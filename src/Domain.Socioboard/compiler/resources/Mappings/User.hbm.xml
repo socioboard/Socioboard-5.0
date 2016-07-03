@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+
+  <class name="User" table="User" lazy="false">
+    <id name="Id" column="Id" />
+    <property name="UserName">
+      <column name="UserName" />
+    </property>
+    <property name="FirstName">
+      <column name="FirstName" />
+    </property>
+    <property name="LastName">
+      <column name="LastName" />
+    </property>
+    <property name="EmailId">
+      <column name="EmailId"  />
+    </property>
+    <property name="ProfilePicUrl">
+      <column name="ProfilePicUrl"  />
+    </property>
+    <property name="AccountType">
+      <column name="AccountType"  />
+    </property>
+
+
+    <property name="CreateDate">
+      <column name="CreateDate"  />
+    </property>
+
+    <property name="ExpiryDate">
+      <column name="ExpiryDate"  />
+    </property>
+
+    <property name="PhoneNumber">
+      <column name="PhoneNumber"  />
+    </property>
+    <property name="Password">
+      <column name="Password"  />
+    </property>
+
+    <property name="TimeZone">
+      <column name="TimeZone"  />
+    </property>
+
+    <property name="PaymentStatus">
+      <column name="PaymentStatus"  />
+    </property>
+
+    <property name="ActivationStatus">
+      <column name="ActivationStatus"  />
+    </property>
+
+
+    <property name="LastLoginTime">
+      <column name="LastLoginTime"  />
+    </property>
+
+    <property name="EmailValidateToken">
+      <column name="EmailValidateToken"  />
+    </property>
+    <property name="ValidateTokenExpireDate">
+      <column name="ValidateTokenExpireDate"  />
+    </property>
+
+    <property name="dateOfBirth">
+      <column name="dateOfBirth"  />
+    </property>
+    <property name="aboutMe">
+      <column name="aboutMe"  />
+    </property>
+    <property name="dailyGrpReportsSummery">
+      <column name="dailyGrpReportsSummery"  />
+    </property>
+    <property name="weeklyGrpReportsSummery">
+      <column name="weeklyGrpReportsSummery"  />
+    </property>
+    <property name="days15GrpReportsSummery">
+      <column name="days15GrpReportsSummery"  />
+    </property>
+    <property name="monthlyGrpReportsSummery">
+      <column name="monthlyGrpReportsSummery"  />
+    </property>
+    <property name="days60GrpReportsSummery">
+      <column name="days60GrpReportsSummery"  />
+    </property>
+    <property name="days90GrpReportsSummery">
+      <column name="days90GrpReportsSummery" />
+    </property>
+    <property name="otherNewsLetters">
+      <column name="otherNewsLetters" />
+    </property>
+  </class>
+</hibernate-mapping>

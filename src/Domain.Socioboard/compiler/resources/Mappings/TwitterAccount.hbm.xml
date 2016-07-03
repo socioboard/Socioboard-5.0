@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="TwitterAccount" table="TwitterAccount" lazy="false">
+    <id name="id" column="id" />
+    <property name="twitterUserId">
+      <column name="twitterUserId" />
+    </property>
+    <property name="twitterScreenName">
+      <column name="twitterScreenName"  />
+    </property>
+    <property name="oAuthToken">
+      <column name="oAuthToken"  />
+    </property>
+    <property name="oAuthSecret">
+      <column name="oAuthSecret"  />
+    </property>
+    <property name="userId">
+      <column name="userId"  />
+    </property>
+    <property name="followersCount">
+      <column name="followersCount"  />
+    </property>
+    <property name="followingCount">
+      <column name="followingCount"  />
+    </property>
+    <property name="profileUrl">
+      <column name="profileUrl"  />
+    </property>
+    <property name="profileImageUrl">
+      <column name="profileImageUrl"  />
+    </property>
+      <property name="profileBackgroundImageUrl">
+      <column name="profileBackgroundImageUrl"  />
+    </property>
+    <property name="twitterName">
+      <column name="twitterName"  />
+    </property>
+    <property name="isAccessTokenActive">
+      <column name="isAccessTokenActive"  />
+    </property>
+    <property name="lastUpdate">
+      <column name="lastUpdate"  />
+    </property>
+    <property name="location">
+      <column name="location"  />
+    </property>
+    <property name="description">
+      <column name="description"  />
+    </property>
+    <property name="isActive">
+      <column name="isActive"  />
+    </property>
+  </class>
+</hibernate-mapping>

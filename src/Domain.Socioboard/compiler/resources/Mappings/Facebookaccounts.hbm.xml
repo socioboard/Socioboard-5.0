@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="Facebookaccounts" table="Facebookaccounts" lazy="true" >
+    <id name="Id" column="Id" />
+    <property name="FbUserId">
+      <column name="FbUserId" />
+    </property>
+    <property name="FbUserName">
+      <column name="FbUserName"/>
+    </property>
+    <property name="AccessToken">
+      <column name="AccessToken"/>
+    </property>
+    <property name="Friends">
+      <column name="Friends"/>
+    </property>
+    <property name="EmailId">
+      <column name="EmailId"/>
+    </property>
+    <property name="coverPic">
+      <column name="coverPic"/>
+    </property>
+    <property name="birthday">
+      <column name="birthday"/>
+    </property>
+    <property name="education">
+      <column name="education"/>
+    </property>
+    <property name="college">
+      <column name="college"/>
+    </property>
+    <property name="workPosition">
+      <column name="workPosition"/>
+    </property>
+    <property name="homeTown">
+      <column name="homeTown"/>
+    </property>
+    <property name="gender">
+      <column name="gender"/>
+    </property>
+    <property name="bio">
+      <column name="bio"/>
+    </property>
+    <property name="about">
+      <column name="about"/>
+    </property>
+    <property name="workCompany">
+      <column name="workCompany"/>
+    </property>
+    <property name="FbProfileType">
+      <column name="FbProfileType"/>
+    </property>
+    <property name="ProfileUrl">
+      <column name="ProfileUrl"/>
+    </property>
+    <property name="IsActive">
+      <column name="IsActive"/>
+    </property>
+    <property name="UserId">
+      <column name="UserId"/>
+    </property>
+    <property name="LastUpdate">
+      <column name="LastUpdate"/>
+    </property>
+    <property name="IsAccessTokenActive">
+      <column name="IsAccessTokenActive"/>
+    </property>
+  </class>
+</hibernate-mapping>

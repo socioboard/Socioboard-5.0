@@ -1,0 +1,266 @@
+  <!-- START LEFT SIDEBAR NAV-->
+            <aside id="left-sidebar-nav">
+                <ul id="slide-out" class="side-nav fixed leftside-navigation">
+                    <li class="user-details cyan darken-2">
+                        <div class="row">
+                            <div class="col col s4 m4 l4">
+                                <img src="https://lh3.googleusercontent.com/yjtIpsfn_FMjBBeX1CWLD8UH29IbDRhuvgDKBSqjM6CBoIpmYeVzvxLOsYZPQTi6wNQfcgNH1w=w1366-h768-rw-no" ng-show="user.FirstName != null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
+                                <img src="https://lh3.googleusercontent.com/yjtIpsfn_FMjBBeX1CWLD8UH29IbDRhuvgDKBSqjM6CBoIpmYeVzvxLOsYZPQTi6wNQfcgNH1w=w1366-h768-rw-no" ng-show="user.FirstName == null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
+                            </div>
+                            <div class="col col s8 m8 l8">
+                                <ul id="profile-dropdown" class="dropdown-content">
+                                    <li>
+                                        <a href="#profilesettings"><i class="mdi-action-settings"></i> Settings</a>
+                                    </li>
+                                    <!--<li>
+                                        <a href="#"><i class="mdi-communication-live-help"></i> Help</a>
+                                    </li>-->
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="../Home/Logout"><i class="mdi-hardware-keyboard-tab"></i> Logout</a>
+                                    </li>
+                                </ul>
+                                <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown"><span ng-show="user.FirstName != null">{{user.FirstName +' '}}</span><span ng-show="user.LastName != null"> {{ user.LastName}}</span> <i class="mdi-navigation-arrow-drop-down right"></i></a>
+                                <p class="user-roal">{{user.EmailId}}</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="bold">
+                        <a href="#dashboard" class="waves-effect waves-cyan">
+                            <i class="icon-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-envelope-letter"></i> Message
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="#/smartinbox">Smart Inbox</a>
+                                        </li>                                        
+                                        <!--<li>
+                                            <a href="">Inbox Message</a>
+                                        </li>
+                                        <li>
+                                            <a href="">My Task</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Send Message</a>
+                                        </li>-->
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan">
+                                    <i class="icon-feed"></i> Feeds
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="no-padding">
+                                            <ul class="collapsible collapsible-accordion">
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-facebook"></i> Facebook
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li ng-repeat="profile in lstProfiles | filter : fbProfileFilter">
+                                                                <a  ng-click="$state.go('facebookfeeds', { 'profileId':profile.ProfileId})" class="truncate"><i class="icon-user"></i>{{profile.ProfileName}}</a>
+                                                            </li>                                        
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-twitter"></i> Twitter
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li ng-repeat="profile in lstProfiles | filter:{ProfileType:2}">
+                                                                <a ng-click="$state.go('twitterfeeds', { 'profileId':profile.ProfileId})" class="truncate"><i class="icon-user"></i>{{profile.ProfileName}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-instagram"></i> Instagram
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li ng-repeat="profile in lstProfiles | filter:{ProfileType:0}">
+                                                                <a href="" class="truncate"><i class="icon-user"></i>{{profile.ProfileName}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-youtube"></i> Youtube
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li ng-repeat="profile in lstProfiles | filter:{ProfileType:0}">
+                                                                <a href="" class="truncate"><i class="icon-user"></i>{{profile.ProfileName}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-google-plus"></i> Google Plus
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li ng-repeat="profile in lstProfiles | filter:{ProfileType:5}">
+                                                                <a href="" class="truncate"><i class="icon-user"></i>{{profile.ProfileName}}</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>                                        
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-share-alt"></i> Publishing
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="#/schedulemsg">Schedule Messages</a>
+                                        </li>
+                                        <li>
+                                            <a href="#/socioqueue">SocioQueue</a>
+                                        </li>
+                                        <li>
+                                            <a href="#/draft">Drafts</a>
+                                        </li>
+                                        <!--<li>
+                                            <a href="#/calendar">Calendar View</a>
+                                        </li>-->
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-globe-alt"></i> Discovery
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="truncate">
+                                            <a href="#/discovery.html">Discovery</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="#/smartsearch.html">Samrt Search</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <!--<li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-notebook"></i> Reports
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="truncate">
+                                            <a href="">Socioboard Group Report</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="">Twitter Report</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="">Facebook Report</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="">Facebook Public Page Report</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="">Instagram Report</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="">Google Analytics</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="">Socioboard Team Report</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="">Shareathon Group Report</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="">Shareathon Page Report</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan">
+                                    <i class="icon-share"></i> Shareathon
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li><a href="">Group Shareathon</a>
+                                        </li>
+                                        <li><a href="">Page Shareathon</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan">
+                                    <i class="icon-rocket"></i> AutoMate Rss Feeds
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>                                        
+                                        <li><a href="">Automate Rss Feeds</a>
+                                        </li>
+                                        <li><a href="">Posted Rss Feeds</a>
+                                        </li>
+                                        <li><a href="">Rss Queue</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-bar-chart"></i> Sentiment Analysis
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li><a href="">Inbox Message</a>
+                                        </li>
+                                        <li><a href="">Facebook Wall</a>
+                                        </li>
+                                        <li><a href="">Twitter Wall</a>
+                                        </li>
+                                        <li><a href="">Twitter Feed</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>-->
+                        </ul>
+                    </li>
+                    <!--<li class="bold">
+                        <a href="#" class="waves-effect waves-cyan">
+                            <i class="icon-wallet"></i> E-Wallet
+                        </a>
+                    </li>
+                    <li class="bold">
+                        <a href="app-calendar.html" class="waves-effect waves-cyan">
+                            <i class="icon-layers"></i> Affiliates
+                        </a>
+                    </li>  
+                    <li class="bold">
+                        <a href="app-calendar.html" class="waves-effect waves-cyan">
+                            <i class="icon-briefcase"></i> Board Me
+                        </a>
+                    </li>-->                  
+                </ul>
+                <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu" ></i></a>
+            </aside>
+            <!-- END LEFT SIDEBAR NAV-->

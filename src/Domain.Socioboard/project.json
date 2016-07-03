@@ -1,0 +1,21 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "NETStandard.Library": "1.5.0-rc2-24027",
+    "Newtonsoft.Json": "8.0.3",
+    "MongoDB.Bson": "2.2.4"
+  },
+
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "System.ComponentModel.DataAnnotations": "4.0.0.0",
+        "System.Net": "4.0.0.0",
+        "System.Security": "4.0.0.0"
+      },
+      "dependencies": {
+      }
+    }
+  }
+}

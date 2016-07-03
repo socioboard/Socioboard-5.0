@@ -1,0 +1,206 @@
+    <div data-ng-controller="SmartInboxController as SmrtInbox">
+            <!-- START CONTENT -->
+            <section id="content">
+                <!--start container-->
+                        <!--card widgets end-->
+                        <div class="row">
+                            <div class="col s12 m8 l8">
+                                <div class="card" id="feeds">
+                                    <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Smart Inbox Notification</h5>
+                                    <ul class="collection smartinbox_slider">
+                                        <li class="collection-item avatar"  ng-repeat="notification in lstNotifications | notificationbyprofilesfileter : filterType : selectedProfiles  ">
+                                          <img src="{{notification.fromProfileUrl}}" alt="{{notification.fromScreenName}}" class="circle">
+                                          <span class="email-title">{{notification.fromScreenName}}</span>
+                                          <div class="row feeds_post z-depth-1 hoverable">
+                                            <div class="col m8">
+                                              <p class="break_word ultra-small">{{notification.twitterMsg}}</p>
+                                            </div>
+                                            <!--<div class="col m4 center">
+                                              <img src="{{notification.sourceUrl}}" alt="{{notification.fromScreenName}}" ng-if="notification.sourceUrl != null" class="responsive-img ">
+                                            </div>-->
+                                          </div>                                         
+                                          <a class="tooltipped secondary-content" data-position="left"  data-tooltip="{{notification.messageDate}}">{{notification.messageDate}}</a>
+                                        </li>
+                                        
+
+                                        <div class="center">
+                                          <div class="preloader-wrapper big active">
+                                            <div class="spinner-layer spinner-blue">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-red">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-yellow">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-green">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </ul>
+
+                                </div>
+                            </div>  
+                            <div class="col s12 m4 l4">
+                              <div class="card" id="feeds">
+                                <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Filter</h5>
+                                <div class="section section_filter">
+                                  <h6>PROFILES</h6>
+                                  <div class="smartinbox_filter_slider">
+                                      <!--rendering twitter profiles start-->
+                                    <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{ProfileType:2}">
+                                      <div class="row valign-wrapper">
+                                        <div class="col s2">
+                                          <img src="{{profile.ProfilePic}}" alt="{{profile.ProfileName}}" class="circle responsive-img">
+                                        </div>
+                                        <div class="col s8">
+                                          <span class="black-text">
+                                            {{profile.ProfileName}}
+                                          </span>
+                                        </div>
+                                        <div class="col s2">
+                                          <p>
+                                            <input type="checkbox" value="{{profile.ProfileId}}" checked="checked"  ng-click="toggleProfileSelection(profile.ProfileId)"  id="test_{{profile.ProfileId}}" />
+                                            <label for="test_{{profile.ProfileId}}"></label>
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                      <!--rendering twitter profiles end-->
+                                  
+                                  </div>
+                                </div>
+                                <!--<div class="section section_filter">
+                                  <h6>MESSAGE TYPES</h6>
+                                  <div class="grey lighten-5 z-depth-1" ng-repeat="filterop in filterType">
+                                    <div class="row valign-wrapper">
+                                      <div class="col s1">
+                                        <i class="fa fa-facebook" ng-if="filterop=='Notifications'"></i>
+                                          <i class="fa fa-twitter" ng-if="filterop!='Notifications'"></i>
+                                      </div>
+                                      <div class="col s8">
+                                        <span class="black-text">
+                                            {{filterop}}
+                                        </span>
+                                      </div>
+                                      <div class="col s2">
+                                        <p>
+                                          <input type="checkbox" checked="checked" name="filterType[]"  value="{{filterop}}" ng-click="toggleSelection(filterop)" ng-checked="selection.indexOf(filterop) > -1"   id="{{filterop}}" />
+                                          <label for="{{filterop}}"></label>
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                    
+                                </div>-->
+                                  <div class="section section_filter">
+                                      <h6>MESSAGE TYPES</h6>
+                                      <div class="grey lighten-5 z-depth-1">
+                                          <div class="row valign-wrapper">
+                                              <div class="col s1">
+                                                  <i class="fa fa-facebook"></i>
+                                              </div>
+                                              <div class="col s8">
+                                                  <span class="black-text">
+                                                      Notifications
+                                                  </span>
+                                              </div>
+                                              <div class="col s2">
+                                                  <p>
+                                                      <input type="checkbox"  name="filterType[]" value="Notifications" ng-click="toggleSelection(9)" ng-checked="filterType.indexOf(9) > -1" id="Notifications" />
+                                                      <label for="Notifications"></label>
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class=" grey lighten-5 z-depth-1">
+                                          <div class="row valign-wrapper">
+                                              <div class="col s1">
+                                                  <i class="fa fa-twitter"></i>
+                                              </div>
+                                              <div class="col s8">
+                                                  <span class="black-text">
+                                                      Mentions
+                                                  </span>
+                                              </div>
+                                              <div class="col s2">
+                                                  <p>
+                                                      <input type="checkbox" name="filterType[]" value="0" ng-click="toggleSelection(0)" ng-checked="filterType.indexOf(0) > -1" id="Mentions" />
+                                                      <label for="Mentions"></label>
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class=" grey lighten-5 z-depth-1">
+                                          <div class="row valign-wrapper">
+                                              <div class="col s1">
+                                                  <i class="fa fa-twitter"></i>
+                                              </div>
+                                              <div class="col s8">
+                                                  <span class="black-text">
+                                                      Retweets
+                                                  </span>
+                                              </div>
+                                              <div class="col s2">
+                                                  <p>
+                                                      <input type="checkbox" name="filterType[]" value="1" ng-click="toggleSelection(1)" ng-checked="filterType.indexOf(1) > -1" id="Retweets" />
+                                                      <label for="Retweets"></label>
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                      <div class=" grey lighten-5 z-depth-1">
+                                          <div class="row valign-wrapper">
+                                              <div class="col s1">
+                                                  <i class="fa fa-twitter"></i>
+                                              </div>
+                                              <div class="col s8">
+                                                  <span class="black-text">
+                                                      New Followers
+                                                  </span>
+                                              </div>
+                                              <div class="col s2">
+                                                  <p>
+                                                      <input type="checkbox" name="filterType[]" value="New Followers" ng-click="toggleSelection(2)" ng-checked="filterType.indexOf(2) > -1" id="NewFollowers" />
+                                                      <label for="NewFollowers"></label>
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                            </div>                                
+                        </div>
+                <!--end container-->
+            </section>
+            <!-- END CONTENT -->   
+    </div>

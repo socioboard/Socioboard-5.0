@@ -1,0 +1,330 @@
+    <div data-ng-controller="InboxMessageController">
+            <!-- START CONTENT -->
+            <section id="content">
+                <!--start container-->
+                        <!--card widgets end-->
+                        <div class="row">
+                            <div class="col s12 m8 l8">
+                                <div class="card" id="feeds">
+                                    <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Inbox Message Notification</h5>
+                                    <ul class="collection inboxmessage_slider">
+                                        <li class="collection-item avatar" ng-repeat="message in lstMessages | notificationbyprofilesfileter  : selectedProfiles">
+                                          <img src="{{message.senderProfileUrl}}" alt="{{message.senderScreenName}}" class="circle">
+                                          <span class="email-title">{{message.senderScreenName}}</span>
+                                          <div class="row feeds_post z-depth-1 hoverable">
+                                            <div class="col m8">
+                                              <p class="break_word ultra-small">{{message.message}}</p>
+                                            </div>
+                                            <div class="col m4 center">
+                                              <img src="{{message.image}}" ng-if="message.image != null || message.image != ''" class="responsive-img ">
+                                            </div>
+                                            <div class="col l12 smartinbox_action_icon">
+                                              <a class="tooltipped modal-trigger" href="#TaskModal" data-position="top" data-delay="50" data-tooltip="Task">
+                                                  <i class="icon-pin"></i>
+                                              </a>
+                                            </div>
+                                          </div>                                         
+                                          <a class="tooltipped secondary-content" data-position="left"  data-tooltip="{{message.createdDate}}">{{message.createdDate}}</a>
+                                        </li>
+                                       
+
+                                        <div class="center"  ng-if="!messagesReachLast">
+                                          <div class="preloader-wrapper big active">
+                                            <div class="spinner-layer spinner-blue">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-red">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-yellow">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-green">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </ul>
+
+                                </div>
+                            </div>  
+                            <div class="col s12 m4 l4">
+                              <div class="card" id="feeds" >
+                                <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Filter</h5>
+                                <div class="section section_filter"  lazy-scroll="LoadMessages()">
+                                  <h6>PROFILES</h6>
+                                  <div class="inboxmsg_filter_slider">
+                                    <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{ProfileType:2}">
+                                      <div class="row valign-wrapper">
+                                        <div class="col s2">
+                                            <img src="{{profile.ProfilePic}}" alt="{{profile.ProfileName}}" class="circle responsive-img">
+                                        </div>
+                                        <div class="col s8">
+                                          <span class="black-text">
+                                              {{profile.ProfileName}}
+                                          </span>
+                                        </div>
+                                        <div class="col s2">
+                                          <p>
+                                              <input type="checkbox" value="{{profile.ProfileId}}" checked="checked" ng-click="toggleProfileSelection(profile.ProfileId)" id="test_{{profile.ProfileId}}" />
+                                              <label for="test_{{profile.ProfileId}}"></label>
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>                                
+                        </div>
+                <!--end container-->
+
+                <!-- Compose Email Trigger -->
+                <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                  <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+                    <i class="large mdi-editor-mode-edit"></i>
+                  </a>
+                </div>
+
+                <!-- Compose Email Structure -->
+                <div id="ComposePostModal" class="modal">
+                  <div class="modal-content">
+                    <nav class="red">
+                      <div class="nav-wrapper">
+                        <div class="left col s12 m5 l5">
+                          <ul>
+                            <li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                            </li>
+                            <li><a href="#!" class="email-type">Compose</a>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col s12 m7 l7 hide-on-med-and-down">
+                          <ul class="right">
+                            <li><a href="#!"><i class="modal-action modal-close mdi-content-send"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </nav>
+                  </div>
+                  <div class="model-email-content">
+                    <div class="row">
+                      <form class="col s12">
+                        <div class="row">
+                             <div class="input-field col s12">
+                            <select multiple>
+                              <option value="" disabled selected>Choose your profile</option>
+                              <option value="1"><span class="fa fa-facebook"></span>Chanchal</option>
+                              <option value="2" data-icon="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="circle">Profile_2</option>
+                              <option value="3">Profile_3</option>
+                            </select>
+                            <label>Select Profiles</label>
+                          </div>
+                        </div>
+                          <!--Default version-->
+                        <div class="row section">
+                          <div class="col s12 m4 l3">
+                             <p>Select your file</p>
+                          </div>
+                          <div class="col s12 m8 l9">
+                              <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="input-field col s12">
+                            <textarea id="compose" class="materialize-textarea" length="500"></textarea>
+                            <label for="compose">Compose email</label>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+
+            <!-- add profile -->
+            <div id="addprofile" class="modal">
+                <div class="modal-content">
+                  <h4>Adding Profiles</h4>
+                    <div class="row">
+                        <div class="col s12">
+                          <ul class="tabs tab-demo z-depth-1">
+                            <li class="tab col s1"><a class="active" href="#twitter"><i class="fa fa-twitter fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#facebook"><i class="fa fa-facebook fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
+                          </ul>
+                        </div>
+                        <div id="twitter" class="col s12">
+                            <div class="center-align">
+                                <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
+                                <p>
+                                  <input type="checkbox" id="Follow1" />
+                                  <label for="Follow1">Follow Socioboard on twitter for update &amp; announcements</label>
+                                </p>
+                            </div>
+                        </div>
+                        <div id="facebook" class="col s12">
+                            <div class="center-align">
+                                <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand’s Facebook page.</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
+                            </div>
+                        </div>
+                        <div id="google" class="col s12">
+                            <div class="center-align">
+                                <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
+                            </div>
+                        </div>
+                        <div id="linkedin" class="col s12">
+                            <div class="center-align">
+                                <p>Grant access to your profile to share updates and view your feed.</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                            </div>
+                        </div>
+                        <div id="instagram" class="col s12">
+                            <div class="center-align">
+                                <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
+                            </div>
+                        </div>
+                        <div id="tumblr" class="col s12">
+                            <div class="center-align">
+                                <p>To allow Socioboard access to your Tumblr account, you must first give authorization from the Tumblr website</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add a tumblr Profile</a>
+                            </div>
+                        </div>
+                        <div id="youtube" class="col s12">
+                            <div class="center-align">
+                                <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-youtube fa-fw"></i>Connect your personal youtube</a>
+                            </div>
+                        </div>
+                        <div id="ganalytics" class="col s12">
+                            <div class="center-align">
+                                <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal GoogleAnalytics</a>
+                            </div>
+                        </div>
+                  </div>             
+                </div>
+            </div>
+
+            <!-- Task Modal -->
+            <div id="TaskModal" class="modal">
+              <div class="modal-content">
+                <h4>Create Task</h4>
+                <p></p>
+                <div class="row">
+                  <form class="col s12">
+                    <div class="row">
+                      <div class="input-field col s8">
+                        <i class="icon-pencil prefix"></i>
+                        <textarea id="LeaveComment" class="materialize-textarea" placeholder="Your comment (viewable only to team members)"></textarea>
+                        <label for="LeaveComment">LEAVE A COMMENT</label>
+                      </div>
+                      <div class="col s4">
+                        <span>ASSIGN TASK TO</span>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Save</a>
+                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+              </div>
+            </div>
+
+            <!-- Email Message Modal -->
+            <div id="EmailMessageModal" class="modal modal-fixed-footer">
+              <div class="modal-content">
+                <h4>Email Message</h4>
+                <div class="row">
+                  <form class="col s12">
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <input disabled value="Chanchal Santra" id="first_name" type="text" class="validate">
+                        <label for="first_name">From</label>
+                      </div>
+                    </div>
+                    <div class="row">                      
+                      <div class="input-field col s12">
+                        <i class="icon-pencil prefix"></i>
+                        <input id="emailid" type="text" class="validate">
+                        <label for="emailid">To</label>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="input-field col s12">
+                        <i class="icon-globe prefix"></i>
+                        <textarea id="LeaveComment" class="materialize-textarea" ></textarea>
+                        <label for="LeaveComment">Subject<span style="margin-left:10px;" class="grey-text text-darken-4">New Follower Alert forwarded by chanchal santra</span></label>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Save</a>
+                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+              </div>
+            </div>
+
+            <!-- Reply Modal -->
+            <div id="ReplyModal" class="modal">
+              <div class="modal-content">
+                <h4>Public Reply</h4>
+                <div class="row">
+                  <div class="input-field col s12">
+                        <i class="icon-pencil prefix"></i>
+                        <textarea id="reply" class="materialize-textarea" placeholder="ur text"></textarea>
+                        <label for="reply">Reply</label>
+                      </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <a href="#!" class="modal-action waves-effect waves-green btn-flat">Reply</a>
+              </div>
+            </div>
+
+
+
+            </section>
+            <!-- END CONTENT -->   
+    </div>

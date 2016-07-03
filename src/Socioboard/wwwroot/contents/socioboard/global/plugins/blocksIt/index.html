@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>BlocksIt.js | Dynamic Grid Layout jQuery Plugin - Plugin Page</title>
+<meta name="description" content="BlocksIt.js jQuery plugin page by inWebson.com"/>
+<meta name="keywords" content="demonstration,demo,jquery,blocksit.js,inwebson"/>
+<link rel='stylesheet' href='style.css' media='screen' />
+
+<link rel="shortcut icon" href="http://www.inwebson.com/wp-content/themes/inwebson2/favicon.ico" />
+<link rel="canonical" href="http://www.inwebson.com/demo/blocksit-js/" />
+</head>
+<body>
+
+<!-- Header -->
+<header id="header">
+	<h1>BlocksIt.js | Dynamic Grid Layout jQuery Plugin</h1>
+	<div id="backlinks">
+		<a href="http://www.inwebson.com/jquery/blocksit-js-dynamic-grid-layout-jquery-plugin/">Visit Plugin Article Page &raquo;</a>
+		<a href="http://www.inwebson.com">Visit inWebson.com &raquo;</a>
+	</div>
+	<div class="clearfix"></div>
+</header>
+
+<!-- Content -->
+<section id="wrapper">
+<div id="container">
+	<div class="block description">
+		<h3>Introduction</h3>
+		<p><strong>BlocksIt.js</strong> is a jQuery plugin for creating dynamic grid layout. It manages to convert HTML elements into '<em>blocks</em>' and position them in well-arranged grid layout like <a href="http://www.pinterest.com">Pinterest</a>.</p>
+	</div>
+	<div class="nobox" data-size="2">
+		<h2>Blocks<span>It</span>.js</h2>
+		<h3>Dynamic Grid Layout jQuery Plugin</h3>
+	</div>
+	<div class="block" style="text-align:center">
+		<p>Download <strong>BlocksIt.js</strong> at <br/>
+		<a href="http://www.inwebson.com/jquery/blocksit-js-dynamic-grid-layout-jquery-plugin/">Plugin Article Page &raquo;</a></p> 
+	</div>
+	<div class="block log">
+		<h3>Change Log</h3>
+		<p>
+			<strong>Version 1.0</strong> – First Release, 24th April 2012
+		</p>
+	</div>
+	
+	<div class="block" data-size="2">
+		<h3>How to Use?</h3>
+		<p><pre>
+$(document).ready(function() {
+	$('#container').BlocksIt({
+		numOfCol: 4,
+		offsetX: 8,
+		offsetY: 8,
+		blockElement: '.block'
+	});
+});</pre></p>
+	</div>
+	
+	<div class="block options">
+		<h3>Plugin Options</h3>
+		<p>
+			<strong>numOfCol:</strong> <br/>
+			<em>Type: Int ( Default: 5 )</em> <br/>
+			<span>The number of columns to be created.</span>
+		</p>	
+		<p>
+			<strong>offsetX:</strong><br/>
+			<em>Type: Int ( Default: 5 )</em><br/>
+			<span>Margin left and right for each block.</span>
+		</p>	
+		<p>
+			<strong>offsetY:</strong><br/>
+			<em>Type: Int ( Default: 5 )</em><br/>
+			<span>Margin top and bottom for each block.</span>
+		</p>
+		<p>
+			<strong>blockElement:</strong><br/>
+			<em>Type: String ( Default: div )</em><br/>
+			<span>Targeted child element, which will converted into blocks.</span>
+		</p>	
+	</div>
+	<div class="block">
+		<h3>License</h3>
+		<p><strong>BlocksIt.js</strong> is licensed under the GNU General Public License version 2 or later.</p>
+	</div>
+	
+	<div class="block demo">
+		<h3>Demo 1</h3>
+		<p>
+		<a class="imgholder" href="demo1/">
+			<img src="http://www.inwebson.com/demo/blocksit-js/random-grid.jpg" width="210" height="150" alt="" />
+		</a>
+		Dynamic grid layout with random generated blocks. <strong>REFRESH</strong> the page and see different result!
+		</p>
+	</div>
+	<div class="block demo">
+		<h3>Demo 2</h3>
+		<p>
+		<a class="imgholder" href="demo2/">
+			<img src="http://www.inwebson.com/demo/blocksit-js/pinterest.jpg" width="210" height="150" alt="" />
+		</a>
+		Pinterest dynamic grid layout integrated with CSS3 Transitions. <strong>RESIZE</strong> your browser to animate these blocks! 
+		</p>
+	</div>
+	<div class="block demo">
+		<h3>Buggy?</h3>
+		<p>Something's not working? Or any other questions regarding this plugin please let me know using comments form in <a href="http://www.inwebson.com/jquery/blocksit-js-dynamic-grid-layout-jquery-plugin/">plugin article page</a>.</p>
+	</div>
+</div>
+</section>
+
+<!-- Footer -->
+<footer id="footer">
+	<span>&copy; 2012 <a href="http://www.inwebson.com">inWebson.com</a>. Design by <a href="http://www.inwebson.com/contactus">Kenny Ooi</a>. Powered by <a href="http://www.inwebson.com/jquery/">jQuery</a>.</span>
+</footer>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<!--[if lt IE 9]>
+<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<script src="blocksit.min.js"></script>
+<script>
+$(document).ready(function() {
+	//vendor script
+	$('#header')
+	.css({ 'top':-50 })
+	.delay(1000)
+	.animate({'top': 0}, 800);
+	
+	$('#footer')
+	.css({ 'bottom':-15 })
+	.delay(1000)
+	.animate({'bottom': 0}, 800);
+	
+	
+	$('#container').BlocksIt({
+		numOfCol: 4,
+		offsetX: 8,
+		offsetY: 8
+	});
+	
+	console.log($('#container').height());
+});
+</script>
+</body>
+</html>

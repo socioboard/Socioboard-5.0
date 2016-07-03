@@ -1,0 +1,180 @@
+    <div data-ng-controller="DiscoveryController">
+            <!-- START CONTENT -->
+            <section id="content">
+                <!--start container-->
+                
+                <div class="row">
+                  <div class="col l12">
+                    <h4>Smart Search allows you to find new customers by searching with keywords around your business.</h4>
+                  </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s10">
+                        <i class="material-icons icon-note prefix"></i>
+                        <input id="txtsearch" type="text" class="materialize-textarea">
+                        <label for="icon_prefix">Type your Keyword here...</label>
+                    </div>
+                </div>
+                <!--card widgets end-->
+                <div class="row">
+                    <div class="col s12 m9 l9">
+
+                      <!-- twitter -->
+                      <div class="card" id="feeds">
+                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-magnifier"></i>Smart Search</h5>
+                          <ul class="collection smartsearchfeeds">
+                              <li class="collection-item avatar" ng-repeat="twtfeed in lstDiscoveryGeoLocation">
+                                <img src="{{twtfeed.profile_image_url}}" alt="{{twtfeed.screan_name}}" class="circle">
+                                <span class="email-title">{{twtfeed.screan_name}}</span>
+                                <div class="row feeds_post z-depth-1 hoverable">
+                                  <div class="col m8">
+                                    <p class="break_word ultra-small">{{twtfeed.text}}.</p>
+                                  </div>
+                                  <div class="col l12">
+                                    <a href="#taskModal" class="tooltipped modal-trigger" data-position="top" data-delay="50" data-tooltip="Task">
+                                        <i class="icon-pin fa-fw"></i>
+                                    </a>
+                                  </div>
+
+                                </div>                                         
+                                <a class="tooltipped secondary-content" data-position="left">{{twtfeed.CreatedTime}}</a>
+                              </li>
+                          </ul>
+                      </div>
+                    </div>  
+                    <div class="col s12 m3 l3">
+                      <div class="card" id="feeds">
+                        <h5 class="feeds_title blue darken-2 white-text"><i class="icon-pointer"></i>Discovery</h5>
+                        <div class="section section_filter">                        
+                          <div class="row">
+                            <div class="input-field col s12">
+                              <input id="search_location" type="text" class="validate">
+                              <label for="location">Enter Location [ Near this place ]</label>
+                            </div>
+                              <div class="input-field col s12">
+                                <select id="radius-select">
+                                  <option value="" disabled selected>Choose your option</option>
+                                  <option value="5">Within 5</option>
+                                  <option value="10">Within 10</option>
+                                  <option value="25">Within 25</option>
+                                  <option value="50">Within 50</option>
+                                  <option value="100">Within 100</option>
+                                  <option value="250">Within 250</option>
+                                  <option value="500">Within 500</option>
+                                  <option value="1000">Within 1000</option>
+                                </select>
+                              </div>
+                              <div class="input-field col s12">
+                                <select id="type-select">
+                                  <option value="" disabled selected>Choose your option</option>
+                                  <option value="1">Miles</option>
+                                  <option value="2">Kilometers</option>
+                                </select>
+                              </div>
+                              <div class="col l12 center">
+                                  <a  ng-click="DiscoverySmartSearch()" class="btn waves-effect waves-light">Search</a>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>                                
+                </div>
+                <!--end container-->
+
+                <!-- Compose Email Trigger -->
+                <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                  <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+                    <i class="large mdi-editor-mode-edit"></i>
+                  </a>
+                </div>
+
+                <!-- Compose Email Structure -->
+                <div id="ComposePostModal" class="modal">
+                  <div class="modal-content">
+                    <nav class="red">
+                      <div class="nav-wrapper">
+                        <div class="left col s12 m5 l5">
+                          <ul>
+                            <li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                            </li>
+                            <li><a href="#!" class="email-type">Compose</a>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col s12 m7 l7 hide-on-med-and-down">
+                          <ul class="right">
+                            <li><a href="#!"><i class="mdi-editor-attach-file"></i></a>
+                            </li>
+                            <li><a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
+                            </li>
+                            <li><a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </nav>
+                  </div>
+                  <div class="model-email-content">
+                    <div class="row">
+                      <form class="col s12">
+                        <div class="row">
+                             <div class="input-field col s12">
+                            <select multiple>
+                              <option value="" disabled selected>Choose your profile</option>
+                              <option value="1"><span class="fa fa-facebook"></span>Chanchal</option>
+                              <option value="2" data-icon="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="circle">Profile_2</option>
+                              <option value="3">Profile_3</option>
+                            </select>
+                            <label>Select Profiles</label>
+                          </div>
+                        </div>
+                          <!--Default version-->
+                        <div class="row section">
+                          <div class="col s12 m4 l3">
+                             <p>Select your file</p>
+                          </div>
+                          <div class="col s12 m8 l9">
+                              <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="input-field col s12">
+                            <textarea id="compose" class="materialize-textarea" length="500"></textarea>
+                            <label for="compose">Compose email</label>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal Structure -->
+                <div id="taskModal" class="modal">
+                  <div class="modal-content">
+                  <h4>Create Task</h4>
+                  <p></p>
+                  <div class="row">
+                    <form class="col s12">
+                      <div class="row">
+                        <div class="input-field col s8">
+                          <i class="icon-pencil prefix"></i>
+                          <textarea id="LeaveComment" class="materialize-textarea" placeholder="Your comment (viewable only to team members)"></textarea>
+                          <label for="LeaveComment">LEAVE A COMMENT</label>
+                        </div>
+                        <div class="col s4">
+                          <span>ASSIGN TASK TO</span>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Save</a>
+                  <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+                </div>
+                </div>
+                        
+            </section>
+            <!-- END CONTENT -->   
+    </div>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="Groupprofiles" table="Groupprofiles" lazy="true" >
+    <id name="Id" column="Id" />
+    <property name="ProfileOwnerId">
+      <column name="ProfileOwnerId"  />
+    </property>
+    <property name="ProfileType">
+      <column name="ProfileType" />
+    </property>
+    <property name="ProfileName">
+      <column name="ProfileName" />
+    </property>
+    <property name="ProfileId">
+      <column name="ProfileId" />
+    </property>
+    <property name="ProfilePic">
+      <column name="ProfilePic" />
+    </property>
+    <property name="GroupId">
+      <column name="GroupId" />
+    </property>
+    <property name="EntryDate">
+      <column name="EntryDate" />
+    </property>
+  </class>
+</hibernate-mapping>

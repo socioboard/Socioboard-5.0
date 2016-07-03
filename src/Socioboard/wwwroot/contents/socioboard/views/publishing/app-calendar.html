@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <title>Socioboard | Calendar</title>
+
+    <link rel="apple-touch-icon" sizes="57x57" href="../assets/frontend/imgs/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../assets/frontend/imgs/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../assets/frontend/imgs/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../assets/frontend/imgs/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../assets/frontend/imgs/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../assets/frontend/imgs/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../assets/frontend/imgs/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../assets/frontend/imgs/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/frontend/imgs/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="../assets/frontend/imgs/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/frontend/imgs/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../assets/frontend/imgs/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/frontend/imgs/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/frontend/imgs/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../assets/frontend/imgs/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:site_name" content="socioboard.com">
+    <meta property="og:title" content="Socioboard - Open Source Social Technology Enabler | Find More Customers on Social Media">
+    <meta property="og:description" content="Be it marketing(finding leads/customers) on Social media, or listening to customer complaints, replying to them, managing multiple social media accounts from one single dashboard, finding influencers in a particular category and reaching out to them and many more things, Socioboard products can do it.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="http://i.imgur.com/1B8wv5m.png">
+    <meta property="og:url" content="https://www.facebook.com/SocioBoard">
+
+
+  <!-- CORE CSS-->
+  
+  <link href="../assets/admin/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
+  <link href="../assets/admin/css/style.css" type="text/css" rel="stylesheet" media="screen,projection">
+
+  <link href="../assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css"/>
+  <link href="../assets/global/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
+
+
+  <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
+  <link href="../assets/admin/css/prism.css" type="text/css" rel="stylesheet" media="screen,projection">
+  <link href="../assets/admin/js/plugins/chartist-js/chartist.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+  <link href="../assets/admin/js/plugins/perfect-scrollbar/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
+  <link href="../assets/admin/js/plugins/fullcalendar/css/fullcalendar.min.css" type="text/css" rel="stylesheet" media="screen,projection">
+</head>
+
+<body>
+  <!-- Start Page Loading -->
+    <div id="loader-wrapper">
+        <div id="loader"></div>        
+        <div class="loader-section section-left"></div>
+        <div class="loader-section section-right"></div>
+    </div>
+    <!-- End Page Loading -->
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+
+    <!-- START HEADER -->
+    <header id="header" class="page-topbar">
+        <!-- start header nav-->
+        <div class="navbar-fixed">
+            <nav class="grey lighten-2">
+                <div class="nav-wrapper">
+                    <h1 class="logo-wrapper"><a href="index.html" class="brand-logo darken-1"><img src="../assets/frontend/imgs/Socioboard.png" alt="Socioboard"></a> <span class="logo-text">Socioboard</span></h1>
+                    <ul class="right hide-on-med-and-down">
+                        <li class="search-out grey-text text-darken-4">
+                            <input type="text" class="search-out-text">
+                        </li>
+                        <li>    
+                            <a href="javascript:void(0);" class="waves-effect waves-block waves-light show-search">
+                                <i class="mdi-action-search  grey-text text-darken-4"></i>
+                            </a>                              
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen">
+                                <i class="mdi-action-settings-overscan  grey-text text-darken-4"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="waves-effect waves-block waves-light">
+                                <i class="mdi-social-notifications  grey-text text-darken-4"></i>
+                            </a>
+                        </li>
+                        <!-- Dropdown Trigger -->                        
+                        <li>
+                            <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
+                                <i class="mdi-communication-chat  grey-text text-darken-4"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+        <!-- end header nav-->
+    </header>
+    <!-- END HEADER -->
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+  <!-- START MAIN -->
+  <div id="main">
+    <!-- START WRAPPER -->
+    <div class="wrapper">
+
+      <!-- START LEFT SIDEBAR NAV-->
+       <aside id="left-sidebar-nav">
+                <ul id="slide-out" class="side-nav fixed leftside-navigation">
+                    <li class="user-details cyan darken-2">
+                        <div class="row">
+                            <div class="col col s4 m4 l4">
+                                <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal_400x400.jpg" alt="Chanchal Santra" class="circle responsive-img valign profile-image">
+                            </div>
+                            <div class="col col s8 m8 l8">
+                                <ul id="profile-dropdown" class="dropdown-content">
+                                    <li>
+                                        <a href="#"><i class="mdi-action-face-unlock"></i> Profile</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="mdi-action-settings"></i> Settings</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="mdi-communication-live-help"></i> Help</a>
+                                    </li>
+                                    <li class="divider"></li>
+                                    <li>
+                                        <a href="#"><i class="mdi-action-lock-outline"></i> Lock</a>
+                                    </li>
+                                    <li>
+                                        <a href="#"><i class="mdi-hardware-keyboard-tab"></i> Logout</a>
+                                    </li>
+                                </ul>
+                                <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown">Chanchal<i class="mdi-navigation-arrow-drop-down right"></i></a>
+                                <p class="user-roal">chanchal.santra@gmail.com</p>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="bold">
+                        <a href="index.html" class="waves-effect waves-cyan">
+                            <i class="icon-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="no-padding">
+                        <ul class="collapsible collapsible-accordion">
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-envelope-letter"></i> Message
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="">Smart Inbox</a>
+                                        </li>                                        
+                                        <li>
+                                            <a href="">Inbox Message</a>
+                                        </li>
+                                        <li>
+                                            <a href="">My Task</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Send Message</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan">
+                                    <i class="icon-feed"></i> Feeds
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="no-padding">
+                                            <ul class="collapsible collapsible-accordion">
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-facebook"></i> Facebook
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Chanchal Santra</a>
+                                                            </li>                                        
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Abhimanyu</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-twitter"></i> Twitter
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Chanchal Santra</a>
+                                                            </li>                                        
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Abhimanyu</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-instagram"></i> Instagram
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Chanchal Santra</a>
+                                                            </li>                                        
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Abhimanyu</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-youtube"></i> Youtube
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Chanchal Santra</a>
+                                                            </li>                                        
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Abhimanyu</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                                <li class="bold">
+                                                    <a class="collapsible-header waves-effect waves-cyan">
+                                                        <i class="fa fa-google-plus"></i> Google Plus
+                                                    </a>
+                                                    <div class="collapsible-body">
+                                                        <ul>
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Chanchal Santra</a>
+                                                            </li>                                        
+                                                            <li>
+                                                                <a href=""><i class="icon-user"></i>Abhimanyu</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </li>                                        
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-share-alt"></i> Publishing
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="">Schedule Messages</a>
+                                        </li>
+                                        <li>
+                                            <a href="">SocioQueue</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Drafts</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Calendar View</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-globe-alt"></i> Discovery
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="">Discovery</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Samrt Search</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-notebook"></i> Reports
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="">Socioboard Group Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Twitter Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Facebook Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Facebook Public Page Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Instagram Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Google Analytics</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Socioboard Team Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Shareathon Group Report</a>
+                                        </li>
+                                        <li>
+                                            <a href="">Shareathon Page Report</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan">
+                                    <i class="icon-share"></i> Shareathon
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li><a href="">Group Shareathon</a>
+                                        </li>
+                                        <li><a href="">Page Shareathon</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header  waves-effect waves-cyan">
+                                    <i class="icon-rocket"></i> AutoMate Rss Feeds
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>                                        
+                                        <li><a href="">Automate Rss Feeds</a>
+                                        </li>
+                                        <li><a href="">Posted Rss Feeds</a>
+                                        </li>
+                                        <li><a href="">Rss Queue</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan">
+                                    <i class="icon-bar-chart"></i> Sentiment Analysis
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li><a href="">Inbox Message</a>
+                                        </li>
+                                        <li><a href="">Facebook Wall</a>
+                                        </li>
+                                        <li><a href="">Twitter Wall</a>
+                                        </li>
+                                        <li><a href="">Twitter Feed</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="bold">
+                        <a href="#" class="waves-effect waves-cyan">
+                            <i class="icon-wallet"></i> E-Wallet
+                        </a>
+                    </li>
+                    <li class="bold">
+                        <a href="app-calendar.html" class="waves-effect waves-cyan">
+                            <i class="icon-layers"></i> Affiliates
+                        </a>
+                    </li>  
+                    <li class="bold">
+                        <a href="app-calendar.html" class="waves-effect waves-cyan">
+                            <i class="icon-briefcase"></i> Board Me
+                        </a>
+                    </li>                  
+                </ul>
+                <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu" ></i></a>
+            </aside>
+      <!-- END LEFT SIDEBAR NAV-->
+
+      <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+      <!-- START CONTENT -->
+      <section id="content">
+        
+        <!--breadcrumbs start-->
+        <div id="breadcrumbs-wrapper" class=" grey lighten-3">
+          <div class="container">
+            <div class="row">
+              <div class="col s12 m12 l12">
+                <h5 class="breadcrumbs-title">Calendar</h5>
+                <ol class="breadcrumb">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li class="active">Calendar</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--breadcrumbs end-->
+        
+
+        <!--start container-->
+        <div class="container">
+          <div class="section">
+
+            <p class="caption">FullCalendar is a jQuery plugin that provides a full-sized, drag & drop event calendar like the one below. It uses AJAX to fetch events on-the-fly and is easily configured to use your own feed format. It is visually customizable with a rich API.</p>
+            <div class="divider"></div>
+            <div id="full-calendar">              
+              <div class="row">
+                <div class="col s12 m4 l3">
+                  <div id='external-events'>    
+                    <h4 class="header">Draggable Events</h4>
+                    <div class='fc-event cyan'>March Invoices</div>
+                    <div class='fc-event teal'>Call Emy</div>
+                    <div class='fc-event cyan darken-1'>Dinner with Team</div>
+                    <div class='fc-event cyan accent-4'>Meeting with Support Team</div>
+                    <div class='fc-event teal accent-4'>Meeting with Sales Team</div>
+                    <div class='fc-event light-blue accent-3'>Design an iOS App</div>
+                    <div class='fc-event light-blue accent-4'>Company Party</div>
+                    <p>
+                      <input type='checkbox' id='drop-remove' />
+                      <label for='drop-remove'>remove after drop</label>
+                    </p>
+                  </div>
+                </div>
+                <div class="col s12 m8 l9">
+                  <div id='calendar'></div>
+                </div>
+              </div>
+            </div>
+            </div>
+        </div>
+        <!--end container-->
+
+      </section>
+      <!-- END CONTENT -->
+
+      <!-- //////////////////////////////////////////////////////////////////////////// -->
+      <!-- START RIGHT SIDEBAR NAV-->
+      <aside id="right-sidebar-nav">
+        <ul id="chat-out" class="side-nav rightside-navigation">
+            <li class="li-hover">
+            <a href="#" data-activates="chat-out" class="chat-close-collapse right"><i class="mdi-navigation-close"></i></a>
+            <div id="right-search" class="row">
+                <form class="col s12">
+                    <div class="input-field">
+                        <i class="mdi-action-search prefix"></i>
+                        <input id="icon_prefix" type="text" class="validate">
+                        <label for="icon_prefix">Search</label>
+                    </div>
+                </form>
+            </div>
+            </li>
+            <li class="li-hover">
+                <ul class="chat-collapsible" data-collapsible="expandable">
+                <li>
+                    <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Recent Activity</div>
+                    <div class="collapsible-body recent-activity">
+                        <div class="recent-activity-list chat-out-list row">
+                            <div class="col s3 recent-activity-list-icon"><i class="mdi-action-add-shopping-cart"></i>
+                            </div>
+                            <div class="col s9 recent-activity-list-text">
+                                <a href="#">just now</a>
+                                <p>Jim Doe Purchased new equipments for zonal office.</p>
+                            </div>
+                        </div>
+                        <div class="recent-activity-list chat-out-list row">
+                            <div class="col s3 recent-activity-list-icon"><i class="mdi-device-airplanemode-on"></i>
+                            </div>
+                            <div class="col s9 recent-activity-list-text">
+                                <a href="#">Yesterday</a>
+                                <p>Your Next flight for USA will be on 15th August 2015.</p>
+                            </div>
+                        </div>
+                        <div class="recent-activity-list chat-out-list row">
+                            <div class="col s3 recent-activity-list-icon"><i class="mdi-action-settings-voice"></i>
+                            </div>
+                            <div class="col s9 recent-activity-list-text">
+                                <a href="#">5 Days Ago</a>
+                                <p>Natalya Parker Send you a voice mail for next conference.</p>
+                            </div>
+                        </div>
+                        <div class="recent-activity-list chat-out-list row">
+                            <div class="col s3 recent-activity-list-icon"><i class="mdi-action-store"></i>
+                            </div>
+                            <div class="col s9 recent-activity-list-text">
+                                <a href="#">Last Week</a>
+                                <p>Jessy Jay open a new store at S.G Road.</p>
+                            </div>
+                        </div>
+                        <div class="recent-activity-list chat-out-list row">
+                            <div class="col s3 recent-activity-list-icon"><i class="mdi-action-settings-voice"></i>
+                            </div>
+                            <div class="col s9 recent-activity-list-text">
+                                <a href="#">5 Days Ago</a>
+                                <p>Natalya Parker Send you a voice mail for next conference.</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header light-blue white-text active"><i class="mdi-editor-attach-money"></i>Sales Repoart</div>
+                    <div class="collapsible-body sales-repoart">
+                        <div class="sales-repoart-list  chat-out-list row">
+                            <div class="col s8">Target Salse</div>
+                            <div class="col s4"><span id="sales-line-1"></span>
+                            </div>
+                        </div>
+                        <div class="sales-repoart-list chat-out-list row">
+                            <div class="col s8">Payment Due</div>
+                            <div class="col s4"><span id="sales-bar-1"></span>
+                            </div>
+                        </div>
+                        <div class="sales-repoart-list chat-out-list row">
+                            <div class="col s8">Total Delivery</div>
+                            <div class="col s4"><span id="sales-line-2"></span>
+                            </div>
+                        </div>
+                        <div class="sales-repoart-list chat-out-list row">
+                            <div class="col s8">Total Progress</div>
+                            <div class="col s4"><span id="sales-bar-2"></span>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="collapsible-header red white-text"><i class="mdi-action-stars"></i>Favorite Associates</div>
+                    <div class="collapsible-body favorite-associates">
+                        <div class="favorite-associate-list chat-out-list row">
+                            <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
+                            </div>
+                            <div class="col s8">
+                                <p>Eileen Sideways</p>
+                                <p class="place">Los Angeles, CA</p>
+                            </div>
+                        </div>
+                        <div class="favorite-associate-list chat-out-list row">
+                            <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
+                            </div>
+                            <div class="col s8">
+                                <p>Zaham Sindil</p>
+                                <p class="place">San Francisco, CA</p>
+                            </div>
+                        </div>
+                        <div class="favorite-associate-list chat-out-list row">
+                            <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img offline-user valign profile-image">
+                            </div>
+                            <div class="col s8">
+                                <p>Renov Leongal</p>
+                                <p class="place">Cebu City, Philippines</p>
+                            </div>
+                        </div>
+                        <div class="favorite-associate-list chat-out-list row">
+                            <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img online-user valign profile-image">
+                            </div>
+                            <div class="col s8">
+                                <p>Weno Carasbong</p>
+                                <p>Tokyo, Japan</p>
+                            </div>
+                        </div>
+                        <div class="favorite-associate-list chat-out-list row">
+                            <div class="col s4"><img src="images/avatar.jpg" alt="" class="circle responsive-img offline-user valign profile-image">
+                            </div>
+                            <div class="col s8">
+                                <p>Nusja Nawancali</p>
+                                <p class="place">Bangkok, Thailand</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                </ul>
+            </li>
+        </ul>
+      </aside>
+      <!-- LEFT RIGHT SIDEBAR NAV-->
+
+    </div>
+    <!-- END WRAPPER -->
+
+  </div>
+  <!-- END MAIN -->
+
+
+
+  <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+  <!-- START FOOTER -->
+  <footer class="page-footer">
+        <div class="footer-copyright">
+            <div class="container">
+                Copyright © 2016 <a class="grey-text text-lighten-4" href="#" target="_blank">Socioboard</a> All rights reserved.
+                <span class="right"> Design and Developed by <a class="grey-text text-lighten-4" href="http://behance.net/chanchalsantra">Chanchal Santra</a></span>
+            </div>
+        </div>
+    </footer>
+    <!-- END FOOTER -->
+
+
+
+    <!-- ================================================
+    Scripts
+    ================================================ -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-58515856-3', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+    <!-- jQuery Library -->
+    <script type="text/javascript" src="../assets/admin/js/jquery-1.11.2.min.js"></script>    
+    <!--materialize js-->
+    <script type="text/javascript" src="../assets/admin/js/materialize.js"></script>
+    <!--prism-->
+    <script type="text/javascript" src="../assets/admin/js/prism.js"></script>
+    <!--scrollbar-->
+    <script type="text/javascript" src="../assets/admin/js/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    
+    <!-- chartist -->
+    <script type="text/javascript" src="../assets/admin/js/plugins/chartist-js/chartist.min.js"></script>   
+
+    <!-- Calendar Script -->
+    <script type="text/javascript" src="../assets/admin/js/plugins/fullcalendar/lib/jquery-ui.custom.min.js"></script>
+    <script type="text/javascript" src="../assets/admin/js/plugins/fullcalendar/lib/moment.min.js"></script>
+    <script type="text/javascript" src="../assets/admin/js/plugins/fullcalendar/js/fullcalendar.min.js"></script>
+    <script type="text/javascript" src="../assets/admin/js/plugins/fullcalendar/fullcalendar-script.js"></script>
+
+    <!--plugins.js - Some Specific JS codes for Plugin Settings-->
+    <script type="text/javascript" src="../assets/admin/js/plugins.js"></script>
+
+    
+</body>
+
+</html>

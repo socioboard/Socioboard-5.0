@@ -1,0 +1,106 @@
+﻿-d:DEBUG
+-d:TRACE
+-d:NET451
+-nowarn:CS1701
+-nowarn:CS1702
+-nowarn:CS1705
+-t:library
+-debug:full
+-nostdlib
+-nologo
+"D:\Suresh\BickBucket\src\Domain.Socioboard\obj\Debug\net451\dotnet-compile.assemblyinfo.cs"
+-out:"D:\Suresh\BickBucket\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll"
+-r:"C:\Users\Murari\.nuget\packages\MongoDB.Bson\2.2.4\lib\net45\MongoDB.Bson.dll"
+-r:"C:\Users\Murari\.nuget\packages\Newtonsoft.Json\8.0.3\lib\net45\Newtonsoft.Json.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Tools.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Tracing.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Globalization.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.IO.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.IO.Compression.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.Http.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Net.Primitives.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.ObjectModel.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.Extensions.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.Primitives.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Resources.ResourceManager.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.InteropServices.dll"
+-r:"C:\Users\Murari\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0-rc2-24027\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Numerics.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.Extensions.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.RegularExpressions.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Tasks.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Timer.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.ReaderWriter.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.ComponentModel.DataAnnotations.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Security.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll"
+-r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll"
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\Discovery.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Discovery.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\Draft.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Draft.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\Facebookaccounts.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Facebookaccounts.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\Googleplusaccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Googleplusaccount.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\Group.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Group.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\Groupmembers.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Groupmembers.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\Groupprofiles.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Groupprofiles.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\ScheduledMessage.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.ScheduledMessage.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\TwitterAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.TwitterAccount.hbm.xml
+-resource:"D:\Suresh\BickBucket\src\Domain.Socioboard\compiler\resources\Mappings\User.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.User.hbm.xml
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Consatants\SocioboardConsts.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\FbProfileType.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\GPlusProfileType.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\GroupMemberStatus.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\SBAccountType.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\SBGroupUserStatus.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\SBPaymentStatus.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\SBRegistrationType.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\SBUserActivationStatus.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\ScheduleStatus.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\SocialProfileStatus.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\SocialProfileType.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Enum\TwitterMessageType.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Helpers\ObjectIdConverter.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Helpers\SBHelper.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Interfaces\Models\ISocialProfile.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Interfaces\Models\IUser.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Interfaces\Repositories\IDatabaseRepository.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Interfaces\Repositories\IMongoRepository.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Interfaces\Repositories\ISocialProfilesRepository.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Interfaces\Repositories\IUserRepository.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Interfaces\Services\IEmailSender.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Interfaces\Services\ISmsSender.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Discovery.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Draft.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Facebookaccounts.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Facebookpage.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Googleplusaccounts.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Groupmembers.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Groupprofiles.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Groups.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\InstagramDiscoveryFeed.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\ScheduledMessage.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\TwitterAccount.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\User.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Mongo\MongoFacebookFeed.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Mongo\MongoFbPostComment.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Mongo\MongoGoogleplusComments.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Mongo\MongoGplusFeed.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Mongo\MongoTwitterDirectMessages.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Mongo\MongoTwitterFeed.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Models\Mongo\MongoTwitterMessage.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Properties\AssemblyInfo.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\Services\AuthMessageSender.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\ViewModels\DiscoveryViewModal.cs"
+"D:\Suresh\BickBucket\src\Domain.Socioboard\ViewModels\UserLoginViewModel.cs"

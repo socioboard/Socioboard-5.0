@@ -1,0 +1,21 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "dependencies": {
+    "NETStandard.Library": "1.5.0-rc2-24027",
+    "Newtonsoft.Json": "8.0.3",
+    "Hammock": "1.2.3",
+    "OAuth": "1.0.3"
+  },
+
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Xml": "4.0.0.0",
+        "System.Xml.Linq": "4.0.0.0"
+      },
+      "dependencies": {
+      }
+    }
+  }
+}

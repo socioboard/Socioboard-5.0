@@ -1,0 +1,92 @@
+--temp-output:D:\Suresh\BickBucket\src\Socioboard.Instagram\obj\Debug\net451\
+--out:D:\Suresh\BickBucket\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
+--define:DEBUG
+--define:TRACE
+--define:NET451
+--suppress-warning:CS1701
+--suppress-warning:CS1702
+--suppress-warning:CS1705
+--optimize:False
+--output-name:Socioboard.Instagram
+--file-version:1.0.0.0
+--version:1.0.0.0
+--informational-version:1.0.0
+--target-framework:.NETFramework,Version=v4.5.1
+--reference:C:\Users\Murari\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
+--reference:C:\Users\Murari\.nuget\packages\Newtonsoft.Json\8.0.3\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Users\Murari\.nuget\packages\OAuth\1.0.3\lib\net40\OAuth.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Tools.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Tracing.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Globalization.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.IO.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.IO.Compression.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.Http.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Net.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.ObjectModel.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Resources.ResourceManager.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.InteropServices.dll
+--reference:C:\Users\Murari\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0-rc2-24027\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Numerics.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.RegularExpressions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Tasks.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Timer.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.ReaderWriter.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\Caption.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\Comment.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\CommentController.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\CommentList.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\GeographiesController.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\ImageLink.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\ImagesList.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\InstagramMedia.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\InstagramResponse.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\LikesController.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\LikesList.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\Location.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\LocationController.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\MediaController.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\Metadata.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\Pagination.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\Relation.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\RelationShipsController.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\Tag.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\TagController.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\User.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\UserController.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\VideoLink.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\App.Core\VideoList.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Authentication\AccessToken.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Authentication\Base.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Authentication\BaseObject.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Authentication\ConfigurationIns.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Authentication\ICache.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Authentication\oAuthBase.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Authentication\oAuthInstagram.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Instagram.Core\CommentsMethods\Comments.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Instagram.Core\GeographiesMethods\Geographies.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Instagram.Core\LikesMethods\Likes.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Instagram.Core\LocationsMethods\Locations.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Instagram.Core\MediaMethods\Media.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Instagram.Core\RelationshipMethods\Relationship.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Instagram.Core\TagsMethods\Tags.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Instagram.Core\UsersMethods\Users.cs
+D:\Suresh\BickBucket\src\Socioboard.Instagram\Properties\AssemblyInfo.cs

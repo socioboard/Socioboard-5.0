@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="ScheduledMessage" table="ScheduledMessage" lazy="false">
+    <id name="id" column="id" />
+    <property name="shareMessage">
+      <column name="shareMessage" />
+    </property>
+    <property name="clientTime">
+      <column name="clientTime"  />
+    </property>
+    <property name="scheduleTime">
+      <column name="scheduleTime"  />
+    </property>
+    <property name="createTime">
+      <column name="createTime"  />
+    </property>
+    <property name="userId">
+      <column name="userId"  />
+    </property>
+    <property name="profileId">
+      <column name="profileId"  />
+    </property>
+    <property name="profileType">
+      <column name="profileType"  />
+    </property>
+    <property name="picUrl">
+      <column name="picUrl"  />
+    </property>
+    <property name="status">
+      <column name="status"  />
+    </property>
+    <property name="socialprofileName">
+      <column name="socialprofileName"  />
+    </property>
+  </class>
+</hibernate-mapping>

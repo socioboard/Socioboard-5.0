@@ -1,0 +1,120 @@
+<div data-ng-controller="FacebookFeedsController">
+    <!-- Page name -->
+    <!-- START CONTENT -->
+    <section id="content">
+        <!--start container-->
+        <div class="container">
+            <!--card widgets end-->
+            <div class="row">
+                <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                    <div class="card" id="feeds">
+                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook recents 5 feeds</h5>
+                        <ul class="collection" id="facebookfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+                            <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
+                                <img src="http://graph.facebook.com/{{fbfeed.FromId}}/picture?type=small" alt="{{fbfeed.FromName}}" class="circle">
+                                <span class="email-title">{{fbfeed.FromName}}</span>
+                                <div class="row feeds_post">
+                                    <div class="col m8">
+                                        <p class="break_word ultra-small">{{fbfeed.FeedDescription}}</p>
+                                    </div>
+                                    <div class="col m4 center">
+                                        <img src="{{fbfeed.Picture}} " ng-if="fbfeed.Picture!= ''" class="responsive-img">
+                                    </div>
+                                    <div class="col m12">
+                                                <ul class="collapsible" data-collapsible="accordion">
+                                                  <li>
+                                                    <div class="collapsible-header"  ng-click="renderComments(fbfeed.FeedId)" ><i class="icon-speech"></i>Comments</div>
+                                                    <div class="collapsible-body">
+                                                      <ul class="collection facebookfeeds">
+                                                          <li class="collection-item avatar" ng-repeat="fbcomments in lstFbComments|limitTo:5">
+                                                            <img src="http://graph.facebook.com/{{fbcomments.FromId}}/picture?type=small" alt="" class="circle">
+                                                            <span class="email-title">{{fbcomments.FromName}}</span>
+                                                            <div class="row dashboard_feeds z-depth-1 hoverable">
+                                                              <div class="col m8">
+                                                                <p class="break_word ultra-small">{{fbcomments.Comment}}</p>
+                                                              </div>
+                                                            <a class="tooltipped secondary-content" data-position="left" data-delay="50" data-tooltip="">{{fbcomments.Commentdate}}</a>
+                                                          </li>
+                                                          
+                                                          <li class="collection-item">
+                                                            <div class="row">                                      
+                                                              <form class="col s10">
+                                                                <div class="row">
+                                                                  <div class="input-field col s12">
+                                                                    <i class="icon-pencil prefix"></i>
+                                                                    <input type="text" id="postcomment_{{fbfeed.FeedId}}" class="materialize-textarea" />
+                                                                    <label for="icon_prefix2">Type your comment here...</label>
+                                                                  </div>
+                                                                </div>
+                                                              </form>
+                                                              <span class="col s12 center">
+                                                                <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed.FeedId,fbfeed.ProfileId)"><i class="icon-cursor"></i></a>
+                                                              </span>
+                                                            </div>
+                                                          </li>
+                                                      </ul>
+                                                    </div>
+                                                  </li>
+                                                </ul>
+                                            </div>
+                                </div>
+                                <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{fbfeed.FeedDate}}">{{fbfeed.FeedDate}}</a>
+                            </li>
+                        </ul>
+                        <div class="col-md-10 portfolio-item" ng-click="listData()">
+                            {{loadmore}}
+                        </div>
+
+
+                        <div class="center">
+                            <div class="preloader-wrapper big active">
+                                <div class="spinner-layer spinner-blue">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+
+                                <div class="spinner-layer spinner-red">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+
+                                <div class="spinner-layer spinner-yellow">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+
+                                <div class="spinner-layer spinner-green">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end container-->
+
+    </section>
+    <!-- END CONTENT -->
+</div>

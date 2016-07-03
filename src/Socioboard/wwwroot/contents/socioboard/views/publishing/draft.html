@@ -1,0 +1,98 @@
+<div data-ng-controller="DraftMessageController">
+    <!-- Page name -->
+    <div class="container">
+        <div class="col m12">
+            <h4>Draft</h4>
+        </div>
+    </div>
+
+
+    <!-- START CONTENT -->
+    <section id="content">
+        <!-- Compose Email Structure -->
+        <div class="row">
+            <div class="col s12 m12">
+                <table id="DraftTable" class="display responsive-table striped" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Message</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                            <th>Schedule</th>
+                        </tr>
+                    </thead>
+                    <!--<tfoot>
+                        <tr>
+                            <th>User</th>
+                            <th>Message</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                            <th>Schedule</th>
+                        </tr>
+                    </tfoot>-->
+                    <tbody>
+                        <tr ng-repeat="draft in lstdraftmessage">
+                            <td class="center">
+                                <div class="col s12">
+                                    <img src="{{user.ProfilePicUrl}}" class="responsive-img profilePic">
+                                </div>
+                                <div class="col s12">
+                                    <span>
+                                        {{user.UserName}}<br>
+                                        <a class="tooltipped" data-position="bottom" data-delay="50">{{draft.scheduleTime}}</a>
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="center">
+                                <span>
+                                    {{draft.shareMessage}}
+                                </span>
+                                <br>
+                                <img ng-if="draft.picUrl!=''" src="{{draft.picUrl}}" class="responsive-img">
+                            </td>
+                            <td>
+                                <a class="waves-effect waves-light btn modal-trigger yellow" ng-click="editdraft(draft.shareMessage,draft.id)"><i class="fa fa-pencil"></i></a>
+                            </td>
+                            <td>
+                                <a class="waves-effect waves-light btn red" ng-click="deleteMsg(draft.id)"><i class="fa fa-times"></i></a>
+                            </td>
+                            <td>
+                                <a class="waves-effect waves-light btn green" ng-click="scheduledraft(draft.shareMessage)"><i class="fa fa-check"></i></a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- END CONTENT -->
+
+    <style>
+        .modal.in {
+            margin-top: -30%;
+        }
+    </style>
+
+    <!-- Modal Structure -->
+    <script id="editdraftModalContent.html" type="text/ng-template">
+        <div id="EditModal" class="" modal="showModal" style="z-index:1005;display:block;opacity:1;transform:scaleX(1);">
+            <div class="modal-content">
+                <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
+                <h5>Edit Message</h5>
+                <div class="row center">
+                    <div class="input-field col s8">
+                        <textarea id="editdraftScheduleMsg" class="materialize-textarea" length="500" value="">{{draftmessgae}}</textarea>
+                        <!--<label for="ScheduleMsg">Edit Message Here</label>-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="saveditdraft()">Save</a>
+            </div>
+        </div>
+    </script>
+
+
+</div>
