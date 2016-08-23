@@ -1,21 +1,20 @@
 /**
 Core script to handle the entire theme and core functions
 **/
-var Socioboard = function() {
+var Socioboard = function () {
 
     var apiDomain = 'http://localhost:6361/';
-    var Domain ='http://localhost:9821/';
+    var Domain = 'http://localhost:9821/';
 
 }();
 
-dashboard = function()
-{
-	// initialize core components
-   // $('#addprofile').openModal();
+dashboard = function () {
+    // initialize core components
+    // $('#addprofile').openModal();
     $('ul.tabs').tabs();
     $('.modal-trigger').leanModal();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
+    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -24,8 +23,8 @@ dashboard = function()
         gutter: 0, // Spacing from edge
         belowOrigin: false, // Displays dropdown below the button
         alignment: 'right' // Displays dropdown with edge aligned to the right of button
-      }
-    );     
+    }
+    );
     Materialize.updateTextFields();
 
 
@@ -37,19 +36,19 @@ dashboard = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -81,18 +80,17 @@ dashboard = function()
         size: '10px',
         height: '400px',
         alwaysVisible: true
-    });  	    
+    });
 };
 
 
-profile = function()
-{
-	// initialize core components
+profile = function () {
+    // initialize core components
     $('ul.tabs').tabs();
     $('.modal-trigger').leanModal();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
-    $('.dropdown-button').dropdown({        
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
         constrain_width: false, // Does not change width of dropdown to that of the activator
@@ -100,7 +98,7 @@ profile = function()
         gutter: 0, // Spacing from edge
         belowOrigin: false, // Displays dropdown below the button
         alignment: 'left' // Displays dropdown with edge aligned to the left of button
-      }
+    }
     );
 
 
@@ -112,19 +110,19 @@ profile = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -159,9 +157,8 @@ profile = function()
     });
 }
 
-profilesetting = function()
-{
-	// initialize core components
+profilesetting = function () {
+    // initialize core components
 
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
@@ -176,12 +173,12 @@ profilesetting = function()
         alignment: 'left' // Displays dropdown with edge aligned to the left of button
     });
     $('.datepicker').pickadate({
-	    selectMonths: true, // Creates a dropdown to control month
-	    selectYears: 15 // Creates a dropdown of 15 years to control year
-	});
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
     Materialize.updateTextFields();
 
-     // Basic
+    // Basic
     $('.dropify').dropify();
 
     // Translated
@@ -189,30 +186,29 @@ profilesetting = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 }
 
-smartinbox = function()
-{
-	// initialize core components
+smartinbox = function () {
+    // initialize core components
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
+    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -237,19 +233,19 @@ smartinbox = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -269,13 +265,12 @@ smartinbox = function()
     });
 }
 
-inboxmessage = function()
-{
+inboxmessage = function () {
     // initialize core components
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
+    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -300,19 +295,19 @@ inboxmessage = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -332,13 +327,12 @@ inboxmessage = function()
     });
 }
 
-mytask = function()
-{
-	// initialize core components
+mytask = function () {
+    // initialize core components
     $('ul.tabs').tabs();
     $('.modal-trigger').leanModal();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
+    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -347,8 +341,8 @@ mytask = function()
         gutter: 0, // Spacing from edge
         belowOrigin: false, // Displays dropdown below the button
         alignment: 'right' // Displays dropdown with edge aligned to the right of button
-      }
-    );     
+    }
+    );
 
 
     // Basic
@@ -359,19 +353,19 @@ mytask = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -406,13 +400,12 @@ mytask = function()
     });
 }
 
-sentmessages = function()
-{
+sentmessages = function () {
     // initialize core components
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
+    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -437,19 +430,19 @@ sentmessages = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -466,73 +459,16 @@ sentmessages = function()
         size: '10px',
         height: '200px',
         alwaysVisible: true
-    }); 
+    });
 }
 
-facebookfeeds = function()
-{
-	// initialize core components
+facebookfeeds = function () {
+    // initialize core components
 
-	$('.modal-trigger').leanModal();
-	$('ul.tabs').tabs();
-	$('select').material_select();
-	$('.tooltipped').tooltip({delay: 50});
-	$('.dropdown-button').dropdown({
-	    inDuration: 300,
-	    outDuration: 225,
-	    constrain_width: false, // Does not change width of dropdown to that of the activator
-	    hover: true, // Activate on hover
-	    gutter: 0, // Spacing from edge
-	    belowOrigin: false, // Displays dropdown below the button
-	    alignment: 'left' // Displays dropdown with edge aligned to the left of button
-	});
-
-	$('.datepicker').pickadate({
-	    selectMonths: true, // Creates a dropdown to control month
-	    selectYears: 15 // Creates a dropdown of 15 years to control year
-	});
-
-
-	// Basic
-	$('.dropify').dropify();
-
-	// Translated
-	$('.dropify-fr').dropify({
-	    messages: {
-	        default: 'Glissez-déposez un fichier ici ou cliquez',
-	        replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-	        remove:  'Supprimer',
-	        error:   'Désolé, le fichier trop volumineux'
-	    }
-	});
-
-	// Used events
-	var drEvent = $('.dropify-event').dropify();
-
-	drEvent.on('dropify.beforeClear', function(event, element){
-	    return confirm("Do you really want to delete \"" + element.filename + "\" ?");
-	});
-
-	drEvent.on('dropify.afterClear', function(event, element){
-	    alert('File deleted');
-	});
-
-
-	$('.facebookfeeds').slimScroll({
-	    color: '#3B5998',
-	    size: '10px',
-	    height: '600px',
-	    alwaysVisible: true
-	});
-}
-
-twitterfeeds = function()
-{
-	// initialize core components
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
+    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -540,7 +476,7 @@ twitterfeeds = function()
         hover: true, // Activate on hover
         gutter: 0, // Spacing from edge
         belowOrigin: false, // Displays dropdown below the button
-        alignment: 'right' 
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
     });
 
     $('.datepicker').pickadate({
@@ -557,19 +493,74 @@ twitterfeeds = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+
+    $('.facebookfeeds').slimScroll({
+        color: '#3B5998',
+        size: '10px',
+        height: '600px',
+        alwaysVisible: true
+    });
+}
+
+twitterfeeds = function () {
+    // initialize core components
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right'
+    });
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -582,13 +573,12 @@ twitterfeeds = function()
     });
 }
 
-instagramfeeds = function()
-{
-	// initialize core components
+instagramfeeds = function () {
+    // initialize core components
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
+    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -612,19 +602,19 @@ instagramfeeds = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -646,13 +636,12 @@ instagramfeeds = function()
 
 //  youtube  feeds
 
-googleplusfeeds = function()
-{
-	// initialize core components
+googleplusfeeds = function () {
+    // initialize core components
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
     $('select').material_select();
-    $('.tooltipped').tooltip({delay: 50});
+    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -676,19 +665,19 @@ googleplusfeeds = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 
@@ -697,7 +686,8 @@ googleplusfeeds = function()
         color: '#d32f2f',
         size: '10px',
         height: '600px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 }
 
@@ -804,7 +794,7 @@ socioqueue = function () {
         alert('File deleted');
     });
 
-   // $('#SocioQueue').DataTable();
+    // $('#SocioQueue').DataTable();
 };
 
 draft = function () {
@@ -876,8 +866,8 @@ calendar = function () {
         alignment: 'right' // Displays dropdown with edge aligned to the right of button
     }
     );
-   
-    $('#calendar').fullCalendar();
+
+    
 
     // Basic
     $('.dropify').dropify();
@@ -903,7 +893,65 @@ calendar = function () {
         alert('File deleted');
     });
 }
+//linkedin comany page feed
+likedinfeeds = function () {
+    // initialize core components
 
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    $('.collapsible').collapsible({
+        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+
+    $('.likedinfeeds').slimScroll({
+        color: '#1a84bc',
+        size: '10px',
+        height: '600px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+}
 
 // discovery
 discovery = function () {
@@ -1063,8 +1111,385 @@ smartsearch = function () {
 }
 
 
-groups = function()
-{
+// Rss Feeds //
+
+autorssfeeds = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+};
+
+// Posted Rss Feeds
+PostedRssFeeds = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+    // $('#PostedRssFeeds').DataTable();
+};
+
+
+// rss queue
+rssqueue = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+    //$('#RssQueue').DataTable();
+};
+
+
+
+// shareathon //
+// create group shareathon
+creategroupshareathon = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+};
+
+// group shareathon
+groupshareathon = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+    $('#recent_followers_list').slimScroll({
+        color: '#424242',
+        size: '10px',
+        height: '400px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+};
+
+// create page shareathon
+createpageshareathon = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+};
+// page shareathon
+pageshareathon = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+    $('#recent_followers_list').slimScroll({
+        color: '#424242',
+        size: '10px',
+        height: '400px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+};
+
+
+
+groups = function () {
     // initialize core components
 
     $('.modal-trigger').leanModal();
@@ -1085,7 +1510,7 @@ groups = function()
     });
     Materialize.updateTextFields();
 
-     // Basic
+    // Basic
     $('.dropify').dropify();
 
     // Translated
@@ -1093,19 +1518,412 @@ groups = function()
         messages: {
             default: 'Glissez-déposez un fichier ici ou cliquez',
             replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove:  'Supprimer',
-            error:   'Désolé, le fichier trop volumineux'
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
         }
     });
 
     // Used events
     var drEvent = $('.dropify-event').dropify();
 
-    drEvent.on('dropify.beforeClear', function(event, element){
+    drEvent.on('dropify.beforeClear', function (event, element) {
         return confirm("Do you really want to delete \"" + element.filename + "\" ?");
     });
 
-    drEvent.on('dropify.afterClear', function(event, element){
+    drEvent.on('dropify.afterClear', function (event, element) {
         alert('File deleted');
     });
 }
+
+
+
+// boardme 
+
+// list of board
+boardlist = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+    // $('#BoardList').DataTable();
+};
+
+// create board
+createboard = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+};
+
+// list of board
+boardAnalytics = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+    $('#PageviewsList').DataTable();
+};
+
+
+
+
+// groups reports //
+// socioboard group report
+groupreport = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+
+    $('.facebookfeeds').slimScroll({
+        color: '#3B5998',
+        size: '10px',
+        height: '400px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+
+    $('.twtfeeds').slimScroll({
+        color: '#90caf9',
+        size: '10px',
+        height: '400px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+
+    $('#social_profile_list').slimScroll({
+        color: '#424242',
+        size: '10px',
+        height: '400px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+
+
+    $('#recent_followers_list').slimScroll({
+        color: '#424242',
+        size: '10px',
+        height: '400px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+};
+
+// facebook report
+facebookreport = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+
+    $(document).ready(function () {
+        $('#CONTENT_BREAKDOWN_table').DataTable();
+    });
+
+};
+
+
+// facebook report
+facebookpagereport = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+};
+
+
+// Instagram report
+instagramreport = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+};

@@ -1,0 +1,979 @@
+﻿2016-08-05 18:47:47.415 +05:30 [Information] User profile is available. Using '"C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+2016-08-05 18:47:47.575 +05:30 [Debug] Hosting starting
+2016-08-05 18:47:47.701 +05:30 [Debug] Hosting started
+2016-08-05 18:47:47.915 +05:30 [Debug] Connection id ""0HKTT6BIHIB8U"" started.
+2016-08-05 18:47:47.916 +05:30 [Debug] Connection id ""0HKTT6BIHIB8V"" started.
+2016-08-05 18:47:48.121 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:9821/  0
+2016-08-05 18:47:48.121 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2016-08-05 18:47:48.216 +05:30 [Information] Request finished in 122.0797ms 200 
+2016-08-05 18:47:48.284 +05:30 [Debug] Connection id ""0HKTT6BIHIB8V"" completed keep alive response.
+2016-08-05 18:47:48.382 +05:30 [Debug] Reading data from file '"C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-cecc48ec-fee9-4bfe-b8c9-3fbbef294436.xml"'.
+2016-08-05 18:47:48.399 +05:30 [Debug] Found key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436}.
+2016-08-05 18:47:48.433 +05:30 [Debug] Considering key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436} with expiration date 2016-10-25 08:09:24Z as default key.
+2016-08-05 18:47:48.454 +05:30 [Debug] Decrypting secret element using Windows DPAPI.
+2016-08-05 18:47:48.473 +05:30 [Debug] Opening CNG algorithm '"AES"' from provider 'null' with chaining mode CBC.
+2016-08-05 18:47:48.486 +05:30 [Debug] Opening CNG algorithm '"SHA256"' from provider 'null' with HMAC.
+2016-08-05 18:47:48.508 +05:30 [Debug] Using key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436} as the default key.
+2016-08-05 18:47:48.549 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-08-05 18:47:48.936 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 18:47:49.152 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2016-08-05 18:47:49.292 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-05 18:47:49.328 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-05 18:47:49.606 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Index"'.
+2016-08-05 18:47:49.664 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2016-08-05 18:47:50.735 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 1061.0042ms.
+2016-08-05 18:47:50.828 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2016-08-05 18:47:57.855 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 7025.7431ms.
+2016-08-05 18:47:57.867 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-08-05 18:47:57.876 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 8.5339ms.
+2016-08-05 18:47:57.877 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-08-05 18:47:57.936 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 58.6604ms.
+2016-08-05 18:47:57.951 +05:30 [Debug] The view '"Index"' was found.
+2016-08-05 18:47:57.954 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2016-08-05 18:47:58.275 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2016-08-05 18:47:58.444 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 168.5953ms.
+2016-08-05 18:47:58.445 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2016-08-05 18:47:58.985 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 540.1497ms.
+2016-08-05 18:47:59.412 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 10254.8771ms
+2016-08-05 18:47:59.422 +05:30 [Information] Session started; Key:"fb3a509d-4faa-e0d0-a9c8-73172fa4eace", Id:"63851de9-4571-3acc-52fb-c0eef8024966"
+2016-08-05 18:47:59.431 +05:30 [Debug] Session stored; Key:"fb3a509d-4faa-e0d0-a9c8-73172fa4eace", Id:"63851de9-4571-3acc-52fb-c0eef8024966", Count:0
+2016-08-05 18:47:59.645 +05:30 [Information] Request finished in 11568.792ms 200 text/html; charset=utf-8
+2016-08-05 18:47:59.650 +05:30 [Debug] Connection id ""0HKTT6BIHIB8U"" completed keep alive response.
+2016-08-05 18:48:00.128 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2016-08-05 18:48:00.142 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2016-08-05 18:48:00.145 +05:30 [Debug] Request did not match any routes.
+2016-08-05 18:48:00.151 +05:30 [Information] Request finished in 26.5043ms 404 
+2016-08-05 18:48:00.152 +05:30 [Debug] Connection id ""0HKTT6BIHIB8V"" completed keep alive response.
+2016-08-05 18:49:47.888 +05:30 [Debug] Connection id ""0HKTT6BIHIB8V"" received FIN.
+2016-08-05 18:49:47.889 +05:30 [Debug] Connection id ""0HKTT6BIHIB8U"" received FIN.
+2016-08-05 18:49:47.891 +05:30 [Debug] Connection id ""0HKTT6BIHIB8V"" disconnecting.
+2016-08-05 18:49:47.892 +05:30 [Debug] Connection id ""0HKTT6BIHIB8U"" disconnecting.
+2016-08-05 18:49:47.895 +05:30 [Debug] Connection id ""0HKTT6BIHIB8U"" sending FIN.
+2016-08-05 18:49:47.893 +05:30 [Debug] Connection id ""0HKTT6BIHIB8V"" sending FIN.
+2016-08-05 18:49:47.906 +05:30 [Debug] Connection id ""0HKTT6BIHIB8V"" sent FIN with status "0".
+2016-08-05 18:49:47.906 +05:30 [Debug] Connection id ""0HKTT6BIHIB8U"" sent FIN with status "0".
+2016-08-05 18:49:47.911 +05:30 [Debug] Connection id ""0HKTT6BIHIB8U"" stopped.
+2016-08-05 18:49:47.911 +05:30 [Debug] Connection id ""0HKTT6BIHIB8V"" stopped.
+2016-08-05 19:12:48.740 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" started.
+2016-08-05 19:12:48.746 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2016-08-05 19:12:48.749 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-08-05 19:12:48.749 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:12:48.752 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2016-08-05 19:12:48.754 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-05 19:12:48.756 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-05 19:12:48.777 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Index"'.
+2016-08-05 19:12:48.778 +05:30 [Debug] The view '"Index"' was found.
+2016-08-05 19:12:48.780 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2016-08-05 19:12:48.810 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 56.7093ms
+2016-08-05 19:12:48.811 +05:30 [Information] Session started; Key:"53fbe0f9-d6e5-c77d-5b53-3f382054d0d0", Id:"d8c9a992-16dd-9676-a856-b0c4b2d9306f"
+2016-08-05 19:12:48.812 +05:30 [Debug] Session stored; Key:"53fbe0f9-d6e5-c77d-5b53-3f382054d0d0", Id:"d8c9a992-16dd-9676-a856-b0c4b2d9306f", Count:0
+2016-08-05 19:12:48.825 +05:30 [Information] Request finished in 79.4483ms 200 text/html; charset=utf-8
+2016-08-05 19:12:48.826 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:25.126 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/Facebook  
+2016-08-05 19:13:25.128 +05:30 [Debug] The request path "/FacebookManager/Facebook" does not match a supported file type
+2016-08-05 19:13:25.130 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:25.152 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)"
+2016-08-05 19:13:25.258 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:25.392 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.FacebookManagerController.<Facebook>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\FacebookManagerController.cs:line 75
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:25.560 +05:30 [Information] Request finished in 436.0554ms 500 text/html; charset=utf-8
+2016-08-05 19:13:25.561 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:25.566 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/Facebook  
+2016-08-05 19:13:25.568 +05:30 [Debug] The request path "/FacebookManager/Facebook" does not match a supported file type
+2016-08-05 19:13:25.569 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:25.572 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)"
+2016-08-05 19:13:25.575 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:25.633 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.FacebookManagerController.<Facebook>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\FacebookManagerController.cs:line 75
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:25.645 +05:30 [Information] Request finished in 78.4581ms 500 text/html; charset=utf-8
+2016-08-05 19:13:25.646 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:31.030 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/Facebook  
+2016-08-05 19:13:31.032 +05:30 [Debug] The request path "/FacebookManager/Facebook" does not match a supported file type
+2016-08-05 19:13:31.033 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:31.034 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)"
+2016-08-05 19:13:31.037 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:31.093 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.FacebookManagerController.<Facebook>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\FacebookManagerController.cs:line 75
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:31.106 +05:30 [Information] Request finished in 75.8227ms 500 text/html; charset=utf-8
+2016-08-05 19:13:31.107 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:32.166 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/Facebook  
+2016-08-05 19:13:32.168 +05:30 [Debug] The request path "/FacebookManager/Facebook" does not match a supported file type
+2016-08-05 19:13:32.169 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:32.169 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)"
+2016-08-05 19:13:32.171 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:32.206 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.FacebookManagerController.<Facebook>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\FacebookManagerController.cs:line 75
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:32.218 +05:30 [Information] Request finished in 51.2459ms 500 text/html; charset=utf-8
+2016-08-05 19:13:32.219 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:34.122 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/Facebook  
+2016-08-05 19:13:34.124 +05:30 [Debug] The request path "/FacebookManager/Facebook" does not match a supported file type
+2016-08-05 19:13:34.125 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:34.126 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)"
+2016-08-05 19:13:34.128 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:34.186 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.FacebookManagerController.<Facebook>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\FacebookManagerController.cs:line 75
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:34.198 +05:30 [Information] Request finished in 76.0171ms 500 text/html; charset=utf-8
+2016-08-05 19:13:34.199 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:40.580 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/GoogleManager/Google  
+2016-08-05 19:13:40.583 +05:30 [Debug] The request path "/GoogleManager/Google" does not match a supported file type
+2016-08-05 19:13:40.584 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:40.586 +05:30 [Debug] Executing action "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)"
+2016-08-05 19:13:40.593 +05:30 [Information] Executing action method "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:40.648 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.GoogleManagerController.<Google>d__3.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\GoogleManagerController.cs:line 53
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:40.659 +05:30 [Information] Request finished in 79.6359ms 500 text/html; charset=utf-8
+2016-08-05 19:13:40.659 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:40.729 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/GoogleManager/Google  
+2016-08-05 19:13:40.730 +05:30 [Debug] The request path "/GoogleManager/Google" does not match a supported file type
+2016-08-05 19:13:40.731 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:40.732 +05:30 [Debug] Executing action "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)"
+2016-08-05 19:13:40.733 +05:30 [Information] Executing action method "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:40.770 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.GoogleManagerController.<Google>d__3.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\GoogleManagerController.cs:line 53
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:40.780 +05:30 [Information] Request finished in 50.4839ms 500 text/html; charset=utf-8
+2016-08-05 19:13:40.781 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:41.279 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/GoogleManager/Google  
+2016-08-05 19:13:41.281 +05:30 [Debug] The request path "/GoogleManager/Google" does not match a supported file type
+2016-08-05 19:13:41.282 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:41.282 +05:30 [Debug] Executing action "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)"
+2016-08-05 19:13:41.284 +05:30 [Information] Executing action method "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:41.321 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.GoogleManagerController.<Google>d__3.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\GoogleManagerController.cs:line 53
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:41.332 +05:30 [Information] Request finished in 51.7775ms 500 text/html; charset=utf-8
+2016-08-05 19:13:41.333 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:13:43.608 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/GoogleManager/Google  
+2016-08-05 19:13:43.610 +05:30 [Debug] The request path "/GoogleManager/Google" does not match a supported file type
+2016-08-05 19:13:43.612 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:13:43.613 +05:30 [Debug] Executing action "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)"
+2016-08-05 19:13:43.617 +05:30 [Information] Executing action method "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:13:43.669 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.GoogleManagerController.<Google>d__3.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\GoogleManagerController.cs:line 53
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:13:43.682 +05:30 [Information] Request finished in 74.2479ms 500 text/html; charset=utf-8
+2016-08-05 19:13:43.682 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:16.667 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/TwitterManager/Twitter  
+2016-08-05 19:14:16.670 +05:30 [Debug] The request path "/TwitterManager/Twitter" does not match a supported file type
+2016-08-05 19:14:16.671 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:16.674 +05:30 [Debug] Executing action "Socioboard.Controllers.TwitterManagerController.Twitter (Socioboard)"
+2016-08-05 19:14:16.682 +05:30 [Information] Executing action method "Socioboard.Controllers.TwitterManagerController.Twitter (Socioboard)" with arguments (["", ""]) - ModelState is Valid
+2016-08-05 19:14:16.754 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.TwitterManagerController.<Twitter>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\TwitterManagerController.cs:line 89
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:16.767 +05:30 [Information] Request finished in 100.828ms 500 text/html; charset=utf-8
+2016-08-05 19:14:16.768 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:16.845 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/TwitterManager/Twitter  
+2016-08-05 19:14:16.849 +05:30 [Debug] The request path "/TwitterManager/Twitter" does not match a supported file type
+2016-08-05 19:14:16.854 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:16.855 +05:30 [Debug] Executing action "Socioboard.Controllers.TwitterManagerController.Twitter (Socioboard)"
+2016-08-05 19:14:16.857 +05:30 [Information] Executing action method "Socioboard.Controllers.TwitterManagerController.Twitter (Socioboard)" with arguments (["", ""]) - ModelState is Valid
+2016-08-05 19:14:16.901 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.TwitterManagerController.<Twitter>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\TwitterManagerController.cs:line 89
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:16.911 +05:30 [Information] Request finished in 67.7794ms 500 text/html; charset=utf-8
+2016-08-05 19:14:16.912 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:18.335 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/TwitterManager/Twitter  
+2016-08-05 19:14:18.336 +05:30 [Debug] The request path "/TwitterManager/Twitter" does not match a supported file type
+2016-08-05 19:14:18.337 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:18.337 +05:30 [Debug] Executing action "Socioboard.Controllers.TwitterManagerController.Twitter (Socioboard)"
+2016-08-05 19:14:18.339 +05:30 [Information] Executing action method "Socioboard.Controllers.TwitterManagerController.Twitter (Socioboard)" with arguments (["", ""]) - ModelState is Valid
+2016-08-05 19:14:18.378 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.TwitterManagerController.<Twitter>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\TwitterManagerController.cs:line 89
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:18.390 +05:30 [Information] Request finished in 55.1426ms 500 text/html; charset=utf-8
+2016-08-05 19:14:18.391 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:20.655 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/InstagramManager/Instagram  
+2016-08-05 19:14:20.656 +05:30 [Debug] The request path "/InstagramManager/Instagram" does not match a supported file type
+2016-08-05 19:14:20.657 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:20.659 +05:30 [Debug] Executing action "Socioboard.Controllers.InstagramManagerController.Instagram (Socioboard)"
+2016-08-05 19:14:20.662 +05:30 [Information] Executing action method "Socioboard.Controllers.InstagramManagerController.Instagram (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:14:20.707 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.InstagramManagerController.<Instagram>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\InstagramManagerController.cs:line 59
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:20.718 +05:30 [Information] Request finished in 62.6219ms 500 text/html; charset=utf-8
+2016-08-05 19:14:20.718 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:20.802 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/InstagramManager/Instagram  
+2016-08-05 19:14:20.805 +05:30 [Debug] The request path "/InstagramManager/Instagram" does not match a supported file type
+2016-08-05 19:14:20.808 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:20.810 +05:30 [Debug] Executing action "Socioboard.Controllers.InstagramManagerController.Instagram (Socioboard)"
+2016-08-05 19:14:20.818 +05:30 [Information] Executing action method "Socioboard.Controllers.InstagramManagerController.Instagram (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:14:20.860 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.InstagramManagerController.<Instagram>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\InstagramManagerController.cs:line 59
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:20.869 +05:30 [Information] Request finished in 67.2316ms 500 text/html; charset=utf-8
+2016-08-05 19:14:20.870 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:23.276 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/InstagramManager/Instagram  
+2016-08-05 19:14:23.279 +05:30 [Debug] The request path "/InstagramManager/Instagram" does not match a supported file type
+2016-08-05 19:14:23.280 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:23.282 +05:30 [Debug] Executing action "Socioboard.Controllers.InstagramManagerController.Instagram (Socioboard)"
+2016-08-05 19:14:23.284 +05:30 [Information] Executing action method "Socioboard.Controllers.InstagramManagerController.Instagram (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:14:23.338 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.InstagramManagerController.<Instagram>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\InstagramManagerController.cs:line 59
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:23.349 +05:30 [Information] Request finished in 73.7844ms 500 text/html; charset=utf-8
+2016-08-05 19:14:23.350 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:29.189 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/LinkedinManager/LinkedinRedirect  
+2016-08-05 19:14:29.191 +05:30 [Debug] The request path "/LinkedinManager/LinkedinRedirect" does not match a supported file type
+2016-08-05 19:14:29.193 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:29.195 +05:30 [Debug] Executing action "Socioboard.Controllers.LinkedinManagerController.LinkedinRedirect (Socioboard)"
+2016-08-05 19:14:29.204 +05:30 [Information] Executing action method "Socioboard.Controllers.LinkedinManagerController.LinkedinRedirect (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:14:29.251 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.LinkedinManagerController.<LinkedinRedirect>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\LinkedinManagerController.cs:line 71
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:29.262 +05:30 [Information] Request finished in 73.6896ms 500 text/html; charset=utf-8
+2016-08-05 19:14:29.263 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:29.308 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/LinkedinManager/LinkedinRedirect  
+2016-08-05 19:14:29.318 +05:30 [Debug] The request path "/LinkedinManager/LinkedinRedirect" does not match a supported file type
+2016-08-05 19:14:29.320 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:29.321 +05:30 [Debug] Executing action "Socioboard.Controllers.LinkedinManagerController.LinkedinRedirect (Socioboard)"
+2016-08-05 19:14:29.328 +05:30 [Information] Executing action method "Socioboard.Controllers.LinkedinManagerController.LinkedinRedirect (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:14:29.376 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.LinkedinManagerController.<LinkedinRedirect>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\LinkedinManagerController.cs:line 71
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:29.393 +05:30 [Information] Request finished in 84.9047ms 500 text/html; charset=utf-8
+2016-08-05 19:14:29.394 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:14:30.829 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/LinkedinManager/LinkedinRedirect  
+2016-08-05 19:14:30.831 +05:30 [Debug] The request path "/LinkedinManager/LinkedinRedirect" does not match a supported file type
+2016-08-05 19:14:30.832 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-05 19:14:30.834 +05:30 [Debug] Executing action "Socioboard.Controllers.LinkedinManagerController.LinkedinRedirect (Socioboard)"
+2016-08-05 19:14:30.836 +05:30 [Information] Executing action method "Socioboard.Controllers.LinkedinManagerController.LinkedinRedirect (Socioboard)" with arguments ([""]) - ModelState is Valid
+2016-08-05 19:14:30.886 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.NullReferenceException: Object reference not set to an instance of an object.
+   at Socioboard.Controllers.LinkedinManagerController.<LinkedinRedirect>d__4.MoveNext() in D:\bitbucket\src\Socioboard\Controllers\LinkedinManagerController.cs:line 71
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.<CastToObject>d__40`1.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Session.SessionMiddleware.<Invoke>d__9.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-08-05 19:14:30.897 +05:30 [Information] Request finished in 68.9571ms 500 text/html; charset=utf-8
+2016-08-05 19:14:30.898 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" completed keep alive response.
+2016-08-05 19:15:47.885 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" received FIN.
+2016-08-05 19:15:47.886 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" disconnecting.
+2016-08-05 19:15:47.886 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" sending FIN.
+2016-08-05 19:15:47.888 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" sent FIN with status "0".
+2016-08-05 19:15:47.889 +05:30 [Debug] Connection id ""0HKTT6BIHIB90"" stopped.

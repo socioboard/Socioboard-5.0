@@ -26,11 +26,11 @@ namespace Api.Socioboard.Repositories
                 }
                 else
                 {
-                    lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.GroupId == groupId).ToList();
+                    lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, lstGroupprofiles);
                 }
                     
-                profileids = lstGroupprofiles.Select(t => t.ProfileId).ToArray();
+                profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
                 List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == 0).ToList();
                 if(lstScheduledMessage!=null && lstScheduledMessage.Count>0)
                 {
@@ -58,10 +58,10 @@ namespace Api.Socioboard.Repositories
             }
             else
             {
-                lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.GroupId == GroupId).ToList();
+                lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == GroupId).ToList();
                 _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + GroupId, lstGroupprofiles);
             }
-            profileids = lstGroupprofiles.Select(t => t.ProfileId).ToArray();
+            profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId)&&t.status==0).ToList();
             if (lstScheduledMessage != null && lstScheduledMessage.Count > 0)
             {
@@ -88,10 +88,10 @@ namespace Api.Socioboard.Repositories
             }
             else
             {
-                lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.GroupId == GroupId).ToList();
+                lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == GroupId).ToList();
                 _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + GroupId, lstGroupprofiles);
             }
-            profileids = lstGroupprofiles.Select(t => t.ProfileId).ToArray();
+            profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == 0).ToList();
             if (lstScheduledMessage != null && lstScheduledMessage.Count > 0)
             {
@@ -103,5 +103,209 @@ namespace Api.Socioboard.Repositories
                 return null;
             }
         }
+
+
+        public static List<Domain.Socioboard.Models.ScheduledMessage> GetAllSentMessages(long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSeetings, Model.DatabaseRepository dbr)
+        {
+            string[] profileids = null;
+            List<Domain.Socioboard.Models.ScheduledMessage> inMemScheduleMessgae = _redisCache.Get<List<Domain.Socioboard.Models.ScheduledMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessages + groupId);
+            if (inMemScheduleMessgae != null && inMemScheduleMessgae.Count > 0)
+            {
+                return inMemScheduleMessgae;
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.Groupprofiles> iMmemGroupprofiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = new List<Groupprofiles>();
+                if (iMmemGroupprofiles != null && iMmemGroupprofiles.Count > 0)
+                {
+                    lstGroupprofiles = iMmemGroupprofiles;
+                }
+                else
+                {
+                    lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, lstGroupprofiles);
+                }
+
+                profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+                List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).ToList();
+                if (lstScheduledMessage != null && lstScheduledMessage.Count > 0)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessages + groupId, lstScheduledMessage);
+                    return lstScheduledMessage;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static int GetAllSentMessagesCount(long userId,long groupId,Model.DatabaseRepository dbr,Helper.Cache _redisCache)
+        {
+            string[] profileids = null;
+            List<Domain.Socioboard.Models.Groupprofiles> iMmemGroupprofiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = new List<Groupprofiles>();
+            if (iMmemGroupprofiles != null && iMmemGroupprofiles.Count > 0)
+            {
+                lstGroupprofiles = iMmemGroupprofiles;
+            }
+            else
+            {
+                lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
+                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, lstGroupprofiles);
+            }
+
+            profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).ToList();
+            return lstScheduledMessage.Count;
+        }
+
+        public static List<Domain.Socioboard.Models.ScheduledMessage> getAllSentMessageDetailsforADay(long userId, long groupId, int days, Helper.Cache _redisCache, Helper.AppSettings _appSeetings, Model.DatabaseRepository dbr)
+        {
+            string[] profileids = null;
+            List<Domain.Socioboard.Models.ScheduledMessage> inMemScheduleMessgae = _redisCache.Get<List<Domain.Socioboard.Models.ScheduledMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CachelSentMessageDetailsforADay + groupId);
+            if (inMemScheduleMessgae != null && inMemScheduleMessgae.Count > 0)
+            {
+                return inMemScheduleMessgae;
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.Groupprofiles> iMmemGroupprofiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = new List<Groupprofiles>();
+                if (iMmemGroupprofiles != null && iMmemGroupprofiles.Count > 0)
+                {
+                    lstGroupprofiles = iMmemGroupprofiles;
+                }
+                else
+                {
+                    lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, lstGroupprofiles);
+                }
+
+                profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+                List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).Where(a => a.scheduleTime.Date == DateTime.Now.AddDays(-days).Date).ToList();
+                if (lstScheduledMessage != null && lstScheduledMessage.Count > 0)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CachelSentMessageDetailsforADay + groupId, lstScheduledMessage);
+                    return lstScheduledMessage;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+
+        public static List<Domain.Socioboard.Models.ScheduledMessage> getAllSentMessageDetailsByDays(long userId, long groupId, int days, Helper.Cache _redisCache, Helper.AppSettings _appSeetings, Model.DatabaseRepository dbr)
+        {
+            string[] profileids = null;
+            List<Domain.Socioboard.Models.ScheduledMessage> inMemScheduleMessgae = _redisCache.Get<List<Domain.Socioboard.Models.ScheduledMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessageDetailsByDays + groupId);
+            if (inMemScheduleMessgae != null && inMemScheduleMessgae.Count > 0)
+            {
+                return inMemScheduleMessgae;
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.Groupprofiles> iMmemGroupprofiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = new List<Groupprofiles>();
+                if (iMmemGroupprofiles != null && iMmemGroupprofiles.Count > 0)
+                {
+                    lstGroupprofiles = iMmemGroupprofiles;
+                }
+                else
+                {
+                    lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, lstGroupprofiles);
+                }
+
+                profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+                List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).Where(a => a.scheduleTime.Date >= DateTime.Now.AddDays(-days).Date).ToList();
+                if (lstScheduledMessage != null && lstScheduledMessage.Count > 0)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessageDetailsByDays + groupId, lstScheduledMessage);
+                    return lstScheduledMessage;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static List<Domain.Socioboard.Models.ScheduledMessage> getAllSentMessageDetailsByMonth(long userId, long groupId, int month, Helper.Cache _redisCache, Helper.AppSettings _appSeetings, Model.DatabaseRepository dbr)
+        {
+            string[] profileids = null;
+            List<Domain.Socioboard.Models.ScheduledMessage> inMemScheduleMessgae = _redisCache.Get<List<Domain.Socioboard.Models.ScheduledMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessageDetailsByMonth + groupId);
+            if (inMemScheduleMessgae != null && inMemScheduleMessgae.Count > 0)
+            {
+                return inMemScheduleMessgae;
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.Groupprofiles> iMmemGroupprofiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = new List<Groupprofiles>();
+                if (iMmemGroupprofiles != null && iMmemGroupprofiles.Count > 0)
+                {
+                    lstGroupprofiles = iMmemGroupprofiles;
+                }
+                else
+                {
+                    lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, lstGroupprofiles);
+                }
+
+                profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+                List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).Where(a => a.scheduleTime.Month == DateTime.Now.AddMonths(-month).Month).ToList();
+                if (lstScheduledMessage != null && lstScheduledMessage.Count > 0)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessageDetailsByMonth + groupId, lstScheduledMessage);
+                    return lstScheduledMessage;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public static List<Domain.Socioboard.Models.ScheduledMessage> getAllSentMessageDetailsForCustomrange(long userId, long groupId, DateTime sdate, DateTime ldate, Helper.Cache _redisCache, Helper.AppSettings _appSeetings, Model.DatabaseRepository dbr)
+        {
+            string[] profileids = null;
+            List<Domain.Socioboard.Models.ScheduledMessage> inMemScheduleMessgae = _redisCache.Get<List<Domain.Socioboard.Models.ScheduledMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessageDetailsForCustomrange + groupId);
+            if (inMemScheduleMessgae != null && inMemScheduleMessgae.Count > 0)
+            {
+                return inMemScheduleMessgae;
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.Groupprofiles> iMmemGroupprofiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = new List<Groupprofiles>();
+                if (iMmemGroupprofiles != null && iMmemGroupprofiles.Count > 0)
+                {
+                    lstGroupprofiles = iMmemGroupprofiles;
+                }
+                else
+                {
+                    lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, lstGroupprofiles);
+                }
+
+                profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+                List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).Where(a => a.scheduleTime.Date>= sdate && a.scheduleTime.Date <= ldate).ToList();
+                if (lstScheduledMessage != null && lstScheduledMessage.Count > 0)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessageDetailsForCustomrange + groupId, lstScheduledMessage);
+                    return lstScheduledMessage;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+
     }
 }

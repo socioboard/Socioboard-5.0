@@ -65,16 +65,20 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                  $('#discoverytext').val('');
                  $scope.DiscoveryHistory();
             }
+            else
+            {
+                swal('enter any keyword for search');
+            }
         }
 
         $scope.SearchGplusdate = function (parm) {
 
             for (var i = 0; i < parm.length; i++) {
-                var date = moment(parm[i].CreatedTime);
+                var date = moment(parm[i].createdTime);
                 var newdate = date.toString();
                 var splitdate = newdate.split(" ");
                 date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
-                parm[i].CreatedTime = date;
+                parm[i].createdTime = date;
             }
             $scope.lstDiscoverySearchGplus = parm;
 
@@ -87,7 +91,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                 var newdate = date.toString();
                 var splitdate = newdate.split(" ");
                 date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
-                parm[i].FeedDate = date;
+                parm[i].feedDate = date;
             }
             $scope.lstDiscoverySearchinstagram = parm;
 
@@ -96,11 +100,11 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
         $scope.SearchTwitterdate = function (parm) {
 
             for (var i = 0; i < parm.length; i++) {
-                var date = moment(parm[i].CreatedTime);
+                var date = moment(parm[i].createdTime);
                 var newdate = date.toString();
                 var splitdate = newdate.split(" ");
                 date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
-                parm[i].CreatedTime = date;
+                parm[i].createdTime = date;
             }
             $scope.lstDiscoverySearchTwitter = parm;
 

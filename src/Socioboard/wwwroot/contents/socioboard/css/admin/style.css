@@ -352,12 +352,12 @@ h1 span.logo-text {
 }
 
 header .brand-logo {
-  margin: 1px 0;
-  padding: 14px 20px;
+  /*margin: 1px 0;*/
+  padding: 15px 15px;
 }
 
 header .brand-logo img {
-  width: 172px;
+  width: 215px;
 }
 
 @media only screen and (max-width: 992px) {
@@ -1084,6 +1084,7 @@ h5.breadcrumbs-header {
 
 #profile-card .card-profile-image {
   width: 70px;
+  height: 70px;
   position: absolute;
   top: 110px;
   z-index: 1;
@@ -1789,12 +1790,14 @@ tr.group:hover {
 
 #email-details .collection {
   border: none;
+  margin: 0.5rem 0 0 0;
 }
 
 #email-details .collection .collection-item.avatar {
   height: auto;
   padding-left: 72px;
   position: relative;
+  min-height: 60px;
 }
 
 #email-details .collection .collection-item.avatar .icon {
@@ -1842,7 +1845,8 @@ tr.group:hover {
 }
 
 .email-reply {
-  padding-top: 20px;
+  padding-top: 10px;
+  border-top: 2px solid #2196f3;
 }
 
 .email-reply a {

@@ -10,193 +10,57 @@
             <div class="container">
 
                 <div class="col m12">
-                    <a class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Group</a>
+                    <a class="waves-effect waves-light btn modal-trigger right" ng-click="addgroupmodal()">Create New Group</a>
                     <h4>User And Group</h4>
                     <span>Groups are used to categorize social profiles together to help manage and report on your social media efforts efficiently. Learn more about Groups</span>
                 </div>
                 <div class="row">
-                  <!--start  code to display all groups in tabs--> 
+                    <!--start  code to display all groups in tabs-->
                     <div class="col s12">
                         <ul class="tabs">
-                            <li class="tab col s3 groups_tabs" ng-repeat="grp in groups" >
-                                <a  class="active" ng-if="groupId==grp.Id" href="#Socioboard_{{grp.Id}}">{{grp.GroupName}}</a>
-                                <a ng-click="getGroupsData($index, grp.Id)" ng-if="groupId!=grp.Id" href="#Socioboard_{{grp.Id}}">{{grp.GroupName}}</a>
+                            <li class="tab col s3 groups_tabs" ng-repeat="grp in groups">
+                                <a class="active" ng-if="groupId==grp.id" href="#Socioboard_{{grp.id}}">{{grp.groupName}}</a>
+                                <a ng-click="getGroupsData($index, grp.id)" ng-if="groupId!=grp.id" href="#Socioboard_{{grp.id}}">{{grp.groupName}}</a>
                             </li>
 
                         </ul>
                     </div>
                     <!--end  code to display all groups in tabs-->
 
-                    <div ng-repeat="grp in groups" id="Socioboard_{{grp.Id}}" my-repeat-tab-directive class="col s12">
+                    <div ng-repeat="grp in groups" id="Socioboard_{{grp.id}}" my-repeat-tab-directive class="col s12">
                         <!--code to render group profiles of selected group-->
-                        <div class="row" ng-if="groupId==grp.Id">
+                        <div class="row" ng-if="groupId==grp.id">
                             <div class="col s12 m12 l12">
                                 <div class="card-panel">
-                                    <h5>Profile Linked To <b class="orange-text text-darken-4">{{grp.GroupName}}</b></h5>
+                                    <h5>Profile Linked To <b class="orange-text text-darken-4">{{grp.groupName}}</b></h5>
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="profile in lstProfiles">
                                             <div class="card-panel social_profile">
                                                 <div class="card-image">
-                                                    <div ng-click="deleteProfile(profile.ProfileId, grp.Id)" class="delet_icon"></div>
-                                                    <img src="{{profile.ProfilePic}}" class="responsive-img">
-                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.ProfileType==0" class="profile_socio_icon">
-                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/gplus-icon.png" ng-if="profile.ProfileType==5" class="profile_socio_icon">
-                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/twticon.png" ng-if="profile.ProfileType==2" class="profile_socio_icon">
+                                                    <div ng-click="deleteProfile(profile.profileId, grp.id)" class="delet_icon"></div>
+                                                    <img src="{{profile.profilePic}}" class="responsive-img">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
-                              <div class="col s12 m12 l12" ng-if="grp.GroupName != 'Socioboard'">
-                                <div class="card-panel" >
+
+                            <div class="col s12 m12 l12" ng-if="grp.groupName != 'Socioboard'">
+                                <div class="card-panel">
                                     <h5>Profiles available for connection</h5>
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profilesToConnect">
                                             <div class="card-panel social_profile">
                                                 <div class="card-image">
-                                                    <div ng-click="addProfile('Added!!')" class="add_icon" role="button" tabindex="0"></div>
-                                                    <img src="{{profile.ProfilePic}}" class="responsive-img">
-                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" class="profile_socio_icon">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                           
-
-                            <div class="col s12 m12 l12" ng-if="grp.GroupName != 'Socioboard'">
-                                <div class="card-panel">
-                                    <a class="waves-effect waves-light btn modal-trigger right" href="#InviteMembersModal" ng-click="openMemberInvitationModal(grp.Id,grp.GroupName)">Invite New Team Members</a>
-                                    <h5>Pending Team Members</h5>
-                                    <div class="row" id="social_profile_list">
-                                        <div class="col s12 m1 l1" ng-repeat="mbr in groups[$index].members">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/12642714_10208734204812139_4588413661156335090_n.jpg?oh=17ef7a6be50ed05c3de7e6337ecf7190&oe=57E142AB" class="responsive-img">
-                                                    <h6 class="center-align">Sumit Ghosh</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/942284_1035274849851830_9039244784084275624_n.jpg?oh=b91ae6f7b68eb0176bb2995cc820fb02&oe=57CEEC2C" class="responsive-img">
-                                                    <h6 class="center-align">Suresh Bandi</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/13178649_1357425650949891_8586748233671236725_n.jpg?oh=38fbc7525c18c20a44b89d004da9195f&oe=579CD006" class="responsive-img">
-                                                    <h6 class="center-align">Chanchal Santra</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://media.licdn.com/media/AAEAAQAAAAAAAAhAAAAAJDc0ZTM0YTQ0LTM0MTctNDhlYS05Y2Q2LTRlZmIzNjQ5ZDkwOQ.jpg" class="responsive-img">
-                                                    <h6 class="center-align">Abhi</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/13103525_1178268112193759_1841592525133340067_n.jpg?oh=dfd597a7910a2069cc46e4143657a2ee&oe=57D36297" class="responsive-img">
-                                                    <h6 class="center-align">Kamal Sain</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/7515_1034384389937743_2250197523977899262_n.jpg?oh=f6e79bfbe9dedc47e6ed280ba22cae9d&oe=57C6ED00" class="responsive-img">
-                                                    <h6 class="center-align">Raj Pal</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/12191667_1217566791591097_3837800444834832196_n.jpg?oh=4caf1203f30d694526f9d435310f037e&oe=580700CA" class="responsive-img">
-                                                    <h6 class="center-align">Biswatma Nayak</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/11951363_10207873819227309_5621295571385377271_n.jpg?oh=c1e28e82b11957827b8ac84f4435aeab&oe=5802E824" class="responsive-img">
-                                                    <h6 class="center-align">Zeeshan Alam</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c171.0.683.683/12983386_1020052438087699_6722992560916754073_o.jpg" class="responsive-img">
-                                                    <h6 class="center-align">Kajal Varma</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img">
-                                                    <h6 class="center-align">Suresh</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="responsive-img">
-                                                    <h6 class="center-align">Abhimanyu</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/12642714_10208734204812139_4588413661156335090_n.jpg?oh=17ef7a6be50ed05c3de7e6337ecf7190&oe=57E142AB" class="responsive-img">
-                                                    <h6 class="center-align">Sumit Ghosh</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://media.licdn.com/media/AAEAAQAAAAAAAAQFAAAAJDAxMjRkYTZhLTEzNzYtNDg2Mi1iYmY4LTE2ZWVlOGU4ZTg5YQ.jpg" class="responsive-img">
-                                                    <h6 class="center-align">Suresh Bandi</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/13178649_1357425650949891_8586748233671236725_n.jpg?oh=38fbc7525c18c20a44b89d004da9195f&oe=579CD006" class="responsive-img">
-                                                    <h6 class="center-align">Chanchal Santra</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://pbs.twimg.com/profile_images/596246728967196672/uQ90f5hu.jpg" class="responsive-img">
-                                                    <h6 class="center-align">Sumit</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c83.0.334.334/548429_317044518364618_1871447914_n.jpg?oh=4f2eb8cc9d86d0d814677c08dcbe1c3e&oe=57C26F35" class="responsive-img">
-                                                    <h6 class="center-align">Sayed Sarfaraz Hussain</h6>
+                                                    <div ng-click="addProfileToGroup(grp.id, profile.profileId, profile.profileType)" class="add_icon" role="button" tabindex="0"></div>
+                                                    <img src="{{profile.profilePic}}" class="responsive-img">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
                                                 </div>
                                             </div>
                                         </div>
@@ -204,92 +68,9 @@
                                 </div>
                             </div>
 
-
-
-                           
-
-                            <div class="col s12 m12 l12" ng-if="grp.GroupName != 'Socioboard'">
+                            <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
                                 <div class="card-panel">
-                                    <h5>Accepted Team Members</h5>
-                                    <div class="row" id="social_profile_list">
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/12642714_10208734204812139_4588413661156335090_n.jpg?oh=17ef7a6be50ed05c3de7e6337ecf7190&oe=57E142AB" class="responsive-img">
-                                                    <h6 class="center-align">Sumit Ghosh</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/942284_1035274849851830_9039244784084275624_n.jpg?oh=b91ae6f7b68eb0176bb2995cc820fb02&oe=57CEEC2C" class="responsive-img">
-                                                    <h6 class="center-align">Suresh Bandi</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-9/13178649_1357425650949891_8586748233671236725_n.jpg?oh=38fbc7525c18c20a44b89d004da9195f&oe=579CD006" class="responsive-img">
-                                                    <h6 class="center-align">Chanchal Santra</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col s12 m1 l1">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="https://media.licdn.com/media/AAEAAQAAAAAAAAhAAAAAJDc0ZTM0YTQ0LTM0MTctNDhlYS05Y2Q2LTRlZmIzNjQ5ZDkwOQ.jpg" class="responsive-img">
-                                                    <h6 class="center-align">Abhi</h6>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--codes end to render group profiles of selected group-->
-                         
-                        <div class="row" ng-if="groupId!=grp.Id">
-                            <div class="col s12 m12 l12">
-                                <div class="card-panel">
-                                    <h5>Profile Linked To <b class="orange-text text-darken-4">{{grp.GroupName}}</b></h5>
-                                    <div class="row" id="social_profile_list">
-                                        <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profiles " >
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <div ng-click="deleteProfile('Deleted!!')" class="delet_icon"></div>
-                                                    <img src="{{profile.ProfilePic}}" class="responsive-img" ng-if="profile.ProfilePic != ''">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="profile.ProfilePic == ''">
-                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" class="profile_socio_icon">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col s12 m12 l12">
-                                <div class="card-panel">
-                                    <h5>Profiles available for connection</h5>
-                                    <div class="row" id="social_profile_list" ng-if="grp.GroupName != 'Socioboard'">
-                                        <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profilesToConnect">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <div ng-click="addProfileToGroup(grp.Id, profile.ProfileId, profile.ProfileType)" class="add_icon" role="button" tabindex="0"></div>
-                                                    <img src="{{profile.ProfilePic}}" class="responsive-img">
-                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" class="profile_socio_icon">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    
-                                </div>
-                            </div>
-                            <div class="col s12 m12 l12" ng-if="grp.GroupName !='Socioboard'">
-                                <div class="card-panel">
-                                    <a class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.Id,grp.GroupName)" href="#InviteMembersModal">Invite New Team Members</a>
+                                    <a class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="#InviteMembersModal">Invite New Team Members</a>
                                     <h5>Pending Team Members</h5>
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
@@ -302,17 +83,96 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
+                                <div class="card-panel">
+                                    <h5>Accepted Team Members</h5>
+                                    <div class="row" id="social_profile_list">
+                                        <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}">
+                                            <div class="card-panel social_profile">
+                                                <div class="card-image">
+                                                    <img src="{{member.profileImg}}" class="responsive-img" ng-if="member.profileImg != ''">
+                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
 
+                                                    <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--codes end to render group profiles of selected group-->
 
+                        <div class="row" ng-if="groupId!=grp.id">
+                            <div class="col s12 m12 l12">
+                                <div class="card-panel">
+                                    <h5>Profile Linked To <b class="orange-text text-darken-4">{{grp.groupName}}</b></h5>
+                                    <div class="row" id="social_profile_list">
+                                        <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profiles ">
+                                            <div class="card-panel social_profile">
+                                                <div class="card-image">
+                                                    <div ng-click="deleteProfile(profile.profileId, grp.id)" class="delet_icon"></div>
+                                                    <img src="{{profile.profilePic}}" class="responsive-img" ng-if="profile.ProfilePic != ''">
+                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="profile.profilePic == ''">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
 
+                                                </div>
+                                            </div>
+                                        </div>
 
+                                    </div>
+                                </div>
+                            </div>
 
-                            <div class="col s12 m12 l12" ng-if="grp.GroupName !='Socioboard'">
+                            <div class="col s12 m12 l12">
+                                <div class="card-panel">
+                                    <h5>Profiles available for connection</h5>
+                                    <div class="row" id="social_profile_list" ng-if="grp.groupName != 'Socioboard'">
+                                        <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profilesToConnect">
+                                            <div class="card-panel social_profile">
+                                                <div class="card-image">
+                                                    <div ng-click="addProfileToGroup(grp.id, profile.profileId, profile.profileType)" class="add_icon" role="button" tabindex="0"></div>
+                                                    <img src="{{profile.profilePic}}" class="responsive-img">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
+                                                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
+                                <div class="card-panel">
+                                    <a class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="#InviteMembersModal">Invite New Team Members</a>
+                                    <h5>Pending Team Members</h5>
+                                    <div class="row" id="social_profile_list">
+                                        <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
+                                            <div class="card-panel social_profile">
+                                                <div class="card-image">
+                                                    <img src="{{member.profileImg}}" class="responsive-img" ng-if="member.profileImg != ''">
+                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
+
+                                                    <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
                                 <div class="card-panel">
                                     <h5>Accepted Team Members</h5>
                                     <div class="row" id="social_profile_list">
@@ -340,7 +200,6 @@
 
     </div>
     <!-- END WRAPPER -->
-   
     <!-- Invite Team Members Modal Structure -->
     <div id="InviteMembersModal" class="modal">
         <div class="modal-content">
@@ -361,7 +220,7 @@
                             <td>{{mbr.firstName}}</td>
                             <td>{{mbr.lastName}}</td>
                             <td>{{mbr.email}}</td>
-                            <td><a  ng-click="deleteFromInviteList($index)" class="red-text"><i class="icon-trash"></i></a></td>
+                            <td><a ng-click="deleteFromInviteList($index)" class="red-text"><i class="icon-trash"></i></a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -387,11 +246,10 @@
         </div>
         <div class="modal-footer">
             <a href="" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-            <a  class="modal-action waves-effect waves-green btn-flat" ng-click="SendInvitations(inviGrpId)" >Submit</a>
+            <a class="modal-action waves-effect waves-green btn-flat" ng-click="SendInvitations(inviGrpId)">Submit</a>
         </div>
     </div>
     <!--Invite Team member modal end-->
-    
     <!-- Create Group Modal Structure -->
     <div id="CreateGroupModal" class="modal">
         <div class="modal-content">
@@ -403,6 +261,7 @@
                         <i class="icon-users prefix"></i>
                         <input placeholder="Type Your Group Name" ng-model="groupName" id="icon_prefix" type="text" class="validate">
                         <label for="icon_prefix">Group Name</label>
+                    </div>
                     </div>
             </form>
         </div>

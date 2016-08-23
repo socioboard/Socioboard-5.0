@@ -7,7 +7,7 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>56a72c17-638d-4c30-951e-aefee8520ec3</ProjectGuid>
+    <ProjectGuid>70aee73a-1921-4eef-bd4e-2c54c9de729f</ProjectGuid>
     <RootNamespace>Socioboard.Facebook</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>

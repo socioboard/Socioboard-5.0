@@ -17,6 +17,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
 	            $http.get(apiDomain + '/api/DraftMessage/DeleteDraftMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&draftId=' + draftId)
                               .then(function (response) {
                                   closeOnConfirm: false
+                                  swal("deleted");
                                   // $scope.lstdraftmessage = response.data;
                                   $scope.date(response.data);
                               }, function (reason) {
@@ -44,11 +45,12 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
         {
             $rootScope.draftmessgae = message;
             $rootScope.draftId = draftId;
-            $scope.modalinstance = $modal.open({
-                templateUrl: 'editdraftModalContent.html',
-                controller: 'DraftMessageController',
-                scope: $scope
-            });
+            $('#EditDraftModal').openModal();
+            //$scope.modalinstance = $modal.open({
+            //    templateUrl: 'editdraftModalContent.html',
+            //    controller: 'DraftMessageController',
+            //    scope: $scope
+            //});
         }
 
         $scope.scheduledraft = function (schedulemessage)
@@ -77,7 +79,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
             var message = $('#editdraftScheduleMsg').val();
             $http.post(apiDomain + '/api/DraftMessage/EditDraftMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&draftId=' + $rootScope.draftId + '&message=' + message)
                                   .then(function (response) {
-                                      $scope.modalinstance.dismiss('cancel');
+                                     // $scope.modalinstance.dismiss('cancel');
                                       //$rootScope.lstdraftmessage = response.data;
                                       $scope.date(response.data);
                                   }, function (reason) {

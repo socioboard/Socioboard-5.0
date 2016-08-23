@@ -1,0 +1,217 @@
+﻿<div data-ng-controller="GoogleAnalyticreportController">
+    <!-- Page name -->
+    <div class="container">
+        <div class="col m12">
+            <h4 class="pull-left">
+                <div class="input-field">
+                    <select class="icons" ng-model="selectedProfile" ng-change="getReports(selectedProfile, 90)">
+                        <option ng-repeat="profile in lstProfiles | filter:{profileType:10}" my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
+                            <img src="{{profile.profilePic}}" class="circle">{{profile.profileName}}
+                        </option>
+                    </select>
+                </div>
+                <span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>
+            </h4>
+            <h6 class="pull-right margin-top-20">
+                <a ng-click="getData(selectedProfile,15)" class="btn">15</a>
+                <a ng-click="getData(selectedProfile,30)" class="btn">30</a>
+                <a ng-click="getData(selectedProfile,60)" class="btn">60</a>
+                <a ng-click="getData(selectedProfile,90)" class="btn">90</a>
+            </h6>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- FACEBOOK STATS -->
+        <div class="col s12 m12 l12">
+            <div class="card" id="feeds">
+                <h5 class="feeds_title  red darken-2 white-text">
+                    <i class="fa fa-google-plus fa-fw" aria-hidden="true"></i> Website vs. Social Report</span>
+                </h5>
+                <div class="collection">
+                    <div class="row">
+                        <div class="col l12 m12 s12">
+                            <blockquote class="groupbox_padding grey lighten-1">
+                                <h5><i class="fa fa-google fa-fw" aria-hidden="true"></i>All Web Site Data</h5>
+                            </blockquote>
+                            <div class="col s10 offset-s2">
+                                <div class="row">
+                                    <div class="col s12 m6 l3">
+                                        <div class="card red accent-2">
+                                            <div class="card-content center">
+                                                <h4 class="card-stats-number grey-text text-darken-3">{{views}}</h4>
+                                                <p class="card-stats-title white-text">Website Traffic</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col s12 m6 l3">
+                                        <div class="card red accent-2">
+                                            <div class="card-content center">
+                                                <h4 class="card-stats-number grey-text text-darken-3">{{twitterMention}}</h4>
+                                                <p class="card-stats-title  white-text">Twitter Mentions</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col s12 m6 l3">
+                                        <div class="card red accent-2">
+                                            <div class="card-content center">
+                                                <h4 class="card-stats-number grey-text text-darken-3">{{article_Blogs}}</h4>
+                                                <p class="card-stats-title white-text">Articles & Blog</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col l12 s12 m12">
+                                <div id="googleanalyticgraph" style="height: 250px;"></div>
+                            </div>
+                        </div>
+
+
+                        <hr>
+                        <div class="col l12 m12 s12">
+                            <div class="row">
+                                <div class="col s12">
+                                    <ul class="tabs">
+                                        <li class="tab col s3"><a class="active" href="#AllPost">All Post</a></li>
+                                        <li class="tab col s3"><a href="#Web">Web</a></li>
+                                    </ul>
+                                </div>
+                                <div id="AllPost" class="col s12">
+                                    <ul class="collection gplusfeeds">
+                                        <li class="collection-item avatar" ng-repeat="post in TwitterMentionReports">
+                                            <img src="{{post.fromImageUrl}}" alt="{{post.fromName}}" class="circle">
+                                            <span class="email-title">{{post.fromName}}</span>
+                                            <div class="row feeds_post z-depth-1 hoverable">
+                                                <div class="col m8">
+                                                    <p class="break_word ultra-small">{{post.feed}}.</p>
+                                                </div>
+
+                                            </div>
+                                            <a class="tooltipped secondary-content" data-position="left" data-tooltip="09">{{post.feeddate}}</a>
+                                        </li>
+
+
+                                        <div class="center">
+                                            <div class="preloader-wrapper big active">
+                                                <div class="spinner-layer spinner-blue">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="spinner-layer spinner-red">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="spinner-layer spinner-yellow">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="spinner-layer spinner-green">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ul>
+                                </div>
+                                <div id="Web" class="col s12">
+                                    <ul class="collection gplusfeeds">
+                                        <li class="collection-item avatar" ng-repeat="webpost in ArticlesAndBlogsReports">
+                                            <img src="{{webpost.videoUrl}}" alt="Chanchal Santra" class="circle">
+                                            <span class="email-title">{{webpost.hostName}}</span>
+                                            <div class="row feeds_post z-depth-1 hoverable">
+                                                <div class="col m8">
+                                                    <p class="break_word ultra-small">{{webpost.description}}.</p>
+                                                </div>
+                                            </div>
+                                            <a class="tooltipped secondary-content" data-position="left" data-tooltip="09">{{webpost.created_Time}}</a>
+                                        </li>
+
+
+                                        <div class="center">
+                                            <div class="preloader-wrapper big active">
+                                                <div class="spinner-layer spinner-blue">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="spinner-layer spinner-red">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="spinner-layer spinner-yellow">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="spinner-layer spinner-green">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ul>ye
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+</div>

@@ -4,27 +4,27 @@
       namespace="Domain.Socioboard.Models"
       assembly="Domain.Socioboard">
   <class name="Groupprofiles" table="Groupprofiles" lazy="true" >
-    <id name="Id" column="Id" />
-    <property name="ProfileOwnerId">
-      <column name="ProfileOwnerId"  />
+    <id name="id" column="id" />
+    <property name="profileOwnerId">
+      <column name="profileOwnerId"  />
     </property>
-    <property name="ProfileType">
-      <column name="ProfileType" />
+    <property name="profileType">
+      <column name="profileType" />
     </property>
-    <property name="ProfileName">
-      <column name="ProfileName" />
+    <property name="profileName">
+      <column name="profileName" />
     </property>
-    <property name="ProfileId">
-      <column name="ProfileId" />
+    <property name="profileId">
+      <column name="profileId" />
     </property>
-    <property name="ProfilePic">
-      <column name="ProfilePic" />
+    <property name="profilePic">
+      <column name="profilePic" />
     </property>
-    <property name="GroupId">
-      <column name="GroupId" />
+    <property name="groupId">
+      <column name="groupId" />
     </property>
-    <property name="EntryDate">
-      <column name="EntryDate" />
+    <property name="entryDate">
+      <column name="entryDate" />
     </property>
   </class>
 </hibernate-mapping>

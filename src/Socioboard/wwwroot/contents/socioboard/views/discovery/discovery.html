@@ -33,14 +33,14 @@
                     <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Twitter Posts</h5>
                     <ul class="collection twtfeeds">
                         <li class="collection-item avatar" ng-repeat="twtfeed in lstDiscoverySearchTwitter">
-                            <img src="{{twtfeed.ProfileImageUrl}}" alt="{{twtfeed.FromName}}" class="circle">
-                            <span class="email-title">{{twtfeed.FromName}}</span>
+                            <img src="{{twtfeed.profileImageUrl}}" alt="{{twtfeed.fromName}}" class="circle">
+                            <span class="email-title">{{twtfeed.fromName}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
-                                    <p class="break_word ultra-small">{{twtfeed.Message}}.</p>
+                                    <p class="break_word ultra-small">{{twtfeed.message}}.</p>
                                 </div>
                             </div>
-                            <a class="tooltipped secondary-content" data-position="left">{{twtfeed.CreatedTime}}</a>
+                            <a class="tooltipped secondary-content" data-position="left">{{twtfeed.createdTime}}</a>
                         </li>
                      </ul>
                 </div>
@@ -50,14 +50,14 @@
                     <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>GooglePlus Posts</h5>
                     <ul class="collection gplusfeeds">
                         <li class="collection-item avatar" ng-repeat="gplusfeed in lstDiscoverySearchGplus">
-                            <img src="{{gplusfeed.ProfileImageUrl}}" alt="{{gplusfeed.FromName}}" class="circle">
-                            <span class="email-title">{{gplusfeed.FromName}}</span>
+                            <img src="{{gplusfeed.profileImageUrl}}" alt="{{gplusfeed.fromName}}" class="circle">
+                            <span class="email-title">{{gplusfeed.fromName}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
-                                    <p class="break_word ultra-small">{{gplusfeed.Message}}.</p>
+                                    <p class="break_word ultra-small">{{gplusfeed.message}}.</p>
                                 </div>
                             </div>
-                            <a class="tooltipped secondary-content" data-position="left" href="{{gplusfeed.MessageId}}">{{gplusfeed.CreatedTime}}am</a>
+                            <a class="tooltipped secondary-content" data-position="left" href="{{gplusfeed.messageId}}">{{gplusfeed.createdTime}}am</a>
                         </li>
 
 
@@ -69,16 +69,16 @@
                     <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Posts</h5>
                     <ul class="collection instagramfeeds">
                         <li class="collection-item avatar" ng-repeat="insfeed in lstDiscoverySearchinstagram">
-                            <img class="circle" src="{{insfeed.ImageUrl}}" alt="{{insfeed.AdminUser}}">
-                            <span class="email-title">{{insfeed.AdminUser}}</span>
+                            <img class="circle" src="{{insfeed.imageUrl}}" alt="{{insfeed.adminUser}}">
+                            <span class="email-title">{{insfeed.adminUser}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
-                                    <p class="break_word ultra-small">{{insfeed.Feed}}.</p>
+                                    <p class="break_word ultra-small">{{insfeed.feed}}.</p>
                                 </div>
-                                <div class="col m4 center" ng-if="{{insfeed.FeedImageUrl}}">
+                                <div class="col m4 center" ng-if="{{insfeed.feedImageUrl}}">
                                 </div>
                             </div>
-                            <a data-position="left" class="tooltipped secondary-content">{{insfeed.FeedDate}}</a>
+                            <a data-position="left" class="tooltipped secondary-content">{{insfeed.feedDate}}</a>
                         </li>
 
                     </ul>
@@ -89,7 +89,7 @@
                     <h5 class="feeds_title blue darken-2 white-text"><i class="icon-layers"></i>Search History</h5>
                     <div class="section section_filter">
                         <div class="collection">
-                            <a ng-click="discovery(history.SearchKeyword)" class="collection-item active" ng-repeat="history in DiscoveryHistory">{{history.SearchKeyword}}</a>
+                            <a ng-click="discovery(history.searchKeyword)" class="collection-item active" ng-repeat="history in DiscoveryHistory">{{history.searchKeyword}}</a>
                         </div>
                     </div>
                 </div>

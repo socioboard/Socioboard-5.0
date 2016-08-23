@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope, $http, $timeout,apiDomain) {
+SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope, $http, $timeout,apiDomain,grouptask) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
     
@@ -15,15 +15,10 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
                 //codes to load  recent Feeds
                 $http.get(apiDomain + '/api/Twitter/GetTwitterDirectMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&skip=' + $scope.messagesEnding + ' &count=' + count)
                               .then(function (response) {
-                                  if (response.data == null || (response.data != null && response.data.length == 0)) {
-                                      $scope.messagesReachLast = true;
-                                  }
-                                  else {
-                                      for (var i = 0; i < response.data.length; i++) {
-                                          $scope.lstMessages.push(response.data[i]);
-                                      }
-                                      $scope.messagesEnding = $scope.messagesEnding + response.data.length;
-                                      console.log($scope.messagesEnding);
+                                  
+                                  $scope.messagesReachLast = true;
+                                  for (var i = 0; i < response.data.length; i++) {
+                                      $scope.lstMessages.push(response.data[i]);
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;
@@ -38,7 +33,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
         $scope.selectedProfiles = [];
 
         angular.forEach($rootScope.lstProfiles, function (item) {
-            $scope.selectedProfiles.push(item.ProfileId);
+            $scope.selectedProfiles.push(item.profileId);
         });
 
         // toggle selection for a given fruit by name
@@ -57,6 +52,84 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
         };
 
         inboxmessage();
+
+        $scope.GetConversation = function (SenderId, RecipientId, profileId, recipientProfileUrl, recipientScreenName, senderScreenName, senderProfileUrl) {
+            
+            $rootScope.profileId = profileId;
+            $rootScope.SenderId = SenderId;
+            $rootScope.RecipientId = RecipientId;
+            $rootScope.recipientProfileUrl = recipientProfileUrl;
+            $rootScope.recipientScreenName = recipientScreenName;
+            $rootScope.senderScreenName = senderScreenName;
+            $rootScope.senderProfileUrl = senderProfileUrl;
+            $scope.Conversation(RecipientId, SenderId);
+             $('#ChatModal').openModal();
+        }
+
+        $scope.Conversation = function (RecipientId, SenderId)
+        {
+            //codes to load  GetConversation
+            $http.get(apiDomain + '/api/Twitter/GetConversation?RecipientId=' + RecipientId + '&SenderId=' + SenderId)
+                          .then(function (response) {
+
+                              $scope.date(response.data);
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                              console.log(reason.data);
+                          });
+            // end codes to load  GetConversation
+        }
+        $scope.taskInboxModel = function (notification) {
+            $rootScope.taskinboxNotification = notification;
+            $('#InboxTaskModal').openModal();
+            
+
+        }
+
+        $scope.postdirrectmessage = function () {
+            var message = $('#dmmessagecomment').val();
+            //codes to postdirrectmessage
+            $http.post(apiDomain + '/api/Twitter/PostTwitterDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message)
+                          .then(function (response) {
+                              $('#dmmessagecomment').val('');
+                              $scope.Conversation($rootScope.RecipientId, $rootScope.SenderId);
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                              console.log(reason.data);
+                          });
+            // end codes to postdirrectmessage
+        }
+
+        $scope.addTask = function (feedTableType) {
+
+            var memberId = $('.task-user-member:checked');
+            var taskComment = $('#taskComment').val();
+            if (!memberId.val()) {
+                swal('please select any member for assign task')
+            }
+            else if (!taskComment) {
+                swal('please write any comment for assign task')
+            }
+            else {
+                var assignUserId = memberId.val();
+                grouptask.addtasks(assignUserId, feedTableType, taskComment, $rootScope.taskinboxNotification.message, $rootScope.taskinboxNotification.messageId,'');
+
+            }
+        }
+
+        $scope.date = function (parm) {
+
+            for (var i = 0; i < parm.length; i++) {
+                var date = moment(parm[i].createdDate);
+                var newdate = date.toString();
+                var splitdate = newdate.split(" ");
+                date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
+                parm[i].createdDate = date;
+            }
+            $scope.lstGetConversation = parm;
+
+        }
             
     });
 });

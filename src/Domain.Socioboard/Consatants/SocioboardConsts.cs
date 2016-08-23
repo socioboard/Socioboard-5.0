@@ -30,6 +30,11 @@
         //Schedule Message Start
         public const string CacheScheduleMessage = "ScheduleMessage_";
         public const string CacheDraftMessage = "CacheDraftMessage_";
+        public const string CacheSentMessages = "SentMessages_";
+        public const string CachelSentMessageDetailsforADay = "SentMessageDetailsforADay_";
+        public const string CacheSentMessageDetailsByDays = "SentMessageDetailsByDays_";
+        public const string CacheSentMessageDetailsByMonth = "SentMessageDetailsByMonth_";
+        public const string CacheSentMessageDetailsForCustomrange = "SentMessageDetailsForCustomrange_";
         //End Schedule Message
 
 
@@ -37,6 +42,7 @@
         public const string CacheFacebookAccount = "FacebookAcc_";
         public const string CacheFacebookRecent100Feeds = "FacebookRec100Feeds_";
         public const string CacheFbPostComment = "FbPostComment_";
+        public const string CacheFacebookGroup = "FacebookGroup_";
         //End Facebook Account
 
 
@@ -47,6 +53,8 @@
 
         //GPlus Account Start 
         public const string CacheGplusAccount = "GPlusAcc_";
+        public const string CacheGAAccount = "GAAcc_";
+        public const string CacheGplusRecent100Feeds = "GplusRecent100Feeds_";
         //End GPlus Account
 
         //Twitter Account Start
@@ -57,5 +65,48 @@
         public const string CacheTwitterUser100DirectMessage = "TwitterRec100DMsgs_";
         //End Twitter Account
 
+        //Facebook Report Start
+        public const string CacheFacebookReport_15 = "FacebookReport_15_";
+        public const string CacheFacebookReport_30 = "FacebookReport_30_";
+        public const string CacheFacebookReport_60 = "FacebookReport_60_";
+        public const string CacheFacebookReport_90 = "FacebookReport_90_";
+        public const string CacheFacebookGroupReport_90 = "FacebookGroupReport_90_";
+        public const string CacheFacebookGroupReport_60 = "FacebookGroupReport_60_";
+        public const string CacheFacebookGroupReport_30 = "FacebookGroupReport_30_";
+        public const string CacheFacebookGroupReport_15 = "FacebookGroupReport_15_";
+        //End Facebook Report
+
+        //Instagram Account Start
+        public const string CacheInstagramAccount = "InstagramAcc_";
+        public const string CacheInstagramFeed = "InstagramFeed_";
+        public const string CacheInstagramDailyReport = "InstagramDailyReport_";
+        //End Instagram Account
+
+        //LinkedIN Account Start
+        public const string CacheLinkedInAccount = "LinkedInAcc_";
+        public const string CacheLinkedInCompanyPage = "LinkedCompanyPage_";
+        public const string CacheLinkedInCompanyPageFeed = "LinkedInCompanyPageFeed_";
+        //End LinkedIN Account
+
+        //Shareathon Start
+        public const string CachePageShareathonByUserId = "PageShareathonByUserId_";
+        public const string CacheGroupShareathonByUserId = "GroupShareathonByUserId_";
+        //Shareathon End
+
+        //Twitter Reports Start
+        public const string CacheTwitterMessageReportsByProfileId = "CacheTwitterMessageReports_";
+
+        //Facebook Page Report Start
+        public const string CacheFacebookPageReportsByProfileId = "CacheFacebookPageReports_";
+        public const string CacheFacebookPagePostReportsByProfileId = "CacheFacebookPagePostReports_";
+
+        //google analytics report
+        public const string CacheGoogleAnalyticsReport = "CacheGoogleAnalyticsReport_";
+
+        //Affiliate
+        public const string Affiliates = "Affiliates_";
+
+        //groupreport
+        public const string CacheGroupdailyReports = "CacheGroupdailyReports_";
     }
 }

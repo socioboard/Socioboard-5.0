@@ -1,24 +1,41 @@
 'use strict';
 
-SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
-    //alert('helo');
+SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http, $timeout, apiDomain,groupmember) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.lstInviteTeamMembers = []; // array contains list of needs to invite for current group
 
         $scope.deleteProfile = function(profileId, groupId){
-        	// console.log(profileId);
-        	swal({   
-	        title: "Are you sure?",   
-	        text: "You want to remove this account from Socioboard",   
-	        type: "warning",   
-	        showCancelButton: true,   
-	        confirmButtonColor: "#DD6B55",   
-	        confirmButtonText: "Yes, delete it!",   
-	        closeOnConfirm: false }, 
-	        function(){
-	            //todo: code to delete profile
-	            swal("Deleted!", "Profile has been deleted.", "success"); 
-	            });
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to send message via this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+           function () {
+               console.log(profileId)
+
+               $http({
+                   method: 'POST',
+                   url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+               }).then(function (response) {
+                   if (response.data == "Deleted") {
+                       swal("Deleted!", "Your profile has been deleted.", "success");
+                       $scope.getGroupsData($rootScope.index, groupId);
+                       //window.location.reload();
+                   }
+                   else {
+                       swal("Deleted!", response.data, "success");
+                   }
+
+               }, function (reason) {
+                   swal("Deleted!", reason, "success");
+               });
+
+               //todo: code to delete profile
+           });
         }
 
         $scope.deleteGroups = function(groupsId){
@@ -37,6 +54,10 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 	            });
         }
 
+        $scope.addgroupmodal = function () {
+            $('#CreateGroupModal').openModal();
+        }
+
         $scope.addGroup = function (groupName) {
             if (groupName == null || groupName == '') {
                 alertify.set({ delay: 1000 });
@@ -48,8 +69,10 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                 url: apiDomain + '/api/Groups/CreateGroup?GroupName=' + groupName + '&AdminId=' + $rootScope.user.Id ,
             }).then(function (response) {
                 if (response.data == 'Group Added') {
+                    $('#CreateGroupModal').closeModal();
                     alertify.set({ delay: 1000 });
                     alertify.success(response.data);
+                    window.location.reload();
                 }
                 else {
                     alertify.set({ delay: 1000 });
@@ -60,29 +83,12 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
             });
         }
 
-        //get GroupMembers of a perticular group and add to members arrary in group
-        $scope.getGroupMembers = function (index, groupId) {
-            console.log(index);
-            console.log(groupId);
-            console.log($rootScope.groups[index].members);
-            if ($rootScope.groups[index].members == undefined) {
-                //codes to load  fb profiles start
-                $http.get(apiDomain + '/api/GroupMember/GetGroupMembers?groupId=' + groupId)
-                              .then(function (response) {
-                                  $rootScope.groups[index].members = response.data;
-                                  console.log($rootScope.groups[index].members);
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-                // end codes to load fb profiles
-            }
-            
-        }
 
 
         //get GroupProfiles of a perticular group and add to groups array in group
         $scope.getGroupProfiles = function (index, groupId) {
-            if ($rootScope.groups[index].profiles == undefined) {
+            console.log("entered");
+           // if ($rootScope.groups[index].profiles == undefined) {
                 //codes to load  fb profiles start
                 $http.get(apiDomain + '/api/GroupProfiles/GetGroupProfiles?groupId=' + groupId)
                               .then(function (response) {
@@ -92,7 +98,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                                   $scope.error = reason.data;
                               });
                 // end codes to load fb profiles
-            }
+           // }
 
         }
 
@@ -100,7 +106,8 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 
         //get GroupProfiles to connect of a perticular group and add to groups array in group
         $scope.getGroupProfilesToconnect = function (index, groupId) {
-            if ($rootScope.groups[index].profilesToConnect == undefined) {
+            
+           // if ($rootScope.groups[index].profilesToConnect == undefined) {
                 $http.get(apiDomain + '/api/GroupProfiles/getProfilesAvailableToConnect?groupId=' + groupId +'&userId='+ $rootScope.user.Id)
                               .then(function (response) {
                                   $rootScope.groups[index].profilesToConnect = response.data;
@@ -108,7 +115,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-            }
+            //}
 
         }
 
@@ -143,6 +150,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         }
 
         $scope.SendInvitations = function (groupId) {
+            debugger;
             var mem ='';
             for (var i = 0; i < $scope.lstInviteTeamMembers.length ; i++)
             {
@@ -150,36 +158,47 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
             }
 
             console.log($scope.lstInviteTeamMembers);
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/GroupMember/InviteGroupMembers?groupId=' + $scope.inviGrpId + '&members='+mem,
-              //  params: { 'mem':  $scope.lstInviteTeamMembers },
-                //headers: {
-                //    'Content-Type': 'application/json'
-                //},
-                //transformRequest: angular.identity,
-            }).then(function (response) {
-                console.log(response);
-            }, function (reason) {
-                console.log(reason);
-            });
+            if (mem!="") {
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupMember/InviteGroupMembers?groupId=' + $scope.inviGrpId + '&members=' + mem,
+                    //  params: { 'mem':  $scope.lstInviteTeamMembers },
+                    //headers: {
+                    //    'Content-Type': 'application/json'
+                    //},
+                    //transformRequest: angular.identity,
+                }).then(function (response) {
+                    console.log(response);
+                }, function (reason) {
+                    console.log(reason);
+                });
+            }
+            else {
+                swal("please click on add");
+            }
         }
 
         $scope.getGroupsData = function (index, groupId) {
-            $scope.getGroupMembers(index, groupId);
+            debugger;
+            $rootScope.index = index;
+            groupmember.getGroupMembers(index, groupId);
             $scope.getGroupProfiles(index, groupId);
             $scope.getGroupProfilesToconnect(index, groupId);
         }
-        // $scope.getGroupMembers(0, 1);
 
         $scope.addProfileToGroup = function (groupId, profileId, profileType) {
+           
             $http({
                 method: 'POST',
                 url: apiDomain + '/api/GroupProfiles/AddProfileToGroup?profileId=' + profileId + '&groupId=' + groupId + '&userId=' + $rootScope.user.Id + '&profileType=' + profileType,
             }).then(function (response) {
                 if (response.data == 'Added Successfully') {
+                    $scope.getGroupsData($rootScope.index, groupId);
                     alertify.set({ delay: 1000 });
                     alertify.success(response.data);
+                   // $scope.getOnPageLoadGroups();
+                   // window.location.reload();
+
                 }
                 else {
                     alertify.set({ delay: 1000 });
@@ -190,6 +209,18 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                 alertify.error(reason.data);
             });
         }
+
+        $scope.getOnPageLoadGroups = function () {
+            var canContinue = true;
+            angular.forEach($rootScope.groups, function (value, key) {
+                if (canContinue && value.id == $rootScope.groupId) {
+                    $scope.getGroupsData(key, $rootScope.groupId)
+                    canContinue = false;
+                }
+            });
+        }
+
+        $scope.getOnPageLoadGroups();
         groups();
     });
 });

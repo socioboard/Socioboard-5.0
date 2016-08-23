@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>amCharts examples</title>
+        <link href='http://fonts.googleapis.com/css?family=Covered+By+Your+Grace' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="../amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="../amcharts/serial.js" type="text/javascript"></script>
+
+        <script>
+			AmCharts.ready(function() {
+				makeLineChart();
+				makeBarChart();
+			});
+
+
+			 //// BAR CHART
+
+			var barChartData = [{
+				"continent": "Australia",
+				"river": "Darling",
+				"length": 2739
+			}, {
+				"continent": "Europe",
+				"river": "Volga",
+				"length": 3692
+			}, {
+				"continent": "North America",
+				"river": "Mississippi",
+				"length": 6275
+			}, {
+				"continent": "Asia",
+				"river": "Yangtze",
+				"length": 6300
+			}, {
+				"continent": "South America",
+				"river": "Amazon",
+				"length": 6400
+			}, {
+				"continent": "Africa",
+				"river": "Nile",
+				"length": 6650
+			}];
+
+			function makeBarChart() {
+				// SERIAL CHART
+				var chart = new AmCharts.AmSerialChart();
+				chart.dataProvider = barChartData;
+				chart.rotate = true;
+
+				chart.fontSize = 18;
+				chart.fontFamily = 'Covered By Your Grace';
+				chart.color = "#FFFFFF";
+				chart.categoryField = "continent";
+				chart.startDuration = 0;
+				chart.handDrawScatter = 3;
+				chart.columnWidth = 0.5;
+				chart.handDrawn = true;
+
+				var balloon = chart.balloon;
+				balloon.adjustBorderColor = false;
+				balloon.borderColor = "#000000";
+				balloon.fillColor = "#FFFFFF";
+				balloon.verticalPadding = 0;
+
+				var valueAxis = new AmCharts.ValueAxis();
+				valueAxis.minimum = 0;
+				valueAxis.axisColor = "#FFFFFF";
+				valueAxis.gridColor = "#FFFFFF";
+				chart.addValueAxis(valueAxis);
+
+				// AXES
+				// category
+				var categoryAxis = chart.categoryAxis;
+				categoryAxis.labelRotation = 90;
+				categoryAxis.gridPosition = "start";
+				categoryAxis.axisColor = "#FFFFFF";
+				categoryAxis.gridColor = "#FFFFFF";
+				categoryAxis.gridAlpha = 0;
+
+				// GRAPH
+				var graph = new AmCharts.AmGraph();
+				graph.valueField = "length";
+				graph.type = "column";
+				graph.balloonText = "<span style='font-size:14px'>[[category]]</span><br>[[river]]: [[value]] km.";
+				graph.lineAlpha = 0;
+				graph.lineColor = "#FFFFFF";
+				graph.fillAlphas = 0.8;
+				graph.lineThickness = 1;
+				graph.pattern = {
+					url: "patterns/chalk/pattern1.jpg",
+					width: 600,
+					height: 600,
+					randomY: 300
+				};
+				chart.addGraph(graph);
+
+				// CURSOR
+				var chartCursor = new AmCharts.ChartCursor();
+				chartCursor.cursorAlpha = 0;
+				chartCursor.zoomable = false;
+				chartCursor.categoryBalloonEnabled = false;
+				chart.addChartCursor(chartCursor);
+
+				chart.creditsPosition = "top-right";
+
+				chart.write("columnChartDiv");
+			}
+
+			 //// LINE CHART
+
+			var lineChartData = [{
+					"continent": "Australia",
+					"mountain": "Kosciusko",
+					"height": 2228
+				}, {
+					"continent": "Africa",
+					"mountain": "Kilimanjaro",
+					"height": 5895
+				}, {
+					"continent": "Antarctica",
+					"mountain": "Aconcagua",
+					"height": 4897
+				},
+
+				{
+					"continent": "Europe",
+					"mountain": "Elbrus",
+					"height": 5642
+				}, {
+					"continent": "Asia",
+					"mountain": "Everest",
+					"height": 8850
+				},
+
+				{
+					"continent": "South America",
+					"mountain": "Aconcagua",
+					"height": 6960
+				}, {
+					"continent": "North America",
+					"mountain": "McKinley",
+					"height": 6194
+				}
+			];
+
+
+			function makeLineChart() {
+				// SERIAL CHART
+				var lineChart = new AmCharts.AmSerialChart();
+				lineChart.dataProvider = lineChartData;
+				lineChart.fontSize = 18;
+				lineChart.fontFamily = 'Covered By Your Grace';
+				lineChart.color = "#FFFFFF";
+				lineChart.categoryField = "continent";
+				lineChart.marginLeft = 117;
+				lineChart.startDuration = 0;
+				lineChart.handDrawn = true;
+
+				lineChart.backgroundColor = "#2d2b2c";
+
+				var balloon = lineChart.balloon;
+				balloon.adjustBorderColor = false;
+				balloon.borderColor = "#000000";
+				balloon.fillColor = "#FFFFFF";
+				balloon.verticalPadding = 0;
+
+				var valueAxis = new AmCharts.ValueAxis();
+				valueAxis.minimum = 0;
+				valueAxis.ignoreAxisWidth = true;
+				valueAxis.axisColor = "#FFFFFF";
+				valueAxis.gridColor = "#FFFFFF";
+				lineChart.addValueAxis(valueAxis);
+
+				// AXES
+				// category
+				var categoryAxis = lineChart.categoryAxis;
+				categoryAxis.labelRotation = 90;
+				categoryAxis.gridPosition = "start";
+				categoryAxis.axisColor = "#FFFFFF";
+				categoryAxis.labelRotation = 45;
+				categoryAxis.gridAlpha = 0;
+
+				// GRAPH
+				var graph = new AmCharts.AmGraph();
+				graph.valueField = "height";
+				graph.balloonText = "<span style='font-size:14px'>[[category]]</span><br>[[mountain]]: [[value]] m.";
+				graph.lineAlpha = 1;
+				graph.lineColor = "#FFFFFF";
+				graph.fillAlphas = 0.8;
+				graph.lineThickness = 4;
+				graph.bullet = "round";
+				graph.pattern = {
+					url: "patterns/chalk/pattern2.jpg",
+					width: 600,
+					height: 600
+				};
+				lineChart.addGraph(graph);
+
+				// CURSOR
+				var chartCursor = new AmCharts.ChartCursor();
+				chartCursor.cursorAlpha = 0;
+				chartCursor.zoomable = false;
+				chartCursor.categoryBalloonEnabled = false;
+				lineChart.addChartCursor(chartCursor);
+
+				lineChart.write("lineChartDiv");
+
+			}
+
+        </script>
+    </head>
+
+    <body style="background-image: url('images/board.jpg')">
+		<div id="lineChartDiv" style="position:absolute;top:100px;left:0px; width:550px; height:350px;"></div>
+		<div id="columnChartDiv" style="position:absolute;top:100px;left:550px; width:550px; height:308px;"></div>
+    </body>
+
+</html>

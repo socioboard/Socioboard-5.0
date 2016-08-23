@@ -10,18 +10,19 @@ namespace Domain.Socioboard.Models
     {
         public Groupprofiles()
         {
-            this.EntryDate = DateTime.UtcNow;
+            this.entryDate = DateTime.UtcNow;
         }
-        public virtual Int64 Id { get; set; }
+        public virtual Int64 id { get; set; }
         [Required]
-        public virtual Int64 ProfileOwnerId { get; set; }
+        public virtual Int64 profileOwnerId { get; set; }
         [Required]
-        public virtual Domain.Socioboard.Enum.SocialProfileType ProfileType { get; set; }
-        public virtual string ProfileName { get; set; }
-        public virtual string ProfileId { get; set; }
-        public virtual string ProfilePic { get; set; }
+        public virtual Domain.Socioboard.Enum.SocialProfileType profileType { get; set; }
+  
+        public virtual string profileName { get; set; }
+        public virtual string profileId { get; set; }
+        public virtual string profilePic { get; set; }
         [Required]
-        public virtual Int64 GroupId { get; set; }
-        public virtual DateTime EntryDate { get; set; }
+        public virtual Int64 groupId { get; set; }
+        public virtual DateTime entryDate { get; set; }
     }
 }

@@ -25,7 +25,7 @@ namespace Socioboard.Facebook.Data
         {
             FacebookClient fb = new FacebookClient();
             fb.AccessToken = accessToken;
-            dynamic friends = fb.Get("v2.0/me/friends");
+            dynamic friends = fb.Get("v2.1/me/friends");
             try
             {
                 return Convert.ToInt64(friends["summary"]["total_count"].ToString());
@@ -44,7 +44,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.0/me/feed?limit=99");
+                return fb.Get("v2.1/me/feed?limit=99");
             }
             catch (Exception ex)
             {
@@ -52,6 +52,61 @@ namespace Socioboard.Facebook.Data
             }
         }
 
+        public static dynamic getFeeds(string accessToken, string facebookid)
+        {
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            try
+            {
+                return fb.Get("v2.1/" + facebookid + "/posts?limit=99");
+            }
+            catch (Exception ex)
+            {
+                return "Invalid Access Token";
+            }
+        }
+
+        public static dynamic getFeedDetail(string accessToken, string PostId)
+        {
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            try
+            {
+                return fb.Get("v2.1/" + PostId + "?fields=likes.summary(true),comments.summary(true),shares");
+            }
+            catch (Exception ex)
+            {
+                return "Invalid Access Token";
+            }
+        }
+        public static dynamic postdetails(string accessToken, string PostId)
+        {
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            try
+            {
+                return fb.Get("v2.1/" + PostId + "/insights");
+            }
+            catch (Exception ex)
+            {
+                return "Invalid Access Token";
+            }
+        }
+
+        public static dynamic conversations(string accessToken)
+        {
+
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            try
+            {
+                return fb.Get("v2.1/me/conversations");
+            }
+            catch (Exception ex)
+            {
+                return "Invalid Access Token";
+            }
+        }
 
         public static dynamic getPostComments(string accessToken, string postid)
         {
@@ -59,7 +114,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.0/" + postid + "/comments?limit=99");
+                return fb.Get("v2.1/" + postid + "/comments?limit=99");
             }
             catch (Exception ex)
             {
@@ -76,7 +131,7 @@ namespace Socioboard.Facebook.Data
             args["message"] = message;
             try
             {
-                return fb.Post("v2.0/" + postid + "/comments", args).ToString();
+                return fb.Post("v2.1/" + postid + "/comments", args).ToString();
             }
             catch (Exception)
             {

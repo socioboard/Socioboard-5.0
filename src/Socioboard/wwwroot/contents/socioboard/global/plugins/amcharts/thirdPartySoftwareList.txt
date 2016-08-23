@@ -1,0 +1,28 @@
+*********************************************************************************
+Third party software used:
+
+    David Knape & Patrick Mineault Bezier curves drawing logic.
+
+    Code optimization made using Closure Compiling service:
+    http://closure-compiler.appspot.com/home
+
+Libraries used for exporting:
+
+    filesaver: https://github.com/eligrey/FileSaver.js/
+    https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+
+    blobjs: https://github.com/eligrey/Blob.js/
+    https://github.com/eligrey/Blob.js/blob/master/LICENSE.md
+
+    fabricjs: https://github.com/kangax/fabric.js
+    https://github.com/kangax/fabric.js/blob/master/LICENSE
+
+    jszip: https://github.com/Stuk/jszip
+    https://github.com/Stuk/jszip/blob/master/LICENSE.markdown
+
+    pdfmake: https://github.com/bpampuch/pdfmake
+    https://github.com/bpampuch/pdfmake/blob/master/LICENSE
+
+    SheetJS.js: https://github.com/SheetJS/js-xlsx
+    https://github.com/SheetJS/js-xlsx/blob/master/LICENSE
+*********************************************************************************

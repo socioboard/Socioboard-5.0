@@ -7,18 +7,43 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
         $scope.updateUser = {};
         $scope.updatePassword = {};
         $scope.mailSettings = {};
-         
+       
 
         //codes to fill update user details 
-        $scope.updateUser.firstName = $rootScope.user.FirstName;
-        $scope.updateUser.lastName = $rootScope.user.LastName;
-        $scope.updateUser.userName = $rootScope.user.UserName;
-        $scope.updateUser.phoneNumber = $rootScope.user.PhoneNumber;
+       
+        if ($rootScope.UpdatedfirstName == '' || $rootScope.UpdatedfirstName == undefined) {
+            $scope.updateUser.firstName = $rootScope.user.FirstName;
+        }
+        else
+        {
+            $scope.updateUser.firstName = $rootScope.UpdatedfirstName;
+        }
+        if ($rootScope.UpdatedlastName == '' || $rootScope.UpdatedlastName == undefined) {
+            $scope.updateUser.lastName = $rootScope.user.LastName;
+        }
+        else {
+            $scope.updateUser.lastName = $rootScope.UpdatedlastName;
+        }
+        if ($rootScope.UpdateduserName == '' || $rootScope.UpdateduserName == undefined) {
+            $scope.updateUser.userName = $rootScope.user.UserName;
+        } else {
+            $scope.updateUser.userName = $rootScope.UpdateduserName;
+        }
+        if ($rootScope.UpdatedphoneNumber == '' || $rootScope.UpdatedphoneNumber == undefined) {
+            $scope.updateUser.phoneNumber = $rootScope.user.PhoneNumber;
+        } else {
+            $scope.updateUser.phoneNumber = $rootScope.UpdatedphoneNumber;
+        } 
+        if ($rootScope.UpdatedaboutMe == '' || $rootScope.UpdatedaboutMe == undefined) {
+            $scope.updateUser.aboutMe = $rootScope.user.aboutMe;
+        } else {
+            $scope.updateUser.aboutMe = $rootScope.UpdatedaboutMe;
+        }
         var $input = $('.datepicker').pickadate();
         var picker = $input.pickadate('picker');
         picker.set('select', $rootScope.user.dateOfBirth, { format: 'yyyy-mm-dd HH:MM:ss' })
      //   $scope.updateUser.dob = $rootScope.user.dateOfBirth;
-        $scope.updateUser.aboutMe = $rootScope.user.aboutMe;
+       
         Materialize.updateTextFields();
         // end codes to fill update user details
 
@@ -34,6 +59,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
         //end codes to intilize mail settings
 
         $scope.UpdateUser = function (updateUser) {
+          
             var $input = $('.datepicker').pickadate();
             var picker = $input.pickadate('picker');
             var formData = new FormData();
@@ -49,9 +75,11 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             }).then(function (response) {
                 alertify.set({ delay: 5000 });
                 alertify.success("Profile Updated Successfully");
-                console.log(response);
-
-
+                $rootScope.UpdatedfirstName = updateUser.firstName;
+                $rootScope.UpdatedlastName = updateUser.lastName;
+                $rootScope.UpdateduserName = updateUser.userName;
+                $rootScope.UpdatedphoneNumber = updateUser.phoneNumber;
+                $rootScope.UpdatedaboutMe = updateUser.aboutMe;
             }, function (reason) {
                 alertify.set({ delay: 5000 });
                 alertify.error(reason.data);
@@ -69,8 +97,10 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).then(function (response) {
                 alertify.set({ delay: 5000 });
-                alertify.success("Profile Updated Successfully");
-                console.log(response);
+                alertify.success(response.data);
+                updatePassword.currentPassword = '';
+                updatePassword.newPassword = '';
+                updatePassword.conformPassword = '';
             }, function (reason) {
                 alertify.set({ delay: 5000 });
                 alertify.error(reason.data);
@@ -80,23 +110,23 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
 
 
 
-        $scope.UpdatePassword = function (updateMailSettings) {
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/User/ChangePassword?currentPassword=' + updatePassword.currentPassword + '&newPassword=' + updatePassword.newPassword + '&conformPassword=' + updatePassword.conformPassword + '&userId=' + $rootScope.user.Id,
-                crossDomain: true,
-                //data: ,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            }).then(function (response) {
-                alertify.set({ delay: 5000 });
-                alertify.success("Mail Settings Updated Successfully");
-                console.log(response);
-            }, function (reason) {
-                alertify.set({ delay: 5000 });
-                alertify.error(reason.data);
-                console.log(reason.data);
-            });
-        }
+        //$scope.UpdatePassword = function (updateMailSettings) {
+        //    $http({
+        //        method: 'POST',
+        //        url: apiDomain + '/api/User/ChangePassword?currentPassword=' + updatePassword.currentPassword + '&newPassword=' + updatePassword.newPassword + '&conformPassword=' + updatePassword.conformPassword + '&userId=' + $rootScope.user.Id,
+        //        crossDomain: true,
+        //        //data: ,
+        //        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        //    }).then(function (response) {
+        //        alertify.set({ delay: 5000 });
+        //        alertify.success("Mail Settings Updated Successfully");
+        //        console.log(response);
+        //    }, function (reason) {
+        //        alertify.set({ delay: 5000 });
+        //        alertify.error(reason.data);
+        //        console.log(reason.data);
+        //    });
+        //}
 
 
         $scope.UpdateMailSettings = function (mailSettings) {

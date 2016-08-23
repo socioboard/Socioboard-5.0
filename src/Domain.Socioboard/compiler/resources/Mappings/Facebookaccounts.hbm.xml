@@ -68,5 +68,11 @@
     <property name="IsAccessTokenActive">
       <column name="IsAccessTokenActive"/>
     </property>
+    <property name="lastpagereportgenerated">
+      <column name="lastpagereportgenerated"/>
+    </property>
+    <property name="Is90DayDataUpdated">
+      <column name="Is90DayDataUpdated"/>
+    </property>
   </class>
 </hibernate-mapping>

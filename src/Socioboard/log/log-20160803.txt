@@ -1,0 +1,1000 @@
+﻿2016-08-03 16:25:47.568 +05:30 [Information] User profile is available. Using '"C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+2016-08-03 16:25:47.817 +05:30 [Debug] Hosting starting
+2016-08-03 16:25:48.173 +05:30 [Debug] Hosting started
+2016-08-03 16:25:48.204 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" started.
+2016-08-03 16:25:48.204 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" started.
+2016-08-03 16:25:48.468 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2016-08-03 16:25:48.500 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:9821/  0
+2016-08-03 16:25:48.623 +05:30 [Information] Request finished in 165.4599ms 200 
+2016-08-03 16:25:48.754 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" completed keep alive response.
+2016-08-03 16:25:48.807 +05:30 [Debug] Reading data from file '"C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-cecc48ec-fee9-4bfe-b8c9-3fbbef294436.xml"'.
+2016-08-03 16:25:48.816 +05:30 [Debug] Found key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436}.
+2016-08-03 16:25:48.844 +05:30 [Debug] Considering key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436} with expiration date 2016-10-25 08:09:24Z as default key.
+2016-08-03 16:25:48.877 +05:30 [Debug] Decrypting secret element using Windows DPAPI.
+2016-08-03 16:25:48.899 +05:30 [Debug] Opening CNG algorithm '"AES"' from provider 'null' with chaining mode CBC.
+2016-08-03 16:25:48.982 +05:30 [Debug] Opening CNG algorithm '"SHA256"' from provider 'null' with HMAC.
+2016-08-03 16:25:49.032 +05:30 [Debug] Using key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436} as the default key.
+2016-08-03 16:25:49.070 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-08-03 16:25:49.430 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:25:49.630 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2016-08-03 16:25:49.792 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:25:49.838 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-03 16:25:50.072 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Index"'.
+2016-08-03 16:25:50.121 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2016-08-03 16:25:50.923 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 797.4071ms.
+2016-08-03 16:25:50.942 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2016-08-03 16:25:57.068 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 6126.1425ms.
+2016-08-03 16:25:57.077 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-08-03 16:25:57.084 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 6.7808ms.
+2016-08-03 16:25:57.086 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-08-03 16:25:57.133 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 45.7972ms.
+2016-08-03 16:25:57.148 +05:30 [Debug] The view '"Index"' was found.
+2016-08-03 16:25:57.151 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2016-08-03 16:25:57.426 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2016-08-03 16:25:57.596 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 169.626ms.
+2016-08-03 16:25:57.597 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2016-08-03 16:25:58.079 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 481.1497ms.
+2016-08-03 16:25:58.493 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 8858.4835ms
+2016-08-03 16:25:58.509 +05:30 [Information] Session started; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345"
+2016-08-03 16:25:58.519 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:0
+2016-08-03 16:25:58.767 +05:30 [Information] Request finished in 10362.8519ms 200 text/html; charset=utf-8
+2016-08-03 16:25:58.771 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" completed keep alive response.
+2016-08-03 16:25:58.956 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2016-08-03 16:25:58.967 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2016-08-03 16:25:58.970 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:25:58.974 +05:30 [Information] Request finished in 17.5377ms 404 
+2016-08-03 16:25:58.974 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" completed keep alive response.
+2016-08-03 16:26:23.600 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/getFbLoginUrl  
+2016-08-03 16:26:23.602 +05:30 [Debug] The request path "/FacebookManager/getFbLoginUrl" does not match a supported file type
+2016-08-03 16:26:23.603 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:26:23.617 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.getFbLoginUrl (Socioboard)"
+2016-08-03 16:26:23.625 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.getFbLoginUrl (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:26:23.767 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:0
+2016-08-03 16:26:23.775 +05:30 [Debug] Executed action method "Socioboard.Controllers.FacebookManagerController.getFbLoginUrl (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ContentResult".
+2016-08-03 16:26:23.779 +05:30 [Information] Executing ContentResult with HTTP Response ContentType of "text/plain; charset=utf-8"
+2016-08-03 16:26:23.782 +05:30 [Information] Executed action "Socioboard.Controllers.FacebookManagerController.getFbLoginUrl (Socioboard)" in 163.3333ms
+2016-08-03 16:26:23.784 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:1
+2016-08-03 16:26:23.787 +05:30 [Information] Request finished in 205.7205ms 200 text/plain; charset=utf-8
+2016-08-03 16:26:23.788 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" completed keep alive response.
+2016-08-03 16:26:24.282 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/Facebook?code=AQBRKyRrpMrB88DdNoIiOyz1GZnqzH5s6AVJ0vbc_NWqivl6reNOdsHJuG2-h_MnAgmNd_gE5z2je4aBroFXk8-jI15JIy6dNhkFAsVx7XsGfSh-WevCwO2zehRmoAfg4r8SeMyCeAETbcBqp5k5yFfB966DHsCZY5ujvkZgFh2wamhQOFYMl1XZ1Ofr8sRLMBtqxKoDCaiQfHkRCroissfFAS3bUgYAdLyl16EMKV2JV8Im1Fw0B-03a0bPApTmCMglg4gX-yALFzEIWRTVpwxaAhBeHlQy-Kv-RT7Wgs8Ve83Ysq4wnDv28M788u8tOTMmV5ebCSjqmpsAMRLfZoNl  
+2016-08-03 16:26:24.284 +05:30 [Debug] The request path "/FacebookManager/Facebook" does not match a supported file type
+2016-08-03 16:26:24.284 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:26:24.289 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)"
+2016-08-03 16:26:24.479 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" with arguments (["AQBRKyRrpMrB88DdNoIiOyz1GZnqzH5s6AVJ0vbc_NWqivl6reNOdsHJuG2-h_MnAgmNd_gE5z2je4aBroFXk8-jI15JIy6dNhkFAsVx7XsGfSh-WevCwO2zehRmoAfg4r8SeMyCeAETbcBqp5k5yFfB966DHsCZY5ujvkZgFh2wamhQOFYMl1XZ1Ofr8sRLMBtqxKoDCaiQfHkRCroissfFAS3bUgYAdLyl16EMKV2JV8Im1Fw0B-03a0bPApTmCMglg4gX-yALFzEIWRTVpwxaAhBeHlQy-Kv-RT7Wgs8Ve83Ysq4wnDv28M788u8tOTMmV5ebCSjqmpsAMRLfZoNl"]) - ModelState is Valid
+2016-08-03 16:26:24.518 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:1
+2016-08-03 16:26:41.002 +05:30 [Debug] Executed action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult".
+2016-08-03 16:26:41.039 +05:30 [Information] Executing RedirectResult, redirecting to "/Home".
+2016-08-03 16:26:41.042 +05:30 [Information] Executed action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" in 16750.832ms
+2016-08-03 16:26:41.043 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:2
+2016-08-03 16:26:41.046 +05:30 [Information] Request finished in 16765.2291ms 302 
+2016-08-03 16:26:41.047 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" completed keep alive response.
+2016-08-03 16:26:41.312 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home  
+2016-08-03 16:26:41.314 +05:30 [Debug] The request path "/Home" does not match a supported file type
+2016-08-03 16:26:41.314 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:26:41.315 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2016-08-03 16:26:41.321 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:26:41.331 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:2
+2016-08-03 16:26:41.396 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult".
+2016-08-03 16:26:41.399 +05:30 [Information] Executing RedirectResult, redirecting to "/".
+2016-08-03 16:26:41.401 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.Index (Socioboard)" in 83.9437ms
+2016-08-03 16:26:41.404 +05:30 [Information] Request finished in 92.1082ms 302 
+2016-08-03 16:26:41.405 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" completed keep alive response.
+2016-08-03 16:26:41.410 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2016-08-03 16:26:41.411 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-08-03 16:26:41.411 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:26:41.412 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2016-08-03 16:26:41.414 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:26:41.415 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-03 16:26:41.420 +05:30 [Debug] View lookup cache hit for view '"Index"' in controller '"Index"'.
+2016-08-03 16:26:41.422 +05:30 [Debug] The view '"Index"' was found.
+2016-08-03 16:26:41.424 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2016-08-03 16:26:41.429 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:2
+2016-08-03 16:26:41.461 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 46.7084ms
+2016-08-03 16:26:41.462 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:2
+2016-08-03 16:26:41.500 +05:30 [Information] Request finished in 79.0196ms 200 text/html; charset=utf-8
+2016-08-03 16:26:41.502 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" completed keep alive response.
+2016-08-03 16:26:41.576 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2016-08-03 16:26:41.578 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2016-08-03 16:26:41.581 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:26:41.589 +05:30 [Information] Request finished in 13.6844ms 404 
+2016-08-03 16:26:41.590 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" completed keep alive response.
+2016-08-03 16:27:48.179 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" received FIN.
+2016-08-03 16:27:48.179 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" received FIN.
+2016-08-03 16:27:48.182 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" disconnecting.
+2016-08-03 16:27:48.183 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" disconnecting.
+2016-08-03 16:27:48.185 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" sending FIN.
+2016-08-03 16:27:48.187 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" sending FIN.
+2016-08-03 16:27:48.201 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" sent FIN with status "0".
+2016-08-03 16:27:48.201 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" sent FIN with status "0".
+2016-08-03 16:27:48.206 +05:30 [Debug] Connection id ""0HKTRHIT21AO1"" stopped.
+2016-08-03 16:27:48.207 +05:30 [Debug] Connection id ""0HKTRHIT21AO2"" stopped.
+2016-08-03 16:29:22.050 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" started.
+2016-08-03 16:29:22.099 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/GoogleManager/getGoogleLoginUrl  
+2016-08-03 16:29:22.101 +05:30 [Debug] The request path "/GoogleManager/getGoogleLoginUrl" does not match a supported file type
+2016-08-03 16:29:22.106 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:29:22.108 +05:30 [Debug] Executing action "Socioboard.Controllers.GoogleManagerController.getGoogleLoginUrl (Socioboard)"
+2016-08-03 16:29:22.112 +05:30 [Information] Executing action method "Socioboard.Controllers.GoogleManagerController.getGoogleLoginUrl (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:29:22.116 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:2
+2016-08-03 16:29:22.119 +05:30 [Debug] Executed action method "Socioboard.Controllers.GoogleManagerController.getGoogleLoginUrl (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ContentResult".
+2016-08-03 16:29:22.122 +05:30 [Information] Executing ContentResult with HTTP Response ContentType of "text/plain; charset=utf-8"
+2016-08-03 16:29:22.124 +05:30 [Information] Executed action "Socioboard.Controllers.GoogleManagerController.getGoogleLoginUrl (Socioboard)" in 14.6365ms
+2016-08-03 16:29:22.125 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:29:22.128 +05:30 [Information] Request finished in 50.3627ms 200 text/plain; charset=utf-8
+2016-08-03 16:29:22.129 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:29:23.146 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/GoogleManager/Google?code=4/h2y7V3hp472iQN5GTrE-IN31wZOmj9khlBqB-dRQqXg  
+2016-08-03 16:29:23.148 +05:30 [Debug] The request path "/GoogleManager/Google" does not match a supported file type
+2016-08-03 16:29:23.150 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:29:23.152 +05:30 [Debug] Executing action "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)"
+2016-08-03 16:29:23.159 +05:30 [Information] Executing action method "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)" with arguments (["4/h2y7V3hp472iQN5GTrE-IN31wZOmj9khlBqB-dRQqXg"]) - ModelState is Valid
+2016-08-03 16:29:23.169 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:29:37.952 +05:30 [Debug] Executed action method "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult".
+2016-08-03 16:29:37.953 +05:30 [Information] Executing RedirectResult, redirecting to "/Home".
+2016-08-03 16:29:37.955 +05:30 [Information] Executed action "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)" in 14799.9287ms
+2016-08-03 16:29:37.957 +05:30 [Information] Request finished in 14811.8504ms 302 
+2016-08-03 16:29:37.958 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:29:37.966 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home  
+2016-08-03 16:29:37.968 +05:30 [Debug] The request path "/Home" does not match a supported file type
+2016-08-03 16:29:37.969 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:29:37.970 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2016-08-03 16:29:37.971 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:29:37.972 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:29:37.973 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult".
+2016-08-03 16:29:37.974 +05:30 [Information] Executing RedirectResult, redirecting to "/".
+2016-08-03 16:29:37.976 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.Index (Socioboard)" in 5.1688ms
+2016-08-03 16:29:37.979 +05:30 [Information] Request finished in 13.6285ms 302 
+2016-08-03 16:29:37.979 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:29:37.985 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2016-08-03 16:29:37.986 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-08-03 16:29:37.987 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:29:37.988 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2016-08-03 16:29:37.990 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:29:37.991 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-03 16:29:37.992 +05:30 [Debug] View lookup cache hit for view '"Index"' in controller '"Index"'.
+2016-08-03 16:29:37.993 +05:30 [Debug] The view '"Index"' was found.
+2016-08-03 16:29:37.995 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2016-08-03 16:29:37.998 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:29:38.026 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 35.9417ms
+2016-08-03 16:29:38.027 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:29:38.043 +05:30 [Information] Request finished in 56.7559ms 200 text/html; charset=utf-8
+2016-08-03 16:29:38.044 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:29:38.102 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2016-08-03 16:29:38.105 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2016-08-03 16:29:38.106 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:29:38.108 +05:30 [Information] Request finished in 8.4358ms 404 
+2016-08-03 16:29:38.110 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:29:38.131 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2016-08-03 16:29:38.133 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2016-08-03 16:29:38.134 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:29:38.136 +05:30 [Information] Request finished in 6.9425ms 404 
+2016-08-03 16:29:38.137 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:29:51.001 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/getFbLoginUrl  
+2016-08-03 16:29:51.003 +05:30 [Debug] The request path "/FacebookManager/getFbLoginUrl" does not match a supported file type
+2016-08-03 16:29:51.006 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:29:51.009 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.getFbLoginUrl (Socioboard)"
+2016-08-03 16:29:51.016 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.getFbLoginUrl (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:29:51.018 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:29:51.020 +05:30 [Debug] Executed action method "Socioboard.Controllers.FacebookManagerController.getFbLoginUrl (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ContentResult".
+2016-08-03 16:29:51.025 +05:30 [Information] Executing ContentResult with HTTP Response ContentType of "text/plain; charset=utf-8"
+2016-08-03 16:29:51.028 +05:30 [Information] Executed action "Socioboard.Controllers.FacebookManagerController.getFbLoginUrl (Socioboard)" in 16.4722ms
+2016-08-03 16:29:51.029 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:29:51.036 +05:30 [Information] Request finished in 51.9716ms 200 text/plain; charset=utf-8
+2016-08-03 16:29:51.041 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:29:51.477 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/FacebookManager/Facebook?code=AQB1frEwwEptbEFd_tZzt5Y2_YGpkDsvecRmhdw7Z4F3Qx1dc_wEH_Kk3UhezBThuZjnxquecy57LGaKnCuSBA7Pty6EwftmOlJgzIqYy_tMvLUtF4aZ8d5yt9rjwVmufE3A2Y3ggDFbAjfSNVNl3teRtsjeMNvnnw7aplf1SuOmXJrD59lxMbFjX9H1B7lkoQ-UGZBx8Rh8j5S0RBWvoqFdSNKqKXxCfup8WQBZ_31i75zQr6B-Tdh9_hkEy3veBO9NKXzPTX5zYlSPkyKA8HkrIr_k1qu3LEWxndGEt05FLabE_VnBkK1tLrb4sW1jta3wL0SAibDn67HRi0ayK-Zm  
+2016-08-03 16:29:51.478 +05:30 [Debug] The request path "/FacebookManager/Facebook" does not match a supported file type
+2016-08-03 16:29:51.479 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:29:51.479 +05:30 [Debug] Executing action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)"
+2016-08-03 16:29:51.481 +05:30 [Information] Executing action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" with arguments (["AQB1frEwwEptbEFd_tZzt5Y2_YGpkDsvecRmhdw7Z4F3Qx1dc_wEH_Kk3UhezBThuZjnxquecy57LGaKnCuSBA7Pty6EwftmOlJgzIqYy_tMvLUtF4aZ8d5yt9rjwVmufE3A2Y3ggDFbAjfSNVNl3teRtsjeMNvnnw7aplf1SuOmXJrD59lxMbFjX9H1B7lkoQ-UGZBx8Rh8j5S0RBWvoqFdSNKqKXxCfup8WQBZ_31i75zQr6B-Tdh9_hkEy3veBO9NKXzPTX5zYlSPkyKA8HkrIr_k1qu3LEWxndGEt05FLabE_VnBkK1tLrb4sW1jta3wL0SAibDn67HRi0ayK-Zm"]) - ModelState is Valid
+2016-08-03 16:29:51.483 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:30:04.608 +05:30 [Debug] Executed action method "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult".
+2016-08-03 16:30:04.612 +05:30 [Information] Executing RedirectResult, redirecting to "/Home".
+2016-08-03 16:30:04.613 +05:30 [Information] Executed action "Socioboard.Controllers.FacebookManagerController.Facebook (Socioboard)" in 13131.4831ms
+2016-08-03 16:30:04.614 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:30:04.618 +05:30 [Information] Request finished in 13140.7146ms 302 
+2016-08-03 16:30:04.619 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:30:04.625 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home  
+2016-08-03 16:30:04.626 +05:30 [Debug] The request path "/Home" does not match a supported file type
+2016-08-03 16:30:04.627 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:04.628 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2016-08-03 16:30:04.630 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 16:30:04.631 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:3
+2016-08-03 16:30:11.688 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-03 16:30:11.689 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Home"'.
+2016-08-03 16:30:11.690 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-08-03 16:30:11.779 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 88.0426ms.
+2016-08-03 16:30:11.780 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-08-03 16:30:11.999 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 219.0464ms.
+2016-08-03 16:30:12.005 +05:30 [Debug] The view '"Index"' was found.
+2016-08-03 16:30:12.008 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Home/Index.cshtml".
+2016-08-03 16:30:12.115 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.Index (Socioboard)" in 7485.2412ms
+2016-08-03 16:30:12.116 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"4541175d-7c06-4d4c-c9d1-c16fbe238345", Count:4
+2016-08-03 16:30:12.134 +05:30 [Information] Request finished in 7505.6511ms 200 text/html; charset=utf-8
+2016-08-03 16:30:12.141 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:30:12.191 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" started.
+2016-08-03 16:30:12.192 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/services/groupmember.js  
+2016-08-03 16:30:12.194 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/controllers/app.js  
+2016-08-03 16:30:12.235 +05:30 [Information] The file "/contents/socioboard/controllers/app.js" was not modified
+2016-08-03 16:30:12.236 +05:30 [Information] The file "/contents/socioboard/services/groupmember.js" was not modified
+2016-08-03 16:30:12.248 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/controllers/app.js"
+2016-08-03 16:30:12.248 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/services/groupmember.js"
+2016-08-03 16:30:12.258 +05:30 [Information] Request finished in 59.4262ms 304 application/javascript
+2016-08-03 16:30:12.260 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" completed keep alive response.
+2016-08-03 16:30:12.260 +05:30 [Information] Request finished in 65.2173ms 304 application/javascript
+2016-08-03 16:30:12.265 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:30:13.773 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/shared/header.html  
+2016-08-03 16:30:13.779 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/shared/sidebar.html  
+2016-08-03 16:30:13.786 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" started.
+2016-08-03 16:30:13.789 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" started.
+2016-08-03 16:30:13.794 +05:30 [Information] The file "/contents/socioboard/views/shared/header.html" was not modified
+2016-08-03 16:30:13.796 +05:30 [Information] The file "/contents/socioboard/views/shared/sidebar.html" was not modified
+2016-08-03 16:30:13.796 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/shared/header.html"
+2016-08-03 16:30:13.798 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/dashboard/dashboard.html  
+2016-08-03 16:30:13.798 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/shared/sidebar.html"
+2016-08-03 16:30:13.812 +05:30 [Information] Request finished in 44.1758ms 304 text/html
+2016-08-03 16:30:13.814 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" completed keep alive response.
+2016-08-03 16:30:13.814 +05:30 [Information] Request finished in 46.5678ms 304 text/html
+2016-08-03 16:30:13.820 +05:30 [Information] The file "/contents/socioboard/views/dashboard/dashboard.html" was not modified
+2016-08-03 16:30:13.801 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/controllers/dashboardcontroller.js  
+2016-08-03 16:30:13.824 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:30:13.826 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/dashboard/dashboard.html"
+2016-08-03 16:30:13.833 +05:30 [Information] The file "/contents/socioboard/controllers/dashboardcontroller.js" was not modified
+2016-08-03 16:30:13.834 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/controllers/dashboardcontroller.js"
+2016-08-03 16:30:13.834 +05:30 [Information] Request finished in 42.3648ms 304 text/html
+2016-08-03 16:30:13.840 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" completed keep alive response.
+2016-08-03 16:30:13.840 +05:30 [Information] Request finished in 45.3216ms 304 application/javascript
+2016-08-03 16:30:13.844 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" completed keep alive response.
+2016-08-03 16:30:14.490 +05:30 [Debug] Connection id ""0HKTRHIT21AO7"" started.
+2016-08-03 16:30:14.495 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BfbProfile.coverPic%7D%7D  
+2016-08-03 16:30:14.491 +05:30 [Debug] Connection id ""0HKTRHIT21AO8"" started.
+2016-08-03 16:30:14.520 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BtwtProfile.profileBackgroundImageUrl%7D%7D  
+2016-08-03 16:30:14.539 +05:30 [Debug] The request path "/{{fbProfile.coverPic}}" does not match a supported file type
+2016-08-03 16:30:14.551 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.560 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.563 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.573 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BtwtProfile.profileImageUrl%7D%7D  
+2016-08-03 16:30:14.574 +05:30 [Debug] The request path "/{{twtProfile.profileBackgroundImageUrl}}" does not match a supported file type
+2016-08-03 16:30:14.577 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.578 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.578 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.581 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgplusProfile.coverPic%7D%7D  
+2016-08-03 16:30:14.582 +05:30 [Debug] The request path "/{{twtProfile.profileImageUrl}}" does not match a supported file type
+2016-08-03 16:30:14.586 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.591 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.593 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgplusProfile.gpProfileImage%7D%7D  
+2016-08-03 16:30:14.594 +05:30 [Debug] The request path "/{{gplusProfile.coverPic}}" does not match a supported file type
+2016-08-03 16:30:14.596 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.599 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.605 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.606 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.608 +05:30 [Information] Request finished in 121.9598ms 404 
+2016-08-03 16:30:14.609 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" completed keep alive response.
+2016-08-03 16:30:14.608 +05:30 [Debug] The request path "/{{gplusProfile.gpProfileImage}}" does not match a supported file type
+2016-08-03 16:30:14.614 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.615 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.615 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.623 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgAProfile.profilePicUrl%7D%7D  
+2016-08-03 16:30:14.629 +05:30 [Information] Request finished in 127.7801ms 404 
+2016-08-03 16:30:14.630 +05:30 [Debug] The request path "/{{gAProfile.profilePicUrl}}" does not match a supported file type
+2016-08-03 16:30:14.630 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" completed keep alive response.
+2016-08-03 16:30:14.633 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.637 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.638 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.635 +05:30 [Information] Request finished in 163.6797ms 404 
+2016-08-03 16:30:14.641 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:30:14.644 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BinsProfile.ProfileUrl%7D%7D  
+2016-08-03 16:30:14.657 +05:30 [Information] Request finished in 134.0691ms 404 
+2016-08-03 16:30:14.659 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" completed keep alive response.
+2016-08-03 16:30:14.664 +05:30 [Information] Request finished in 105.2226ms 404 
+2016-08-03 16:30:14.665 +05:30 [Debug] The request path "/{{insProfile.ProfileUrl}}" does not match a supported file type
+2016-08-03 16:30:14.667 +05:30 [Information] Request finished in 80.4072ms 404 
+2016-08-03 16:30:14.667 +05:30 [Debug] Connection id ""0HKTRHIT21AO7"" completed keep alive response.
+2016-08-03 16:30:14.675 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.674 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Bprofile.profilePic%7D%7D  
+2016-08-03 16:30:14.675 +05:30 [Debug] Connection id ""0HKTRHIT21AO8"" completed keep alive response.
+2016-08-03 16:30:14.681 +05:30 [Debug] The request path "/{{profile.profilePic}}" does not match a supported file type
+2016-08-03 16:30:14.681 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BlinProfile.LogoUrl%7D%7D  
+2016-08-03 16:30:14.676 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.684 +05:30 [Debug] The request path "/{{linProfile.LogoUrl}}" does not match a supported file type
+2016-08-03 16:30:14.682 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.684 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Btwtfollower.profile_image_url%7D%7D  
+2016-08-03 16:30:14.685 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.686 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.688 +05:30 [Debug] The request path "/{{twtfollower.profile_image_url}}" does not match a supported file type
+2016-08-03 16:30:14.689 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 16:30:14.687 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.690 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.692 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.692 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.691 +05:30 [Information] Request finished in 61.5742ms 404 
+2016-08-03 16:30:14.688 +05:30 [Debug] No actions matched the current request
+2016-08-03 16:30:14.697 +05:30 [Debug] Request did not match any routes.
+2016-08-03 16:30:14.694 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" completed keep alive response.
+2016-08-03 16:30:14.699 +05:30 [Information] Request finished in 35.4649ms 404 
+2016-08-03 16:30:14.701 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" completed keep alive response.
+2016-08-03 16:30:14.705 +05:30 [Information] Request finished in 29.3464ms 404 
+2016-08-03 16:30:14.706 +05:30 [Information] Request finished in 64.8855ms 404 
+2016-08-03 16:30:14.706 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" completed keep alive response.
+2016-08-03 16:30:14.707 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" completed keep alive response.
+2016-08-03 16:31:48.177 +05:30 [Debug] Connection id ""0HKTRHIT21AO8"" received FIN.
+2016-08-03 16:31:48.178 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" received FIN.
+2016-08-03 16:31:48.179 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" received FIN.
+2016-08-03 16:31:48.180 +05:30 [Debug] Connection id ""0HKTRHIT21AO7"" received FIN.
+2016-08-03 16:31:48.178 +05:30 [Debug] Connection id ""0HKTRHIT21AO8"" disconnecting.
+2016-08-03 16:31:48.183 +05:30 [Debug] Connection id ""0HKTRHIT21AO8"" sending FIN.
+2016-08-03 16:31:48.180 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" disconnecting.
+2016-08-03 16:31:48.185 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" disconnecting.
+2016-08-03 16:31:48.185 +05:30 [Debug] Connection id ""0HKTRHIT21AO7"" disconnecting.
+2016-08-03 16:31:48.184 +05:30 [Debug] Connection id ""0HKTRHIT21AO8"" sent FIN with status "0".
+2016-08-03 16:31:48.188 +05:30 [Debug] Connection id ""0HKTRHIT21AO8"" stopped.
+2016-08-03 16:31:48.186 +05:30 [Debug] Connection id ""0HKTRHIT21AO7"" sending FIN.
+2016-08-03 16:31:48.189 +05:30 [Debug] Connection id ""0HKTRHIT21AO7"" sent FIN with status "0".
+2016-08-03 16:31:48.191 +05:30 [Debug] Connection id ""0HKTRHIT21AO7"" stopped.
+2016-08-03 16:31:48.189 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" sending FIN.
+2016-08-03 16:31:48.192 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" sending FIN.
+2016-08-03 16:31:48.191 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" received FIN.
+2016-08-03 16:31:48.194 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" received FIN.
+2016-08-03 16:31:48.193 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" sent FIN with status "0".
+2016-08-03 16:31:48.199 +05:30 [Debug] Connection id ""0HKTRHIT21AO4"" stopped.
+2016-08-03 16:31:48.200 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" sent FIN with status "0".
+2016-08-03 16:31:48.201 +05:30 [Debug] Connection id ""0HKTRHIT21AO6"" stopped.
+2016-08-03 16:31:48.202 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" disconnecting.
+2016-08-03 16:31:48.203 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" sending FIN.
+2016-08-03 16:31:48.204 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" sent FIN with status "0".
+2016-08-03 16:31:48.207 +05:30 [Debug] Connection id ""0HKTRHIT21AO5"" stopped.
+2016-08-03 16:31:48.206 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" disconnecting.
+2016-08-03 16:31:48.209 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" sending FIN.
+2016-08-03 16:31:48.211 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" sent FIN with status "0".
+2016-08-03 16:31:48.213 +05:30 [Debug] Connection id ""0HKTRHIT21AO3"" stopped.
+2016-08-03 19:11:54.195 +05:30 [Information] User profile is available. Using '"C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+2016-08-03 19:11:54.347 +05:30 [Debug] Hosting starting
+2016-08-03 19:11:54.480 +05:30 [Debug] Hosting started
+2016-08-03 19:11:54.558 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" started.
+2016-08-03 19:11:54.558 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" started.
+2016-08-03 19:11:54.756 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:9821/  0
+2016-08-03 19:11:54.756 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2016-08-03 19:11:54.839 +05:30 [Information] Request finished in 122.1016ms 200 
+2016-08-03 19:11:54.920 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:11:54.979 +05:30 [Debug] Reading data from file '"C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-cecc48ec-fee9-4bfe-b8c9-3fbbef294436.xml"'.
+2016-08-03 19:11:54.993 +05:30 [Debug] Found key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436}.
+2016-08-03 19:11:55.033 +05:30 [Debug] Considering key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436} with expiration date 2016-10-25 08:09:24Z as default key.
+2016-08-03 19:11:55.057 +05:30 [Debug] Decrypting secret element using Windows DPAPI.
+2016-08-03 19:11:55.079 +05:30 [Debug] Opening CNG algorithm '"AES"' from provider 'null' with chaining mode CBC.
+2016-08-03 19:11:55.094 +05:30 [Debug] Opening CNG algorithm '"SHA256"' from provider 'null' with HMAC.
+2016-08-03 19:11:55.114 +05:30 [Debug] Using key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436} as the default key.
+2016-08-03 19:11:55.140 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-08-03 19:11:55.509 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:11:55.740 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2016-08-03 19:11:55.892 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 19:11:55.933 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-03 19:11:56.170 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Index"'.
+2016-08-03 19:11:56.209 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2016-08-03 19:11:56.974 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 761.266ms.
+2016-08-03 19:11:56.995 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2016-08-03 19:12:03.529 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 6533.6071ms.
+2016-08-03 19:12:03.537 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-08-03 19:12:03.544 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 6.5624ms.
+2016-08-03 19:12:03.545 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-08-03 19:12:03.604 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 57.998ms.
+2016-08-03 19:12:03.623 +05:30 [Debug] The view '"Index"' was found.
+2016-08-03 19:12:03.628 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2016-08-03 19:12:03.902 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2016-08-03 19:12:04.075 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 172.6629ms.
+2016-08-03 19:12:04.076 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2016-08-03 19:12:04.601 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 524.92ms.
+2016-08-03 19:12:04.833 +05:30 [Warning] Accessing expired session, Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56"
+2016-08-03 19:12:05.025 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 9280.6089ms
+2016-08-03 19:12:05.034 +05:30 [Information] Session started; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52"
+2016-08-03 19:12:05.045 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:0
+2016-08-03 19:12:05.283 +05:30 [Information] Request finished in 10561.4156ms 200 text/html; charset=utf-8
+2016-08-03 19:12:05.288 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:12:05.478 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2016-08-03 19:12:05.485 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2016-08-03 19:12:05.490 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:12:05.532 +05:30 [Information] Request finished in 108.5986ms 404 
+2016-08-03 19:12:05.532 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:12:39.894 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/GoogleManager/getGoogleLoginUrl  
+2016-08-03 19:12:39.898 +05:30 [Debug] The request path "/GoogleManager/getGoogleLoginUrl" does not match a supported file type
+2016-08-03 19:12:39.900 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:12:39.901 +05:30 [Debug] Executing action "Socioboard.Controllers.GoogleManagerController.getGoogleLoginUrl (Socioboard)"
+2016-08-03 19:12:39.916 +05:30 [Information] Executing action method "Socioboard.Controllers.GoogleManagerController.getGoogleLoginUrl (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 19:12:40.062 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:0
+2016-08-03 19:12:40.071 +05:30 [Debug] Executed action method "Socioboard.Controllers.GoogleManagerController.getGoogleLoginUrl (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ContentResult".
+2016-08-03 19:12:40.074 +05:30 [Information] Executing ContentResult with HTTP Response ContentType of "text/plain; charset=utf-8"
+2016-08-03 19:12:40.077 +05:30 [Information] Executed action "Socioboard.Controllers.GoogleManagerController.getGoogleLoginUrl (Socioboard)" in 172.6917ms
+2016-08-03 19:12:40.080 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:1
+2016-08-03 19:12:40.083 +05:30 [Information] Request finished in 230.6999ms 200 text/plain; charset=utf-8
+2016-08-03 19:12:40.083 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:12:40.796 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/GoogleManager/Google?code=4/_Jo7AwQGAK4ZzHD6XJN3p-7qRHCz6iHSqY7BLXBUTJc  
+2016-08-03 19:12:40.798 +05:30 [Debug] The request path "/GoogleManager/Google" does not match a supported file type
+2016-08-03 19:12:40.798 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:12:40.804 +05:30 [Debug] Executing action "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)"
+2016-08-03 19:12:40.972 +05:30 [Information] Executing action method "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)" with arguments (["4/_Jo7AwQGAK4ZzHD6XJN3p-7qRHCz6iHSqY7BLXBUTJc"]) - ModelState is Valid
+2016-08-03 19:12:41.003 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:1
+2016-08-03 19:12:51.031 +05:30 [Debug] Executed action method "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.RedirectToActionResult".
+2016-08-03 19:12:51.068 +05:30 [Information] Executing RedirectResult, redirecting to "/Home".
+2016-08-03 19:12:51.071 +05:30 [Information] Executed action "Socioboard.Controllers.GoogleManagerController.Google (Socioboard)" in 10264.3716ms
+2016-08-03 19:12:51.072 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:2
+2016-08-03 19:12:51.075 +05:30 [Information] Request finished in 10279.6038ms 302 
+2016-08-03 19:12:51.076 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:12:51.081 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home  
+2016-08-03 19:12:51.083 +05:30 [Debug] The request path "/Home" does not match a supported file type
+2016-08-03 19:12:51.084 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:12:51.086 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2016-08-03 19:12:51.089 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 19:12:51.098 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:2
+2016-08-03 19:12:57.685 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-03 19:12:57.686 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Home"'.
+2016-08-03 19:12:57.686 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-08-03 19:12:57.779 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 92.2305ms.
+2016-08-03 19:12:57.780 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-08-03 19:12:58.125 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 345.1314ms.
+2016-08-03 19:12:58.132 +05:30 [Debug] The view '"Index"' was found.
+2016-08-03 19:12:58.151 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Home/Index.cshtml".
+2016-08-03 19:12:58.278 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.Index (Socioboard)" in 7191.4182ms
+2016-08-03 19:12:58.279 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:3
+2016-08-03 19:12:58.291 +05:30 [Information] Request finished in 7207.6477ms 200 text/html; charset=utf-8
+2016-08-03 19:12:58.293 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:12:58.359 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/css/admin/custom.css  
+2016-08-03 19:12:58.399 +05:30 [Information] The file "/contents/socioboard/css/admin/custom.css" was not modified
+2016-08-03 19:12:58.411 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/css/admin/custom.css"
+2016-08-03 19:12:58.414 +05:30 [Information] Request finished in 61.9425ms 304 text/css
+2016-08-03 19:12:58.415 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:12:59.915 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/shared/sidebar.html  
+2016-08-03 19:12:59.919 +05:30 [Information] The file "/contents/socioboard/views/shared/sidebar.html" was not modified
+2016-08-03 19:12:59.921 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/shared/sidebar.html"
+2016-08-03 19:12:59.929 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" started.
+2016-08-03 19:12:59.932 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/controllers/dashboardcontroller.js  
+2016-08-03 19:12:59.934 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/dashboard/dashboard.html  
+2016-08-03 19:12:59.936 +05:30 [Information] Request finished in 25.248ms 304 text/html
+2016-08-03 19:12:59.937 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:12:59.941 +05:30 [Information] The file "/contents/socioboard/views/dashboard/dashboard.html" was not modified
+2016-08-03 19:12:59.942 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/dashboard/dashboard.html"
+2016-08-03 19:12:59.943 +05:30 [Information] The file "/contents/socioboard/controllers/dashboardcontroller.js" was not modified
+2016-08-03 19:12:59.944 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/controllers/dashboardcontroller.js"
+2016-08-03 19:12:59.946 +05:30 [Information] Request finished in 15.4525ms 304 text/html
+2016-08-03 19:12:59.948 +05:30 [Information] Request finished in 22.4027ms 304 application/javascript
+2016-08-03 19:12:59.948 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:12:59.948 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:00.461 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" started.
+2016-08-03 19:13:00.475 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" started.
+2016-08-03 19:13:00.475 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" started.
+2016-08-03 19:13:00.497 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BfbProfile.coverPic%7D%7D  
+2016-08-03 19:13:00.604 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgAProfile.profilePicUrl%7D%7D  
+2016-08-03 19:13:00.707 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgplusProfile.coverPic%7D%7D  
+2016-08-03 19:13:00.709 +05:30 [Debug] The request path "/{{gAProfile.profilePicUrl}}" does not match a supported file type
+2016-08-03 19:13:00.709 +05:30 [Debug] The request path "/{{gplusProfile.coverPic}}" does not match a supported file type
+2016-08-03 19:13:00.716 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.719 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BtwtProfile.profileImageUrl%7D%7D  
+2016-08-03 19:13:00.712 +05:30 [Debug] The request path "/{{fbProfile.coverPic}}" does not match a supported file type
+2016-08-03 19:13:00.720 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.721 +05:30 [Debug] The request path "/{{twtProfile.profileImageUrl}}" does not match a supported file type
+2016-08-03 19:13:00.723 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.721 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.716 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.725 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.726 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.726 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.727 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.723 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.747 +05:30 [Information] Request finished in 251.5744ms 404 
+2016-08-03 19:13:00.759 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:00.758 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.761 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.759 +05:30 [Information] Request finished in 282.9847ms 404 
+2016-08-03 19:13:00.764 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:00.771 +05:30 [Information] Request finished in 279.2934ms 404 
+2016-08-03 19:13:00.772 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:00.778 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgplusProfile.gpProfileImage%7D%7D  
+2016-08-03 19:13:00.788 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BtwtProfile.profileBackgroundImageUrl%7D%7D  
+2016-08-03 19:13:00.794 +05:30 [Debug] The request path "/{{gplusProfile.gpProfileImage}}" does not match a supported file type
+2016-08-03 19:13:00.794 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BlinProfile.LogoUrl%7D%7D  
+2016-08-03 19:13:00.795 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.794 +05:30 [Debug] The request path "/{{twtProfile.profileBackgroundImageUrl}}" does not match a supported file type
+2016-08-03 19:13:00.796 +05:30 [Debug] The request path "/{{linProfile.LogoUrl}}" does not match a supported file type
+2016-08-03 19:13:00.796 +05:30 [Information] Request finished in 68.4908ms 404 
+2016-08-03 19:13:00.801 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:00.798 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.798 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.805 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.805 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.806 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BinsProfile.ProfileUrl%7D%7D  
+2016-08-03 19:13:00.799 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.807 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.810 +05:30 [Information] Request finished in 37.5319ms 404 
+2016-08-03 19:13:00.813 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:00.809 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.812 +05:30 [Debug] The request path "/{{insProfile.ProfileUrl}}" does not match a supported file type
+2016-08-03 19:13:00.817 +05:30 [Information] Request finished in 42.7647ms 404 
+2016-08-03 19:13:00.820 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.818 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.819 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Bprofile.profilePic%7D%7D  
+2016-08-03 19:13:00.820 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:00.821 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.826 +05:30 [Debug] The request path "/{{profile.profilePic}}" does not match a supported file type
+2016-08-03 19:13:00.829 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Btwtfollower.profile_image_url%7D%7D  
+2016-08-03 19:13:00.829 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.826 +05:30 [Information] Request finished in 45.9345ms 404 
+2016-08-03 19:13:00.831 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.828 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.830 +05:30 [Debug] The request path "/{{twtfollower.profile_image_url}}" does not match a supported file type
+2016-08-03 19:13:00.836 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:00.835 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.837 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:00.832 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:00.839 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:00.839 +05:30 [Information] Request finished in 33.8305ms 404 
+2016-08-03 19:13:00.843 +05:30 [Information] Request finished in 22.5258ms 404 
+2016-08-03 19:13:00.844 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:00.847 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:00.849 +05:30 [Information] Request finished in 19.5355ms 404 
+2016-08-03 19:13:00.850 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:07.331 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home/changeSelectdGroupId?groupId=3  
+2016-08-03 19:13:07.335 +05:30 [Debug] The request path "/Home/changeSelectdGroupId" does not match a supported file type
+2016-08-03 19:13:07.337 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:07.352 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.changeSelectdGroupId (Socioboard)"
+2016-08-03 19:13:07.356 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.changeSelectdGroupId (Socioboard)" with arguments (["3"]) - ModelState is Valid
+2016-08-03 19:13:07.357 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:3
+2016-08-03 19:13:07.359 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.changeSelectdGroupId (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2016-08-03 19:13:07.375 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-03 19:13:07.379 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"text/plain; charset=utf-8"' to write the response.
+2016-08-03 19:13:07.383 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-03 19:13:07.391 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.changeSelectdGroupId (Socioboard)" in 37.1774ms
+2016-08-03 19:13:07.392 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:3
+2016-08-03 19:13:07.394 +05:30 [Information] Request finished in 64.9ms 200 text/plain; charset=utf-8
+2016-08-03 19:13:07.394 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:07.409 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home  
+2016-08-03 19:13:07.410 +05:30 [Debug] The request path "/Home" does not match a supported file type
+2016-08-03 19:13:07.410 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:07.411 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2016-08-03 19:13:07.412 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 19:13:07.414 +05:30 [Debug] Session loaded; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:3
+2016-08-03 19:13:13.723 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-03 19:13:13.726 +05:30 [Debug] View lookup cache hit for view '"Index"' in controller '"Home"'.
+2016-08-03 19:13:13.726 +05:30 [Debug] The view '"Index"' was found.
+2016-08-03 19:13:13.727 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Home/Index.cshtml".
+2016-08-03 19:13:13.737 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.Index (Socioboard)" in 6324.2682ms
+2016-08-03 19:13:13.738 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"5bf31739-f371-a90c-deb4-4c42c3bb2e52", Count:3
+2016-08-03 19:13:13.756 +05:30 [Information] Request finished in 6341.1416ms 200 text/html; charset=utf-8
+2016-08-03 19:13:13.760 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:13.840 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/css/admin/materialize.css  
+2016-08-03 19:13:13.859 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css  
+2016-08-03 19:13:13.863 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/css/admin/custom.css  
+2016-08-03 19:13:13.869 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/simple-line-icons/simple-line-icons.min.css  
+2016-08-03 19:13:13.876 +05:30 [Information] The file "/contents/socioboard/css/admin/materialize.css" was not modified
+2016-08-03 19:13:13.878 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/css/admin/materialize.css"
+2016-08-03 19:13:13.878 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/js/admin/plugins/perfect-scrollbar/perfect-scrollbar.css  
+2016-08-03 19:13:13.881 +05:30 [Information] The file "/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css" was not modified
+2016-08-03 19:13:13.885 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css"
+2016-08-03 19:13:13.886 +05:30 [Information] The file "/contents/socioboard/css/admin/custom.css" was not modified
+2016-08-03 19:13:13.889 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/css/admin/custom.css"
+2016-08-03 19:13:13.891 +05:30 [Information] The file "/contents/socioboard/global/plugins/simple-line-icons/simple-line-icons.min.css" was not modified
+2016-08-03 19:13:13.892 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/simple-line-icons/simple-line-icons.min.css"
+2016-08-03 19:13:13.897 +05:30 [Information] Request finished in 68.2996ms 304 text/css
+2016-08-03 19:13:13.899 +05:30 [Information] The file "/contents/socioboard/js/admin/plugins/perfect-scrollbar/perfect-scrollbar.css" was not modified
+2016-08-03 19:13:13.899 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:13.902 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/js/admin/plugins/perfect-scrollbar/perfect-scrollbar.css"
+2016-08-03 19:13:13.906 +05:30 [Information] Request finished in 73.0073ms 304 text/css
+2016-08-03 19:13:13.907 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:13.904 +05:30 [Information] Request finished in 55.4647ms 304 text/css
+2016-08-03 19:13:13.909 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:13.918 +05:30 [Information] Request finished in 72.4102ms 304 text/css
+2016-08-03 19:13:13.940 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:13.939 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/css/admin/style.css  
+2016-08-03 19:13:13.945 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/dropify/dist/css/dropify.min.css  
+2016-08-03 19:13:13.948 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/js/admin/jquery-1.11.2.min.js  
+2016-08-03 19:13:13.950 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.css  
+2016-08-03 19:13:13.972 +05:30 [Information] Request finished in 94.804ms 304 text/css
+2016-08-03 19:13:13.974 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:13.988 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/css/frontend/alertify.core.css  
+2016-08-03 19:13:13.993 +05:30 [Information] The file "/contents/socioboard/js/admin/jquery-1.11.2.min.js" was not modified
+2016-08-03 19:13:13.994 +05:30 [Information] The file "/contents/socioboard/global/plugins/dropify/dist/css/dropify.min.css" was not modified
+2016-08-03 19:13:13.994 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/js/admin/jquery-1.11.2.min.js"
+2016-08-03 19:13:13.996 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/dropify/dist/css/dropify.min.css"
+2016-08-03 19:13:13.995 +05:30 [Information] The file "/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.css" was not modified
+2016-08-03 19:13:14.000 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.css"
+2016-08-03 19:13:13.998 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/css/frontend/alertify.default.css  
+2016-08-03 19:13:14.005 +05:30 [Information] The file "/contents/socioboard/css/admin/style.css" was not modified
+2016-08-03 19:13:14.007 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/css/admin/style.css"
+2016-08-03 19:13:14.008 +05:30 [Information] The file "/contents/socioboard/css/frontend/alertify.core.css" was not modified
+2016-08-03 19:13:14.009 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/css/frontend/alertify.core.css"
+2016-08-03 19:13:14.010 +05:30 [Information] Request finished in 95.686ms 304 text/css
+2016-08-03 19:13:14.011 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:14.011 +05:30 [Information] Request finished in 87.3984ms 304 text/css
+2016-08-03 19:13:14.018 +05:30 [Information] The file "/contents/socioboard/css/frontend/alertify.default.css" was not modified
+2016-08-03 19:13:14.019 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:14.016 +05:30 [Information] Request finished in 81.2082ms 304 application/javascript
+2016-08-03 19:13:14.019 +05:30 [Information] Request finished in 185.6327ms 304 text/css
+2016-08-03 19:13:14.020 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/css/frontend/alertify.default.css"
+2016-08-03 19:13:14.045 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/js/admin/plugins/perfect-scrollbar/perfect-scrollbar.min.js  
+2016-08-03 19:13:14.049 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/angularjs/angular.js  
+2016-08-03 19:13:14.025 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:14.046 +05:30 [Information] Request finished in 69.1107ms 304 text/css
+2016-08-03 19:13:14.056 +05:30 [Information] Request finished in 69.09ms 304 text/css
+2016-08-03 19:13:14.061 +05:30 [Information] The file "/contents/socioboard/js/admin/plugins/perfect-scrollbar/perfect-scrollbar.min.js" was not modified
+2016-08-03 19:13:14.063 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:14.075 +05:30 [Information] The file "/contents/socioboard/global/plugins/angularjs/angular.js" was not modified
+2016-08-03 19:13:14.078 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/angularjs/angular.js"
+2016-08-03 19:13:14.073 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/js/admin/plugins/perfect-scrollbar/perfect-scrollbar.min.js"
+2016-08-03 19:13:14.066 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:14.080 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/angularjs/angular-sanitize.min.js  
+2016-08-03 19:13:14.091 +05:30 [Information] Request finished in 57.9446ms 304 application/javascript
+2016-08-03 19:13:14.093 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:14.091 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/angularjs/plugins/angular-ui-router.min.js  
+2016-08-03 19:13:14.106 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/angularjs/plugins/ocLazyLoad.min.js  
+2016-08-03 19:13:14.106 +05:30 [Information] Request finished in 72.774ms 304 application/javascript
+2016-08-03 19:13:14.050 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:14.130 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/angularjs/plugins/ui-bootstrap-tpls.min.js  
+2016-08-03 19:13:14.132 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:14.141 +05:30 [Information] The file "/contents/socioboard/global/plugins/angularjs/plugins/angular-ui-router.min.js" was not modified
+2016-08-03 19:13:14.144 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/angularjs/plugins/angular-ui-router.min.js"
+2016-08-03 19:13:14.147 +05:30 [Information] The file "/contents/socioboard/global/plugins/angularjs/angular-sanitize.min.js" was not modified
+2016-08-03 19:13:14.148 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/angularjs/angular-sanitize.min.js"
+2016-08-03 19:13:14.152 +05:30 [Information] The file "/contents/socioboard/global/plugins/angularjs/plugins/ocLazyLoad.min.js" was not modified
+2016-08-03 19:13:14.154 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/angularjs/plugins/ocLazyLoad.min.js"
+2016-08-03 19:13:14.155 +05:30 [Information] The file "/contents/socioboard/global/plugins/angularjs/plugins/ui-bootstrap-tpls.min.js" was not modified
+2016-08-03 19:13:14.160 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/controllers/app.js  
+2016-08-03 19:13:14.162 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/angularjs/plugins/ui-bootstrap-tpls.min.js"
+2016-08-03 19:13:14.168 +05:30 [Information] Request finished in 72.6589ms 304 application/javascript
+2016-08-03 19:13:14.170 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:14.173 +05:30 [Information] Request finished in 95.592ms 304 application/javascript
+2016-08-03 19:13:14.174 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:14.181 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/angularjs/angular-touch.min.js  
+2016-08-03 19:13:14.183 +05:30 [Information] The file "/contents/socioboard/controllers/app.js" was not modified
+2016-08-03 19:13:14.185 +05:30 [Information] Request finished in 65.9607ms 304 application/javascript
+2016-08-03 19:13:14.207 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/js/admin/materialize.js  
+2016-08-03 19:13:14.208 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/controllers/app.js"
+2016-08-03 19:13:14.205 +05:30 [Information] Request finished in 79.4876ms 304 application/javascript
+2016-08-03 19:13:14.239 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:14.230 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/services/groupmember.js  
+2016-08-03 19:13:14.208 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:14.270 +05:30 [Information] The file "/contents/socioboard/global/plugins/angularjs/angular-touch.min.js" was not modified
+2016-08-03 19:13:14.270 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/angularjs/angular-touch.min.js"
+2016-08-03 19:13:14.303 +05:30 [Information] Request finished in 143.7325ms 304 application/javascript
+2016-08-03 19:13:14.305 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/lazy-scroll.min.js  
+2016-08-03 19:13:14.305 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:14.313 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/js/admin/socioboard.js  
+2016-08-03 19:13:14.306 +05:30 [Information] The file "/contents/socioboard/services/groupmember.js" was not modified
+2016-08-03 19:13:14.317 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/services/groupmember.js"
+2016-08-03 19:13:14.319 +05:30 [Information] The file "/contents/socioboard/js/admin/materialize.js" was not modified
+2016-08-03 19:13:14.320 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/js/admin/materialize.js"
+2016-08-03 19:13:14.327 +05:30 [Information] The file "/contents/socioboard/global/plugins/lazy-scroll.min.js" was not modified
+2016-08-03 19:13:14.328 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/lazy-scroll.min.js"
+2016-08-03 19:13:14.329 +05:30 [Information] Request finished in 139.4348ms 304 application/javascript
+2016-08-03 19:13:14.330 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:14.334 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/dropify/dist/js/dropify.min.js  
+2016-08-03 19:13:14.337 +05:30 [Information] Request finished in 146.242ms 304 application/javascript
+2016-08-03 19:13:14.339 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:14.346 +05:30 [Information] The file "/contents/socioboard/js/admin/socioboard.js" was not modified
+2016-08-03 19:13:14.347 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/js/admin/socioboard.js"
+2016-08-03 19:13:14.351 +05:30 [Information] The file "/contents/socioboard/global/plugins/dropify/dist/js/dropify.min.js" was not modified
+2016-08-03 19:13:14.353 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/dropify/dist/js/dropify.min.js"
+2016-08-03 19:13:14.354 +05:30 [Information] Request finished in 48.3188ms 304 application/javascript
+2016-08-03 19:13:14.355 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:14.357 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/js/frontend/alertify.min.js  
+2016-08-03 19:13:14.364 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/jquery-slimscroll/jquery.slimscroll.js  
+2016-08-03 19:13:14.368 +05:30 [Information] Request finished in 63.8795ms 304 application/javascript
+2016-08-03 19:13:14.369 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:14.373 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js  
+2016-08-03 19:13:14.374 +05:30 [Information] The file "/contents/socioboard/js/frontend/alertify.min.js" was not modified
+2016-08-03 19:13:14.375 +05:30 [Information] Request finished in 48.7798ms 304 application/javascript
+2016-08-03 19:13:14.377 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/js/frontend/alertify.min.js"
+2016-08-03 19:13:14.377 +05:30 [Information] The file "/contents/socioboard/global/plugins/jquery-slimscroll/jquery.slimscroll.js" was not modified
+2016-08-03 19:13:14.379 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:14.385 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/jquery-slimscroll/jquery.slimscroll.js"
+2016-08-03 19:13:14.386 +05:30 [Information] Request finished in 161.0621ms 304 application/javascript
+2016-08-03 19:13:14.409 +05:30 [Information] Request finished in 40.3379ms 304 application/javascript
+2016-08-03 19:13:14.408 +05:30 [Information] The file "/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js" was not modified
+2016-08-03 19:13:14.422 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:14.422 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js"
+2016-08-03 19:13:14.410 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:14.440 +05:30 [Information] Request finished in 82.9491ms 304 application/javascript
+2016-08-03 19:13:14.441 +05:30 [Information] Request finished in 72.8323ms 304 application/javascript
+2016-08-03 19:13:14.442 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:14.441 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:14.516 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/fonts/roboto/Roboto-Regular.woff2  
+2016-08-03 19:13:14.519 +05:30 [Information] The file "/contents/socioboard/fonts/roboto/Roboto-Regular.woff2" was not modified
+2016-08-03 19:13:14.520 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/fonts/roboto/Roboto-Regular.woff2"
+2016-08-03 19:13:14.523 +05:30 [Information] Request finished in 7.8565ms 304 application/font-woff2
+2016-08-03 19:13:14.524 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:14.698 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/js/admin/plugins.js  
+2016-08-03 19:13:14.711 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/controllers/dashboardcontroller.js  
+2016-08-03 19:13:14.717 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/shared/sidebar.html  
+2016-08-03 19:13:14.723 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/dashboard/dashboard.html  
+2016-08-03 19:13:14.731 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/shared/footer.html  
+2016-08-03 19:13:14.735 +05:30 [Information] The file "/contents/socioboard/views/dashboard/dashboard.html" was not modified
+2016-08-03 19:13:14.736 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/dashboard/dashboard.html"
+2016-08-03 19:13:14.744 +05:30 [Information] The file "/contents/socioboard/controllers/dashboardcontroller.js" was not modified
+2016-08-03 19:13:14.745 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/controllers/dashboardcontroller.js"
+2016-08-03 19:13:14.749 +05:30 [Information] The file "/contents/socioboard/views/shared/sidebar.html" was not modified
+2016-08-03 19:13:14.749 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/shared/sidebar.html"
+2016-08-03 19:13:14.756 +05:30 [Information] The file "/contents/socioboard/views/shared/footer.html" was not modified
+2016-08-03 19:13:14.757 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/shared/footer.html"
+2016-08-03 19:13:14.769 +05:30 [Information] The file "/contents/socioboard/js/admin/plugins.js" was not modified
+2016-08-03 19:13:14.776 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/js/admin/plugins.js"
+2016-08-03 19:13:14.786 +05:30 [Information] Request finished in 59.4707ms 304 application/javascript
+2016-08-03 19:13:14.788 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:14.798 +05:30 [Information] Request finished in 42.6521ms 304 text/html
+2016-08-03 19:13:14.799 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:14.806 +05:30 [Information] Request finished in 53.2157ms 304 text/html
+2016-08-03 19:13:14.807 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:14.811 +05:30 [Information] Request finished in 65.7589ms 304 text/html
+2016-08-03 19:13:14.812 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:14.827 +05:30 [Information] Request finished in 91.8047ms 304 application/javascript
+2016-08-03 19:13:14.827 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:14.844 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/shared/header.html  
+2016-08-03 19:13:14.858 +05:30 [Information] The file "/contents/socioboard/views/shared/header.html" was not modified
+2016-08-03 19:13:14.859 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/shared/header.html"
+2016-08-03 19:13:14.869 +05:30 [Information] Request finished in 166.3172ms 304 text/html
+2016-08-03 19:13:14.870 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:14.936 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/user-bg.jpg  
+2016-08-03 19:13:14.937 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/fonts/material-design-icons/Material-Design-Icons.woff2  
+2016-08-03 19:13:14.941 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/simple-line-icons/fonts/Simple-Line-Icons.woff  
+2016-08-03 19:13:14.942 +05:30 [Information] The file "/contents/socioboard/images/user-bg.jpg" was not modified
+2016-08-03 19:13:14.944 +05:30 [Information] The file "/contents/socioboard/fonts/material-design-icons/Material-Design-Icons.woff2" was not modified
+2016-08-03 19:13:14.944 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/images/user-bg.jpg"
+2016-08-03 19:13:14.945 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/fonts/material-design-icons/Material-Design-Icons.woff2"
+2016-08-03 19:13:14.950 +05:30 [Information] The file "/contents/socioboard/global/plugins/simple-line-icons/fonts/Simple-Line-Icons.woff" was not modified
+2016-08-03 19:13:14.952 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/simple-line-icons/fonts/Simple-Line-Icons.woff"
+2016-08-03 19:13:14.954 +05:30 [Information] Request finished in 35.6504ms 304 application/font-woff2
+2016-08-03 19:13:14.955 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:14.960 +05:30 [Information] Request finished in 37.506ms 304 image/jpeg
+2016-08-03 19:13:14.961 +05:30 [Information] Request finished in 23.1522ms 304 application/font-woff
+2016-08-03 19:13:14.962 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:14.961 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:14.970 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/fonts/roboto/Roboto-Light.woff2  
+2016-08-03 19:13:14.983 +05:30 [Information] The file "/contents/socioboard/fonts/roboto/Roboto-Light.woff2" was not modified
+2016-08-03 19:13:14.985 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/fonts/roboto/Roboto-Light.woff2"
+2016-08-03 19:13:14.986 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/Socioboard.png  
+2016-08-03 19:13:14.990 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/avatar.jpg  
+2016-08-03 19:13:14.998 +05:30 [Information] The file "/contents/socioboard/images/Socioboard.png" was not modified
+2016-08-03 19:13:15.003 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/images/Socioboard.png"
+2016-08-03 19:13:15.003 +05:30 [Information] Request finished in 21.609ms 304 application/font-woff2
+2016-08-03 19:13:15.005 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:15.009 +05:30 [Information] The file "/contents/socioboard/images/avatar.jpg" was not modified
+2016-08-03 19:13:15.014 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/images/avatar.jpg"
+2016-08-03 19:13:15.015 +05:30 [Information] Request finished in 26.5323ms 304 image/png
+2016-08-03 19:13:15.018 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:15.028 +05:30 [Information] Request finished in 43.9736ms 304 image/jpeg
+2016-08-03 19:13:15.030 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:15.058 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/fonts/roboto/Roboto-Bold.woff2  
+2016-08-03 19:13:15.061 +05:30 [Information] The file "/contents/socioboard/fonts/roboto/Roboto-Bold.woff2" was not modified
+2016-08-03 19:13:15.061 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/fonts/roboto/Roboto-Bold.woff2"
+2016-08-03 19:13:15.064 +05:30 [Information] Request finished in 6.0722ms 304 application/font-woff2
+2016-08-03 19:13:15.065 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:15.187 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/font-awesome/fonts/fontawesome-webfont.woff2?v=4.5.0  
+2016-08-03 19:13:15.190 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/fonts/roboto/Roboto-Medium.woff2  
+2016-08-03 19:13:15.191 +05:30 [Information] The file "/contents/socioboard/global/plugins/font-awesome/fonts/fontawesome-webfont.woff2" was not modified
+2016-08-03 19:13:15.193 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/global/plugins/font-awesome/fonts/fontawesome-webfont.woff2"
+2016-08-03 19:13:15.193 +05:30 [Information] The file "/contents/socioboard/fonts/roboto/Roboto-Medium.woff2" was not modified
+2016-08-03 19:13:15.195 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/fonts/roboto/Roboto-Medium.woff2"
+2016-08-03 19:13:15.200 +05:30 [Information] Request finished in 31.7141ms 304 application/font-woff2
+2016-08-03 19:13:15.202 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:15.202 +05:30 [Information] Request finished in 31.6958ms 304 application/font-woff2
+2016-08-03 19:13:15.206 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:15.326 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgplusProfile.gpProfileImage%7D%7D  
+2016-08-03 19:13:15.346 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BfbProfile.coverPic%7D%7D  
+2016-08-03 19:13:15.352 +05:30 [Debug] The request path "/{{gplusProfile.gpProfileImage}}" does not match a supported file type
+2016-08-03 19:13:15.366 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.368 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BtwtProfile.profileImageUrl%7D%7D  
+2016-08-03 19:13:15.373 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.372 +05:30 [Debug] The request path "/{{fbProfile.coverPic}}" does not match a supported file type
+2016-08-03 19:13:15.382 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.384 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgplusProfile.coverPic%7D%7D  
+2016-08-03 19:13:15.384 +05:30 [Debug] The request path "/{{twtProfile.profileImageUrl}}" does not match a supported file type
+2016-08-03 19:13:15.382 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.390 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BtwtProfile.profileBackgroundImageUrl%7D%7D  
+2016-08-03 19:13:15.394 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.396 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.394 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.397 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.398 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.400 +05:30 [Debug] The request path "/{{gplusProfile.coverPic}}" does not match a supported file type
+2016-08-03 19:13:15.401 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.401 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.400 +05:30 [Debug] The request path "/{{twtProfile.profileBackgroundImageUrl}}" does not match a supported file type
+2016-08-03 19:13:15.402 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.400 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgAProfile.profilePicUrl%7D%7D  
+2016-08-03 19:13:15.403 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.412 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.413 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.417 +05:30 [Information] Request finished in 130.1279ms 404 
+2016-08-03 19:13:15.420 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:15.421 +05:30 [Information] Request finished in 138.9831ms 404 
+2016-08-03 19:13:15.418 +05:30 [Debug] The request path "/{{gAProfile.profilePicUrl}}" does not match a supported file type
+2016-08-03 19:13:15.427 +05:30 [Information] Request finished in 138.9389ms 404 
+2016-08-03 19:13:15.429 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.432 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:15.431 +05:30 [Information] Request finished in 134.1441ms 404 
+2016-08-03 19:13:15.436 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:15.428 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:15.434 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.441 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.446 +05:30 [Information] Request finished in 128.7382ms 404 
+2016-08-03 19:13:15.452 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:15.460 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BinsProfile.ProfileUrl%7D%7D  
+2016-08-03 19:13:15.463 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Btwtfollower.profile_image_url%7D%7D  
+2016-08-03 19:13:15.464 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BlinProfile.LogoUrl%7D%7D  
+2016-08-03 19:13:15.465 +05:30 [Debug] The request path "/{{insProfile.ProfileUrl}}" does not match a supported file type
+2016-08-03 19:13:15.469 +05:30 [Debug] The request path "/{{twtfollower.profile_image_url}}" does not match a supported file type
+2016-08-03 19:13:15.469 +05:30 [Debug] The request path "/{{linProfile.LogoUrl}}" does not match a supported file type
+2016-08-03 19:13:15.472 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.469 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Bprofile.profilePic%7D%7D  
+2016-08-03 19:13:15.476 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.474 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.475 +05:30 [Information] Request finished in 157.3307ms 404 
+2016-08-03 19:13:15.479 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.480 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:15.478 +05:30 [Debug] The request path "/{{profile.profilePic}}" does not match a supported file type
+2016-08-03 19:13:15.479 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.476 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.482 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:15.484 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.486 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.488 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.485 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:15.493 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:15.495 +05:30 [Information] Request finished in 58.6187ms 404 
+2016-08-03 19:13:15.499 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:15.502 +05:30 [Information] Request finished in 45.5087ms 404 
+2016-08-03 19:13:15.505 +05:30 [Information] Request finished in 47.109ms 404 
+2016-08-03 19:13:15.506 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:15.527 +05:30 [Information] Request finished in 56.418ms 404 
+2016-08-03 19:13:15.528 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:15.533 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:19.044 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/controllers/mytaskcontroller.js  
+2016-08-03 19:13:19.069 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/message/mytask.html  
+2016-08-03 19:13:19.078 +05:30 [Information] The file "/contents/socioboard/controllers/mytaskcontroller.js" was not modified
+2016-08-03 19:13:19.081 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/controllers/mytaskcontroller.js"
+2016-08-03 19:13:19.089 +05:30 [Information] The file "/contents/socioboard/views/message/mytask.html" was not modified
+2016-08-03 19:13:19.092 +05:30 [Debug] Handled. Status code: 304 File: "/contents/socioboard/views/message/mytask.html"
+2016-08-03 19:13:19.092 +05:30 [Information] Request finished in 51.8026ms 304 application/javascript
+2016-08-03 19:13:19.097 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:19.112 +05:30 [Information] Request finished in 72.8607ms 304 text/html
+2016-08-03 19:13:19.117 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:19.164 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/images/avatar.jpg  
+2016-08-03 19:13:19.166 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Btask.user.ProfilePicUrl%7D%7D  
+2016-08-03 19:13:19.168 +05:30 [Debug] The request path "/images/avatar.jpg" does not match an existing file
+2016-08-03 19:13:19.168 +05:30 [Debug] The request path "/{{task.user.ProfilePicUrl}}" does not match a supported file type
+2016-08-03 19:13:19.169 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:19.169 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:19.169 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:19.170 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:19.172 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:19.171 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:19.181 +05:30 [Information] Request finished in 13.0354ms 404 
+2016-08-03 19:13:19.186 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:19.194 +05:30 [Information] Request finished in 21.1945ms 404 
+2016-08-03 19:13:19.195 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:23.567 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/images/avatar.jpg  
+2016-08-03 19:13:23.569 +05:30 [Debug] The request path "/images/avatar.jpg" does not match an existing file
+2016-08-03 19:13:23.570 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:23.571 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:23.572 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:23.574 +05:30 [Information] Request finished in 7.6567ms 404 
+2016-08-03 19:13:23.575 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:30.583 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BtwtProfile.profileBackgroundImageUrl%7D%7D  
+2016-08-03 19:13:30.591 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BtwtProfile.profileImageUrl%7D%7D  
+2016-08-03 19:13:30.599 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BfbProfile.coverPic%7D%7D  
+2016-08-03 19:13:30.599 +05:30 [Debug] The request path "/{{twtProfile.profileImageUrl}}" does not match a supported file type
+2016-08-03 19:13:30.602 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.599 +05:30 [Debug] The request path "/{{twtProfile.profileBackgroundImageUrl}}" does not match a supported file type
+2016-08-03 19:13:30.603 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.604 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.603 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.607 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.608 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.609 +05:30 [Debug] The request path "/{{fbProfile.coverPic}}" does not match a supported file type
+2016-08-03 19:13:30.608 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgAProfile.profilePicUrl%7D%7D  
+2016-08-03 19:13:30.615 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.616 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.616 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.614 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgplusProfile.gpProfileImage%7D%7D  
+2016-08-03 19:13:30.622 +05:30 [Debug] The request path "/{{gAProfile.profilePicUrl}}" does not match a supported file type
+2016-08-03 19:13:30.624 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.623 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BgplusProfile.coverPic%7D%7D  
+2016-08-03 19:13:30.625 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.626 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.628 +05:30 [Information] Request finished in 37.9411ms 404 
+2016-08-03 19:13:30.630 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:30.635 +05:30 [Debug] The request path "/{{gplusProfile.coverPic}}" does not match a supported file type
+2016-08-03 19:13:30.636 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.637 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.637 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.638 +05:30 [Debug] The request path "/{{gplusProfile.gpProfileImage}}" does not match a supported file type
+2016-08-03 19:13:30.639 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.640 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.640 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.641 +05:30 [Information] Request finished in 55.0502ms 404 
+2016-08-03 19:13:30.643 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:30.645 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BinsProfile.ProfileUrl%7D%7D  
+2016-08-03 19:13:30.649 +05:30 [Information] Request finished in 66.2577ms 404 
+2016-08-03 19:13:30.651 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:13:30.658 +05:30 [Information] Request finished in 58.0029ms 404 
+2016-08-03 19:13:30.658 +05:30 [Debug] The request path "/{{insProfile.ProfileUrl}}" does not match a supported file type
+2016-08-03 19:13:30.682 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.684 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.684 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.659 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:30.689 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7BlinProfile.LogoUrl%7D%7D  
+2016-08-03 19:13:30.690 +05:30 [Information] Request finished in 74.2438ms 404 
+2016-08-03 19:13:30.702 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ2"" completed keep alive response.
+2016-08-03 19:13:30.709 +05:30 [Debug] The request path "/{{linProfile.LogoUrl}}" does not match a supported file type
+2016-08-03 19:13:30.712 +05:30 [Information] Request finished in 70.6405ms 404 
+2016-08-03 19:13:30.714 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ6"" completed keep alive response.
+2016-08-03 19:13:30.714 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.711 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Bprofile.profilePic%7D%7D  
+2016-08-03 19:13:30.715 +05:30 [Information] Request finished in 54.3595ms 404 
+2016-08-03 19:13:30.719 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.724 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ3"" completed keep alive response.
+2016-08-03 19:13:30.727 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/%7B%7Btwtfollower.profile_image_url%7D%7D  
+2016-08-03 19:13:30.729 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.728 +05:30 [Debug] The request path "/{{profile.profilePic}}" does not match a supported file type
+2016-08-03 19:13:30.731 +05:30 [Debug] The request path "/{{twtfollower.profile_image_url}}" does not match a supported file type
+2016-08-03 19:13:30.732 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.735 +05:30 [Information] Request finished in 84.0402ms 404 
+2016-08-03 19:13:30.737 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.734 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:13:30.739 +05:30 [Debug] No actions matched the current request
+2016-08-03 19:13:30.740 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.738 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:13:30.737 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ4"" completed keep alive response.
+2016-08-03 19:13:30.746 +05:30 [Information] Request finished in 54.1626ms 404 
+2016-08-03 19:13:30.748 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ1"" completed keep alive response.
+2016-08-03 19:13:30.747 +05:30 [Information] Request finished in 86.2567ms 404 
+2016-08-03 19:13:30.752 +05:30 [Debug] Connection id ""0HKTRKFN8JGQ5"" completed keep alive response.
+2016-08-03 19:30:54.166 +05:30 [Information] User profile is available. Using '"C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+2016-08-03 19:30:54.334 +05:30 [Debug] Hosting starting
+2016-08-03 19:30:54.466 +05:30 [Debug] Hosting started
+2016-08-03 19:30:54.698 +05:30 [Debug] Connection id ""0HKTRKQB1Q31A"" started.
+2016-08-03 19:30:54.720 +05:30 [Debug] Connection id ""0HKTRKQB1Q31B"" started.
+2016-08-03 19:30:54.905 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2016-08-03 19:30:54.905 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:9821/  0
+2016-08-03 19:30:54.995 +05:30 [Information] Request finished in 132.3505ms 200 
+2016-08-03 19:30:55.055 +05:30 [Debug] Connection id ""0HKTRKQB1Q31A"" completed keep alive response.
+2016-08-03 19:30:55.090 +05:30 [Debug] Reading data from file '"C:\Users\hp\AppData\Local\ASP.NET\DataProtection-Keys\key-cecc48ec-fee9-4bfe-b8c9-3fbbef294436.xml"'.
+2016-08-03 19:30:55.096 +05:30 [Debug] Found key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436}.
+2016-08-03 19:30:55.115 +05:30 [Debug] Considering key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436} with expiration date 2016-10-25 08:09:24Z as default key.
+2016-08-03 19:30:55.130 +05:30 [Debug] Decrypting secret element using Windows DPAPI.
+2016-08-03 19:30:55.149 +05:30 [Debug] Opening CNG algorithm '"AES"' from provider 'null' with chaining mode CBC.
+2016-08-03 19:30:55.161 +05:30 [Debug] Opening CNG algorithm '"SHA256"' from provider 'null' with HMAC.
+2016-08-03 19:30:55.185 +05:30 [Debug] Using key {cecc48ec-fee9-4bfe-b8c9-3fbbef294436} as the default key.
+2016-08-03 19:30:55.216 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-08-03 19:30:55.532 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2016-08-03 19:30:55.709 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2016-08-03 19:30:55.837 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-03 19:30:55.878 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-08-03 19:30:56.118 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Index"'.
+2016-08-03 19:30:56.159 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2016-08-03 19:30:56.837 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 674.4129ms.
+2016-08-03 19:30:56.859 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2016-08-03 19:31:03.995 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 7136.2828ms.
+2016-08-03 19:31:04.004 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-08-03 19:31:04.011 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 6.3469ms.
+2016-08-03 19:31:04.012 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-08-03 19:31:04.062 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 49.2778ms.
+2016-08-03 19:31:04.077 +05:30 [Debug] The view '"Index"' was found.
+2016-08-03 19:31:04.080 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2016-08-03 19:31:04.328 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2016-08-03 19:31:04.481 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 151.8038ms.
+2016-08-03 19:31:04.482 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2016-08-03 19:31:04.991 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 508.5952ms.
+2016-08-03 19:31:05.318 +05:30 [Warning] Accessing expired session, Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56"
+2016-08-03 19:31:05.517 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 9803.6216ms
+2016-08-03 19:31:05.525 +05:30 [Information] Session started; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"3e647cbe-31f4-87f7-8eb9-4d5b549a59dc"
+2016-08-03 19:31:05.542 +05:30 [Debug] Session stored; Key:"a7bc7e40-6603-65d2-9908-f109b26c5a56", Id:"3e647cbe-31f4-87f7-8eb9-4d5b549a59dc", Count:0
+2016-08-03 19:31:05.721 +05:30 [Information] Request finished in 10881.2642ms 200 text/html; charset=utf-8
+2016-08-03 19:31:05.725 +05:30 [Debug] Connection id ""0HKTRKQB1Q31B"" completed keep alive response.
+2016-08-03 19:31:05.844 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2016-08-03 19:31:05.849 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2016-08-03 19:31:05.852 +05:30 [Debug] Request did not match any routes.
+2016-08-03 19:31:05.871 +05:30 [Information] Request finished in 21.9335ms 404 
+2016-08-03 19:31:05.873 +05:30 [Debug] Connection id ""0HKTRKQB1Q31A"" completed keep alive response.
+2016-08-03 19:32:54.669 +05:30 [Debug] Connection id ""0HKTRKQB1Q31A"" received FIN.
+2016-08-03 19:32:54.672 +05:30 [Debug] Connection id ""0HKTRKQB1Q31B"" received FIN.
+2016-08-03 19:32:54.683 +05:30 [Debug] Connection id ""0HKTRKQB1Q31A"" disconnecting.
+2016-08-03 19:32:54.688 +05:30 [Debug] Connection id ""0HKTRKQB1Q31A"" sending FIN.
+2016-08-03 19:32:54.695 +05:30 [Debug] Connection id ""0HKTRKQB1Q31A"" sent FIN with status "0".
+2016-08-03 19:32:54.708 +05:30 [Debug] Connection id ""0HKTRKQB1Q31A"" stopped.
+2016-08-03 19:32:54.709 +05:30 [Debug] Connection id ""0HKTRKQB1Q31B"" disconnecting.
+2016-08-03 19:32:54.710 +05:30 [Debug] Connection id ""0HKTRKQB1Q31B"" sending FIN.
+2016-08-03 19:32:54.710 +05:30 [Debug] Connection id ""0HKTRKQB1Q31B"" sent FIN with status "0".
+2016-08-03 19:32:54.710 +05:30 [Debug] Connection id ""0HKTRKQB1Q31B"" stopped.

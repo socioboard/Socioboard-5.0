@@ -15,6 +15,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string strId { get; set; }
         public string feed { get; set; }
         public string feedDate { get; set; }
+        public double feedTimeStamp { get; set; }
         public string profileId { get; set; }
         public string fromId { get; set; }
         public string fromName { get; set; }

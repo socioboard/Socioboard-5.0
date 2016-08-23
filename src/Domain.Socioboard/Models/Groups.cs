@@ -10,13 +10,13 @@ namespace Domain.Socioboard.Models
     {
         public Groups()
         {
-            this.CreatedDate = DateTime.UtcNow;
+            this.createdDate = DateTime.UtcNow;
         }
-        public virtual Int64 Id { get; set; }
+        public virtual Int64 id { get; set; }
         [Required]
-        public virtual string GroupName { get; set; }
+        public virtual string groupName { get; set; }
         [Required]
-        public virtual Int64 AdminId { get; set; }
-        public virtual DateTime CreatedDate { get; set; }
+        public virtual Int64 adminId { get; set; }
+        public virtual DateTime createdDate { get; set; }
     }
 }

@@ -1,7 +1,5 @@
-/* http://graphicburger.com/simple-line-icons-webfont/ */
 @font-face {
 	font-family: 'Simple-Line-Icons';
-
 	src:url('fonts/Simple-Line-Icons.eot');
 	src:url('fonts/Simple-Line-Icons.eot?#iefix') format('embedded-opentype'),
 		url('fonts/Simple-Line-Icons.woff') format('woff'),
@@ -9,13 +7,6 @@
 		url('fonts/Simple-Line-Icons.svg#Simple-Line-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
-}
-
-@media screen and (-webkit-min-device-pixel-ratio:0) {
-	@font-face {
-		font-family: 'Simple-Line-Icons';
-		src: url('fonts/Simple-Line-Icons.svg#Simple-Line-Icons') format('svg');
-	}
 }
 
 /* Use the following CSS code if you want to use data attributes for inserting your icons */

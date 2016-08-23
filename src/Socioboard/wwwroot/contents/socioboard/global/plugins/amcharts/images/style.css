@@ -1,0 +1,36 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300);
+
+body {
+	background-color: #FFFFFF;
+	margin-left: 32px;
+	margin-top: 20px;
+	margin-right: 20px;
+	margin-bottom: 20px;
+	font-family: "Lato", Arial;
+	font-size: 14px;
+	line-height:16px;
+}
+
+hr{
+   border: 1px solid #FFFFFF;
+}
+
+a:link{
+	color:#0055CC;
+}
+a:visited{
+		color:#990099;
+}
+a:hover{
+		color:#CC0000;
+}
+
+th{
+	background-color:#FFFFFF;
+ 	font-weight:bold;
+}
+
+td{
+	background-color:#ecf7fe;
+ 	text-align:center;
+}

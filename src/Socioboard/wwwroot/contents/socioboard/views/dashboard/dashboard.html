@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card-content red white-text">
                         <p class="card-stats-title"><i class="fa fa-comments fa-fw d_card_icon"></i>Incoming Messages</p>
-                        <h4 class="card-stats-number">9</h4>
+                        <h4 class="card-stats-number">{{TotaltIncommingMessage}}</h4>
                     </div>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                 <div class="card">
                     <div class="card-content green white-text">
                         <p class="card-stats-title"><i class="fa fa-mail-reply-all fa-fw d_card_icon"></i>Sent Messages</p>
-                        <h4 class="card-stats-number">99</h4>
+                        <h4 class="card-stats-number">{{TotalSetMessages}}</h4>
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 <div class="card">
                     <div class="card-content cyan lighten-4 white-text">
                         <p class="card-stats-title"><i class="fa fa-twitter fa-fw d_card_icon"></i> Twitter Followers</p>
-                        <h4 class="card-stats-number">9K</h4>
+                        <h4 class="card-stats-number">{{TwitterFollowerCount}}</h4>
                     </div>
                 </div>
             </div>
@@ -38,7 +38,7 @@
                 <div class="card">
                     <div class="card-content light-blue darken-4 white-text">
                         <p class="card-stats-title"><i class="fa fa-facebook fa-fw d_card_icon"></i> Facebook Fans</p>
-                        <h4 class="card-stats-number">9M</h4>
+                        <h4 class="card-stats-number">{{FacebookfanPageCount}}</h4>
                     </div>
                 </div>
             </div>
@@ -59,24 +59,22 @@
                             <div class="col s12 m6 l4"  ng-repeat="fbProfile in  lstFbProfiles ">
                                 <div id="profile-card" class="card">
                                     <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{fbProfile.coverPic}}" alt="{{fbProfile.FbUserName}}">
+                                        <img class="activator" src="{{fbProfile.coverPic}}" alt="{{fbProfile.fbUserName}}">
                                     </div>
                                     <div class="card-content">
-                                        <img src="http://graph.facebook.com/{{fbProfile.FbUserId}}/picture?type=small" alt="{{fbProfile.FbUserName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="https://graph.facebook.com/{{fbProfile.fbUserId}}/picture?type=small" alt="{{fbProfile.fbUserName}}" class="circle responsive-img activator card-profile-image">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate">{{fbProfile.FbUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{fbProfile.Friends}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2"></i> +91 (97) 38281377</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{fbProfile.EmailId}}</p>
+                                        <span class="card-title activator grey-text text-darken-4 truncate">{{fbProfile.fbUserName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{fbProfile.friends}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{fbProfile.emailId}}</p>
                                     </div>
                                     <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{fbProfile.FbUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <span class="card-title grey-text text-darken-4 truncate">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{fbProfile.about}}</p>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{fbProfile.workPosition}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2"></i> +91 (97) 38281377</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{fbProfile.EmailId}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{fbProfile.emailId}}</p>
                                         <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{fbProfile.birthday}}</p>
                                         <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{fbProfile.gender}}</p>
                                     </div>
@@ -97,14 +95,12 @@
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate">{{twtProfile.twitterScreenName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{twtProfile.followersCount}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2"></i> +91 (97) 38281377</p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{twtProfile.location}}</p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate">{{twtProfile.twitterScreenName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{twtProfile.description}}</p>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{twtProfile.twitterName}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2"></i> +91 (97) 38281377</p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{twtProfile.description}}</p>
                                         <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{twtProfile.followingCount}}</p>
                                         <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{twtProfile.location}}</p>
@@ -112,6 +108,117 @@
                                 </div>
                             </div>
                             <!--twitter profiles bind end-->
+
+
+                            <!--gplus profiles binding start-->
+                            <div class="col s12 m6 l4" ng-repeat="gplusProfile in lstGplusProfiles">
+                                <div id="profile-card" class="card">
+                                    <div class="card-image waves-effect waves-block waves-light">
+                                        <img class="activator" src="{{gplusProfile.coverPic}}" alt="{{gplusProfile.gpUserName}}">
+                                    </div>
+                                    <div class="card-content">
+                                        <img src="{{gplusProfile.gpProfileImage}}" alt="{{gplusProfile.gpUserName}}" class="circle responsive-img activator card-profile-image">
+                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                            <i class="mdi-editor-mode-edit"></i>
+                                        </a>
+                                        <span class="card-title activator grey-text text-darken-4 truncate">{{gplusProfile.gpUserName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{gplusProfile.inYourCircles}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{gplusProfile.inYourCircles}}</p>
+                                    </div>
+                                    <div class="card-reveal">
+                                        <span class="card-title grey-text text-darken-4 truncate">{{gplusProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <!--<p>{{gplusProfile.description}}</p>-->
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{gplusProfile.inYourCircles}}</p>
+                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2"></i> {{gplusProfile.haveYouInCircles}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{gplusProfile.description}}</p>
+                                        <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>-->
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{gplusProfile.location}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--gplus profiles binding end-->
+
+                            <!--gA profiles binding start-->
+                            <div class="col s12 m6 l4" ng-repeat="gAProfile in lstAProfiles">
+                                <div id="profile-card" class="card">
+                                    <div class="card-image waves-effect waves-block waves-light">
+                                        <img class="activator" src="{{gAProfile.profilePicUrl}}" alt="{{gAProfile.gaProfileName}}">
+                                    </div>
+                                    <div class="card-content">
+                                        <img src="{{gAProfile.profilePicUrl}}" alt="{{gAProfile.aaProfileName}}" class="circle responsive-img activator card-profile-image">
+                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                            <i class="mdi-editor-mode-edit"></i>
+                                        </a>
+                                        <span class="card-title activator grey-text text-darken-4 truncate">{{gAProfile.gaProfileName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{gAProfile.visits}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{gAProfile.views}}</p>
+                                    </div>
+                                    <div class="card-reveal">
+                                        <span class="card-title grey-text text-darken-4 truncate">{{gAProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{gAProfile.visits}}</p>
+                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2"></i> {{gAProfile.views}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{gAProfile.websiteUrl}}</p>
+                                        <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gAProfile.followingCount}}</p>-->
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{gplgAProfileusProfile.emailId}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--gA profiles binding end-->
+
+                            <!--instagram profiles bind start-->
+                            <div class="col s12 m6 l4" ng-repeat="insProfile in lstinsProfiles">
+                                <div id="profile-card" class="card">
+                                    <div class="card-image waves-effect waves-block waves-light">
+                                        <img class="activator" src="{{insProfile.profileUrl}}" alt="{{insProfile.insUserName}}">
+                                    </div>
+                                    <div class="card-content">
+                                        <img src="{{insProfile.profileUrl}}" alt="{{insProfile.insUserName}}" class="circle responsive-img activator card-profile-image">
+                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                            <i class="mdi-editor-mode-edit"></i>
+                                        </a>
+                                        <span class="card-title activator grey-text text-darken-4 truncate">{{insProfile.insUserName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{insProfile.followers}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{insProfile.totalImages}}</p>
+                                    </div>
+                                    <div class="card-reveal">
+                                        <span class="card-title grey-text text-darken-4 truncate">{{insProfile.insUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <p>{{insProfile.bio}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{insProfile.insUserName}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{insProfile.bio}}</p>
+                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{insProfile.totalImages}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{insProfile.followedBy}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--instagram profiles bind end-->
+
+                            <!--LinkedIn Comapany page profiles bind start-->
+                            <div class="col s12 m6 l4" ng-repeat="linProfile in lstlincmpnyProfiles">
+                                <div id="profile-card" class="card">
+                                    <div class="card-image waves-effect waves-block waves-light">
+                                        <img class="activator" src="{{linProfile.logoUrl}}" alt="{{insProfile.linkedinPageName}}">
+                                    </div>
+                                    <div class="card-content">
+                                        <img src="{{linProfile.logoUrl}}" alt="{{linProfile.linkedinPageName}}" class="circle responsive-img activator card-profile-image">
+                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                            <i class="mdi-editor-mode-edit"></i>
+                                        </a>
+                                        <span class="card-title activator grey-text text-darken-4 truncate">{{linProfile.logoUrl}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{linProfile.numFollowers}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{insProfile.locations}}</p>
+                                    </div>
+                                    <div class="card-reveal">
+                                        <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinPageName}}<i class="mdi-navigation-close right"></i></span>
+                                        <p>{{linProfile.specialties}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{linProfile.linkedinPageName}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{linProfile.description}}</p>
+                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{linProfile.locations}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{linProfile.numFollowers}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--LinkedIn Comapany page profiles bind end-->
+
                         </div>
                     </div>
                     <!--card widgets end-->
@@ -382,12 +489,12 @@
                             <div class="col s12 m6 l6" ng-repeat="profile in lstProfiles">
                                 <div class="card-panel">
                                     <div class="card-image">
-                                        <div class="delet_icon" role="button" tabindex="0" ng-click="deleteProfile(profile.ProfileId)"></div>
-                                        <img src="{{profile.ProfilePic}}" class="responsive-img">
-                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.ProfileType==0" class="profile_socio_icon">
-                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/gplus-icon.png" ng-if="profile.ProfileType==5" class="profile_socio_icon">
-                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/twticon.png" ng-if="profile.ProfileType==2" class="profile_socio_icon">
-
+                                        <div class="delet_icon" role="button" tabindex="0" ng-click="deleteProfile(profile.profileId)"></div>
+                                        <img src="{{profile.profilePic}}" class="responsive-img">
+                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
+                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
+                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
+                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
                                     </div>
                                 </div>
                             </div>
@@ -423,10 +530,11 @@
                 </div>
 
                 <ul id='group_dropdown' class='dropdown-content'>
-                    <li><a href="#!" class="dropdown_text">Socioboard</a></li>
-                    <li><a href="#!" class="dropdown_text">Globussoft</a></li>
+                    <li ng-repeat="grp in groups">
+                    <a  class="dropdown_text" ng-click="changeGroup(grp.id)">{{grp.groupName}}</a>
+                    </li>
                     <li class="divider"></li>
-                    <li><a href="#!" class="dropdown_text">Create New</a></li>
+                    <li><a href="#/groups" class="dropdown_text">Create New</a></li>
                 </ul>
                 <!--end container-->
                 <!--start container-->
@@ -434,34 +542,14 @@
                     <div class="card-panel grey lighten-5 z-depth-1">
                         <h6 class="r_side_title"><i class="icon-user-following"></i>Recent Followers</h6>
                         <div class="row" id="#recent_followers_list">
-                            <div class="col s12 m6 l6">
+                            <div class="col s12 m6 l6" ng-repeat="twtfollower in TwitterRecentFollower">
                                 <div class="card-panel">
                                     <div class="card-image">
-                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="responsive-img">
+                                        <img src="{{twtfollower.profile_image_url}}" title="{{twtfollower.screen_name}}"  class="responsive-img">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col s12 m6 l6">
-                                <div class="card-panel">
-                                    <div class="card-image">
-                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="responsive-img">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col s12 m6 l6">
-                                <div class="card-panel">
-                                    <div class="card-image">
-                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="responsive-img">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col s12 m6 l6">
-                                <div class="card-panel">
-                                    <div class="card-image">
-                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="responsive-img">
-                                    </div>
-                                </div>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -470,7 +558,7 @@
         </div>
         <!-- Compose Email Trigger -->
         <div class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
-            <div class="btn-floating btn-large red modal-trigger"  href="#ComposePostModal">
+            <div class="btn-floating btn-large red modal-trigger"  ng-click="ComposePostModal()">
                 <i class="large mdi-editor-mode-edit"></i>
             </div>
         </div>
@@ -513,10 +601,11 @@
                         <div class="input-field col s12">
                             <select multiple  id="composeProfiles" >
                                 <option value="" disabled selected>Choose your option</option>
-                                <option ng-repeat="profile in lstProfiles | filter:{ProfileType:0}" value="fb_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{ProfileType:1}" value="fb_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{ProfileType:2}" value="tw_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
-
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                             </select>
                         </div>
                     </div>
@@ -552,8 +641,8 @@
                         <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
-                        <li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>
-                        <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
+                        <!--<li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>
+                        <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>-->
                         <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
                     </ul>
                 </div>
@@ -572,6 +661,15 @@
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand’s Facebook page.</p>
                         <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
                         <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
+                        <a  class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i> Get Facebook Fanpage Analytics</a>
+                        <div class="form-group input-group margin-top-10">
+                            <input type="text" placeholder="Ex: http://www.facebook.com/socioboard" id="_txtinputurl" class="form-control">
+                            <span class="input-group-btn">
+                                <button type="button" ng-click="Addfacebookpagebyurl()"  class="btn btn-info">
+                                    Submit
+                                </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div id="google" class="col s12">
@@ -583,82 +681,140 @@
                 <div id="linkedin" class="col s12">
                     <div class="center-align">
                         <p>Grant access to your profile to share updates and view your feed.</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                        <a href="../LinkedinManager/AuthenticateLinkedin" class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                        <a href="../LinkedinManager/AuthenticateLinkedin?Op=page" class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
                     </div>
                 </div>
                 <div id="instagram" class="col s12">
                     <div class="center-align">
                         <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
+                        <a href="../InstagramManager/AuthenticateInstagram" class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
                     </div>
                 </div>
-                <div id="tumblr" class="col s12">
+                <!--<div id="tumblr" class="col s12">
                     <div class="center-align">
                         <p>To allow Socioboard access to your Tumblr account, you must first give authorization from the Tumblr website</p>
                         <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add a tumblr Profile</a>
                     </div>
-                </div>
-                <div id="youtube" class="col s12">
+                </div>-->
+                <!--<div id="youtube" class="col s12">
                     <div class="center-align">
                         <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
                         <a class="waves-effect waves-light btn"><i class="fa fa-youtube fa-fw"></i>Connect your personal youtube</a>
                     </div>
-                </div>
+                </div>-->
                 <div id="ganalytics" class="col s12">
                     <div class="center-align">
                         <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal GoogleAnalytics</a>
+                        <a href="../GoogleManager/AddGoogleAccount?Op=page" class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal GoogleAnalytics</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div>
-        <!--start modal codes to add facebook pages --> 
-        <script id="pageModalContent.html" type="text/ng-template">
-            <div class="modal" modal="showModal" id="FbFanpage_Modal" style="z-index: 1005; display: block; opacity: 1; transform: scaleX(1); top: 10%;">
-                <div class="modal-content">
-                    <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
-                    <ul class="collection">
-                        <li class="collection-item avatar" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==0">
-                            <div class="left">
-                                <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
-                                <span class="title">{{fbpages.Name}}</span>
-                                <p>{{fbpages.LikeCount}}</p>
-                            </div>
-                            <p class="right">
-                                <input type="checkbox" value="{{fbpages.AccessToken}}" id="page_{{fbpages.AccessToken}}" ng-click="toggleProfileSelection(fbpages.AccessToken)">
-                                <label for="page_{{fbpages.AccessToken}}"></label>
-                            </p>
-                        </li>
+        <div class="modal" id="FbFanpage_Modal" >
+            <div class="modal-content">
+                <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
+                <ul class="collection">
+                    <li class="collection-item avatar" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==0">
+                        <div class="left">
+                            <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
+                            <span class="title">{{fbpages.Name}}</span>
+                            <p>{{fbpages.LikeCount}}</p>
+                        </div>
+                        <p class="right">
+                            <input type="checkbox" value="{{fbpages.AccessToken}}" id="page_{{fbpages.AccessToken}}" ng-click="toggleFbPageProfileSelection(fbpages.AccessToken)">
+                            <label for="page_{{fbpages.AccessToken}}"></label>
+                        </p>
+                    </li>
 
-                        <li class="collection-item avatar disabled" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==1">
-                            <div class="left">
-                                <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
-                                <span class="title">{{fbpages.Name}}</span>
-                                <p>{{fbpages.LikeCount}}</p>
-                            </div>
-                            <p class="right">
-                                <input type="checkbox" checked disabled value="" id="" />
-                                <label for=""></label>
-                            </p>
-                        </li>
-                    </ul>
-                </div>
-                <div class="modal-footer">
-                    <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="closeModal()">Close</a>
-                    <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddFacebookPages()">Connect</a>
-                </div>
+                    <li class="collection-item avatar disabled" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==1">
+                        <div class="left">
+                            <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
+                            <span class="title">{{fbpages.Name}}</span>
+                            <p>{{fbpages.LikeCount}}</p>
+                        </div>
+                        <p class="right">
+                            <input type="checkbox" checked disabled value="" id="" />
+                            <label for=""></label>
+                        </p>
+                    </li>
+                </ul>
             </div>
-        </script>
-        <!--end modal codes to add facebook pages -->
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+                <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddFacebookPages()">Connect</a>
+            </div>
+        </div>
+       
+        <div class="modal"  id="LinCompanypage_Modal">
+            <div class="modal-content">
+                <h4>CHOOSE LINKED PAGES TO CONNECT</h4>
+                <ul class="collection">
+                    <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0">
+                        <div class="left">
+                            <span class="title">{{linpages.PageName}}</span>
+                        </div>
+                        <p class="right">
+                            <input type="checkbox" value="{{linpages.PageId}}" id="page_{{linpages.PageId}}" ng-click="toggleLinkedinProfileSelection(linpages.PageId,linpages._token,linpages.PageName)">
+                            <label for="page_{{linpages.PageId}}"></label>
+                        </p>
+                    </li>
+
+                    <li class="collection-item avatar disabled" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==1">
+                        <div class="left">
+                            <span class="title">{{linpages.PageName}}</span>
+                        </div>
+                        <p class="right">
+                            <input type="checkbox" checked disabled value="" id="" />
+                            <label for=""></label>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="linpagecloseModal()">Close</a>
+                <a class="modal-action waves-effect waves-green btn-flat" ng-click="addcompanypages()">Connect</a>
+            </div>
+        </div>
+        
+        <div class="modal" id="GoogleAnalytics_Modal">
+            <div class="modal-content">
+                <h4>CHOOSE Google Analytics Sites TO CONNECT</h4>
+                <ul class="collection">
+                    <li class="collection-item avatar" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==0">
+                        <div class="left">
+                            <img class="circle" alt="Socioboard" src="https://www.socioboard.com/Themes/Socioboard/Contents/img/analytics_img.png">
+                            <span class="title">{{ganalytics.ProfileName}}</span>
+
+                        </div>
+                        <p class="right">
+                            <input type="checkbox" value="{{ganalytics.AccessToken}}" id="GA_{{ganalytics.ProfileId}}" ng-click="toggleGAeProfileSelection(ganalytics.AccessToken,ganalytics.RefreshToken,ganalytics.AccountId,ganalytics.AccountName,ganalytics.EmailId,ganalytics.ProfileId,ganalytics.ProfileName,ganalytics.WebPropertyId,ganalytics.WebsiteUrl)">
+                            <label for="GA_{{ganalytics.ProfileId}}"></label>
+                        </p>
+                    </li>
+
+                    <li class="collection-item avatar disabled" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==1">
+                        <div class="left">
+                            <img class="circle" alt="Socioboard" src="https://www.socioboard.com/Themes/Socioboard/Contents/img/analytics_img.png">
+                            <span class="title">{{ganalytics.ProfileName}}</span>
+
+                        </div>
+                        <p class="right">
+                            <input type="checkbox" checked disabled value="" id="" />
+                            <label for=""></label>
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+                <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddGaSites()">Connect</a>
+            </div>
+        </div>
 
     </div>
 </div>
-<style>
-    .collection-item.avatar.disabled {
-        opacity: 0.4;
-    }
-</style>
+
 

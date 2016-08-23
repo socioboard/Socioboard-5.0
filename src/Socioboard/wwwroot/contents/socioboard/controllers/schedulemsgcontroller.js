@@ -23,23 +23,34 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             var profiles = $('#scheduleprofiles').val();
             var message = $('#ScheduleMsg').val();
             var scheduletime = $('#ScheduleTime').val();
-            var formData = new FormData();
-            formData.append('files', $("#input-file-now").get(0).files[0]);
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + scheduletime,
-                data: formData,
-                headers: {
-                    'Content-Type': undefined
-                },
-                transformRequest: angular.identity,
-            }).then(function (response) {
-                $('#ScheduleMsg').val('');
-                $('#ScheduleTime').val('');
-                swal("message schduled successfully");
-            }, function (reason) {
-                console.log(reason);
-            });
+            if (profiles.length > 0)
+            {
+                if (scheduletime!="") {
+                    var formData = new FormData();
+                    formData.append('files', $("#input-file-now").get(0).files[0]);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + scheduletime,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#ScheduleMsg').val('');
+                        $('#ScheduleTime').val('');
+                        swal("message schduled successfully");
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+                else {
+                    swal('please enter data time to schedule message');
+                }
+            }
+            else {
+                swal('please select profile for schedule message');
+            }
         }
 
 

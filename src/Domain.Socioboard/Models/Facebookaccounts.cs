@@ -34,5 +34,7 @@ namespace Domain.Socioboard.Models
 
         public virtual bool IsAccessTokenActive { get; set; }
         public virtual DateTime LastUpdate { get; set;}
+        public virtual DateTime lastpagereportgenerated { get; set; }
+        public virtual bool Is90DayDataUpdated { get; set; }
     }
 }

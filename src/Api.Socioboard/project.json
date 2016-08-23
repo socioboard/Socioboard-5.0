@@ -1,41 +1,41 @@
 {
   "dependencies": {
     "Domain.Socioboard": "1.0.0-*",
-    "Microsoft.ApplicationInsights.AspNetCore": "1.0.0-rc2-final",
-    "Microsoft.AspNetCore.Mvc": "1.0.0-rc2-final",
-    "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0-rc2-final",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Logging": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Logging.Console": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Logging.Debug": "1.0.0-rc2-final",
+    "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
+    "Microsoft.AspNetCore.Mvc": "1.0.0",
+    "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
+    "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Microsoft.Extensions.Logging": "1.0.0",
+    "Microsoft.Extensions.Logging.Console": "1.0.0",
+    "Microsoft.Extensions.Logging.Debug": "1.0.0",
+    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Socioboard.Facebook": "1.0.0-*",
     "Socioboard.Google": "1.0.0-*",
-    "Socioboard.Twitter": "1.0.0-*",
     "Socioboard.Instagram": "1.0.0-*",
-    "Serilog": "2.0.0-rc-598",
-    "Serilog.Extensions.Logging": "1.0.0-rc2-10110",
-    "Serilog.Sinks.ColoredConsole": "2.0.0-beta-700",
-    "Serilog.Sinks.RollingFile": "2.0.0-rc-703",
-    "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0-rc2-final",
-    "Microsoft.Extensions.Options": "1.0.0-rc2-final",
-    "MongoDB.Bson": "2.2.4",
+    "Socioboard.LinkedIn": "1.0.0-*",
+    "Socioboard.Twitter": "1.0.0-*",
+    "Serilog": "2.1.0",
+    "Serilog.Extensions.Logging": "1.1.0",
+    "Serilog.Sinks.ColoredConsole": "2.0.0",
+    "Serilog.Sinks.RollingFile": "2.1.0",
+    "Microsoft.Extensions.Options": "1.0.0",
     "MongoDB.Driver": "2.2.4",
     "MySql.Data": "6.9.8",
     "MySql.Data.Entity": "6.9.8",
-    "Newtonsoft.Json": "8.0.3",
+    "Newtonsoft.Json": "9.0.1",
     "NHibernate.Linq": "1.0.0",
     "StackExchange.Redis": "1.1.603",
-    "Microsoft.AspNetCore.Cors": "1.0.0-rc2-final"
+    "Google.Apis.Analytics.v3": "1.14.0.456",
+    "Microsoft.AspNetCore.Cors": "1.0.0",
+    "MongoDB.Bson": "2.2.4",
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0"
   },
 
   "tools": {
-    "Microsoft.AspNetCore.Server.IISIntegration.Tools": {
-      "version": "1.0.0-preview1-final",
-      "imports": "portable-net45+win8+dnxcore50"
-    }
+    "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-preview2-final"
   },
 
   "frameworks": {
@@ -49,22 +49,26 @@
     }
   },
 
-
   "buildOptions": {
     "emitEntryPoint": true,
     "preserveCompilationContext": true
   },
-
+  "runtimes": { "win": [ "win7-x64", "win8-x64", "win10-x64" ] },
   "runtimeOptions": {
-    "gcServer": true
+    "configProperties": {
+      "System.GC.Server": true
+    }
   },
 
   "publishOptions": {
     "include": [
       "wwwroot",
       "Views",
+      "Areas/**/Views",
       "appsettings.json",
-      "web.config"
+      "web.config",
+      "hibernate.cfg.xml",
+      "SocioboardBoardMe-1b20a17f8879.p12"
     ]
   },
 

@@ -15,7 +15,7 @@ namespace Api.Socioboard
             var host = new WebHostBuilder()
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
-                .UseUrls("http://localhost:6361")
+               // .UseUrls("http://localhost:6361")
                 .UseIISIntegration()
                 .UseStartup<Startup>()
                 .Build();

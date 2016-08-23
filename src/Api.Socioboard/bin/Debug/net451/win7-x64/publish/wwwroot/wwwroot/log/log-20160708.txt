@@ -1,0 +1,1148 @@
+﻿2016-07-08 15:57:26.374 +05:30 [Debug] Hosting starting
+2016-07-08 15:57:27.481 +05:30 [Debug] Hosting started
+2016-07-08 15:57:27.770 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" started.
+2016-07-08 15:57:27.771 +05:30 [Debug] Connection id ""0HKT739QTCI4R"" started.
+2016-07-08 15:57:28.517 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2016-07-08 15:57:28.521 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2016-07-08 15:57:32.183 +05:30 [Debug] Request did not match any routes.
+2016-07-08 15:57:32.213 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2016-07-08 15:57:32.579 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"1156fea8-40a0-48bb-8d14-61945e52ce9b"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2016-07-08 15:57:32.605 +05:30 [Information] Request finished in 4260.0884ms 404 
+2016-07-08 15:57:32.686 +05:30 [Debug] Connection id ""0HKT739QTCI4R"" completed keep alive response.
+2016-07-08 15:57:32.735 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2016-07-08 15:57:33.393 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid'
+2016-07-08 15:57:33.405 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".'
+2016-07-08 15:57:33.483 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 15:57:33.495 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 15:57:33.530 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 15:57:34.601 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1841.7668ms
+2016-07-08 15:57:34.615 +05:30 [Information] Request finished in 6294.8552ms 200 application/json; charset=utf-8
+2016-07-08 15:57:34.619 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" completed keep alive response.
+2016-07-08 15:57:35.085 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/favicon.ico  
+2016-07-08 15:57:35.086 +05:30 [Debug] Request did not match any routes.
+2016-07-08 15:57:35.089 +05:30 [Information] Request finished in 3.222ms 404 
+2016-07-08 15:57:35.090 +05:30 [Debug] Connection id ""0HKT739QTCI4R"" completed keep alive response.
+2016-07-08 15:58:32.101 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/FacebookLogin application/x-www-form-urlencoded 178
+2016-07-08 15:58:32.102 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/FacebookLogin"'.
+2016-07-08 15:58:32.103 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)"
+2016-07-08 15:58:37.591 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" with arguments (["EAAKYvwDVmnUBAKZAy4y4nEZAAGo2D4ZAv1xzcZApDPIqw4gLMT4cJCt3ci8OGeZA1AwrXPZBObMjDtvp2rBIrOvs08tVo2x7MHkNA97NjLuG5nggzbYgZAop16zrltdbt1dvLG6ijVHY18ikOX40ZCxjtO3UqoFYLrsZD"]) - ModelState is Valid'
+2016-07-08 15:58:39.852 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 15:58:39.863 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 15:58:39.865 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 15:58:39.956 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" in 7850.9576ms
+2016-07-08 15:58:39.959 +05:30 [Information] Request finished in 7858.9686ms 200 application/json; charset=utf-8
+2016-07-08 15:58:39.960 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" completed keep alive response.
+2016-07-08 15:58:40.714 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 15:58:40.715 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 15:58:40.715 +05:30 [Debug] Connection id ""0HKT739QTCI4R"" received FIN.
+2016-07-08 15:58:40.716 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 15:58:40.722 +05:30 [Debug] Connection id ""0HKT739QTCI4R"" disconnecting.
+2016-07-08 15:58:40.724 +05:30 [Debug] Connection id ""0HKT739QTCI4R"" sending FIN.
+2016-07-08 15:58:40.740 +05:30 [Debug] Connection id ""0HKT739QTCI4R"" sent FIN with status "0".
+2016-07-08 15:58:40.781 +05:30 [Debug] Connection id ""0HKT739QTCI4R"" stopped.
+2016-07-08 15:58:40.823 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 15:58:40.854 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 15:58:40.855 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 15:58:40.856 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 15:58:40.861 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 142.4699ms
+2016-07-08 15:58:40.865 +05:30 [Information] Request finished in 159.6876ms 200 application/json; charset=utf-8
+2016-07-08 15:58:40.866 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" completed keep alive response.
+2016-07-08 15:58:41.002 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 15:58:41.004 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 15:58:41.011 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 15:58:41.032 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 15:58:41.058 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 15:58:41.059 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 15:58:41.060 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 15:58:41.073 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 59.6483ms
+2016-07-08 15:58:41.078 +05:30 [Information] Request finished in 76.0866ms 200 application/json; charset=utf-8
+2016-07-08 15:58:41.078 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" completed keep alive response.
+2016-07-08 15:58:44.854 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-07-08 15:58:44.855 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-07-08 15:58:44.856 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-07-08 15:58:44.910 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 15:59:03.517 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 15:59:03.518 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 15:59:03.518 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 15:59:03.520 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 15:59:03.566 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 18708.3731ms
+2016-07-08 15:59:03.570 +05:30 [Information] Request finished in 18716.6452ms 200 application/json; charset=utf-8
+2016-07-08 15:59:03.571 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" completed keep alive response.
+2016-07-08 15:59:03.584 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetTwitterProfiles?groupId=1  
+2016-07-08 15:59:03.584 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetTwitterProfiles"'.
+2016-07-08 15:59:03.585 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)"
+2016-07-08 15:59:03.626 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 15:59:03.751 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 15:59:03.752 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 15:59:03.752 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 15:59:03.754 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 15:59:03.802 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" in 214.6382ms
+2016-07-08 15:59:03.805 +05:30 [Information] Request finished in 221.8943ms 200 application/json; charset=utf-8
+2016-07-08 15:59:03.806 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" completed keep alive response.
+2016-07-08 16:01:07.713 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" received FIN.
+2016-07-08 16:01:07.714 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" disconnecting.
+2016-07-08 16:01:07.714 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" sending FIN.
+2016-07-08 16:01:07.715 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" sent FIN with status "0".
+2016-07-08 16:01:07.716 +05:30 [Debug] Connection id ""0HKT739QTCI4Q"" stopped.
+2016-07-08 18:59:07.898 +05:30 [Debug] Hosting starting
+2016-07-08 18:59:09.188 +05:30 [Debug] Hosting started
+2016-07-08 18:59:09.424 +05:30 [Debug] Connection id ""0HKT76FBRBH79"" started.
+2016-07-08 18:59:09.424 +05:30 [Debug] Connection id ""0HKT76FBRBH7A"" started.
+2016-07-08 18:59:10.494 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2016-07-08 18:59:10.531 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2016-07-08 18:59:15.618 +05:30 [Debug] Request did not match any routes.
+2016-07-08 18:59:15.675 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2016-07-08 18:59:16.211 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"9c5792b4-9f7d-45a6-b939-99f0970967b6"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2016-07-08 18:59:16.238 +05:30 [Information] Request finished in 5917.545ms 404 
+2016-07-08 18:59:16.287 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2016-07-08 18:59:16.329 +05:30 [Debug] Connection id ""0HKT76FBRBH79"" completed keep alive response.
+2016-07-08 18:59:17.282 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid'
+2016-07-08 18:59:17.334 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".'
+2016-07-08 18:59:17.536 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 18:59:17.555 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 18:59:17.602 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 18:59:19.022 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 2706.0131ms
+2016-07-08 18:59:19.035 +05:30 [Information] Request finished in 8790.1769ms 200 application/json; charset=utf-8
+2016-07-08 18:59:19.042 +05:30 [Debug] Connection id ""0HKT76FBRBH7A"" completed keep alive response.
+2016-07-08 19:24:14.459 +05:30 [Debug] Hosting starting
+2016-07-08 19:24:15.476 +05:30 [Debug] Hosting started
+2016-07-08 19:24:15.712 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" started.
+2016-07-08 19:24:15.712 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" started.
+2016-07-08 19:24:16.392 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2016-07-08 19:24:16.392 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2016-07-08 19:24:19.362 +05:30 [Debug] Request did not match any routes.
+2016-07-08 19:24:19.389 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2016-07-08 19:24:19.682 +05:30 [Information] Request finished in 3418.0621ms 404 
+2016-07-08 19:24:19.733 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"4003557c-1b56-432f-b969-76c3365f6862"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2016-07-08 19:24:19.803 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" completed keep alive response.
+2016-07-08 19:24:19.920 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2016-07-08 19:24:20.744 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid'
+2016-07-08 19:24:20.753 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".'
+2016-07-08 19:24:20.873 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:24:20.891 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:24:20.896 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:24:21.888 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1950.8983ms
+2016-07-08 19:24:21.901 +05:30 [Information] Request finished in 5691.2899ms 200 application/json; charset=utf-8
+2016-07-08 19:24:21.905 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" completed keep alive response.
+2016-07-08 19:25:09.648 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/FacebookLogin application/x-www-form-urlencoded 180
+2016-07-08 19:25:09.650 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/FacebookLogin"'.
+2016-07-08 19:25:09.651 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)"
+2016-07-08 19:25:11.712 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" with arguments (["EAAKYvwDVmnUBAHBkWPPcSqXMehhhxNCINIiB5LtuizOeeUUbbOc4aZBDJEcNZCRF4UTTZAHo6hIypNjZC1VbHZA58wyiUqUiwBY2kaBHA2iYLlPlN2xaVEqsw8ZAdm13RvZCeEcfmtXZAkkfcJYZA7YZCU5PTxHLwsOh4ZD"]) - ModelState is Valid'
+2016-07-08 19:25:13.591 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:13.603 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:13.607 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:13.716 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" in 4040.0415ms
+2016-07-08 19:25:13.737 +05:30 [Information] Request finished in 4089.2389ms 200 application/json; charset=utf-8
+2016-07-08 19:25:13.738 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" completed keep alive response.
+2016-07-08 19:25:14.977 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:25:14.978 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:25:14.978 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:25:15.094 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:25:15.155 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:15.156 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:15.157 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:15.167 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 187.042ms
+2016-07-08 19:25:15.176 +05:30 [Information] Request finished in 198.5739ms 200 application/json; charset=utf-8
+2016-07-08 19:25:15.176 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" completed keep alive response.
+2016-07-08 19:25:15.410 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:25:15.411 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:25:15.412 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:25:15.510 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:25:15.584 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:15.585 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:15.587 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:15.611 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 197.6833ms
+2016-07-08 19:25:15.616 +05:30 [Information] Request finished in 216.0294ms 200 application/json; charset=utf-8
+2016-07-08 19:25:15.619 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" completed keep alive response.
+2016-07-08 19:25:19.496 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-07-08 19:25:19.498 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-07-08 19:25:19.498 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-07-08 19:25:19.557 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:25:35.084 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:35.084 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:25:35.085 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:35.087 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:35.130 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 15628.5991ms
+2016-07-08 19:25:35.135 +05:30 [Information] Request finished in 15637.5697ms 200 application/json; charset=utf-8
+2016-07-08 19:25:35.135 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" completed keep alive response.
+2016-07-08 19:25:35.158 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetTwitterProfiles?groupId=1  
+2016-07-08 19:25:35.158 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetTwitterProfiles"'.
+2016-07-08 19:25:35.159 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)"
+2016-07-08 19:25:35.266 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:25:35.344 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:35.345 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:25:35.345 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:35.348 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:35.393 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" in 232.1513ms
+2016-07-08 19:25:35.397 +05:30 [Information] Request finished in 240.1806ms 200 application/json; charset=utf-8
+2016-07-08 19:25:35.398 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" completed keep alive response.
+2016-07-08 19:25:48.272 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:25:48.273 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:25:48.277 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:25:48.344 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:25:48.345 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:48.345 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:48.347 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:48.349 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 71.4271ms
+2016-07-08 19:25:48.354 +05:30 [Information] Request finished in 83.5314ms 200 application/json; charset=utf-8
+2016-07-08 19:25:48.355 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" completed keep alive response.
+2016-07-08 19:25:48.366 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:25:48.366 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:25:48.367 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:25:48.380 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:25:48.381 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:48.382 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:48.384 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:48.390 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 18.2087ms
+2016-07-08 19:25:48.395 +05:30 [Information] Request finished in 28.4839ms 200 application/json; charset=utf-8
+2016-07-08 19:25:48.396 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" completed keep alive response.
+2016-07-08 19:25:50.770 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-07-08 19:25:50.771 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-07-08 19:25:50.772 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-07-08 19:25:50.908 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:25:50.925 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:50.925 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:25:50.926 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:50.971 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:51.012 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 199.8067ms
+2016-07-08 19:25:51.060 +05:30 [Information] Request finished in 255.052ms 200 application/json; charset=utf-8
+2016-07-08 19:25:51.062 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" completed keep alive response.
+2016-07-08 19:25:51.568 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetTwitterProfiles?groupId=1  
+2016-07-08 19:25:51.570 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetTwitterProfiles"'.
+2016-07-08 19:25:51.571 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)"
+2016-07-08 19:25:51.676 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:25:51.679 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:25:51.680 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:25:51.680 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:25:51.682 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:25:51.685 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" in 110.1218ms
+2016-07-08 19:25:51.692 +05:30 [Information] Request finished in 240.8682ms 200 application/json; charset=utf-8
+2016-07-08 19:25:51.693 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" completed keep alive response.
+2016-07-08 19:27:55.678 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" received FIN.
+2016-07-08 19:27:55.678 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" received FIN.
+2016-07-08 19:27:55.683 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" disconnecting.
+2016-07-08 19:27:55.683 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" disconnecting.
+2016-07-08 19:27:55.688 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" sending FIN.
+2016-07-08 19:27:55.688 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" sending FIN.
+2016-07-08 19:27:55.731 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" sent FIN with status "0".
+2016-07-08 19:27:55.732 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" sent FIN with status "0".
+2016-07-08 19:27:55.747 +05:30 [Debug] Connection id ""0HKT76TCOR2KI"" stopped.
+2016-07-08 19:27:55.747 +05:30 [Debug] Connection id ""0HKT76TCOR2KJ"" stopped.
+2016-07-08 19:42:06.794 +05:30 [Debug] Hosting starting
+2016-07-08 19:42:07.523 +05:30 [Debug] Hosting started
+2016-07-08 19:42:07.642 +05:30 [Debug] Connection id ""0HKT777C7FR4U"" started.
+2016-07-08 19:42:07.642 +05:30 [Debug] Connection id ""0HKT777C7FR4V"" started.
+2016-07-08 19:42:08.189 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2016-07-08 19:42:08.189 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2016-07-08 19:42:24.227 +05:30 [Debug] Request did not match any routes.
+2016-07-08 19:42:24.255 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2016-07-08 19:42:24.904 +05:30 [Information] Request finished in 16786.615ms 404 
+2016-07-08 19:42:25.056 +05:30 [Debug] Connection id ""0HKT777C7FR4V"" completed keep alive response.
+2016-07-08 19:42:25.167 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"99d4996f-4bc7-43c6-889d-003f8f93dd30"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2016-07-08 19:42:25.258 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2016-07-08 19:42:26.307 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid'
+2016-07-08 19:42:26.317 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".'
+2016-07-08 19:42:26.394 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:42:26.402 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:42:26.405 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:42:27.184 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1905.6613ms
+2016-07-08 19:42:27.202 +05:30 [Information] Request finished in 19189.5024ms 200 application/json; charset=utf-8
+2016-07-08 19:42:27.207 +05:30 [Debug] Connection id ""0HKT777C7FR4U"" completed keep alive response.
+2016-07-08 19:43:41.571 +05:30 [Debug] Connection id ""0HKT777C7FR4U"" received FIN.
+2016-07-08 19:43:41.577 +05:30 [Debug] Connection id ""0HKT777C7FR50"" started.
+2016-07-08 19:43:41.578 +05:30 [Debug] Connection id ""0HKT777C7FR4U"" disconnecting.
+2016-07-08 19:43:41.582 +05:30 [Debug] Connection id ""0HKT777C7FR4U"" sending FIN.
+2016-07-08 19:43:41.586 +05:30 [Debug] Connection id ""0HKT777C7FR4V"" received FIN.
+2016-07-08 19:43:41.594 +05:30 [Debug] Connection id ""0HKT777C7FR4V"" disconnecting.
+2016-07-08 19:43:41.596 +05:30 [Debug] Connection id ""0HKT777C7FR4V"" sending FIN.
+2016-07-08 19:43:41.596 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/FacebookLogin application/x-www-form-urlencoded 178
+2016-07-08 19:43:41.599 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/FacebookLogin"'.
+2016-07-08 19:43:41.607 +05:30 [Debug] Connection id ""0HKT777C7FR4U"" sent FIN with status "0".
+2016-07-08 19:43:41.607 +05:30 [Debug] Connection id ""0HKT777C7FR4V"" sent FIN with status "0".
+2016-07-08 19:43:41.609 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)"
+2016-07-08 19:43:41.611 +05:30 [Debug] Connection id ""0HKT777C7FR4U"" stopped.
+2016-07-08 19:43:41.611 +05:30 [Debug] Connection id ""0HKT777C7FR4V"" stopped.
+2016-07-08 19:43:44.830 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" with arguments (["EAAKYvwDVmnUBAKS2l1RhvRyZBdzjJHIcMw8S58avD7ya3puHR1UBOTZAVl2nRiPXkMw5UvZCmCUJdNEnnIkZAOrWo0x6Nx5ZAP5IeBft0DNxwCfdi4zNmR3XiKeQucSasZC6OqGx6SihJzmmQkgaObZAlA8YlhWZBosZD"]) - ModelState is Valid'
+2016-07-08 19:43:47.908 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:43:47.920 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:43:47.921 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:43:47.992 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" in 6380.9445ms
+2016-07-08 19:43:48.003 +05:30 [Information] Request finished in 6406.2115ms 200 application/json; charset=utf-8
+2016-07-08 19:43:48.003 +05:30 [Debug] Connection id ""0HKT777C7FR50"" completed keep alive response.
+2016-07-08 19:43:49.340 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:43:49.342 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:43:49.342 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:43:49.425 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:43:49.455 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:43:49.456 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:43:49.457 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:43:49.464 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 117.9236ms
+2016-07-08 19:43:49.468 +05:30 [Information] Request finished in 128.1754ms 200 application/json; charset=utf-8
+2016-07-08 19:43:49.469 +05:30 [Debug] Connection id ""0HKT777C7FR50"" completed keep alive response.
+2016-07-08 19:43:49.594 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:43:49.594 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:43:49.595 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:43:49.621 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:43:49.644 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:43:49.645 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:43:49.646 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:43:49.663 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 62.6189ms
+2016-07-08 19:43:49.667 +05:30 [Information] Request finished in 72.5526ms 200 application/json; charset=utf-8
+2016-07-08 19:43:49.667 +05:30 [Debug] Connection id ""0HKT777C7FR50"" completed keep alive response.
+2016-07-08 19:43:53.305 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-07-08 19:43:53.306 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-07-08 19:43:53.307 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-07-08 19:43:53.345 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:44:11.321 +05:30 [Debug] Connection id ""0HKT777C7FR51"" started.
+2016-07-08 19:44:11.330 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:44:11.331 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:44:11.334 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:44:11.352 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:44:11.354 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:44:11.355 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:44:11.358 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:44:11.366 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 25.0423ms
+2016-07-08 19:44:11.374 +05:30 [Information] Request finished in 47.6505ms 200 application/json; charset=utf-8
+2016-07-08 19:44:11.375 +05:30 [Debug] Connection id ""0HKT777C7FR51"" completed keep alive response.
+2016-07-08 19:44:11.404 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:44:11.405 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:44:11.406 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:44:11.452 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:44:11.454 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:44:11.454 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:44:11.456 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:44:11.461 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 50.5864ms
+2016-07-08 19:44:11.468 +05:30 [Information] Request finished in 73.3759ms 200 application/json; charset=utf-8
+2016-07-08 19:44:11.469 +05:30 [Debug] Connection id ""0HKT777C7FR51"" completed keep alive response.
+2016-07-08 19:44:11.710 +05:30 [Debug] Connection id ""0HKT777C7FR50"" received FIN.
+2016-07-08 19:44:18.375 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:44:18.375 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:44:18.376 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:44:18.378 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:44:18.456 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 25145.9662ms
+2016-07-08 19:44:18.460 +05:30 [Information] Request finished in 25156.027ms 200 application/json; charset=utf-8
+2016-07-08 19:44:18.460 +05:30 [Debug] Connection id ""0HKT777C7FR50"" completed keep alive response.
+2016-07-08 19:44:18.461 +05:30 [Debug] Connection id ""0HKT777C7FR50"" disconnecting.
+2016-07-08 19:44:18.469 +05:30 [Information] Connection id ""0HKT777C7FR50"" communication error
+Microsoft.AspNetCore.Server.Kestrel.Networking.UvException: Error -4077 ECONNRESET connection reset by peer
+2016-07-08 19:44:18.469 +05:30 [Debug] Connection id ""0HKT777C7FR50"" sending FIN.
+2016-07-08 19:44:18.470 +05:30 [Debug] Connection id ""0HKT777C7FR50"" sent FIN with status "0".
+2016-07-08 19:44:18.471 +05:30 [Debug] Connection id ""0HKT777C7FR50"" stopped.
+2016-07-08 19:44:18.473 +05:30 [Information] Connection id ""0HKT777C7FR50"" communication error
+Microsoft.AspNetCore.Server.Kestrel.Networking.UvException: Error -4077 ECONNRESET connection reset by peer
+2016-07-08 19:45:31.244 +05:30 [Debug] Hosting starting
+2016-07-08 19:45:31.930 +05:30 [Debug] Hosting started
+2016-07-08 19:45:32.026 +05:30 [Debug] Connection id ""0HKT77994K1F3"" started.
+2016-07-08 19:45:32.026 +05:30 [Debug] Connection id ""0HKT77994K1F4"" started.
+2016-07-08 19:45:32.434 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2016-07-08 19:45:32.432 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2016-07-08 19:45:33.950 +05:30 [Debug] Request did not match any routes.
+2016-07-08 19:45:33.983 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2016-07-08 19:45:34.251 +05:30 [Information] Request finished in 1934.0899ms 404 
+2016-07-08 19:45:34.319 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"38979ad0-66c9-40b0-86f0-178b87c93366"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2016-07-08 19:45:34.353 +05:30 [Debug] Connection id ""0HKT77994K1F4"" completed keep alive response.
+2016-07-08 19:45:34.492 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2016-07-08 19:45:35.084 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid'
+2016-07-08 19:45:35.096 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".'
+2016-07-08 19:45:35.187 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:45:35.201 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:45:35.217 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:45:35.780 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1270.2856ms
+2016-07-08 19:45:35.794 +05:30 [Information] Request finished in 3506.6545ms 200 application/json; charset=utf-8
+2016-07-08 19:45:35.799 +05:30 [Debug] Connection id ""0HKT77994K1F3"" completed keep alive response.
+2016-07-08 19:46:54.240 +05:30 [Debug] Connection id ""0HKT77994K1F4"" received FIN.
+2016-07-08 19:46:54.242 +05:30 [Debug] Connection id ""0HKT77994K1F3"" received FIN.
+2016-07-08 19:46:54.246 +05:30 [Debug] Connection id ""0HKT77994K1F5"" started.
+2016-07-08 19:46:54.252 +05:30 [Debug] Connection id ""0HKT77994K1F4"" disconnecting.
+2016-07-08 19:46:54.252 +05:30 [Debug] Connection id ""0HKT77994K1F3"" disconnecting.
+2016-07-08 19:46:54.275 +05:30 [Debug] Connection id ""0HKT77994K1F4"" sending FIN.
+2016-07-08 19:46:54.276 +05:30 [Debug] Connection id ""0HKT77994K1F3"" sending FIN.
+2016-07-08 19:46:54.283 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/FacebookLogin application/x-www-form-urlencoded 178
+2016-07-08 19:46:54.287 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/FacebookLogin"'.
+2016-07-08 19:46:54.290 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)"
+2016-07-08 19:46:54.300 +05:30 [Debug] Connection id ""0HKT77994K1F4"" sent FIN with status "0".
+2016-07-08 19:46:54.300 +05:30 [Debug] Connection id ""0HKT77994K1F3"" sent FIN with status "0".
+2016-07-08 19:46:54.310 +05:30 [Debug] Connection id ""0HKT77994K1F4"" stopped.
+2016-07-08 19:46:54.315 +05:30 [Debug] Connection id ""0HKT77994K1F3"" stopped.
+2016-07-08 19:46:55.128 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" with arguments (["EAAKYvwDVmnUBAId60XDZCwpZCgOH7xxpT6deypJEtsuNkMbZB6rpxTWUzdAqiuuAZCDK2JvoeuZCYYV2NQifbBS5k2m1WxMB0YJ3l4RZCHLsHLlk9hS1WKYuKSmi2vb3w0Nh43UgN72ZA0QQ7TCwaNkmZAAYuJquvN4ZD"]) - ModelState is Valid'
+2016-07-08 19:46:56.350 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:46:56.360 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:46:56.362 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:46:56.476 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" in 2180.6993ms
+2016-07-08 19:46:56.483 +05:30 [Information] Request finished in 2199.0694ms 200 application/json; charset=utf-8
+2016-07-08 19:46:56.484 +05:30 [Debug] Connection id ""0HKT77994K1F5"" completed keep alive response.
+2016-07-08 19:46:57.189 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:46:57.190 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:46:57.190 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:46:57.255 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:46:57.288 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:46:57.289 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:46:57.290 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:46:57.299 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 105.805ms
+2016-07-08 19:46:57.304 +05:30 [Information] Request finished in 114.6308ms 200 application/json; charset=utf-8
+2016-07-08 19:46:57.304 +05:30 [Debug] Connection id ""0HKT77994K1F5"" completed keep alive response.
+2016-07-08 19:46:57.396 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:46:57.396 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:46:57.397 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:46:57.422 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:46:57.456 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:46:57.457 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:46:57.458 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:46:57.472 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 73.5122ms
+2016-07-08 19:46:57.477 +05:30 [Information] Request finished in 81.9178ms 200 application/json; charset=utf-8
+2016-07-08 19:46:57.478 +05:30 [Debug] Connection id ""0HKT77994K1F5"" completed keep alive response.
+2016-07-08 19:47:00.235 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-07-08 19:47:00.236 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-07-08 19:47:00.246 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-07-08 19:47:00.300 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:47:05.989 +05:30 [Debug] Connection id ""0HKT77994K1F6"" started.
+2016-07-08 19:47:05.995 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/BoardMe/getUserBoards?userId=1  
+2016-07-08 19:47:05.996 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/BoardMe/getUserBoards"'.
+2016-07-08 19:47:05.997 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)"
+2016-07-08 19:47:06.031 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:47:21.728 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:47:21.729 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:47:21.729 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:47:21.731 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:47:21.766 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 21518.7081ms
+2016-07-08 19:47:21.831 +05:30 [Information] Request finished in 21576.5313ms 200 application/json; charset=utf-8
+2016-07-08 19:47:21.832 +05:30 [Debug] Connection id ""0HKT77994K1F5"" completed keep alive response.
+2016-07-08 19:47:21.845 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetTwitterProfiles?groupId=1  
+2016-07-08 19:47:21.847 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetTwitterProfiles"'.
+2016-07-08 19:47:21.848 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)"
+2016-07-08 19:47:21.933 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:47:24.978 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:47:24.979 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:47:24.979 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:47:24.980 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:47:25.070 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" in 3193.2559ms
+2016-07-08 19:47:25.089 +05:30 [Information] Request finished in 3240.3727ms 200 application/json; charset=utf-8
+2016-07-08 19:47:25.090 +05:30 [Debug] Connection id ""0HKT77994K1F5"" completed keep alive response.
+2016-07-08 19:47:49.381 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:47:49.381 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:47:49.382 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:47:49.384 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:47:49.390 +05:30 [Information] Executed action "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)" in 43391.8276ms
+2016-07-08 19:47:49.395 +05:30 [Information] Request finished in 43402.4996ms 200 application/json; charset=utf-8
+2016-07-08 19:47:49.395 +05:30 [Debug] Connection id ""0HKT77994K1F6"" completed keep alive response.
+2016-07-08 19:48:03.637 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-07-08 19:48:03.638 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-07-08 19:48:03.640 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-07-08 19:48:03.652 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:48:03.660 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:48:03.660 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:48:03.661 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:48:03.662 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:48:03.664 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 22.0306ms
+2016-07-08 19:48:03.669 +05:30 [Information] Request finished in 31.8628ms 200 application/json; charset=utf-8
+2016-07-08 19:48:03.670 +05:30 [Debug] Connection id ""0HKT77994K1F5"" completed keep alive response.
+2016-07-08 19:48:03.806 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetTwitterProfiles?groupId=1  
+2016-07-08 19:48:03.807 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetTwitterProfiles"'.
+2016-07-08 19:48:03.809 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)"
+2016-07-08 19:48:03.848 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:48:03.850 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:48:03.851 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:48:03.851 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:48:03.860 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:48:03.890 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" in 51.16ms
+2016-07-08 19:48:03.922 +05:30 [Information] Request finished in 111.6162ms 200 application/json; charset=utf-8
+2016-07-08 19:48:03.923 +05:30 [Debug] Connection id ""0HKT77994K1F6"" completed keep alive response.
+2016-07-08 19:52:19.839 +05:30 [Debug] Hosting starting
+2016-07-08 19:52:20.296 +05:30 [Debug] Hosting started
+2016-07-08 19:52:20.381 +05:30 [Debug] Connection id ""0HKT77D2QV7O9"" started.
+2016-07-08 19:52:20.381 +05:30 [Debug] Connection id ""0HKT77D2QV7OA"" started.
+2016-07-08 19:52:20.744 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2016-07-08 19:52:20.744 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2016-07-08 19:52:22.140 +05:30 [Debug] Request did not match any routes.
+2016-07-08 19:52:22.166 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2016-07-08 19:52:22.401 +05:30 [Information] Request finished in 1737.4762ms 404 
+2016-07-08 19:52:22.467 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"32c866b5-2a9c-40f6-a589-73e317324a2e"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2016-07-08 19:52:22.500 +05:30 [Debug] Connection id ""0HKT77D2QV7O9"" completed keep alive response.
+2016-07-08 19:52:22.662 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2016-07-08 19:52:23.290 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid'
+2016-07-08 19:52:23.303 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".'
+2016-07-08 19:52:23.415 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:52:23.427 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:52:23.431 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:52:24.179 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1483.7561ms
+2016-07-08 19:52:24.198 +05:30 [Information] Request finished in 3560.5098ms 200 application/json; charset=utf-8
+2016-07-08 19:52:24.208 +05:30 [Debug] Connection id ""0HKT77D2QV7OA"" completed keep alive response.
+2016-07-08 19:53:03.379 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/FacebookLogin application/x-www-form-urlencoded 177
+2016-07-08 19:53:03.380 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/FacebookLogin"'.
+2016-07-08 19:53:03.381 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)"
+2016-07-08 19:53:04.729 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" with arguments (["EAAKYvwDVmnUBAM1MAPY2EIZAvUUBZBLUwgcq6xbSkinigSmdyfZBrdGWKxo8N3HDPEF3WmFJkIogF7sRDWJzIf3sVbtFZABya3CnlxYqEKakWAxLdpn08fwiredhOqDZA8BQgup4xjEZBrwEGfcixPlD2yZBYRTfSkZD"]) - ModelState is Valid'
+2016-07-08 19:53:06.405 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:53:06.419 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:53:06.421 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:53:06.555 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" in 3166.9289ms
+2016-07-08 19:53:06.585 +05:30 [Information] Request finished in 3320.3012ms 200 application/json; charset=utf-8
+2016-07-08 19:53:06.586 +05:30 [Debug] Connection id ""0HKT77D2QV7O9"" completed keep alive response.
+2016-07-08 19:53:07.257 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:53:07.257 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:53:07.258 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:53:07.313 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:53:07.344 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:53:07.345 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:53:07.346 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:53:07.356 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 92.3567ms
+2016-07-08 19:53:07.360 +05:30 [Information] Request finished in 102.2111ms 200 application/json; charset=utf-8
+2016-07-08 19:53:07.361 +05:30 [Debug] Connection id ""0HKT77D2QV7OA"" completed keep alive response.
+2016-07-08 19:53:07.462 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:53:07.462 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:53:07.463 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:53:07.482 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:53:07.502 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:53:07.503 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:53:07.504 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:53:07.514 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 50.0937ms
+2016-07-08 19:53:07.519 +05:30 [Information] Request finished in 56.1508ms 200 application/json; charset=utf-8
+2016-07-08 19:53:07.519 +05:30 [Debug] Connection id ""0HKT77D2QV7O9"" completed keep alive response.
+2016-07-08 19:53:10.515 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-07-08 19:53:10.516 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-07-08 19:53:10.527 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-07-08 19:53:10.712 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:53:19.171 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:53:19.171 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:53:19.171 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:53:19.173 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:53:19.215 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 8684.1102ms
+2016-07-08 19:53:19.221 +05:30 [Information] Request finished in 8705.4822ms 200 application/json; charset=utf-8
+2016-07-08 19:53:19.222 +05:30 [Debug] Connection id ""0HKT77D2QV7OA"" completed keep alive response.
+2016-07-08 19:53:19.236 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetTwitterProfiles?groupId=1  
+2016-07-08 19:53:19.237 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetTwitterProfiles"'.
+2016-07-08 19:53:19.238 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)"
+2016-07-08 19:53:19.280 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:53:19.356 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:53:19.356 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:53:19.357 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:53:19.358 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:53:19.415 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" in 154.0594ms
+2016-07-08 19:53:19.419 +05:30 [Information] Request finished in 183.5884ms 200 application/json; charset=utf-8
+2016-07-08 19:53:19.420 +05:30 [Debug] Connection id ""0HKT77D2QV7O9"" completed keep alive response.
+2016-07-08 19:53:29.336 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/BoardMe/getUserBoards?userId=1  
+2016-07-08 19:53:29.336 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/BoardMe/getUserBoards"'.
+2016-07-08 19:53:29.337 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)"
+2016-07-08 19:53:29.386 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:53:34.231 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:53:34.231 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:53:34.231 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:53:34.233 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:53:34.240 +05:30 [Information] Executed action "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)" in 4900.9738ms
+2016-07-08 19:53:34.243 +05:30 [Information] Request finished in 4910.8579ms 200 application/json; charset=utf-8
+2016-07-08 19:53:34.244 +05:30 [Debug] Connection id ""0HKT77D2QV7OA"" completed keep alive response.
+2016-07-08 19:54:12.420 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:54:12.421 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:54:12.425 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:54:12.543 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:54:12.544 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:54:12.545 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:54:12.598 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:54:12.660 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 200.9288ms
+2016-07-08 19:54:12.678 +05:30 [Information] Request finished in 265.1802ms 200 application/json; charset=utf-8
+2016-07-08 19:54:12.679 +05:30 [Debug] Connection id ""0HKT77D2QV7O9"" completed keep alive response.
+2016-07-08 19:54:12.747 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:54:12.748 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:54:12.748 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:54:12.838 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:54:12.910 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:54:12.918 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:54:12.920 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:54:12.927 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:54:12.927 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:54:12.964 +05:30 [Debug] Connection id ""0HKT77D2QV7OB"" started.
+2016-07-08 19:54:12.972 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:54:12.987 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 222.2159ms
+2016-07-08 19:54:13.019 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:54:13.023 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:54:13.025 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:54:13.055 +05:30 [Information] Request finished in 295.743ms 200 application/json; charset=utf-8
+2016-07-08 19:54:13.056 +05:30 [Debug] Connection id ""0HKT77D2QV7OA"" completed keep alive response.
+2016-07-08 19:54:13.082 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 19:54:13.083 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 19:54:13.083 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 19:54:13.202 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:54:13.215 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 285.104ms
+2016-07-08 19:54:13.242 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:54:13.243 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:54:13.244 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:54:13.247 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:54:13.248 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:54:13.284 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:54:13.286 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:54:13.286 +05:30 [Information] Request finished in 507.1802ms 200 application/json; charset=utf-8
+2016-07-08 19:54:13.287 +05:30 [Debug] Connection id ""0HKT77D2QV7O9"" completed keep alive response.
+2016-07-08 19:54:13.312 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 203.0094ms
+2016-07-08 19:54:13.383 +05:30 [Information] Request finished in 370.6738ms 200 application/json; charset=utf-8
+2016-07-08 19:54:13.383 +05:30 [Debug] Connection id ""0HKT77D2QV7OB"" completed keep alive response.
+2016-07-08 19:54:13.457 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:54:13.458 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:54:13.459 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:54:13.465 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:54:13.483 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 181.9572ms
+2016-07-08 19:54:13.495 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 19:54:13.497 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 19:54:13.497 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 19:54:13.580 +05:30 [Information] Request finished in 315.7797ms 200 application/json; charset=utf-8
+2016-07-08 19:54:13.580 +05:30 [Debug] Connection id ""0HKT77D2QV7OA"" completed keep alive response.
+2016-07-08 19:54:13.646 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:54:13.647 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:54:13.648 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:54:13.651 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:54:13.658 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 154.4955ms
+2016-07-08 19:54:13.666 +05:30 [Information] Request finished in 229.2069ms 200 application/json; charset=utf-8
+2016-07-08 19:54:13.667 +05:30 [Debug] Connection id ""0HKT77D2QV7O9"" completed keep alive response.
+2016-07-08 19:54:17.403 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/BoardMe/getUserBoards?userId=1  
+2016-07-08 19:54:17.403 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/BoardMe/getUserBoards"'.
+2016-07-08 19:54:17.404 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)"
+2016-07-08 19:54:17.561 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 19:54:20.791 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 19:54:20.791 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 19:54:20.792 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 19:54:20.797 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 19:54:20.814 +05:30 [Information] Executed action "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)" in 3392.7815ms
+2016-07-08 19:54:20.820 +05:30 [Information] Request finished in 3435.3289ms 200 application/json; charset=utf-8
+2016-07-08 19:54:20.820 +05:30 [Debug] Connection id ""0HKT77D2QV7OB"" completed keep alive response.
+2016-07-08 20:18:53.039 +05:30 [Debug] Hosting starting
+2016-07-08 20:18:53.478 +05:30 [Debug] Hosting started
+2016-07-08 20:18:53.676 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" started.
+2016-07-08 20:18:53.682 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" started.
+2016-07-08 20:18:54.165 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2016-07-08 20:18:54.184 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2016-07-08 20:18:55.598 +05:30 [Debug] Request did not match any routes.
+2016-07-08 20:18:55.626 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2016-07-08 20:18:55.823 +05:30 [Information] Request finished in 1810.4873ms 404 
+2016-07-08 20:18:55.888 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"ad2f37e5-b986-43ed-ad54-dbac688129d2"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2016-07-08 20:18:55.938 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" completed keep alive response.
+2016-07-08 20:18:56.034 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2016-07-08 20:18:56.653 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid'
+2016-07-08 20:18:56.663 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".'
+2016-07-08 20:18:56.763 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 20:18:56.774 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:18:56.777 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:18:57.372 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1322.168ms
+2016-07-08 20:18:57.385 +05:30 [Information] Request finished in 3402.5532ms 200 application/json; charset=utf-8
+2016-07-08 20:18:57.389 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" completed keep alive response.
+2016-07-08 20:19:41.743 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/FacebookLogin application/x-www-form-urlencoded 177
+2016-07-08 20:19:41.744 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/FacebookLogin"'.
+2016-07-08 20:19:41.745 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)"
+2016-07-08 20:19:42.754 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" with arguments (["EAAKYvwDVmnUBAEG5FNMFknQ4wfqlIPOh1wWrIw5p6tY5ZC7JdzjcBYtpKnE0fXHI3P4UVMDyzAZAsZCr8CVvCCuPhzJWd2xZBHizg0FwwmbeG2pcOsRLUR9ZCybFfUXwb6BygtIMoYCdZCOS5MZBm199GlzWdLsxmYZD"]) - ModelState is Valid'
+2016-07-08 20:19:44.278 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:19:44.289 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:19:44.292 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:19:44.433 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" in 2672.0257ms
+2016-07-08 20:19:44.463 +05:30 [Information] Request finished in 2714.5932ms 200 application/json; charset=utf-8
+2016-07-08 20:19:44.463 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" completed keep alive response.
+2016-07-08 20:19:45.886 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:19:45.887 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:19:45.889 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:19:46.078 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:19:46.196 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:19:46.198 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:19:46.213 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:19:46.242 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 338.6759ms
+2016-07-08 20:19:46.248 +05:30 [Information] Request finished in 389.394ms 200 application/json; charset=utf-8
+2016-07-08 20:19:46.249 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" completed keep alive response.
+2016-07-08 20:19:46.473 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:19:46.474 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:19:46.476 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:19:46.523 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:19:46.592 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:19:46.597 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:19:46.611 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:19:46.643 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 161.3748ms
+2016-07-08 20:19:46.678 +05:30 [Information] Request finished in 204.3653ms 200 application/json; charset=utf-8
+2016-07-08 20:19:46.680 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" completed keep alive response.
+2016-07-08 20:19:50.871 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-07-08 20:19:50.872 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-07-08 20:19:50.882 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-07-08 20:19:50.981 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:20:05.190 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:20:05.191 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 20:20:05.191 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:20:05.193 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:20:05.277 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 14391.425ms
+2016-07-08 20:20:05.282 +05:30 [Information] Request finished in 14409.6793ms 200 application/json; charset=utf-8
+2016-07-08 20:20:05.282 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" completed keep alive response.
+2016-07-08 20:20:05.300 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetTwitterProfiles?groupId=1  
+2016-07-08 20:20:05.301 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetTwitterProfiles"'.
+2016-07-08 20:20:05.302 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)"
+2016-07-08 20:20:05.390 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:20:05.478 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:20:05.478 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 20:20:05.479 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:20:05.481 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:20:05.531 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" in 226.6548ms
+2016-07-08 20:20:05.535 +05:30 [Information] Request finished in 235.9179ms 200 application/json; charset=utf-8
+2016-07-08 20:20:05.536 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" completed keep alive response.
+2016-07-08 20:20:22.712 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/BoardMe/getUserBoards?userId=1  
+2016-07-08 20:20:22.712 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/BoardMe/getUserBoards"'.
+2016-07-08 20:20:22.713 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)"
+2016-07-08 20:20:22.754 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:20:26.622 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:20:26.622 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-07-08 20:20:26.622 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:20:26.624 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:20:26.633 +05:30 [Information] Executed action "Api.Socioboard.Controllers.BoardMeController.getUserBoards (Api.Socioboard)" in 3918.4687ms
+2016-07-08 20:20:26.638 +05:30 [Information] Request finished in 3927.965ms 200 application/json; charset=utf-8
+2016-07-08 20:20:26.638 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" completed keep alive response.
+2016-07-08 20:22:33.631 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" received FIN.
+2016-07-08 20:22:33.631 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" received FIN.
+2016-07-08 20:22:33.632 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" disconnecting.
+2016-07-08 20:22:33.633 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" disconnecting.
+2016-07-08 20:22:33.634 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" sending FIN.
+2016-07-08 20:22:33.634 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" sending FIN.
+2016-07-08 20:22:33.648 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" sent FIN with status "0".
+2016-07-08 20:22:33.648 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" sent FIN with status "0".
+2016-07-08 20:22:33.652 +05:30 [Debug] Connection id ""0HKT77RTLT4BO"" stopped.
+2016-07-08 20:22:33.652 +05:30 [Debug] Connection id ""0HKT77RTLT4BN"" stopped.
+2016-07-08 20:28:12.749 +05:30 [Debug] Connection id ""0HKT77RTLT4BP"" started.
+2016-07-08 20:28:12.751 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:28:12.752 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:28:12.755 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:28:12.764 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:28:12.765 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:28:12.766 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:28:12.767 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:28:12.772 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 12.7948ms
+2016-07-08 20:28:12.777 +05:30 [Information] Request finished in 26.6821ms 200 application/json; charset=utf-8
+2016-07-08 20:28:12.778 +05:30 [Debug] Connection id ""0HKT77RTLT4BP"" completed keep alive response.
+2016-07-08 20:28:12.791 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:28:12.791 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:28:12.792 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:28:12.811 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:28:12.812 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:28:12.813 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:28:12.818 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:28:12.825 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 28.7804ms
+2016-07-08 20:28:12.828 +05:30 [Information] Request finished in 39.2615ms 200 application/json; charset=utf-8
+2016-07-08 20:28:12.829 +05:30 [Debug] Connection id ""0HKT77RTLT4BP"" completed keep alive response.
+2016-07-08 20:29:53.628 +05:30 [Debug] Connection id ""0HKT77RTLT4BP"" received FIN.
+2016-07-08 20:29:53.629 +05:30 [Debug] Connection id ""0HKT77RTLT4BP"" disconnecting.
+2016-07-08 20:29:53.629 +05:30 [Debug] Connection id ""0HKT77RTLT4BP"" sending FIN.
+2016-07-08 20:29:53.630 +05:30 [Debug] Connection id ""0HKT77RTLT4BP"" sent FIN with status "0".
+2016-07-08 20:29:53.630 +05:30 [Debug] Connection id ""0HKT77RTLT4BP"" stopped.
+2016-07-08 20:36:44.673 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" started.
+2016-07-08 20:36:44.681 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:36:44.684 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:36:44.686 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:36:44.701 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:44.703 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:44.704 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:44.706 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:44.714 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 21.0345ms
+2016-07-08 20:36:44.721 +05:30 [Information] Request finished in 41.4663ms 200 application/json; charset=utf-8
+2016-07-08 20:36:44.722 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" completed keep alive response.
+2016-07-08 20:36:44.737 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:36:44.738 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:36:44.738 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:36:44.785 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:44.788 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:44.789 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:44.790 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:44.799 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 53.114ms
+2016-07-08 20:36:44.804 +05:30 [Information] Request finished in 69.1726ms 200 application/json; charset=utf-8
+2016-07-08 20:36:44.805 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" completed keep alive response.
+2016-07-08 20:36:45.573 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:36:45.574 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:36:45.575 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:36:45.643 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:45.659 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:45.659 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:45.695 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:45.707 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 120.2334ms
+2016-07-08 20:36:45.783 +05:30 [Information] Request finished in 171.1334ms 200 application/json; charset=utf-8
+2016-07-08 20:36:45.783 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" completed keep alive response.
+2016-07-08 20:36:45.845 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" started.
+2016-07-08 20:36:45.845 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:36:45.847 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:36:45.849 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:36:45.849 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:36:45.855 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:36:45.856 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:36:45.883 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:45.885 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:45.885 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:45.890 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:45.891 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:45.891 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:45.897 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:45.898 +05:30 [Debug] Connection id ""0HKT77RTLT4BS"" started.
+2016-07-08 20:36:45.901 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:45.906 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:36:45.907 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:36:45.908 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:36:45.911 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 46.7804ms
+2016-07-08 20:36:45.926 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 48.4887ms
+2016-07-08 20:36:45.934 +05:30 [Information] Request finished in 73.1519ms 200 application/json; charset=utf-8
+2016-07-08 20:36:45.935 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" completed keep alive response.
+2016-07-08 20:36:45.944 +05:30 [Information] Request finished in 98.3037ms 200 application/json; charset=utf-8
+2016-07-08 20:36:45.945 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" completed keep alive response.
+2016-07-08 20:36:45.970 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:45.971 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:45.972 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:45.989 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:46.024 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:36:46.032 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:36:46.033 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:36:46.051 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 108.6587ms
+2016-07-08 20:36:46.122 +05:30 [Information] Request finished in 184.1375ms 200 application/json; charset=utf-8
+2016-07-08 20:36:46.125 +05:30 [Debug] Connection id ""0HKT77RTLT4BS"" completed keep alive response.
+2016-07-08 20:36:46.133 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:46.135 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:46.136 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:46.151 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:46.166 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 119.9574ms
+2016-07-08 20:36:46.194 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:36:46.195 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:36:46.195 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:36:46.205 +05:30 [Information] Request finished in 201.0582ms 200 application/json; charset=utf-8
+2016-07-08 20:36:46.208 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" completed keep alive response.
+2016-07-08 20:36:46.293 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:36:46.295 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:36:46.299 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:36:46.307 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:46.311 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:46.312 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:46.338 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:46.359 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 140.8654ms
+2016-07-08 20:36:46.390 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:46.391 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:46.392 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:46.402 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:46.412 +05:30 [Information] Request finished in 215.2129ms 200 application/json; charset=utf-8
+2016-07-08 20:36:46.413 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" completed keep alive response.
+2016-07-08 20:36:46.447 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 104.7347ms
+2016-07-08 20:36:46.466 +05:30 [Information] Request finished in 197.2534ms 200 application/json; charset=utf-8
+2016-07-08 20:36:46.467 +05:30 [Debug] Connection id ""0HKT77RTLT4BS"" completed keep alive response.
+2016-07-08 20:36:46.497 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:36:46.498 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:36:46.499 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:36:46.547 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:36:46.549 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:36:46.550 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:36:46.555 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:36:46.571 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 56.3418ms
+2016-07-08 20:36:46.584 +05:30 [Information] Request finished in 91.3572ms 200 application/json; charset=utf-8
+2016-07-08 20:36:46.585 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" completed keep alive response.
+2016-07-08 20:38:10.355 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" received FIN.
+2016-07-08 20:38:10.355 +05:30 [Debug] Connection id ""0HKT77RTLT4BS"" received FIN.
+2016-07-08 20:38:10.355 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" disconnecting.
+2016-07-08 20:38:10.355 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" received FIN.
+2016-07-08 20:38:10.356 +05:30 [Debug] Connection id ""0HKT77RTLT4BS"" disconnecting.
+2016-07-08 20:38:10.356 +05:30 [Debug] Connection id ""0HKT77RTLT4BT"" started.
+2016-07-08 20:38:10.356 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" disconnecting.
+2016-07-08 20:38:10.357 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" sending FIN.
+2016-07-08 20:38:10.356 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" sending FIN.
+2016-07-08 20:38:10.359 +05:30 [Debug] Connection id ""0HKT77RTLT4BS"" sending FIN.
+2016-07-08 20:38:10.359 +05:30 [Debug] Connection id ""0HKT77RTLT4BS"" sent FIN with status "0".
+2016-07-08 20:38:10.360 +05:30 [Debug] Connection id ""0HKT77RTLT4BS"" stopped.
+2016-07-08 20:38:10.359 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" sent FIN with status "0".
+2016-07-08 20:38:10.360 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" sent FIN with status "0".
+2016-07-08 20:38:10.360 +05:30 [Debug] Connection id ""0HKT77RTLT4BR"" stopped.
+2016-07-08 20:38:10.361 +05:30 [Debug] Connection id ""0HKT77RTLT4BQ"" stopped.
+2016-07-08 20:38:10.363 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:38:10.363 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:38:10.364 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:38:10.399 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:38:10.401 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:38:10.401 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:38:10.403 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:38:10.407 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 39.9251ms
+2016-07-08 20:38:10.413 +05:30 [Information] Request finished in 49.8223ms 200 application/json; charset=utf-8
+2016-07-08 20:38:10.413 +05:30 [Debug] Connection id ""0HKT77RTLT4BT"" completed keep alive response.
+2016-07-08 20:38:10.419 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:38:10.420 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:38:10.421 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:38:10.440 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:38:10.442 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:38:10.442 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:38:10.446 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:38:10.454 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 26.1878ms
+2016-07-08 20:38:10.461 +05:30 [Information] Request finished in 42.3056ms 200 application/json; charset=utf-8
+2016-07-08 20:38:10.463 +05:30 [Debug] Connection id ""0HKT77RTLT4BT"" completed keep alive response.
+2016-07-08 20:40:53.628 +05:30 [Debug] Connection id ""0HKT77RTLT4BT"" received FIN.
+2016-07-08 20:40:53.630 +05:30 [Debug] Connection id ""0HKT77RTLT4BT"" disconnecting.
+2016-07-08 20:40:53.631 +05:30 [Debug] Connection id ""0HKT77RTLT4BT"" sending FIN.
+2016-07-08 20:40:53.633 +05:30 [Debug] Connection id ""0HKT77RTLT4BT"" sent FIN with status "0".
+2016-07-08 20:40:53.634 +05:30 [Debug] Connection id ""0HKT77RTLT4BT"" stopped.
+2016-07-08 20:44:30.522 +05:30 [Debug] Connection id ""0HKT77RTLT4BU"" started.
+2016-07-08 20:44:30.525 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:44:30.527 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:44:30.527 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:44:30.579 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:44:30.580 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:44:30.580 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:44:30.582 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:44:30.586 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 55.3474ms
+2016-07-08 20:44:30.593 +05:30 [Information] Request finished in 68.4045ms 200 application/json; charset=utf-8
+2016-07-08 20:44:30.593 +05:30 [Debug] Connection id ""0HKT77RTLT4BU"" completed keep alive response.
+2016-07-08 20:44:30.600 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:44:30.601 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:44:30.602 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:44:30.617 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:44:30.619 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:44:30.619 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:44:30.621 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:44:30.627 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 19.6489ms
+2016-07-08 20:44:30.633 +05:30 [Information] Request finished in 33.3418ms 200 application/json; charset=utf-8
+2016-07-08 20:44:30.634 +05:30 [Debug] Connection id ""0HKT77RTLT4BU"" completed keep alive response.
+2016-07-08 20:46:23.628 +05:30 [Debug] Connection id ""0HKT77RTLT4BU"" received FIN.
+2016-07-08 20:46:23.630 +05:30 [Debug] Connection id ""0HKT77RTLT4BU"" disconnecting.
+2016-07-08 20:46:23.631 +05:30 [Debug] Connection id ""0HKT77RTLT4BU"" sending FIN.
+2016-07-08 20:46:23.633 +05:30 [Debug] Connection id ""0HKT77RTLT4BU"" sent FIN with status "0".
+2016-07-08 20:46:23.634 +05:30 [Debug] Connection id ""0HKT77RTLT4BU"" stopped.
+2016-07-08 20:48:21.558 +05:30 [Debug] Connection id ""0HKT77RTLT4BV"" started.
+2016-07-08 20:48:21.572 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:48:21.574 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:48:21.575 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:48:21.626 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:48:21.629 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:48:21.629 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:48:21.633 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:48:21.641 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 58.2519ms
+2016-07-08 20:48:21.651 +05:30 [Information] Request finished in 86.5602ms 200 application/json; charset=utf-8
+2016-07-08 20:48:21.652 +05:30 [Debug] Connection id ""0HKT77RTLT4BV"" completed keep alive response.
+2016-07-08 20:48:21.662 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:48:21.664 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:48:21.664 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:48:21.694 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:48:21.696 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:48:21.697 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:48:21.701 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:48:21.714 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 36.9859ms
+2016-07-08 20:48:21.719 +05:30 [Information] Request finished in 58.1464ms 200 application/json; charset=utf-8
+2016-07-08 20:48:21.719 +05:30 [Debug] Connection id ""0HKT77RTLT4BV"" completed keep alive response.
+2016-07-08 20:49:44.573 +05:30 [Debug] Connection id ""0HKT77RTLT4BV"" received FIN.
+2016-07-08 20:49:44.574 +05:30 [Debug] Connection id ""0HKT77RTLT4BV"" disconnecting.
+2016-07-08 20:49:44.574 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" started.
+2016-07-08 20:49:44.574 +05:30 [Debug] Connection id ""0HKT77RTLT4BV"" sending FIN.
+2016-07-08 20:49:44.575 +05:30 [Debug] Connection id ""0HKT77RTLT4BV"" sent FIN with status "0".
+2016-07-08 20:49:44.576 +05:30 [Debug] Connection id ""0HKT77RTLT4BV"" stopped.
+2016-07-08 20:49:44.578 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:49:44.579 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:49:44.580 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:49:44.620 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:49:44.624 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:49:44.624 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:49:44.626 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:49:44.631 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 46.627ms
+2016-07-08 20:49:44.639 +05:30 [Information] Request finished in 61.7904ms 200 application/json; charset=utf-8
+2016-07-08 20:49:44.640 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:49:44.647 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:49:44.648 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:49:44.648 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:49:44.666 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:49:44.667 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:49:44.668 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:49:44.671 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:49:44.678 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 22.8961ms
+2016-07-08 20:49:44.685 +05:30 [Information] Request finished in 37.8656ms 200 application/json; charset=utf-8
+2016-07-08 20:49:44.686 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:49:54.742 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:49:54.744 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:49:54.746 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:49:54.781 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:49:54.782 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:49:54.783 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:49:54.785 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:49:54.790 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 39.9497ms
+2016-07-08 20:49:54.798 +05:30 [Information] Request finished in 65.268ms 200 application/json; charset=utf-8
+2016-07-08 20:49:54.798 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:49:54.805 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:49:54.806 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:49:54.806 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:49:54.924 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:49:54.927 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:49:54.927 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:49:54.930 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:49:54.937 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 124.6574ms
+2016-07-08 20:49:54.945 +05:30 [Information] Request finished in 138.8099ms 200 application/json; charset=utf-8
+2016-07-08 20:49:54.947 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:50:20.501 +05:30 [Information] Request starting HTTP/1.1 OPTIONS http://localhost:6361/api/BoardMe/createBoard  
+2016-07-08 20:50:20.502 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/BoardMe/createBoard"'.
+2016-07-08 20:50:20.504 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.BoardMeController.createBoard (Api.Socioboard)"
+2016-07-08 20:50:20.539 +05:30 [Warning] Authorization failed for the request at filter '"Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter"'.
+2016-07-08 20:50:20.568 +05:30 [Information] Executing HttpStatusCodeResult, setting HTTP status code 200
+2016-07-08 20:50:20.571 +05:30 [Information] Executed action "Api.Socioboard.Controllers.BoardMeController.createBoard (Api.Socioboard)" in 64.5587ms
+2016-07-08 20:50:20.583 +05:30 [Information] Request finished in 78.357ms 200 
+2016-07-08 20:50:20.584 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:50:48.215 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:50:48.216 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:50:48.217 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:50:48.271 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:50:48.273 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:50:48.273 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:50:48.275 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:50:48.279 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 58.8489ms
+2016-07-08 20:50:48.285 +05:30 [Information] Request finished in 70.2462ms 200 application/json; charset=utf-8
+2016-07-08 20:50:48.286 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:50:48.292 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:50:48.293 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:50:48.294 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:50:48.308 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:50:48.309 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:50:48.310 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:50:48.312 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:50:48.319 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 19.4614ms
+2016-07-08 20:50:48.327 +05:30 [Information] Request finished in 32.5521ms 200 application/json; charset=utf-8
+2016-07-08 20:50:48.328 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:51:32.578 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:51:32.580 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:51:32.581 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:51:32.616 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:51:32.617 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:51:32.618 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:51:32.622 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:51:32.633 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 39.9525ms
+2016-07-08 20:51:32.646 +05:30 [Information] Request finished in 66.1398ms 200 application/json; charset=utf-8
+2016-07-08 20:51:32.647 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:51:32.672 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:51:32.674 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:51:32.674 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:51:32.719 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:51:32.724 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:51:32.725 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:51:32.728 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:51:32.736 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 54.0588ms
+2016-07-08 20:51:32.743 +05:30 [Information] Request finished in 79.7095ms 200 application/json; charset=utf-8
+2016-07-08 20:51:32.744 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:51:53.568 +05:30 [Information] Request starting HTTP/1.1 OPTIONS http://localhost:6361/api/BoardMe/createBoard  
+2016-07-08 20:51:53.569 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/BoardMe/createBoard"'.
+2016-07-08 20:51:53.570 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.BoardMeController.createBoard (Api.Socioboard)"
+2016-07-08 20:51:53.574 +05:30 [Warning] Authorization failed for the request at filter '"Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter"'.
+2016-07-08 20:51:53.577 +05:30 [Information] Executing HttpStatusCodeResult, setting HTTP status code 200
+2016-07-08 20:51:53.581 +05:30 [Information] Executed action "Api.Socioboard.Controllers.BoardMeController.createBoard (Api.Socioboard)" in 6.4977ms
+2016-07-08 20:51:53.596 +05:30 [Information] Request finished in 27.9206ms 200 
+2016-07-08 20:51:53.603 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" completed keep alive response.
+2016-07-08 20:53:43.628 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" received FIN.
+2016-07-08 20:53:43.629 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" disconnecting.
+2016-07-08 20:53:43.630 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" sending FIN.
+2016-07-08 20:53:43.631 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" sent FIN with status "0".
+2016-07-08 20:53:43.632 +05:30 [Debug] Connection id ""0HKT77RTLT4C0"" stopped.
+2016-07-08 20:55:54.456 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" started.
+2016-07-08 20:55:54.465 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:55:54.466 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:55:54.467 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:55:54.519 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:55:54.521 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:55:54.521 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:55:54.523 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:55:54.529 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 56.38ms
+2016-07-08 20:55:54.537 +05:30 [Information] Request finished in 73.4535ms 200 application/json; charset=utf-8
+2016-07-08 20:55:54.538 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" completed keep alive response.
+2016-07-08 20:55:54.546 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:55:54.547 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:55:54.547 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:55:54.569 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:55:54.572 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:55:54.572 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:55:54.576 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:55:54.583 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 29.4435ms
+2016-07-08 20:55:54.590 +05:30 [Information] Request finished in 44.9034ms 200 application/json; charset=utf-8
+2016-07-08 20:55:54.591 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" completed keep alive response.
+2016-07-08 20:56:53.893 +05:30 [Information] Request starting HTTP/1.1 OPTIONS http://localhost:6361/api/BoardMe/createBoard  
+2016-07-08 20:56:53.901 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/BoardMe/createBoard"'.
+2016-07-08 20:56:53.901 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.BoardMeController.createBoard (Api.Socioboard)"
+2016-07-08 20:56:53.905 +05:30 [Warning] Authorization failed for the request at filter '"Microsoft.AspNetCore.Mvc.Cors.CorsAuthorizationFilter"'.
+2016-07-08 20:56:53.910 +05:30 [Information] Executing HttpStatusCodeResult, setting HTTP status code 200
+2016-07-08 20:56:53.917 +05:30 [Information] Executed action "Api.Socioboard.Controllers.BoardMeController.createBoard (Api.Socioboard)" in 8.3611ms
+2016-07-08 20:56:53.938 +05:30 [Information] Request finished in 31.0417ms 200 
+2016-07-08 20:56:53.939 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" completed keep alive response.
+2016-07-08 20:57:19.399 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 20:57:19.400 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 20:57:19.401 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 20:57:19.419 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:57:19.420 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:57:19.421 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:57:19.423 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:57:19.428 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 23.5165ms
+2016-07-08 20:57:19.435 +05:30 [Information] Request finished in 36.8154ms 200 application/json; charset=utf-8
+2016-07-08 20:57:19.436 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" completed keep alive response.
+2016-07-08 20:57:19.446 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 20:57:19.446 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 20:57:19.447 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 20:57:19.466 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 20:57:19.468 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 20:57:19.468 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 20:57:19.471 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 20:57:19.477 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 24.9385ms
+2016-07-08 20:57:19.485 +05:30 [Information] Request finished in 40.5273ms 200 application/json; charset=utf-8
+2016-07-08 20:57:19.486 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" completed keep alive response.
+2016-07-08 20:59:13.628 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" received FIN.
+2016-07-08 20:59:13.628 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" disconnecting.
+2016-07-08 20:59:13.629 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" sending FIN.
+2016-07-08 20:59:13.630 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" sent FIN with status "0".
+2016-07-08 20:59:13.630 +05:30 [Debug] Connection id ""0HKT77RTLT4C1"" stopped.
+2016-07-08 21:00:40.521 +05:30 [Debug] Connection id ""0HKT77RTLT4C2"" started.
+2016-07-08 21:00:40.524 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 21:00:40.525 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 21:00:40.525 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 21:00:40.603 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 21:00:40.604 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 21:00:40.604 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 21:00:40.608 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 21:00:40.614 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 83.5149ms
+2016-07-08 21:00:40.622 +05:30 [Information] Request finished in 97.7244ms 200 application/json; charset=utf-8
+2016-07-08 21:00:40.623 +05:30 [Debug] Connection id ""0HKT77RTLT4C2"" completed keep alive response.
+2016-07-08 21:00:40.631 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 21:00:40.632 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 21:00:40.632 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 21:00:40.655 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 21:00:40.656 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 21:00:40.657 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 21:00:40.661 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 21:00:40.674 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 29.6106ms
+2016-07-08 21:00:40.688 +05:30 [Information] Request finished in 56.157ms 200 application/json; charset=utf-8
+2016-07-08 21:00:40.690 +05:30 [Debug] Connection id ""0HKT77RTLT4C2"" completed keep alive response.
+2016-07-08 21:02:53.629 +05:30 [Debug] Connection id ""0HKT77RTLT4C2"" received FIN.
+2016-07-08 21:02:53.629 +05:30 [Debug] Connection id ""0HKT77RTLT4C2"" disconnecting.
+2016-07-08 21:02:53.630 +05:30 [Debug] Connection id ""0HKT77RTLT4C2"" sending FIN.
+2016-07-08 21:02:53.631 +05:30 [Debug] Connection id ""0HKT77RTLT4C2"" sent FIN with status "0".
+2016-07-08 21:02:53.631 +05:30 [Debug] Connection id ""0HKT77RTLT4C2"" stopped.
+2016-07-08 21:03:31.640 +05:30 [Debug] Connection id ""0HKT77RTLT4C3"" started.
+2016-07-08 21:03:31.644 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 21:03:31.645 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 21:03:31.645 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 21:03:31.671 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 21:03:31.673 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 21:03:31.673 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 21:03:31.677 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 21:03:31.686 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 32.425ms
+2016-07-08 21:03:31.694 +05:30 [Information] Request finished in 51.6173ms 200 application/json; charset=utf-8
+2016-07-08 21:03:31.695 +05:30 [Debug] Connection id ""0HKT77RTLT4C3"" completed keep alive response.
+2016-07-08 21:03:31.707 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 21:03:31.708 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 21:03:31.709 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 21:03:31.744 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 21:03:31.746 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 21:03:31.747 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 21:03:31.751 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 21:03:31.758 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 42.7726ms
+2016-07-08 21:03:31.767 +05:30 [Information] Request finished in 61.8201ms 200 application/json; charset=utf-8
+2016-07-08 21:03:31.768 +05:30 [Debug] Connection id ""0HKT77RTLT4C3"" completed keep alive response.
+2016-07-08 21:04:43.628 +05:30 [Debug] Connection id ""0HKT77RTLT4C3"" received FIN.
+2016-07-08 21:04:43.629 +05:30 [Debug] Connection id ""0HKT77RTLT4C3"" disconnecting.
+2016-07-08 21:04:43.629 +05:30 [Debug] Connection id ""0HKT77RTLT4C3"" sending FIN.
+2016-07-08 21:04:43.630 +05:30 [Debug] Connection id ""0HKT77RTLT4C3"" sent FIN with status "0".
+2016-07-08 21:04:43.631 +05:30 [Debug] Connection id ""0HKT77RTLT4C3"" stopped.
+2016-07-08 21:10:53.509 +05:30 [Debug] Connection id ""0HKT77RTLT4C4"" started.
+2016-07-08 21:10:53.513 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-07-08 21:10:53.514 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-07-08 21:10:53.515 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-07-08 21:10:53.541 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 21:10:53.542 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 21:10:53.543 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 21:10:53.546 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 21:10:53.553 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 31.4363ms
+2016-07-08 21:10:53.560 +05:30 [Information] Request finished in 46.7434ms 200 application/json; charset=utf-8
+2016-07-08 21:10:53.561 +05:30 [Debug] Connection id ""0HKT77RTLT4C4"" completed keep alive response.
+2016-07-08 21:10:53.570 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-07-08 21:10:53.571 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-07-08 21:10:53.571 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-07-08 21:10:53.603 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid'
+2016-07-08 21:10:53.604 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".'
+2016-07-08 21:10:53.604 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-07-08 21:10:53.607 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-07-08 21:10:53.614 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 36.2503ms
+2016-07-08 21:10:53.624 +05:30 [Information] Request finished in 55.592ms 200 application/json; charset=utf-8
+2016-07-08 21:10:53.625 +05:30 [Debug] Connection id ""0HKT77RTLT4C4"" completed keep alive response.

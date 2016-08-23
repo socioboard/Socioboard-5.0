@@ -80,6 +80,18 @@ namespace Socioboard.GoogleLib.Authentication
                 response = "[" + response + "]";
             return response;
         }
+
+        public string GetPeopleInfo(string UserId, string access,string profileid)
+        {
+            string RequestUrl = Globals.strPeopleIf + profileid + "?fields=aboutMe,ageRange,birthday,braggingRights,circledByCount,cover,currentLocation,displayName,domain,emails,etag,gender,id,image,isPlusUser,kind,language,name,nickname,objectType,occupation,organizations,placesLived,plusOneCount,relationshipStatus,skills,tagline,url,urls,verified&access_token=" + access;
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = WebRequestHeader(path, header, val);
+            if (!response.StartsWith("["))
+                response = "[" + response + "]";
+            return response;
+        }
         /// <summary>
         /// Web Request Wrapper
         /// </summary>

@@ -10,6 +10,7 @@ namespace Domain.Socioboard.Models.Mongo
     [BsonIgnoreExtraElements]
     public class MongoGplusFeed
     {
+        [BsonId]
         public ObjectId Id { get; set; }
         public string GpUserId { get; set; }
         public string ActivityId { get; set; }

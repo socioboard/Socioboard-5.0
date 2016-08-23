@@ -691,6 +691,22 @@ analytics" href="http://statcounter.com/shopify/"
     </script>
     @*Google Login JS End*@
 
+    
+    <script>
+            $.ajax({
+                type: "GET",
+                url: "../Home/IsSessionExist",
+                dataType: "html",
+                success: function (msg) {
+                    console.log(msg);
+                    if (msg == "true") {
+                        console.log(msg);
+                        window.top.location = '/home';
+                    }
+                }
+            });
+
+    </script>
     @RenderSection("Scripts", false)
 </body>
 </html>

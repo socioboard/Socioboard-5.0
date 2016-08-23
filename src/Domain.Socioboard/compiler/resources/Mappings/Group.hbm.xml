@@ -4,15 +4,15 @@
       namespace="Domain.Socioboard.Models"
       assembly="Domain.Socioboard">
   <class name="Groups" table="Groups" lazy="true" >
-    <id name="Id" column="Id" />
-    <property name="GroupName">
-      <column name="GroupName" sql-type="varchar(50)" not-null="true" />
+    <id name="id" column="id" />
+    <property name="groupName">
+      <column name="groupName" sql-type="varchar(50)" not-null="true" />
     </property>
-    <property name="CreatedDate">
-      <column name="CreatedDate" sql-type="datetime" not-null="true" />
+    <property name="createdDate">
+      <column name="createdDate" sql-type="datetime" not-null="true" />
     </property>
-    <property name="AdminId">
-      <column name="AdminId" sql-type="bigint(20)" not-null="true" />
+    <property name="adminId">
+      <column name="adminId" sql-type="bigint(20)" not-null="true" />
     </property>
   </class>
 </hibernate-mapping>

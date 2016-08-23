@@ -7,7 +7,7 @@
 
   <Import Project="$(VSToolsPath)\DotNet\Microsoft.DotNet.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>6d4c3b73-998c-452f-a63b-5f629ff299f9</ProjectGuid>
+    <ProjectGuid>dda3032a-0143-4273-8771-99a761d3617c</ProjectGuid>
     <RootNamespace>Socioboard.Google</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>

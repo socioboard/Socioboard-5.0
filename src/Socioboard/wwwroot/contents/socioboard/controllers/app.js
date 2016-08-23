@@ -4,7 +4,6 @@
 /***
 Socioboard AngularJS App Main Script
 ***/
-
 /* Socioboard App */
 var SocioboardApp = angular.module("SocioboardApp", [
     "ui.router",
@@ -13,7 +12,6 @@ var SocioboardApp = angular.module("SocioboardApp", [
     "ngSanitize",
     "lazy-scroll"
 ]);
-
 
 
 
@@ -40,6 +38,20 @@ SocioboardApp.directive('myRepeatDropdownDirective', function () {
 })
 
 //Not Using End
+
+SocioboardApp.directive('myRepeatTimeoutDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+                $('select').material_select();
+
+
+            });
+        }
+    };
+})
+
+
 
 //codes to redirect all unauthorized calls to index page
 SocioboardApp.config(function ($httpProvider) {
@@ -153,8 +165,9 @@ initialization can be disabled and Layout.init() should be called on page load c
 ***/
 
 /* Setup Layout Part - Header */
-SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http, domain) {
+SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http, domain, apiDomain, groupmember) {
     $scope.$on('$includeContentLoaded', function () {
+
 
         $scope.changeGroup = function (groupId) {
             console.log($rootScope.groupId);
@@ -168,26 +181,46 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
                               $scope.error = reason.data;
                           });
         }
-        //codes to load  groups start
-        //$http.get(apiDomain + '/api/Groups/GetUserGroups?userId=' + $rootScope.user.Id)
-        //              .then(function (response) {
-        //                  $scope.groups = response.data;
-        //              }, function (reason) {
-        //                  $scope.error = reason.data;
-        //              });
-        // end codes to load groups
-        //Layout.initHeader(); // init header
+
+        
+
+        $scope.getOnPageLoadGroups = function () {
+            var canContinue = true;
+            angular.forEach($rootScope.groups, function (value, key) {
+                if (canContinue && value.id == $rootScope.groupId) {
+                    groupmember.getGroupMembers(key, $rootScope.groupId)
+                    $rootScope.groupIndex = key;
+                    canContinue = false;
+                }
+            });
+        }
+
+        $scope.getOnPageLoadGroups();
     });
 });
 
 /* Setup Layout Part - Sidebar */
 /* Setup Layout Part - Sidebar */
-SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $http, apiDomain) {
+SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $http, apiDomain, domain) {
     $scope.$on('$includeContentLoaded', function () {
 
         $scope.fbProfileFilter = function (item) {
-            return item.ProfileType === 0 || item.ProfileType === 1;
+            return item.profileType === 0 || item.profileType === 1;
         };
+        $scope.logout = function () {
+            //alert('hello');
+            $rootScope.groupId = '';
+            //$rootScope.user.Id = '';
+            //codes to logout from all session
+            $http.get(domain + '/Home/Logout')
+                          .then(function (response) {
+                              window.location.href = '../Index/Index';
+                              window.location.reload();
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to logout from all session
+        }
 
         ////codes to load  social profiles start
         //$http.get(apiDomain + '/api/GroupProfiles/GetGroupProfiles?groupId=' + $rootScope.groupId)
@@ -244,7 +277,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                              '../contents/socioboard/controllers/dashboardcontroller.js',
-                             '../contents/socioboard/js/admin/plugins.js'
+                             '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/css/admin/custom.css'
                         ]
                     });
                 }]
@@ -266,7 +300,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/controllers/smartinboxcontroller.js'
+                            '../contents/socioboard/controllers/smartinboxcontroller.js',
+                            '../contents/socioboard/services/grouptask.js'
                         ]
                     });
                 }]
@@ -287,12 +322,59 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/controllers/inboxmessagecontroller.js'
+                            '../contents/socioboard/controllers/inboxmessagecontroller.js',
+                            '../contents/socioboard/js/admin/moment.min.js',
+                            '../contents/socioboard/services/grouptask.js'
                         ]
                     });
                 }]
             }
         })
+
+         // MyTask controller
+
+        .state('mytask', {
+            url: "/mytask",
+            templateUrl: "../contents/socioboard/views/message/mytask.html",
+            data: { pageTitle: 'My Task', pageSubTitle: 'updated' },
+            controller: "MyTaskController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/mytaskcontroller.js',
+                             '../contents/socioboard/services/grouptask.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+         // Sent Messages Controller 
+         .state('sentmessages', {
+             url: "/sentmessages",
+             templateUrl: "../contents/socioboard/views/message/sentmessages.html",
+             data: { pageTitle: 'Sent Messages', pageSubTitle: 'updated' },
+             controller: "SentMessagesController",
+
+             resolve: {
+                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                     return $ocLazyLoad.load({
+                         name: 'SocioboardApp',
+                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                         files: [
+                             '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/js/admin/moment.min.js',
+                             '../contents/socioboard/controllers/sentmessagescontroller.js'
+                         ]
+                     });
+                 }]
+             }
+         })
 
           // schedule message controller
         .state('schedulemsg', {
@@ -331,6 +413,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                          files: [
                              '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/js/admin/moment.min.js',
+                             '../contents/socioboard/css/admin/custom.css',
                              '../contents/socioboard/controllers/draftmsgcontroller.js'
                          ]
                      });
@@ -352,6 +435,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                          files: [
                              '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/js/admin/moment.min.js',
+                             '../contents/socioboard/css/admin/custom.css',
                              '../contents/socioboard/controllers/socioqueuecontroller.js'
                          ]
                      });
@@ -360,32 +444,35 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
          })
 
 
-         // socialqueue calendar controller
-         .state('calendar', {
-             url: "/calendar",
-             templateUrl: "../contents/socioboard/views/publishing/calendar.html",
-             data: { pageTitle: 'Calendar', pageSubTitle: 'updated' },
-             controller: "CalendarController",
+        .state('calendar', {
+            url: "/calendar",
+            templateUrl: "../contents/socioboard/views/publishing/calendar.html",
+            data: { pageTitle: 'Calendar', pageSubTitle: 'updated' },
+            controller: "CalendarController",
 
-             resolve: {
-                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                     return $ocLazyLoad.load({
-                         name: 'SocioboardApp',
-                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
-                         files: [
-                             '../contents/socioboard/js/admin/plugins.js',
-                             '../contents/socioboard/js/admin/moment.min.js',
-                             '../contents/socioboard/controllers/calendarcontroller.js'
-                         ]
-                     });
-                 }]
-             }
-         })
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins/fullcalendar/css/fullcalendar.min.css',
+                            '../contents/socioboard/js/admin/plugins/fullcalendar/lib/jquery-ui.custom.min.js',
+                            '../contents/socioboard/js/admin/plugins/fullcalendar/lib/moment.min.js',
+                            '../contents/socioboard/js/admin/plugins/fullcalendar/js/fullcalendar.min.js',
+                            '../contents/socioboard/js/admin/plugins/fullcalendar/fullcalendar-script.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/calendarcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
 
 
         // discovery
         .state('discovery', {
-            url: "/discovery.html",
+            url: "/discovery",
             templateUrl: "../contents/socioboard/views/discovery/discovery.html",
             data: { pageTitle: 'Discovery', pageSubTitle: 'updated' },
             controller: "DiscoveryController",
@@ -407,7 +494,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
 
         // Smart Search
         .state('smartsearch', {
-            url: "/smartsearch.html",
+            url: "/smartsearch",
             templateUrl: "../contents/socioboard/views/discovery/smartsearch.html",
             data: { pageTitle: 'SmartSearch', pageSubTitle: 'updated' },
             controller: "DiscoveryController",
@@ -443,7 +530,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                          insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                          files: [
                              '../contents/socioboard/js/admin/plugins.js',
-                             '../contents/socioboard/controllers/facebookfeedscontroller.js'
+                             '../contents/socioboard/controllers/facebookfeedscontroller.js',
+                            '../contents/socioboard/services/grouptask.js'
                          ]
                      });
                  }]
@@ -508,12 +596,477 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                          insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                          files: [
                              '../contents/socioboard/js/admin/plugins.js',
-                             '../contents/socioboard/controllers/twitterfeedscontroller.js'
+                             '../contents/socioboard/controllers/twitterfeedscontroller.js',
+                            '../contents/socioboard/services/grouptask.js'
                          ]
                      });
                  }]
              }
          })
+
+
+        // instagram feeds controller
+         .state('instagramfeeds', {
+             url: "/instagramfeeds/{profileId}",
+             templateUrl: "../contents/socioboard/views/feeds/instagramfeeds.html",
+             data: { pageTitle: 'Instagram Live feeds', pageSubTitle: 'updated' },
+             controller: "InstagramFeedsController",
+             resolve: {
+                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                     return $ocLazyLoad.load({
+                         name: 'SocioboardApp',
+                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                         files: [
+                             '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/js/admin/moment.min.js',
+                             '../contents/socioboard/controllers/instagramfeedscontroller.js',
+                            '../contents/socioboard/services/grouptask.js'
+                         ]
+                     });
+                 }]
+             }
+         })
+
+
+         // Linkedin Company feeds controller
+
+        .state('linkedin_comp_feeds', {
+            url: "/linkedin_comp_feeds.html/{profileId}",
+            templateUrl: "../contents/socioboard/views/feeds/linkedin_comp_feeds.html",
+            data: { pageTitle: 'LinkedIn Company page Live feeds', pageSubTitle: 'updated' },
+            controller: "LinkedinCompFeedsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/js/admin/moment.min.js',
+                            '../contents/socioboard/controllers/linkedin_comp_feeds_controller.js',
+                            '../contents/socioboard/services/grouptask.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+          .state('googleplusfeeds', {
+              url: "/googleplusfeeds.html",
+              templateUrl: "../contents/socioboard/views/feeds/googleplusfeeds.html",
+              data: { pageTitle: 'Google plus Live feeds', pageSubTitle: 'updated' },
+              controller: "GooglePlusFeedsController",
+
+              resolve: {
+                  deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                      return $ocLazyLoad.load({
+                          name: 'SocioboardApp',
+                          insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                          files: [
+                              '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/js/admin/moment.min.js',
+                              '../contents/socioboard/controllers/googleplusfeedscontroller.js'
+                          ]
+                      });
+                  }]
+              }
+          })
+
+          // AutoMate Rss Feeds
+
+        .state('automate_rss_feeds', {
+            url: "/automate_rss_feeds.html",
+            templateUrl: "../contents/socioboard/views/rss_feeds/automate_rss_feeds.html",
+            data: { pageTitle: 'RssQueue', pageSubTitle: 'updated' },
+            controller: "AutoMateRssFeedsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                            '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/automaterssfeedscontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // Posted Rss Feeds
+
+        .state('posted_rss_feeds', {
+            url: "/posted_rss_feeds.html",
+            templateUrl: "../contents/socioboard/views/rss_feeds/posted_rss_feeds.html",
+            data: { pageTitle: 'RssQueue', pageSubTitle: 'updated' },
+            controller: "PostedRssFeedsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                           '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                            '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/postedrssfeedscontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+        // Rss Queue controller
+
+        .state('rss_queue', {
+            url: "/rss_queue.html",
+            templateUrl: "../contents/socioboard/views/rss_feeds/rss_queue.html",
+            data: { pageTitle: 'RssQueue', pageSubTitle: 'updated' },
+            controller: "RssQueueController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                             '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                            '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/rssqueuecontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+
+         // group report
+
+        .state('groupreport', {
+            url: "/groupreport.html",
+            templateUrl: "../contents/socioboard/views/reports/groupreport.html",
+            data: { pageTitle: 'Group Report', pageSubTitle: 'updated' },
+            controller: "GroupreportController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+
+                            '../contents/socioboard/js/admin/plugins/sparkline/jquery.sparkline.min.js',
+                            '../contents/socioboard/global/plugins/amcharts/charts-amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/pie.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/groupreportcontroller.js',
+                            '../contents/socioboard/js/admin/moment.min.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+          // tweeter group report
+
+        .state('twitterreports', {
+            url: "/twitterreports",
+            templateUrl: "../contents/socioboard/views/reports/twitterreports.html",
+            data: { pageTitle: 'Tweeter Group Report', pageSubTitle: 'updated' },
+            controller: "TwitterreportsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/twitterreportscontroller.js',
+                            '../contents/socioboard/js/admin/moment.min.js',
+                        ]
+                    });
+                }]
+            }
+        })
+
+         // googleanalytic report
+
+        .state('googleanalyticreport', {
+            url: "/googleanalyticsreport.html",
+            templateUrl: "../contents/socioboard/views/reports/googleanalyticsreport.html",
+            data: { pageTitle: 'googleanalytic Report', pageSubTitle: 'updated' },
+            controller: "GoogleAnalyticreportController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/global/plugins/amcharts/charts-amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/googleanalyticreportcontroller.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
+          // Facebook public page report
+        .state('facebookpagereport', {
+            url: "/facebookpagereport.html",
+            templateUrl: "../contents/socioboard/views/reports/facebookpagereport.html",
+            data: { pageTitle: 'Facebook Page Report', pageSubTitle: 'updated' },
+            controller: "FacebookpagereportController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+
+                            '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                            '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+                            '../contents/socioboard/js/admin/plugins/sparkline/jquery.sparkline.min.js',
+                            '../contents/socioboard/global/plugins/amcharts/charts-amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/pie.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/facebookpagereportcontroller.js',
+                              '../contents/socioboard/js/admin/moment.min.js',
+
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+            // Facebook report
+
+        .state('facebookreport', {
+            url: "/facebookreport.html",
+            templateUrl: "../contents/socioboard/views/reports/facebookreport.html",
+            data: { pageTitle: 'Facebook Report', pageSubTitle: 'updated' },
+            controller: "FacebookreportController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+
+                            '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                            '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+                            '../contents/socioboard/js/admin/plugins/sparkline/jquery.sparkline.min.js',
+                            '../contents/socioboard/global/plugins/amcharts/charts-amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/pie.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/facebookreportcontroller.js',
+                            '../contents/socioboard/js/admin/moment.min.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
+
+         // Instagram report
+
+        .state('instagramreport', {
+            url: "/instagramreport.html",
+            templateUrl: "../contents/socioboard/views/reports/instagramreport.html",
+            data: { pageTitle: 'Instagram Report', pageSubTitle: 'updated' },
+            controller: "InstagramreportController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+
+                            '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                            '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+                            '../contents/socioboard/js/admin/plugins/sparkline/jquery.sparkline.min.js',
+                            '../contents/socioboard/global/plugins/amcharts/charts-amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/pie.js',
+                            '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/instagramreportcontroller.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+         // Shareathon //
+
+        // Create group shareathon controller
+
+        .state('creategroupshareathon', {
+            url: "/create_group_shareathon.html",
+            templateUrl: "../contents/socioboard/views/shareathon/create_group_shareathon.html",
+            data: { pageTitle: 'Create group shareathon', pageSubTitle: 'updated' },
+            controller: "CreateGroupShareathonController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/creategroupshareathoncontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // Edit group shareathon controller
+
+        .state('editgroupshareathon', {
+            url: "/edit_group_shareathon.html",
+            templateUrl: "../contents/socioboard/views/shareathon/edit_group_shareathon.html",
+            data: { pageTitle: 'Edit group shareathon', pageSubTitle: 'updated' },
+            controller: "CreateGroupShareathonController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/creategroupshareathoncontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // group shareathon
+
+        .state('groupshareathon', {
+            url: "/group_shareathon.html",
+            templateUrl: "../contents/socioboard/views/shareathon/group_shareathon.html",
+            data: { pageTitle: 'Group Shareathon', pageSubTitle: 'updated' },
+            controller: "GroupShareathonController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/groupshareathoncontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // Create Page shareathon controller
+
+        .state('createpageshareathon', {
+            url: "/create_page_shareathon.html",
+            templateUrl: "../contents/socioboard/views/shareathon/create_page_shareathon.html",
+            data: { pageTitle: 'Create page shareathon', pageSubTitle: 'updated' },
+            controller: "CreatePageShareathonController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/createpageshareathoncontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        //edit page shareathon
+          .state('editpageshareathon', {
+              url: "/edit_page_shareathon.html",
+              templateUrl: "../contents/socioboard/views/shareathon/edit_page_shareathon.html",
+              data: { pageTitle: 'Edit page shareathon', pageSubTitle: 'updated' },
+              controller: "CreatePageShareathonController",
+
+              resolve: {
+                  deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                      return $ocLazyLoad.load({
+                          name: 'SocioboardApp',
+                          insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                          files: [
+                              '../contents/socioboard/js/admin/plugins.js',
+                              '../contents/socioboard/controllers/createpageshareathoncontroller.js'
+                          ]
+                      });
+                  }]
+              }
+          })
+
+        // page shareathon
+
+        .state('pageshareathon', {
+            url: "/page_shareathon.html",
+            templateUrl: "../contents/socioboard/views/shareathon/page_shareathon.html",
+            data: { pageTitle: 'Page Shareathon', pageSubTitle: 'updated' },
+            controller: "PageShareathonController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/pageshareathoncontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+
 
         .state('groups', {
             url: "/groups",
@@ -534,6 +1087,81 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                 }]
             }
         })
+
+    // BoardList controller
+
+        .state('boardlist', {
+            url: "/boardlist",
+            templateUrl: "../contents/socioboard/views/boardme/boardlist.html",
+            data: { pageTitle: 'BoardList', pageSubTitle: 'updated' },
+            controller: "BoardlistController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                            '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/boardlistcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+        // Create Board me controller
+        .state('createboard', {
+            url: "/createboard",
+            templateUrl: "../contents/socioboard/views/boardme/createboard.html",
+            data: { pageTitle: 'Create BoardMe', pageSubTitle: 'updated' },
+            controller: "CreateBoardController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/createboardcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+    .state('boardanalytics', {
+        url: "/boardanalytics/{boardName}",
+        templateUrl: "../contents/socioboard/views/boardme/boardanalytics.html",
+        data: { pageTitle: 'BoardList', pageSubTitle: 'updated' },
+        controller: "BoardAnalyticsController",
+
+        resolve: {
+            deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                return $ocLazyLoad.load({
+                    name: 'SocioboardApp',
+                    insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                    files: [
+
+                        '../contents/socioboard/js/admin/plugins/sparkline/jquery.sparkline.min.js',
+                        '../contents/socioboard/global/plugins/amcharts/charts-amcharts.js',
+                        '../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js',
+                        '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
+                        '../contents/socioboard/global/plugins/amcharts/amcharts/pie.js',
+                        '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                        '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                        '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+                        '../contents/socioboard/js/admin/plugins.js',
+                        '../contents/socioboard/controllers/boardanalyticscontroller.js'
+                    ]
+                });
+            }]
+        }
+    })
 
 }]);
 

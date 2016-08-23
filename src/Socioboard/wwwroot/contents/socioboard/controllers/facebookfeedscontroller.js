@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope, $http, $timeout, $stateParams, apiDomain) {
+SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope, $http, $timeout, $stateParams, apiDomain, grouptask) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         // initialize core components
@@ -92,6 +92,27 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             }
             else {
                 swal("please type comment");
+            }
+        }
+
+        $scope.taskfbfeedModel = function (notification) {
+            $('#TaskfbfeedModal').openModal();
+            $rootScope.taskNotification = notification;
+        }
+        $scope.addTask = function (feedTableType) {
+
+            var memberId = $('.task-user-member:checked');
+            var taskComment = $('#taskfbfeedComment').val();
+            if (!memberId.val()) {
+                swal('please select any member for assign task')
+            }
+            else if (!taskComment) {
+                swal('please write any comment for assign task')
+            }
+            else {
+                var assignUserId = memberId.val();
+                grouptask.addtasks(assignUserId, feedTableType, taskComment, $rootScope.taskNotification.feedDescription, $rootScope.taskNotification.feedId, $rootScope.taskNotification.picture);
+
             }
         }
 

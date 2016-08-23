@@ -1,0 +1,93 @@
+<div data-ng-controller="RssQueueController">
+    <!-- Page name -->
+    <div class="container">
+        <div class="col m12">
+            <h4>Rss Queue</h4>
+        </div>
+    </div>
+
+
+    <!-- START CONTENT -->
+    <section id="content">
+        <!-- Compose Email Structure -->
+        <div class="row">
+            <div class="col s12 m12">
+                <table id="RssQueue" class="display responsive-table striped" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Url</th>
+                            <th>Profile</th>
+                            <th>Delete</th>
+                            <th>Edit</th>
+                        </tr>
+                    </thead>
+                    <!--<tfoot>
+                        <tr>
+                            <th>Url</th>
+                            <th>Profile</th>
+                            <th>Delete</th>
+                            <th>Edit</th>
+                        </tr>
+                    </tfoot>-->
+                    <tbody>
+                        <tr ng-repeat="rssqueue in lstrssqueue">
+                            <td>{{$index +1}}</td>
+                            <td>
+                                <span>
+                                    {{rssqueue.RssFeedUrl}}
+                                </span>
+                            </td>
+                            <td class="center">
+                                <div class="col s12" ng-if="rssqueue.ProfileType==0 ||rssqueue.ProfileType==1 ">
+                                    <img src="https://graph.facebook.com/{{rssqueue.ProfileId}}/picture?type=small" class="responsive-img profilePic">
+                                </div>
+                                <div class="col s12" ng-if="rssqueue.ProfileType==2">
+                                    <img src="{{rssqueue.ProfileImageUrl}}" class="responsive-img profilePic">
+                                </div>
+                                <div class="col s12">
+                                    <span>{{rssqueue.ProfileName}}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a class="waves-effect waves-light btn red" ng-click="deleteRss(rssqueue.strId)"><i class="fa fa-times"></i></a>
+                            </td>
+                            <td>
+                                <a class="waves-effect waves-light btn modal-trigger" ng-click="editrssurl(rssqueue.RssFeedUrl,rssqueue.strId)"><i class="fa fa-pencil"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- END CONTENT -->
+    <!-- Modal Structure -->
+    <script id="editsrssfeedModalContent.html" type="text/ng-template">
+        <div id="EditModal" class="" modal="showModal" style="z-index:1005;display:block;opacity:1;transform:scaleX(1);">
+            <div class="modal-content">
+                <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
+                <h5>Edit</h5>
+                <div class="row center">
+                    <div class="input-field col s12">
+                        <textarea id="rssQueue" class="materialize-textarea">
+                            {{oldurl}}
+                        </textarea>
+                        <label for="rssQueue">Edit your rss code</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a ng-click="editrssUrl()" class="modal-action modal-close waves-effect waves-green btn grey">Save</a>
+            </div>
+        </div>
+
+    </script>
+</div>
+
+
+<style>
+    .modal.fade.in {
+        margin-top: -17%;
+    }
+</style>

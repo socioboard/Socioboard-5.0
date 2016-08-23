@@ -11,6 +11,8 @@
         GplusPage =6, 
         YouTube =7,
         Instagram =8,
-        Tumblr =9
+        Tumblr =9,
+        GoogleAnalytics=10,
+        FacebookPublicPage=11
     }
 }

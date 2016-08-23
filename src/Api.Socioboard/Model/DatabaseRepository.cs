@@ -43,6 +43,54 @@ namespace Api.Socioboard.Model
 
             return result;
         }
+        public IList<T> FindAll<T>() where T : class, new()
+        {
+            IList<T> result = null;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
+                {
+                    result = session.Query<T>().ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                try
+                {
+                    _logger.LogError(ex.InnerException.Message);
+
+                }
+                catch { }
+            }
+
+            return result;
+        }
+        public T FindSingle<T>(Expression<Func<T,bool>> query)where T:class,new()
+        {
+           T result = null;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
+                {
+                    result = session.Query<T>().Where(query).SingleOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                try
+                {
+                    _logger.LogError(ex.InnerException.Message);
+
+                }
+                catch { }
+            }
+
+            return result;
+        }
 
 
         public System.Linq.IQueryable<T> All<T>() where T : class, new()

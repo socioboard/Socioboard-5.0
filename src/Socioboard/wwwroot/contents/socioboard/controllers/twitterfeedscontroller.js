@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope, $http,$modal, $timeout, $stateParams, apiDomain) {
+SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope, $http,$modal, $timeout, $stateParams, apiDomain,grouptask) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
         // initialize core components
@@ -102,6 +102,51 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                   controller: 'twittermodalcontroller',
                   scope: $scope
               });
+          }
+
+
+          $scope.tasktwtfeedModel = function (notification) {
+              $rootScope.taskNotification = notification;
+              $('#TasktwtfeedModal').openModal();
+              
+          }
+          $scope.tasktwttweetModel = function (twtnotification) {
+              $rootScope.tasktweetNotification = twtnotification;
+              $('#TasktwttweetModal').openModal();
+
+          }
+          $scope.addtwtfeedTask = function (feedTableType) {
+
+              var memberId = $('.task-user-member:checked');
+              var taskComment = $('#tasktwtfeedComment').val();
+              if (!memberId.val()) {
+                  swal('please select any member for assign task')
+              }
+              else if (!taskComment) {
+                  swal('please write any comment for assign task')
+              }
+              else {
+                  var assignUserId = memberId.val();
+                  grouptask.addtasks(assignUserId, feedTableType, taskComment, $rootScope.taskNotification.feed, $rootScope.taskNotification.messageId, $rootScope.taskNotification.mediaUrl);
+
+              }
+          }
+
+          $scope.addtwttweetTask = function (feedTableType) {
+
+              var memberId = $('.task-user-member:checked');
+              var taskComment = $('#tasktwttweetComment').val();
+              if (!memberId.val()) {
+                  swal('please select any member for assign task')
+              }
+              else if (!taskComment) {
+                  swal('please write any comment for assign task')
+              }
+              else {
+                  var assignUserId = memberId.val();
+                  grouptask.addtasks(assignUserId, feedTableType, taskComment, $rootScope.tasktweetNotification.twitterMsg, $rootScope.tasktweetNotification.messageId, '');
+
+              }
           }
     });
 });

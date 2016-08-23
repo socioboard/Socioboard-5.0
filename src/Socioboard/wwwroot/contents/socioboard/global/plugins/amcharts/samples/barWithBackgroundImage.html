@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>amCharts examples</title>
+        <script src="../amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="../amcharts/serial.js" type="text/javascript"></script>
+
+        <script>
+            var chart;
+
+            var chartData = [
+                {
+                    "country": "Czech Republic",
+                    "litres": 156.9,
+                    "short": "CZ"
+                },
+                {
+                    "country": "Ireland",
+                    "litres": 131.1,
+                    "short": "IR"
+                },
+                {
+                    "country": "Germany",
+                    "litres": 115.8,
+                    "short": "DE"
+                },
+                {
+                    "country": "Australia",
+                    "litres": 109.9,
+                    "short": "AU"
+                },
+                {
+                    "country": "Austria",
+                    "litres": 108.3,
+                    "short": "AT"
+                },
+                {
+                    "country": "UK",
+                    "litres": 99,
+                    "short": "UK"
+                },
+                {
+                    "country": "Belgium",
+                    "litres": 93,
+                    "short": "BE"
+                }
+            ];
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                var chart = new AmCharts.AmSerialChart();
+                chart.dataProvider = chartData;
+                chart.categoryField = "country";
+                chart.rotate = true;
+                chart.color = "#FFFFFF";
+                chart.handDrawn = true;
+                chart.handDrawScatter = 4;
+
+                // this line makes the chart to show image in the background
+                chart.backgroundImage = "images/bg.jpg";
+
+                // sometimes we need to set margins manually
+                // autoMargins should be set to false in order chart to use custom margin values
+                chart.autoMargins = false;
+                chart.marginTop = 100;
+                chart.marginLeft = 50;
+                chart.marginRight = 30;
+                chart.startDuration = 2;
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridAlpha = 0;
+                categoryAxis.axisAlpha = 0;
+                categoryAxis.labelsEnabled = false;
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.gridAlpha = 0;
+                valueAxis.axisAlpha = 0;
+                valueAxis.labelsEnabled = false;
+                valueAxis.minimum = 0;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPH
+                var graph = new AmCharts.AmGraph();
+                graph.balloonText = "[[category]]: [[value]]";
+                graph.valueField = "litres";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.fillAlphas = 0.5;
+                // you can pass any number of colors in array to create more fancy gradients
+                graph.fillColors = ["#000000", "#FF6600"];
+                graph.gradientOrientation = "horizontal";
+                graph.labelPosition = "inside";
+                graph.labelText = "[[category]]: [[value]] Litres";
+                graph.balloonText = "[[category]]: [[value]] Litres";
+                chart.addGraph(graph);
+
+                // LABEL
+                chart.addLabel(50, 40, "Beer Consumption by country", "left", 15, "#000000", 0, 1, true);
+
+                chart.creditsPosition = "bottom-right";
+
+                // WRITE
+                chart.write("chartdiv");
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="chartdiv" style="width: 520px; height: 400px;"></div>
+    </body>
+
+</html>

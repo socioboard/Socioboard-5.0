@@ -1,0 +1,251 @@
+﻿2016-07-26 21:04:41.278 +05:30 [Debug] Hosting starting
+2016-07-26 21:04:41.717 +05:30 [Debug] Hosting started
+2016-07-26 21:04:41.904 +05:30 [Debug] Connection id ""0HKTLD9EE37HM"" started.
+2016-07-26 21:04:41.926 +05:30 [Debug] Connection id ""0HKTLD9EE37HN"" started.
+2016-07-26 21:04:42.132 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:50891/  
+2016-07-26 21:04:42.128 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50891/  0
+2016-07-26 21:04:42.255 +05:30 [Information] Request finished in 166.1762ms 200 
+2016-07-26 21:04:42.345 +05:30 [Debug] Connection id ""0HKTLD9EE37HN"" completed keep alive response.
+2016-07-26 21:04:42.369 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-07-26 21:04:42.683 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Home}/{action=Index}/{id?}"'.
+2016-07-26 21:04:42.839 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2016-07-26 21:04:42.957 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-07-26 21:04:42.974 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-07-26 21:04:43.357 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Home"'.
+2016-07-26 21:04:43.414 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-07-26 21:04:44.336 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 919.2558ms.
+2016-07-26 21:04:44.356 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-07-26 21:04:49.580 +05:30 [Error] An unhandled exception has occurred while executing the request
+Microsoft.AspNetCore.Mvc.Razor.Compilation.CompilationFailedException: One or more compilation failures occurred:
+/Themes/Socioboard/Views/_ViewImports.cshtml(2,28): error CS0234: The type or namespace name 'Identity' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+   at Microsoft.AspNetCore.Mvc.Razor.Compilation.CompilationResult.EnsureSuccessful()
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.CompilerCache.CreateCacheEntry(String relativePath, String normalizedPath, Func`2 compile)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.CompilerCache.GetOrAdd(String relativePath, Func`2 compile)
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.DefaultRazorPageFactoryProvider.CreateFactory(String relativePath)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.CreateCacheResult(HashSet`1 expirationTokens, String relativePath, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.OnCacheMiss(ViewLocationExpanderContext expanderContext, ViewLocationCacheKey cacheKey)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.LocatePageFromViewLocations(ActionContext actionContext, String pageName, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.FindView(ActionContext context, String viewName, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.ViewEngines.CompositeViewEngine.FindView(ActionContext context, String viewName, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor.FindView(ActionContext actionContext, ViewResult viewResult)
+   at Microsoft.AspNetCore.Mvc.ViewResult.<ExecuteResultAsync>d__26.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResultAsync>d__32.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResultFilterAsync>d__31.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAllResultFiltersAsync>d__29.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResourceFilterAsync>d__23.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-07-26 21:04:49.685 +05:30 [Information] Request finished in 7615.9474ms 500 text/html; charset=utf-8
+2016-07-26 21:04:49.688 +05:30 [Debug] Connection id ""0HKTLD9EE37HM"" completed keep alive response.
+2016-07-26 21:36:04.060 +05:30 [Debug] Hosting starting
+2016-07-26 21:36:04.419 +05:30 [Debug] Hosting started
+2016-07-26 21:36:04.579 +05:30 [Debug] Connection id ""0HKTLDQVGN2IC"" started.
+2016-07-26 21:36:04.579 +05:30 [Debug] Connection id ""0HKTLDQVGN2ID"" started.
+2016-07-26 21:36:04.730 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50891/  0
+2016-07-26 21:36:04.730 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:50891/  
+2016-07-26 21:36:04.809 +05:30 [Information] Request finished in 101.1058ms 200 
+2016-07-26 21:36:04.871 +05:30 [Debug] Connection id ""0HKTLDQVGN2IC"" completed keep alive response.
+2016-07-26 21:36:04.875 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-07-26 21:36:05.120 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Home}/{action=Index}/{id?}"'.
+2016-07-26 21:36:05.347 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2016-07-26 21:36:05.426 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-07-26 21:36:05.436 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-07-26 21:36:05.878 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Home"'.
+2016-07-26 21:36:05.916 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-07-26 21:36:06.491 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 570.9287ms.
+2016-07-26 21:36:06.515 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-07-26 21:36:11.124 +05:30 [Error] An unhandled exception has occurred while executing the request
+Microsoft.AspNetCore.Mvc.Razor.Compilation.CompilationFailedException: One or more compilation failures occurred:
+/Themes/Socioboard/Views/_ViewImports.cshtml(2,28): error CS0234: The type or namespace name 'Identity' does not exist in the namespace 'Microsoft.AspNetCore' (are you missing an assembly reference?)
+   at Microsoft.AspNetCore.Mvc.Razor.Compilation.CompilationResult.EnsureSuccessful()
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.CompilerCache.CreateCacheEntry(String relativePath, String normalizedPath, Func`2 compile)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.CompilerCache.GetOrAdd(String relativePath, Func`2 compile)
+   at Microsoft.AspNetCore.Mvc.Razor.Internal.DefaultRazorPageFactoryProvider.CreateFactory(String relativePath)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.CreateCacheResult(HashSet`1 expirationTokens, String relativePath, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.OnCacheMiss(ViewLocationExpanderContext expanderContext, ViewLocationCacheKey cacheKey)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.LocatePageFromViewLocations(ActionContext actionContext, String pageName, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.Razor.RazorViewEngine.FindView(ActionContext context, String viewName, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.ViewEngines.CompositeViewEngine.FindView(ActionContext context, String viewName, Boolean isMainPage)
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor.FindView(ActionContext actionContext, ViewResult viewResult)
+   at Microsoft.AspNetCore.Mvc.ViewResult.<ExecuteResultAsync>d__26.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResultAsync>d__32.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResultFilterAsync>d__31.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAllResultFiltersAsync>d__29.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResourceFilterAsync>d__23.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-07-26 21:36:11.184 +05:30 [Information] Request finished in 6489.1529ms 500 text/html; charset=utf-8
+2016-07-26 21:36:11.186 +05:30 [Debug] Connection id ""0HKTLDQVGN2ID"" completed keep alive response.
+2016-07-26 21:38:06.035 +05:30 [Debug] Hosting starting
+2016-07-26 21:38:06.217 +05:30 [Debug] Hosting started
+2016-07-26 21:38:06.482 +05:30 [Debug] Connection id ""0HKTLDS3R9E75"" started.
+2016-07-26 21:38:06.482 +05:30 [Debug] Connection id ""0HKTLDS3R9E76"" started.
+2016-07-26 21:38:06.666 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:50891/  0
+2016-07-26 21:38:06.666 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:50891/  
+2016-07-26 21:38:06.776 +05:30 [Information] Request finished in 143.9462ms 200 
+2016-07-26 21:38:06.839 +05:30 [Debug] Connection id ""0HKTLDS3R9E76"" completed keep alive response.
+2016-07-26 21:38:06.873 +05:30 [Debug] The request path "/" does not match a supported file type
+2016-07-26 21:38:07.262 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Home}/{action=Index}/{id?}"'.
+2016-07-26 21:38:07.538 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2016-07-26 21:38:07.669 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2016-07-26 21:38:07.683 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2016-07-26 21:38:07.997 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Home"'.
+2016-07-26 21:38:08.045 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-07-26 21:38:08.717 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 666.8706ms.
+2016-07-26 21:38:08.739 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2016-07-26 21:38:14.765 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 6024.972ms.
+2016-07-26 21:38:14.803 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-07-26 21:38:14.813 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 9.6567ms.
+2016-07-26 21:38:14.814 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2016-07-26 21:38:14.858 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 43.8359ms.
+2016-07-26 21:38:14.870 +05:30 [Debug] The view '"Index"' was found.
+2016-07-26 21:38:14.873 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Home/Index.cshtml".
+2016-07-26 21:38:14.976 +05:30 [Information] User profile is available. Using '"C:\Users\GLB-008\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+2016-07-26 21:38:15.802 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.InvalidOperationException: Session has not been configured for this application or request.
+   at Microsoft.AspNetCore.Http.DefaultHttpContext.get_Session()
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.SessionStateTempDataProvider.LoadTempData(HttpContext context)
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.TempDataDictionary.Load()
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.TempDataDictionary.get_Item(String key)
+   at AspNetCore._Themes_Socioboard_Views_Home_Index_cshtml.<ExecuteAsync>d__91.MoveNext() in /Themes/Socioboard/Views/Home/Index.cshtml:line 55
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.<RenderPageAsync>d__14.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Microsoft.AspNetCore.Mvc.Razor.RazorView.<RenderAsync>d__13.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.ViewFeatures.ViewExecutor.<ExecuteAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.ViewResult.<ExecuteResultAsync>d__26.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResultAsync>d__32.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResultFilterAsync>d__31.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAllResultFiltersAsync>d__29.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeResourceFilterAsync>d__23.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.ApplicationInsights.AspNetCore.ExceptionTrackingMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.VisualStudio.Web.BrowserLink.Runtime.BrowserLinkMiddleware.<ExecuteWithFilter>d__7.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2016-07-26 21:38:16.116 +05:30 [Information] Request finished in 9508.8379ms 500 text/html; charset=utf-8
+2016-07-26 21:38:16.118 +05:30 [Debug] Connection id ""0HKTLDS3R9E75"" completed keep alive response.

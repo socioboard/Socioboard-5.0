@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Logging;
-using Socioboard.Services;
 using Serilog;
 using System.IO;
-using Serilog.Sinks.RollingFile;
+using Socioboard.Services;
 
 namespace Socioboard
 {
@@ -18,23 +20,20 @@ namespace Socioboard
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables();
 
             if (env.IsDevelopment())
             {
-                // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
-
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
                 builder.AddApplicationInsightsSettings(developerMode: true);
             }
-
-            builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+            builder.AddEnvironmentVariables();
             Log.Logger = new LoggerConfiguration()
            .MinimumLevel.Debug()
            .WriteTo.ColoredConsole()
-           .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "wwwroot/log/log-{Date}.txt"))
+           .WriteTo.RollingFile(Path.Combine(env.ContentRootPath, "log/log-{Date}.txt"))
            .CreateLogger();
         }
 
@@ -46,12 +45,8 @@ namespace Socioboard
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
-
-
-            services.Configure<Helpers.AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddMvc();
-
-            // services.AddCaching(); // Adds a default in-memory implementation of IDistributedCache
+            services.Configure<Helpers.AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddSession();
 
 
@@ -59,8 +54,6 @@ namespace Socioboard
             {
                 options.ViewLocationExpanders.Add(new CustomViewLocationRazorViewEngine());
             });
-
-
 
         }
 
@@ -75,7 +68,6 @@ namespace Socioboard
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
             }
             else
@@ -83,16 +75,10 @@ namespace Socioboard
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseSession();
             app.UseApplicationInsightsExceptionTelemetry();
 
             app.UseStaticFiles();
-
-            // app.UseIdentity();
-
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-
-            app.UseSession();
-            // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
             {
@@ -100,8 +86,7 @@ namespace Socioboard
                     name: "default",
                     template: "{controller=Index}/{action=Index}/{id?}");
             });
-
-             loggerFactory.AddSerilog();
+            loggerFactory.AddSerilog();
         }
     }
 }

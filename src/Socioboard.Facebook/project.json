@@ -2,7 +2,8 @@
   "version": "1.0.0-*",
 
   "dependencies": {
-    "NETStandard.Library": "1.5.0-rc2-24027"
+    "Domain.Socioboard": "1.0.0-*",
+    "NETStandard.Library": "1.6.0"
   },
 
   "frameworks": {
@@ -11,8 +12,7 @@
       },
       "dependencies": {
         "Facebook": "7.0.10-beta",
-        "Newtonsoft.Json": "8.0.3",
-        "Domain.Socioboard": "1.0.0-*"
+        "Newtonsoft.Json": "9.0.1"
 
       }
     }

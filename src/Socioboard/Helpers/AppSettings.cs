@@ -28,6 +28,18 @@ namespace Socioboard.Helpers
         public string twitterRedirectionUrl { get;  set; }
         //End Twitter App Creds 
 
+        //Instgram App Creds Start
+        public string InstagramClientKey { get; set; }
+        public string InstagramClientSec { get; set; }
+        public string InstagramCallBackURL { get; set; }
+        public string InsagramAuthUrl { get; set; }
+        //End Instgram App Creds 
+
+        //LinkedIn App Creds Start
+        public string LinkedinApiKey { get; set; }
+        public string LinkedinSecretKey { get; set; }
+        public string LinkedinCallBackURL { get; set; }
+        //End LinkedIn App Creds 
 
     }
 }

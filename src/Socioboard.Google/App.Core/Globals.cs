@@ -12,6 +12,7 @@ namespace Socioboard.GoogleLib.App.Core
         public static string strRefreshTokenGPlus = "https://www.googleapis.com/oauth2/v4/token";
         public static string strUserInfo = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json";
         public static string strRevokeToken = "https://accounts.google.com/o/oauth2/revoke?token=";
+        public static string strPeopleIf= "https://www.googleapis.com/plus/v1/people/";
 
         #region People
         public static string strGetPeopleProfile = "https://www.googleapis.com/plus/v1/people/";

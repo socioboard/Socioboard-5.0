@@ -16,8 +16,22 @@ namespace Api.Socioboard.Helper
         public string ZohoMailUserName { get; set; }
         public string ZohoMailPassword { get; set; }
 
-        //Mongo Database Creds
+       
 
+
+        //Start facebook App Creds
+        public string FacebookClientId { get; set; }
+        public string FacebookClientSecretKey { get; set; }
+        public string FacebookRedirectUrl { get; set; }
+
+        public string AccessToken1 { get; set; }
+        public string AccessToken2 { get; set; }
+        public string AccessToken3 { get; set; }
+        public string AccessToken4 { get; set; }
+
+        //End facebook App Creds
+
+        //Mongo Database Creds
         public string MongoDbConnectionString { get; set; }
         public string MongoDbName { get; set; }
 
@@ -42,7 +56,20 @@ namespace Api.Socioboard.Helper
         public string InstagramClientKey { get; set; }
         public string InstagramClientSec { get; set; }
         public string InstagramCallBackURL { get; set; }
+        public string InsagramAuthUrl { get; set; }
         //End Instgram App Creds 
+
+        //LinkedIn App Creds Start
+        public string LinkedinApiKey { get; set; }
+        public string LinkedinSecretKey { get; set; }
+        public string LinkedinCallBackURL { get; set; }
+        //End LinkedIn App Creds 
+
+
+        //BoardMe
+        public string InstagramBoardMeAccessToken { get; set; }
+
+        public string bitlyaccesstoken { get; set; }
 
 
 

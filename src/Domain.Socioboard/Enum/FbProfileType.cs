@@ -5,6 +5,7 @@ namespace Domain.Socioboard.Enum
     public enum FbProfileType
     {
         FacebookProfile =0,
-        FacebookPage =1
+        FacebookPage =1,
+        FacebookPublicPage=2
     }
 }

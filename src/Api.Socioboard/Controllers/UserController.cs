@@ -67,23 +67,29 @@ namespace Api.Socioboard.Controllers
             if (SavedStatus == 1 && nuser != null)
             {
                 Groups group = new Groups();
-                group.AdminId = nuser.Id;
-                group.Id = nuser.Id;
-                group.CreatedDate = DateTime.UtcNow;
-                group.GroupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
+                group.adminId = nuser.Id;
+                group.id = nuser.Id;
+                group.createdDate = DateTime.UtcNow;
+                group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
                 SavedStatus = dbr.Add<Groups>(group);
-                if (SavedStatus == 0)
+                if (SavedStatus == 1)
                 {
-                    //todo : codes to delete user and and return Can't create User.
+                    long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
+                    GroupMembersRepository.createGroupMember(GroupId, nuser, _redisCache, dbr);
                 }
-                string path = System.IO.Path.Combine(_appEnv.WebRootPath, "wwwroot/views/mailtemplates/registrationmail.html");
-                string html = System.IO.File.ReadAllText(path);
-                html = html.Replace("[FirstName]", nuser.FirstName);
-                html = html.Replace("[AccountType]", nuser.AccountType.ToString());
-                html = html.Replace("[ActivationLink]", _appSettings.Domain +"/Home/Active?Token=" + nuser.EmailValidateToken + "&id=" + nuser.Id);
-
-
-                _emailSender.SendMail("", "", nuser.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+                try
+                {
+                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
+                    string html = System.IO.File.ReadAllText(path);
+                    html = html.Replace("[FirstName]", nuser.FirstName);
+                    html = html.Replace("[AccountType]", nuser.AccountType.ToString());
+                    html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + nuser.EmailValidateToken + "&id=" + nuser.Id);
+                    _emailSender.SendMail("", "", nuser.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+                }
+                catch
+                {
+                    return Ok();
+                }
             }
             else
             {
@@ -333,6 +339,11 @@ namespace Api.Socioboard.Controllers
                     user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                     user.UserName = "Socioboard";
                     user.EmailValidateToken = "Facebook";
+                    try
+                    {
+                        user.ProfilePicUrl = "http://graph.facebook.com/" + Convert.ToString(profile["id"]) + "/picture?type=small";
+                    }
+                    catch { }
                     user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
                     try
                     {
@@ -346,15 +357,16 @@ namespace Api.Socioboard.Controllers
                     if (SavedStatus == 1 && nuser != null)
                     {
                         Groups group = new Groups();
-                        group.AdminId = nuser.Id;
-                        group.CreatedDate = DateTime.UtcNow;
-                        group.GroupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
+                        group.adminId = nuser.Id;
+                        group.createdDate = DateTime.UtcNow;
+                        group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
                         SavedStatus = dbr.Add<Groups>(group);
                         if (SavedStatus == 1)
                         {
-                            Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.AdminId == nuser.Id && t.GroupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
+                            Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == nuser.Id && t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
+                            GroupMembersRepository.createGroupMember(ngrp.id, nuser, _redisCache, dbr);
                             // Adding Facebook Profile
-                            Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.getFbFriends(AccessToken), dbr, nuser.Id, ngrp.Id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, AccessToken, _redisCache, _appSettings, _logger);
+                            Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.getFbFriends(AccessToken), dbr, nuser.Id, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, AccessToken, _redisCache, _appSettings, _logger);
                         }
                     }
                     return Ok(nuser);
@@ -375,11 +387,9 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("UpdateUser")]
-        public IActionResult UpdateUser(string firstName, string lastName, string userName, string phoneNumber, string dob, string aboutMe, long userId, IFormFile files)
+        public IActionResult UpdateUser(string firstName, string lastName, string userName, string phoneNumber, DateTime dob, string aboutMe, long userId, IFormFile files)
         {
-
-
-
+            
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
 
@@ -398,7 +408,7 @@ namespace Api.Socioboard.Controllers
             {
 
                 var imgPath = "";
-                if (files!= null && files.Length > 0)
+                if (files != null && files.Length > 0)
                 {
                     var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
                     // await file.s(Path.Combine(uploads, fileName));
@@ -406,13 +416,20 @@ namespace Api.Socioboard.Controllers
                             .Parse(files.ContentDisposition)
                             .FileName
                             .Trim('"');
-                    imgPath = _appEnv.WebRootPath + $@"\upload\userprofilepic\{fileName}";
+                    imgPath = _appEnv.WebRootPath + $@"\{fileName}";
                     // size += file.Length;
-                    using (FileStream fs = System.IO.File.Create(imgPath))
+                    try
                     {
-                        files.CopyTo(fs);
-                        fs.Flush();
-                        user.ProfilePicUrl = imgPath;
+                        using (FileStream fs = System.IO.File.Create(imgPath))
+                        {
+                            files.CopyTo(fs);
+                            fs.Flush();
+                            user.ProfilePicUrl = imgPath;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        
                     }
                 }
 
@@ -421,7 +438,7 @@ namespace Api.Socioboard.Controllers
                 user.PhoneNumber = phoneNumber;
                 try
                 {
-                    user.dateOfBirth = DateTime.Parse(dob);
+                    user.dateOfBirth = dob;
                 }
                 catch (Exception ex)
                 {
@@ -454,8 +471,12 @@ namespace Api.Socioboard.Controllers
             User user = dbr.Single<User>(t => t.Id == userId);
             if (user != null && user.Password != null)
             {
-                if (user.Password.Equals(SBHelper.MD5Hash(user.Password)))
+                if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
                 {
+                    if(user.Password.Equals(SBHelper.MD5Hash(newPassword)))
+                    {
+                        return Ok("Current Password and New Password are same.Try with New Password");
+                    }
                     if (newPassword.Equals(conformPassword))
                     {
                         user.Password = SBHelper.MD5Hash(newPassword);
@@ -489,11 +510,11 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpPost("UpdateMailSettings")]
-        public IActionResult UpdateMailSettings(long userId, bool dailyGrpReportsSummery,bool weeklyGrpReportsSummery,bool days15GrpReportsSummery,bool monthlyGrpReportsSummery,bool days60GrpReportsSummery,bool days90GrpReportsSummery, bool otherNewsLetters)
+        public IActionResult UpdateMailSettings(long userId, bool dailyGrpReportsSummery, bool weeklyGrpReportsSummery, bool days15GrpReportsSummery, bool monthlyGrpReportsSummery, bool days60GrpReportsSummery, bool days90GrpReportsSummery, bool otherNewsLetters)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
-            if(user != null)
+            if (user != null)
             {
                 user.dailyGrpReportsSummery = dailyGrpReportsSummery;
                 user.weeklyGrpReportsSummery = weeklyGrpReportsSummery;
@@ -503,7 +524,7 @@ namespace Api.Socioboard.Controllers
                 user.days90GrpReportsSummery = days90GrpReportsSummery;
                 user.otherNewsLetters = otherNewsLetters;
                 int res = dbr.Update<User>(user);
-                if(res == 1)
+                if (res == 1)
                 {
                     _redisCache.Delete(user.EmailId);
                     return Ok("Mail Settings Updated.");

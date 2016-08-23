@@ -5,6 +5,7 @@ using Api.Socioboard.Repositories;
 using Api.Socioboard.Model;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Cors;
+using Domain.Socioboard.Models;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,15 +35,19 @@ namespace Api.Socioboard.Controllers
         public IActionResult CreateGroup(Domain.Socioboard.Models.Groups group)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            if(dbr.Find<Domain.Socioboard.Models.Groups>(t=>t.AdminId == group.AdminId && t.GroupName.Equals(group.GroupName)).Count  > 0)
+            if(dbr.Find<Domain.Socioboard.Models.Groups>(t=>t.adminId == group.adminId && t.groupName.Equals(group.groupName)).Count  > 0)
             {
                 return Ok("Group Name Already Exist");
             }
-            group.CreatedDate = System.DateTime.UtcNow;
+            group.createdDate = System.DateTime.UtcNow;
           int res =  dbr.Add<Domain.Socioboard.Models.Groups>(group);
+
             if(res == 1)
             {
-                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + group.AdminId);
+                Domain.Socioboard.Models.User user = dbr.FindSingle<User>(t => t.Id == group.adminId);
+                long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
+                GroupMembersRepository.createGroupMember(GroupId, user, _redisCache, dbr);
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + group.adminId);
                 return Ok("Group Added");
             }
             else
@@ -55,7 +60,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult IsGroupExist(string groupName, long userId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.AdminId == userId && t.GroupName.Equals(groupName)).Count > 0)
+            if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.groupName.Equals(groupName)).Count > 0)
             {
                 return Ok("Group Name Already Exist");
             }

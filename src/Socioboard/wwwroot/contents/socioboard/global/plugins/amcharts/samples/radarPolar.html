@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>amCharts examples</title>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="../amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="../amcharts/radar.js" type="text/javascript"></script>
+
+        <script>
+            var chart;
+
+            var chartData = [
+                {
+                    "direction": "N",
+                    "value": 8
+                },
+                {
+                    "direction": "NE",
+                    "value": 9
+                },
+                {
+                    "direction": "E",
+                    "value": 4.5
+                },
+                {
+                    "direction": "SE",
+                    "value": 3.5
+                },
+                {
+                    "direction": "S",
+                    "value": 9.2
+                },
+                {
+                    "direction": "SW",
+                    "value": 8.4
+                },
+                {
+                    "direction": "W",
+                    "value": 11.1
+                },
+                {
+                    "direction": "NW",
+                    "value": 10
+                }
+            ];
+
+
+            AmCharts.ready(function () {
+                // RADAR CHART
+                chart = new AmCharts.AmRadarChart();
+                chart.dataProvider = chartData;
+                chart.categoryField = "direction";
+                chart.startDuration = 1;
+
+                // TITLE
+                chart.addTitle("Prevailing winds", 15);
+
+                // VALUE AXIS
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.gridType = "circles";
+                valueAxis.fillAlpha = 0.05;
+                valueAxis.fillColor = "#000000";
+                valueAxis.axisAlpha = 0.2;
+                valueAxis.gridAlpha = 0;
+                valueAxis.fontWeight = "bold";
+                valueAxis.minimum = 0;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPH
+                var graph = new AmCharts.AmGraph();
+                graph.lineColor = "#FFCC00";
+                graph.fillAlphas = 0.4;
+                graph.bullet = "round";
+                graph.valueField = "value";
+                graph.balloonText = "[[category]]: [[value]] m/s";
+                chart.addGraph(graph);
+
+                // GUIDES
+                // blue fill
+                var guide = new AmCharts.Guide();
+                guide.angle = 225;
+                guide.tickLength = 0;
+                guide.toAngle = 315;
+                guide.value = 0;
+                guide.toValue = 14;
+                guide.fillColor = "#0066CC";
+                guide.fillAlpha = 0.6;
+                valueAxis.addGuide(guide);
+
+                // red fill
+                guide = new AmCharts.Guide();
+                guide.angle = 45;
+                guide.tickLength = 0;
+                guide.toAngle = 135;
+                guide.value = 0;
+                guide.toValue = 14;
+                guide.fillColor = "#CC3333";
+                guide.fillAlpha = 0.6;
+                valueAxis.addGuide(guide);
+
+                // WRITE
+                chart.write("chartdiv");
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="chartdiv" style="width:600px; height:400px;"></div>
+    </body>
+
+</html>

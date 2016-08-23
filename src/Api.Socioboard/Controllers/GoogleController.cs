@@ -10,6 +10,9 @@ using Api.Socioboard.Model;
 using Microsoft.AspNetCore.Hosting;
 using Socioboard.GoogleLib.Authentication;
 using Microsoft.AspNetCore.Cors;
+using MongoDB.Driver;
+using System.Threading.Tasks;
+using Api.Socioboard.Repositories;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -141,22 +144,23 @@ namespace Api.Socioboard.Controllers
                 if (SavedStatus == 1 && nuser != null)
                 {
                     Groups group = new Groups();
-                    group.AdminId = nuser.Id;
-                    group.CreatedDate = DateTime.UtcNow;
-                    group.GroupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
+                    group.adminId = nuser.Id;
+                    group.createdDate = DateTime.UtcNow;
+                    group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
                     SavedStatus = dbr.Add<Groups>(group);
                     if (SavedStatus == 1)
                     {
-                        Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.AdminId == nuser.Id && t.GroupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
+                        Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == nuser.Id && t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
+                        GroupMembersRepository.createGroupMember(ngrp.id, nuser, _redisCache, dbr);
                         // Adding GPlus Profile
-                        Api.Socioboard.Repositories.GplusRepository.AddGplusAccount(userinfo,  dbr, nuser.Id, ngrp.Id, access_token,refreshToken, _redisCache, _appSettings, _logger);
+                        Api.Socioboard.Repositories.GplusRepository.AddGplusAccount(userinfo, dbr, nuser.Id, ngrp.id, access_token, refreshToken, _redisCache, _appSettings, _logger);
                     }
                 }
                 return Ok(nuser);
             }
 
 
-         
+
 
         }
 
@@ -186,9 +190,11 @@ namespace Api.Socioboard.Controllers
                 }
                 catch { }
                 access_token = objaccesstoken["access_token"].ToString();
-                string user = objToken.GetUserInfo("self", access_token.ToString());
-                _logger.LogInformation(user);
-                userinfo = JObject.Parse(JArray.Parse(user)[0].ToString());
+               string user = objToken.GetUserInfo("self", access_token.ToString());
+                //_logger.LogInformation(user);
+               userinfo = JObject.Parse(JArray.Parse(user)[0].ToString());
+                string people = objToken.GetPeopleInfo("self", access_token.ToString(), Convert.ToString(userinfo["id"]));
+                userinfo = JObject.Parse(JArray.Parse(people)[0].ToString());
             }
             catch (Exception ex)
             {
@@ -204,13 +210,13 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("GPlus account added by other user.");
             }
-            Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.AdminId == userId && t.Id == groupId).FirstOrDefault();
-            if(ngrp == null)
+            Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
+            if (ngrp == null)
             {
                 return Ok("group not exist");
             }
             // Adding GPlus Profile
-            int x = Api.Socioboard.Repositories.GplusRepository.AddGplusAccount(userinfo, dbr, userId, ngrp.Id, access_token, refreshToken, _redisCache, _appSettings, _logger);
+            int x = Api.Socioboard.Repositories.GplusRepository.AddGplusAccount(userinfo, dbr, userId, ngrp.id, access_token, refreshToken, _redisCache, _appSettings, _logger);
             if (x == 1)
             {
                 return Ok("Gplus Account Added Successfully");
@@ -219,6 +225,104 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("Issues while adding account");
             }
+        }
+
+
+        [HttpGet("GetGplusFeeds")]
+        public IActionResult GetGplusFeeds(string profileId, long userId, int skip, int count)
+        {
+            if (skip + count < 100)
+            {
+                return Ok(Repositories.GplusRepository.getgoogleplusActivity(profileId, _redisCache, _appSettings).Skip(skip).Take(count));
+            }
+            else
+            {
+                MongoRepository gplusFeedRepo = new MongoRepository("MongoGplusFeed", _appSettings);
+                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoGplusFeed>.Sort;
+                var sort = builder.Descending(t => t.PublishedDate);
+                var result = gplusFeedRepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoGplusFeed>(t => t.GpUserId.Equals(profileId), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoGplusFeed> lstMongoGplusFeed = task.Result;
+                return Ok(lstMongoGplusFeed);
+            }
+        }
+
+
+        [HttpGet("GetGplusProfiles")]
+        public IActionResult GetGplusProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Googleplusaccounts> lstGplusAcc = new List<Domain.Socioboard.Models.Googleplusaccounts>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus))
+            {
+                Domain.Socioboard.Models.Googleplusaccounts gPlusAcc = Repositories.GplusRepository.getGPlusAccount(item.profileId, _redisCache, dbr);
+                if (gPlusAcc != null)
+                {
+                    lstGplusAcc.Add(gPlusAcc);
+                }
+            }
+            return Ok(lstGplusAcc);
+        }
+
+        [HttpPost("GetGanalyticsAccount")]
+        public IActionResult GetGanalyticsAccount(string code, long groupId, long userId)
+        {
+            try
+            {
+                List<Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles> lstGoogleAnalyticsProfiles = new List<Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles>();
+                lstGoogleAnalyticsProfiles = Helper.GoogleHelper.GetGanalyticsAccount(code, _appSettings);
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+                lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics).ToList();
+                string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
+                if (lstStr.Length > 0)
+                {
+                    lstGoogleAnalyticsProfiles.Where(t => lstStr.Contains(t.ProfileId)).Select(s => { s.connected = 1; return s; }).ToList();
+                }
+                return Ok(lstGoogleAnalyticsProfiles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("GetGetGanalyticsAccount" + ex.StackTrace);
+                _logger.LogError("GetGetGanalyticsAccount" + ex.Message);
+                return Ok(new List<Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles>());
+            }
+        }
+
+        [HttpPost("AddGaSites")]
+        public IActionResult AddGaSites(long groupId, long userId)
+        {
+            string data = Request.Form["profileaccesstoken"];
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string[] profiledata = null;
+            int i = 0;
+            profiledata = data.Split(',');
+            foreach (var item in profiledata)
+            {
+                int j = Repositories.GplusRepository.AddGaSites(item, userId, groupId, _redisCache, _appSettings, dbr);
+            }
+            return Ok("Added Successfully");
+        }
+
+        [HttpGet("GetGAProfiles")]
+        public IActionResult GetGAProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics).ToList();
+            List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstGoogleAnalyticsAccount = new List<GoogleAnalyticsAccount>();
+            foreach (var item in lstGroupprofiles)
+            {
+                Domain.Socioboard.Models.GoogleAnalyticsAccount gAAcc = Repositories.GplusRepository.getGAAccount(item.profileId, _redisCache, dbr);
+                if (gAAcc != null)
+                {
+                    lstGoogleAnalyticsAccount.Add(gAAcc);
+                }
+            }
+            return Ok(lstGoogleAnalyticsAccount);
         }
     }
 }

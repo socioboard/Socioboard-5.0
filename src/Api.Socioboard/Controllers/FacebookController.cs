@@ -66,13 +66,13 @@ namespace Api.Socioboard.Controllers
             }
             else
             {
-                Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.AdminId == userId && t.Id == groupId).FirstOrDefault();
+                Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
                 if (ngrp == null)
                 {
                     return Ok("Wrong Group Id");
                 }
                 // Adding Facebook Profile
-                int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.Id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, _redisCache, _appSettings, _logger);
+                int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, _redisCache, _appSettings, _logger);
                 if (res == 1)
                 {
                     return Ok("Facebook Added Successfully");
@@ -85,7 +85,7 @@ namespace Api.Socioboard.Controllers
         }
 
 
-        
+
         [HttpPost("ComposeMessage")]
         public IActionResult ComposeMessage(string message, string profileId, long userId, string imagePath, string link)
         {
@@ -204,9 +204,9 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = new List<Facebookaccounts>();
-            foreach (var item in lstGrpProfiles.Where(t=>t.ProfileType== Domain.Socioboard.Enum.SocialProfileType.Facebook|| t.ProfileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage))
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage))
             {
-                Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(item.ProfileId, _redisCache, dbr);
+                Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(item.profileId, _redisCache, dbr);
                 if (fbAcc != null)
                 {
                     lstFbAcc.Add(fbAcc);
@@ -225,8 +225,8 @@ namespace Api.Socioboard.Controllers
                 lstpages = Fbpages.Getfacebookpages(accesstoken);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
-                lstGrpProfiles = lstGrpProfiles.Where(t => t.ProfileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
-                string[] lstStr = lstGrpProfiles.Select(t => t.ProfileId).ToArray();
+                lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
+                string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
                 if (lstStr.Length > 0)
                 {
                     lstpages.Where(t => lstStr.Contains(t.ProfilePageId)).Select(s => { s.connected = 1; return s; }).ToList();
@@ -267,13 +267,13 @@ namespace Api.Socioboard.Controllers
                 }
                 else
                 {
-                    Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.AdminId == userId && t.Id == groupId).FirstOrDefault();
+                    Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
                     if (ngrp == null)
                     {
                         return Ok("Wrong Group Id");
                     }
                     // Adding Facebook Page
-                    int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookPage(profile, dbr, userId, ngrp.Id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, item, _redisCache, _appSettings, _logger);
+                    int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookPage(profile, dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, item, _redisCache, _appSettings, _logger);
 
                 }
             }
@@ -301,6 +301,46 @@ namespace Api.Socioboard.Controllers
                 return Ok("Not Posted");
             }
         }
+
+        [HttpGet("GetFacebookGroup")]
+        public IActionResult GetFacebookGroup(string profileId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.FacebookGroup> lstFacebookGroup = Repositories.FacebookRepository.GetAllFacebookGroups(profileId, _redisCache, _appSettings, dbr);
+            return Ok(lstFacebookGroup);
+        }
+
+        [HttpGet("FacebookfanPageCount")]
+        public IActionResult FacebookfanPageCount(long userId, long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string FacebookfanPageCount = Repositories.FacebookRepository.FacebookfanPageCount(userId, groupId, dbr, _redisCache);
+            return Ok(FacebookfanPageCount);
+        }
+
+        [HttpGet("AddFacebookPagesByUrl")]
+        public IActionResult AddFacebookPagesByUrl(long userId, long groupId,string url)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            Domain.Socioboard.Models.Facebookpage _facebookpages = Helper.FacebookHelper.GetFbPageDetails(url, _appSettings);
+            if (_facebookpages!=null)
+            {
+                int adddata = Repositories.FacebookRepository.AddFacebookPagesByUrl(_facebookpages, dbr, userId, groupId, Domain.Socioboard.Enum.FbProfileType.FacebookPublicPage, _facebookpages.AccessToken, _redisCache, _appSettings, _logger);
+                if (adddata == 1)
+                {
+                    return Ok("added successfully");
+                }
+                else
+                {
+                    return Ok("issue in adding");
+                } 
+            }
+            else
+            {
+                return Ok("issue while hiting api");
+            }
+        }
+
 
     }
 }

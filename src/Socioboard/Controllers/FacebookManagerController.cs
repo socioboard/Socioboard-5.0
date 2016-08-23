@@ -20,14 +20,12 @@ namespace Socioboard.Controllers
             _appSettings = settings.Value;
             _logger = logger;
         }
-
         [HttpGet]
         public ActionResult getFbLoginUrl()
         {
             HttpContext.Session.SetObjectAsJson("fblogin", "Fb_Login");
             return Content(Socioboard.Facebook.Auth.Authentication.GetFacebookRedirectLink(_appSettings.FacebookAuthUrl, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl));
         }
-
         [HttpGet]
         public async Task<ActionResult> Facebook(string code)
         {
@@ -45,7 +43,7 @@ namespace Socioboard.Controllers
                 {
                     _logger.LogInformation(ex.Message);
                     _logger.LogError(ex.StackTrace);
-                    return Content("Issue with Token");
+                    return Content(ex.Message);
                 }
 
                  Domain.Socioboard.Models.User user = null;
@@ -88,8 +86,6 @@ namespace Socioboard.Controllers
 
             return RedirectToAction("Index", "Index");
         }
-
-
         [HttpGet]
         public async Task<ActionResult> AddFacebookAcc(string Op)
         {
@@ -100,6 +96,7 @@ namespace Socioboard.Controllers
             try
             {
                 count = Convert.ToInt32(profileCount);
+
             }
             catch (Exception ex)
             {
@@ -129,9 +126,6 @@ namespace Socioboard.Controllers
            
 
         }
-
-
-
         public async Task<ActionResult> AddFbAcc(string code)
         {
             string accessToken = string.Empty;
@@ -164,8 +158,6 @@ namespace Socioboard.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
-
         public async Task<ActionResult> AddFbPage(string code)
         {
             string accessToken = string.Empty;

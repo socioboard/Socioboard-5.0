@@ -1,0 +1,82 @@
+    <div data-ng-controller="FacebookpagereportController">
+            <!-- Page name -->
+            <div class="container">
+                <div class="col m12">
+                    <h4 class="pull-left">
+                        <div class="input-field">
+                            <select class="icons">
+                              <option value="" data-icon=""><img src="http://pbs.twimg.com/profile_images/507048905217802240/MjAkkHK__normal.jpeg"  class="circle">sb_1</option>
+                              <option value="" data-icon="http://pbs.twimg.com/profile_images/507048905217802240/MjAkkHK__normal.jpeg" class="circle">sb_2</option>
+                            </select>
+                        </div>
+                        <span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>
+                    </h4> 
+                    <h6 class="pull-right margin-top-20">
+                        <a ng-click="getData(15)" class="btn">15</a>
+                        <a ng-click="getData(30)" class="btn">30</a>
+                        <a ng-click="getData(60)" class="btn">60</a>
+                        <a ng-click="getData(90)" class="btn">90</a>
+                    </h6>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- FACEBOOK STATS -->
+                <div class="col s12 m12 l12">
+                    <div class="card" id="feeds">
+                        <h5 class="feeds_title blue darken-4 white-text">
+                            <i class="icon-social-facebook"></i>FACEBOOK <small>Public Pages Reports</small></span>
+                        </h5>
+                        <div class="collection">
+                            <div class="row">
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5><i class="fa fa-facebook-official fa-fw"></i>Facebook Page Likes Comparision</h5>
+                                    </blockquote>
+                                    <div id="FacebookPagesLikes" class="chart" style="height: 200px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="collection">
+                            <div class="row">
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5><i class="fa fa-facebook-official fa-fw"></i>Facebook Page Posts Comparision</h5>
+                                    </blockquote>
+                                    <div id="FacebookPagesPosts" class="chart" style="height: 200px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="collection">
+                            <div class="row">
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5><i class="fa fa-facebook-official fa-fw"></i>Facebook Page Shares Comparision</h5>
+                                    </blockquote>
+                                    <div id="FacebookPagesShares" class="chart" style="height: 200px;"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="collection">
+                            <div class="row">
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5><i class="fa fa-facebook-official fa-fw"></i>Facebook Page Comments Comparision</h5>
+                                    </blockquote>
+                                    <div id="FacebookPagesComments" class="chart" style="height: 200px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+    </div>

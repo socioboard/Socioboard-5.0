@@ -1,0 +1,73 @@
+    <div data-ng-controller="PostedRssFeedsController">
+            <!-- Page name -->
+            <div class="container">
+                <div class="col m12">
+                    <h4>Posted Rss Feeds</h4> 
+                </div>
+            </div>
+
+
+            <!-- START CONTENT -->
+            <section id="content">
+                <!-- Compose Email Structure -->
+                <div class="row">
+                    <div class="col s12 m12">
+                      <table id="PostedRssFeeds" class="display responsive-table striped" cellspacing="0" width="100%">
+                          <thead>
+                              <tr>
+                                  <th>#</th>
+                                  <th>Sent From</th>
+                                  <th>Message</th>
+                                  <th>Network</th>
+                                  <th>RssFeedUrl</th>
+                              </tr>
+                          </thead>
+                          <!--<tfoot>
+                              <tr>
+                                  <th>Sent From</th>
+                                  <th>Message</th>
+                                  <th>Network</th>
+                                  <th>Sent To</th>
+                              </tr>
+                          </tfoot>-->
+                          <tbody>
+                              <tr ng-repeat="postrssfeed in PostedRssFeeds">
+                                  <td>{{$index +1}}</td>
+                                <td class="center">
+                                    <div class="col s12">
+                                        <img src="{{user.ProfilePicUrl}}" class="responsive-img profilePic" >
+                                    </div>
+                                    <div class="col s12">
+                                        <span>{{user.UserName}}</span>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <span>
+                                     {{postrssfeed.Message}}
+                                    </span>
+                                  </td>
+                                  <td class="center">
+                                    <div class="col s12" ng-if="postrssfeed.ProfileType==0 ||postrssfeed.ProfileType==1 ">
+                                        <img src="https://graph.facebook.com/{{postrssfeed.ProfileId}}/picture?type=small" class="responsive-img profilePic" >
+                                    </div>
+                                      <div class="col s12" ng-if="postrssfeed.ProfileType==2">
+                                          <img src="{{postrssfeed.ProfileImageUrl}}" class="responsive-img profilePic">
+                                      </div>
+                                    <div class="col s12">
+                                        <span>{{postrssfeed.ProfileName}}</span>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <span>{{postrssfeed.RssFeedUrl}}</span>
+                                  </td>
+                              </tr>      
+                              
+                          </tbody>
+                      </table>
+                    </div>
+                </div>
+            </section>
+            <!-- END CONTENT -->
+
+               
+    </div>

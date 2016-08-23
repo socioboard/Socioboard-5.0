@@ -1,0 +1,195 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>amCharts examples</title>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="../amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="../amcharts/serial.js" type="text/javascript"></script>
+
+        <script>
+			var chart;
+
+			var chartData = [
+				{
+					"category": "Evaluation",
+					"excelent": 20,
+					"good": 20,
+					"average": 20,
+					"poor": 20,
+					"bad": 20,
+					"limit": 78,
+					"full": 100,
+					"bullet": 65
+				}
+			];
+
+
+			AmCharts.ready(function () {
+
+				// FIRST BULLET CHART
+				// bullet chart is a simple serial chart
+				chart = new AmCharts.AmSerialChart();
+				chart.dataProvider = chartData;
+				chart.categoryField = "category";
+				chart.rotate = true; // if you want vertical bullet chart, set rotate to false
+				chart.columnWidth = 1;
+				chart.startDuration = 1;
+
+				// AXES
+				// category
+				var categoryAxis = chart.categoryAxis;
+				categoryAxis.gridAlpha = 0;
+
+				// value
+				var valueAxis = new AmCharts.ValueAxis();
+				valueAxis.maximum = 100;
+				valueAxis.axisAlpha = 1;
+				valueAxis.gridAlpha = 0;
+				valueAxis.stackType = "regular"; // we use stacked graphs to make color fills
+				chart.addValueAxis(valueAxis);
+
+				// this graph displays the short dash, which usually indicates maximum value reached.
+				var graph = new AmCharts.AmGraph();
+				graph.valueField = "limit";
+				graph.lineColor = "#000000";
+				// it's a step line with no risers
+				graph.type = "step";
+				graph.noStepRisers = true;
+				graph.lineAlpha = 1;
+				graph.lineThickness = 3;
+				graph.columnWidth = 0.5; // change this if you want wider dash
+				graph.stackable = false; // this graph shouldn't be stacked
+				chart.addGraph(graph);
+
+				// The following graphs produce color bands
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "excelent";
+				graph.lineColor = "#19d228";
+				graph.showBalloon = false;
+				graph.type = "column";
+				graph.fillAlphas = 0.8;
+				chart.addGraph(graph);
+
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "good";
+				graph.lineColor = "#b4dd1e";
+				graph.showBalloon = false;
+				graph.type = "column";
+				graph.fillAlphas = 0.8;
+				chart.addGraph(graph);
+
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "average";
+				graph.lineColor = "#f4fb16";
+				graph.showBalloon = false;
+				graph.type = "column";
+				graph.fillAlphas = 0.8;
+				chart.addGraph(graph);
+
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "poor";
+				graph.lineColor = "#f6d32b";
+				graph.showBalloon = false;
+				graph.type = "column";
+				graph.fillAlphas = 0.8;
+				chart.addGraph(graph);
+
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "bad";
+				graph.lineColor = "#fb7116";
+				graph.showBalloon = false;
+				graph.type = "column";
+				graph.fillAlphas = 0.8;
+				chart.addGraph(graph);
+
+				// this is the "bullet" graph - black bar showing current value
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "bullet";
+				graph.lineColor = "#000000";
+				graph.type = "column";
+				graph.lineAlpha = 1;
+				graph.fillAlphas = 1;
+				graph.columnWidth = 0.3; // this makes it narrower than color graphs
+				graph.stackable = false; // bullet graph should not stack
+				graph.clustered = false; // this makes the trick - one column above another
+				chart.addGraph(graph);
+
+				// WRITE
+				chart.write("chartdiv");
+
+
+
+				// SECOND BULLET CHART
+				// bullet chart is a simple serial chart
+				chart = new AmCharts.AmSerialChart();
+				chart.dataProvider = chartData;
+				chart.categoryField = "category";
+				chart.rotate = false; // if you want horizontal bullet chart, set rotate to true
+				chart.columnWidth = 1;
+				chart.startDuration = 1;
+
+
+				// AXES
+				// category
+				categoryAxis = chart.categoryAxis;
+				categoryAxis.gridAlpha = 0;
+
+				// value
+				valueAxis = new AmCharts.ValueAxis();
+				valueAxis.maximum = 100;
+				valueAxis.minimum = 0;
+				valueAxis.axisAlpha = 1;
+				valueAxis.gridAlpha = 0;
+				chart.addValueAxis(valueAxis);
+
+
+
+				// this graph displays the short dash, which usually indicates maximum value reached.
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "limit";
+				graph.lineColor = "#000000";
+				graph.type = "step";
+				graph.noStepRisers = true;
+				graph.lineAlpha = 1;
+				graph.lineThickness = 3;
+				graph.columnWidth = 0.5;
+				graph.stackable = false;
+				chart.addGraph(graph);
+
+				// this is the color range graph.
+				// we use only one graph here (not like in the first example, and set gradient fill)
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "full";
+				graph.showBalloon = false;
+				graph.type = "column";
+				graph.lineAlpha = 0;
+				graph.fillAlphas = 0.8;
+				graph.fillColors = ["#19d228", "#f6d32b", "#fb2316"];
+				graph.gradientOrientation = "vertical";
+				chart.addGraph(graph);
+
+				// this is the "bullet" graph - black bar showing current value
+				graph = new AmCharts.AmGraph();
+				graph.valueField = "bullet";
+				graph.lineColor = "#000000";
+				graph.type = "column";
+				graph.lineAlpha = 1;
+				graph.fillAlphas = 1;
+				graph.columnWidth = 0.3; // this makes it narrower than color graph
+				graph.clustered = false; // this makes the trick - one column above another
+				chart.addGraph(graph);
+
+				// WRITE
+				chart.write("chartdiv2");
+
+			});
+        </script>
+    </head>
+
+    <body>
+        <div id="chartdiv" style="width: 600px; height: 100px;"></div>
+		<div id="chartdiv2" style="width: 120px; height: 600px;"></div>
+    </body>
+</html>

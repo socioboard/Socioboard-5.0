@@ -21,9 +21,11 @@
                                         <div class="input-field col s12">
                                         <select multiple id="scheduleprofiles">
                                             <option value="" disabled selected>Choose your option</option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:0}" value="fb_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:1}" value="page_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:2}" value="tw_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0}" value="fb_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                         </select>
                                         <label>Select Profiles</label>
                                       </div>

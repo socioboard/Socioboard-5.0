@@ -1,15 +1,15 @@
-/*! FixedColumns 3.0.2
- * ©2010-2014 SpryMedia Ltd - datatables.net/license
+/*! FixedColumns 3.2.2
+ * ©2010-2016 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     FixedColumns
  * @description Freeze columns in place on a scrolling DataTable
- * @version     3.0.2
+ * @version     3.2.2
  * @file        dataTables.fixedColumns.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
- * @copyright   Copyright 2010-2014 SpryMedia Ltd.
+ * @copyright   Copyright 2010-2016 SpryMedia Ltd.
  *
  * This source file is free software, available under the following license:
  *   MIT license - http://datatables.net/license/mit
@@ -20,13 +20,35 @@
  *
  * For details please refer to: http://www.datatables.net
  */
+(function( factory ){
+	if ( typeof define === 'function' && define.amd ) {
+		// AMD
+		define( ['jquery', 'datatables.net'], function ( $ ) {
+			return factory( $, window, document );
+		} );
+	}
+	else if ( typeof exports === 'object' ) {
+		// CommonJS
+		module.exports = function (root, $) {
+			if ( ! root ) {
+				root = window;
+			}
 
+			if ( ! $ || ! $.fn.dataTable ) {
+				$ = require('datatables.net')(root, $).$;
+			}
 
-(function(window, document, undefined) {
-
-
-var factory = function( $, DataTable ) {
-"use strict";
+			return factory( $, root, root.document );
+		};
+	}
+	else {
+		// Browser
+		factory( jQuery, window, document );
+	}
+}(function( $, window, document, undefined ) {
+'use strict';
+var DataTable = $.fn.dataTable;
+var _firefoxScroll;
 
 /**
  * When making use of DataTables' x-axis scrolling feature, you may wish to
@@ -62,27 +84,25 @@ var FixedColumns = function ( dt, init ) {
 	var that = this;
 
 	/* Sanity check - you just know it will happen */
-	if ( ! this instanceof FixedColumns )
-	{
+	if ( ! ( this instanceof FixedColumns ) ) {
 		alert( "FixedColumns warning: FixedColumns must be initialised with the 'new' keyword." );
 		return;
 	}
 
-	if ( typeof init == 'undefined' )
-	{
+	if ( init === undefined || init === true ) {
 		init = {};
 	}
 
 	// Use the DataTables Hungarian notation mapping method, if it exists to
 	// provide forwards compatibility for camel case variables
-	if ( $.fn.dataTable.camelToHungarian ) {
-		$.fn.dataTable.camelToHungarian( FixedColumns.defaults, init );
+	var camelToHungarian = $.fn.dataTable.camelToHungarian;
+	if ( camelToHungarian ) {
+		camelToHungarian( FixedColumns.defaults, FixedColumns.defaults, true );
+		camelToHungarian( FixedColumns.defaults, init );
 	}
 
 	// v1.10 allows the settings object to be got form a number of sources
-	var dtSettings = $.fn.dataTable.Api ?
-		new $.fn.dataTable.Api( dt ).settings()[0] :
-		dt.fnSettings();
+	var dtSettings = new $.fn.dataTable.Api( dt ).settings()[0];
 
 	/**
 	 * Settings object which contains customisable information for FixedColumns instance
@@ -119,7 +139,14 @@ var FixedColumns = function ( dt, init ) {
 		 *  @type     array.<int>
 		 *  @default  []
 		 */
-		"aiInnerWidths": []
+		"aiInnerWidths": [],
+
+
+		/**
+		 * Is the document layout right-to-left
+		 * @type boolean
+		 */
+		rtl: $(dtSettings.nTable).css('direction') === 'rtl'
 	};
 
 
@@ -263,6 +290,10 @@ var FixedColumns = function ( dt, init ) {
 		}
 	};
 
+	if ( dtSettings._oFixedColumns ) {
+		throw 'FixedColumns already initialised on this table';
+	}
+
 	/* Attach the instance to the DataTables instance so it can be accessed easily */
 	dtSettings._oFixedColumns = this;
 
@@ -281,7 +312,7 @@ var FixedColumns = function ( dt, init ) {
 
 
 
-FixedColumns.prototype = /** @lends FixedColumns.prototype */{
+$.extend( FixedColumns.prototype , {
 	/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	 * Public methods
 	 * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -466,13 +497,30 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 
 		/* Event handlers */
 		var mouseController;
+		var mouseDown = false;
+
+		// When the mouse is down (drag scroll) the mouse controller cannot
+		// change, as the browser keeps the original element as the scrolling one
+		$(this.s.dt.nTableWrapper).on( 'mousedown.DTFC', function () {
+			mouseDown = true;
+
+			$(document).one( 'mouseup', function () {
+				mouseDown = false;
+			} );
+		} );
 
 		// When the body is scrolled - scroll the left and right columns
 		$(this.dom.scroller)
 			.on( 'mouseover.DTFC touchstart.DTFC', function () {
-				mouseController = 'main';
+				if ( ! mouseDown ) {
+					mouseController = 'main';
+				}
 			} )
-			.on( 'scroll.DTFC', function () {
+			.on( 'scroll.DTFC', function (e) {
+				if ( ! mouseController && e.originalEvent ) {
+					mouseController = 'main';
+				}
+
 				if ( mouseController === 'main' ) {
 					if ( that.s.iLeftColumns > 0 ) {
 						that.dom.grid.left.liner.scrollTop = that.dom.scroller.scrollTop;
@@ -491,9 +539,15 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 			// When scrolling the left column, scroll the body and right column
 			$(that.dom.grid.left.liner)
 				.on( 'mouseover.DTFC touchstart.DTFC', function () {
-					mouseController = 'left';
+					if ( ! mouseDown ) {
+						mouseController = 'left';
+					}
 				} )
-				.on( 'scroll.DTFC', function () {
+				.on( 'scroll.DTFC', function ( e ) {
+					if ( ! mouseController && e.originalEvent ) {
+						mouseController = 'left';
+					}
+
 					if ( mouseController === 'left' ) {
 						that.dom.scroller.scrollTop = that.dom.grid.left.liner.scrollTop;
 						if ( that.s.iRightColumns > 0 ) {
@@ -501,7 +555,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 						}
 					}
 				} )
-				.on( wheelType, function(e) { // xxx update the destroy as well
+				.on( wheelType, function(e) {
 					// Pass horizontal scrolling through
 					var xDelta = e.type === 'wheel' ?
 						-e.originalEvent.deltaX :
@@ -514,9 +568,15 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 			// When scrolling the right column, scroll the body and the left column
 			$(that.dom.grid.right.liner)
 				.on( 'mouseover.DTFC touchstart.DTFC', function () {
-					mouseController = 'right';
+					if ( ! mouseDown ) {
+						mouseController = 'right';
+					}
 				} )
-				.on( 'scroll.DTFC', function () {
+				.on( 'scroll.DTFC', function ( e ) {
+					if ( ! mouseController && e.originalEvent ) {
+						mouseController = 'right';
+					}
+
 					if ( mouseController === 'right' ) {
 						that.dom.scroller.scrollTop = that.dom.grid.right.liner.scrollTop;
 						if ( that.s.iLeftColumns > 0 ) {
@@ -542,6 +602,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 
 		jqTable
 			.on( 'draw.dt.DTFC', function () {
+				that._fnColCalc();
 				that._fnDraw.call( that, bFirstDraw );
 				bFirstDraw = false;
 			} )
@@ -549,21 +610,29 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 				that._fnColCalc();
 				that._fnGridLayout( that );
 			} )
-			.on( 'column-visibility.dt.DTFC', function () {
-				that._fnColCalc();
-				that._fnGridLayout( that );
-				that._fnDraw( true );
+			.on( 'column-visibility.dt.DTFC', function ( e, settings, column, vis, recalc ) {
+				if ( recalc === undefined || recalc ) {
+					that._fnColCalc();
+					that._fnGridLayout( that );
+					that._fnDraw( true );
+				}
+			} )
+			.on( 'select.dt.DTFC deselect.dt.DTFC', function ( e, dt, type, indexes ) {
+				if ( e.namespace === 'dt' ) {
+					that._fnDraw( false );
+				}
 			} )
 			.on( 'destroy.dt.DTFC', function () {
-				jqTable.off( 'column-sizing.dt.DTFC destroy.dt.DTFC draw.dt.DTFC' );
+				jqTable.off( '.DTFC' );
 
-				$(that.dom.scroller).off( 'scroll.DTFC mouseover.DTFC' );
-				$(window).off( 'resize.DTFC' );
+				$(that.dom.scroller).off( '.DTFC' );
+				$(window).off( '.DTFC' );
+				$(that.s.dt.nTableWrapper).off( '.DTFC' );
 
-				$(that.dom.grid.left.liner).off( 'scroll.DTFC mouseover.DTFC '+wheelType );
+				$(that.dom.grid.left.liner).off( '.DTFC '+wheelType );
 				$(that.dom.grid.left.wrapper).remove();
 
-				$(that.dom.grid.right.liner).off( 'scroll.DTFC mouseover.DTFC '+wheelType );
+				$(that.dom.grid.right.liner).off( '.DTFC '+wheelType );
 				$(that.dom.grid.right.wrapper).remove();
 			} );
 
@@ -665,7 +734,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 					'</div>'+
 					'<div class="DTFC_LeftFootWrapper" style="position:relative; top:0; left:0; overflow:hidden;"></div>'+
 				'</div>'+
-				'<div class="DTFC_RightWrapper" style="position:absolute; top:0; left:0;">'+
+				'<div class="DTFC_RightWrapper" style="position:absolute; top:0; right:0;">'+
 					'<div class="DTFC_RightHeadWrapper" style="position:relative; top:0; left:0;">'+
 						'<div class="DTFC_RightHeadBlocker DTFC_Blocker" style="position:absolute; top:0; bottom:0;"></div>'+
 					'</div>'+
@@ -702,6 +771,8 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 			this.dom.grid.right.body = nRight.childNodes[1];
 			this.dom.grid.right.liner = $('div.DTFC_RightBodyLiner', nSWrapper)[0];
 
+			nRight.style.right = oOverflow.bar+"px";
+
 			block = $('div.DTFC_RightHeadBlocker', nSWrapper)[0];
 			block.style.width = oOverflow.bar+"px";
 			block.style.right = -oOverflow.bar+"px";
@@ -727,6 +798,14 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 				this.dom.grid.right.foot = nRight.childNodes[2];
 			}
 		}
+
+		// RTL support - swap the position of the left and right columns (#48)
+		if ( this.s.rtl ) {
+			$('div.DTFC_RightHeadBlocker', nSWrapper).css( {
+				left: -oOverflow.bar+'px',
+				right: ''
+			} );
+		}
 	},
 
 
@@ -737,15 +816,34 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 	 */
 	"_fnGridLayout": function ()
 	{
+		var that = this;
 		var oGrid = this.dom.grid;
 		var iWidth = $(oGrid.wrapper).width();
 		var iBodyHeight = $(this.s.dt.nTable.parentNode).outerHeight();
 		var iFullHeight = $(this.s.dt.nTable.parentNode.parentNode).outerHeight();
 		var oOverflow = this._fnDTOverflow();
-		var
-			iLeftWidth = this.s.iLeftWidth,
-			iRightWidth = this.s.iRightWidth,
-			iRight;
+		var iLeftWidth = this.s.iLeftWidth;
+		var iRightWidth = this.s.iRightWidth;
+		var rtl = $(this.dom.body).css('direction') === 'rtl';
+		var wrapper;
+		var scrollbarAdjust = function ( node, width ) {
+			if ( ! oOverflow.bar ) {
+				// If there is no scrollbar (Macs) we need to hide the auto scrollbar
+				node.style.width = (width+20)+"px";
+				node.style.paddingRight = "20px";
+				node.style.boxSizing = "border-box";
+			}
+			else if ( that._firefoxScrollError() ) {
+				// See the above function for why this is required
+				if ( $(node).height() > 34 ) {
+					node.style.width = (width+oOverflow.bar)+"px";
+				}
+			}
+			else {
+				// Otherwise just overflow by the scrollbar
+				node.style.width = (width+oOverflow.bar)+"px";
+			}
+		};
 
 		// When x scrolling - don't paint the fixed columns over the x scrollbar
 		if ( oOverflow.x )
@@ -757,34 +855,52 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 
 		if ( this.s.iLeftColumns > 0 )
 		{
-			oGrid.left.wrapper.style.width = iLeftWidth+"px";
-			oGrid.left.wrapper.style.height = "1px";
+			wrapper = oGrid.left.wrapper;
+			wrapper.style.width = iLeftWidth+'px';
+			wrapper.style.height = '1px';
+
+			// Swap the position of the left and right columns for rtl (#48)
+			// This is always up against the edge, scrollbar on the far side
+			if ( rtl ) {
+				wrapper.style.left = '';
+				wrapper.style.right = 0;
+			}
+			else {
+				wrapper.style.left = 0;
+				wrapper.style.right = '';
+			}
+
 			oGrid.left.body.style.height = iBodyHeight+"px";
 			if ( oGrid.left.foot ) {
 				oGrid.left.foot.style.top = (oOverflow.x ? oOverflow.bar : 0)+"px"; // shift footer for scrollbar
 			}
 
-			oGrid.left.liner.style.width = (iLeftWidth+oOverflow.bar)+"px";
+			scrollbarAdjust( oGrid.left.liner, iLeftWidth );
 			oGrid.left.liner.style.height = iBodyHeight+"px";
 		}
 
 		if ( this.s.iRightColumns > 0 )
 		{
-			iRight = iWidth - iRightWidth;
-			if ( oOverflow.y )
-			{
-				iRight -= oOverflow.bar;
+			wrapper = oGrid.right.wrapper;
+			wrapper.style.width = iRightWidth+'px';
+			wrapper.style.height = '1px';
+
+			// Need to take account of the vertical scrollbar
+			if ( this.s.rtl ) {
+				wrapper.style.left = oOverflow.y ? oOverflow.bar+'px' : 0;
+				wrapper.style.right = '';
+			}
+			else {
+				wrapper.style.left = '';
+				wrapper.style.right = oOverflow.y ? oOverflow.bar+'px' : 0;
 			}
 
-			oGrid.right.wrapper.style.width = iRightWidth+"px";
-			oGrid.right.wrapper.style.left = iRight+"px";
-			oGrid.right.wrapper.style.height = "1px";
 			oGrid.right.body.style.height = iBodyHeight+"px";
 			if ( oGrid.right.foot ) {
 				oGrid.right.foot.style.top = (oOverflow.x ? oOverflow.bar : 0)+"px";
 			}
 
-			oGrid.right.liner.style.width = (iRightWidth+oOverflow.bar)+"px";
+			scrollbarAdjust( oGrid.right.liner, iRightWidth );
 			oGrid.right.liner.style.height = iBodyHeight+"px";
 
 			oGrid.right.headBlock.style.display = oOverflow.y ? 'block' : 'none';
@@ -908,9 +1024,10 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 	 *  @returns {Array} Copy of the layout array
 	 *  @param   {Object} aoOriginal Layout array from DataTables (aoHeader or aoFooter)
 	 *  @param   {Object} aiColumns Columns to copy
+	 *  @param   {boolean} events Copy cell events or not
 	 *  @private
 	 */
-	"_fnCopyLayout": function ( aoOriginal, aiColumns )
+	"_fnCopyLayout": function ( aoOriginal, aiColumns, events )
 	{
 		var aReturn = [];
 		var aClones = [];
@@ -919,7 +1036,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 		for ( var i=0, iLen=aoOriginal.length ; i<iLen ; i++ )
 		{
 			var aRow = [];
-			aRow.nTr = $(aoOriginal[i].nTr).clone(true, true)[0];
+			aRow.nTr = $(aoOriginal[i].nTr).clone(events, false)[0];
 
 			for ( var j=0, jLen=this.s.iTableColumns ; j<jLen ; j++ )
 			{
@@ -931,7 +1048,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 				var iCloned = $.inArray( aoOriginal[i][j].cell, aCloned );
 				if ( iCloned === -1 )
 				{
-					var nClone = $(aoOriginal[i][j].cell).clone(true, true)[0];
+					var nClone = $(aoOriginal[i][j].cell).clone(events, false)[0];
 					aClones.push( nClone );
 					aCloned.push( aoOriginal[i][j].cell );
 
@@ -970,24 +1087,23 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 	{
 		var that = this,
 			i, iLen, j, jLen, jq, nTarget, iColumn, nClone, iIndex, aoCloneLayout,
-			jqCloneThead, aoFixedHeader;
+			jqCloneThead, aoFixedHeader,
+			dt = this.s.dt;
 
 		/*
 		 * Header
 		 */
 		if ( bAll )
 		{
-			if ( oClone.header !== null )
-			{
-				oClone.header.parentNode.removeChild( oClone.header );
-			}
-			oClone.header = $(this.dom.header).clone(true, true)[0];
+			$(oClone.header).remove();
+
+			oClone.header = $(this.dom.header).clone(true, false)[0];
 			oClone.header.className += " DTFC_Cloned";
 			oClone.header.style.width = "100%";
 			oGrid.head.appendChild( oClone.header );
 
 			/* Copy the DataTables layout cache for the header for our floating column */
-			aoCloneLayout = this._fnCopyLayout( this.s.dt.aoHeader, aiColumns );
+			aoCloneLayout = this._fnCopyLayout( dt.aoHeader, aiColumns, true );
 			jqCloneThead = $('>thead', oClone.header);
 			jqCloneThead.empty();
 
@@ -1000,7 +1116,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 			/* Use the handy _fnDrawHead function in DataTables to do the rowspan/colspan
 			 * calculations for us
 			 */
-			this.s.dt.oApi._fnDrawHead( this.s.dt, aoCloneLayout, true );
+			dt.oApi._fnDrawHead( dt, aoCloneLayout, true );
 		}
 		else
 		{
@@ -1009,10 +1125,10 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 			 * cloned cells, just copy the classes across. To get the matching layout for the
 			 * fixed component, we use the DataTables _fnDetectHeader method, allowing 1:1 mapping
 			 */
-			aoCloneLayout = this._fnCopyLayout( this.s.dt.aoHeader, aiColumns );
+			aoCloneLayout = this._fnCopyLayout( dt.aoHeader, aiColumns, false );
 			aoFixedHeader=[];
 
-			this.s.dt.oApi._fnDetectHeader( aoFixedHeader, $('>thead', oClone.header)[0] );
+			dt.oApi._fnDetectHeader( aoFixedHeader, $('>thead', oClone.header)[0] );
 
 			for ( i=0, iLen=aoCloneLayout.length ; i<iLen ; i++ )
 			{
@@ -1040,14 +1156,14 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 
 		if ( oClone.body !== null )
 		{
-			oClone.body.parentNode.removeChild( oClone.body );
+			$(oClone.body).remove();
 			oClone.body = null;
 		}
 
 		oClone.body = $(this.dom.body).clone(true)[0];
 		oClone.body.className += " DTFC_Cloned";
-		oClone.body.style.paddingBottom = this.s.dt.oScroll.iBarWidth+"px";
-		oClone.body.style.marginBottom = (this.s.dt.oScroll.iBarWidth*2)+"px"; /* For IE */
+		oClone.body.style.paddingBottom = dt.oScroll.iBarWidth+"px";
+		oClone.body.style.marginBottom = (dt.oScroll.iBarWidth*2)+"px"; /* For IE */
 		if ( oClone.body.getAttribute('id') !== null )
 		{
 			oClone.body.removeAttribute('id');
@@ -1058,7 +1174,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 
 		var nBody = $('tbody', oClone.body)[0];
 		$(nBody).empty();
-		if ( this.s.dt.aiDisplay.length > 0 )
+		if ( dt.aiDisplay.length > 0 )
 		{
 			/* Copy the DataTables' header elements to force the column width in exactly the
 			 * same way that DataTables does it - have the header element, apply the width and
@@ -1069,7 +1185,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 			{
 				iColumn = aiColumns[iIndex];
 
-				nClone = $(this.s.dt.aoColumns[iColumn].nTh).clone(true)[0];
+				nClone = $(dt.aoColumns[iColumn].nTh).clone(true)[0];
 				nClone.innerHTML = "";
 
 				var oStyle = nClone.style;
@@ -1085,18 +1201,23 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 
 			/* Add in the tbody elements, cloning form the master table */
 			$('>tbody>tr', that.dom.body).each( function (z) {
-				var n = this.cloneNode(false);
-				n.removeAttribute('id');
 				var i = that.s.dt.oFeatures.bServerSide===false ?
 					that.s.dt.aiDisplay[ that.s.dt._iDisplayStart+z ] : z;
+				var aTds = that.s.dt.aoData[ i ].anCells || $(this).children('td, th');
+
+				var n = this.cloneNode(false);
+				n.removeAttribute('id');
+				n.setAttribute( 'data-dt-row', i );
+
 				for ( iIndex=0 ; iIndex<aiColumns.length ; iIndex++ )
 				{
-					var aTds = that.s.dt.aoData[i].anCells || that.s.dt.oApi._fnGetTdNodes( that.s.dt, i );
 					iColumn = aiColumns[iIndex];
 
 					if ( aTds.length > 0 )
 					{
 						nClone = $( aTds[iColumn] ).clone(true, true)[0];
+						nClone.setAttribute( 'data-dt-row', i );
+						nClone.setAttribute( 'data-dt-column', iIndex );
 						n.appendChild( nClone );
 					}
 				}
@@ -1117,13 +1238,21 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 		oClone.body.style.margin = "0";
 		oClone.body.style.padding = "0";
 
-		if ( bAll )
+		// Interop with Scroller - need to use a height forcing element in the
+		// scrolling area in the same way that Scroller does in the body scroll.
+		if ( dt.oScroller !== undefined )
 		{
-			if ( typeof this.s.dt.oScroller != 'undefined' )
-			{
-				oGrid.liner.appendChild( this.s.dt.oScroller.dom.force.cloneNode(true) );
+			var scrollerForcer = dt.oScroller.dom.force;
+
+			if ( ! oGrid.forcer ) {
+				oGrid.forcer = scrollerForcer.cloneNode( true );
+				oGrid.liner.appendChild( oGrid.forcer );
+			}
+			else {
+				oGrid.forcer.style.height = scrollerForcer.style.height;
 			}
 		}
+
 		oGrid.liner.appendChild( oClone.body );
 
 		this._fnEqualiseHeights( 'tbody', that.dom.body, oClone.body );
@@ -1131,7 +1260,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 		/*
 		 * Footer
 		 */
-		if ( this.s.dt.nTFoot !== null )
+		if ( dt.nTFoot !== null )
 		{
 			if ( bAll )
 			{
@@ -1145,7 +1274,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 				oGrid.foot.appendChild( oClone.footer );
 
 				/* Copy the footer just like we do for the header */
-				aoCloneLayout = this._fnCopyLayout( this.s.dt.aoFooter, aiColumns );
+				aoCloneLayout = this._fnCopyLayout( dt.aoFooter, aiColumns, true );
 				var jqCloneTfoot = $('>tfoot', oClone.footer);
 				jqCloneTfoot.empty();
 
@@ -1153,14 +1282,14 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 				{
 					jqCloneTfoot[0].appendChild( aoCloneLayout[i].nTr );
 				}
-				this.s.dt.oApi._fnDrawHead( this.s.dt, aoCloneLayout, true );
+				dt.oApi._fnDrawHead( dt, aoCloneLayout, true );
 			}
 			else
 			{
-				aoCloneLayout = this._fnCopyLayout( this.s.dt.aoFooter, aiColumns );
+				aoCloneLayout = this._fnCopyLayout( dt.aoFooter, aiColumns, false );
 				var aoCurrFooter=[];
 
-				this.s.dt.oApi._fnDetectHeader( aoCurrFooter, $('>tfoot', oClone.footer)[0] );
+				dt.oApi._fnDetectHeader( aoCurrFooter, $('>tfoot', oClone.footer)[0] );
 
 				for ( i=0, iLen=aoCloneLayout.length ; i<iLen ; i++ )
 				{
@@ -1174,7 +1303,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 		}
 
 		/* Equalise the column widths between the header footer and body - body get's priority */
-		var anUnique = this.s.dt.oApi._fnGetUniqueThs( this.s.dt, $('>thead', oClone.header)[0] );
+		var anUnique = dt.oApi._fnGetUniqueThs( dt, $('>thead', oClone.header)[0] );
 		$(anUnique).each( function (i) {
 			iColumn = aiColumns[i];
 			this.style.width = that.s.aiInnerWidths[iColumn]+"px";
@@ -1182,7 +1311,7 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 
 		if ( that.s.dt.nTFoot !== null )
 		{
-			anUnique = this.s.dt.oApi._fnGetUniqueThs( this.s.dt, $('>tfoot', oClone.footer)[0] );
+			anUnique = dt.oApi._fnGetUniqueThs( dt, $('>tfoot', oClone.footer)[0] );
 			$(anUnique).each( function (i) {
 				iColumn = aiColumns[i];
 				this.style.width = that.s.aiInnerWidths[iColumn]+"px";
@@ -1255,8 +1384,43 @@ FixedColumns.prototype = /** @lends FixedColumns.prototype */{
 			anClone[i].style.height = heights[i]+"px";
 			anOriginal[i].style.height = heights[i]+"px";
 		}
+	},
+
+	/**
+	 * Determine if the UA suffers from Firefox's overflow:scroll scrollbars
+	 * not being shown bug.
+	 *
+	 * Firefox doesn't draw scrollbars, even if it is told to using
+	 * overflow:scroll, if the div is less than 34px height. See bugs 292284 and
+	 * 781885. Using UA detection here since this is particularly hard to detect
+	 * using objects - its a straight up rendering error in Firefox.
+	 *
+	 * @return {boolean} True if Firefox error is present, false otherwise
+	 */
+	_firefoxScrollError: function () {
+		if ( _firefoxScroll === undefined ) {
+			var test = $('<div/>')
+				.css( {
+					position: 'absolute',
+					top: 0,
+					left: 0,
+					height: 10,
+					width: 50,
+					overflow: 'scroll'
+				} )
+				.appendTo( 'body' );
+
+			// Make sure this doesn't apply on Macs with 0 width scrollbars
+			_firefoxScroll = (
+				test[0].clientWidth === test[0].offsetWidth && this._fnDTOverflow().bar !== 0
+			);
+
+			test.remove();
+		}
+
+		return _firefoxScroll;
 	}
-};
+} );
 
 
 
@@ -1352,48 +1516,108 @@ FixedColumns.defaults = /** @lends FixedColumns.defaults */{
  *  @default   See code
  *  @static
  */
-FixedColumns.version = "3.0.2";
+FixedColumns.version = "3.2.2";
 
 
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
- * Fired events (for documentation)
+ * DataTables API integration
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+DataTable.Api.register( 'fixedColumns()', function () {
+	return this;
+} );
 
-/**
- * Event fired whenever FixedColumns redraws the fixed columns (i.e. clones the table elements from the main DataTable). This will occur whenever the DataTable that the FixedColumns instance is attached does its own draw.
- * @name FixedColumns#draw.dtfc
- * @event
- * @param {event} e jQuery event object
- * @param {object} o Event parameters from FixedColumns
- * @param {object} o.leftClone Instance's object dom.clone.left for easy reference. This object contains references to the left fixed clumn column's nodes
- * @param {object} o.rightClone Instance's object dom.clone.right for easy reference. This object contains references to the right fixed clumn column's nodes
- */
+DataTable.Api.register( 'fixedColumns().update()', function () {
+	return this.iterator( 'table', function ( ctx ) {
+		if ( ctx._oFixedColumns ) {
+			ctx._oFixedColumns.fnUpdate();
+		}
+	} );
+} );
+
+DataTable.Api.register( 'fixedColumns().relayout()', function () {
+	return this.iterator( 'table', function ( ctx ) {
+		if ( ctx._oFixedColumns ) {
+			ctx._oFixedColumns.fnRedrawLayout();
+		}
+	} );
+} );
+
+DataTable.Api.register( 'rows().recalcHeight()', function () {
+	return this.iterator( 'row', function ( ctx, idx ) {
+		if ( ctx._oFixedColumns ) {
+			ctx._oFixedColumns.fnRecalculateHeight( this.row(idx).node() );
+		}
+	} );
+} );
+
+DataTable.Api.register( 'fixedColumns().rowIndex()', function ( row ) {
+	row = $(row);
+
+	return row.parents('.DTFC_Cloned').length ?
+		this.rows( { page: 'current' } ).indexes()[ row.index() ] :
+		this.row( row ).index();
+} );
+
+DataTable.Api.register( 'fixedColumns().cellIndex()', function ( cell ) {
+	cell = $(cell);
+
+	if ( cell.parents('.DTFC_Cloned').length ) {
+		var rowClonedIdx = cell.parent().index();
+		var rowIdx = this.rows( { page: 'current' } ).indexes()[ rowClonedIdx ];
+		var columnIdx;
+
+		if ( cell.parents('.DTFC_LeftWrapper').length ) {
+			columnIdx = cell.index();
+		}
+		else {
+			var columns = this.columns().flatten().length;
+			columnIdx = columns - this.context[0]._oFixedColumns.s.iRightColumns + cell.index();
+		}
+
+		return {
+			row: rowIdx,
+			column: this.column.index( 'toData', columnIdx ),
+			columnVisible: columnIdx
+		};
+	}
+	else {
+		return this.cell( cell ).index();
+	}
+} );
+
+
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Initialisation
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+// Attach a listener to the document which listens for DataTables initialisation
+// events so we can automatically initialise
+$(document).on( 'init.dt.fixedColumns', function (e, settings) {
+	if ( e.namespace !== 'dt' ) {
+		return;
+	}
+
+	var init = settings.oInit.fixedColumns;
+	var defaults = DataTable.defaults.fixedColumns;
+
+	if ( init || defaults ) {
+		var opts = $.extend( {}, init, defaults );
+
+		if ( init !== false ) {
+			new FixedColumns( settings, opts );
+		}
+	}
+} );
+
 
 
 // Make FixedColumns accessible from the DataTables instance
 $.fn.dataTable.FixedColumns = FixedColumns;
 $.fn.DataTable.FixedColumns = FixedColumns;
 
-
 return FixedColumns;
-}; // /factory
-
-
-// Define as an AMD module if possible
-if ( typeof define === 'function' && define.amd ) {
-	define( ['jquery', 'datatables'], factory );
-}
-else if ( typeof exports === 'object' ) {
-    // Node/CommonJS
-    factory( require('jquery'), require('datatables') );
-}
-else if ( jQuery && !jQuery.fn.dataTable.FixedColumns ) {
-	// Otherwise simply initialise as normal, stopping multiple evaluation
-	factory( jQuery, jQuery.fn.dataTable );
-}
-
-
-})(window, document);
-
+}));

@@ -7,6 +7,10 @@ using System.Net.Http;
 using Socioboard.Extensions;
 using Domain.Socioboard.ViewModels;
 
+
+
+
+
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Socioboard.Controllers
@@ -23,6 +27,7 @@ namespace Socioboard.Controllers
 
 
         // GET: /<controller>/
+        [ResponseCache(Duration = 604800)]
         public IActionResult Index()
         {
             ViewBag.ApiDomain = _appSettings.ApiDomain;
@@ -103,5 +108,7 @@ namespace Socioboard.Controllers
             return View();
         }
 
+
+      
     }
 }

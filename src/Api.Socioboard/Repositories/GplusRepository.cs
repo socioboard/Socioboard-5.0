@@ -6,9 +6,11 @@ using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using Socioboard.GoogleLib.App.Core;
 using Socioboard.GoogleLib.Authentication;
+using Socioboard.GoogleLib.GAnalytics.Core.AnalyticsMethod;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,12 +46,38 @@ namespace Api.Socioboard.Repositories
 
         }
 
+        public static Domain.Socioboard.Models.GoogleAnalyticsAccount getGAAccount(string GaAccountId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                Domain.Socioboard.Models.GoogleAnalyticsAccount inMemGAAcc = _redisCache.Get<Domain.Socioboard.Models.GoogleAnalyticsAccount>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGAAccount + GaAccountId);
+                if (inMemGAAcc != null)
+                {
+                    return inMemGAAcc;
+                }
+            }
+            catch { }
 
+            List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstGAAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(GaAccountId)).ToList();
+            if (lstGAAcc != null && lstGAAcc.Count() > 0)
+            {
+                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusAccount + GaAccountId, lstGAAcc.First());
+                return lstGAAcc.First();
+            }
+            else
+            {
+                return null;
+            }
+
+
+
+        }
         public static int AddGplusAccount(JObject profile,  Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, string accessToken,string refreshToken ,Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
         {
             int isSaved = 0;
             Domain.Socioboard.Models.Googleplusaccounts gplusAcc = GplusRepository.getGPlusAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
             oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey,settings.GoogleConsumerSecret,settings.GoogleRedirectUri);
+           
             if (gplusAcc != null && gplusAcc.IsActive == false)
             {
                 gplusAcc.IsActive = true;
@@ -57,10 +85,89 @@ namespace Api.Socioboard.Repositories
                 gplusAcc.AccessToken = accessToken;
                 gplusAcc.RefreshToken = refreshToken;
                 gplusAcc.EntryDate = DateTime.UtcNow;
-                gplusAcc.GpProfileImage = Convert.ToString(profile["picture"]); 
+                try
+                {
+                    gplusAcc.GpUserName = profile["displayName"].ToString();
+                }
+                catch
+                {
+                    try
+                    {
+                        gplusAcc.GpUserName = profile["name"].ToString();
+                    }
+                    catch { }
+                }
+                try
+                {
+                    gplusAcc.GpProfileImage = Convert.ToString(profile["image"]["url"]);
+                }
+                catch
+                {
+                    try
+                    {
+                        gplusAcc.GpProfileImage = Convert.ToString(profile["picture"]);
+                    }
+                    catch { }
+
+                }
                 gplusAcc.AccessToken = accessToken;
-
-
+                try
+                {
+                    gplusAcc.about = Convert.ToString(profile["tagline"]);
+                }
+                catch 
+                {
+                    gplusAcc.about = "";
+                }
+                try
+                {
+                    gplusAcc.college = Convert.ToString(profile["organizations"][0]["name"]);
+                }
+                catch
+                {
+                    gplusAcc.college = "";
+                }
+                try
+                {
+                    gplusAcc.coverPic = Convert.ToString(profile["cover"]["coverPhoto"]["url"]);
+                }
+                catch
+                {
+                    gplusAcc.coverPic = "";
+                }
+                try
+                {
+                    gplusAcc.education = Convert.ToString(profile["organizations"][0]["type"]);
+                }
+                catch
+                {
+                    gplusAcc.education = "";
+                }
+                try
+                {
+                    gplusAcc.EmailId = Convert.ToString(profile["emails"][0]["value"]);
+                }
+                catch
+                {
+                    gplusAcc.EmailId = "";
+                }
+                try
+                {
+                    gplusAcc.gender = Convert.ToString(profile["gender"]);
+                }
+                catch
+                {
+                    gplusAcc.gender = "";
+                }
+                try
+                {
+                    gplusAcc.workPosition = Convert.ToString(profile["occupation"]);
+                }
+                catch
+                {
+                    gplusAcc.workPosition = "";
+                }
+                gplusAcc.LastUpdate = DateTime.UtcNow;
                 #region Get_InYourCircles
                 try
                 {
@@ -97,13 +204,96 @@ namespace Api.Socioboard.Repositories
                 gplusAcc = new Domain.Socioboard.Models.Googleplusaccounts();
                 gplusAcc.UserId = userId;
                 gplusAcc.GpUserId = profile["id"].ToString();
-                gplusAcc.GpUserName = profile["name"].ToString();
+                try {
+                    gplusAcc.GpUserName = profile["displayName"].ToString();
+                }
+                catch {
+                    try {
+                        gplusAcc.GpUserName = profile["name"].ToString();
+                    }
+                    catch { }
+                }
                 gplusAcc.IsActive = true;
                 gplusAcc.AccessToken = accessToken;
                 gplusAcc.RefreshToken = refreshToken;
                 gplusAcc.EntryDate = DateTime.UtcNow;
-                gplusAcc.GpProfileImage = Convert.ToString(profile["picture"]);
+                try {
+                    gplusAcc.GpProfileImage = Convert.ToString(profile["image"]["url"]);
+                }
+                catch
+                {
+                    try
+                    {
+                        gplusAcc.GpProfileImage = Convert.ToString(profile["picture"]);
+                    }
+                    catch { }
+                    
+                }
                 gplusAcc.AccessToken = accessToken;
+                try
+                {
+                    gplusAcc.about = Convert.ToString(profile["tagline"]);
+                }
+                catch
+                {
+                    gplusAcc.about = "";
+                }
+                try
+                {
+                    gplusAcc.college = Convert.ToString(profile["organizations"][0]["name"]);
+                }
+                catch
+                {
+                    gplusAcc.college = "";
+                }
+                try
+                {
+                    gplusAcc.coverPic = Convert.ToString(profile["cover"]["coverPhoto"]["url"]);
+                }
+                catch
+                {
+                    gplusAcc.coverPic = "";
+                }
+                try
+                {
+                    gplusAcc.education = Convert.ToString(profile["organizations"][0]["type"]);
+                }
+                catch
+                {
+                    gplusAcc.education = "";
+                }
+                try
+                {
+                    gplusAcc.EmailId = Convert.ToString(profile["emails"][0]["value"]);
+                }
+                catch
+                {
+                    try {
+                        try
+                        {
+                            gplusAcc.EmailId = Convert.ToString(profile["email"]);
+                        }
+                        catch { }
+                    } catch { }
+                    gplusAcc.EmailId = "";
+                }
+                try
+                {
+                    gplusAcc.gender = Convert.ToString(profile["gender"]);
+                }
+                catch
+                {
+                    gplusAcc.gender = "";
+                }
+                try
+                {
+                    gplusAcc.workPosition = Convert.ToString(profile["occupation"]);
+                }
+                catch
+                {
+                    gplusAcc.workPosition = "";
+                }
+                gplusAcc.LastUpdate = DateTime.UtcNow;
 
 
                 #region Get_InYourCircles
@@ -132,11 +322,6 @@ namespace Api.Socioboard.Repositories
                 }
                 #endregion
 
-                try
-                {
-                    gplusAcc.EmailId = (Convert.ToString(profile["email"]));
-                }
-                catch { }
                  isSaved = dbr.Add<Domain.Socioboard.Models.Googleplusaccounts>(gplusAcc);
             }
            
@@ -316,7 +501,118 @@ namespace Api.Socioboard.Repositories
             }
         }
 
+        public static int AddGaSites(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
+        {
+            int isSaved = 0;
+            Analytics _Analytics = new Analytics(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            Domain.Socioboard.Models.GoogleAnalyticsAccount _GoogleAnalyticsAccount;
+            string[] GAdata = Regex.Split(profiledata, "<:>");
+            _GoogleAnalyticsAccount = Repositories.GplusRepository.getGAAccount(GAdata[5], _redisCache, dbr);
 
+            if (_GoogleAnalyticsAccount != null && _GoogleAnalyticsAccount.IsActive == false)
+            {
+                try
+                {
+                    _GoogleAnalyticsAccount.UserId = userId;
+                    _GoogleAnalyticsAccount.IsActive = true;
+                    _GoogleAnalyticsAccount.EntryDate = DateTime.UtcNow;
+                    _GoogleAnalyticsAccount.EmailId = GAdata[4];
+                    _GoogleAnalyticsAccount.GaAccountId = GAdata[2];
+                    _GoogleAnalyticsAccount.GaAccountName = GAdata[3];
+                    _GoogleAnalyticsAccount.GaWebPropertyId = GAdata[7];
+                    _GoogleAnalyticsAccount.GaProfileId = GAdata[5];
+                    _GoogleAnalyticsAccount.GaProfileName = GAdata[6];
+                    _GoogleAnalyticsAccount.AccessToken = GAdata[0];
+                    _GoogleAnalyticsAccount.RefreshToken = GAdata[1];
+                    _GoogleAnalyticsAccount.WebsiteUrl = GAdata[8];
+                    string visits = string.Empty;
+                    string pageviews = string.Empty;
+                    try
+                    {
+                        string analytics = _Analytics.getAnalyticsData(GAdata[5], "ga:visits,ga:pageviews", DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-dd"), DateTime.UtcNow.ToString("yyyy-MM-dd"), GAdata[0]);
+                        JObject JData = JObject.Parse(analytics);
+                        visits = JData["totalsForAllResults"]["ga:visits"].ToString();
+                        pageviews = JData["totalsForAllResults"]["ga:pageviews"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        visits = "0";
+                        pageviews = "0";
+                    }
+                    _GoogleAnalyticsAccount.Views = Double.Parse(pageviews);
+                    _GoogleAnalyticsAccount.Visits = Double.Parse(visits);
+                    _GoogleAnalyticsAccount.ProfilePicUrl = "https://www.socioboard.com/Themes/Socioboard/Contents/img/analytics_img.png";
+                    _GoogleAnalyticsAccount.EntryDate = DateTime.UtcNow;
+
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+                dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(_GoogleAnalyticsAccount);
+            }
+            else
+            {
+                try
+                {
+                    _GoogleAnalyticsAccount = new Domain.Socioboard.Models.GoogleAnalyticsAccount();
+                    _GoogleAnalyticsAccount.UserId = userId;
+                    _GoogleAnalyticsAccount.IsActive = true;
+                    _GoogleAnalyticsAccount.EntryDate = DateTime.UtcNow;
+                    _GoogleAnalyticsAccount.EmailId = GAdata[4];
+                    _GoogleAnalyticsAccount.GaAccountId = GAdata[2];
+                    _GoogleAnalyticsAccount.GaAccountName = GAdata[3];
+                    _GoogleAnalyticsAccount.GaWebPropertyId = GAdata[7];
+                    _GoogleAnalyticsAccount.GaProfileId = GAdata[5];
+                    _GoogleAnalyticsAccount.GaProfileName = GAdata[6];
+                    _GoogleAnalyticsAccount.AccessToken = GAdata[0];
+                    _GoogleAnalyticsAccount.RefreshToken = GAdata[1];
+                    _GoogleAnalyticsAccount.WebsiteUrl = GAdata[8];
+                    string visits = string.Empty;
+                    string pageviews = string.Empty;
+                    try
+                    {
+                        string analytics = _Analytics.getAnalyticsData(GAdata[5], "ga:visits,ga:pageviews", DateTime.UtcNow.AddDays(-7).ToString("yyyy-MM-dd"), DateTime.UtcNow.ToString("yyyy-MM-dd"), GAdata[0]);
+                        JObject JData = JObject.Parse(analytics);
+                        visits = JData["totalsForAllResults"]["ga:visits"].ToString();
+                        pageviews = JData["totalsForAllResults"]["ga:pageviews"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        visits = "0";
+                        pageviews = "0";
+                    }
+                    _GoogleAnalyticsAccount.Views = Double.Parse(pageviews);
+                    _GoogleAnalyticsAccount.Visits = Double.Parse(visits);
+                    _GoogleAnalyticsAccount.ProfilePicUrl = "https://www.socioboard.com/Themes/Socioboard/Contents/img/analytics_img.png";
+                    _GoogleAnalyticsAccount.EntryDate = DateTime.UtcNow;
+
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+                isSaved = dbr.Add<Domain.Socioboard.Models.GoogleAnalyticsAccount>(_GoogleAnalyticsAccount);
+            }
+
+            if (isSaved == 1)
+            {
+                List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstgaAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(_GoogleAnalyticsAccount.GaProfileId)).ToList();
+                if (lstgaAcc != null && lstgaAcc.Count() > 0)
+                {
+                    isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lstgaAcc.First().GaProfileId, lstgaAcc.First().GaProfileName, userId, lstgaAcc.First().ProfilePicUrl, Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics, dbr);
+                    //codes to delete cache
+                    _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
+                    _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+
+
+                }
+
+            }
+            return isSaved;
+        }
 
 
         public static void GetGooglePlusComments(string feedId, string AccessToken, string profileId, Helper.AppSettings settings, ILogger _logger)
@@ -406,5 +702,61 @@ namespace Api.Socioboard.Repositories
         //    }
 
         //}
+
+        public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(profileId) && t.UserId == userId).FirstOrDefault();
+            if (fbAcc != null)
+            {
+                fbAcc.IsActive = false;
+                dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(fbAcc);
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGAAccount + profileId);
+                return "Deleted";
+            }
+            else
+            {
+                return "Account Not Exist";
+            }
+        }
+
+        public static string DeleteGplusProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            Domain.Socioboard.Models.Googleplusaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(profileId) && t.UserId == userId).FirstOrDefault();
+            if (fbAcc != null)
+            {
+                fbAcc.IsActive = false;
+                dbr.Update<Domain.Socioboard.Models.Googleplusaccounts>(fbAcc);
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusAccount + profileId);
+                return "Deleted";
+            }
+            else
+            {
+                return "Account Not Exist";
+            }
+        }
+        public static List<Domain.Socioboard.Models.Mongo.MongoGplusFeed> getgoogleplusActivity(string profileId,Helper.Cache _redisCache,Helper.AppSettings _appSettings)
+        {
+            MongoRepository gplusFeedRepo = new MongoRepository("MongoGplusFeed", _appSettings);
+            List<Domain.Socioboard.Models.Mongo.MongoGplusFeed> iMmemMongoGplusFeed = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoGplusFeed>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusRecent100Feeds + profileId);
+            if(iMmemMongoGplusFeed!=null && iMmemMongoGplusFeed.Count>0)
+            {
+                return iMmemMongoGplusFeed;
+            }
+            else
+            {
+                var builder = Builders<MongoGplusFeed>.Sort;
+                var sort = builder.Descending(t => t.PublishedDate);
+                var ret = gplusFeedRepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoGplusFeed>(t => t.GpUserId.Equals(profileId), sort, 0, 100);
+                var task=Task.Run(async() =>{
+                    return await ret;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoGplusFeed> lstMongoGplusFeed = task.Result.ToList();
+                if (lstMongoGplusFeed.Count>0)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusRecent100Feeds + profileId, lstMongoGplusFeed.ToList());
+                }
+                return lstMongoGplusFeed.ToList();
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
- .side-nav .collapsible-body li.active a, .side-nav.fixed .collapsible-body li.active a{
-    color: #444;
+
+.side-nav .collapsible-body li.active a, .side-nav.fixed .collapsible-body li.active a{
+	color: #444;
 }
 ul.side-nav.leftside-navigation li.active > a{
     color: #F85C37;
@@ -8,10 +9,10 @@ ul.side-nav.leftside-navigation li.active > a{
     color: #D83F1A;
 }
 .card .card-content p{
-    font-size: x-large;
+	font-size: x-large;
 }
 .dropdown_text{
-    white-space: nowrap; 
+	white-space: nowrap; 
     width: auto; 
     overflow: hidden;
     text-overflow: ellipsis; 
@@ -31,17 +32,17 @@ ul.side-nav.leftside-navigation li.active > a{
   overflow: hidden;
   text-overflow: ellipsis;
 }
- 
+
 .more_profile_btn{
     position: relative;
     top: -15px;
     right: -10px;
     float: right;
 }
- 
- 
- 
- 
+
+
+
+
 /*feeds*/
 #feeds .feeds_title{
     background-color: #3B5998;
@@ -53,7 +54,7 @@ ul.side-nav.leftside-navigation li.active > a{
     padding: 5px;
 }
 #feeds li{
-    border-bottom: none;
+	border-bottom: none;
 }
 #feeds .collection {
     border: 0px solid #fff !important ;
@@ -66,7 +67,7 @@ ul.side-nav.leftside-navigation li.active > a{
 #feeds .collection .collection-item.avatar img.circle {
     padding: 0px;
 }
- 
+
 #feeds .collection .collection-item.avatar .circle {
     position: absolute;
     width: 42px;
@@ -126,7 +127,7 @@ ul.side-nav.leftside-navigation li.active > a{
     position: relative;
     font-weight: 600;
 }
- 
+
 .groupslist{
     position: relative;
     top: -9px;
@@ -137,7 +138,7 @@ ul.side-nav.leftside-navigation li.active > a{
   position: relative;
  padding: 5px;
 }
- 
+
 /* right_side title*/
 .r_side_title{
     background-color: #757575;
@@ -152,7 +153,7 @@ ul.side-nav.leftside-navigation li.active > a{
 #social_profile_list .card-panel{
     padding: 10px;
 }
- 
+
 .profile_socio_icon{
     float: right;
     margin-top: -20px;
@@ -173,23 +174,23 @@ ul.side-nav.leftside-navigation li.active > a{
     line-height: 60px !important; 
     opacity: 0.5;
 }
- 
+
 /*message*/
- 
+
 .section_filter{
     padding: 10px;
 }
 .section_filter .row{
     margin-bottom: 5px !important;
 }
- 
+
 .smartinbox_action_icon i{
         margin-right: 5px;
         color: #1976D2 !important;
 }
 .section_filter a{
     color: #fff;
- 
+
 }
 /*color */
 .instagram_color{
@@ -201,7 +202,7 @@ ul.side-nav.leftside-navigation li.active > a{
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
- 
+
 /*groups */
 .groups_tabs:hover .trash_icon {
     background: transparent url(../../images/trash.png) no-repeat center;
@@ -220,8 +221,8 @@ ul.side-nav.leftside-navigation li.active > a{
     position: absolute;
     z-index: 9999;
 }
- 
- 
+
+
 /* Publishing */
 .profilePic {
     height: 54px;
@@ -229,4 +230,89 @@ ul.side-nav.leftside-navigation li.active > a{
 }
 .msgiconPoss {
     margin-left: -15px;
+}
+
+/*group reports*/
+.groupbox_padding{
+    padding: 2px 20px;
+}
+.GroupStats_twt {
+    font-family: 'Arial Narrow',Helvetica,Arial,sans-serif;
+    margin-right: 5px;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1;
+    color: #676363;
+    text-align: center;
+    text-shadow: none;
+}
+
+.charts{
+  width: 100%;
+  height: 500px;
+  font-size: 11px;
+}
+
+.amcharts-pie-slice {
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition-duration: 0.3s;
+  transition: all .3s ease-out;
+  -webkit-transition: all .3s ease-out;
+  -moz-transition: all .3s ease-out;
+  -o-transition: all .3s ease-out;
+  cursor: pointer;
+  box-shadow: 0 0 30px 0 #000;
+}
+
+.amcharts-pie-slice:hover {
+  transform: scale(1.1);
+  filter: url(#shadow);
+}                           
+
+
+/*margin css*/
+.margin-top-10{
+    margin-top: 10px !important;
+}
+.margin-top-20{
+    margin-top: 20px !important;
+}
+.margin-top-30{
+    margin-top: 30px !important;
+}
+.margin-top-50{
+    margin-top: 50px !important;
+}
+
+
+/*linkedin feeds*/
+.company_desc_logo{
+    height: 100px !important;
+}
+
+/* font size */
+.font_50{
+    font-size: 50px;
+}
+/*e - wallet */
+.money_avata{
+    padding-top: 10px;
+    width: 150px !important;
+    margin: auto;
+}
+
+
+  /* instagram report */
+  .inst_name_big_dt{
+    font-size: large;
+    color: #005686;
+  }
+.inst_name_big_dd {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: large;
+    color: #3C3C3C;
+    font-weight: 900;
 }

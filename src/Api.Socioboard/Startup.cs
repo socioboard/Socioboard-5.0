@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Serilog;
 using System.IO;
-using Serilog.Sinks.RollingFile;
+using Serilog;
 using Domain.Socioboard.Interfaces.Services;
 using Domain.Socioboard.Services;
 
@@ -34,10 +33,10 @@ namespace Api.Socioboard
             Configuration = builder.Build();
 
             Log.Logger = new LoggerConfiguration()
-         .MinimumLevel.Debug()
-         .WriteTo.ColoredConsole()
-         .WriteTo.RollingFile(Path.Combine(env.WebRootPath, "wwwroot/log/log-{Date}.txt"))
-         .CreateLogger();
+        .MinimumLevel.Debug()
+        .WriteTo.ColoredConsole()
+        .WriteTo.RollingFile(Path.Combine(env.WebRootPath, "log/log-{Date}.txt"))
+        .CreateLogger();
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -48,11 +47,11 @@ namespace Api.Socioboard
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
             services.Configure<Helper.AppSettings>(Configuration.GetSection("AppSettings"));
+
             services.AddMvc();
-            services.AddCors();
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.WithOrigins("http://localhost:6361", "http://localhost:9821")));
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient < IEmailSender, AuthMessageSender>();
+            services.AddTransient < ISmsSender, AuthMessageSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -64,15 +63,10 @@ namespace Api.Socioboard
             app.UseApplicationInsightsRequestTelemetry();
 
             app.UseApplicationInsightsExceptionTelemetry();
-
+            app.UseDeveloperExceptionPage();
             app.UseMvc();
             app.UseCors("AllowAll");
-            //app.UseCors(policy =>
-            //{
-            //    policy.WithOrigins("http://localhost:6361", "http://localhost:9821");
-            //    policy.AllowAnyHeader();
-            //    policy.AllowAnyMethod();
-            //});
+           
             loggerFactory.AddSerilog();
         }
     }

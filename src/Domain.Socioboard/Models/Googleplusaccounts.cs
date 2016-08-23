@@ -26,5 +26,15 @@ namespace Domain.Socioboard.Models
         public virtual DateTime EntryDate { get; set; }
         public virtual bool IsAccessTokenActive { get; set; }
         public virtual DateTime LastUpdate { get; set; }
+        public virtual string coverPic { get; set; }
+        public virtual string birthday { get; set; }
+        public virtual string education { get; set; }
+        public virtual string college { get; set; }
+        public virtual string workPosition { get; set; }
+        public virtual string homeTown { get; set; }
+        public virtual string gender { get; set; }
+        public virtual string bio { get; set; }
+        public virtual string about { get; set; }
+        public virtual string workCompany { get; set; }
     }
 }

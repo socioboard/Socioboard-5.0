@@ -17,7 +17,7 @@ namespace Socioboard.Controllers
         private Helpers.AppSettings _appSettings;
         private readonly ILogger _logger;
 
-        public TwitterManagerController(ILogger<FacebookManagerController> logger, Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
+        public TwitterManagerController(ILogger<TwitterManagerController> logger, Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
         {
             _appSettings = settings.Value;
             _logger = logger;

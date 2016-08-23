@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
+SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $http, $timeout, apiDomain, grouptask) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         var reachLast = false;
@@ -54,14 +54,38 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
         $scope.selectedProfiles = [];
 
         angular.forEach($rootScope.lstProfiles, function (item) {
-            $scope.selectedProfiles.push(item.ProfileId);
+            $scope.selectedProfiles.push(item.profileId);
         });
-        //console.log($scope.selectedProfiles);
+
+
+        $scope.taskModel = function (notification) {
+            $('#TaskModal').openModal();
+            $rootScope.taskNotification = notification;
+
+        }
+
+        $scope.addTask = function (feedTableType) {
+          
+            var memberId = $('.task-user-member:checked');
+            var taskComment = $('#taskComment').val();
+            if (!memberId.val()) {
+                swal('please select any member for assign task')
+            }
+            else if (!taskComment) {
+                swal('please write any comment for assign task')
+            }
+            else {
+                var assignUserId = memberId.val();
+                grouptask.addtasks(assignUserId, feedTableType, taskComment, $rootScope.taskNotification.twitterMsg, $rootScope.taskNotification.messageId,'');
+                
+            }
+        }
+
     });
 });
 
 SocioboardApp.filter('notificationbyprofilesfileter', function () {
-    return function (items, filterType,selectedProfiles) {
+    return function (items, filterType, selectedProfiles) {
         var filtered = [];
         angular.forEach(items, function (item) {
             if (filterType.indexOf(item.type) != -1 && selectedProfiles.indexOf(item.profileId) != -1) {

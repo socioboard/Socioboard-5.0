@@ -42,5 +42,6 @@ namespace Domain.Socioboard.Models
         public bool days60GrpReportsSummery { get; set; }
         public bool days90GrpReportsSummery { get; set; }
         public bool otherNewsLetters { get; set; }
+        public string Ewallet { get; set; }
     }
 }

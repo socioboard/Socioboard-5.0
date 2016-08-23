@@ -14,6 +14,7 @@ namespace Domain.Socioboard.Models.Mongo
         public ObjectId id { get; set; }
         public string twitterMsg { get; set; }
         public string messageDate { get; set; }
+        public double messageTimeStamp { get; set; } // unix time stamp of messageDate
         public string profileId { get; set; }
         public string fromId { get; set; }
         public string fromName { get; set; }
@@ -24,9 +25,13 @@ namespace Domain.Socioboard.Models.Mongo
         public string inReplyToStatusUserId { get; set; }
         public string sourceUrl { get; set; }
         public string fromScreenName { get; set; }
+        public int  FollowerCount { get; set; }
+        public int FollowingCount { get; set; }
         public int readStatus { get; set; }
         public int isArchived { get; set; }
         public double positive { get; set; }
         public double negative { get; set; }
+        public string RecipientId { get; set; }
+        public string RecipientName { get; set; }
     }
 }

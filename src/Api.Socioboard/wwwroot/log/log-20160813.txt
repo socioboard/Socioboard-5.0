@@ -1,0 +1,227 @@
+﻿2016-08-13 13:10:30.360 +05:30 [Debug] Hosting starting
+2016-08-13 13:10:30.597 +05:30 [Debug] Hosting started
+2016-08-13 13:10:30.697 +05:30 [Debug] Connection id ""0HKU39KD15SQF"" started.
+2016-08-13 13:10:30.697 +05:30 [Debug] Connection id ""0HKU39KD15SQE"" started.
+2016-08-13 13:10:30.933 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2016-08-13 13:10:30.933 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2016-08-13 13:10:31.173 +05:30 [Information] Request finished in 173.5664ms 200 
+2016-08-13 13:10:31.255 +05:30 [Debug] Connection id ""0HKU39KD15SQF"" completed keep alive response.
+2016-08-13 13:10:32.082 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2016-08-13 13:10:32.153 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"d1cb5a24-a96d-470e-bf1b-94f6d42a3cd6"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2016-08-13 13:10:32.745 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2016-08-13 13:10:33.101 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2016-08-13 13:10:33.140 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2016-08-13 13:10:33.258 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 13:10:33.278 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 13:10:33.531 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 13:10:34.365 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1459.9178ms
+2016-08-13 13:10:34.554 +05:30 [Information] Request finished in 3685.086ms 200 application/json; charset=utf-8
+2016-08-13 13:10:34.558 +05:30 [Debug] Connection id ""0HKU39KD15SQE"" completed keep alive response.
+2016-08-13 13:12:30.666 +05:30 [Debug] Connection id ""0HKU39KD15SQE"" received FIN.
+2016-08-13 13:12:30.671 +05:30 [Debug] Connection id ""0HKU39KD15SQE"" disconnecting.
+2016-08-13 13:12:30.673 +05:30 [Debug] Connection id ""0HKU39KD15SQF"" received FIN.
+2016-08-13 13:12:30.674 +05:30 [Debug] Connection id ""0HKU39KD15SQE"" sending FIN.
+2016-08-13 13:12:30.694 +05:30 [Debug] Connection id ""0HKU39KD15SQE"" sent FIN with status "0".
+2016-08-13 13:12:30.700 +05:30 [Debug] Connection id ""0HKU39KD15SQF"" disconnecting.
+2016-08-13 13:12:30.702 +05:30 [Debug] Connection id ""0HKU39KD15SQF"" sending FIN.
+2016-08-13 13:12:30.703 +05:30 [Debug] Connection id ""0HKU39KD15SQF"" sent FIN with status "0".
+2016-08-13 13:12:30.703 +05:30 [Debug] Connection id ""0HKU39KD15SQE"" stopped.
+2016-08-13 13:12:30.703 +05:30 [Debug] Connection id ""0HKU39KD15SQF"" stopped.
+2016-08-13 14:06:44.237 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" started.
+2016-08-13 14:06:44.256 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/FacebookLogin application/x-www-form-urlencoded 172
+2016-08-13 14:06:44.258 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/FacebookLogin"'.
+2016-08-13 14:06:44.262 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)"
+2016-08-13 14:06:48.093 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" with arguments (["EAAKYvwDVmnUBAAPZARHfxIatlhv9YmASu6xTD7xW8UoGe3AplKAjmuDEvJt0UyvxnYK3vV1tX5xJ1AYsdtmYLettXrZAMhYsrYUF6e9xxBge7acjK4dSldA5yahmVjDzWgJJ1sS5DUYJwGjI3dpNfCiinBNsgZD"]) - ModelState is Valid
+2016-08-13 14:06:57.743 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:06:57.783 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:06:57.788 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:06:57.986 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.FacebookLogin (Api.Socioboard)" in 13722.3615ms
+2016-08-13 14:06:57.990 +05:30 [Information] Request finished in 13747.2449ms 200 application/json; charset=utf-8
+2016-08-13 14:06:57.991 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" completed keep alive response.
+2016-08-13 14:06:58.382 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Groups/GetUserGroups?userId=1  
+2016-08-13 14:06:58.383 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Groups/GetUserGroups"'.
+2016-08-13 14:06:58.385 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)"
+2016-08-13 14:07:01.470 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:02.036 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:02.039 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:02.042 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:02.057 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupsController.GetUserGroups (Api.Socioboard)" in 3669.2863ms
+2016-08-13 14:07:02.061 +05:30 [Information] Request finished in 3679.4675ms 200 application/json; charset=utf-8
+2016-08-13 14:07:02.062 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" completed keep alive response.
+2016-08-13 14:07:02.125 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupProfiles/GetGroupProfiles?groupId=1  
+2016-08-13 14:07:02.126 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupProfiles/GetGroupProfiles"'.
+2016-08-13 14:07:02.127 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)"
+2016-08-13 14:07:05.213 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:05.462 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:05.463 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:05.466 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:05.510 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupProfilesController.GetGroupProfiles (Api.Socioboard)" in 3365.3042ms
+2016-08-13 14:07:05.518 +05:30 [Information] Request finished in 3390.4012ms 200 application/json; charset=utf-8
+2016-08-13 14:07:05.520 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" completed keep alive response.
+2016-08-13 14:07:08.394 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/GroupMember/GetGroupMembers?groupId=1  
+2016-08-13 14:07:08.397 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/GroupMember/GetGroupMembers"'.
+2016-08-13 14:07:08.401 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GroupMemberController.GetGroupMembers (Api.Socioboard)"
+2016-08-13 14:07:09.176 +05:30 [Debug] Connection id ""0HKU39KD15SQH"" started.
+2016-08-13 14:07:09.188 +05:30 [Debug] Connection id ""0HKU39KD15SQI"" started.
+2016-08-13 14:07:09.195 +05:30 [Debug] Connection id ""0HKU39KD15SQJ"" started.
+2016-08-13 14:07:09.220 +05:30 [Debug] Connection id ""0HKU39KD15SQK"" started.
+2016-08-13 14:07:09.220 +05:30 [Debug] Connection id ""0HKU39KD15SQL"" started.
+2016-08-13 14:07:09.256 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/GetFacebookProfiles?groupId=1  
+2016-08-13 14:07:09.256 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/GetFacebookProfiles"'.
+2016-08-13 14:07:09.269 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetTwitterProfiles?groupId=1  
+2016-08-13 14:07:09.271 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)"
+2016-08-13 14:07:09.276 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetTwitterProfiles"'.
+2016-08-13 14:07:09.278 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Instagram/GetInstagramProfiles?groupId=1  
+2016-08-13 14:07:09.282 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Instagram/GetInstagramProfiles"'.
+2016-08-13 14:07:09.285 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.InstagramController.GetInstagramProfiles (Api.Socioboard)"
+2016-08-13 14:07:09.285 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)"
+2016-08-13 14:07:10.284 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Google/GetGAProfiles?groupId=1  
+2016-08-13 14:07:10.285 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Google/GetGAProfiles"'.
+2016-08-13 14:07:10.286 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GoogleController.GetGAProfiles (Api.Socioboard)"
+2016-08-13 14:07:10.951 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Google/GetGplusProfiles?groupId=1  
+2016-08-13 14:07:10.951 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Google/GetGplusProfiles"'.
+2016-08-13 14:07:10.961 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.GoogleController.GetGplusProfiles (Api.Socioboard)"
+2016-08-13 14:07:14.074 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.InstagramController.GetInstagramProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:14.165 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GoogleController.GetGAProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:14.170 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:14.175 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GoogleController.GetGAProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:14.176 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:14.176 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:14.193 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GroupMemberController.GetGroupMembers (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:14.253 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.InstagramController.GetInstagramProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:14.255 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:14.255 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:14.257 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.GoogleController.GetGplusProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:14.301 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:14.360 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:14.424 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:14.601 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GoogleController.GetGAProfiles (Api.Socioboard)" in 4169.2986ms
+2016-08-13 14:07:14.617 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GroupMemberController.GetGroupMembers (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:14.621 +05:30 [Information] Executed action "Api.Socioboard.Controllers.InstagramController.GetInstagramProfiles (Api.Socioboard)" in 5174.9009ms
+2016-08-13 14:07:14.622 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.GoogleController.GetGplusProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:14.621 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:14.624 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:14.625 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:14.625 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:14.639 +05:30 [Information] Request finished in 4336.5319ms 200 application/json; charset=utf-8
+2016-08-13 14:07:14.639 +05:30 [Debug] Connection id ""0HKU39KD15SQL"" completed keep alive response.
+2016-08-13 14:07:14.666 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:14.710 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:14.740 +05:30 [Information] Request finished in 5395.5286ms 200 application/json; charset=utf-8
+2016-08-13 14:07:14.799 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/LinkedIn/GetLinkedInCompanyPagesProfiles?groupId=1  
+2016-08-13 14:07:14.804 +05:30 [Debug] Connection id ""0HKU39KD15SQK"" completed keep alive response.
+2016-08-13 14:07:14.818 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/LinkedIn/GetLinkedInCompanyPagesProfiles"'.
+2016-08-13 14:07:14.901 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GroupMemberController.GetGroupMembers (Api.Socioboard)" in 6408.4936ms
+2016-08-13 14:07:14.933 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.LinkedInController.GetLinkedInCompanyPagesProfiles (Api.Socioboard)"
+2016-08-13 14:07:14.877 +05:30 [Information] Executed action "Api.Socioboard.Controllers.GoogleController.GetGplusProfiles (Api.Socioboard)" in 3843.4361ms
+2016-08-13 14:07:14.929 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/SocialMessages/GetAllSentMessagesCount?groupId=1&userId=1  
+2016-08-13 14:07:15.009 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:15.009 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:15.020 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:15.021 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:15.021 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:15.021 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:15.019 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/SocialMessages/GetAllSentMessagesCount"'.
+2016-08-13 14:07:15.029 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.SocialMessagesController.GetAllSentMessagesCount (Api.Socioboard)"
+2016-08-13 14:07:15.031 +05:30 [Information] Request finished in 6626.054ms 200 application/json; charset=utf-8
+2016-08-13 14:07:15.031 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" completed keep alive response.
+2016-08-13 14:07:15.037 +05:30 [Information] Request finished in 4078.0412ms 200 application/json; charset=utf-8
+2016-08-13 14:07:15.038 +05:30 [Debug] Connection id ""0HKU39KD15SQI"" completed keep alive response.
+2016-08-13 14:07:15.050 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:15.060 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/GetIncommingMessage?groupId=1&userId=1  
+2016-08-13 14:07:15.062 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/GetIncommingMessage"'.
+2016-08-13 14:07:15.077 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:15.077 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.GetIncommingMessage (Api.Socioboard)"
+2016-08-13 14:07:15.079 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/TwitterFollowerCount?groupId=1&userId=1  
+2016-08-13 14:07:15.087 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/TwitterFollowerCount"'.
+2016-08-13 14:07:15.090 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.TwitterFollowerCount (Api.Socioboard)"
+2016-08-13 14:07:15.098 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetTwitterProfiles (Api.Socioboard)" in 5798.5176ms
+2016-08-13 14:07:15.109 +05:30 [Information] Request finished in 5872.6181ms 200 application/json; charset=utf-8
+2016-08-13 14:07:15.112 +05:30 [Debug] Connection id ""0HKU39KD15SQJ"" completed keep alive response.
+2016-08-13 14:07:15.140 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Facebook/FacebookfanPageCount?groupId=1&userId=1  
+2016-08-13 14:07:15.141 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Facebook/FacebookfanPageCount"'.
+2016-08-13 14:07:15.143 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.FacebookController.FacebookfanPageCount (Api.Socioboard)"
+2016-08-13 14:07:15.154 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.GetFacebookProfiles (Api.Socioboard)" in 5866.1877ms
+2016-08-13 14:07:15.166 +05:30 [Information] Request finished in 5981.4736ms 200 application/json; charset=utf-8
+2016-08-13 14:07:15.167 +05:30 [Debug] Connection id ""0HKU39KD15SQH"" completed keep alive response.
+2016-08-13 14:07:15.248 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/Twitter/TwitterRecentFollower?groupId=1  
+2016-08-13 14:07:15.251 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Twitter/TwitterRecentFollower"'.
+2016-08-13 14:07:15.254 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.TwitterController.TwitterRecentFollower (Api.Socioboard)"
+2016-08-13 14:07:18.080 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.LinkedInController.GetLinkedInCompanyPagesProfiles (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:18.215 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.TwitterFollowerCount (Api.Socioboard)" with arguments (["1", "1"]) - ModelState is Valid
+2016-08-13 14:07:18.306 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.SocialMessagesController.GetAllSentMessagesCount (Api.Socioboard)" with arguments (["1", "1"]) - ModelState is Valid
+2016-08-13 14:07:18.355 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.FacebookController.FacebookfanPageCount (Api.Socioboard)" with arguments (["1", "1"]) - ModelState is Valid
+2016-08-13 14:07:18.401 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.GetIncommingMessage (Api.Socioboard)" with arguments (["1", "1"]) - ModelState is Valid
+2016-08-13 14:07:18.434 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.LinkedInController.GetLinkedInCompanyPagesProfiles (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:18.458 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.TwitterFollowerCount (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:18.462 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:18.462 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:18.463 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:18.463 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"text/plain; charset=utf-8"' to write the response.
+2016-08-13 14:07:18.533 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.TwitterController.TwitterRecentFollower (Api.Socioboard)" with arguments (["1"]) - ModelState is Valid
+2016-08-13 14:07:18.557 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:18.586 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:18.614 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.TwitterFollowerCount (Api.Socioboard)" in 3502.523ms
+2016-08-13 14:07:18.619 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.FacebookController.FacebookfanPageCount (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:18.677 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:18.678 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"text/plain; charset=utf-8"' to write the response.
+2016-08-13 14:07:18.685 +05:30 [Information] Request finished in 3635.5618ms 200 text/plain; charset=utf-8
+2016-08-13 14:07:18.687 +05:30 [Debug] Connection id ""0HKU39KD15SQI"" completed keep alive response.
+2016-08-13 14:07:18.694 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:18.699 +05:30 [Information] Executed action "Api.Socioboard.Controllers.LinkedInController.GetLinkedInCompanyPagesProfiles (Api.Socioboard)" in 3677.6723ms
+2016-08-13 14:07:18.701 +05:30 [Information] Executed action "Api.Socioboard.Controllers.FacebookController.FacebookfanPageCount (Api.Socioboard)" in 3548.7529ms
+2016-08-13 14:07:18.703 +05:30 [Information] Request finished in 4036.1933ms 200 application/json; charset=utf-8
+2016-08-13 14:07:18.706 +05:30 [Debug] Connection id ""0HKU39KD15SQL"" completed keep alive response.
+2016-08-13 14:07:18.706 +05:30 [Information] Request finished in 3587.8479ms 200 text/plain; charset=utf-8
+2016-08-13 14:07:18.714 +05:30 [Debug] Connection id ""0HKU39KD15SQJ"" completed keep alive response.
+2016-08-13 14:07:18.740 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.SocialMessagesController.GetAllSentMessagesCount (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:18.741 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:18.741 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:18.745 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:18.748 +05:30 [Information] Executed action "Api.Socioboard.Controllers.SocialMessagesController.GetAllSentMessagesCount (Api.Socioboard)" in 3717.5646ms
+2016-08-13 14:07:18.751 +05:30 [Information] Request finished in 3872.0237ms 200 application/json; charset=utf-8
+2016-08-13 14:07:18.752 +05:30 [Debug] Connection id ""0HKU39KD15SQK"" completed keep alive response.
+2016-08-13 14:07:19.813 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.GetIncommingMessage (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:19.815 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:19.816 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"text/plain; charset=utf-8"' to write the response.
+2016-08-13 14:07:19.819 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:19.821 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.GetIncommingMessage (Api.Socioboard)" in 4735.2843ms
+2016-08-13 14:07:19.826 +05:30 [Information] Request finished in 4788.9166ms 200 text/plain; charset=utf-8
+2016-08-13 14:07:19.827 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" completed keep alive response.
+2016-08-13 14:07:20.153 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.TwitterController.TwitterRecentFollower (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2016-08-13 14:07:20.155 +05:30 [Debug] No information found on request to perform content negotiation.
+2016-08-13 14:07:20.156 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2016-08-13 14:07:20.158 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2016-08-13 14:07:20.170 +05:30 [Information] Executed action "Api.Socioboard.Controllers.TwitterController.TwitterRecentFollower (Api.Socioboard)" in 4912.6011ms
+2016-08-13 14:07:20.176 +05:30 [Information] Request finished in 4933.9501ms 200 application/json; charset=utf-8
+2016-08-13 14:07:20.177 +05:30 [Debug] Connection id ""0HKU39KD15SQH"" completed keep alive response.
+2016-08-13 14:08:30.663 +05:30 [Debug] Connection id ""0HKU39KD15SQI"" received FIN.
+2016-08-13 14:08:30.663 +05:30 [Debug] Connection id ""0HKU39KD15SQJ"" received FIN.
+2016-08-13 14:08:30.663 +05:30 [Debug] Connection id ""0HKU39KD15SQL"" received FIN.
+2016-08-13 14:08:30.664 +05:30 [Debug] Connection id ""0HKU39KD15SQK"" received FIN.
+2016-08-13 14:08:30.667 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" received FIN.
+2016-08-13 14:08:30.667 +05:30 [Debug] Connection id ""0HKU39KD15SQJ"" disconnecting.
+2016-08-13 14:08:30.663 +05:30 [Debug] Connection id ""0HKU39KD15SQI"" disconnecting.
+2016-08-13 14:08:30.667 +05:30 [Debug] Connection id ""0HKU39KD15SQL"" disconnecting.
+2016-08-13 14:08:30.670 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" disconnecting.
+2016-08-13 14:08:30.668 +05:30 [Debug] Connection id ""0HKU39KD15SQH"" received FIN.
+2016-08-13 14:08:30.669 +05:30 [Debug] Connection id ""0HKU39KD15SQK"" disconnecting.
+2016-08-13 14:08:30.681 +05:30 [Debug] Connection id ""0HKU39KD15SQI"" sending FIN.
+2016-08-13 14:08:30.695 +05:30 [Debug] Connection id ""0HKU39KD15SQJ"" sending FIN.
+2016-08-13 14:08:30.698 +05:30 [Debug] Connection id ""0HKU39KD15SQL"" sending FIN.
+2016-08-13 14:08:30.695 +05:30 [Debug] Connection id ""0HKU39KD15SQH"" disconnecting.
+2016-08-13 14:08:30.698 +05:30 [Debug] Connection id ""0HKU39KD15SQK"" sending FIN.
+2016-08-13 14:08:30.699 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" sending FIN.
+2016-08-13 14:08:30.706 +05:30 [Debug] Connection id ""0HKU39KD15SQH"" sending FIN.
+2016-08-13 14:08:30.707 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" sent FIN with status "0".
+2016-08-13 14:08:30.708 +05:30 [Debug] Connection id ""0HKU39KD15SQH"" sent FIN with status "0".
+2016-08-13 14:08:30.711 +05:30 [Debug] Connection id ""0HKU39KD15SQG"" stopped.
+2016-08-13 14:08:30.713 +05:30 [Debug] Connection id ""0HKU39KD15SQL"" sent FIN with status "0".
+2016-08-13 14:08:30.711 +05:30 [Debug] Connection id ""0HKU39KD15SQH"" stopped.
+2016-08-13 14:08:30.714 +05:30 [Debug] Connection id ""0HKU39KD15SQL"" stopped.
+2016-08-13 14:08:30.714 +05:30 [Debug] Connection id ""0HKU39KD15SQK"" sent FIN with status "0".
+2016-08-13 14:08:30.716 +05:30 [Debug] Connection id ""0HKU39KD15SQK"" stopped.
+2016-08-13 14:08:30.716 +05:30 [Debug] Connection id ""0HKU39KD15SQI"" sent FIN with status "0".
+2016-08-13 14:08:30.717 +05:30 [Debug] Connection id ""0HKU39KD15SQJ"" sent FIN with status "0".
+2016-08-13 14:08:30.719 +05:30 [Debug] Connection id ""0HKU39KD15SQJ"" stopped.
+2016-08-13 14:08:30.719 +05:30 [Debug] Connection id ""0HKU39KD15SQI"" stopped.

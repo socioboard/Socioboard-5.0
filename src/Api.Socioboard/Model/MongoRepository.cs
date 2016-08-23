@@ -58,15 +58,28 @@ namespace Api.Socioboard.Model
                 _db.DropCollectionAsync(typeof(T).Name);
             
         }
-
+        public void DeleteMany<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            _db.GetCollection<T>(collecionName, settings).DeleteManyAsync(query);
+        }
         public async Task<IList<T>> Find<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             // Return the enumerable of the collection
             var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query);
-           
+           try
+            {
                 var output = await collection.ToListAsync().ConfigureAwait(false);
                 return output;
+            }
+            catch(Exception ex) { return null; }
+             
           
+        }
+        public async Task<IList<T>> FindAll<T>() where T : class, new()
+        {
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(Builders<T>.Filter.Empty);
+            var output = await collection.ToListAsync().ConfigureAwait(false);
+            return output;
         }
         public async Task<IList<T>> FindWithRange<T>(Expression<Func<T, bool>> query, SortDefinition<T> sort, int skip, int take) where T : class, new()
         {
@@ -121,6 +134,32 @@ namespace Api.Socioboard.Model
                 var collection = _db.GetCollection<BsonDocument>(collecionName);
                 return collection.UpdateManyAsync(filter, document);
             
+        }
+
+        public Task Update<T>(UpdateDefinition<T> document, Expression<Func<T, bool>> filter) where T : class, new()
+        {
+            try
+            {
+                var collection = _db.GetCollection<T>(collecionName);
+                return collection.UpdateManyAsync(filter, document);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public Task UpdateReplace<T>(T item, Expression<Func<T, bool>> filter) where T : class, new()
+        {
+            try
+            {
+                var collection = _db.GetCollection<T>(collecionName);
+                return collection.ReplaceOneAsync(filter, item);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
         }
 
         public System.Threading.Tasks.Task AddList<T>(IEnumerable<T> items) where T : class, new()

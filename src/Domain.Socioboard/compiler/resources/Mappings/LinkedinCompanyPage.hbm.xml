@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  
+   <class name="LinkedinCompanyPage" table="LinkedinCompanyPage" lazy="false">
+     <id name="id" column="id" />
+    <property name="LinkedinPageId">
+      <column name="LinkedinPageId" />
+    </property>
+    <property name="LinkedinPageName">
+      <column name="LinkedinPageName"  />
+    </property>
+    <property name="EmailDomains">
+      <column name="EmailDomains"  />
+    </property>
+    <property name="OAuthToken">
+      <column name="OAuthToken"  />
+    </property>
+    <property name="OAuthSecret">
+      <column name="OAuthSecret"  />
+    </property>
+    <property name="OAuthVerifier">
+      <column name="OAuthVerifier"  />
+    </property>
+    <property name="UserId">
+      <column name="UserId" />
+    </property>
+    <property name="Description">
+      <column name="Description" />
+    </property>
+    <property name="FoundedYear">
+      <column name="FoundedYear"  />
+    </property>
+    <property name="EndYear">
+      <column name="EndYear"  />
+    </property>
+    <property name="Locations">
+      <column name="Locations"  />
+    </property>
+    <property name="Specialties">
+      <column name="Specialties"  />
+    </property>
+    <property name="WebsiteUrl">
+      <column name="WebsiteUrl"  />
+    </property>
+    <property name="Status">
+      <column name="Status"  />
+    </property>
+    <property name="EmployeeCountRange">
+      <column name="EmployeeCountRange"  />
+    </property>
+    <property name="Industries">
+      <column name="Industries"  />
+    </property>
+     <property name="IsActive">
+       <column name="IsActive"  />
+     </property>
+    <property name="CompanyType">
+      <column name="CompanyType"  />
+    </property>
+    <property name="LogoUrl">
+      <column name="LogoUrl"  />
+    </property>
+    <property name="SquareLogoUrl">
+      <column name="SquareLogoUrl"  />
+    </property>
+    <property name="BlogRssUrl">
+      <column name="BlogRssUrl"  />
+    </property>
+    <property name="UniversalName">
+      <column name="UniversalName"  />
+    </property>
+     <property name="lastUpdate">
+       <column name="lastUpdate"/>
+     </property>
+    <property name="NumFollowers">
+      <column name="NumFollowers"  />
+    </property>
+  </class>
+</hibernate-mapping>

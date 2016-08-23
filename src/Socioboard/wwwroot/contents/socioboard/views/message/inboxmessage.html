@@ -10,17 +10,20 @@
                                     <ul class="collection inboxmessage_slider">
                                         <li class="collection-item avatar" ng-repeat="message in lstMessages | notificationbyprofilesfileter  : selectedProfiles">
                                           <img src="{{message.senderProfileUrl}}" alt="{{message.senderScreenName}}" class="circle">
-                                          <span class="email-title">{{message.senderScreenName}}</span>
+                                          <span class="email-title" >{{message.senderScreenName}}</span>
                                           <div class="row feeds_post z-depth-1 hoverable">
                                             <div class="col m8">
-                                              <p class="break_word ultra-small">{{message.message}}</p>
+                                              <p class="break_word ultra-small" >{{message.message}}</p>
                                             </div>
-                                            <div class="col m4 center">
-                                              <img src="{{message.image}}" ng-if="message.image != null || message.image != ''" class="responsive-img ">
+                                            <div class="col m4 center" ng-if="message.image" >
+                                              <img src="{{message.image}}" class="responsive-img ">
                                             </div>
-                                            <div class="col l12 smartinbox_action_icon">
-                                              <a class="tooltipped modal-trigger" href="#TaskModal" data-position="top" data-delay="50" data-tooltip="Task">
-                                                  <i class="icon-pin"></i>
+                                           <div class="col l12 smartinbox_action_icon">
+                                                <!-- <a data-tooltip="Task" data-delay="50" data-position="top" href="javascript:void(0);" class="tooltipped modal-trigger" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" ng-click="taskModel(message)">
+                                                    <i class="icon-pin"></i>
+                                                </a>-->
+                                                <a class="tooltipped modal-trigger" ng-click="GetConversation(message.senderId,message.recipientId,message.profileId ,message.recipientProfileUrl, message.recipientScreenName, message.senderScreenName,message.senderProfileUrl)" data-position="top" data-delay="50" data-tooltip="Chat">
+                                                  <i class="icon-bubbles"></i>
                                               </a>
                                             </div>
                                           </div>                                         
@@ -28,7 +31,7 @@
                                         </li>
                                        
 
-                                        <div class="center"  ng-if="!messagesReachLast">
+                                        <!--<div class="center"  ng-if="!messagesReachLast">
                                           <div class="preloader-wrapper big active">
                                             <div class="spinner-layer spinner-blue">
                                               <div class="circle-clipper left">
@@ -70,7 +73,7 @@
                                               </div>
                                             </div>
                                           </div>
-                                        </div>
+                                        </div>-->
                                     </ul>
 
                                 </div>
@@ -81,20 +84,20 @@
                                 <div class="section section_filter"  lazy-scroll="LoadMessages()">
                                   <h6>PROFILES</h6>
                                   <div class="inboxmsg_filter_slider">
-                                    <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{ProfileType:2}">
+                                    <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:2}">
                                       <div class="row valign-wrapper">
                                         <div class="col s2">
-                                            <img src="{{profile.ProfilePic}}" alt="{{profile.ProfileName}}" class="circle responsive-img">
+                                            <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
                                         </div>
                                         <div class="col s8">
                                           <span class="black-text">
-                                              {{profile.ProfileName}}
+                                              {{profile.profileName}}
                                           </span>
                                         </div>
                                         <div class="col s2">
                                           <p>
-                                              <input type="checkbox" value="{{profile.ProfileId}}" checked="checked" ng-click="toggleProfileSelection(profile.ProfileId)" id="test_{{profile.ProfileId}}" />
-                                              <label for="test_{{profile.ProfileId}}"></label>
+                                              <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
+                                              <label for="test_{{profile.profileId}}"></label>
                                           </p>
                                         </div>
                                       </div>
@@ -245,32 +248,7 @@
                 </div>
             </div>
 
-            <!-- Task Modal -->
-            <div id="TaskModal" class="modal">
-              <div class="modal-content">
-                <h4>Create Task</h4>
-                <p></p>
-                <div class="row">
-                  <form class="col s12">
-                    <div class="row">
-                      <div class="input-field col s8">
-                        <i class="icon-pencil prefix"></i>
-                        <textarea id="LeaveComment" class="materialize-textarea" placeholder="Your comment (viewable only to team members)"></textarea>
-                        <label for="LeaveComment">LEAVE A COMMENT</label>
-                      </div>
-                      <div class="col s4">
-                        <span>ASSIGN TASK TO</span>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Save</a>
-                <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-              </div>
-            </div>
-
+           
             <!-- Email Message Modal -->
             <div id="EmailMessageModal" class="modal modal-fixed-footer">
               <div class="modal-content">
@@ -323,8 +301,92 @@
               </div>
             </div>
 
+                <!--Chat Modal-->
+                <div id="ChatModal" class="modal">
+                    <div class="modal-content">
+                        <div style="">
+                            <img src="{{senderProfileUrl}}" alt="vikash_glb" class="circle"> <b>{{senderScreenName}}</b>
+                            <img src="http://www.freeiconspng.com/uploads/arrow-icon-images--crazy-gallery-30.jpg" style="width: 7%; margin: 0px 3%;">
+                            <img src="{{recipientProfileUrl}}" class="circle"> <b>{{recipientScreenName}}</b>
+                        </div>
+                        <p></p>
+                        <div class="row">
+                            <form class="col s12">
+                                <div class="row">
+                                    <ul class="collection">
+                                        <li class="collection-item avatar" ng-repeat="dmmessage in lstGetConversation">
+                                            <img src="{{dmmessage.senderProfileUrl}}" alt="{{dmmessage.senderScreenName}}" class="circle">
+                                            <span class="email-title">{{dmmessage.senderScreenName}}</span>
+                                            <div class="row feeds_post z-depth-1 hoverable">
+                                                <div class="col m12">
+                                                    <p class="break_word ultra-small">{{dmmessage.message}}</p>
+                                                </div>
+                                                <a data-tooltip="Task" data-delay="50" data-position="top" href="javascript:void(0);" class="tooltipped modal-trigger" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" ng-click="taskInboxModel(dmmessage)">
+                                                    <i class="icon-pin"></i>
+                                                </a>
+                                            </div>
+                                        
+                                            <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{dmmessage.createdDate}}">{{dmmessage.createdDate}}</a>
+                                        </li>
+                                        
+                                    </ul>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <form class="col s10 ng-pristine ng-valid">
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <i class="icon-pencil prefix"></i>
+                                        <textarea id="dmmessagecomment" class="materialize-textarea"></textarea>
+                                        <label for="icon_prefix2">Type your Message here...</label>
+                                    </div>
+                                </div>
+                            </form>
+                            <span class="col s2 margin-top-30">
+                                <a class="waves-effect waves-light btn" ng-click="postdirrectmessage()"><i class="icon-cursor"></i></a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
 
 
             </section>
             <!-- END CONTENT -->   
+
+        <div id="InboxTaskModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
+                <h4>Create Task</h4>
+                <p></p>
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s8">
+                                <i class="icon-pencil prefix"></i>
+                                <textarea id="taskComment" class="materialize-textarea" placeholder="Your comment (viewable only to team members)"></textarea>
+                                <label for="LeaveComment">LEAVE A COMMENT</label>
+                            </div>
+                            <div class="col s4">
+                                <span>ASSIGN TASK TO</span><br />
+                                <div class="smartinbox_filter_slider">
+                                    <p class="grey lighten-5 z-depth-1" ng-repeat="member in groups[groupIndex].members |filter:{memberStatus:1} ">
+                                        <input name="member" type="radio" id="{{member.userId}}" value="{{member.userId}}" class="with-gap task-user-member" />
+                                        <label for="{{member.userId}}">{{ member.firstName}}</label>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0);" class="modal-action waves-effect waves-green btn-flat" ng-click="addTask('MongoTwitterDirectMessages')">Save</a>
+                <a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="closeModal()">Close</a>
+            </div>
+        </div>
     </div>

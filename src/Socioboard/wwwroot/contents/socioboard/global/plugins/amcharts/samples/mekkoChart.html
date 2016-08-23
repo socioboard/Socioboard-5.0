@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>amCharts examples</title>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="../amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="../amcharts/serial.js" type="text/javascript"></script>
+
+        <script>
+            var chart;
+
+            var chartData = [
+                {
+                    "continent": "North America",
+                    "trucks": 40000,
+                    "SUVs": 180000,
+                    "cars": 90000,
+                    "total": 310000
+                },
+                {
+                    "continent": "Asia",
+                    "trucks": 90000,
+                    "SUVs": 40000,
+                    "cars": 110000,
+                    "total": 240000
+                },
+                {
+                    "continent": "Europe",
+                    "trucks": 30000,
+                    "SUVs": 50000,
+                    "cars": 110000,
+                    "total": 190000
+                }
+            ];
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+                chart.dataProvider = chartData;
+                chart.categoryField = "continent";
+                chart.plotAreaBorderAlpha = 0.2;
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridAlpha = 0.1;
+                categoryAxis.axisAlpha = 0;
+                categoryAxis.widthField = "total";
+                categoryAxis.gridPosition = "start";
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.stackType = "100% stacked";
+                valueAxis.gridAlpha = 0.1;
+                valueAxis.unit = "%";
+                valueAxis.axisAlpha = 0;
+                chart.addValueAxis(valueAxis);
+
+
+                // GRAPHS
+                // first graph
+                var graph = new AmCharts.AmGraph();
+                graph.title = "Trucks";
+                graph.labelText = "[[value]]";
+                graph.valueField = "trucks";
+                graph.type = "column";
+                graph.fillAlphas = 1;
+                chart.addGraph(graph);
+
+                // second graph
+                graph = new AmCharts.AmGraph();
+                graph.title = "SUVs";
+                graph.labelText = "[[value]]";
+                graph.valueField = "SUVs";
+                graph.type = "column";
+                graph.fillAlphas = 1;
+                chart.addGraph(graph);
+
+                // third graph
+                graph = new AmCharts.AmGraph();
+                graph.title = "Cars";
+                graph.labelText = "[[value]]";
+                graph.valueField = "cars";
+                graph.type = "column";
+                graph.fillAlphas = 1;
+                chart.addGraph(graph);
+
+                chart.legend = new AmCharts.AmLegend();
+
+
+                // WRITE
+                chart.write("chartdiv");
+            });
+
+        </script>
+    </head>
+
+    <body>
+        <div id="chartdiv" style="width: 600px; height: 400px;"></div>
+    </body>
+
+</html>

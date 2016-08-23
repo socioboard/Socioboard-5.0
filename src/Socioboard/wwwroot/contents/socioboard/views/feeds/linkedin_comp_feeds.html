@@ -1,0 +1,260 @@
+    <div data-ng-controller="LinkedinCompFeedsController">
+            <!-- START CONTENT -->
+            <section id="content">
+                <!--start container-->
+                <!-- description -->
+                <div class="row">
+                  <div class="col offset-s1 s12 offset-m1 m10 offset-l1 l10">
+                     <div class="card" id="feeds">
+                        <h5 class="feeds_title blue darken-2 white-text"><i class="fa fa-linkedin-square" aria-hidden="true"></i>Linkedin Company Description</h5>
+                        <div class="company_desc row">
+                          <div class="col l12 center margin-top-10">
+                            <img src="{{companypagedata.logoUrl}}" class="responsive-img company_desc_logo">
+                          </div>
+                          <hr>
+                          <div class="col l12">
+                            <p>{{companypagedata.description}}.</p>
+                          </div>
+                          <dl class="col l12">
+                            <dt><strong>Specialties</strong></dt>
+                            <dd>{{companypagedata.specialties}}</dd>
+                          </dl>
+                          <dl class="col m4 l4 s12">
+                              <dt><strong>Website</strong></dt>
+                              <dd><a ></a>{{companypagedata.websiteUrl}}</dd>
+                              <dt><strong>Industry</strong></dt>
+                              <dd>{{companypagedata.industries}}</dd>
+                          </dl>
+                          <dl class="col m4 l4 s12">
+                              <dt><strong>Type</strong></dt>
+                              <dd>{{companypagedata.companyType}}</dd>
+                              <dt><strong>Headquarters</strong></dt>
+                              <dd> {{companypagedata.locations}}</dd>
+                          </dl>
+                          <dl class="col m4 l4 s12">
+                              <dt><strong>Company Size</strong></dt>
+                              <dd>{{companypagedata.employeeCountRange}}</dd>
+                              <dt><strong>Founded</strong></dt>
+                              <dd>{{companypagedata.foundedYear}}</dd>
+                          </dl>
+                        </div>
+                      </div>
+                  </div>
+                </div>
+                <!--card widgets end-->
+                  <div class="row">
+                      <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                          <div class="card" id="feeds">
+                              <h5 class="feeds_title blue darken-2 white-text"><i class="fa fa-linkedin-square" aria-hidden="true"></i>Linkedin Company News Feeds</h5>
+                              <ul class="collection likedinfeeds">
+                                  <li class="collection-item avatar" ng-repeat="lincmpnypagefeed in lstlincmpnypageFeeds">
+                                    <img src="{{companypagedata.logoUrl}}" alt="sb" class="circle">
+                                    <span class="email-title">{{companypagedata.linkedinPageName}}</span>
+                                    <div class="row feeds_post z-depth-1 hoverable">
+                                      <div class="col m8">
+                                        <p class="break_word ultra-small">{{lincmpnypagefeed.posts}}.</p>
+                                      </div>
+                                      <div class="col m4 center" ng-if="lincmpnypagefeed.postImageUrl!=''">
+                                        <img src="{{lincmpnypagefeed.postImageUrl}}" class="responsive-img ">
+                                      </div>
+                                      <div class="col m12" ng-click="getpostcomment(companypagedata.oAuthToken,lincmpnypagefeed.pageId,lincmpnypagefeed.updateKey)">
+                                          <ul class="collapsible" data-collapsible="accordion">
+                                            <li>
+                                              <div class="collapsible-header" ><i class="icon-speech"></i>Comments</div>
+                                              <div class="collapsible-body" >
+                                                <ul class="collection likedinfeeds">
+                                                    <li class="collection-item avatar" ng-repeat="linpostcomment in lstlincmpnypagecommentFeeds">
+                                                        <span class="email-title">{{linpostcomment.firstName}} {{linpostcomment.lastName}}</span>
+                                                      <div class="row dashboard_feeds z-depth-1 hoverable">
+                                                        <div class="col m8">
+                                                          <p class="break_word ultra-small">{{linpostcomment.comment}}.</p>
+                                                        </div>
+                                                        <div class="col m4 center">
+                                                          <img src="{{linpostcomment.pictureUrl}}" ng-if="linpostcomment.pictureUrl!=''" class="responsive-img ">
+                                                        </div>
+                                                      </div>                                         
+                                                      <a class="tooltipped secondary-content" data-position="left" data-delay="50">{{linpostcomment.CommentTime}}</a>
+                                                    </li>
+                                                    <li class="collection-item">
+                                                        <div class="row">
+                                                            <form class="col s10">
+                                                                <div class="row">
+                                                                    <div class="input-field col s12">
+                                                                        <i class="icon-pencil prefix"></i>
+                                                                        <textarea id="comment" class="materialize-textarea"></textarea>
+                                                                        <label for="icon_prefix2">Type your comment here...</label>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                            <span class="col s12 center">
+                                                                <a ng-click="commentpost(companypagedata.oAuthToken,lincmpnypagefeed.pageId,lincmpnypagefeed.updateKey)" class="waves-effect waves-light btn"><i class="icon-cursor"></i></a>
+                                                            </span>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                              </div>
+                                            </li>
+
+                                          </ul>
+                                      </div>
+                                    </div>                                         
+                                    <a class="tooltipped secondary-content" data-position="left" >{{lincmpnypagefeed.postDate}}</a>
+                                      <a ng-click="TaskModal(lincmpnypagefeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
+                                          <i class="icon-pin"></i>
+                                      </a>
+                                  </li>
+                                  
+
+                                  <!--<div class="center">
+                                    <div class="preloader-wrapper big active">
+                                      <div class="spinner-layer spinner-blue">
+                                        <div class="circle-clipper left">
+                                          <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                          <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                          <div class="circle"></div>
+                                        </div>
+                                      </div>
+
+                                      <div class="spinner-layer spinner-red">
+                                        <div class="circle-clipper left">
+                                          <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                          <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                          <div class="circle"></div>
+                                        </div>
+                                      </div>
+
+                                      <div class="spinner-layer spinner-yellow">
+                                        <div class="circle-clipper left">
+                                          <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                          <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                          <div class="circle"></div>
+                                        </div>
+                                      </div>
+
+                                      <div class="spinner-layer spinner-green">
+                                        <div class="circle-clipper left">
+                                          <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                          <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                          <div class="circle"></div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>-->
+                              </ul>
+
+                          </div>
+                      </div>                                  
+                  </div>
+                <!--end container-->
+
+                <!-- Compose Email Trigger -->
+                <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                  <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+                    <i class="large mdi-editor-mode-edit"></i>
+                  </a>
+                </div>
+
+                <!-- Compose Email Structure -->
+                <div id="ComposePostModal" class="modal">
+                  <div class="modal-content">
+                    <nav class="red">
+                      <div class="nav-wrapper">
+                        <div class="left col s12 m5 l5">
+                          <ul>
+                            <li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                            </li>
+                            <li><a href="#!" class="email-type">Compose</a>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col s12 m7 l7 hide-on-med-and-down">
+                          <ul class="right">
+                            <li><a href="#!"><i class="mdi-editor-attach-file"></i></a>
+                            </li>
+                            <li><a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
+                            </li>
+                            <li><a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </nav>
+                  </div>
+                  <div class="model-email-content">
+                    <div class="row">
+                      <form class="col s12">
+                        <div class="row">
+                             <div class="input-field col s12">
+                            <select multiple>
+                              <option value="" disabled selected>Choose your profile</option>
+                              <option value="1"><span class="fa fa-facebook"></span>Chanchal</option>
+                              <option value="2" data-icon="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="circle">Profile_2</option>
+                              <option value="3">Profile_3</option>
+                            </select>
+                            <label>Select Profiles</label>
+                          </div>
+                        </div>
+                          <!--Default version-->
+                        <div class="row section">
+                          <div class="col s12 m4 l3">
+                             <p>Select your file</p>
+                          </div>
+                          <div class="col s12 m8 l9">
+                              <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="input-field col s12">
+                            <textarea id="compose" class="materialize-textarea" length="500"></textarea>
+                            <label for="compose">Compose email</label>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </section>
+            <!-- END CONTENT -->   
+
+        <div id="TaskModal" class="modal">
+            <div class="modal-content">
+                <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
+                <h4>Create Task</h4>
+                <p></p>
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s8">
+                                <i class="icon-pencil prefix"></i>
+                                <textarea id="linkedFeedComment" class="materialize-textarea" placeholder="Your comment (viewable only to team members)"></textarea>
+                                <label for="LeaveComment">LEAVE A COMMENT</label>
+                            </div>
+                            <div class="col s4">
+                                <span>ASSIGN TASK TO</span><br />
+                                <div class="smartinbox_filter_slider">
+                                    <p class="grey lighten-5 z-depth-1" ng-repeat="member in groups[groupIndex].members |filter:{memberStatus:1} ">
+                                        <input name="member" type="radio" id="{{member.userId}}" value="{{member.userId}}" class="with-gap task-user-member" />
+                                        <label for="{{member.userId}}">{{ member.firstName}}</label>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="javascript:void(0);" class="modal-action waves-effect waves-green btn-flat" ng-click="addTask('LinkedinCompanyPagePosts')">Save</a>
+                <a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="closeModal()">Close</a>
+            </div>
+        </div>
+    </div>

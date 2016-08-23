@@ -43,10 +43,11 @@ namespace Socioboard.Controllers
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
                             ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
                         }
+                        
                     }
                     else
                     {
-                        long selectedGroupId = groups.FirstOrDefault(t => t.GroupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).Id;
+                        long selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
                         HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
                         ViewBag.selectedGroupId = selectedGroupId;
                         HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
@@ -55,6 +56,7 @@ namespace Socioboard.Controllers
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
                             ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
                         }
+                       
                     }
                 }
                 catch (Exception e)
@@ -77,21 +79,38 @@ namespace Socioboard.Controllers
             return "changed";
         }
 
-
+        [HttpGet]
         public IActionResult Logout()
         {
             HttpContext.Session.Remove("User");
             HttpContext.Session.Remove("selectedGroupId");
             HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Index");
+            ViewBag.user = null;
+            ViewBag.selectedGroupId = null;
+            ViewBag.groupProfiles = null;
+            //return RedirectToAction("Index", "Index");
+            return Ok();
         }
 
+        [HttpGet]
+        public bool IsSessionExist()
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
 
         public IActionResult Error()
         {
             return View();
         }
-        public IActionResult GroupInvite(string token, string email)
+        public IActionResult GroupInvite(string token, string email, long id)
         {
 
             return View();

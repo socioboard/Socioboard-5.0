@@ -25,8 +25,8 @@ namespace Api.Socioboard.Helper
                 if (string.IsNullOrEmpty(configfilepath))
                 {
                   //  var appEnv = CallContextServiceLocator.Locator.ServiceProvider.GetService(typeof(IHostingEnvironment)) as IHostingEnvironment;
-                    path = System.IO.Path.Combine(env.WebRootPath, "hibernate.cfg.xml");
-                    path = @"D:\Suresh\BickBucket\src\Api.Socioboard\hibernate.cfg.xml";
+                    path = System.IO.Path.Combine(env.ContentRootPath, "hibernate.cfg.xml");
+                    //path = @"D:\Suresh\BickBucket\src\Api.Socioboard\hibernate.cfg.xml";
                 }
                 else
                 {

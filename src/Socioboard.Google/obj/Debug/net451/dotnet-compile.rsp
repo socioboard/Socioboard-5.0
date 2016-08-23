@@ -1,5 +1,5 @@
---temp-output:D:\Suresh\BickBucket\src\Socioboard.Google\obj\Debug\net451\
---out:D:\Suresh\BickBucket\src\Socioboard.Google\bin\Debug\net451\Socioboard.Google.dll
+--temp-output:D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\obj\Debug\net451\
+--out:D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\bin\Debug\net451\Socioboard.Google.dll
 --define:DEBUG
 --define:TRACE
 --define:NET451
@@ -12,7 +12,8 @@
 --version:1.0.0.0
 --informational-version:1.0.0
 --target-framework:.NETFramework,Version=v4.5.1
---reference:C:\Users\Murari\.nuget\packages\Newtonsoft.Json\8.0.3\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Users\hp\.nuget\packages\Microsoft.AspNet.WebApi.Client\5.2.3\lib\net45\System.Net.Http.Formatting.dll
+--reference:C:\Users\hp\.nuget\packages\Newtonsoft.Json\6.0.4\lib\net45\Newtonsoft.Json.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll
@@ -22,6 +23,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.IO.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.IO.Compression.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.Expressions.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.Http.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Net.Primitives.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.ObjectModel.dll
@@ -32,7 +34,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.InteropServices.dll
---reference:C:\Users\Murari\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0-rc2-24027\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Users\hp\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Numerics.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.Extensions.dll
@@ -49,29 +51,30 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
-D:\Suresh\BickBucket\src\Socioboard.Google\App.Core\AccountsController.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\App.Core\ActivitiesController.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\App.Core\CommentsController.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\App.Core\Globals.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\App.Core\MomentsController.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\App.Core\PeopleController.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Authentication\oAuthToken.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Authentication\oAuthTokenBlogger.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Authentication\oAuthTokenGa.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Authentication\oAuthTokenGPlus.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Authentication\oAuthTokenYoutube.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Blogger.Core\BloggerPost.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\GAnalytics.Core\AccountsMethod\Accounts.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\GAnalytics.Core\AnalyticsMethod\Analytics.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Gplus.Core\ActivitiesMethod\Activities.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Gplus.Core\CommentsMethod\Comments.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Gplus.Core\MomentsMethod\Moments.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Gplus.Core\PeopleMethod\People.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Properties\AssemblyInfo.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Youtube.Core\Activities.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Youtube.Core\Channels.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Youtube.Core\PlaylistItems.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Youtube.Core\Playlists.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Youtube.Core\Search.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Youtube.Core\Subscriptions.cs
-D:\Suresh\BickBucket\src\Socioboard.Google\Youtube.Core\Video.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\AccountsController.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\ActivitiesController.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\CommentsController.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\Globals.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\MomentsController.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\PeopleController.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthToken.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenBlogger.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenGa.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenGPlus.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenYoutube.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Blogger.Core\BloggerPost.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Custom\GplusTagSearch.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\GAnalytics.Core\AccountsMethod\Accounts.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\GAnalytics.Core\AnalyticsMethod\Analytics.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\ActivitiesMethod\Activities.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\CommentsMethod\Comments.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\MomentsMethod\Moments.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\PeopleMethod\People.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Properties\AssemblyInfo.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Activities.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Channels.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\PlaylistItems.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Playlists.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Search.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Subscriptions.cs
+D:\Git\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Video.cs

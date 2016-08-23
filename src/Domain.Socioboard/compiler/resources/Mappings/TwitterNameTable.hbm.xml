@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="TwitterNameTable" table="TwitterNameTable" lazy="false">
+    <id name="Id" column="Id" />
+    <property name="Gender">
+      <column name="Gender" />
+    </property>
+    <property name="Name">
+      <column name="Name"  />
+    </property>
+   
+  </class>
+</hibernate-mapping>

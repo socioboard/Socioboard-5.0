@@ -13,6 +13,9 @@ using Socioboard.Twitter.Twitter.Core.SearchMethods;
 using System.IO;
 using System.Net;
 using System.IO.Compression;
+using MongoDB.Driver;
+using MongoDB.Bson;
+using Socioboard.Twitter.Twitter.Core.UserMethods;
 
 namespace Api.Socioboard.Helper
 {
@@ -164,8 +167,8 @@ namespace Api.Socioboard.Helper
                     var objText = reader.ReadToEnd();
                     output = JArray.Parse(JObject.Parse(objText)["statuses"].ToString());
                 }
-               Helper.DiscoverySmart _Discovery;
-               List<Helper.DiscoverySmart> lstDiscovery = new List<Helper.DiscoverySmart>();
+                Helper.DiscoverySmart _Discovery;
+                List<Helper.DiscoverySmart> lstDiscovery = new List<Helper.DiscoverySmart>();
                 try
                 {
                     foreach (var item in output)
@@ -198,5 +201,120 @@ namespace Api.Socioboard.Helper
                 return null;
             }
         }
+
+
+        public static string TwitterComposeMessageRss(string message, string OAuthToken, string OAuthSecret, string profileid, string TwitterScreenName, string rssFeedId, Helper.AppSettings _appSettings)
+        {
+            string ret = "";
+            oAuthTwitter OAuthTwt = new oAuthTwitter();
+            OAuthTwt.AccessToken = OAuthToken;
+            OAuthTwt.AccessTokenSecret = OAuthSecret;
+            OAuthTwt.TwitterScreenName = TwitterScreenName;
+            OAuthTwt.TwitterUserId = profileid;
+            Tweet twt = new Tweet();
+            MongoRepository rssfeedRepo = new MongoRepository("RssFeed", _appSettings);
+            try
+            {
+                JArray post = twt.Post_Statuses_Update(OAuthTwt, message);
+
+                var builders = Builders<BsonDocument>.Filter;
+                FilterDefinition<BsonDocument> filter = builders.Eq("strId", rssFeedId);
+                var update = Builders<BsonDocument>.Update.Set("Status", true);
+                rssfeedRepo.Update<Domain.Socioboard.Models.Mongo.RssFeed>(update, filter);
+
+                return ret = "Messages Posted Successfully";
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return ret = "Message Could Not Posted";
+            }
+        }
+
+
+        public static List<Domain.Socioboard.Models.TwitterRecentFollower> TwitterRecentFollower(long groupId, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        {
+            string[] profileids = null;
+            List<Domain.Socioboard.Models.TwitterRecentFollower> lstTwitterRecentFollower = new List<Domain.Socioboard.Models.TwitterRecentFollower>();
+            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
+            profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+            List<Domain.Socioboard.Models.TwitterAccount> lstAccRepo = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => profileids.Contains(t.twitterUserId) && t.isActive).ToList();
+            oAuthTwitter oauth = null;
+            Users twtUsers = new Users();
+            foreach (Domain.Socioboard.Models.TwitterAccount itemTwt in lstAccRepo)
+            {
+                oauth = new oAuthTwitter();
+                oauth.AccessToken = itemTwt.oAuthToken;
+                oauth.AccessTokenSecret = itemTwt.oAuthSecret;
+                oauth.TwitterScreenName = itemTwt.twitterScreenName;
+                oauth.TwitterUserId = itemTwt.twitterUserId;
+                oauth.ConsumerKey = _appSettings.twitterConsumerKey;
+                oauth.ConsumerKeySecret = _appSettings.twitterConsumerScreatKey;
+                JArray jarresponse = twtUsers.Get_Followers_ById(oauth, itemTwt.twitterUserId);
+                foreach (var item in jarresponse)
+                {
+                    int resposecount = 0;
+                    if (item["ids"] != null)
+                    {
+                        foreach (var child in item["ids"])
+                        {
+                            if (resposecount < 2)
+                            {
+                                JArray userprofile = twtUsers.Get_Users_LookUp(oauth, child.ToString());
+                                foreach (var items in userprofile)
+                                {
+                                    Domain.Socioboard.Models.TwitterRecentFollower objTwitterRecentFollower = new Domain.Socioboard.Models.TwitterRecentFollower();
+                                    resposecount++;
+                                    objTwitterRecentFollower.screen_name = items["screen_name"].ToString();
+                                    objTwitterRecentFollower.name = items["name"].ToString();
+                                    objTwitterRecentFollower.profile_image_url = items["profile_image_url"].ToString();
+                                    lstTwitterRecentFollower.Add(objTwitterRecentFollower);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return lstTwitterRecentFollower;
+        }
+
+        public static void PostTwitterDirectmessage(string toId, string message, string profileId,Model.DatabaseRepository dbr, Helper.AppSettings _appSettings,Helper.Cache _redisCache)
+        {
+            Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages _TwitterDirectMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages();
+            Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Repositories.TwitterRepository.getTwitterAccount(profileId, _redisCache,dbr);
+            oAuthTwitter OAuthTwt = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
+            OAuthTwt.AccessToken = objTwitterAccount.oAuthToken;
+            OAuthTwt.AccessTokenSecret = objTwitterAccount.oAuthSecret;
+            OAuthTwt.TwitterScreenName = objTwitterAccount.twitterScreenName;
+            OAuthTwt.TwitterUserId = objTwitterAccount.twitterUserId;
+            const string format = "ddd MMM dd HH:mm:ss zzzz yyyy";
+            TwitterUser twtuser = new TwitterUser();
+            JArray ret = new JArray();
+            try
+            {
+                ret = twtuser.PostDirect_Messages_New(OAuthTwt, message, toId);
+                _TwitterDirectMessages.messageId = ret[0]["id_str"].ToString();
+                _TwitterDirectMessages.message = ret[0]["text"].ToString();
+                _TwitterDirectMessages.createdDate= DateTime.ParseExact(ret[0]["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
+                _TwitterDirectMessages.timeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(ret[0]["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
+                _TwitterDirectMessages.entryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                _TwitterDirectMessages.recipientId = ret[0]["recipient"]["id_str"].ToString();
+                _TwitterDirectMessages.recipientProfileUrl = ret[0]["recipient"]["profile_image_url_https"].ToString();
+                _TwitterDirectMessages.recipientScreenName = ret[0]["recipient"]["screen_name"].ToString();
+                _TwitterDirectMessages.senderId = ret[0]["sender"]["id_str"].ToString();
+                _TwitterDirectMessages.senderProfileUrl = ret[0]["sender"]["profile_image_url_https"].ToString();
+                _TwitterDirectMessages.senderScreenName = ret[0]["sender"]["screen_name"].ToString();
+                _TwitterDirectMessages.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent;
+                MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
+                mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(_TwitterDirectMessages);
+               
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
     }
 }

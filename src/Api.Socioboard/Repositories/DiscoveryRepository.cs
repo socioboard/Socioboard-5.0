@@ -37,11 +37,13 @@ namespace Api.Socioboard.Repositories
                     oauth.AccessTokenSecret = item.oAuthSecret;
                     oauth.TwitterUserId = item.twitterUserId;
                     oauth.TwitterScreenName = item.twitterScreenName;
+                    SetCofigDetailsForTwitter(oauth, _appSeetings);
+                    
                     try
                     {
                         Users _Users = new Users();
                         JArray _AccountVerify = _Users.Get_Account_Verify_Credentials(oauth);
-                        string id = _AccountVerify["id_str"].ToString();
+                        string id = (string)(_AccountVerify[0]["id_str"]);
                         break;
                     }
                     catch (Exception ex)
@@ -60,6 +62,14 @@ namespace Api.Socioboard.Repositories
             }
 
         }
+
+        public static void SetCofigDetailsForTwitter(oAuthTwitter OAuth,Helper.AppSettings _appSettings)
+        {
+            OAuth.ConsumerKey = _appSettings.twitterConsumerKey;
+            OAuth.ConsumerKeySecret = _appSettings.twitterConsumerScreatKey;
+            OAuth.CallBackUrl = _appSettings.twitterRedirectionUrl;
+        }
+
 
         public static List<Domain.Socioboard.ViewModels.DiscoveryViewModal> DiscoverySearchGplus(long userId, long groupId, string keyword, Helper.Cache _redisCache, Helper.AppSettings _appSeetings, Model.DatabaseRepository dbr)
         {
@@ -104,8 +114,8 @@ namespace Api.Socioboard.Repositories
             }
             else
             {
-               
-                List<Domain.Socioboard.Models.InstagramDiscoveryFeed> lstnstagramDiscoveryFeed = Helper.InstagramHelper.DiscoverySearchinstagram(keyword, "",_appSettings.InstagramClientKey);
+                Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.AccessToken != null).FirstOrDefault();
+                List<Domain.Socioboard.Models.InstagramDiscoveryFeed> lstnstagramDiscoveryFeed = Helper.InstagramHelper.DiscoverySearchinstagram(keyword, _Instagramaccounts.AccessToken,_appSettings.InstagramClientKey);
                 if (lstnstagramDiscoveryFeed != null)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheDiscoveryInstagram + keyword, lstnstagramDiscoveryFeed);

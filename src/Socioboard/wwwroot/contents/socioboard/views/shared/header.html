@@ -5,7 +5,7 @@
         <div class="navbar-fixed">
             <nav class="grey lighten-2">
                 <div class="nav-wrapper">
-                    <h1 class="logo-wrapper"><a href="index.html" class="brand-logo darken-1"><img src="../contents/socioboard/images/Socioboard.png" alt="Socioboard"></a> <span class="logo-text">Socioboard</span></h1>
+                    <h1 class="logo-wrapper"><a href="#dashboard" class="brand-logo darken-1"><img src="../contents/socioboard/images/Socioboard.png" alt="Socioboard"></a> <span class="logo-text">Socioboard</span></h1>
                     <ul class="right hide-on-med-and-down">
                         <li>    
                             <a href="javascript:void(0);" class="waves-effect waves-block waves-light show-search">
@@ -32,8 +32,8 @@
 
                     <ul id='groups' class='dropdown-content'>
                         <li ng-repeat="grp in groups">
-                        <span class="grey grey-text text-lighten-4" ng-if="groupId==grp.Id">{{grp.GroupName}}</span>
-                            <span ng-click="changeGroup(grp.Id)"  ng-if="groupId!=grp.Id">{{grp.GroupName}}</span>
+                        <span class="grey grey-text text-lighten-4" ng-if="groupId==grp.id">{{grp.groupName}}</span>
+                            <span ng-click="changeGroup(grp.id)"  ng-if="groupId!=grp.id">{{grp.groupName}}</span>
                          </li>
                         
                     </ul>

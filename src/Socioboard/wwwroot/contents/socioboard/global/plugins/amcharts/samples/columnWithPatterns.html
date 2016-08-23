@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>amCharts examples</title>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="../amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="../amcharts/serial.js" type="text/javascript"></script>
+
+        <script>
+            var chart;
+
+            var chartData = [
+                {
+                    "country": "USA",
+                    "visits": 4025,
+                    "pattern": {"url":"patterns/black/pattern21.png", "width":4, "height":4, "color":"#CC0000"}
+                },
+                {
+                    "country": "China",
+                    "visits": 1882,
+                    "pattern": {"url":"patterns/black/pattern20.png", "width":4, "height":4}
+                },
+                {
+                    "country": "Japan",
+                    "visits": 1809,
+                    "pattern": {"url":"patterns/black/pattern19.png", "width":4, "height":4}
+                },
+                {
+                    "country": "Germany",
+                    "visits": 1322,
+                    "pattern": {"url":"patterns/black/pattern18.png", "width":4, "height":4}
+                },
+                {
+                    "country": "UK",
+                    "visits": 1122,
+                    "pattern": {"url":"patterns/black/pattern17.png", "width":4, "height":4}
+                },
+                {
+                    "country": "France",
+                    "visits": 1114,
+                    "pattern": {"url":"patterns/black/pattern16.png", "width":4, "height":4}
+                },
+                {
+                    "country": "India",
+                    "visits": 984,
+                    "pattern": {"url":"patterns/black/pattern15.png", "width":4, "height":4}
+                },
+                {
+                    "country": "Spain",
+                    "visits": 711,
+                    "pattern": {"url":"patterns/black/pattern14.png", "width":4, "height":4}
+                }
+            ];
+
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+
+                chart.dataProvider = chartData;
+                chart.categoryField = "country";
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridAlpha = 0;
+                categoryAxis.axisAlpha = 0;
+                categoryAxis.gridPosition = "start";
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.axisAlpha = 0;
+                valueAxis.gridAlpha = 0;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPH
+                var graph = new AmCharts.AmGraph();
+                graph.valueField = "visits";
+                graph.balloonText = "[[category]]: <b>[[value]]</b>";
+                graph.type = "column";
+                graph.lineAlpha = 0;
+                graph.lineColor = "#000000";
+                graph.fillAlphas = 0.8;
+                graph.patternField = "pattern";
+                chart.addGraph(graph);
+
+                // CURSOR
+                var chartCursor = new AmCharts.ChartCursor();
+                chartCursor.cursorAlpha = 0;
+                chartCursor.zoomable = false;
+                chartCursor.categoryBalloonEnabled = false;
+                chart.addChartCursor(chartCursor);
+
+                chart.creditsPosition = "top-right";
+
+                chart.write("chartdiv");
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="chartdiv" style="width: 100%; height: 400px;"></div>
+    </body>
+
+</html>

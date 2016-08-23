@@ -55,6 +55,11 @@ namespace Socioboard.Controllers
                 HttpContext.Session.SetObjectAsJson("Google", null);
                 return RedirectToAction("AddGoogleAcc", "GoogleManager", new { code = code });
             }
+            else if (googleSocial.Equals("Ganalytics_Account"))
+            {
+                HttpContext.Session.SetObjectAsJson("Google", null);
+                return RedirectToAction("AddGanalyticsAcc", "GoogleManager", new { code = code });
+            }
             return View();
         }
 
@@ -68,7 +73,7 @@ namespace Socioboard.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> AddGoogleAccount()
+        public async Task<ActionResult> AddGoogleAccount(string Op)
         {
             int count = 0;
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
@@ -92,9 +97,18 @@ namespace Socioboard.Controllers
             }
             else
             {
-                HttpContext.Session.SetObjectAsJson("Google", "Gplus_Account");
-                string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me&response_type=code&access_type=offline";
-                return Redirect(googleurl);
+                if (string.IsNullOrEmpty(Op))
+                {
+                    HttpContext.Session.SetObjectAsJson("Google", "Gplus_Account");
+                    string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me&response_type=code&access_type=offline";
+                    return Redirect(googleurl); 
+                }
+                else
+                {
+                    HttpContext.Session.SetObjectAsJson("Google", "Ganalytics_Account");
+                    string googleurl = "https://accounts.google.com/o/oauth2/auth?approval_prompt=force&access_type=offline&client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/analytics+https://www.googleapis.com/auth/analytics.edit+https://www.googleapis.com/auth/analytics.readonly&response_type=code";
+                    return Redirect(googleurl);
+                }
             }
 
         }
@@ -115,6 +129,39 @@ namespace Socioboard.Controllers
             {
                 TempData["Success"] = await response.Content.ReadAsStringAsync();
                 return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["Error"] = "Error while hitting api.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> AddGanalyticsAcc(string code)
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+            List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Add(new KeyValuePair<string, string>("code", code));
+            Parameters.Add(new KeyValuePair<string, string>("groupId", groupId));
+            Parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/Google/GetGanalyticsAccount", Parameters, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                List<Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles> lstpages = await response.Content.ReadAsAsync<List<Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles>>();
+                if (lstpages.Count > 0)
+                {
+                    TempData["Ganalytics"] = Newtonsoft.Json.JsonConvert.SerializeObject(lstpages);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    TempData["Error"] = "No Ganalytics linked with this account";
+                    return RedirectToAction("Index", "Home");
+                }
             }
             else
             {

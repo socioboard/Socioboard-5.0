@@ -52,7 +52,18 @@
     <div ng-init="groups=@ViewBag.groups"></div>
     <div ng-init="user=@ViewBag.user"></div>
     <div ng-init="lstProfiles=@ViewBag.groupProfiles"> </div>
-    <div ng-init="lstAddFbPages=@TempData["fbPages"]"></div>
+    @if (TempData["fbPages"] != null)
+    {
+        <div ng-init="lstAddFbPages=@TempData["fbPages"]"></div>
+    }
+    @if (TempData["linPages"] != null)
+    {
+        <div ng-init="lstaddlinpages=@TempData["linPages"]"></div>
+    }
+    @if (TempData["Ganalytics"] != null)
+    {
+        <div ng-init="lstGanalytics=@TempData["Ganalytics"]"></div>
+    }
     <div data-ng-include="'../contents/socioboard/views/shared/header.html'" data-ng-controller="HeaderController"></div>
     <!-- END HEADER -->
     <!-- START MAIN -->
@@ -88,7 +99,7 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
     <script type="text/javascript" src="~/contents/socioboard/controllers/app.js"></script>
-
+    <script src="~/contents/socioboard/services/groupmember.js"></script>
     <script type="text/javascript" src="https://greasyfork.org/scripts/14637-arrive-js/code/Arrivejs.js"></script>
     <!--materialize js-->
     <script type="text/javascript" src="~/contents/socioboard/js/admin/materialize.js"></script>
@@ -100,6 +111,8 @@
     <link href="~/contents/socioboard/css/frontend/alertify.core.css" rel="stylesheet" type="text/css" />
     <link href="~/contents/socioboard/css/frontend/alertify.default.css" rel="stylesheet" type="text/css" id="toggleCSS" />
     <script src="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js"></script>
+
+
     <!-- Toast Notification -->
     @*<script type="text/javascript">
         // Toast Notification
@@ -130,6 +143,15 @@
             $(document).ready(function () {
                 alertify.set({ delay: 5000 });
                 alertify.error("@Convert.ToString(TempData["Error"])");
+            });
+        </script>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <script>
+            $(document).ready(function () {
+                alertify.set({ delay: 5000 });
+                alertify.success("@Convert.ToString(TempData["Success"])");
             });
         </script>
     }

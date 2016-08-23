@@ -1,0 +1,132 @@
+    <div data-ng-controller="InstagramreportController">
+            <!-- Page name -->
+            <div class="container">
+                <div class="col m12">
+                    <h4 class="pull-left">
+                        <div class="input-field">
+                            <select class="icons" ng-model="selectedProfile" ng-change="getReports(selectedProfile, 90)">
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:8}" my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
+                                    <img src="{{profile.profilePic}}" class="circle">{{profile.profileName}}
+                                </option>
+                            </select>
+                        </div>
+                        <span class="grey-text text-darken-1">from June - 19 to July - 03</span>
+                    </h4> 
+                    <h6 class="pull-right margin-top-20">
+                        <a ng-click="getData(selectedProfile,15)" class="btn">15</a>
+                        <a ng-click="getData(selectedProfile,30)" class="btn">30</a>
+                        <a ng-click="getData(selectedProfile,60)" class="btn">60</a>
+                        <a ng-click="getData(selectedProfile,90)" class="btn">90</a>
+                    </h6>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <!-- FACEBOOK STATS -->
+                <div class="col s12 m12 l12">
+                    <div class="card" id="feeds">
+                        <h5 class="feeds_title blue darken-4 white-text">
+                            <i class="fa fa-instagram fa-fw" aria-hidden="true"></i>INSTAGRAM STATS</span>
+                        </h5>
+                        <div class="collection">
+                            <div class="row">
+                                <div class="col l6 m6 s12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5><i class="fa fa-instagram fa-fw" aria-hidden="true"></i>PROFILE DESCRIPTION</h5>
+                                    </blockquote>
+                                    <div class="row">
+                                        <div class="col m2">
+                                            <img src="{{instagramdata.profileUrl}}" class="responsive-img">
+                                        </div>
+                                        <div class="col m8">
+                                            <dl class="dl-horizontal">
+                                                <dt class="inst_name_big_dt">Full Name</dt>
+                                                <dd class="inst_name_big_dd">{{instagramdata.insUserName}}</dd>
+                                                <dt class="inst_name_big_dt">Instagram Name</dt>
+                                                <dd class="inst_name_big_dd">{{instagramdata.insUserName}}</dd>
+                                            </dl>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col l6 m6 s12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5><i class="fa fa-instagram fa-fw" aria-hidden="true"></i>INSTAGRAM DASHBOARD</h5>
+                                    </blockquote>
+                                    <div class="row center">
+                                        <div class="col m4">
+                                             <h5 class="GroupStats_twt">
+                                            <i class="icon-anchor fa-2x fa-fw blue-text text-darken-3"></i>
+                                            </h5><h5><strong>{{totalMedia}}</strong></h5>
+                                            <span>Total Media</span>                                            
+                                        </div>
+                                        <div class="col m4">
+                                            <h5 class="GroupStats_twt">
+                                            <i class="fa fa-at fa-2x fa-fw blue-text text-darken-3"></i>
+                                            </h5><h5><strong>{{totalFollower}}</strong></h5>
+                                            <span>Total Follower</span>                                            
+                                        </div>
+                                        <div class="col m4">
+                                            <h5 class="GroupStats_twt">
+                                            <i class="fa fa-retweet fa-2x fa-fw blue-text text-darken-3"></i>
+                                            </h5><h5><strong>{{totalFollowing}}</strong></h5>
+                                            <span>Total Following</span>                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="col l12 m12 s12">
+                                    <blockquote class="row  groupbox_padding grey lighten-1">
+                                        <h5 class="left">FOLLOWER</h5>
+                                        <h5 class="right">{{totalFollower}}</h5>
+                                    </blockquote>
+                                    <div id="" class="charts" style="height: 200px;"></div>
+                                </div>
+
+                                <div class="col l12 m12 s12">
+                                    <blockquote class="row  groupbox_padding grey lighten-1">
+                                        <h5 class="left">FOLLOWING</h5>
+                                        <h5 class="right">{{totalFollowing}}</h5>
+                                    </blockquote>
+                                    <div id="" class="charts" style="height: 200px;"></div>
+                                </div>
+
+                                <div class="col l12 m12 s12">
+                                    <blockquote class="row  groupbox_padding grey lighten-1">
+                                        <h5 class="left">POST-COMMENTS</h5>
+                                        <h5 class="right">{{totalPOSTCOMMENTS}}</h5>
+                                    </blockquote>
+                                    <div id="" class="charts" style="height: 200px;"></div>
+                                </div>
+
+                                <div class="col l12 m12 s12">
+                                    <blockquote class="row  groupbox_padding grey lighten-1">
+                                        <h5 class="left">POST-LIKES</h5>
+                                        <h5 class="right">{{totalPOSTLIKES}}</h5>
+                                    </blockquote>
+                                    <div id="" class="charts" style="height: 200px;"></div>
+                                </div>
+
+                                <div class="col l12 m12 s12">
+                                    <blockquote class="row  groupbox_padding grey lighten-1">
+                                        <h5 class="left">MEDIA</h5>
+                                        <h5 class="right">{{totalMedia}}</h5>
+                                    </blockquote>
+                                    <div id="" class="charts" style="height: 200px;"></div>
+                                </div>
+
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+    </div>

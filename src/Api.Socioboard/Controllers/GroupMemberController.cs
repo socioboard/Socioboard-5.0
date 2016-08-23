@@ -62,12 +62,12 @@ namespace Api.Socioboard.Controllers
 
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            Domain.Socioboard.Models.Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.Id == groupId).FirstOrDefault();
+            Domain.Socioboard.Models.Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.id == groupId).FirstOrDefault();
             if (grp == null)
             {
                 return BadRequest("wrong group Id");
             }
-            else if (grp.GroupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName))
+            else if (grp.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName))
             {
                 return BadRequest("you can't invite members to default group.");
             }
@@ -93,7 +93,7 @@ namespace Api.Socioboard.Controllers
                 {
                     dbr.Add<Groupmembers>(member);
                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + groupId);
-                    string path = System.IO.Path.Combine(_appEnv.WebRootPath, "wwwroot/views/mailtemplates/groupinvitation.html");
+                    string path = System.IO.Path.Combine(_appEnv.WebRootPath, "views\\mailtemplates\\groupinvitation.html");
                     string html = System.IO.File.ReadAllText(path);
                     html = html.Replace("[FirstName]", member.firstName);
                     html = html.Replace("[[JoinLink]]", _appSettings.Domain + "/Home/GroupInvite?Token=" + member.memberCode + "&email=" + member.email);
@@ -113,10 +113,22 @@ namespace Api.Socioboard.Controllers
             return Ok(GroupMembersRepository.getGroupMembers(groupId, _redisCache, dbr));
         }
 
-
+        [HttpGet("ActivateGroupMember")]
         public IActionResult ActivateGroupMember(string code, string email)
         {
-            return Ok();
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Domain.Socioboard.Models.Groupmembers grpMember = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.email.Equals(email)&&t.memberCode.Equals(code)).FirstOrDefault();
+            if(grpMember != null)
+            {
+                    grpMember.memberStatus = Domain.Socioboard.Enum.GroupMemberStatus.Accepted;
+                    dbr.Update<Domain.Socioboard.Models.Groupmembers>(grpMember);
+                return Ok("updated");
+            }
+            else
+            {
+                return Ok("wrong code or email");
+            }
         }
+
     }
 }

@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>amCharts examples</title>
+        <link rel="stylesheet" href="style.css" type="text/css">
+        <script src="../amcharts/amcharts.js" type="text/javascript"></script>
+        <script src="../amcharts/serial.js" type="text/javascript"></script>
+
+        <script>
+            var chart;
+            var chartData = [
+                {
+                    "year": 2005,
+                    "value": 11.5,
+                    "error": 5
+                },
+                {
+                    "year": 2006,
+                    "value": 26.2,
+                    "error": 5
+                },
+                {
+                    "year": 2007,
+                    "value": 30.1,
+                    "error": 5
+                },
+                {
+                    "year": 2008,
+                    "value": 29.5,
+                    "error": 7
+                },
+                {
+                    "year": 2009,
+                    "value": 24.6,
+                    "error": 10
+                }
+            ];
+
+
+            AmCharts.ready(function () {
+                // SERIAL CHART
+                chart = new AmCharts.AmSerialChart();
+
+                chart.dataProvider = chartData;
+                chart.categoryField = "year";
+                chart.startDuration = 1;
+                chart.balloon.textAlign = "left";
+
+                // AXES
+                // category
+                var categoryAxis = chart.categoryAxis;
+                categoryAxis.gridPosition = "start";
+                categoryAxis.dashLength = 3;
+                categoryAxis.axisAlpha = 0;
+
+                // value
+                var valueAxis = new AmCharts.ValueAxis();
+                valueAxis.axisAlpha = 0;
+                valueAxis.dashLength = 3;
+                chart.addValueAxis(valueAxis);
+
+                // GRAPHS
+                var graph1 = new AmCharts.AmGraph();
+                graph1.valueField = "value";
+                graph1.lineColor = "#ff339d";
+                graph1.lineThickness = 2;
+                graph1.bullet = "yError";
+                graph1.errorField = "error";
+                graph1.bulletSize = 10; // when bulletAxis is set, this property affects only width of error bar
+                graph1.bulletAxis = valueAxis;
+                graph1.balloonText = "value:<b>[[value]]</b><br>error:<b>[[error]]</b>";
+                chart.addGraph(graph1);
+
+                // one more graph added for circle bullets, as onew graph can show one bullet type only
+                var graph2 = new AmCharts.AmGraph();
+                graph2.valueField = "value";
+                graph2.lineColor = "#ff339d";
+                graph2.lineThickness = 2;
+                graph2.lineAlpha = 0;
+                graph2.bullet = "round";
+                graph2.bulletBorderThickness = 2;
+                graph2.bulletBorderColor = "#FFFFFF";
+                graph2.bulletBorderAlpha = 1;
+                graph2.showBalloon = false;
+                chart.addGraph(graph2);
+
+                // CURSOR
+                var chartCursor = new AmCharts.ChartCursor();
+                chartCursor.cursorAlpha = 0;
+                chartCursor.zoomable = false;
+                chartCursor.cursorPosition = "mouse";
+                chartCursor.graphBulletSize = 1;
+                chart.addChartCursor(chartCursor);
+
+                // WRITE
+                chart.write("chartdiv");
+            });
+        </script>
+    </head>
+
+    <body>
+        <div id="chartdiv" style="width:700px; height:400px;"></div>
+    </body>
+
+</html>

@@ -15,6 +15,7 @@
                 <table id="DraftTable" class="display responsive-table striped" cellspacing="0" width="100%">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>User</th>
                             <th>Message</th>
                             <th>Edit</th>
@@ -33,6 +34,7 @@
                     </tfoot>-->
                     <tbody>
                         <tr ng-repeat="draft in lstdraftmessage">
+                            <td>{{$index +1}}</td>
                             <td class="center">
                                 <div class="col s12">
                                     <img src="{{user.ProfilePicUrl}}" class="responsive-img profilePic">
@@ -69,15 +71,11 @@
     </section>
     <!-- END CONTENT -->
 
-    <style>
-        .modal.in {
-            margin-top: -30%;
-        }
-    </style>
+   
 
     <!-- Modal Structure -->
-    <script id="editdraftModalContent.html" type="text/ng-template">
-        <div id="EditModal" class="" modal="showModal" style="z-index:1005;display:block;opacity:1;transform:scaleX(1);">
+    <!--<script id="editdraftModalContent.html" type="text/ng-template">-->
+        <div id="EditDraftModal" class="modal">
             <div class="modal-content">
                 <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
                 <h5>Edit Message</h5>
@@ -92,7 +90,7 @@
                 <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="saveditdraft()">Save</a>
             </div>
         </div>
-    </script>
+    <!--</script>-->
 
 
 </div>

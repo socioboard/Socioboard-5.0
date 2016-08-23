@@ -1,0 +1,151 @@
+    <div data-ng-controller="GooglePlusFeedsController">
+            <!-- START CONTENT -->
+            <section id="content">
+                <!--start container-->
+                        <!--card widgets end-->
+                        <div class="row">
+                            <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                                <div class="card" id="feeds">
+                                    <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>Google plus Live feeds</h5>
+                                    <ul class="collection gplusfeeds">
+                                        <li class="collection-item avatar" ng-repeat="gplusfeed in lstGpFeeds">
+                                          <img src="{{gplusfeed.FromProfileImage}}" alt="{{gplusfeed.FromUserName}}" class="circle">
+                                          <span class="email-title">{{gplusfeed.FromUserName}}</span>
+                                          <div class="row feeds_post z-depth-1 hoverable">
+                                            <div class="col m8">
+                                              <p class="break_word ultra-small">{{gplusfeed.Title}}.</p>
+                                            </div>
+                                            <div class="col m4 center" ng-if="gplusfeed.AttachmentType=='photo'">
+                                              <img src="{{gplusfeed.Attachment}}" class="responsive-img ">
+                                            </div>
+                                              <div class="col m4 center" ng-if="gplusfeed.AttachmentType=='article'">
+                                                  <img src="{{gplusfeed.Attachment}}" class="responsive-img ">
+                                              </div>
+                                              <div class="col m4 center" ng-if="gplusfeed.AttachmentType=='event'">
+                                                  {{gplusfeed.Content}}
+                                              </div>
+                                          </div>                                         
+                                          <a class="tooltipped secondary-content" data-position="left">{{gplusfeed.PublishedDate}}</a>
+                                        </li>
+                                        <!--<div class="center">
+                                          <div class="preloader-wrapper big active">
+                                            <div class="spinner-layer spinner-blue">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-red">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-yellow">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+
+                                            <div class="spinner-layer spinner-green">
+                                              <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                              </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                              </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>-->
+                                    </ul>
+
+                                </div>
+                            </div>                                  
+                        </div>
+                <!--end container-->
+
+                <!-- Compose Email Trigger -->
+                <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                  <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+                    <i class="large mdi-editor-mode-edit"></i>
+                  </a>
+                </div>
+
+                <!-- Compose Email Structure -->
+                <div id="ComposePostModal" class="modal">
+                    <div class="modal-content">
+                        <nav class="red">
+                            <div class="nav-wrapper">
+                                <div class="left col s12 m5 l5">
+                                    <ul>
+                                        <li>
+                                            <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                                        </li>
+                                        <li>
+                                            <a href="#!" class="email-type">Compose</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col s12 m7 l7 hide-on-med-and-down">
+                                    <ul class="right">
+                                        <li>
+                                            <div ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                                        </li>
+                                        <li>
+                                            <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="model-email-content">
+                        <div class="row">
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <select multiple id="composeProfiles">
+                                            <option value="" disabled selected>Choose your option</option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:0}" value="fb_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:1}" value="fb_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:2}" value="tw_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
+
+                                        </select>
+                                    </div>
+                                </div>
+                                <!--Default version-->
+                                <div class="row section">
+                                    <div class="col s12 m4 l3">
+                                        <p>Select your file</p>
+                                    </div>
+                                    <div class="col s12 m8 l9">
+                                        <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
+                                        <label for="compose">Message</label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END CONTENT -->   
+    </div>

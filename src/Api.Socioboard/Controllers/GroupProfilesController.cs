@@ -43,7 +43,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult DeleteProfile(long groupId, long userId,string profileId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-          return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr));
+          return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr,_appSettings));
         }
 
         [HttpGet("getProfilesAvailableToConnect")]
@@ -52,9 +52,9 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.Groupprofiles> lstGroupProfiles = GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Groups> lstGroups = GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr);
-            long defaultGroupId = lstGroups.FirstOrDefault(t => t.GroupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).Id;
+            long defaultGroupId = lstGroups.FirstOrDefault(t => t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).id;
             List<Domain.Socioboard.Models.Groupprofiles> defalutGroupProfiles = GroupProfilesRepository.getGroupProfiles(defaultGroupId, _redisCache, dbr);
-            return Ok(defalutGroupProfiles.Where(t=> !lstGroupProfiles.Any(x=>x.ProfileId.Equals(t.ProfileId))));
+            return Ok(defalutGroupProfiles.Where(t=> !lstGroupProfiles.Any(x=>x.profileId.Equals(t.profileId))));
         }
 
         [HttpPost("AddProfileToGroup")]
@@ -62,13 +62,13 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.Groupprofiles> lstGroupProfiles = GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
-            if(lstGroupProfiles.Where(t=>t.ProfileId.Equals(profileId)).Count() > 0)
+            if(lstGroupProfiles.Where(t=>t.profileId.Equals(profileId)).Count() > 0)
             {
                 return BadRequest("profile already added");
             }
             else
             {
-                Domain.Socioboard.Models.Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.Id == groupId).FirstOrDefault();
+                Domain.Socioboard.Models.Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.id == groupId).FirstOrDefault();
                 if(grp == null)
                 {
                     return BadRequest("Invalid groupId");
@@ -76,7 +76,7 @@ namespace Api.Socioboard.Controllers
                 else
                 {
                     Domain.Socioboard.Models.Groupprofiles grpProfile = new Domain.Socioboard.Models.Groupprofiles();
-                    if (profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook  || profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)
+                    if (profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook  || profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || profileType==Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage)
                     {
                         Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(profileId, _redisCache, dbr);
                         if(fbAcc == null)
@@ -87,10 +87,10 @@ namespace Api.Socioboard.Controllers
                         {
                             return BadRequest("profile is added by other user");
                         }
-                        grpProfile.ProfileName = fbAcc.FbUserName;
-                        grpProfile.ProfileOwnerId = userId;
-                        grpProfile.ProfilePic = "http://graph.facebook.com/"+ fbAcc.FbUserId+"/picture?type=small";
-                        grpProfile.ProfileType = profileType;
+                        grpProfile.profileName = fbAcc.FbUserName;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = "http://graph.facebook.com/"+ fbAcc.FbUserId+"/picture?type=small";
+                        grpProfile.profileType = profileType;
 
                     }
                     else if(profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
@@ -104,15 +104,75 @@ namespace Api.Socioboard.Controllers
                         {
                             return BadRequest("profile is added by other user");
                         }
-                        grpProfile.ProfileName = twtAcc.twitterName;
-                        grpProfile.ProfileOwnerId = userId;
-                        grpProfile.ProfilePic = twtAcc.profileImageUrl;
-                        grpProfile.ProfileType = Domain.Socioboard.Enum.SocialProfileType.Twitter;
+                        grpProfile.profileName = twtAcc.twitterScreenName;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = twtAcc.profileImageUrl;
+                        grpProfile.profileType = Domain.Socioboard.Enum.SocialProfileType.Twitter;
                     }
-                    grpProfile.EntryDate = DateTime.UtcNow;
-                    grpProfile.GroupId = grp.Id;
-                    grpProfile.ProfileId = profileId;
-                    grpProfile.ProfileType = profileType; 
+                    else if(profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus)
+                    {
+                        Domain.Socioboard.Models.Googleplusaccounts gplusAccount = Repositories.GplusRepository.getGPlusAccount(profileId, _redisCache, dbr);
+                        if(gplusAccount == null)
+                        {
+                            return BadRequest("Invalid ProfileId");
+                        }
+                        if (gplusAccount.UserId != userId)
+                        {
+                            return BadRequest("profile is added by other user");
+                        }
+                        grpProfile.profileName = gplusAccount.GpUserName;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = gplusAccount.GpProfileImage;
+                    }
+                    else if (profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram)
+                    {
+                        Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = Repositories.InstagramRepository.getInstagramAccount(profileId, _redisCache, dbr);
+                        if (_Instagramaccounts == null)
+                        {
+                            return BadRequest("Invalid ProfileId");
+                        }
+                        if (_Instagramaccounts.UserId != userId)
+                        {
+                            return BadRequest("profile is added by other user");
+                        }
+                        grpProfile.profileName = _Instagramaccounts.InsUserName;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = _Instagramaccounts.ProfileUrl;
+                    }
+                    else if(profileType==Domain.Socioboard.Enum.SocialProfileType.LinkedIn)
+                    {
+                        Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = Repositories.LinkedInAccountRepository.getLinkedInAccount(profileId, _redisCache, dbr);
+                        if (_LinkedInAccount == null)
+                        {
+                            return BadRequest("Invalid ProfileId");
+                        }
+                        if (_LinkedInAccount.UserId != userId)
+                        {
+                            return BadRequest("profile is added by other user");
+                        }
+                        grpProfile.profileName = _LinkedInAccount.LinkedinUserName;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = _LinkedInAccount.ProfileImageUrl;
+                    }
+                    else if (profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage)
+                    {
+                        Domain.Socioboard.Models.LinkedinCompanyPage _LinkedInAccount = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(profileId, _redisCache, dbr);
+                        if (_LinkedInAccount == null)
+                        {
+                            return BadRequest("Invalid ProfileId");
+                        }
+                        if (_LinkedInAccount.UserId != userId)
+                        {
+                            return BadRequest("profile is added by other user");
+                        }
+                        grpProfile.profileName = _LinkedInAccount.LinkedinPageName;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = _LinkedInAccount.LogoUrl;
+                    }
+                    grpProfile.entryDate = DateTime.UtcNow;
+                    grpProfile.groupId = grp.id;
+                    grpProfile.profileId = profileId;
+                    grpProfile.profileType = profileType; 
                     dbr.Add<Domain.Socioboard.Models.Groupprofiles>(grpProfile);
                     //codes to clear cache
                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
@@ -123,39 +183,6 @@ namespace Api.Socioboard.Controllers
 
         }
 
-        [HttpPost("DeleteProfileFromGroup")]
-        public IActionResult DeleteProfileFromGroup(string profileId, long groupId, long userId)
-        {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupProfiles = GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
-            if (lstGroupProfiles.Where(t => t.ProfileId.Equals(profileId)).Count() == 0)
-            {
-                return BadRequest("no profile exist");
-            }
-            else
-            {
-                Domain.Socioboard.Models.Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.Id == groupId).FirstOrDefault();
-                if (grp == null)
-                {
-                    return BadRequest("Invalid groupId");
-                }
-                else
-                {
-                    if(grp.AdminId == userId)
-                    {
-                        dbr.Delete<Domain.Socioboard.Models.Groupprofiles>(lstGroupProfiles.FirstOrDefault());
-                        //codes to clear cache
-                        _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                        //end codes to clear cache
-                    }
-                    else
-                    {
-                        return BadRequest("not authorized to delete");
-                    }
-                }
-            }
-
-            return Ok();
-        }
+        
     }
 }
