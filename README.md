@@ -130,6 +130,10 @@ Build Instructions
 
 now Everything is ready you can start using it. 
 
+Here are few Screens
+
+![](http://i.imgur.com/2piQqRX.png)
+
 
 
 
