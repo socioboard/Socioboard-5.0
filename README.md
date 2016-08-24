@@ -128,7 +128,7 @@ Build Instructions
 
 ![](http://i.imgur.com/xf928HD.png)
 
-
+now Everything is ready you can start using it. 
 
 
 
