@@ -135,10 +135,10 @@ c) Select the Api.socioboard : click over the drop down list and choose Start va
 d) Select the Socioboard : click over the drop down list and choose Start value.
 
 e) Now click on ok button.
-
-   After this debug the project 
-
+ 
 ![](http://i.imgur.com/ogqzxll.png)
+
+After this debug the project
 
 Build the project if you face any build error:
 
@@ -152,7 +152,7 @@ Step 7:To edit the Social network settings, Go to “app.setting” and change i
 
 ![](http://i.imgur.com/zGzGRd3.png)
 
-For local url,server and database setting  same path :Api.Socioboard>appsetting.json
+For local url,server and database setting follow same path :Api.Socioboard>appsetting.json
 
 ![](http://i.imgur.com/J3VemGp.png)
 
