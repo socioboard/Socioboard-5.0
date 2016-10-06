@@ -102,39 +102,69 @@ Devices and Platforms :
 Socioboard is available on web, desktop and mobiles. We have Android and iOS apps which work in tandem with the web app.
 =========================
 
-Build Instructions
 
-1. Once you load the project in visual studio 2015 with update 3, you have see a solution structure with following projects.
+To access the Socioboard Files visit : https://github.com/socioboard/Socioboard-Core-3.0
 
-![](http://i.imgur.com/ZVoSUc3.png)
+Step 1:Download the socioboard file from above mentioned path.
 
-2. Edit src>Sociboard>appsettings.json as shown in below image - 
+![](http://i.imgur.com/eSGCUdT.png)
 
-![](http://i.imgur.com/tCkvQqS.png)
+Step 2: Now after downloading it, you can see zip file named “socioboard-master.zip”  in your download folder.
+Unzip it and select the file named socioboard.sln and click over it to open either in visual studio 2013/2015 .
 
-3. Edit src>Socioboard>wwwroot>content>socioboard>controllers>app.js
+![](http://i.imgur.com/c9eLgGg.png)
 
-![](http://i.imgur.com/5wqOUXi.png)
+Step 3: Build Instructions: Once you load the project in visual studio, you can see a solution project with the following structure. 
 
-4. Edit src>Api.Socioboard>hibernate.cfg.xml
+![](http://i.imgur.com/IIXh8ms.png)
 
-![](http://i.imgur.com/dAHPKcb.png)
+Step 4: Right click on the socioboard project and select the properties .
 
-5.Edit src>Api.Socioboard>appsettigns.json
+![](http://i.imgur.com/jAYtz4r.png)
 
-![](http://i.imgur.com/UMqJirX.png)
+Step 5: When you click on properties it open property window. Follow the instruction given below.
 
-6.Edit src>Api.Sociboard>Startup.cs
+Instructions:
 
-![](http://i.imgur.com/xf928HD.png)
+a) Select  startup project .
 
-now Everything is ready you can start using it. 
+b) Select multiple startup project
+
+c) Select the Api.socioboard : click over the drop down list and choose Start value.
+
+d) Select the Socioboard : click over the drop down list and choose Start value.
+
+e) Now click on ok button.
+
+   After this debug the project 
+
+![](http://i.imgur.com/ogqzxll.png)
+
+Build the project if you face any build error:
+
+![](http://i.imgur.com/cd9V3hL.png)
+
+Step 6: For Editing the Database server files and Connection string, go to “hibernate.cfg.xml” and edit It directly.
+
+![](http://i.imgur.com/UXvQ59w.png)
+
+Step 7:To edit the Social network settings, Go to “app.setting” and change it as per your requirements.
+
+![](http://i.imgur.com/zGzGRd3.png)
+
+For local url,server and database setting  same path :Api.Socioboard>appsetting.json
+
+![](http://i.imgur.com/J3VemGp.png)
+
+
+![](http://i.imgur.com/scXIBYJ.png)
+
+Edit in startup class : follow the path  src>Api.Sociboard>Startup.cs
+
+![](http://i.imgur.com/qPkomhk.png)
+
+now Everything is ready you can start using it.
 
 Here are few Screens
 
-![](http://i.imgur.com/2piQqRX.png)
-
-
-
-
-
+![](http://i.imgur.com/CRtFmke.png)
