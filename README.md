@@ -165,6 +165,4 @@ Edit in startup class : follow the path  src>Api.Sociboard>Startup.cs
 
 now Everything is ready you can start using it.
 
-Here are few Screens
-
 ![](http://i.imgur.com/CRtFmke.png)
