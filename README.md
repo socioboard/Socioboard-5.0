@@ -169,4 +169,3 @@ Now Everything is ready you can start project.
 
 
 Thank You for reading....
-All the best
