@@ -163,6 +163,10 @@ Edit in startup class : follow the path  src>Api.Sociboard>Startup.cs
 
 ![](http://i.imgur.com/qPkomhk.png)
 
-now Everything is ready you can start using it.
+Now Everything is ready you can start project.
 
 ![](http://i.imgur.com/CRtFmke.png)
+
+
+Thank You for reading....
+All the best
