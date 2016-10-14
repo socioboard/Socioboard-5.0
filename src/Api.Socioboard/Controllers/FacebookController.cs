@@ -62,6 +62,10 @@ namespace Api.Socioboard.Controllers
             Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
             if (fbacc != null && fbacc.IsActive == true)
             {
+                if(fbacc.UserId == userId)
+                {
+                    return Ok("Facebook account already added by you.");
+                }
                 return Ok("Facebook account added by other user.");
             }
             else
@@ -222,7 +226,7 @@ namespace Api.Socioboard.Controllers
             try
             {
                 List<Domain.Socioboard.Models.Facebookpage> lstpages = new List<Facebookpage>();
-                lstpages = Fbpages.Getfacebookpages(accesstoken);
+                 lstpages = Fbpages.Getfacebookpages(accesstoken);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
                 lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
@@ -323,6 +327,12 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             Domain.Socioboard.Models.Facebookpage _facebookpages = Helper.FacebookHelper.GetFbPageDetails(url, _appSettings);
+
+            Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(_facebookpages.ProfilePageId, _redisCache, dbr);
+            if (fbacc != null && fbacc.IsActive == true)
+            {
+                return Ok("Facebook Page added by other user");
+            }
             if (_facebookpages!=null)
             {
                 int adddata = Repositories.FacebookRepository.AddFacebookPagesByUrl(_facebookpages, dbr, userId, groupId, Domain.Socioboard.Enum.FbProfileType.FacebookPublicPage, _facebookpages.AccessToken, _redisCache, _appSettings, _logger);

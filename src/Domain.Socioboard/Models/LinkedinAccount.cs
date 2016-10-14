@@ -21,7 +21,7 @@ namespace Domain.Socioboard.Models
         public int Connections { get; set; }
         public string ProfileType { get; set; }
         public virtual DateTime LastUpdate { get; set; }
-
+        public virtual DateTime SchedulerUpdate { get; set; }
 
 
 

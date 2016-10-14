@@ -13,47 +13,31 @@ namespace SocioboardDataScheduler.Facebook
     public class FacebookScheduler
     {
         public static int apiHitsCount = 0;
-        public static int MaxapiHitsCount = 150;
+        public static int MaxapiHitsCount = 40;
 
-        public static void PostFacebookMessage(Domain.Socioboard.Models.ScheduledMessage schmessage)
+        public static void PostFacebookMessage(Domain.Socioboard.Models.ScheduledMessage schmessage, Domain.Socioboard.Models.Facebookaccounts _facebook)
         {
-            DatabaseRepository dbr = new DatabaseRepository();
-            Domain.Socioboard.Models.Facebookaccounts _facebook = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == schmessage.profileId && t.IsAccessTokenActive).First();
-            apiHitsCount = 0;
-            if(_facebook.LastUpdate.AddHours(1)>=DateTime.UtcNow)
+            try
             {
-                if (_facebook!=null)
+                if (_facebook != null)
                 {
                     if (_facebook.IsActive)
                     {
-                        while (apiHitsCount < MaxapiHitsCount)
+                        if (schmessage.scheduleTime <= DateTime.UtcNow)
                         {
-                            if (schmessage.scheduleTime <= DateTime.UtcNow)
-                            {
-                                string data = ComposeMessage(_facebook.FbProfileType, _facebook.AccessToken, _facebook.FbUserId, schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.picUrl, "");
-                                if (!string.IsNullOrEmpty(data))
-                                {
-                                    apiHitsCount++;
-                                }
-                                else
-                                {
-                                    apiHitsCount = MaxapiHitsCount;
-                                }
-                            }
+                            string data = ComposeMessage(_facebook.FbProfileType, _facebook.AccessToken, _facebook.FbUserId, schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.url, "", schmessage);
                         }
-                        _facebook.LastUpdate = DateTime.UtcNow;
-                        dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(_facebook);
                     }
-                    else
-                    {
-                        apiHitsCount = MaxapiHitsCount;
-                    } 
                 }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 
 
-        public static string ComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link)
+        public static string ComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Models.ScheduledMessage schmessage)
         {
             string ret = "";
             DatabaseRepository dbr = new DatabaseRepository();
@@ -98,17 +82,10 @@ namespace SocioboardDataScheduler.Facebook
                     ret = fb.Post("v2.1/" + fbUserId + "/feed", args).ToString();
 
                 }
-                ScheduledMessage scheduledMessage = new ScheduledMessage();
-                scheduledMessage.createTime = DateTime.UtcNow;
-                scheduledMessage.picUrl = imagePath;
-                scheduledMessage.profileId = profileId;
-                scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.Facebook;
-                scheduledMessage.scheduleTime = DateTime.UtcNow;
-                scheduledMessage.shareMessage = message;
-                scheduledMessage.userId = userId;
-                scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                scheduledMessage.url = ret;
-                dbr.Add<ScheduledMessage>(scheduledMessage);
+
+                schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
+                schmessage.url = ret;
+                dbr.Update<ScheduledMessage>(schmessage);
 
             }
             catch (Exception ex)

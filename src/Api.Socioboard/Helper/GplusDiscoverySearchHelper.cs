@@ -21,7 +21,7 @@ namespace Api.Socioboard.Helper
             {
                 string Key = "AIzaSyASmXtuaErvVC0FGblSLUAzRcxRXLlBsgE";
                 
-                string RequestUrl = "https://www.googleapis.com/plus/v1/activities?query=" + keyword + "&maxResults=15&orderBy=best&key=" + Key;
+                string RequestUrl = "https://www.googleapis.com/plus/v1/activities?query=" + keyword + "&maxResults=20&orderBy=best&key=" + Key;
 
 
 

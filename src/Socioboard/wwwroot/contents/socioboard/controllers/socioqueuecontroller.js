@@ -30,7 +30,11 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
             //codes to load  socioqueue messages start
             $http.get(apiDomain + '/api/SocialMessages/GetAllScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
-                              $scope.date(response.data);
+                              if (response.data != "") {
+                                  $scope.date(response.data);
+                              } else {
+                                  swal("No Schedule Post To Display");
+                              }
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -38,10 +42,15 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
         }
         $scope.fetchsocioqueuemessage();
 
+        $scope.getProperURL = function (obj) {
+            console.log(obj);
+            var img = obj.split("wwwroot/")[1];
+            return apiDomain + "/api/Media/get?id=" + img;
+        };
 
         $scope.editscheulemessage = function (sharemessage, socioqueueId)
         {
-            $rootScope.sharemessage = sharemessage;
+            $rootScope.editscdmessage = sharemessage;
             $rootScope.socioqueueId = socioqueueId;
             $('#SocioqueueModal').openModal();
             //$scope.modalinstance = $modal.open({
@@ -68,6 +77,20 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
         }
         $scope.savesocioqueueedit = function () {
             var message = $('#editScheduleMsg').val();
+
+            //For taking special character start
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+            message = updatedmessage;
+            //End
+
             $http.get(apiDomain + '/api/SocialMessages/EditScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + $rootScope.socioqueueId + '&message=' + message)
                                   .then(function (response) {
                                       //$scope.modalinstance.dismiss('cancel');

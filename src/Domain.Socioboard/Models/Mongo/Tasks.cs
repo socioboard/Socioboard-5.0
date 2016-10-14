@@ -25,8 +25,8 @@ namespace Domain.Socioboard.Models.Mongo
         public virtual Domain.Socioboard.Enum.ReadStaus readStaus { get; set; }
         public virtual Domain.Socioboard.Enum.FeedTableType feedTableType { get; set; }
         public virtual string feedTableId { get; set; }
-        public virtual long cratedOn { get; set; }
-        public virtual long completeddOn { get; set; }
+        public virtual double cratedOn { get; set; }
+        public virtual double completeddOn { get; set; }
 
     }
 

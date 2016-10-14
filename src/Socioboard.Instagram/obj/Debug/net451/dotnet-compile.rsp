@@ -1,5 +1,5 @@
---temp-output:D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\obj\Debug\net451\
---out:D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
+--temp-output:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\obj\Debug\net451\
+--out:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
 --define:DEBUG
 --define:TRACE
 --define:NET451
@@ -12,9 +12,9 @@
 --version:1.0.0.0
 --informational-version:1.0.0
 --target-framework:.NETFramework,Version=v4.5.1
---reference:C:\Users\hp\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
---reference:C:\Users\hp\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll
---reference:C:\Users\hp\.nuget\packages\OAuth\1.0.3\lib\net40\OAuth.dll
+--reference:C:\Users\GLB-187\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
+--reference:C:\Users\GLB-187\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Users\GLB-187\.nuget\packages\OAuth\1.0.3\lib\net40\OAuth.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll
@@ -35,7 +35,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.InteropServices.dll
---reference:C:\Users\hp\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Users\GLB-187\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Numerics.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.Extensions.dll
@@ -51,44 +51,44 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Caption.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Comment.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\CommentController.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\CommentList.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\GeographiesController.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\ImageLink.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\ImagesList.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\InstagramMedia.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\InstagramResponse.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\LikesController.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\LikesList.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Location.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\LocationController.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\MediaController.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Metadata.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Pagination.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Relation.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\RelationShipsController.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Tag.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\TagController.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\User.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\UserController.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\VideoLink.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\VideoList.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\AccessToken.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\Base.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\BaseObject.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\ConfigurationIns.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\ICache.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\oAuthBase.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\oAuthInstagram.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Custom\TagSearch.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\CommentsMethods\Comments.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\GeographiesMethods\Geographies.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\LikesMethods\Likes.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\LocationsMethods\Locations.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\MediaMethods\Media.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\RelationshipMethods\Relationship.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\TagsMethods\Tags.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\UsersMethods\Users.cs
-D:\Git\Socioboard-Core-3.0\src\Socioboard.Instagram\Properties\AssemblyInfo.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Caption.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Comment.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\CommentController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\CommentList.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\GeographiesController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\ImageLink.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\ImagesList.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\InstagramMedia.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\InstagramResponse.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\LikesController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\LikesList.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Location.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\LocationController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\MediaController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Metadata.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Pagination.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Relation.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\RelationShipsController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\Tag.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\TagController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\User.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\UserController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\VideoLink.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\App.Core\VideoList.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\AccessToken.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\Base.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\BaseObject.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\ConfigurationIns.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\ICache.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\oAuthBase.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Authentication\oAuthInstagram.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Custom\TagSearch.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\CommentsMethods\Comments.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\GeographiesMethods\Geographies.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\LikesMethods\Likes.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\LocationsMethods\Locations.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\MediaMethods\Media.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\RelationshipMethods\Relationship.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\TagsMethods\Tags.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Instagram.Core\UsersMethods\Users.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\Properties\AssemblyInfo.cs

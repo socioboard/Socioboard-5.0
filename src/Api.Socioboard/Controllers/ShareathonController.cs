@@ -28,19 +28,28 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _env;
 
-
+        /// <summary>
+        /// To share the facebook page post with selected facebook profile in a given period of time.
+        /// </summary>
+        /// <param name="userId">Id of the user</param>
+        /// <param name="FacebookPageId">facebookpage id of user facebook profile</param>
+        /// <param name="Facebookaccountid">Facebook account id of user</param>
+        /// <param name="Timeintervalminutes">Time interval provided by the user for posting</param>
+        /// <returns></returns>
         [HttpPost("AddPageShareathon")]
-        public IActionResult AddPageShareathon(long userId,string FacebookPageId,string Facebookaccountid, int Timeintervalminutes)
+        public IActionResult AddPageShareathon(long userId,string Facebookaccountid, int Timeintervalminutes)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger,_env);
+            string FacebookPageId = Request.Form["FacebookPageId"];
             string pagedata = Repositories.ShareathonRepository.AddPageShareathon(userId, FacebookPageId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
             return Ok(pagedata);
         }
 
         [HttpPost("EditPageShareathon")]
-        public IActionResult EditPageShareathon(string PageShareathodId,long userId, string FacebookPageId, string Facebookaccountid, int Timeintervalminutes)
+        public IActionResult EditPageShareathon(string PageShareathodId,long userId, string Facebookaccountid, int Timeintervalminutes)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string FacebookPageId = Request.Form["FacebookPageId"];
             string pagedata = Repositories.ShareathonRepository.EditPageShareathon(PageShareathodId,userId, FacebookPageId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
             return Ok(pagedata);
         }
@@ -75,19 +84,32 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        /// <summary>
+        /// To group post with selected facebook profiles in a given period of time 
+        /// </summary>
+        /// <param name="userId">id of the user</param>
+        /// <param name="FacebookUrl">facebook url of user</param>
+        /// <param name="Facebookaccountid">Facebook account id of user</param>
+        /// <param name="Timeintervalminutes">Time interval provided by the user</param>
+        /// <param name="FacebookGroupId">FacebookGroup id of user facebook profile</param>
+        /// <returns></returns>
         [HttpPost("AddGroupShareathon")]
-        public IActionResult AddGroupShareathon(long userId, string FacebookUrl, string Facebookaccountid, int Timeintervalminutes,string FacebookGroupId)
+        public IActionResult AddGroupShareathon(long userId,string Facebookaccountid, int Timeintervalminutes)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string FacebookGroupId = Request.Form["FacebookGroupId"];
+            string FacebookUrl = Request.Form["FacebookUrl"];
             string pagedata = Repositories.ShareathonRepository.AddGroupShareathon(userId, FacebookUrl, FacebookGroupId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
             return Ok(pagedata);
         }
 
 
         [HttpPost("EditGroupShareathon")]
-        public IActionResult EditGroupShareathon(string GroupShareathodId, long userId, string FacebookUrl, string Facebookaccountid, int Timeintervalminutes, string FacebookGroupId)
+        public IActionResult EditGroupShareathon(string GroupShareathodId, long userId,string Facebookaccountid, int Timeintervalminutes)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string FacebookGroupId = Request.Form["FacebookGroupId"];
+            string FacebookUrl = Request.Form["FacebookUrl"];
             string pagedata = Repositories.ShareathonRepository.EditgroupShareathon(GroupShareathodId, userId, FacebookUrl, FacebookGroupId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
             return Ok(pagedata);
         }

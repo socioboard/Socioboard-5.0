@@ -19,30 +19,31 @@
 			                        <div class="input-field col s12">
 									    <select id="shraeathonfacebookaccount" >
 									      <option value="" disabled selected>Choose your option</option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:0}"  selected value="{{profile.ProfileId}}" ng-if="pageshareathondata.Facebookaccountid.indexOf(profile.ProfileId) > -1" my-repeat-timeout-directive>  {{profile.ProfileName}} </option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:0}"   value="{{profile.ProfileId}}" ng-if="pageshareathondata.Facebookaccountid.indexOf(profile.ProfileId) ==-1" my-repeat-timeout-directive>  {{profile.ProfileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0}"  selected value="{{profile.profileId}}" ng-if="pageshareathondata.facebookaccountid.indexOf(profile.profileId) > -1" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0}"   value="{{profile.profileId}}" ng-if="pageshareathondata.facebookaccountid.indexOf(profile.profileId) ==-1" my-repeat-timeout-directive>  {{profile.profileName}} </option>
 									    </select>
 									    <label>Selects An Account To Automate Post</label>
 									</div>
 				                    <div class="input-field col s12">
 									    <select multiple id="shraeathonfacebookpage">
-									      <option value="" disabled selected>Choose your option</option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:1}" value="{{profile.ProfileId}}" my-repeat-timeout-directive>  {{profile.ProfileName}} </option>
+									      <option value="{{pageshareathondata.facebookpageid}}"  selected>{{pageshareathondata.facebookpagename}}</option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1}" value="{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
 									    </select>
 									    <label>Selects Pages Whose Post's You Want To Automate</label>
 									</div>									
 							        <div class="input-field col s12">
 									    <select id="shraeathontimeinterval">
-									      <option value="" disabled selected>Choose your option</option>
-									      <option value="20" >20 min</option>
+                                            <option value="{{pageshareathondata.timeintervalminutes}}"  selected>{{pageshareathondata.timeintervalminutes}}</option>
+									      <option value="20">20 min</option>
 									      <option value="30">30 min</option>
-									      <option value="60">1 hr</option>
+									      <option value="60">60 min</option>
 									    </select>
 									    <label>Set Your Time Interval</label>
 									</div>
+                                    <div ng-init="dispbtn= {{dispbtn}}"></div>
 				                    <div class="col l12 center margin-top-50">
-				                      	<a ng-click="EditPageShareathon(pageshareathondata.strId)" class="btn grey darken-4 waves-effect waves-light">Edit</a>
-				                    </div>
+				                      	<a ng-show="dispbtn" ng-click="EditPageShareathon(pageshareathondata.strId)" class="btn grey darken-4 waves-effect waves-light">Edit</a>
+                                        <a ng-show="!dispbtn" href="javascript:;" class="btn grey darken-4 waves-effect waves-light">Wait</a></div>
 			                    </form>
 			                </div>
                         </div>

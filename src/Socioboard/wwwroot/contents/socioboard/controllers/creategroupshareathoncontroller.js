@@ -35,9 +35,21 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
           
             if (Facebookaccountid != null && FacebookUrl != '' && FacebookGroupId != '' && Timeintervalminutes != null) {
                 $scope.dispbtn = false;
+                var formData = new FormData();
+                formData.append('FacebookGroupId', FacebookGroupId);
+                formData.append('FacebookUrl', FacebookUrl);
                 //codes to add groupshareathon
-                $http.post(apiDomain + '/api/Shareathon/AddGroupShareathon?Facebookaccountid=' + Facebookaccountid + '&FacebookUrl=' + FacebookUrl + '&Timeintervalminutes=' + Timeintervalminutes + '&FacebookGroupId=' + FacebookGroupId + '&userId=' + $rootScope.user.Id)
-                                  .then(function (response) {
+               // $http.post(apiDomain + '/api/Shareathon/AddGroupShareathon?Facebookaccountid=' + Facebookaccountid + '&FacebookUrl=' + FacebookUrl + '&Timeintervalminutes=' + Timeintervalminutes + '&FacebookGroupId=' + FacebookGroupId + '&userId=' + $rootScope.user.Id)
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/Shareathon/AddGroupShareathon?Facebookaccountid=' + Facebookaccountid + '&Timeintervalminutes=' + Timeintervalminutes + '&userId=' + $rootScope.user.Id,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+                })
+                .then(function (response) {
                                       swal(response.data);
                                       window.location.href = "#/group_shareathon.html";
                                   }, function (reason) {
@@ -57,15 +69,35 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
             var FacebookUrl = $('#postpage_url').val();
             var FacebookGroupId = $('#facebookgroupid').val();
             var Timeintervalminutes = $('#grouptimerinterval').val();
+            if (Facebookaccountid != null && FacebookUrl != '' && FacebookGroupId != '' && Timeintervalminutes != null) {
+                $scope.dispbtn = false;
             //codes to edit  page shreathon
-            $http.post(apiDomain + '/api/Shareathon/EditGroupShareathon?Facebookaccountid=' + Facebookaccountid + '&FacebookUrl=' + FacebookUrl + '&Timeintervalminutes=' + Timeintervalminutes + '&FacebookGroupId=' + FacebookGroupId + '&userId=' + $rootScope.user.Id + '&GroupShareathodId=' + GroupShareathodId)
-                          .then(function (response) {
+           // $http.post(apiDomain + '/api/Shareathon/EditGroupShareathon?Facebookaccountid=' + Facebookaccountid + '&FacebookUrl=' + FacebookUrl + '&Timeintervalminutes=' + Timeintervalminutes + '&FacebookGroupId=' + FacebookGroupId + '&userId=' + $rootScope.user.Id + '&GroupShareathodId=' + GroupShareathodId)
+                var formData = new FormData();
+                formData.append('FacebookGroupId', FacebookGroupId);
+                formData.append('FacebookUrl', FacebookUrl);
+                //codes to add groupshareathon
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/Shareathon/EditGroupShareathon?Facebookaccountid=' + Facebookaccountid + '&Timeintervalminutes=' + Timeintervalminutes + '&userId=' + $rootScope.user.Id + '&GroupShareathodId=' + GroupShareathodId,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+                })
+                .then(function (response) {
                               swal(response.data);
                               window.location.href = "#/group_shareathon.html";
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
-            // end codes to edit page shreathon
+                // end codes to edit page shreathon
+            }
+            else {
+                $scope.dispbtn = true;
+                swal('please fill all the details');
+            }
         }
 
   });

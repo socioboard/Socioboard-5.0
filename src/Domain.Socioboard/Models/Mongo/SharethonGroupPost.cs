@@ -18,7 +18,7 @@ namespace Domain.Socioboard.Models.Mongo
         public ObjectId Id { get; set; }
         public virtual string Facebookgroupid { get; set; }
         public virtual string Facebookaccountid { get; set; }
-        public virtual DateTime PostedTime { get; set; }
+        public virtual double PostedTime { get; set; }
         public virtual string PostId { get; set; }
         public virtual string Facebookgroupname { get; set; }
 

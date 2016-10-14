@@ -31,18 +31,23 @@
     <meta property="og:title" content="Socioboard - Open Source Social Technology Enabler | Find More Customers on Social Media">
     <meta property="og:description" content="Be it marketing(finding leads/customers) on Social media, or listening to customer complaints, replying to them, managing multiple social media accounts from one single dashboard, finding influencers in a particular category and reaching out to them and many more things, Socioboard products can do it.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="http://i.imgur.com/1B8wv5m.png">
+    <meta property="og:image" content="https://i.imgur.com/1B8wv5m.png">
     <meta property="og:url" content="https://www.facebook.com/SocioBoard">
     <!-- CORE CSS-->
     <link href="~/contents/socioboard/css/admin/materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
     <link href="~/contents/socioboard/css/admin/style.css" type="text/css" rel="stylesheet" media="screen,projection">
     <link href="~/contents/socioboard/css/admin/custom.css" type="text/css" rel="stylesheet" media="screen,projection">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+
     <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
     <link href="~/contents/socioboard/js/admin/plugins/perfect-scrollbar/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
     <link href="~/contents/socioboard/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
     <link href="~/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="~/contents/socioboard/global/plugins/dropify/dist/css/dropify.min.css">
     <link href="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" />
+    <link href="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css" rel="stylesheet" />
+
     <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
     <link id="ng_load_plugins_before" />
 </head>
@@ -94,10 +99,10 @@
     <script src="~/contents/socioboard/global/plugins/angularjs/plugins/ocLazyLoad.min.js" type="text/javascript"></script>
     <script src="~/contents/socioboard/global/plugins/angularjs/plugins/ui-bootstrap-tpls.min.js" type="text/javascript"></script>
     <!-- Angular Material Library -->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
     <script type="text/javascript" src="~/contents/socioboard/controllers/app.js"></script>
     <script src="~/contents/socioboard/services/groupmember.js"></script>
     <script type="text/javascript" src="https://greasyfork.org/scripts/14637-arrive-js/code/Arrivejs.js"></script>
@@ -111,7 +116,20 @@
     <link href="~/contents/socioboard/css/frontend/alertify.core.css" rel="stylesheet" type="text/css" />
     <link href="~/contents/socioboard/css/frontend/alertify.default.css" rel="stylesheet" type="text/css" id="toggleCSS" />
     <script src="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.js"></script>
 
+    <script type="text/javascript">
+
+
+   //Disable Back Button In All Browsers.
+        function DisableBackButtonAllBrowsers() {
+            window.history.forward()
+        };
+         DisableBackButtonAllBrowsers();
+        window.onload = DisableBackButtonAllBrowsers;
+         window.onpageshow = function (evts) { if (evts.persisted) DisableBackButtonAllBrowsers(); };
+        window.onunload = function () { void (0) };
+    </script>
 
     <!-- Toast Notification -->
     @*<script type="text/javascript">

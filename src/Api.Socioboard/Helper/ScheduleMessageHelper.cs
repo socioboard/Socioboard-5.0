@@ -10,11 +10,29 @@ namespace Api.Socioboard.Helper
 {
     public class ScheduleMessageHelper
     {
-        public static void ScheduleMessage(string profileId,string socialprofileName,string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId,string url,string picUrl,string scheduleTime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
+        public static string ScheduleMessage(string profileId,string socialprofileName,string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId,string url,string picUrl,string scheduleTime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
         {
+
+           
             ScheduledMessage scheduledMessage = new ScheduledMessage();
             scheduledMessage.shareMessage = shareMessage;
-            scheduledMessage.scheduleTime = DateTime.Parse(scheduleTime);
+            try
+            {
+                // var dt = DateTime.Parse(scheduleTime);
+                //scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
+                scheduledMessage.scheduleTime = Convert.ToDateTime(scheduleTime) ;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            DateTime fromTime = scheduledMessage.scheduleTime.AddMinutes(-scheduledMessage.scheduleTime.Minute);
+            DateTime toTime = scheduledMessage.scheduleTime.AddMinutes(-scheduledMessage.scheduleTime.Minute).AddHours(1);
+            int count = dbr.Find<ScheduledMessage>(t => t.scheduleTime > fromTime && t.scheduleTime <= toTime).Count();
+            if (count > _AppSettings.FacebookScheduleMessageMaxLimit)
+            {
+                return "Max limit Reached.";
+            }
             scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Pending;
             scheduledMessage.userId = userId;
             scheduledMessage.profileType = profiletype;
@@ -22,7 +40,16 @@ namespace Api.Socioboard.Helper
             scheduledMessage.url = url;
             scheduledMessage.picUrl = picUrl;
             scheduledMessage.createTime = DateTime.UtcNow;
-            dbr.Add<ScheduledMessage>(scheduledMessage);
+          int ret =  dbr.Add<ScheduledMessage>(scheduledMessage);
+            if (ret == 1)
+            {
+                return "Scheduled.";
+            }
+            else
+            {
+                return "Not Scheduled.";
+            }
+
         }
 
         public static void DraftScheduleMessage(string shareMessage, long userId,long groupId, string picUrl, string scheduleTime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
@@ -35,6 +62,43 @@ namespace Api.Socioboard.Helper
             _Draft.picUrl = picUrl;
             _Draft.createTime = DateTime.UtcNow;
             dbr.Add<Draft>(_Draft);
+        }
+
+
+
+        public static string CompareDateWithclient(string clientdate, string scheduletime)
+        {
+            try
+            {
+                var dt = DateTime.Parse(scheduletime);
+                
+                DateTime client = Convert.ToDateTime(clientdate);
+
+                DateTime server = DateTime.UtcNow;
+                DateTime schedule = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
+                {
+                    var kind = schedule.Kind; // will equal DateTimeKind.Unspecified
+                    if (DateTime.Compare(client, server) > 0)
+                    {
+                        double minutes = (server - client).TotalMinutes;
+                        schedule = schedule.AddMinutes(minutes);
+                    }
+                    else if (DateTime.Compare(client, server) == 0)
+                    {
+                    }
+                    else if (DateTime.Compare(client, server) < 0)
+                    {
+                        double minutes = (server - client).TotalMinutes;
+                        schedule = schedule.AddMinutes(minutes);
+                    }
+                }
+                return schedule.ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return "";
+            }
         }
     }
 }

@@ -53,5 +53,8 @@
     <property name="isActive">
       <column name="isActive"  />
     </property>
+    <property name="SchedulerUpdate">
+      <column name="SchedulerUpdate"/>
+    </property>
   </class>
 </hibernate-mapping>

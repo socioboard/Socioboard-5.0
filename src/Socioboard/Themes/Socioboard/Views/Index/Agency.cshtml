@@ -18,25 +18,25 @@
                 <li>Comes with Mobile App - Android and IOS</li>
             </ul>
             <p>Interested? One of our account managers will be in touch...</p>
-            <form id="demoForm" class="row">
+            <form onsubmit="CreateDemoReq(); return false;" id="demoForm" class="row">
                 <div class="col s12">
                     <div class="row">
                         <div class="input-field col s6">
                             <i class="material-icons prefix">person_pin</i>
-                            <input id="req_first_name" type="text" class="validate">
+                            <input id="req_first_name" type="text" required class="validate" pattern="^[a-zA-Z0-9]+$">
                             <label for="req_first_name">First Name</label>
                         </div>
                         <div class="input-field col s6">
                             <i class="material-icons prefix">person_pin</i>
-                            <input id="req_last_name" type="text" class="validate">
+                            <input id="req_last_name" type="text" required class="validate" pattern="^[a-zA-Z0-9]+$">
                             <label for="req_last_name">Last Name</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">message</i>
-                            <input id="req_email" type="email" class="validate">
-                            <label for="req_email">Email</label>
+                            <input id="req_email" type="email" required class="validate" pattern="^([a-zA-Z0-9_\-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" >
+                            <label for="req_email" data-error="wrong" data-success="right">Email</label>
                         </div>
                     </div>
                     <div class="row">
@@ -60,8 +60,8 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <i class="material-icons prefix">phonelink_ring</i>
-                            <input id="req_Phone" type="text" class="validate">
-                            <label for="req_Phone">Phn No</label>
+                            <input id="req_Phone" type="text" required class="validate" maxlength="10" pattern="[0-9]{10}">
+                            <label for="req_Phone" data-error="PhoneNumber" data-success="right">Phn No</label>
                         </div>
                     </div>
                     <div class="row">
@@ -70,10 +70,11 @@
                         </div>
                     </div>
                     <div class="center-align">
-                        <div class="btn waves-effect waves-light red" onclick="CreateDemoReq()" name="action">
+                        <button id="submitButton" type="submit" class="btn waves-effect waves-light red">Submit<i class="fa fa-paper-plane"></i></button>
+                        @*<div class="btn waves-effect waves-light red" onclick="CreateDemoReq()" name="action">
                             Submit
                             <i class="fa fa-paper-plane"></i>
-                        </div>
+                        </div>*@
                         <a class="waves-effect waves-light btn cyan" onclick="document.getElementById('demoForm').reset();">Reset</a>
                     </div>
                 </div>
@@ -82,7 +83,7 @@
         <div class="col s8">
             <h4 class="center-align hr_shadow Righteous_font grey-text text-darken-2">Are you an Agency?</h4>
             <p>Increase and nurture your clientele with the Socioboard’s offerings designed uniquely for the Agencies. These versions have a great interface that anybody can understand, powerful engagement tools and customizable analytics to monitor, analyze and report across countless social profiles. What’s more, you can feature your own logo and domain name, so your clients consider it your product, not to mention Socioboard anywhere. Agencies can use commerically supported whitelabel version of Socioboard. Its fully open sourced and customizable as per your agency needs.</p>
-            <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/agency1.png" class="responsive-img">
+            <img src="/contents/socioboard/images/sb_mockup.png" class="responsive-img">
             <p>Agency White Label version is best suited to Small and Medium Enterprises (SMEs) who’d need support, updates, upgrades and related apps for being able to use Socioboard effectively to continue to build their clientele and their brands.</p>
         </div>
     </div>
@@ -95,7 +96,7 @@
                 <div class="card-panel grey lighten-5 z-depth-1">
                     <div class="row valign-wrapper">
                         <div class="col s2 center-align">
-                            <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/Agency_icon1.png" alt="" class="circle responsive-img">
+                            <img src="~/contents/socioboard/images/agency_1.png" alt="" class="circle responsive-img">
                             <span>Agency Lite</span>
                         </div>
                         <div class="col s7">
@@ -111,7 +112,7 @@
                 <div class="card-panel grey lighten-5 z-depth-1">
                     <div class="row valign-wrapper">
                         <div class="col s2 center-align">
-                            <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/Agency_icon2.png" alt="" class="circle responsive-img">
+                            <img src="~/contents/socioboard/images/agency_2.png" alt="" class="circle responsive-img">
                             <span>Agency Pro</span>
                         </div>
                         <div class="col s7">
@@ -127,7 +128,7 @@
                 <div class="card-panel grey lighten-5 z-depth-1">
                     <div class="row valign-wrapper">
                         <div class="col s2 center-align">
-                            <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/Agency_icon1.png" alt="" class="circle responsive-img">
+                            <img src="~/contents/socioboard/images/agency_3.png" alt="" class="circle responsive-img">
                             <span>Agency Premium</span>
                         </div>
                         <div class="col s7">
@@ -147,49 +148,59 @@
 
 
 @section Scripts{
+
     <script>
         function CreateDemoReq() {
+            debugger;
             var firstName = $('#req_first_name').val();
-            var designation = $('#req_Designation').val();
+            //var designation = $('#req_Designation').val();
             var lastName = $('#req_last_name').val();
             var email = $('#req_email').val();
             var company = $('#req_Company').val();
             var Phone = $('#req_Phone').val();
-           // var skype = $('#req_skype').val();
+            // var skype = $('#req_skype').val();
             //var location = $('#req_Location').val();
-           // var companyWebsite = $('#req_CompanyWebsite').val();
+            // var companyWebsite = $('#req_CompanyWebsite').val();
             var message = $('#req_Message').val();
-            if (grecaptcha.getResponse() != "") {
-                $.ajax({
+            if (grecaptcha.getResponse() != "")
+            {
+            $.ajax({
 
-                    type: "POST",
+                type: "POST",
 
-                    url: "../Index/AddDemoRequest",
+                url: "@ViewBag.ApiDomain/api/user/DemoRequest",
 
-                    data: { "Firstname": firstName, "Lastname": lastName, "Company": company, "Email": email, "Phone": Phone, "Message": message, "DemoPlanType": "Agency" },
+                data: { "firstName": firstName, "lastName": lastName, "company": company, "emailId": email, "phoneNumber": Phone, "message": message, "demoPlanType": "Agency" },
 
-                    //contentType: "application/json; charset=utf-8",
+                // contentType: "application/json; charset=utf-8",
 
-                    dataType: "html",
+                dataType: "html",
 
-                    success: function (msg) {
+                success: function (msg) {
 
-                        alertify.set({ delay: 5000 });
-                        alertify.success("Request Sent Successfully");
-                        $('#req_first_name').val("");
-                        $('#req_last_name').val("");
-                        $('#req_email').val("");
-                        $('#req_Company').val("");
-                        $('#req_Phone').val("");
-                       // $('#req_skype').val("");
-                        $('#req_Message').val("");
-                        $('#req_CompanyWebsite').val("");
-                        $('#req_Location').val("");
-                        $('#req_Designation').val("");
-                        grecaptcha.reset();
-                    }
+                    alertify.set({ delay: 5000 });
+                    alertify.success("Request Sent Successfully");
+                    $('#req_first_name').val('');
+                    $('#req_last_name').val('');
+                    $('#req_email').val('');
+                    $('#req_Company').val('');
+                    $('#req_Phone').val('');
+                    // $('#req_skype').val("");
+                    $('#req_Message').val('');
+                    $('#req_CompanyWebsite').val('');
+                    $('#req_Location').val('');
+                    $('#req_Designation').val('');
+                    grecaptcha.reset();
+                },
+                error: function (msg) {
+                    alertify.set({ delay: 5000 });
+                    alertify.error(msg.responseText);
+                    $('#ImgLoading').hide();
+                    $('#submitButton').show();
+                    return false;
+                }
 
-                });
+            });
             }
             else
             {
@@ -197,7 +208,8 @@
                 alertify.error("You can't leave Captcha Code empty");
             }
 
-        }
+             }
+       
     </script>
     <script>
         // $(document).ready(function () {

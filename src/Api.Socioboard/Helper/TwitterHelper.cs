@@ -112,7 +112,7 @@ namespace Api.Socioboard.Helper
                         objDiscoverySearch.ProfileImageUrl = chile["user"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
                         objDiscoverySearch.SearchKeyword = keyword;
                         objDiscoverySearch.Network = "twitter";
-                        objDiscoverySearch.Message = chile["text"].ToString().TrimStart('"').TrimEnd('"');
+                        objDiscoverySearch.Message = chile["text"].ToString().TrimStart('"').TrimEnd('"').Replace("&amp", " ");
                         objDiscoverySearch.MessageId = chile["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         objDiscoverySearch.UserId = userId;
                         lstDiscoverySearch.Add(objDiscoverySearch);
@@ -313,6 +313,35 @@ namespace Api.Socioboard.Helper
             {
 
             }
+        }
+
+
+
+        public static bool FollowAccount(oAuthTwitter OAuth, string Screen_name, string user_id)
+        {
+            bool IsFollowed = false;
+
+            string RequestUrl = "https://api.twitter.com/1.1/friendships/create.json";
+            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+            if (!string.IsNullOrEmpty(Screen_name))
+            {
+                strdic.Add("screen_name", Screen_name);
+            }
+            else if (!string.IsNullOrEmpty(user_id))
+            {
+                strdic.Add("user_id", user_id);
+            }
+            else
+            {
+                return false;
+            }
+            strdic.Add("follow", "true");
+            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            if (!string.IsNullOrEmpty(response))
+            {
+                IsFollowed = true;
+            }
+            return IsFollowed;
         }
 
 

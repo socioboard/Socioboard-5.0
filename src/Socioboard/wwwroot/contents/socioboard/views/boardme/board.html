@@ -1,0 +1,160 @@
+﻿
+<div data-ng-controller="BoardController">
+    <!-- Page name -->
+    <div class="container">
+        <div class="col m12">
+            <h4>Listen</h4>
+        </div>
+    </div>
+    <!-- statr products list -->
+    <div id="products" class="row" ng-lazy-scroll="loadMore()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+        <div class="product-sizer"></div>
+        <div ng-if="lstBoardFeeds.length!=0" ng-repeat="feed in  lstBoardFeeds | orderBy:'publishedtime':true" my-repeat-feed-timeout-directive>
+            <div class="product" ng-if="feed.twitterprofileid != undefined">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col l12 m12 s12 margin-top-10 center">
+                                <img class="responsive-img circle " src="{{feed.fromPicUrl}}">
+                            </div>
+                            <div class="col l12 s12 m12 center">
+                                <span class="card-title">{{feed.fromName}}</span>
+                                <br>
+                                <span>
+                                    <a href="#" target="_blank">
+                                        <i class="fa fa-twitter-square fa-fw"></i>@{{feed.fromName}}
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="col l12 m12 s12">
+                                <p class="description_listen">
+                                    {{feed.text}}
+                                    <div class="center">
+                                        <img ng-if="feed.imageurl != null" src="{{feed.imageurl}}" class="responsive-img">
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action center">
+                        <a href="#">Schedule</a>
+                        <a href="#" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product" ng-if="feed.instagramaccountid != undefined">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col l6 m6 s6 margin-top-10 center">
+                                <img class="responsive-img circle " src="{{feed.fromPicUrl}}">
+                            </div>
+                            <div class="col l12 s12 m12 center">
+                                <span class="card-title">{{feed.fromName}}</span>
+                                <br>
+                                <span>
+                                    <a href="#" target="_blank">
+                                        <i class="fa fa-instagram fa-fw"></i>@{{feed.fromName}}
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="col l12 m12 s12">
+                                <p class="description_listen">
+
+                                    <div class="center">
+                                        <img ng-if="feed.imageurl != null" src="{{feed.imageurl}}" class="responsive-img">
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action center">
+                        <a href="#">Schedule</a>
+                        <a href="#" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product" ng-if="feed.gplusboardaccprofileid != undefined">
+                <div class="card hoverable">
+                    <div class="card-content">
+                        <div class="row">
+                            <div class="col l6 m6 s6 margin-top-10 center">
+                                <img class="responsive-img circle " src="{{feed.fromPicUrl}}">
+                            </div>
+                            <div class="col l12 s12 m12 center">
+                                <span class="card-title">{{feed.fromName}}</span>
+                                <br>
+                                <span>
+                                    <a href="#" target="_blank">
+                                        <i class="fa fa-google-plus-square fa-fw"></i>@{{feed.fromName}}
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="col l12 m12 s12">
+                                <p class="description_listen">
+                                    {{feed.title}}
+                                    <div class="center">
+                                        <img ng-if="feed.imageurl != null" src="{{feed.imageurl}}" class="responsive-img">
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action center">
+                        <a href="#">Schedule</a>
+                        <a href="#" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div ng-if="lstBoardFeeds.length==0">
+            <span>
+                No Post availabe for this keyword
+            </span>
+        </div>
+    </div>
+    <!--/ end items list -->
+    <!-- Modal Structure -->
+    <div id="searchcatagory" class="modal">
+        <div class="modal-content">
+            <a href="" class="right modal-action modal-close waves-effect waves-green"><i class="icon-close"></i></a>
+            <h4 class="center">Categories Featured</h4>
+            <div class="row">
+                <div class="col l12 s12 m12">
+                    <div class="input-field">
+                        <input value="SocioBoard" id="categories" type="text" class="validate">
+                        <label class="active" for="categories">Search your categories</label>
+                    </div>
+                </div>
+                <div class="col l4 m4 s12">
+                    <div class="collection">
+                        <a href="#!" class="collection-item active">Advertising</a>
+                        <a href="#!" class="collection-item">Agriculture</a>
+                        <a href="#!" class="collection-item">Aircraft</a>
+                        <a href="#!" class="collection-item">Animals</a>
+                    </div>
+                </div>
+                <div class="col l4 m4 s12">
+                    <div class="collection">
+                        <a href="#!" class="collection-item">Digital Marketing</a>
+                        <a href="#!" class="collection-item">Economy</a>
+                        <a href="#!" class="collection-item">Food &amp; Beverage</a>
+                        <a href="#!" class="collection-item">HR &amp; Management</a>
+                    </div>
+                </div>
+                <div class="col l4 m4 s12">
+                    <div class="collection">
+                        <a href="#!" class="collection-item">Knowledge Management</a>
+                        <a href="#!" class="collection-item">Internet</a>
+                        <a href="#!" class="collection-item">Literature</a>
+                        <a href="#!" class="collection-item">Marketing</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

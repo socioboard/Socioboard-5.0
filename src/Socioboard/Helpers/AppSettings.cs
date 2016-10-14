@@ -41,5 +41,12 @@ namespace Socioboard.Helpers
         public string LinkedinCallBackURL { get; set; }
         //End LinkedIn App Creds 
 
+
+        //pay pal
+        public string PaypalURL { get; set; }
+        public string failUrl { get; set; }
+        public string callBackUrl { get; set; }
+        public string cancelurl { get; set; }
+        public string paypalemail { get; set; }
     }
 }

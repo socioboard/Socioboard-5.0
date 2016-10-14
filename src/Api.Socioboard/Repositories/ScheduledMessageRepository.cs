@@ -14,7 +14,7 @@ namespace Api.Socioboard.Repositories
             List<Domain.Socioboard.Models.ScheduledMessage> inMemScheduleMessgae = _redisCache.Get<List<Domain.Socioboard.Models.ScheduledMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheScheduleMessage + groupId);
             if(inMemScheduleMessgae!=null && inMemScheduleMessgae.Count>0)
             {
-                return inMemScheduleMessgae;
+                return inMemScheduleMessgae.OrderByDescending(t => t.scheduleTime).ToList(); 
             }
             else
             {
@@ -31,7 +31,7 @@ namespace Api.Socioboard.Repositories
                 }
                     
                 profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-                List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == 0).ToList();
+                List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == 0).OrderByDescending(t=>t.scheduleTime).ToList();
                 if(lstScheduledMessage!=null && lstScheduledMessage.Count>0)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheScheduleMessage + groupId, lstScheduledMessage);

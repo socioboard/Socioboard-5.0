@@ -31,7 +31,11 @@ namespace Api.Socioboard.Controllers
         private readonly IHostingEnvironment _appEnv;
 
 
-
+        /// <summary>
+        /// To get the group profiles 
+        /// </summary>
+        /// <param name="groupId">Id of the group from which account is to be added.</param>
+        /// <returns></returns>
         [HttpGet("GetGroupProfiles")]
         public IActionResult GetGroupProfiles(long groupId)
         {
@@ -43,7 +47,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult DeleteProfile(long groupId, long userId,string profileId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-          return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr,_appSettings));
+            return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr,_appSettings));
         }
 
         [HttpGet("getProfilesAvailableToConnect")]

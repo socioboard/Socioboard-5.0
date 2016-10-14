@@ -27,11 +27,25 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
+
+        /// <summary>
+        /// To provide the report on instagaram profile
+        /// </summary>
+        /// <param name="profileId">profile id of user</param>
+        /// <param name="daysCount">for preparing instagram report till counted days</param>
+        /// <returns></returns>
         [HttpGet("GetInstagramReportData")]
         public IActionResult GetInstagramReportData(string profileId, int daysCount)
         {
             return Ok(Repositories.InstagramReportsRepository.getInstagramReportData(profileId, daysCount, _redisCache, _appSettings));
         }
+
+
+        /// <summary>
+        /// To get instagram data.
+        /// </summary>
+        /// <param name="profileId">profile id of user </param>
+        /// <returns></returns>
         [HttpGet("GetInstagramData")]
         public IActionResult GetInstagramData(string profileId)
         {

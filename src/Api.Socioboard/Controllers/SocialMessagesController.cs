@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Domain.Socioboard.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 
 
@@ -33,12 +34,24 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
-
+        /// <summary>
+        /// To compose message
+        /// </summary>
+        /// <param name="message">message provided by the user for posting</param>
+        /// <param name="profileId">id of profiles of the user</param>
+        /// <param name="userId">id of the user</param>
+        /// <param name="imagePath">path for taking image</param>
+        /// <param name="link"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
         [HttpPost("ComposeMessage")]
         public async Task<IActionResult> ComposeMessage(string message, string profileId, long userId, string imagePath, string link, IFormFile files)
         {
             var filename = "";
-            var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\" + profileId;
+            var apiimgPath = "";
+            var uploads = _appEnv.WebRootPath + "\\upload" ;
+            string postmessage = "";
+
             if (files != null)
             {
 
@@ -50,7 +63,8 @@ namespace Api.Socioboard.Controllers
                             .Parse(files.ContentDisposition)
                             .FileName
                             .Trim('"');
-                    filename = _appEnv.WebRootPath + $@"\{fileName}";
+                    apiimgPath = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{fileName}";
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{fileName}";
                     // size += file.Length;
                     using (FileStream fs = System.IO.File.Create(filename))
                     {
@@ -60,6 +74,26 @@ namespace Api.Socioboard.Controllers
                 }
             }
 
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("https://") || item.Contains("http://"))
+                    {
+                        link = item;
+                    }
+                    else if(item.Contains("hhh"))
+                    {
+                        postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            message = postmessage;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string[] lstProfileIds = null;
             if (profileId != null)
@@ -78,7 +112,7 @@ namespace Api.Socioboard.Controllers
                 {
                     string prId = item.Substring(3, item.Length - 3);
                     Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                    string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, filename, imagePath, dbr, _logger);
+                    string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, filename, link, dbr, _logger);
 
                 }
                 if (item.StartsWith("tw"))
@@ -90,13 +124,13 @@ namespace Api.Socioboard.Controllers
                 if (item.StartsWith("lin"))
                 {
                     string prId = item.Substring(4, item.Length - 4);
-                    string ret = Helper.LinkedInHelper.PostLinkedInMessage(filename, userId, message, prId, filename, _redisCache, _appSettings, dbr);
+                    string ret = Helper.LinkedInHelper.PostLinkedInMessage(apiimgPath, userId, message, prId, apiimgPath, _redisCache, _appSettings, dbr);
 
                 }
                 if (item.StartsWith("Cmpylinpage"))
                 {
                     string prId = item.Substring(12, item.Length - 12);
-                    string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(filename, userId, message, prId, _redisCache, dbr, _appSettings);
+                    string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(apiimgPath, userId, message, prId, _redisCache, dbr, _appSettings);
 
                 }
             }
@@ -109,6 +143,7 @@ namespace Api.Socioboard.Controllers
         public async Task<ActionResult> ScheduleMessage(string message, string profileId, long userId, string imagePath, string link, string scheduledatetime, IFormFile files)
         {
             var filename = "";
+            string postmessage = "";
             var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\" + profileId;
             if (files != null)
             {
@@ -121,7 +156,7 @@ namespace Api.Socioboard.Controllers
                             .Parse(files.ContentDisposition)
                             .FileName
                             .Trim('"');
-                    filename = _appEnv.WebRootPath + $@"\{fileName}";
+                    filename = _appEnv.WebRootPath +"\\upload\\"+$@"\{fileName}";
                     // size += file.Length;
                     using (FileStream fs = System.IO.File.Create(filename))
                     {
@@ -130,6 +165,28 @@ namespace Api.Socioboard.Controllers
                     }
                 }
             }
+
+
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("https://") || item.Contains("http://"))
+                    {
+                        link = item;
+                    }
+                    else if (item.Contains("hhh"))
+                    {
+                        postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            message = postmessage;
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string[] lstProfileIds = null;
@@ -143,13 +200,15 @@ namespace Api.Socioboard.Controllers
                 return Ok("profileId required");
             }
 
+            string retunMsg = string.Empty;
+
             foreach (var item in lstProfileIds)
             {
                 if (item.StartsWith("fb"))
                 {
                     string prId = item.Substring(3, item.Length - 3);
                     Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                    Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                     Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
                 }
                 if (item.StartsWith("page"))
                 {
@@ -228,6 +287,37 @@ namespace Api.Socioboard.Controllers
         [HttpGet("EditScheduleMessage")]
         public IActionResult EditScheduleMessage(long socioqueueId, long userId, long GroupId, string message)
         {
+            string postmessage = "";
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("hhh"))
+                    {
+                        postmessage = postmessage + item.Replace("hhh", "#");
+                    }
+                    if (item.Contains("nnn"))
+                    {
+                        postmessage = postmessage.Replace("nnn", "&");
+                    }
+                    if (item.Contains("ppp"))
+                    {
+                        postmessage = postmessage.Replace("ppp", "+");
+                    }
+                    if (item.Contains("jjj"))
+                    {
+                        postmessage = postmessage.Replace("jjj", "-+");
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            message = postmessage;
+
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduleMessage = Repositories.ScheduledMessageRepository.EditScheduleMessage(socioqueueId, userId, GroupId, message, _redisCache, _appSettings, dbr);
             return Ok(lstScheduleMessage);

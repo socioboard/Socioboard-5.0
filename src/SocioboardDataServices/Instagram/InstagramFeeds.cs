@@ -25,11 +25,69 @@ namespace SocioboardDataServices.Instagram
         public static  int updateInstagramFeeds(Domain.Socioboard.Models.Instagramaccounts insAcc)
         {
             apiHitsCount = 0;
-            if(insAcc.lastUpdate.AddHours(1)>=DateTime.UtcNow)
+            DatabaseRepository dbr = new DatabaseRepository();
+            if (insAcc.lastUpdate.AddHours(1)<=DateTime.UtcNow)
             {
                 if(insAcc.IsActive)
                 {
-                    while(apiHitsCount<MaxapiHitsCount)
+
+                    Domain.Socioboard.Models.Instagramaccounts Instagramaccounts = new Domain.Socioboard.Models.Instagramaccounts();
+                    Domain.Socioboard.Models.Instagramaccounts objInstagramAccount;
+                    UserController objusercontroller = new UserController();
+                    ConfigurationIns configi = new ConfigurationIns("https://api.instagram.com/oauth/authorize/", "d89b5cfa3796458ebbb2520d70eeb498", "e4663d0a287243f88ac619b5692119c8", "https://www.socioboard.com/InstagramManager/Instagram", "https://api.instagram.com/oauth/access_token", "https://api.instagram.com/v1/", "");
+                    oAuthInstagram _api = new oAuthInstagram();
+                    _api = oAuthInstagram.GetInstance(configi);
+                    InstagramResponse<User> objuser = objusercontroller.GetUserDetails(insAcc.InstagramId,insAcc.AccessToken);
+
+                    objInstagramAccount = new Domain.Socioboard.Models.Instagramaccounts();
+
+
+                    if (objuser!=null)
+                    {
+                        try
+                        {
+                            objInstagramAccount.ProfileUrl = objuser.data.profile_picture;
+                        }
+                        catch (Exception ex)
+                        {
+                            objInstagramAccount.ProfileUrl = insAcc.ProfileUrl;
+                        }
+                        try
+                        {
+                            objInstagramAccount.TotalImages = objuser.data.counts.media;
+                        }
+                        catch (Exception ex)
+                        {
+                            objInstagramAccount.TotalImages = insAcc.TotalImages;
+                        }
+                        try
+                        {
+                            objInstagramAccount.FollowedBy = objuser.data.counts.followed_by;
+                        }
+                        catch (Exception ex)
+                        {
+                            objInstagramAccount.FollowedBy = insAcc.FollowedBy;
+                        }
+                        try
+                        {
+                            objInstagramAccount.Followers = objuser.data.counts.follows;
+                        }
+                        catch (Exception ex)
+                        {
+                            objInstagramAccount.Followers = insAcc.Followers;
+                        }
+                        try
+                        {
+                            objInstagramAccount.bio = objuser.data.bio;
+                        }
+                        catch (Exception ex)
+                        {
+                            objInstagramAccount.bio = insAcc.bio;
+                        }
+
+                        dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(objInstagramAccount); 
+                    }
+                    while (apiHitsCount<MaxapiHitsCount)
                     {
                         GetInstagramSelfFeeds(insAcc.InstagramId, insAcc.AccessToken);
                         GetInstagramUserDetails(insAcc.InstagramId, insAcc.AccessToken, insAcc);
@@ -39,9 +97,12 @@ namespace SocioboardDataServices.Instagram
                         GetInstagramFollower(insAcc.InstagramId, insAcc.AccessToken, 1);
                     }
                     insAcc.lastUpdate = DateTime.UtcNow;
-                    DatabaseRepository dbr = new DatabaseRepository();
                     dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(insAcc);
                 }
+            }
+            else
+            {
+                apiHitsCount = 0;
             }
            
             return 0;
@@ -70,7 +131,7 @@ namespace SocioboardDataServices.Instagram
                             Domain.Socioboard.Models.Mongo.InstagramFeed objInstagramFeed = new Domain.Socioboard.Models.Mongo.InstagramFeed();
                             try
                             {
-                                objInstagramFeed.FeedDate = SBHelper.ConvertToUnixTimestamp(Convert.ToDateTime(item["created_time"].ToString()));
+                                objInstagramFeed.FeedDate = Convert.ToDouble(item["created_time"].ToString());
                             }
                             catch { }
                             try
@@ -177,7 +238,7 @@ namespace SocioboardDataServices.Instagram
                                         catch { }
                                         try
                                         {
-                                            objInstagramComment.CommentDate = SBHelper.ConvertToUnixTimestamp(Convert.ToDateTime(usercmts.data[cmt].created_time.ToString()));
+                                            objInstagramComment.CommentDate =Convert.ToDouble(usercmts.data[cmt].created_time.ToString());
                                         }
                                         catch { }
                                         try

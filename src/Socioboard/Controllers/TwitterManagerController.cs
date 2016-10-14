@@ -24,7 +24,7 @@ namespace Socioboard.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddTwitterAccount()
+        public async Task<IActionResult> AddTwitterAccount(bool follow)
         {
             int count = 0;
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
@@ -46,7 +46,14 @@ namespace Socioboard.Controllers
             }
             else
             {
-                HttpContext.Session.SetObjectAsJson("Twitter", "Twitter_Account");
+                if (follow)
+                {
+                    HttpContext.Session.SetObjectAsJson("Twitter", "Twitter_Account_Follow");
+                }
+                else
+                {
+                    HttpContext.Session.SetObjectAsJson("Twitter", "Twitter_Account");
+                }
                 OAuthCredentials credentials = new OAuthCredentials()
                 {
                     Type = OAuthType.RequestToken,
@@ -86,9 +93,8 @@ namespace Socioboard.Controllers
             string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
             string requestSecret = HttpContext.Session.GetObjectFromJson<string>("requestSecret");
             string twitterSession = HttpContext.Session.GetObjectFromJson<string>("Twitter");
-            if (twitterSession.Equals("Twitter_Account"))
+            if (twitterSession.Equals("Twitter_Account") || twitterSession.Equals("Twitter_Account_Follow"))
             {
-                HttpContext.Session.SetObjectAsJson("Twitter", null);
                 Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("requestToken", oauth_token));
@@ -96,6 +102,14 @@ namespace Socioboard.Controllers
                 Parameters.Add(new KeyValuePair<string, string>("requestVerifier", oauth_verifier));
                 Parameters.Add(new KeyValuePair<string, string>("groupId", groupId));
                 Parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+                if (twitterSession.Equals("Twitter_Account_Follow"))
+                {
+                    Parameters.Add(new KeyValuePair<string, string>("follow","true"));
+
+                }
+                HttpContext.Session.SetObjectAsJson("Twitter", null);
+               
+
                 HttpResponseMessage response = await WebApiReq.PostReq("/api/Twitter/AddTwitterAccount", Parameters, "", "", _appSettings.ApiDomain);
                 if (response.IsSuccessStatusCode)
                 {

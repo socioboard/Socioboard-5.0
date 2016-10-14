@@ -31,7 +31,10 @@
     "Google.Apis.Analytics.v3": "1.14.0.456",
     "Microsoft.AspNetCore.Cors": "1.0.0",
     "MongoDB.Bson": "2.2.4",
-    "Microsoft.AspNetCore.Diagnostics": "1.0.0"
+    "Microsoft.AspNetCore.Diagnostics": "1.0.0",
+    "System.Drawing.Primitives": "4.0.0",
+    "Swashbuckle.SwaggerGen": "6.0.0-beta901",
+    "Swashbuckle.SwaggerUi": "6.0.0-beta901"
   },
 
   "tools": {
@@ -51,7 +54,8 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "xmlDoc": true
   },
   "runtimes": { "win": [ "win7-x64", "win8-x64", "win10-x64" ] },
   "runtimeOptions": {
@@ -62,13 +66,7 @@
 
   "publishOptions": {
     "include": [
-      "wwwroot",
-      "Views",
-      "Areas/**/Views",
-      "appsettings.json",
-      "web.config",
-      "hibernate.cfg.xml",
-      "SocioboardBoardMe-1b20a17f8879.p12"
+      "wwwroot"
     ]
   },
 

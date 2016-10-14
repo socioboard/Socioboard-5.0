@@ -26,7 +26,7 @@ namespace Domain.Socioboard.Models.Mongo
         public virtual string Facebookpageid { get; set; }
         public virtual int Timeintervalminutes { get; set; }
         public virtual string Lastpostid { get; set; }
-        public virtual string Lastsharetimestamp { get; set; }
+        public virtual double Lastsharetimestamp { get; set; }
         public virtual bool IsHidden { get; set; }
         public virtual int FacebookStatus { get; set; }
         public virtual string AccessToken { get; set; }

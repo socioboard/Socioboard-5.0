@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Api.Socioboard.Model;
 using Microsoft.AspNetCore.Cors;
+using System.Xml;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -28,9 +29,34 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _env;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId">id of the user</param>
+        /// <param name="groupId">Id of the group to which account is to be added. </param>
+        /// <param name="rssUrl"></param>
+        /// <param name="profileId"></param>
+        /// <returns></returns>
         [HttpPost("AddRssUrl")]
         public IActionResult AddRssUrl(long userId,long groupId,string rssUrl, string profileId)
         {
+
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
+                xmlDoc.Load(rssUrl);
+                var abc = xmlDoc.DocumentElement.GetElementsByTagName("item");
+                if(abc.Count==0)
+                {
+                    return Ok("This Url Does't  Conatin Rss Feed");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok("This Url Does't  Conatin Rss Feed");
+            }
+
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = Repositories.RssFeedRepository.AddRssUrl(rssUrl, dbr);
             if(_RssFeedUrl!=null)

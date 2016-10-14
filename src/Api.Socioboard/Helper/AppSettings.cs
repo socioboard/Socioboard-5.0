@@ -16,7 +16,12 @@ namespace Api.Socioboard.Helper
         public string ZohoMailUserName { get; set; }
         public string ZohoMailPassword { get; set; }
 
-       
+        //Send Grid Mail Crds
+        public string SendgridUserName { get; set; }
+        public string SendGridPassword { get; set; }
+
+        public string frommail { get; set; }
+
 
 
         //Start facebook App Creds
@@ -71,6 +76,8 @@ namespace Api.Socioboard.Helper
 
         public string bitlyaccesstoken { get; set; }
 
+        //facebooklimits
+        public int FacebookScheduleMessageMaxLimit { get; set; }
 
 
     }

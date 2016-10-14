@@ -14,27 +14,44 @@ namespace SociobordRssDataServices.Rss
         {
             while(true)
             {
-                DatabaseRepository dbr = new DatabaseRepository();
-                MongoRepository _MongoRepository = new MongoRepository("Rss");
-                List<Domain.Socioboard.Models.RssFeedUrl> lstRssFeedUrl = dbr.FindAll<Domain.Socioboard.Models.RssFeedUrl>().ToList();
-                foreach (var item in lstRssFeedUrl)
+                try
                 {
-                    var ret = _MongoRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.rssFeedUrl.rssFeedUrlId == item.rssFeedUrlId);
-                    var task=Task.Run(async()=>{
-                        return await ret;
-                    });
-                    List<Domain.Socioboard.Models.Mongo.Rss> lstRss = task.Result.ToList();
-                    foreach (var item_Rss in lstRss)
+                    DatabaseRepository dbr = new DatabaseRepository();
+                    MongoRepository _MongoRepository = new MongoRepository("Rss");
+                    List<Domain.Socioboard.Models.RssFeedUrl> lstRssFeedUrl = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl != null).ToList();
+                    foreach (var item in lstRssFeedUrl)
                     {
-                        if(item.LastUpdate.AddHours(6) >= DateTime.UtcNow)
+                        var ret = _MongoRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.rssFeedUrl.rssFeedUrlId == item.rssFeedUrlId);
+                        var task = Task.Run(async () =>
                         {
-                            RssFeed _RssFeed = new RssFeed();
-                            string rssdata = _RssFeed.updateRssFeeds(item_Rss);
-                            Console.WriteLine(item.rssurl + "rssdata");
+                            return await ret;
+                        });
+                        List<Domain.Socioboard.Models.Mongo.Rss> lstRss = task.Result.ToList();
+                        foreach (var item_Rss in lstRss)
+                        {
+                            if (item.LastUpdate.AddHours(6) <= DateTime.UtcNow)
+                            {
+
+                                new Thread(delegate ()
+                                {
+                                    RssFeed.updateRssFeeds(item_Rss);
+                                }).Start();
+                                
+                                Console.WriteLine(item.rssurl + "rssdata");
+                                item.LastUpdate = DateTime.UtcNow;
+                                dbr.Update<Domain.Socioboard.Models.RssFeedUrl>(item);
+                            }
+
                         }
+                        
                     }
+                    Thread.Sleep(60000);
                 }
-                Thread.Sleep(60000);
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue while calling api");
+                    Thread.Sleep(60000);
+                }
             }
         }
     }

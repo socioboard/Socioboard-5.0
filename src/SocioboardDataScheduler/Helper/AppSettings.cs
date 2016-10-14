@@ -24,17 +24,15 @@ namespace SocioboardDataScheduler.Helper
 
 
         //Twitter App Creds Start
-        public string twitterConsumerKey { get; set; }
-        public string twitterConsumerScreatKey { get; set; }
-        public string twitterRedirectionUrl { get; set; }
+        public const string twitterConsumerKey = "";
+        public const string twitterConsumerScreatKey = "";
+        public const string twitterRedirectionUrl = "http://localhost:9821/TwitterManager/Twitter";
         //End Twitter App Creds 
 
         //LinkedIn App Creds Start
-        public string LinkedinApiKey { get; set; }
-        public string LinkedinSecretKey { get; set; }
-        public string LinkedinCallBackURL { get; set; }
-        //End LinkedIn App Creds 
-
+        public const string LinkedinApiKey = "";
+        public const string LinkedinSecretKey = "";
+        public const string LinkedinCallBackURL = "http://localhost:9821/LinkedinManager/LinkedinRedirect";
 
     }
 }

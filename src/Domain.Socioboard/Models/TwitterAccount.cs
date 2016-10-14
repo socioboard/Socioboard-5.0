@@ -28,5 +28,6 @@ namespace Domain.Socioboard.Models
         public virtual DateTime lastUpdate { get; set; }
         public virtual string location { get; set; }
         public virtual string description { get; set; }
+        public virtual DateTime SchedulerUpdate { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using Socioboard.Twitter.App.Core;
 using Socioboard.Twitter.Authentication;
 using Socioboard.Twitter.Twitter.Core.TimeLineMethods;
+using Socioboard.Twitter.Twitter.Core.UserMethods;
 using SocioboardDataServices.Model;
 using System;
 using System.Collections.Generic;
@@ -20,23 +21,96 @@ namespace SocioboardDataServices.Twitter
         public static int updateTwitterFeeds(Domain.Socioboard.Models.TwitterAccount twtaccount, oAuthTwitter oAuth)
         {
             apiHitsCount = 0;
-            if (twtaccount.lastUpdate.AddMinutes(15) >= DateTime.UtcNow)
+            if (twtaccount.lastUpdate.AddMinutes(15) <= DateTime.UtcNow)
             {
                 if (twtaccount.isActive)
                 {
-                    while (apiHitsCount < MaxapiHitsCount)
+                    string twitterUserId = string.Empty;
+                    Users userinfo = new Users();
+                    JArray profile = userinfo.Get_Users_LookUp_ByScreenName(oAuth, oAuth.TwitterScreenName);
+                    TwitterUser twtuser;
+                    if (profile!=null)
                     {
-                        SaveTwitterMessages(twtaccount.twitterUserId,oAuth);
-                        SaveUserRetweets(twtaccount.twitterUserId, oAuth);
-                        SaveUserTweets(twtaccount.twitterUserId,twtaccount.twitterScreenName ,oAuth);
-                        SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
-                        SaveUserFollowers(oAuth, twtaccount.twitterScreenName, twtaccount.twitterUserId);
-                        SaveTwitterDirectMessageSent(oAuth);
-                        SaveTwittwrDirectMessageRecieved(oAuth);
+                        var item = profile[0];
+                        Domain.Socioboard.Models.TwitterAccount twitterAccount = new Domain.Socioboard.Models.TwitterAccount();
+
+                        try
+                        {
+                            twitterAccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            twitterAccount.followingCount = twtaccount.followingCount;
+                        }
+                        try
+                        {
+                            twitterAccount.followersCount = Convert.ToInt64(item["followers_count"].ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            twitterAccount.followersCount = twtaccount.followersCount;
+                        }
+
+                        try
+                        {
+                            twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        try
+                        {
+                            twitterAccount.location = item["location"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            twitterAccount.description = item["description"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            twitterAccount.profileUrl = string.Empty;
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            twitterAccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            twitterAccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        Model.DatabaseRepository dbr = new DatabaseRepository();
+                        dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twitterAccount);
+                        while (apiHitsCount < MaxapiHitsCount)
+                        {
+                            SaveTwitterMessages(twtaccount.twitterUserId, oAuth);
+                            SaveUserRetweets(twtaccount.twitterUserId, oAuth);
+                            SaveUserTweets(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
+                            SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
+                            SaveUserFollowers(oAuth, twtaccount.twitterScreenName, twtaccount.twitterUserId);
+                            SaveTwitterDirectMessageSent(oAuth,twtaccount.twitterUserId);
+                            SaveTwittwrDirectMessageRecieved(oAuth,twtaccount.twitterUserId);
+                        }
+                        twtaccount.lastUpdate = DateTime.UtcNow;
+                        dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount); 
                     }
-                    twtaccount.lastUpdate = DateTime.UtcNow;
-                    DatabaseRepository dbr = new DatabaseRepository();
-                    dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount);
                 }
             }
             return 0;
@@ -558,7 +632,7 @@ namespace SocioboardDataServices.Twitter
         }
 
 
-        private static void SaveTwitterDirectMessageSent(oAuthTwitter OAuth)
+        private static void SaveTwitterDirectMessageSent(oAuthTwitter OAuth, string profileId)
         {
             #region Add Twitter Direct Message
             TwitterUser twtuser = new TwitterUser();
@@ -574,7 +648,7 @@ namespace SocioboardDataServices.Twitter
                     {
                         objTwitterDirectMessages.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent;
                         objTwitterDirectMessages.id = ObjectId.GenerateNewId();
-
+                        objTwitterDirectMessages.profileId = profileId;
                         try
                         {
                             objTwitterDirectMessages.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
@@ -680,7 +754,7 @@ namespace SocioboardDataServices.Twitter
         }
 
 
-        private static void SaveTwittwrDirectMessageRecieved(oAuthTwitter OAuth)
+        private static void SaveTwittwrDirectMessageRecieved(oAuthTwitter OAuth, string profileId )
         {
             #region Add Twitter Direct Message
             TwitterUser twtuser = new TwitterUser();
@@ -695,7 +769,7 @@ namespace SocioboardDataServices.Twitter
                     {
                         objTwitterDirectMessages.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived;
                         objTwitterDirectMessages.id = ObjectId.GenerateNewId();
-
+                        objTwitterDirectMessages.profileId = profileId;
                         try
                         {
                             objTwitterDirectMessages.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');

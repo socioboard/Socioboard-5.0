@@ -15,20 +15,29 @@ namespace SocioboardDataServices.LinkedIn
         {
             while (true)
             {
-                Model.DatabaseRepository dbr = new Model.DatabaseRepository();
-                AppSettings _appsetting = new AppSettings();
-                List<Domain.Socioboard.Models.LinkedinCompanyPage> lstLinkedinCompanyPage = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.IsActive).ToList();
-                foreach (var item in lstLinkedinCompanyPage)
+                try
                 {
-                    oAuthLinkedIn _oauth = new oAuthLinkedIn();
-                    _oauth.ConsumerKey = "81k55eukagnqfa";
-                    _oauth.ConsumerSecret = "d9rqHEf7ewdSbsF1";
-                    _oauth.Token = item.OAuthToken;
-                    Console.WriteLine(item.LinkedinPageName + "Updating Started");
-                    LinkedPageFeed.UpdateLinkedInComanyPageFeed(item,_oauth);
-                    Console.WriteLine(item.LinkedinPageName + "Updated");
+                    Model.DatabaseRepository dbr = new Model.DatabaseRepository();
+                    AppSettings _appsetting = new AppSettings();
+                    List<Domain.Socioboard.Models.LinkedinCompanyPage> lstLinkedinCompanyPage = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.IsActive).ToList();
+                    foreach (var item in lstLinkedinCompanyPage)
+                    {
+                        oAuthLinkedIn _oauth = new oAuthLinkedIn();
+
+                        _oauth.ConsumerKey = Helper.AppSettings.LinkedinApiKey;
+                        _oauth.ConsumerSecret = Helper.AppSettings.LinkedinSecretKey;
+                        _oauth.Token = item.OAuthToken;
+                        Console.WriteLine(item.LinkedinPageName + "Updating Started");
+                        LinkedPageFeed.UpdateLinkedInComanyPageFeed(item, _oauth);
+                        Console.WriteLine(item.LinkedinPageName + "Updated");
+                    }
+                    Thread.Sleep(60000);
                 }
-                Thread.Sleep(60000);
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(600000);
+                }
             }
         }
     }

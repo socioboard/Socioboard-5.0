@@ -3,8 +3,15 @@
 SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $http, $modal, $timeout, apiDomain,domain) {
     //alert('helo');
     
-        $scope.$on('$viewContentLoaded', function () {
-            //console.log(lstAddFbPages);
+    $scope.$on('$viewContentLoaded', function () {
+        $scope.dispbtn = true;
+        $scope.check = false;
+        //console.log(lstAddFbPages);
+       
+        //Auth.login().success(function () { });
+        $scope.getHttpsURL = function (obj) {
+            return obj.replace("http:", "https:")
+        };
 
             if ($rootScope.lstAddFbPages != undefined) {
                 $('#FbFanpage_Modal').openModal();
@@ -63,28 +70,73 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 $('#ComposePostModal').openModal();
             }
             $scope.ComposeMessage = function () {
+                $scope.dispbtn = false;
                 var profiles = $('#composeProfiles').val();
                 var message = $('#composeMessage').val();
-                var formData = new FormData();
-                formData.append('files', $("#composeImage").get(0).files[0]);
-                $http({
-                    method: 'POST',
-                    url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message,
-                    data: formData,
-                    headers: {
-                        'Content-Type': undefined
-                    },
-                    transformRequest: angular.identity,
-                }).then(function (response) {
-                    if (response.data == "Posted") {
-                        $('#ComposePostModal').closeModal();
-                        swal('Message compose successfully');
+                var updatedmessage = "";
+                var postdata = message.split("\n");
+                for (var i = 0; i < postdata.length; i++) {
+                    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                }
+                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                if (profiles.length > 0 && message!='') {
+                    $scope.checkfile();
+                    if ($scope.check == true) {
+                        var formData = new FormData();
+                        formData.append('files', $("#composeImage").get(0).files[0]);
+                        $http({
+                            method: 'POST',
+                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
+                            data: formData,
+                            headers: {
+                                'Content-Type': undefined
+                            },
+                            transformRequest: angular.identity,
+                        }).then(function (response) {
+                            if (response.data == "Posted") {
+                                $scope.dispbtn = true;
+                                $('#ComposePostModal').closeModal();
+                                swal('Message compose successfully');
+                            }
+
+                        }, function (reason) {
+                            console.log(reason);
+                        });
                     }
-                    
-                }, function (reason) {
-                    console.log(reason);
-                });
+                    else {
+                        alertify.set({ delay: 3000 });
+                        alertify.error("File Extention is not valid. Please upload any image file");
+                        $('#input-file-now').val('');
+                    }
+                }
+                else {
+                    $scope.dispbtn = true;
+                    swal('please select profile and type message for compose');
+                }
             }
+
+            $scope.checkfile = function () {
+                var filesinput = $('#composeImage');
+                var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+                if (filesinput != undefined && filesinput[0].files[0] != null) {
+                    if ($scope.hasExtension('#composeImage', fileExtension)) {
+                        $scope.check = true;
+                    }
+                    else {
+
+                        $scope.check = false;
+                    }
+                }
+                else
+                {
+                    $scope.check = true;
+                }
+            }
+            $scope.hasExtension = function (inputID, exts) {
+                var fileName = $('#composeImage').val();
+                return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+            }
+
             $scope.GetIncommingMessage = function () {
                 //codes to load  TotalIncommingMessages
                 $http.get(apiDomain + '/api/Twitter/GetIncommingMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
@@ -379,7 +431,16 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     //codes to load  Gplus profiles start
                     $http.get(apiDomain + '/api/Facebook/AddFacebookPagesByUrl?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&url=' + url)
                                   .then(function (response) {
-                                      $('#_txtinputurl').val('');
+                                      if (response.data!="")
+                                      {
+                                          swal(response.data)
+                                          $('#_txtinputurl').val('');
+                                          if (response.data == "added successfully") {
+                                              window.location.reload();
+                                          }
+                                      }
+                                      
+
 
                                   }, function (reason) {
                                       $scope.error = reason.data;
@@ -402,6 +463,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
+            }
+
+            $scope.followChange = function () {
+
+                if ($('#TwitterFollow').is(':checked')) {
+                    console.log('../TwitterManager/AddTwitterAccount?follow=true');
+                    document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount?follow=true");
+                }
+                else {
+                    console.log('../TwitterManager/AddTwitterAccount');
+
+                    document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount");
+                }
             }
             dashboard();
 

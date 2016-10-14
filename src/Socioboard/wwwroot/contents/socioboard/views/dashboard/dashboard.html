@@ -45,6 +45,9 @@
         </div>
     </div>
     <!--card stats end-->
+
+
+
     <!-- START CONTENT -->
     <section id="content">
         <div class="row">
@@ -66,17 +69,17 @@
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate">{{fbProfile.fbUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{fbProfile.friends}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{fbProfile.emailId}}</p>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Friends"></i> {{fbProfile.friends}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> {{fbProfile.emailId}}</p>
                                     </div>
                                     <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{fbProfile.about}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{fbProfile.workPosition}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{fbProfile.emailId}}</p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{fbProfile.birthday}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{fbProfile.gender}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Designation"></i> {{fbProfile.workPosition}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i>{{fbProfile.emailId}}</p>
+                                        <p><i class="mdi-social-cake cyan-text text-darken-2" title="DOB"></i> {{fbProfile.birthday}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Gender"></i> {{fbProfile.gender}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -89,21 +92,21 @@
                                         <img class="activator" src="{{twtProfile.profileBackgroundImageUrl}}" alt="{{twtProfile.twitterScreenName}}">
                                     </div>
                                     <div class="card-content">
-                                        <img src="{{twtProfile.profileImageUrl}}" alt="{{twtProfile.twitterScreenName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="{{getHttpsURL(twtProfile.profileImageUrl)}}" alt="{{twtProfile.twitterScreenName}}" class="circle responsive-img activator card-profile-image">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate">{{twtProfile.twitterScreenName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{twtProfile.followersCount}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{twtProfile.location}}</p>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{twtProfile.twitterScreenName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i> {{twtProfile.followersCount}}</p>
+                                        <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Following"></i> {{twtProfile.followingCount}}</p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate">{{twtProfile.twitterScreenName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{twtProfile.description}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{twtProfile.twitterName}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{twtProfile.description}}</p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{twtProfile.followingCount}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{twtProfile.location}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Your Name"></i> {{twtProfile.twitterName}}</p>
+                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Descriptions"></i>{{twtProfile.description}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Following"></i> {{twtProfile.followingCount}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followers"></i> {{twtProfile.followersCount}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -121,18 +124,18 @@
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate">{{gplusProfile.gpUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{gplusProfile.inYourCircles}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{gplusProfile.inYourCircles}}</p>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.inYourCircles}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> {{gplusProfile.inYourCircles}}</p>
                                     </div>
                                     <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{gplusProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <!--<p>{{gplusProfile.description}}</p>-->
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{gplusProfile.inYourCircles}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2"></i> {{gplusProfile.haveYouInCircles}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{gplusProfile.description}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="In Your Circle"></i> {{gplusProfile.inYourCircles}}</p>
+                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.haveYouInCircles}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i>{{gplusProfile.description}}</p>
                                         <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>-->
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{gplusProfile.location}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Location"></i> {{gplusProfile.location}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -145,21 +148,21 @@
                                         <img class="activator" src="{{gAProfile.profilePicUrl}}" alt="{{gAProfile.gaProfileName}}">
                                     </div>
                                     <div class="card-content">
-                                        <img src="{{gAProfile.profilePicUrl}}" alt="{{gAProfile.aaProfileName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="{{gAProfile.profilePicUrl}}" alt="{{gAProfile.gaProfileName}}" class="circle responsive-img activator card-profile-image">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate">{{gAProfile.gaProfileName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{gAProfile.visits}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{gAProfile.views}}</p>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gAProfile.gaProfileName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> {{gAProfile.visits}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Views"></i> {{gAProfile.views}}</p>
                                     </div>
                                     <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{gAProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{gAProfile.visits}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2"></i> {{gAProfile.views}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{gAProfile.websiteUrl}}</p>
-                                        <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gAProfile.followingCount}}</p>-->
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{gplgAProfileusProfile.emailId}}</p>
+                                        <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{gAProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> {{gAProfile.visits}}</p>
+                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Views"></i> {{gAProfile.views}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Website URL"></i>{{gAProfile.websiteUrl}}</p>
+                                      <p><i class="mdi-social-cake cyan-text text-darken-2" title="Have You In Circles"></i> {{gAProfile.haveYouInCircles}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Email Id"></i> {{gplgAProfileusProfile.emailId}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -176,17 +179,18 @@
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate">{{insProfile.insUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{insProfile.followers}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{insProfile.totalImages}}</p>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{insProfile.insUserName}}</span>
+                                        <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> {{insProfile.followers}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i> {{insProfile.followedBy}}</p>
+                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>
                                     </div>
                                     <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{insProfile.insUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <span class="card-title grey-text text-darken-4 truncate" >{{insProfile.insUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{insProfile.bio}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{insProfile.insUserName}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{insProfile.bio}}</p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{insProfile.totalImages}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{insProfile.followedBy}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="User Name"></i> {{insProfile.insUserName}}</p>
+                                        <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> {{insProfile.followers}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i> {{insProfile.followedBy}}</p>
+                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -203,17 +207,17 @@
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate">{{linProfile.logoUrl}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{linProfile.numFollowers}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i> {{insProfile.locations}}</p>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.logoUrl}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Followers"></i> {{linProfile.numFollowers}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Location"></i> {{insProfile.locations}}</p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinPageName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{linProfile.specialties}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i> {{linProfile.linkedinPageName}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i>{{linProfile.description}}</p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{linProfile.locations}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2"></i> {{linProfile.numFollowers}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Page Name"></i> {{linProfile.linkedinPageName}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Description"></i>{{linProfile.description}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Location"></i> {{linProfile.locations}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i> {{linProfile.numFollowers}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -487,47 +491,52 @@
                         <h6 class="r_side_title"><i class="icon-users"></i>Social Profiles</h6>
                         <div class="row" id="social_profile_list">
                             <div class="col s12 m6 l6" ng-repeat="profile in lstProfiles">
-                                <div class="card-panel">
+                                <div class="card-panel social_profile">
                                     <div class="card-image">
                                         <div class="delet_icon" role="button" tabindex="0" ng-click="deleteProfile(profile.profileId)"></div>
-                                        <img src="{{profile.profilePic}}" class="responsive-img">
-                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
-                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/fb_icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
-                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
-                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
+                                        <img src="{{getHttpsURL(profile.profilePic)}}" title="{{profile.profileName}}" class="responsive-img">
+                                        <a target="_blank" href="https://www.facebook.com/{{profile.profileId}}"> <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon"></a>
+                                        <a target="_blank" href="https://www.facebook.com/{{profile.profileId}}"><img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==1" class="profile_socio_icon"></a>
+                                        <a target="_blank" href="https://www.facebook.com/{{profile.profileId}}"> <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==11" class="profile_socio_icon"></a>
+                                        <a target="_blank" href="https://plus.google.com/{{profile.profileId}}/posts"><img src="/contents/socioboard/images/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon"></a>
+                                        <a target="_blank" href="https://twitter.com/{{profile.profileName}}"> <img src="/contents/socioboard/images/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon"></a>
+                                        <a target="_blank" title="{{profile.profileName}}" href="https://analytics.google.com/analytics/web/"><img src="/contents/socioboard/images/analytics_icon.png" style="width: 24px; height: 24px; margin-top: 26%;" ng-if="profile.profileType==10" class="profile_socio_icon"></a>
+                                        <a target="_blank" href="http://www.linkedin.com/profile/view?id={{profile.profileId}}"><img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon"></a>
+                                        <a target="_blank" href="https://www.linkedin.com/company/{{profile.profileId}}"><img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -10%;" ng-if="profile.profileType==4" class="profile_socio_icon"></a>
+                                        <a target="_blank" href="http://instagram.com/{{profile.profileName}}"><img src="/contents/socioboard/images/instagram.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==8" class="profile_socio_icon"></a>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col s12 m6 l6">
                                 <div class="card-panel">
                                     <div class="card-image">
                                         <a class="waves-effect waves-light modal-trigger" href="#addprofile">
-                                            <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/invite.png" class="responsive-img">
+                                            <i class="icon-user-follow fa-3x"></i>
                                         </a>
                                     </div>
                                 </div>
                             </div>
 
-                        </div>
+                       
                     </div>
                 </div>
                 <!--end container-->
                 <!--start container-->
-                <div class="container">
+                <!--<div class="container">
                     <div class="card-panel grey lighten-5 z-depth-1">
                         <h6 class="r_side_title"><i class="icon-user-follow"></i>Team Members</h6>
                         <div class="row">
                             <div class="col s12 m6 l6">
                                 <div class="card-panel">
-                                    <div class="card-image center-align">
-                                        <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/invite.png" class="dropdown-button responsive-img" data-activates='group_dropdown'>
+                                    <div class="card-image center-align" data-activates="group_dropdown">
+                                        <i class="icon-user-follow fa-3x" ></i>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
 
                 <ul id='group_dropdown' class='dropdown-content'>
                     <li ng-repeat="grp in groups">
@@ -544,9 +553,11 @@
                         <div class="row" id="#recent_followers_list">
                             <div class="col s12 m6 l6" ng-repeat="twtfollower in TwitterRecentFollower">
                                 <div class="card-panel">
-                                    <div class="card-image">
-                                        <img src="{{twtfollower.profile_image_url}}" title="{{twtfollower.screen_name}}"  class="responsive-img">
-                                    </div>
+                                    <a href="https://twitter.com/{{twtfollower.screen_name}}" target="_blank">
+                                        <div class="card-image">
+                                            <img src="{{twtfollower.profile_image_url}}" title="{{twtfollower.screen_name}}" class="responsive-img">
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                             
@@ -558,7 +569,7 @@
         </div>
         <!-- Compose Email Trigger -->
         <div class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
-            <div class="btn-floating btn-large red modal-trigger"  ng-click="ComposePostModal()">
+            <div class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
                 <i class="large mdi-editor-mode-edit"></i>
             </div>
         </div>
@@ -580,14 +591,16 @@
                             </li>
                         </ul>
                     </div>
+                    <div ng-init="dispbtn= {{dispbtn}}"></div>
                     <div class="col s12 m7 l7 hide-on-med-and-down">
                         <ul class="right">
                             <li>
-                                <div ng-click="ComposeMessage()" ><i class="modal-action  mdi-content-send"></i></div>
+                                <div ng-show="dispbtn"  ng-click="ComposeMessage()" ><i class="modal-action  mdi-content-send"></i></div>
+                                <div ng-show="!dispbtn" ><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
                             </li>
-                            <li>
+                            <!--<li>
                                 <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
 
@@ -630,7 +643,7 @@
     </div>
     <!-- END CONTENT -->
     <!-- add profile -->
-    <div id="addprofile" class="modal">
+         <div id="addprofile" class="modal">
         <div class="modal-content">
             <h4>Adding Profiles</h4>
             <div class="row">
@@ -649,10 +662,11 @@
                 <div id="twitter" class="col s12">
                     <div class="center-align">
                         <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
-                        <a href="../TwitterManager/AddTwitterAccount"  class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
+                        <a href="../TwitterManager/AddTwitterAccount?follow=true" id="TwitterAddButton" class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
                         <p>
-                            <input type="checkbox" id="Follow1" />
-                            <label for="Follow1">Follow Socioboard on twitter for update &amp; announcements</label>
+                            <!-- ng-change="followChange()" -->
+                            <input type="checkbox" ng-click="followChange()"  checked="checked" id="TwitterFollow" />
+                            <label for="TwitterFollow">Follow Socioboard on twitter for update &amp; announcements</label>
                         </p>
                     </div>
                 </div>
@@ -663,7 +677,7 @@
                         <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
                         <a  class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i> Get Facebook Fanpage Analytics</a>
                         <div class="form-group input-group margin-top-10">
-                            <input type="text" placeholder="Ex: http://www.facebook.com/socioboard" id="_txtinputurl" class="form-control">
+                            <input type="text" placeholder="Ex: https://www.facebook.com/socioboard" id="_txtinputurl" class="form-control">
                             <span class="input-group-btn">
                                 <button type="button" ng-click="Addfacebookpagebyurl()"  class="btn btn-info">
                                     Submit
@@ -712,10 +726,11 @@
             </div>
         </div>
     </div>
-    <div>
+   
         <div class="modal" id="FbFanpage_Modal" >
             <div class="modal-content">
                 <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
+               
                 <ul class="collection">
                     <li class="collection-item avatar" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==0">
                         <div class="left">
@@ -752,8 +767,10 @@
             <div class="modal-content">
                 <h4>CHOOSE LINKED PAGES TO CONNECT</h4>
                 <ul class="collection">
+                   
                     <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0">
                         <div class="left">
+                            <img class="circle" alt="" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
                             <span class="title">{{linpages.PageName}}</span>
                         </div>
                         <p class="right">
@@ -764,6 +781,7 @@
 
                     <li class="collection-item avatar disabled" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==1">
                         <div class="left">
+                            <img class="circle" alt="" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
                             <span class="title">{{linpages.PageName}}</span>
                         </div>
                         <p class="right">
@@ -814,7 +832,7 @@
             </div>
         </div>
 
-    </div>
+    
 </div>
 
 

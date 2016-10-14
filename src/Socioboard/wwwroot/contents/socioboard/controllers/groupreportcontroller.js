@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, $http, $timeout) {
+SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
     
@@ -97,7 +97,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             //codes to load  fb page profiles start
             $http.get(apiDomain + '/api/GroupReport/getfacebookpageGroupReportData?groupId=' + $rootScope.groupId + '&daysCount=' + days)
                           .then(function (response) {
-                              $scope.generatefacebookGraph = response.data;
+                              $scope.generatefacebookGraphData = response.data;
                               $scope.generatefacebookGraph(days);
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -125,7 +125,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             var impressionsFemaleper = 0;
             var sharingMaleper = 0;
             var sharingperFemaleper = 0;
-            angular.forEach($scope.generatefacebookGraph, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {
                 if (value.date > startDate) {
                     totalLikes = totalLikes + value.totalLikes;
                     talkingAbout = talkingAbout + value.talkingAbout;

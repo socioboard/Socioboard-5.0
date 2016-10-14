@@ -19,7 +19,7 @@
     "tag": "2.2.0",
     "commit": "6fc01e29bdad0964f62ef56d01297039cdcadbe5"
   },
-  "_source": "git://github.com/jquery/jquery-dist.git",
+  "_source": "https://github.com/jquery/jquery-dist.git",
   "_target": "2.2.0",
   "_originalSource": "jquery"
 }

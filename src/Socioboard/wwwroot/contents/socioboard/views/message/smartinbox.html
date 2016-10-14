@@ -14,6 +14,7 @@
                             <span ng-if="notification.type==1 && notification.fromScreenName!=''" class="email-title">{{notification.fromScreenName}} retweet {{notification.recipientName}} Post</span>
                             <span ng-if="notification.type==1 && notification.fromScreenName==''" class="email-title">{{notification.fromName}} retweet {{notification.recipientName}} Post</span>
                             <span ng-if="notification.type==6" class="email-title">{{notification.fromScreenName}} New Follower Alert</span>
+                            <span ng-if="notification.type==11" class="email-title">{{notification.fromScreenName}} Facebook Page Notification</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
                                     <p class="break_word ultra-small">{{notification.twitterMsg}}</p>
@@ -37,7 +38,7 @@
                         </li>
 
 
-                        <div class="center">
+                        <!--<div class="center">
                             <div class="preloader-wrapper big active">
                                 <div class="spinner-layer spinner-blue">
                                     <div class="circle-clipper left">
@@ -79,7 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </ul>
 
                 </div>
@@ -92,6 +93,42 @@
                         <div class="smartinbox_filter_slider">
                             <!--rendering twitter profiles start-->
                             <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                <div class="row valign-wrapper">
+                                    <div class="col s2">
+                                        <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
+                                    </div>
+                                    <div class="col s8">
+                                        <span class="black-text">
+                                            {{profile.profileName}}
+                                        </span>
+                                    </div>
+                                    <div class="col s2">
+                                        <p>
+                                            <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
+                                            <label for="test_{{profile.profileId}}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}">
+                                <div class="row valign-wrapper">
+                                    <div class="col s2">
+                                        <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
+                                    </div>
+                                    <div class="col s8">
+                                        <span class="black-text">
+                                            {{profile.profileName}}
+                                        </span>
+                                    </div>
+                                    <div class="col s2">
+                                        <p>
+                                            <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
+                                            <label for="test_{{profile.profileId}}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:2} |filter:{ProfileType:1}">
                                 <div class="row valign-wrapper">
                                     <div class="col s2">
                                         <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
@@ -138,7 +175,7 @@
                     </div>-->
                     <div class="section section_filter">
                         <h6>MESSAGE TYPES</h6>
-                        <div class="grey lighten-5 z-depth-1">
+                        <!--<div class="grey lighten-5 z-depth-1">
                             <div class="row valign-wrapper">
                                 <div class="col s1">
                                     <i class="fa fa-facebook"></i>
@@ -155,7 +192,7 @@
                                     </p>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class=" grey lighten-5 z-depth-1">
                             <div class="row valign-wrapper">
                                 <div class="col s1">

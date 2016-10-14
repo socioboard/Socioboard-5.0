@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('InstagramreportController', function ($rootScope, $scope, $http, $timeout) {
+SocioboardApp.controller('InstagramreportController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
     
@@ -48,7 +48,7 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
             $scope.totalPOSTLIKES = totalPOSTLIKES;
         }
 
-        $scope.getprofileData = function () {
+        $scope.getprofileData = function (profileId) {
             //codes to load  instgarm  profiles start
             $http.get(apiDomain + '/api/InstagramReports/GetInstagramData?profileId=' + profileId)
                           .then(function (response) {
@@ -62,7 +62,7 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
         $scope.getOnPageLoadReports = function () {
             var canContinue = true;
             angular.forEach($rootScope.lstProfiles, function (value, key) {
-                if (canContinue && value.profileType == 1) {
+                if (canContinue && value.profileType == 8) {
                     $scope.getReports(value.profileId, 90)
                     $scope.selectedProfile = value.profileId;
                     canContinue = false;

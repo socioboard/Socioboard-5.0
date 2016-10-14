@@ -1,4 +1,11 @@
-    <div data-ng-controller="ScheduleMessageController">
+
+<style type="text/css">
+    md-dialog {
+        opacity: 1 !important;
+    }
+</style>
+    
+<div data-ng-controller="ScheduleMessageController">
             <!-- Page name -->
 
             <div class="container">
@@ -6,6 +13,7 @@
                     <h4>Schedule Message</h4> 
                 </div>
             </div>
+
 
 
             <!-- START CONTENT -->
@@ -36,17 +44,19 @@
                                          <p>Select your file</p>
                                       </div>
                                       <div class="col s12 m8 l9">
-                                          <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                                          <input  type="file" id="input-file-now" class="dropify" data-default-file="" />
                                       </div>
                                     </div>
                                     <div class="row">
+                                      
                                       <div class="input-field col s12">
                                           <div ng-if="!schedulemessage">
                                               <textarea id="ScheduleMsg" class="materialize-textarea" ng-pattern="/^[a-z]+[@+!+#][a-z]*$/" ng-model="ScheduleMsg" required name="ScheduleMsgtxt" length="500"></textarea>
                                               <label for="ScheduleMsg">Type Your Message Here</label>
                                           </div>
                                         <div ng-if="schedulemessage">
-                                            <textarea id="ScheduleMsg" class="materialize-textarea" ng-model="schedulemessage" required name="ScheduleMsgtxt"  length="500">{{schedulemessage}}</textarea>
+                                            <textarea id="ScheduleMsg" class="materialize-textarea" ng-model="schedulemessage.shareMessage" ng-if="!grppost" required name="ScheduleMsgtxt"  length="500">{{schedulemessage.shareMessage}}</textarea>
+                                            <textarea id="ScheduleMsg" class="materialize-textarea" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500"></textarea>
                                             <label for="ScheduleMsg">Type Your Message Here</label>
                                         </div>
                                       </div>
@@ -54,16 +64,56 @@
                                             <span style="color:red" ng-show="scheduleform.ScheduleMsgtxt.$error.required">Please enter Schedule Message</span>
                                         </span>
                                     </div>
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <input type="date" class="datepicker" id="ScheduleTime">
-                                            <label for="dob">Pick Date</label>
-                                        </div> 
-                                    </div>
-                                <div class="card-action">
+                                    
+
+                                   <div class="row">
+                                       <div class="input-field col s12">
+                                           <!-- <input id="datetimepicker" type="text" > -->
+                                           <!-- <input type="date" class="datepicker"> -->
+                                           <div id="content" layout="column" flex>
+                                               <md-content flex layout="column" layout-align="center center" layout-padding>
+                                                   <div layout="row" ng-form="demoForm">
+                                                       <div layout-padding>
+                                                           <div>
+                                                               <!-- <h4 class="md-subhead">Pick a date</h4> -->
+                                                               <mdp-date-picker mdp-open-on-click required name="dateFormat"  mdp-placeholder="(dd/mm/yyyy)" mdp-format="DD/MM/YYYY" ng-model="currentDate">
+                                                                   <div ng-show="demoForm.dateFormat.$error.required" >
+                                                                       <div ng-message="required">This is required</div>
+                                                                       <div ng-message="format">Invalid format</div>
+                                                                   </div>
+                                                               </mdp-date-picker>
+                                                           </div>
+                                                       </div>
+                                                       <div layout-padding>
+                                                           <div>
+                                                               <!-- <h4 class="md-subhead">Pick a time</h4> -->
+                                                               <mdp-time-picker mdp-open-on-click name="timeFormat" required ng-model="currentDate" mdp-format="HH:mm A" mdp-placeholder="(hh/mm)">
+                                                                   <div ng-show="demoForm.timeFormat.$error.required">
+                                                                       <div ng-message="required">This is required</div>
+                                                                       <div ng-message="format">Invalid format</div>
+                                                                   </div>
+                                                               </mdp-time-picker>
+                                                           </div>
+                                                       </div>
+                                                   </div>
+                                               </md-content>
+                                           </div>
+                                       </div>
+                                   </div>
+                                         
+                                    
+                                   <div ng-init="dispbtn= {{dispbtn}}"></div>
+                                <div class="card-action" ng-if="!schedulemessage"  ng-show="dispbtn">
                                     <button ng-disabled="!((scheduleform.ScheduleMsgtxt.$dirty))" class="waves-effect waves-light btn grey darken-3" ng-click="schedulemsg()">Schedule</button>
                                     <button ng-disabled="!((scheduleform.ScheduleMsgtxt.$dirty))" class="waves-effect waves-light btn grey darken-2" ng-click="draftmsg()">Save To Draft</button>
                                 </div>
+                                   <div class="card-action" ng-if="schedulemessage" ng-show="dispbtn">
+                                       <button  class="waves-effect waves-light btn grey darken-3" ng-click="schedulemsg()">Schedule</button>
+                                       <button  class="waves-effect waves-light btn grey darken-2" ng-click="draftmsg()">Save To Draft</button>
+                                   </div>
+                                   <div class="card-action" ng-show="!dispbtn">
+                                       <a href="#" class="waves-effect waves-light btn grey darken-3">Wait</a>
+                                   </div>
                                </form>
                             </div>
                         </div>

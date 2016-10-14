@@ -1,0 +1,275 @@
+    <div data-ng-controller="DesignFeedsController" scroll id="page" ng-class="{min:boolChangeClass}" style="height:100%;">
+            <!-- Page name -->
+            <div class="container">
+                <div class="col m12">
+                    <h4>Monitor</h4> 
+                </div>
+            </div>
+
+            <!-- START CONTENT -->
+            <section id="content">
+                <div class="row">
+                    <div class="col m12">
+                        <!--start container-->
+                            <div class="container">
+                                <!--card widgets start-->
+                                <div id="profiles">
+                                    <div class="row">
+                                        <div class="col s12 m6 l3" ng-repeat="fbpost in lstDiscoverySearchFacebook">
+                                            <div class="card">
+                                                <div class="card-content">                                                  
+                                                    <div class="row">
+                                                        <div class="col l2 m2 s6 margin-top-10">
+                                                            <img class="responsive-img" src="{{fbpost.profileImage}}"> 
+                                                        </div>
+                                                        <div class="col l10 s10 m10">
+                                                            <span class="card-title">{{fbpost.profileName}}</span>
+                                                  <br>
+                                                            <span>
+                                                                <a href="javascript:;">
+                                                                    <i class="fa fa-linkedin-square fa-fw"></i>@{{fbpost.profileName}}
+                                                                </a>
+                                                            </span>
+                                                        </div>
+                                                        <div class="col l12 m12 s12">  
+                                                            <p class="description_listen">
+                                                               {{fbpost.message}} 
+                                                                <img ng-if="fbpost.postImgUrl!='N/A'" src="{{fbpost.postImgUrl}}" class="responsive-img">
+                                                            </p> 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-action center">
+                                                  <a style="cursor:context-menu" ng-click="schedulefbpost(fbpost.message)">Schedule</a>
+                                                  <!--<a ng-click="schedulefbpost(fbpost.message)" href="#" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>-->
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        <!--end container-->
+                    </div>
+                </div>
+                <div ng-init="dispbtn= {{dispbtn}}"></div>
+                <div ng-show="dispbtn" class="col-md-10 portfolio-item" href="javascript:;">
+                    <img src="/contents/socioboard/images/sbloader.gif">
+                </div>
+
+                <!-- Compose Email Trigger -->
+                <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                  <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+                    <i class="large mdi-editor-mode-edit  animated bounceIn infinite"></i>
+                  </a>
+                </div>
+
+                <!-- Compose Email Structure -->
+                <div id="ComposePostModal" class="modal">
+                  <div class="modal-content">
+                    <nav class="red">
+                      <div class="nav-wrapper">
+                        <div class="left col s12 m5 l5">
+                          <ul>
+                            <li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                            </li>
+                            <li><a href="#!" class="email-type">Compose</a>
+                            </li>
+                          </ul>
+                        </div>
+                        <div class="col s12 m7 l7 hide-on-med-and-down">
+                          <ul class="right">
+                            <li><a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
+                            </li>
+                          </ul>
+                        </div>
+
+                      </div>
+                    </nav>
+                  </div>
+                  <div class="model-email-content">
+                    <div class="row">
+                      <form class="col s12">
+                        <div class="row">
+                             <div class="input-field col s12">
+                            <select multiple>
+                              <option value="" disabled selected>Choose your profile</option>
+                              <option value="1"><span class="fa fa-facebook"></span>Chanchal</option>
+                              <option value="2" data-icon="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="circle">Profile_2</option>
+                              <option value="3">Profile_3</option>
+                            </select>
+                            <label>Select Profiles</label>
+                          </div>
+                        </div>
+                          <!--Default version-->
+                        <div class="row section">
+                          <div class="col s12 m4 l3">
+                             <p>Select your file</p>
+                          </div>
+                          <div class="col s12 m8 l9">
+                              <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                          </div>
+                        </div>
+                        <div class="row">
+                          <div class="input-field col s12">
+                            <textarea id="compose" class="materialize-textarea" length="500"></textarea>
+                            <label for="compose">Compose email</label>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </section>
+            <!-- END CONTENT -->
+
+            <!-- add profile -->
+            <div id="addprofile" class="modal">
+                <div class="modal-content">
+                  <h4>Adding Profiles</h4>
+                    <div class="row">
+                        <div class="col s12">
+                          <ul class="tabs tab-demo z-depth-1">
+                            <li class="tab col s1"><a class="active" href="#twitter"><i class="fa fa-twitter fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#facebook"><i class="fa fa-facebook fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
+                          </ul>
+                        </div>
+                        <div id="twitter" class="col s12">
+                            <div class="center-align">
+                                <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
+                                <p>
+                                  <input type="checkbox" id="Follow1" />
+                                  <label for="Follow1">Follow Socioboard on twitter for update &amp; announcements</label>
+                                </p>
+                            </div>
+                        </div>
+                        <div id="facebook" class="col s12">
+                            <div class="center-align">
+                                <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand’s Facebook page.</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
+                                <a class="waves-effect waves-light btn modal-trigger" href="#FbFanpageModal"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Fanpage</a>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Fanpage Analytics</a>
+                            </div>
+                        </div>
+                        <div id="google" class="col s12">
+                            <div class="center-align">
+                                <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
+                            </div>
+                        </div>
+                        <div id="linkedin" class="col s12">
+                            <div class="center-align">
+                                <p>Grant access to your profile to share updates and view your feed.</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                            </div>
+                        </div>
+                        <div id="instagram" class="col s12">
+                            <div class="center-align">
+                                <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
+                            </div>
+                        </div>
+                        <div id="tumblr" class="col s12">
+                            <div class="center-align">
+                                <p>To allow Socioboard access to your Tumblr account, you must first give authorization from the Tumblr website</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add a tumblr Profile</a>
+                            </div>
+                        </div>
+                        <div id="youtube" class="col s12">
+                            <div class="center-align">
+                                <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-youtube fa-fw"></i>Connect your personal youtube</a>
+                            </div>
+                        </div>
+                        <div id="ganalytics" class="col s12">
+                            <div class="center-align">
+                                <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
+                                <a class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal GoogleAnalytics</a>
+                            </div>
+                        </div>
+                  </div>             
+                </div>
+            </div>
+
+            <!-- Fb Fanpage Modal  -->
+            <div id="FbFanpageModal" class="modal">
+                <div class="modal-content">
+                    <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
+                    <ul class="collection">
+                        <li class="collection-item avatar">
+                            <div class="left">
+                                <img src="https://graph.facebook.com/938022872953726/picture?type=small" alt="Socioboard" class="circle">
+                                <span class="title">Socioboard</span>
+                                <p>Connected</p>
+                            </div>
+                            <p class="right">
+                              <input type="checkbox" id="Socioboard" />
+                              <label for="Socioboard"></label>
+                            </p>
+                        </li>
+                        <li class="collection-item avatar">
+                            <div class="left">
+                                <img src="https://graph.facebook.com/284030164045/picture?type=small" alt="Globussoft" class="circle">
+                                <span class="title">Globussoft</span>
+                                <p>Connected</p>
+                            </div>
+                            <p class="right">
+                              <input type="checkbox" id="Globussoft" />
+                              <label for="Globussoft"></label>
+                            </p>
+                        </li>
+                        <li class="collection-item avatar">
+                            <div class="left">
+                                <img src="https://graph.facebook.com/1872928502931573/picture?type=small" alt="DailyOfficeCocktail" class="circle">
+                                <span class="title">DailyOfficeCocktail</span>
+                                <p>Connected</p>
+                            </div>
+                            <p class="right">
+                              <input type="checkbox" id="DailyOfficeCocktail" />
+                              <label for="DailyOfficeCocktail"></label>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                  <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+                  <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Connect</a>
+                </div>
+            </div>
+
+            <!-- Modal Structure -->
+            <div id="searchcatagory" class="modal">
+                <div class="modal-content">
+                <a href="" class="right modal-action modal-close waves-effect waves-green"><i class="icon-close"></i></a>
+                  <h4 class="center">Categories Featured</h4>
+                  <div class="row">
+                    <div class="col l12 s12 m12">
+                        <div class="input-field">
+                          <input value="" id="categories" type="text" class="validate">
+                          <label class="active" for="categories">Search your categories</label>
+                        </div>
+                        <div class="col s2">
+                            <a ng-click="discovery()" class="btn">
+                                <i class="fa fa-search"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col l4 m4 s12" ng-repeat="categories in lstcategories">
+                        <div class="collection">
+                            <a ng-click="discovery(categories.keyword)" class="collection-item active">{{categories.keyword}}</a>
+                        </div>
+                    </div>
+                   
+                  </div>
+                </div>
+            </div>
+
+    </div>

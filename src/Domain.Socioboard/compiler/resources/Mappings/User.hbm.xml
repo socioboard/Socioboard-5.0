@@ -64,6 +64,12 @@
     <property name="ValidateTokenExpireDate">
       <column name="ValidateTokenExpireDate"  />
     </property>
+    <property name="forgotPasswordKeyToken">
+      <column name="forgotPasswordKeyToken"  />
+    </property>
+    <property name="forgotPasswordExpireDate">
+      <column name="forgotPasswordExpireDate"  />
+    </property>
 
     <property name="dateOfBirth">
       <column name="dateOfBirth"  />

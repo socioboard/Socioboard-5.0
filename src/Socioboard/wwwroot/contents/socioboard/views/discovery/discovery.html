@@ -17,9 +17,13 @@
                         <input id="discoverytext" type="text" ng-pattern="/^[a-z]+[@+!+#][a-z]*$/" ng-model="discoverytext" required name="discoverytext" class="materialize-textarea">
                         <label for="icon_prefix">Type your Keyword here...</label>
                     </div>
+                    <div ng-init="dispbtn= {{dispbtn}}"></div>
                     <div class="col s2">
-                        <a ng-click="discovery()" class="btn">
+                        <a ng-show="dispbtn" ng-click="discovery()" class="btn">
                             <i class="fa fa-search"></i>
+                        </a>
+                        <a ng-show="!dispbtn"  class="btn">
+                            <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
                         </a>
                     </div>
                 </div>
@@ -97,14 +101,12 @@
         </div>
         <!--end container-->
         <!-- Compose Email Trigger -->
-        <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-            <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+        <div class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
+            <div class="btn-floating btn-large red modal-trigger" href="#ComposePost">
                 <i class="large mdi-editor-mode-edit"></i>
-            </a>
+            </div>
         </div>
-
-        <!-- Compose Email Structure -->
-        <div id="ComposePostModal" class="modal">
+        <div id="ComposePost" class="modal">
             <div class="modal-content">
                 <nav class="red">
                     <div class="nav-wrapper">
@@ -118,17 +120,16 @@
                                 </li>
                             </ul>
                         </div>
+                        <div ng-init="dispbtn= {{dispbtn}}"></div>
                         <div class="col s12 m7 l7 hide-on-med-and-down">
                             <ul class="right">
                                 <li>
-                                    <a href="#!"><i class="mdi-editor-attach-file"></i></a>
+                                    <div ng-show="dispbtn" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                                    <div ng-show="!dispbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
                                 </li>
-                                <li>
-                                    <a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
-                                </li>
+                                <!--<li>
+                                <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                            </li>-->
                             </ul>
                         </div>
 
@@ -140,13 +141,14 @@
                     <form class="col s12">
                         <div class="row">
                             <div class="input-field col s12">
-                                <select multiple>
-                                    <option value="" disabled selected>Choose your profile</option>
-                                    <option value="1"><span class="fa fa-facebook"></span>Chanchal</option>
-                                    <option value="2" data-icon="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="circle">Profile_2</option>
-                                    <option value="3">Profile_3</option>
+                                <select multiple id="composeProfiles">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 </select>
-                                <label>Select Profiles</label>
                             </div>
                         </div>
                         <!--Default version-->
@@ -155,19 +157,23 @@
                                 <p>Select your file</p>
                             </div>
                             <div class="col s12 m8 l9">
-                                <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                                <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <textarea id="compose" class="materialize-textarea" length="500"></textarea>
-                                <label for="compose">Compose email</label>
+                                <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
+                                <label for="compose">Message</label>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+        <!-- Compose Email Structure -->
+      
     </section>
     <!-- END CONTENT -->
+
+    
 </div>

@@ -5,8 +5,18 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+   
+     <script>
+        $(document).ready(function () {
+           // debugger;
+
+            $('.modal-trigger').leanModal();
+        });
+    </script>
     <!--Import Google Icon Font-->
-    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>
         Socioboard - Generate More leads on Social Media| Social CRM | Social Media CMS
     </title>
@@ -31,7 +41,7 @@
     <meta property="og:title" content="Socioboard - Open Source Social Technology Enabler | Find More Customers on Social Media">
     <meta property="og:description" content="Be it marketing(finding leads/customers) on Social media, or listening to customer complaints, replying to them, managing multiple social media accounts from one single dashboard, finding influencers in a particular category and reaching out to them and many more things, Socioboard products can do it.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="http://i.imgur.com/1B8wv5m.png">
+    <meta property="og:image" content="https://i.imgur.com/1B8wv5m.png">
     <meta property="og:url" content="https://www.facebook.com/SocioBoard">
 
 
@@ -116,11 +126,8 @@
             <div class="row center-align">
                 <div class="col l6 s12">
                     <h5 class="white-text">GET IN TOUCH WITH US</h5>
-                    <p class="grey-text text-lighten-4">
-                        #58 L V Complex, 2nd Floor<br>
-                        7th Block, 80 Feet Road, Koramangala Layout, Bangalore-560095
-                    </p>
-                    <img src="https://www.socioboard.com/Themes/Socioboard/Contents/img/contactus.png">
+                    <p class="grey-text text-lighten-4">TV Complex, 2, 60 Feet Rd, 6th Block, Koramangala, Bengaluru, Karnataka 560034</p>
+                    <img src="/contents/socioboard/images/contactus.png">
 
                 </div>
                 <div class="col l6 s12">
@@ -149,14 +156,13 @@
 
     <!-- SignUp Modal -->
     <div id="SignUpModal" class="modal modal-fixed-footer" style="width: 600px;">
-        <form onsubmit="myFunction(); return false;" class="col s12 form form-validate floating-label" id="RegistrationForm">
-
+        <form onsubmit="myFunction(); return false;"  id="RegistrationForm">
             <div class="modal-content">
                 <h4>Create a free account</h4>
                 <div class="row">
                     <div class="row">
                         <div class="input-field col s12 m12">
-                            <select name="AccountType">
+                            <select id="AccountType" name="AccountType">
                                 <optgroup label="Basic Plans">
                                     <option value="0">Basic(Free)</option>
                                     <option value="1">Standard</option>
@@ -175,35 +181,35 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
-                            <input id="FirstName" name="FirstName" type="text" required class="validate">
+                            <input id="FirstName" name="FirstName" type="text" required class="validate" pattern="^[a-zA-Z0-9]+$">
                             <label for="FirstName">First Name</label>
                         </div>
                         <div class="input-field col s6">
-                            <input id="LastName" name="LastName" type="text" class="validate">
+                            <input id="LastName" name="LastName" type="text" required class="validate" pattern="^[a-zA-Z0-9]+$">
                             <label for="LastName">Last Name</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="EmailId" name="EmailId" type="email" required class="validate">
+                            <input id="EmailId" name="EmailId" type="email" required class="validate" pattern="^([a-zA-Z0-9_\-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" >
                             <label for="EmailId" data-error="wrong" data-success="right">Email</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="PhoneNumber" name="PhoneNumber" type="tel" required class="validate">
+                            <input id="PhoneNumber" name="PhoneNumber" type="tel"  class="validate" maxlength="10" pattern="[0-9]{10}">
                             <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="Password" name="Password" type="password" data-rule-minlength="6" required class="validate">
+                            <input id="Password" name="Password" type="password" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" required class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
                             <label for="Password">Password</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="CnfPassword" name="CnfPassword" type="password" data-rule-minlength="6" required class="validate">
+                            <input id="CnfPassword" name="CnfPassword" type="password" data-rule-minlength="8" required class="validate">
                             <label for="CnfPassword">Confirm Password</label>
 
                         </div>
@@ -250,11 +256,11 @@
                         <input type="checkbox" id="RememberMe" />
                         <label for="RememberMe">Remember me</label>
                     </p>
-                    <p>Forgot Password? <a href="#">Click here to restore</a></p>
+                    <p>Forgot Password? <a class="modal-trigger modal-action modal-close modal-trigger" href="#ForgotPasswdModal">Click here to restore</a></p>
 
                     <img class='img-portfolio img-responsive hide' id="logLoading" src='~/contents/socioboard/images/loading-spinner-grey.gif'>
 
-                    <div id="btnlogin" onclick="signinFunction();">
+                    <div id="btnlogin" onclick="Login();">
                         <button type="submit" class="modal-action waves-effect waves-green btn">Submit</button>
                     </div>
                 </form>
@@ -273,6 +279,26 @@
             </div>
         </div>
     </div>
+
+
+    <div id="ForgotPasswdModal" class="modal">
+        <form onsubmit="forgotPassword(); return false;" class="col m6 s12">
+            <div class="modal-content">
+                <h4 class="Comfortaa_font">Forgot Password</h4>
+                <div class="row">
+                    <div class="input-field col s12 box1">
+                        <input id="forgotPwdEmail" name="forgotPwdEmail" type="email" class="validate box_input">
+                        <label for="forgotPwdEmail">Email</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div onclick="forgotPassword()" class="waves-effect waves-green btn-flat">Submit</div>
+            </div>
+        </form>
+    </div>
+
 
     <!--Import jQuery before materialize.js-->
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
@@ -400,7 +426,12 @@ analytics" href="http://statcounter.com/shopify/"
             color: #a94442;
         }
     </style>
+    <script>
+        $(document).ready(function () {
 
+            $('.modal-trigger').leanModal();
+        });
+    </script>
 
     <script>
         function myFunction() {
@@ -414,7 +445,7 @@ analytics" href="http://statcounter.com/shopify/"
             var Phone = $('#PhoneNumber').val();
             var password = $('#Password').val();
             var cnfPassword = $('#CnfPassword').val();
-
+            var accountType = $('#AccountType').val()
             if (password != cnfPassword) {
                 alert('password not match');
                 $('#ImgLoading').hide();
@@ -428,7 +459,7 @@ analytics" href="http://statcounter.com/shopify/"
 
                 url: "@ViewBag.ApiDomain/api/user/Register",
 
-                data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": Phone, "password": password },
+                data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": Phone, "password": password, "AccountType": accountType },
 
                 //contentType: "application/json; charset=utf-8",
 
@@ -495,6 +526,10 @@ analytics" href="http://statcounter.com/shopify/"
 
                 success: function (msg) {
                     $("#fb-gp-login").css("display", "none");
+                    if (msg == "UpgradePlans") {
+                        window.top.location = '/Index/UpgradePlans'
+
+                    }
                     if (msg == "1") {
                         $('input[type="submit"]').attr('disabled', false);
                         if ($("#RememberMe").is(':checked')) {
@@ -693,6 +728,7 @@ analytics" href="http://statcounter.com/shopify/"
 
     
     <script>
+        function gotohome() {
             $.ajax({
                 type: "GET",
                 url: "../Home/IsSessionExist",
@@ -705,8 +741,56 @@ analytics" href="http://statcounter.com/shopify/"
                     }
                 }
             });
-
+        }
+        gotohome();
     </script>
+
+    @*Forgot password js start*@
+    <script>
+        function forgotPassword() {
+            $('#ImgLoading').show();
+            $('#submitButton').hide();
+            debugger;
+            var emailId = $('#forgotPwdEmail').val();
+
+            $('#ImgLoading').hide();
+            $('#submitButton').show();
+
+
+            $.ajax({
+
+                type: "POST",
+
+                url: "@ViewBag.ApiDomain/api/user/ForgotPasswordSendMail",
+
+                data: { "EmailId": emailId },
+
+                dataType: "html",
+
+                success: function (msg) {
+                    console.log(msg);
+                    alertify.set({ delay: 5000 });
+                    alertify.success(msg);
+                    $('#forgotPwdEmail').val("");
+                    $('#ImgLoading').hide();
+                    $('#submitButton').show();
+                },
+                error: function (msg) {
+                    alertify.set({ delay: 5000 });
+                    alertify.error(msg1.responseText);
+                    $('#ImgLoading').hide();
+                    $('#submitButton').show();
+                    return false;
+                }
+
+            });
+            $('#ImgLoading').hide();
+            $('#submitButton').show();
+            return false;
+        }
+    </script>
+    @*Forgot password js end*@
+
     @RenderSection("Scripts", false)
 </body>
 </html>

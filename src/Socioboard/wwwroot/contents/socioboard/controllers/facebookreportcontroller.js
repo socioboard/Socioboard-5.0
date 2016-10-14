@@ -219,7 +219,7 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
         }
 
         $scope.generateIMPRESSIONS2Graph = function (days) {
-            $scope.generateChart2Data(days);
+            $scope.generate2ChartData(days);
             var chart = AmCharts.makeChart("BREAKDOWN_2", {
                 "type": "pie",
                 "theme": "light",

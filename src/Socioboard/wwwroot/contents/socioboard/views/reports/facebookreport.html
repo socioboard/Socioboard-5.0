@@ -5,7 +5,7 @@
                     <h4 class="pull-left">
                         <div class="input-field">
                             <select class="icons" ng-model="selectedProfile" ng-change="getReports(selectedProfile, 90)">
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10' | filter:{profileType:'!11'}" my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} " my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
                                     <img src="http://graph.facebook.com/{{profile.profileId}}/picture?type=small" class="circle">{{profile.profileName}}
                                 </option>
                             </select>

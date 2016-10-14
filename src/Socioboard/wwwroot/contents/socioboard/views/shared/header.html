@@ -7,11 +7,11 @@
                 <div class="nav-wrapper">
                     <h1 class="logo-wrapper"><a href="#dashboard" class="brand-logo darken-1"><img src="../contents/socioboard/images/Socioboard.png" alt="Socioboard"></a> <span class="logo-text">Socioboard</span></h1>
                     <ul class="right hide-on-med-and-down">
-                        <li>    
+                        <!--<li>    
                             <a href="javascript:void(0);" class="waves-effect waves-block waves-light show-search">
                                 <i class="mdi-action-search  grey-text text-darken-4"></i>
                             </a>                              
-                        </li>
+                        </li>-->
                         <li>
                             <a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen">
                                 <i class="icon-size-fullscreen  grey-text text-darken-4"></i>
@@ -23,11 +23,11 @@
                             </a>
                         </li>
                         <!-- Dropdown Trigger -->                        
-                        <li>
+                        <!--<li>
                             <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                                 <i class="icon-bell grey-text text-darken-4"></i>
                             </a>
-                        </li>
+                        </li>-->
                     </ul>
 
                     <ul id='groups' class='dropdown-content'>
@@ -35,7 +35,8 @@
                         <span class="grey grey-text text-lighten-4" ng-if="groupId==grp.id">{{grp.groupName}}</span>
                             <span ng-click="changeGroup(grp.id)"  ng-if="groupId!=grp.id">{{grp.groupName}}</span>
                          </li>
-                        
+                        <li class="divider"></li>
+                        <li><a href="#/groups" >Create New</a></li>
                     </ul>
                 </div>
             </nav>

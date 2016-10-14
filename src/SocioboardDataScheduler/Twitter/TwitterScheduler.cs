@@ -16,46 +16,57 @@ namespace SocioboardDataScheduler.Twitter
         public static int apiHitsCount = 0;
         public static int MaxapiHitsCount = 100;
 
-        public static void PostTwitterMessage(Domain.Socioboard.Models.ScheduledMessage schmessage)
+        public static void PostTwitterMessage(Domain.Socioboard.Models.ScheduledMessage schmessage, Domain.Socioboard.Models.TwitterAccount _TwitterAccount)
         {
-            DatabaseRepository dbr = new DatabaseRepository();
-            Domain.Socioboard.Models.TwitterAccount _TwitterAccount = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId == schmessage.profileId && t.isActive).First();
-            if (_TwitterAccount.lastUpdate.AddMinutes(15) <= DateTime.UtcNow)
+            try
             {
-                if (_TwitterAccount != null)
+                DatabaseRepository dbr = new DatabaseRepository();
+                if (_TwitterAccount.SchedulerUpdate.AddMinutes(15) <= DateTime.UtcNow)
                 {
-                    if (_TwitterAccount.isActive)
+                    if (_TwitterAccount != null)
                     {
-                        while (apiHitsCount < MaxapiHitsCount)
+                        if (_TwitterAccount.isActive)
                         {
-                            if (schmessage.scheduleTime <= DateTime.UtcNow)
+                            if (apiHitsCount < MaxapiHitsCount)
                             {
-                                string twitterdata = ComposeTwitterMessage(schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.picUrl, false, dbr, _TwitterAccount);
-                                if(!string.IsNullOrEmpty(twitterdata))
+                                if (schmessage.scheduleTime <= DateTime.UtcNow)
                                 {
-                                    apiHitsCount++;
+                                    string twitterdata = ComposeTwitterMessage(schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.url, false, dbr, _TwitterAccount, schmessage);
+                                    if (!string.IsNullOrEmpty(twitterdata))
+                                    {
+                                        apiHitsCount++;
+                                    }
                                 }
                             }
+                            //_TwitterAccount.lastUpdate = DateTime.UtcNow;
+                            //dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
                         }
-                        _TwitterAccount.lastUpdate = DateTime.UtcNow;
-                        dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
-                    }
-                    else
-                    {
-                        apiHitsCount = MaxapiHitsCount;
+                        else
+                        {
+                            apiHitsCount = MaxapiHitsCount;
+                        }
                     }
                 }
+                else
+                {
+                    apiHitsCount = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                apiHitsCount = MaxapiHitsCount;
             }
         }
 
 
-        public static string ComposeTwitterMessage(string message, string profileid, long userid, string picurl, bool isScheduled, DatabaseRepository dbr, Domain.Socioboard.Models.TwitterAccount TwitterAccount)
+        public static string ComposeTwitterMessage(string message, string profileid, long userid, string picurl, bool isScheduled, DatabaseRepository dbr, Domain.Socioboard.Models.TwitterAccount TwitterAccount, Domain.Socioboard.Models.ScheduledMessage schmessage)
         {
             bool rt = false;
             string ret = "";
             string str = "Message posted";
             Domain.Socioboard.Models.TwitterAccount objTwitterAccount = TwitterAccount;
-            oAuthTwitter OAuthTwt = new oAuthTwitter("MbOQl85ZcvRGvp3kkOOJBlbFS", "GF0UIXnTAX28hFhN1ISNf3tURHARZdKWlZrsY4PlHm9A4llYjZ", "http://serv1.socioboard.com/TwitterManager/Twitter");
+            oAuthTwitter OAuthTwt = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey, Helper.AppSettings.twitterConsumerScreatKey, Helper.AppSettings.twitterRedirectionUrl);
+            
             OAuthTwt.AccessToken = objTwitterAccount.oAuthToken;
             OAuthTwt.AccessTokenSecret = objTwitterAccount.oAuthSecret;
             OAuthTwt.TwitterScreenName = objTwitterAccount.twitterScreenName;
@@ -91,17 +102,9 @@ namespace SocioboardDataScheduler.Twitter
             if (!string.IsNullOrEmpty(ret) || rt == true)
             {
 
-                ScheduledMessage scheduledMessage = new ScheduledMessage();
-                scheduledMessage.createTime = DateTime.UtcNow;
-                scheduledMessage.picUrl = picurl;
-                scheduledMessage.profileId = profileid;
-                scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.Twitter;
-                scheduledMessage.scheduleTime = DateTime.UtcNow;
-                scheduledMessage.shareMessage = message;
-                scheduledMessage.userId = userid;
-                scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                scheduledMessage.url = ret;
-                dbr.Add<ScheduledMessage>(scheduledMessage);
+                schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
+                schmessage.url = ret;
+                dbr.Update<ScheduledMessage>(schmessage);
 
 
             }

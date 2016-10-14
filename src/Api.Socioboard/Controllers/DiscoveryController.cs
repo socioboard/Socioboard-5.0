@@ -28,6 +28,16 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _env;
 
+
+
+        /// <summary>
+        /// Use for searching the customer which is linked with keyword 
+        /// </summary>
+        /// <param name="userId">Id of user</param>
+        /// <param name="groupId">Id of the group to which account is to be added. </param>
+        /// <param name="keyword">provided by the user for searcing new customer or post related to keyword</param>
+        /// <returns></returns>
+        /// <response code="500">Internal Server Erro.r</response>
         [HttpPost("DiscoverySearchTwitter")]
         public IActionResult DiscoverySearchTwitter(long userId,long groupId,string keyword)
         {

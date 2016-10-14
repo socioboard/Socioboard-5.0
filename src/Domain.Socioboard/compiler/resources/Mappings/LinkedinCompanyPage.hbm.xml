@@ -78,5 +78,9 @@
     <property name="NumFollowers">
       <column name="NumFollowers"  />
     </property>
+
+     <property name="SchedulerUpdate">
+       <column name="SchedulerUpdate"/>
+     </property>
   </class>
 </hibernate-mapping>

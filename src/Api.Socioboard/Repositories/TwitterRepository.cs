@@ -46,7 +46,7 @@ namespace Api.Socioboard.Repositories
 
         }
 
-        public static string AddTwitterAccount(long userId, long groupId, Model.DatabaseRepository dbr, oAuthTwitter OAuth, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static string AddTwitterAccount(long userId, long groupId,bool follow, Model.DatabaseRepository dbr, oAuthTwitter OAuth, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             string twitterUserId = string.Empty;
             Users userinfo = new Users();
@@ -108,7 +108,7 @@ namespace Api.Socioboard.Repositories
                 twitterAccount.oAuthToken = OAuth.AccessToken;
                 try
                 {
-                    twitterAccount.profileImageUrl = item["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                    twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
 
                 }
                 catch (Exception ex)
@@ -175,14 +175,20 @@ namespace Api.Socioboard.Repositories
                             new Thread(delegate ()
                             {
                                 //todo : codes to update feeds 
-                                SaveTwitterMessages(twitterAccount.twitterUserId,twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
                                 SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveUserTweets(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
                                 SaveTwitterFeeds(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
                                 SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
-                           }).Start();
+                            }).Start();
+
+
+                            if (follow)
+                            {
+                                Helper.TwitterHelper.FollowAccount(OAuth, "Socioboard", "");
+            }
 
                             return "Added_Successfully";
                         }
@@ -215,7 +221,7 @@ namespace Api.Socioboard.Repositories
                 twitterAccount.oAuthToken = OAuth.AccessToken;
                 try
                 {
-                    twitterAccount.profileImageUrl = item["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                    twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
                 }
                 catch (Exception ex)
                 {
@@ -280,7 +286,7 @@ namespace Api.Socioboard.Repositories
                             new Thread(delegate ()
                             {
                                 //todo : codes to update feeds 
-                                SaveTwitterMessages(twitterAccount.twitterUserId,twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
                                 SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveUserTweets(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
                                 SaveTwitterFeeds(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
@@ -302,7 +308,7 @@ namespace Api.Socioboard.Repositories
 
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache)
         {
-            Domain.Socioboard.Models.TwitterAccount twtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(profileId) && t.userId == userId).FirstOrDefault();
+            Domain.Socioboard.Models.TwitterAccount twtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(profileId) && t.userId == userId && t.isActive).FirstOrDefault();
             if (twtAcc != null)
             {
                 twtAcc.isActive = false;
@@ -518,7 +524,7 @@ namespace Api.Socioboard.Repositories
         }
 
 
-        private static void SaveTwitterMessages(string profileId,string screenName ,oAuthTwitter oAuth, ILogger _logger, Helper.AppSettings _appSettings)
+        private static void SaveTwitterMessages(string profileId, string screenName, oAuthTwitter oAuth, ILogger _logger, Helper.AppSettings _appSettings)
         {
 
             TwitterUser twtuser;
@@ -638,7 +644,7 @@ namespace Api.Socioboard.Repositories
                     }
                     catch (Exception ex)
                     {
-                       
+
                     }
                     try
                     {
@@ -648,15 +654,16 @@ namespace Api.Socioboard.Repositories
                     {
 
                     }
-                    
+
 
                     MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
                     var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == objTwitterMessage.RecipientId && t.messageId == objTwitterMessage.messageId && t.profileId == profileId);
-                    var task=Task.Run(async()=>{
+                    var task = Task.Run(async () =>
+                    {
                         return await ret;
                     });
                     int count = task.Result.Count;
-                    if (count<1)
+                    if (count < 1)
                     {
                         mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
                     }
@@ -776,7 +783,8 @@ namespace Api.Socioboard.Repositories
 
                     MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
                     var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == objTwitterMessage.RecipientId && t.messageId == objTwitterMessage.messageId && t.profileId == profileId);
-                    var task = Task.Run(async () => {
+                    var task = Task.Run(async () =>
+                    {
                         return await ret;
                     });
                     int count = task.Result.Count;
@@ -900,7 +908,8 @@ namespace Api.Socioboard.Repositories
                     }
                     MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
                     var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == objTwitterMessage.RecipientId && t.messageId == objTwitterMessage.messageId && t.profileId == profileId);
-                    var task = Task.Run(async () => {
+                    var task = Task.Run(async () =>
+                    {
                         return await ret;
                     });
                     int count = task.Result.Count;
@@ -1039,7 +1048,8 @@ namespace Api.Socioboard.Repositories
                     }
                     MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed", _appSettings);
                     var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>(t => t.messageId == objTwitterFeed.messageId && t.profileId == profileId);
-                    var task = Task.Run(async () => {
+                    var task = Task.Run(async () =>
+                    {
                         return await ret;
                     });
                     int count = task.Result.Count;
@@ -1160,8 +1170,9 @@ namespace Api.Socioboard.Repositories
                         Console.WriteLine(ex.StackTrace);
                     }
                     MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
-                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => t.messageId == objTwitterDirectMessages.messageId && t.profileId == profileId && t.recipientId==objTwitterDirectMessages.recipientId && t.senderId==objTwitterDirectMessages.senderId);
-                    var task = Task.Run(async () => {
+                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => t.messageId == objTwitterDirectMessages.messageId && t.profileId == profileId && t.recipientId == objTwitterDirectMessages.recipientId && t.senderId == objTwitterDirectMessages.senderId);
+                    var task = Task.Run(async () =>
+                    {
                         return await ret;
                     });
                     int count = task.Result.Count;
@@ -1284,7 +1295,8 @@ namespace Api.Socioboard.Repositories
                     }
                     MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
                     var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => t.messageId == objTwitterDirectMessages.messageId && t.profileId == profileId && t.recipientId == objTwitterDirectMessages.recipientId && t.senderId == objTwitterDirectMessages.senderId);
-                    var task = Task.Run(async () => {
+                    var task = Task.Run(async () =>
+                    {
                         return await ret;
                     });
                     int count = task.Result.Count;
@@ -1454,19 +1466,19 @@ namespace Api.Socioboard.Repositories
                 if (!string.IsNullOrEmpty(messageId))
                 {
                     replypost = twt.Post_StatusesUpdate(OAuthTwt, message, messageId);
-                    return "succeess";
+                    return "reply post successfully";
                 }
                 else
                 {
                     replypost = twt.Post_StatusesUpdate(OAuthTwt, message);
-                    return "succeess";
+                    return "reply post successfully";
                 }
             }
             catch (Exception e)
             {
                 _logger.LogError("Post_ReplyStatusesUpdate" + e.StackTrace);
                 _logger.LogError("Post_ReplyStatusesUpdate" + e.Message);
-                return "failure";
+                return "api issue while post reply";
             }
         }
 
@@ -1497,19 +1509,19 @@ namespace Api.Socioboard.Repositories
                 JArray retweetpost = twt.Post_Statuses_RetweetsById(oAuth, messageId, "");
                 if (retweetpost.HasValues == true)
                 {
-                    return "succeess";
+                    return "post retweet successfully";
                 }
 
                 else
                 {
-                    return "failuer";
+                    return "post is already retweeted by you";
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError("TwitterRetweet_post" + ex.StackTrace);
                 _logger.LogError("TwitterRetweet_post" + ex.Message);
-                return "failuer";
+                return "api issue while retweet post";
             }
         }
 
@@ -1540,19 +1552,19 @@ namespace Api.Socioboard.Repositories
                 JArray favoritepost = twt.Post_favorites(oAuth, messageId);
                 if (favoritepost.HasValues == true)
                 {
-                    return "succeess";
+                    return "post is in favourite list successfully";
                 }
 
                 else
                 {
-                    return "already favorite";
+                    return "this post already in your favourite list";
                 }
             }
             catch (Exception ex)
             {
                 _logger.LogError("TwitterFavorite_post" + ex.StackTrace);
                 _logger.LogError("TwitterFavorite_post" + ex.Message);
-                return "failuer";
+                return "api issue while favourite post";
             }
         }
     }

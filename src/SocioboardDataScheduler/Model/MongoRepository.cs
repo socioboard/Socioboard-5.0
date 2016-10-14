@@ -22,10 +22,10 @@ namespace SocioboardDataServices.Model
         public MongoRepository(string CollectionName) 
         {
 
-            
-            MongoClient client = new MongoClient("mongodb://localhost/admin");
+            MongoClient client = new MongoClient("mongo connection string");
 
-            _db = client.GetDatabase("Socioboard3");
+            _db = client.GetDatabase("database name");
+
 
             this.collecionName = CollectionName;
             

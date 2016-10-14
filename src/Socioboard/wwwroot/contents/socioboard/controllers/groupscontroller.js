@@ -168,7 +168,8 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                     //},
                     //transformRequest: angular.identity,
                 }).then(function (response) {
-                    console.log(response);
+                    $('#InviteMembersModal').closeModal();
+                    swal('mail send successfully');
                 }, function (reason) {
                     console.log(reason);
                 });

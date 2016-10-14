@@ -1,49 +1,87 @@
 'use strict';
 
-SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
+SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scope, $http, $timeout, apiDomain, userservice) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         // initialize core components
         $scope.updateUser = {};
         $scope.updatePassword = {};
         $scope.mailSettings = {};
-       
+
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 65 // Creates a dropdown of 15 years to control year
+        });
+
+        $scope.phoneNumbr = /^\+?\d{2}[- ]?\d{3}[- ]?\d{5}$/;
+        function personalsettingload() {
+            $http({
+                method: 'GET',
+                url: apiDomain + '/api/User/GetUser?Id=' + $rootScope.user.Id,
+                crossDomain: true,
+                //data: ,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).then(function (response) {
+                $rootScope.user.FirstName = response.data.firstName;
+                $rootScope.user.LastName = response.data.lastName;
+                $rootScope.user.UserName = response.data.userName;
+                $rootScope.user.PhoneNumber = response.data.phoneNumber;
+                if (response.data.aboutMe != 'null') {
+                    console.log(response.data.aboutMe)
+
+                    $rootScope.user.aboutMe = response.data.aboutMe;
+                }
+                else {
+                    $rootScope.user.aboutMe = '';
+                }
+                $('ul.tabs').tabs();
+            }, function (reason) {
+
+            });
+
+            setTimeout(userdata, 5000);
+        }
+
+
 
         //codes to fill update user details 
-       
-        if ($rootScope.UpdatedfirstName == '' || $rootScope.UpdatedfirstName == undefined) {
-            $scope.updateUser.firstName = $rootScope.user.FirstName;
+
+        function userdata() {
+
+            if ($rootScope.UpdatedfirstName == '' || $rootScope.UpdatedfirstName == undefined) {
+                $scope.updateUser.firstName = $rootScope.user.FirstName;
+            }
+            else {
+                $scope.updateUser.firstName = $rootScope.UpdatedfirstName;
+            }
+            if ($rootScope.UpdatedlastName == '' || $rootScope.UpdatedlastName == undefined) {
+                $scope.updateUser.lastName = $rootScope.user.LastName;
+            }
+            else {
+                $scope.updateUser.lastName = $rootScope.UpdatedlastName;
+            }
+            if ($rootScope.UpdateduserName == '' || $rootScope.UpdateduserName == undefined) {
+                $scope.updateUser.userName = $rootScope.user.UserName;
+            } else {
+                $scope.updateUser.userName = $rootScope.UpdateduserName;
+            }
+            if ($rootScope.UpdatedphoneNumber == '' || $rootScope.UpdatedphoneNumber == undefined) {
+                $scope.updateUser.phoneNumber = $rootScope.user.PhoneNumber;
+            } else {
+                $scope.updateUser.phoneNumber = $rootScope.UpdatedphoneNumber;
+            }
+            if ($rootScope.UpdatedaboutMe == '' || $rootScope.UpdatedaboutMe == undefined) {
+                $scope.updateUser.aboutMe = $rootScope.user.aboutMe;
+            } else {
+                $scope.updateUser.aboutMe = $rootScope.UpdatedaboutMe;
+            }
+            var $input = $('.datepicker').pickadate();
+            var picker = $input.pickadate('picker');
+
+            picker.set('select', $rootScope.user.dateOfBirth, { format: 'yyyy-mm-dd HH:MM:ss' });
         }
-        else
-        {
-            $scope.updateUser.firstName = $rootScope.UpdatedfirstName;
-        }
-        if ($rootScope.UpdatedlastName == '' || $rootScope.UpdatedlastName == undefined) {
-            $scope.updateUser.lastName = $rootScope.user.LastName;
-        }
-        else {
-            $scope.updateUser.lastName = $rootScope.UpdatedlastName;
-        }
-        if ($rootScope.UpdateduserName == '' || $rootScope.UpdateduserName == undefined) {
-            $scope.updateUser.userName = $rootScope.user.UserName;
-        } else {
-            $scope.updateUser.userName = $rootScope.UpdateduserName;
-        }
-        if ($rootScope.UpdatedphoneNumber == '' || $rootScope.UpdatedphoneNumber == undefined) {
-            $scope.updateUser.phoneNumber = $rootScope.user.PhoneNumber;
-        } else {
-            $scope.updateUser.phoneNumber = $rootScope.UpdatedphoneNumber;
-        } 
-        if ($rootScope.UpdatedaboutMe == '' || $rootScope.UpdatedaboutMe == undefined) {
-            $scope.updateUser.aboutMe = $rootScope.user.aboutMe;
-        } else {
-            $scope.updateUser.aboutMe = $rootScope.UpdatedaboutMe;
-        }
-        var $input = $('.datepicker').pickadate();
-        var picker = $input.pickadate('picker');
-        picker.set('select', $rootScope.user.dateOfBirth, { format: 'yyyy-mm-dd HH:MM:ss' })
-     //   $scope.updateUser.dob = $rootScope.user.dateOfBirth;
-       
+        //   $scope.updateUser.dob = $rootScope.user.dateOfBirth;
+
         Materialize.updateTextFields();
         // end codes to fill update user details
 
@@ -55,11 +93,11 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
         $scope.mailSettings.days60GrpReportsSummery = $rootScope.user.days60GrpReportsSummery;
         $scope.mailSettings.days90GrpReportsSummery = $rootScope.user.days90GrpReportsSummery;
         $scope.mailSettings.otherNewsLetters = $rootScope.user.otherNewsLetters;
-       
+
         //end codes to intilize mail settings
 
         $scope.UpdateUser = function (updateUser) {
-          
+
             var $input = $('.datepicker').pickadate();
             var picker = $input.pickadate('picker');
             var formData = new FormData();
@@ -73,12 +111,14 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 },
                 transformRequest: angular.identity,
             }).then(function (response) {
+                userservice.updateLocalUser();
                 alertify.set({ delay: 5000 });
                 alertify.success("Profile Updated Successfully");
                 $rootScope.UpdatedfirstName = updateUser.firstName;
                 $rootScope.UpdatedlastName = updateUser.lastName;
                 $rootScope.UpdateduserName = updateUser.userName;
                 $rootScope.UpdatedphoneNumber = updateUser.phoneNumber;
+                $rootScope.dateOfBirth = updateUser.dateOfBirth;
                 $rootScope.UpdatedaboutMe = updateUser.aboutMe;
             }, function (reason) {
                 alertify.set({ delay: 5000 });
@@ -149,5 +189,6 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
 
 
         profilesetting();
+        personalsettingload();
     });
 });

@@ -10,6 +10,7 @@ using Domain.Socioboard.Models;
 using Api.Socioboard.Repositories;
 using Domain.Socioboard.ViewModels;
 using Microsoft.AspNetCore.Cors;
+using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -52,7 +53,6 @@ namespace Api.Socioboard.Controllers
                 {
                     return BadRequest(ex.Message);
                 }
-           
         }
 
         
@@ -79,6 +79,41 @@ namespace Api.Socioboard.Controllers
         [HttpPost("AddComment")]
         public IActionResult AddComment(CommentViewModel commentViewModel)
         {
+            string postmessage = "";
+            string[] updatedmessgae = Regex.Split(commentViewModel.commentText, "<br>");
+
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("hhh"))
+                    {
+                        postmessage = postmessage + item.Replace("hhh", "#");
+                    }
+                    if (item.Contains("nnn"))
+                    {
+                        postmessage = postmessage.Replace("nnn", "&");
+                    }
+                    if (item.Contains("ppp"))
+                    {
+                        postmessage = postmessage.Replace("ppp", "+");
+                    }
+                    if (item.Contains("jjj"))
+                    {
+                        postmessage = postmessage.Replace("jjj", "-+");
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+
+
+
+                }
+            }
+            commentViewModel.commentText = postmessage;
+
+
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             User user = dbr.FindSingle<User>(t => t.Id == commentViewModel.userId);
             if (user != null)

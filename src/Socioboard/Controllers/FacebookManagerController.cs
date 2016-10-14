@@ -56,6 +56,10 @@ namespace Socioboard.Controllers
                     {
                         user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
                         HttpContext.Session.SetObjectAsJson("User", user);
+                        if (user.ExpiryDate < DateTime.UtcNow)
+                        {
+                            return RedirectToAction("UpgradePlans", "Index");
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -80,10 +84,6 @@ namespace Socioboard.Controllers
                 HttpContext.Session.SetObjectAsJson("fbSocial", null);
                 return RedirectToAction("AddFbPage", "FacebookManager", new { code = code });
             }
-
-
-
-
             return RedirectToAction("Index", "Index");
         }
         [HttpGet]
@@ -123,8 +123,6 @@ namespace Socioboard.Controllers
                 }
                 return Redirect(Socioboard.Facebook.Auth.Authentication.GetFacebookRedirectLink(_appSettings.FacebookAuthUrl, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl));
             }
-           
-
         }
         public async Task<ActionResult> AddFbAcc(string code)
         {

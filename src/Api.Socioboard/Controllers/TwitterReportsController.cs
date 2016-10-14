@@ -24,6 +24,14 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
+
+        /// <summary>
+        /// To give report on twitter
+        /// </summary>
+        /// <param name="profileId">Id of the user</param>
+        /// <param name="daysCount">preparing the report till given counted days</param>
+        /// <response code="500">Internal Server Erro.r</response>
+        /// <returns></returns>
         [HttpGet("GetTwitterReports")]
         public IActionResult GetTwitterReports(string profileId, int daysCount)
         {

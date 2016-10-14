@@ -39,6 +39,12 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
 
 
+
+        /// <summary>
+        /// To register the new user.
+        /// </summary>
+        /// <param name="user">data of the user for registration</param>
+        /// <returns></returns>
         [HttpPost("Register")]
         public IActionResult Register(User user)
         {
@@ -61,14 +67,18 @@ namespace Api.Socioboard.Controllers
             {
                 return BadRequest("EmailID Exist");
             }
-
+            IList<User> lstUser1 = dbr.Find < User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
+            if (lstUser1 != null && lstUser1.Count() > 0)
+            {
+                return BadRequest("Phone Number Exist");
+            }
             int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
             User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
             if (SavedStatus == 1 && nuser != null)
             {
                 Groups group = new Groups();
                 group.adminId = nuser.Id;
-                group.id = nuser.Id;
+               // group.id = nuser.Id;
                 group.createdDate = DateTime.UtcNow;
                 group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
                 SavedStatus = dbr.Add<Groups>(group);
@@ -84,7 +94,7 @@ namespace Api.Socioboard.Controllers
                     html = html.Replace("[FirstName]", nuser.FirstName);
                     html = html.Replace("[AccountType]", nuser.AccountType.ToString());
                     html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + nuser.EmailValidateToken + "&id=" + nuser.Id);
-                    _emailSender.SendMail("", "", nuser.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", nuser.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
                 }
                 catch
                 {
@@ -98,6 +108,12 @@ namespace Api.Socioboard.Controllers
             return Ok("Email verification mail sent successfully.");
         }
 
+
+        /// <summary>
+        /// To login page.
+        /// </summary>
+        /// <param name="user">User login details :EmailId and password</param>
+        /// <returns>Success:user can login successfully ,Failure: entered wrong password or EmailId does not exist</returns>
         [HttpPost("Login")]
         public IActionResult Login(UserLoginViewModel user)
         {
@@ -133,7 +149,14 @@ namespace Api.Socioboard.Controllers
                 {
                     // _memoryCache.Set(lstUser.First().EmailId, lstUser.First());
                     _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
-                    return Ok(lstUser.First());
+                    if(lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                    {
+                        return Ok(lstUser.First());
+                    }
+                    else
+                    {
+                        return Ok("Account not activated.");
+                    }
                 }
                 else
                 {
@@ -146,6 +169,12 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+
+        /// <summary>
+        /// To check EmailId exist or not.
+        /// </summary>
+        /// <param name="Email">Email id of user</param>
+        /// <returns>Success: if EmailId exist in db,Failure: if EmailId does not exist in db</returns>
         [HttpPost("IsEmailExst")]
         public IActionResult IsEmailExst(string Email)
         {
@@ -177,6 +206,14 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        /// <summary>
+        /// To get the user datails.
+        /// </summary>
+        /// <param name="Id">id of the user </param>
+        /// <returns>
+        /// 1. success: if the user id is exist in db.
+        /// 2. failure: if user id does not exist in db
+        /// </returns>
         [HttpGet("GetUser")]
         public IActionResult GetUser(Int64 Id)
         {
@@ -195,6 +232,16 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        /// <summary>
+        /// For varifying the emailId after registration
+        /// </summary>
+        /// <param name="Id"> Id of the user</param>
+        /// <param name="Token">Generated token id after registration </param>
+        /// <returns>Account Activated:if token id exist in user db 
+        /// Failed to Activate:if user details does not update.
+        /// Link Expired:if user does not activate his account in a given expire time.
+        /// Wrong Link:when user use false link or unautorize link.
+        /// </returns>
         [HttpPost("VerifyEmail")]
         public IActionResult VerifyEmail(Int64 Id, string Token)
         {
@@ -239,7 +286,7 @@ namespace Api.Socioboard.Controllers
         }
 
 
-        [HttpPost("ResendMail")]
+        [HttpGet("ResendMail")]
         public IActionResult ResendMail(string Email)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
@@ -256,14 +303,15 @@ namespace Api.Socioboard.Controllers
                 int result = dbr.Update<User>(user);
                 if (result == 1)
                 {
-                    string path = System.IO.Path.Combine(_appEnv.WebRootPath, "views/registrationmail.html");
+                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
                     string html = System.IO.File.ReadAllText(path);
                     html = html.Replace("[FirstName]", user.FirstName);
                     html = html.Replace("[AccountType]", user.AccountType.ToString());
                     html = html.Replace("[ActivationLink]", "http://localhost:9821/Home/Active?Token=" + user.EmailValidateToken + "&id=" + user.Id);
 
 
-                    _emailSender.SendMail("", "", user.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", user.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+
                     return Ok("Mail Sent Successfully.");
                 }
                 else
@@ -280,6 +328,11 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        /// <summary>
+        /// To validate the access token before login facebook
+        /// </summary>
+        /// <param name="AccessToken">Code obtained after successfull authentication from facebook.</param>
+        /// <returns>Success:added su</returns>
         [HttpPost("FacebookLogin")]
         public IActionResult FacebookLogin(string AccessToken)
         {
@@ -341,7 +394,7 @@ namespace Api.Socioboard.Controllers
                     user.EmailValidateToken = "Facebook";
                     try
                     {
-                        user.ProfilePicUrl = "http://graph.facebook.com/" + Convert.ToString(profile["id"]) + "/picture?type=small";
+                        user.ProfilePicUrl = "https://graph.facebook.com/" + Convert.ToString(profile["id"]) + "/picture?type=small";
                     }
                     catch { }
                     user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
@@ -378,6 +431,12 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+
+        /// <summary>
+        /// To count the user profiles .
+        /// </summary>
+        /// <param name="userId">Id of the user</param>
+        /// <returns></returns>
         [HttpGet("GetUserProfileCount")]
         public IActionResult GetUserProfileCount(long userId)
         {
@@ -385,6 +444,8 @@ namespace Api.Socioboard.Controllers
 
             return Ok(GroupProfilesRepository.getAllProfilesCountOfUser(userId, _redisCache, dbr));
         }
+
+
 
         [HttpPost("UpdateUser")]
         public IActionResult UpdateUser(string firstName, string lastName, string userName, string phoneNumber, DateTime dob, string aboutMe, long userId, IFormFile files)
@@ -400,6 +461,10 @@ namespace Api.Socioboard.Controllers
                     if (dbr.Find<User>(t => t.UserName.Equals(userName)).Count() > 0)
                     {
                         return Ok("UserName already Taken.");
+                    }
+                    else
+                    {
+                        user.UserName = userName;
                     }
                 }
             }
@@ -464,6 +529,14 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        /// <summary>
+        /// To change the password when user request it.
+        /// </summary>
+        /// <param name="userId">id of the user</param>
+        /// <param name="currentPassword">password which is using currently</param>
+        /// <param name="newPassword">A new password given by the user</param>
+        /// <param name="conformPassword">confirm password </param>
+        /// <returns></returns>
         [HttpPost("ChangePassword")]
         public IActionResult ChangePassword(long userId, string currentPassword, string newPassword, string conformPassword)
         {
@@ -539,5 +612,270 @@ namespace Api.Socioboard.Controllers
                 return Unauthorized();
             }
         }
+
+
+        /// <summary>
+        /// To send the mail to user :for reseting the password when user forgot it and request for change.
+        /// </summary>
+        /// <param name="emailId">User email id</param>
+        /// <returns>Eemail sent successfully:when email id existin db,
+        /// Emaild does not exist or falil to send:email does not exist in db
+        /// </returns>
+        [HttpPost("ForgotPasswordSendMail")]
+        public IActionResult ForgotPasswordSendMail(string emailId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = null;
+            try
+            {
+                user = dbr.Single<User>(t => t.EmailId.Equals(emailId));
+            }
+            catch (Exception ex)
+            {
+            }
+            if (user != null)
+            {
+                user.forgotPasswordKeyToken = SBHelper.RandomString(20);
+                user.forgotPasswordExpireDate = DateTime.UtcNow.AddDays(1);
+                user.EmailId = emailId;
+                user.Id = user.Id;
+
+                int result = dbr.Update<Domain.Socioboard.Models.User>(user);
+
+                if (result == 1)
+                {
+                    try
+                    {
+                        string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\forogtPassword.html";
+                        string html = System.IO.File.ReadAllText(path);
+                        html = html.Replace("[FirstName]", user.FirstName);
+                        html = html.Replace("[AccountType]", user.AccountType.ToString());
+                        html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/ForgotPassword?Token=" + user.forgotPasswordKeyToken + "&emailId=" + user.EmailId);
+
+                        _emailSender.SendMailSendGrid(_appSettings.frommail, "", user.EmailId, "", "", "You requested for reset password of your account", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                        
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    return Ok("Mail Sent Successfully.");
+                }
+                else
+                {
+                    return Ok("Failed to send mail.");
+                }
+            }
+            else
+            {
+                return Ok("EmailId does not exist");
+            }
+        }
+
+
+        /// <summary>
+        /// To validate the tokenId after getting forgot password mail.
+        /// </summary>
+        /// <param name="emailId">User email id</param>
+        /// <param name="accessToken">Forgot token id </param>
+        /// <returns>You can change the password:when tokane validate successfully.
+        /// Link expired:when user does not change the password for given period. 
+        /// Wrong link: when user use unauthorize link
+        /// Email Id does not exist: When email id does not exist in db.
+        /// </returns>
+        [HttpPost("ValidateforgotpwdToken")]
+        public IActionResult validateforgotpwdToken(string emailId, string accessToken)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = null;
+            try
+            {
+                user = dbr.Single<User>(t => t.EmailId == emailId);
+            }
+            catch (Exception ex)
+            {
+            }
+            if (user != null)
+            {
+                if (user.forgotPasswordKeyToken.Equals(accessToken))
+                {
+                    if (user.forgotPasswordExpireDate >= DateTime.UtcNow)
+                    {
+                        return Ok("You can change the password");
+                    }
+                    else
+                    {
+                        return Ok("Link Expired.");
+                    }
+
+                }
+                else
+                {
+                    return Ok("Wrong Link");
+                }
+            }
+            else
+            {
+                return Ok("EmailId does not exist");
+            }
+        }
+
+
+        /// <summary>
+        /// sending mail to user after reseting the password.
+        /// </summary>
+        /// <param name="emailId">User email id </param>
+        /// <param name="changePassword">changed password</param>
+        /// <param name="token">Forgot password token</param>
+        /// <returns>Password changed successfully:if user data present in db and validate token.
+        /// EmailId does not exist:when user emailid does not exist
+        /// </returns>
+        [HttpPost("ResetPasswordMail")]
+        public IActionResult ResetPasswordMail(string emailId, string changePassword, string token)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = null;
+            try
+            {
+                user = dbr.Single<User>(t => t.EmailId == emailId);
+            }
+            catch
+            { }
+
+            if (user != null)
+            {
+                if (user.forgotPasswordKeyToken.Equals(token))
+                {
+                    user.Password = SBHelper.MD5Hash(changePassword);
+                    int res = dbr.Update<User>(user);
+                    if (res == 1)
+                    {
+                        return Ok("Password changed successfully");
+                    }
+                    else
+                    {
+                        return BadRequest("error while updating password, pls try after some time.");
+                    }
+                }
+                else
+                {
+                    return Ok("wrong link");
+                }
+
+            }
+            else
+            {
+                return Ok("EmailId does not exist");
+            }
+        }
+
+        /// <summary>
+        /// when user request for demo enterprise. 
+        /// </summary>
+        /// <param name="demoRequest">user data for demo enterprise</param>
+        /// <returns>EmailId exist: if user already resisterd.
+        /// Mail Sent Successfully:if mail sent successfully to user given mailid.
+        /// Demo requested added:if successfully added the user for demo enterprise
+        /// </returns>
+        [HttpPost("DemoRequest")]
+        public IActionResult DemoRequest(DemoRequest demoRequest)
+        {
+
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            IList<DemoRequest> lstUser = dbr.Find<DemoRequest>(t => t.emailId.Equals(demoRequest.emailId));
+            if (lstUser != null && lstUser.Count() > 0)
+            {
+                return BadRequest("EmailId Exist");
+            }
+            int SavedStatus = dbr.Add<Domain.Socioboard.Models.DemoRequest>(demoRequest);
+
+            if (SavedStatus == 1 && demoRequest != null)
+            {
+
+                try
+                {
+                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\plan.html";
+                    string html = System.IO.File.ReadAllText(path);
+                    html = html.Replace("[FirstName]", demoRequest.firstName);
+                    html = html.Replace("[AccountType]", demoRequest.demoPlanType.ToString());
+
+                    //_emailSender.SendMail("", "", demoRequest.emailId, "", "", "You requested for Demo plan", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+                    //Mailforsocioboard(demoRequest);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", demoRequest.emailId, "", "", "You requested for Demo plan", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                    Mailforsocioboard(demoRequest);
+                    return Ok("Demo Requested Added");
+                    // return Ok("Mail Sent Successfully.");
+                }
+                catch(Exception ex)
+                {
+                    return Ok("Issue while sending mail.");
+                }
+            }
+            else
+            {
+                return Ok("problem while saving,pls try after some time");
+            }
+            
+        }
+
+        [HttpPost("SendAgencyMail")]
+        public IActionResult SendAgencyMail(DemoRequest demoRequest)
+        {
+            string ret = string.Empty;
+            string tomail = _appSettings.ZohoMailUserName;
+            
+            string subject = "Socioboard Agency";
+            string Body = "Name: " + demoRequest.firstName + "" + demoRequest.lastName + "</br>" + "Email: " + demoRequest.emailId + "</br>" + "Company: " + demoRequest.company + "</br>" + "Message: " + demoRequest.message + "</br>" + "Phone: " + demoRequest.phoneNumber + "</br>";
+            
+            try
+            {
+                ret = _emailSender.SendMail(tomail, "", tomail, "", "", subject, Body, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("MailSender = > " + ex.StackTrace);
+                _logger.LogError("MailSender = > " + ex.Message);
+            }
+         
+            return Ok();
+        }
+
+
+        [HttpPost("demoReq")]
+        public ActionResult Mailforsocioboard(DemoRequest demoReq)
+        {
+            string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
+            string html = System.IO.File.ReadAllText(path);
+            html = html.Replace("[FirstName]", demoReq.firstName);
+            html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
+            _emailSender.SendMail("", "", "sumit@socioboard.com", "", "", "Customer requested for demo enterprise plan ", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+            return Ok("Mail Sent Successfully.");
+           
+        }
+
+
+        [HttpPost("UpdateFreeUser")]
+        public IActionResult UpdateFreeUser(string userId)
+        {
+            Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            User _user = dbr.Single<User>(t => t.Id == Convert.ToInt64(userId));
+            if (_user != null)
+            {
+                _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Paid;
+                _user.ExpiryDate = DateTime.UtcNow.AddDays(30);
+                _user.Id = Convert.ToInt64(userId);
+                dbr.Update<User>(_user);
+            }
+            return Ok(_user);
+        }
+
+
     }
 }

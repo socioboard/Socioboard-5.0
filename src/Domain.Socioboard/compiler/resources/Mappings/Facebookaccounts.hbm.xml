@@ -65,6 +65,15 @@
     <property name="LastUpdate">
       <column name="LastUpdate"/>
     </property>
+    <property name="PageShareathonUpdate">
+      <column name="PageShareathonUpdate"/>
+    </property>
+      <property name="GroupShareathonUpdate">
+      <column name="GroupShareathonUpdate"/>
+    </property>
+      <property name="SchedulerUpdate">
+      <column name="SchedulerUpdate"/>
+    </property>
     <property name="IsAccessTokenActive">
       <column name="IsAccessTokenActive"/>
     </property>

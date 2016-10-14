@@ -43,5 +43,9 @@
     <property name="LastUpdate">
       <column name="LastUpdate"/>
     </property>
+
+    <property name="SchedulerUpdate">
+      <column name="SchedulerUpdate"/>
+    </property>
   </class>
 </hibernate-mapping>

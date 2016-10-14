@@ -144,11 +144,12 @@ namespace Api.Socioboard.Repositories
             _GroupShareathon.Facebookaccountid = _Facebookaccounts.FbUserId;
             _GroupShareathon.Facebookusername = _Facebookaccounts.FbUserName;
             _GroupShareathon.AccessToken = _Facebookaccounts.AccessToken;
-            _GroupShareathon.Lastsharetimestamp = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+            _GroupShareathon.Lastsharetimestamp = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow);
             MongoRepository _ShareathonRepository = new MongoRepository("GroupShareathon", _appSettings);
-            profileids = pageid.Split(',');
-            groupids = FacebookGroupId.Split(',');
-            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.GroupShareathon>(t => t.Facebookpageid==_GroupShareathon.Facebookpageid && t.Facebookaccountid == Facebookaccountid && t.Userid == userId && groupids.Contains(t.Facebookgroupid));
+            profileids = pageid.TrimEnd(',').Split(',');
+            groupids = FacebookGroupId.TrimEnd(',').Split(',');
+            string[] arrgroupids = groupId.Split(',');
+            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.GroupShareathon>(t => profileids.Contains(t.Facebookpageid)&& t.Facebookaccountid == Facebookaccountid && t.Userid == userId && arrgroupids.Contains(t.Facebookgroupid));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -223,7 +224,7 @@ namespace Api.Socioboard.Repositories
                 MongoRepository _ShareathonRepository = new MongoRepository("GroupShareathon", _appSettings);
                 var builders = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", GroupShareathodId);
-                var update = Builders<BsonDocument>.Update.Set("Facebookaccountid", Facebookaccountid).Set("FacebookPageId", pageid.TrimEnd(','))
+                var update = Builders<BsonDocument>.Update.Set("Facebookaccountid", _Facebookaccounts.FbUserId).Set("Facebookusername",_Facebookaccounts.FbUserName).Set("FacebookPageId", pageid.TrimEnd(','))
                     .Set("Facebookgroupid", groupId.TrimEnd(',')).Set("FacebookPageUrl", FacebookUrl).Set("Facebookgroupname", groupName.TrimEnd(',')).Set("Facebooknameid", FacebookGroupId)
                     .Set("Timeintervalminutes", Timeintervalminutes);
                 _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.GroupShareathon>(update, filter);

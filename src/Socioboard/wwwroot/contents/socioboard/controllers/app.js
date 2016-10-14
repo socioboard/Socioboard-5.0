@@ -10,7 +10,9 @@ var SocioboardApp = angular.module("SocioboardApp", [
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
-    "lazy-scroll"
+    "lazy-scroll",
+    "ngMaterial",
+    "mdPickers",
 ]);
 
 
@@ -167,6 +169,8 @@ initialization can be disabled and Layout.init() should be called on page load c
 /* Setup Layout Part - Header */
 SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http, domain, apiDomain, groupmember) {
     $scope.$on('$includeContentLoaded', function () {
+        console.log($rootScope.user);
+        localStorage.setItem("user", JSON.stringify($rootScope.user));
 
 
         $scope.changeGroup = function (groupId) {
@@ -208,6 +212,7 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
             return item.profileType === 0 || item.profileType === 1;
         };
         $scope.logout = function () {
+            console.log("sdfasfsa");
             //alert('hello');
             $rootScope.groupId = '';
             //$rootScope.user.Id = '';
@@ -219,6 +224,8 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
+            localStorage.removeItem("user");
+
             // end codes to logout from all session
         }
 
@@ -267,7 +274,9 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         .state('dashboard', {
             url: "/dashboard",
             templateUrl: "../contents/socioboard/views/dashboard/dashboard.html",
-            data: { pageTitle: 'Dashboard', pageSubTitle: 'updated' },
+            data: {
+                pageTitle: 'Dashboard', pageSubTitle: 'updated',
+            },
             controller: "DashboardController",
 
             resolve: {
@@ -377,8 +386,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
          })
 
           // schedule message controller
-        .state('schedulemsg', {
-            url: "/schedulemsg",
+        .state('schedulemessage', {
+            url: "/schedulemessage",
             templateUrl: "../contents/socioboard/views/publishing/schedulemsg.html",
             data: { pageTitle: 'Schedule Message', pageSubTitle: 'updated' },
             controller: "ScheduleMessageController",
@@ -389,9 +398,12 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
+                            '../contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css',
+                            '../contents/socioboard/global/plugins/mdPickers/dist/mdPickers.js',
+                            '../contents/socioboard/global/plugins/moment.js',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/js/admin/moment.min.js',
                             '../contents/socioboard/controllers/schedulemsgcontroller.js'
+
                         ]
                     });
                 }]
@@ -553,6 +565,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                       insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                       files: [
                           '../contents/socioboard/js/admin/plugins.js',
+                          '../contents/socioboard/services/userservice.js',
                           '../contents/socioboard/controllers/profilesettingcontroller.js'
                       ]
                   });
@@ -654,7 +667,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
 
 
           .state('googleplusfeeds', {
-              url: "/googleplusfeeds.html",
+              url: "/googleplusfeeds/{profileId}",
               templateUrl: "../contents/socioboard/views/feeds/googleplusfeeds.html",
               data: { pageTitle: 'Google plus Live feeds', pageSubTitle: 'updated' },
               controller: "GooglePlusFeedsController",
@@ -810,7 +823,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
          // googleanalytic report
 
         .state('googleanalyticreport', {
-            url: "/googleanalyticsreport.html",
+            url: "/googleanalyticsreport",
             templateUrl: "../contents/socioboard/views/reports/googleanalyticsreport.html",
             data: { pageTitle: 'googleanalytic Report', pageSubTitle: 'updated' },
             controller: "GoogleAnalyticreportController",
@@ -1134,6 +1147,31 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
             }
         })
 
+
+         // Create Board me controller
+        .state('board', {
+            url: "/board/{boardId}",
+            templateUrl: "../contents/socioboard/views/boardme/board.html",
+            data: { pageTitle: 'BoardMe', pageSubTitle: 'updated' },
+            controller: "BoardController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                             '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                             '../contents/socioboard/controllers/boardcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
     .state('boardanalytics', {
         url: "/boardanalytics/{boardName}",
         templateUrl: "../contents/socioboard/views/boardme/boardanalytics.html",
@@ -1163,12 +1201,64 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         }
     })
 
-}]);
+     // Design Feeds Sample
 
-/* Init global settings and run the app */
-SocioboardApp.run(["$rootScope", "settings", "$state", function ($rootScope, settings, $state) {
-    $rootScope.$state = $state; // state to be accessed from view
+        .state('facebookgrouppost', {
+            url: "/facebookgrouppost",
+            templateUrl: "../contents/socioboard/views/design/design_feeds.html",
+            data: { pageTitle: 'Design Feeds', pageSubTitle: 'updated' },
+            controller: "DesignFeedsController",
 
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                             '../contents/socioboard/js/admin/moment.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/controllers/designfeedscontroller.js'
 
+                        ]
+                    });
+                }]
+            }
+        })
 
-}]);
+       .state('linkedingrouppost', {
+           url: "/linkedingrouppost",
+           templateUrl: "../contents/socioboard/views/design/design_linfeeds.html",
+           data: { pageTitle: 'Design Feeds', pageSubTitle: 'updated' },
+           controller: "DesignFeedsINController",
+
+           resolve: {
+               deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                   return $ocLazyLoad.load({
+                       name: 'SocioboardApp',
+                       insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                       files: [
+                           '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            '../contents/socioboard/js/admin/moment.min.js',
+                           '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/designlinfeedscontroller.js'
+
+                       ]
+                   });
+               }]
+           }
+       })
+
+}]).run(function ($rootScope, $state) {
+    $rootScope.$on('$stateChangeStart', function (event, toState, $stateParams) {
+
+        if (localStorage.user != "" && localStorage.user != undefined) {
+
+        }
+        else {
+            window.location.href = '../Index/Index';
+            window.location.reload();
+        }
+    });
+});
+

@@ -28,6 +28,13 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
+
+        /// <summary>
+        /// To provide the report on group profiles
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="daysCount"></param>
+        /// <returns></returns>
         [HttpGet("getgroupReportData")]
         public IActionResult getgroupReportData(long groupId,int daysCount)
         {

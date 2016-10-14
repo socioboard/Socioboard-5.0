@@ -127,9 +127,44 @@ namespace Api.Socioboard.Repositories
                                     res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
                                     break;
                                 }
+                            case Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage:
+                                {
+                                    res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                    break;
+                                }
+                            case Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage:
+                                {
+                                    res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                    break;
+                                }
                             case Domain.Socioboard.Enum.SocialProfileType.Twitter:
                                 {
                                     res = TwitterRepository.DeleteProfile(dbr, profileId, userId, _redisCache);
+                                    break;
+                                }
+                            case Domain.Socioboard.Enum.SocialProfileType.LinkedIn:
+                                {
+                                    res = LinkedInAccountRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                    break;
+                                }
+                            case Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage:
+                                {
+                                    res = LinkedInAccountRepository.DeleteCompanyPageProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                    break;
+                                }
+                            case Domain.Socioboard.Enum.SocialProfileType.Instagram:
+                                {
+                                    res = InstagramRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                    break;
+                                }
+                            case Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics:
+                                {
+                                    res = GplusRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                    break;
+                                }
+                            case Domain.Socioboard.Enum.SocialProfileType.GPlus:
+                                {
+                                    res = GplusRepository.DeleteGplusProfile(dbr, profileId, userId, _redisCache, _appSettings);
                                     break;
                                 }
                         }

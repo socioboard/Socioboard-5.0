@@ -160,7 +160,7 @@ ul.side-nav.leftside-navigation li.active > a{
     position: relative;
 }
 .social_profile:hover .delet_icon {
-    background: transparent url(../../images/button-cross.png) no-repeat center;
+    background: transparent url(/contents/socioboard/images/button-cross.png) no-repeat center;
     cursor: pointer;
     width: 20px;
     height: 20px;

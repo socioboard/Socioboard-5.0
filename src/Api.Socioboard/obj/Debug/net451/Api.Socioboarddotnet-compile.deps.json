@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETFramework,Version=v4.5.1/",
-    "signature": "368f33de3520202ec3683c58be2da21ab0726ef8"
+    "signature": "e34ce30ac3d6c8a77bb88efb03135a4a5e605827"
   },
   "compilationOptions": {
     "defines": [
@@ -11,7 +11,8 @@
     ],
     "platform": "x64",
     "optimize": false,
-    "emitEntryPoint": true
+    "emitEntryPoint": true,
+    "xmlDoc": true
   },
   "targets": {
     ".NETFramework,Version=v4.5.1": {
@@ -50,7 +51,10 @@
           "Google.Apis.Analytics.v3": "1.14.0.456",
           "Microsoft.AspNetCore.Cors": "1.0.0",
           "MongoDB.Bson": "2.2.4",
-          "Microsoft.AspNetCore.Diagnostics": "1.0.0"
+          "Microsoft.AspNetCore.Diagnostics": "1.0.0",
+          "System.Drawing.Primitives": "4.0.0",
+          "Swashbuckle.SwaggerGen": "6.0.0-beta901",
+          "Swashbuckle.SwaggerUi": "6.0.0-beta901"
         },
         "compile": {
           "Api.Socioboard.exe": {}
@@ -611,6 +615,18 @@
           "lib/net451/Microsoft.AspNetCore.Server.Kestrel.dll": {}
         }
       },
+      "Microsoft.AspNetCore.StaticFiles/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
+          "Microsoft.AspNetCore.Http.Extensions": "1.0.0",
+          "Microsoft.Extensions.FileProviders.Abstractions": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
+          "Microsoft.Extensions.WebEncoders": "1.0.0"
+        },
+        "compile": {
+          "lib/net451/Microsoft.AspNetCore.StaticFiles.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.WebUtilities/1.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "1.0.0",
@@ -802,6 +818,15 @@
         },
         "compile": {
           "lib/netstandard1.0/Microsoft.Extensions.FileProviders.Composite.dll": {}
+        }
+      },
+      "Microsoft.Extensions.FileProviders.Embedded/1.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.FileProviders.Abstractions": "1.0.0",
+          "System.Runtime.Extensions": "4.0.0.0"
+        },
+        "compile": {
+          "lib/netstandard1.0/Microsoft.Extensions.FileProviders.Embedded.dll": {}
         }
       },
       "Microsoft.Extensions.FileProviders.Physical/1.0.0": {
@@ -1109,6 +1134,38 @@
           "lib/net45/StackExchange.Redis.dll": {}
         }
       },
+      "Swashbuckle.Swagger/6.0.0-beta901": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
+          "Microsoft.AspNetCore.Mvc.Formatters.Json": "1.0.0"
+        },
+        "compile": {
+          "lib/net451/Swashbuckle.Swagger.dll": {}
+        }
+      },
+      "Swashbuckle.SwaggerGen/6.0.0-beta901": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc.ApiExplorer": "1.0.0",
+          "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
+          "Microsoft.AspNetCore.Mvc.DataAnnotations": "1.0.0",
+          "Swashbuckle.Swagger": "6.0.0-beta901",
+          "System.Xml": "4.0.0.0"
+        },
+        "compile": {
+          "lib/net451/Swashbuckle.SwaggerGen.dll": {}
+        }
+      },
+      "Swashbuckle.SwaggerUi/6.0.0-beta901": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
+          "Microsoft.AspNetCore.StaticFiles": "1.0.0",
+          "Microsoft.Extensions.FileProviders.Embedded": "1.0.0",
+          "System.Xml": "4.0.0.0"
+        },
+        "compile": {
+          "lib/net451/Swashbuckle.SwaggerUi.dll": {}
+        }
+      },
       "System.Buffers/4.0.0": {
         "compile": {
           "lib/netstandard1.1/System.Buffers.dll": {}
@@ -1176,6 +1233,15 @@
       "System.Diagnostics.Tracing/4.0.10.0": {
         "compile": {
           ".NETFramework/v4.5.1/Facades/System.Diagnostics.Tracing.dll": {}
+        }
+      },
+      "System.Drawing.Primitives/4.0.0": {
+        "dependencies": {
+          "System.Drawing": "4.0.0.0",
+          "mscorlib": "4.0.0.0"
+        },
+        "compile": {
+          "ref/net45/System.Drawing.Primitives.dll": {}
         }
       },
       "System.Globalization/4.0.0.0": {
@@ -1457,6 +1523,11 @@
           ".NETFramework/v4.5.1/System.Xml.Linq.dll": {}
         }
       },
+      "System.Drawing/4.0.0.0": {
+        "compile": {
+          ".NETFramework/v4.5.1/System.Drawing.dll": {}
+        }
+      },
       "System.Net/4.0.0.0": {
         "compile": {
           ".NETFramework/v4.5.1/System.Net.dll": {}
@@ -1509,7 +1580,10 @@
           "Google.Apis.Analytics.v3": "1.14.0.456",
           "Microsoft.AspNetCore.Cors": "1.0.0",
           "MongoDB.Bson": "2.2.4",
-          "Microsoft.AspNetCore.Diagnostics": "1.0.0"
+          "Microsoft.AspNetCore.Diagnostics": "1.0.0",
+          "System.Drawing.Primitives": "4.0.0",
+          "Swashbuckle.SwaggerGen": "6.0.0-beta901",
+          "Swashbuckle.SwaggerUi": "6.0.0-beta901"
         },
         "runtime": {
           "Api.Socioboard.exe": {}
@@ -2070,6 +2144,18 @@
           "lib/net451/Microsoft.AspNetCore.Server.Kestrel.dll": {}
         }
       },
+      "Microsoft.AspNetCore.StaticFiles/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Hosting.Abstractions": "1.0.0",
+          "Microsoft.AspNetCore.Http.Extensions": "1.0.0",
+          "Microsoft.Extensions.FileProviders.Abstractions": "1.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
+          "Microsoft.Extensions.WebEncoders": "1.0.0"
+        },
+        "runtime": {
+          "lib/net451/Microsoft.AspNetCore.StaticFiles.dll": {}
+        }
+      },
       "Microsoft.AspNetCore.WebUtilities/1.0.0": {
         "dependencies": {
           "Microsoft.Extensions.Primitives": "1.0.0",
@@ -2257,6 +2343,15 @@
         },
         "runtime": {
           "lib/netstandard1.0/Microsoft.Extensions.FileProviders.Composite.dll": {}
+        }
+      },
+      "Microsoft.Extensions.FileProviders.Embedded/1.0.0": {
+        "dependencies": {
+          "Microsoft.Extensions.FileProviders.Abstractions": "1.0.0",
+          "System.Runtime.Extensions": "4.0.0.0"
+        },
+        "runtime": {
+          "lib/netstandard1.0/Microsoft.Extensions.FileProviders.Embedded.dll": {}
         }
       },
       "Microsoft.Extensions.FileProviders.Physical/1.0.0": {
@@ -2564,6 +2659,38 @@
           "lib/net45/StackExchange.Redis.dll": {}
         }
       },
+      "Swashbuckle.Swagger/6.0.0-beta901": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
+          "Microsoft.AspNetCore.Mvc.Formatters.Json": "1.0.0"
+        },
+        "runtime": {
+          "lib/net451/Swashbuckle.Swagger.dll": {}
+        }
+      },
+      "Swashbuckle.SwaggerGen/6.0.0-beta901": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc.ApiExplorer": "1.0.0",
+          "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
+          "Microsoft.AspNetCore.Mvc.DataAnnotations": "1.0.0",
+          "Swashbuckle.Swagger": "6.0.0-beta901",
+          "System.Xml": "4.0.0.0"
+        },
+        "runtime": {
+          "lib/net451/Swashbuckle.SwaggerGen.dll": {}
+        }
+      },
+      "Swashbuckle.SwaggerUi/6.0.0-beta901": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc.Core": "1.0.0",
+          "Microsoft.AspNetCore.StaticFiles": "1.0.0",
+          "Microsoft.Extensions.FileProviders.Embedded": "1.0.0",
+          "System.Xml": "4.0.0.0"
+        },
+        "runtime": {
+          "lib/net451/Swashbuckle.SwaggerUi.dll": {}
+        }
+      },
       "System.Buffers/4.0.0": {
         "runtime": {
           "lib/netstandard1.1/System.Buffers.dll": {}
@@ -2605,6 +2732,15 @@
       },
       "System.Diagnostics.Tools/4.0.0.0": {},
       "System.Diagnostics.Tracing/4.0.10.0": {},
+      "System.Drawing.Primitives/4.0.0": {
+        "dependencies": {
+          "System.Drawing": "4.0.0.0",
+          "mscorlib": "4.0.0.0"
+        },
+        "runtime": {
+          "lib/net45/System.Drawing.Primitives.dll": {}
+        }
+      },
       "System.Globalization/4.0.0.0": {},
       "System.IO/4.0.0.0": {},
       "System.IO.Compression/4.0.0.0": {},
@@ -2748,6 +2884,7 @@
       "System.ComponentModel.DataAnnotations/4.0.0.0": {},
       "System.Security/4.0.0.0": {},
       "System.Xml.Linq/4.0.0.0": {},
+      "System.Drawing/4.0.0.0": {},
       "System.Net/4.0.0.0": {},
       "System.Data/4.0.0.0": {},
       "System.Web.Extensions/4.0.0.0": {}
@@ -3034,6 +3171,11 @@
       "serviceable": true,
       "sha512": "sha512-TNRTsufpdeoa88kR2NU+mO0IZIyJCcBurkdLx4I9d7MpLV1MCnRCrIeTgFIOWpB+j6kytUUXblzhsd0rfk6+bQ=="
     },
+    "Microsoft.AspNetCore.StaticFiles/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pXiUBJtpO0fIlGEg/ESykhbIZ2+I+9Y+3qXzN19zZDDF+tD88eATg3A5MHMXu/VmqaROLfvpGJmJ6uOLUGsBVQ=="
+    },
     "Microsoft.AspNetCore.WebUtilities/1.0.0": {
       "type": "package",
       "serviceable": true,
@@ -3133,6 +3275,11 @@
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-4nbDQfagNr1eILXSFZbTNuAKuZ6SsOyK6ySTMryo67ECi8+EcZBQ12E0aXcxX/aT3v+3pbWSt71NXlEm8tKIxw=="
+    },
+    "Microsoft.Extensions.FileProviders.Embedded/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-mMCI3/BLXAyBCDneqOI4ohETd0IXjbXZdoiCm1dYdnOdV193ByEOCFQ6/Vn9RVdU5UlC4Nn1P4J5Df7pXG/vGg=="
     },
     "Microsoft.Extensions.FileProviders.Physical/1.0.0": {
       "type": "package",
@@ -3299,6 +3446,21 @@
       "serviceable": true,
       "sha512": "sha512-p1r0jd4HiJHQ72ynTJ/ypNzf4xvCKtPJdqpeS8h9Raa5wakJ8a0Bxw1f8iYvqUOLC2CMfZMkHv3IlNYijktSAw=="
     },
+    "Swashbuckle.Swagger/6.0.0-beta901": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Aa9fzgCfJ6STF9EJyvpHz0J2BUKMYOV/ASZVvEN/Z8Tad4Ovn2KiKr6yN5rrXvtVqWjYlOiFPd01TM/DCtmKYA=="
+    },
+    "Swashbuckle.SwaggerGen/6.0.0-beta901": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-lLznzenpFMkSyIygf7PZr9f48PRT51kSrrfsvufgciUxnKOBsGJMAFhBWQFccYSxDjFYdP0EOfPU6yZrGwZ+nQ=="
+    },
+    "Swashbuckle.SwaggerUi/6.0.0-beta901": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qqYh14nwLQI4NCTYQXjtoXoAjv1Fonio5LFRLlbQ8vfDUMOjEzBw94oLUF7uRBivrY6NEEqTmBasSdujveCCeA=="
+    },
     "System.Buffers/4.0.0": {
       "type": "package",
       "serviceable": true,
@@ -3358,6 +3520,11 @@
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""
+    },
+    "System.Drawing.Primitives/4.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9lVRG1voBwzLGZkf1XFJrobdZDZ5ZHMU4FVTbXAbzehpN90yYgkUeo9GoEYdvkt/EXaaHZJAeuffXP4JBbY+Ig=="
     },
     "System.Globalization/4.0.0.0": {
       "type": "referenceassembly",
@@ -3585,6 +3752,11 @@
       "sha512": ""
     },
     "System.Xml.Linq/4.0.0.0": {
+      "type": "referenceassembly",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Drawing/4.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""

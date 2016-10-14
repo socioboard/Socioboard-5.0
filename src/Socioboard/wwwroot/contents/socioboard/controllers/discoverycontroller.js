@@ -5,11 +5,86 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
     $scope.$on('$viewContentLoaded', function () {
         discovery();
         smartsearch();
-        
+        $scope.dispbtn = true;
+        $scope.dispbtnsmart = true;
+
+
+
+         $scope.ComposeMessage = function () {
+                $scope.dispbtn = false;
+                var profiles = $('#composeProfiles').val();
+                var message = $('#composeMessage').val();
+                var updatedmessage = "";
+                var postdata = message.split("\n");
+                for (var i = 0; i < postdata.length; i++) {
+                    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                }
+                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                if (profiles.length > 0 && message!='') {
+                    $scope.checkfile();
+                    if ($scope.check == true) {
+                        var formData = new FormData();
+                        formData.append('files', $("#composeImage").get(0).files[0]);
+                        $http({
+                            method: 'POST',
+                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
+                            data: formData,
+                            headers: {
+                                'Content-Type': undefined
+                            },
+                            transformRequest: angular.identity,
+                        }).then(function (response) {
+                            if (response.data == "Posted") {
+                                $scope.dispbtn = true;
+                                $('#ComposePost').closeModal();
+                                swal('Message compose successfully');
+                            }
+
+                        }, function (reason) {
+                            console.log(reason);
+                        });
+                    }
+                    else {
+                        alertify.set({ delay: 3000 });
+                        alertify.error("File Extention is not valid. Please upload any image file");
+                        $('#input-file-now').val('');
+                    }
+                }
+                else {
+                    $scope.dispbtn = true;
+                    swal('please select profile and type message for compose');
+                }
+            }
+
+            $scope.checkfile = function () {
+                var filesinput = $('#composeImage');
+                var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+                if (filesinput != undefined && filesinput[0].files[0] != null) {
+                    if ($scope.hasExtension('#composeImage', fileExtension)) {
+                        $scope.check = true;
+                    }
+                    else {
+
+                        $scope.check = false;
+                    }
+                }
+                else
+                {
+                    $scope.check = true;
+                }
+            }
+            $scope.hasExtension = function (inputID, exts) {
+                var fileName = $('#composeImage').val();
+                return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+            }
+
+
+
         $scope.DiscoverySearchTwitter = function () {
             //codes to load twitter discovery start
             $http.post(apiDomain + '/api/Discovery/DiscoverySearchTwitter?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&keyword=' + $scope.searchText)
                           .then(function (response) {
+                              $scope.dispbtn = true;
                               $scope.SearchTwitterdate(response.data);
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -21,6 +96,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             //codes to load twitter discovery start
             $http.post(apiDomain + '/api/Discovery/DiscoverySearchinstagram?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&keyword=' + $scope.searchText)
                           .then(function (response) {
+                              $scope.dispbtn = true;
                               $scope.Searchinstagramdate(response.data);
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -32,6 +108,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             //codes to load gplus discovery start
             $http.post(apiDomain + '/api/Discovery/DiscoverySearchGplus?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&keyword=' + $scope.searchText)
                           .then(function (response) {
+                              $scope.dispbtn = true;
                               $scope.SearchGplusdate(response.data);
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -44,6 +121,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             //codes to load discovery historys start
             $http.post(apiDomain + '/api/Discovery/DiscoveryHistory?userId=' + $rootScope.user.Id)
                           .then(function (response) {
+                              $scope.dispbtn = true;
                               $scope.DiscoveryHistory=response.data;
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -54,19 +132,23 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
         {
             if (SearchKeyword != undefined) {
                 $scope.searchText = SearchKeyword;
+
             }
             else {
                 $scope.searchText = $('#discoverytext').val();
             }
-            if($scope.searchText!=''){
+            if ($scope.searchText != '') {
+                $scope.dispbtn = false;
                 $scope.DiscoverySearchGplus();
                 $scope.DiscoverySearchTwitter();
                  $scope.DiscoverySearchinstagram();
                  $('#discoverytext').val('');
                  $scope.DiscoveryHistory();
+                 
             }
             else
             {
+                $scope.dispbtn = true;
                 swal('enter any keyword for search');
             }
         }
@@ -130,19 +212,23 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
 
             var keyword = $('#txtsearch').val();
             if (keyword == "") {
+                $scope.dispbtnsmart = true;
                 return;
             }
 
             if (address == "" || address == null || address == undefined) {
+                $scope.dispbtnsmart = false;
                 $http.post(apiDomain + '/api/Discovery/TwitterTweetSearchWithGeoLocation?searchkeyword=' + keyword + "&geoLocation=" + geoLocation)
                           .then(function (response) {
                               $("#search_location").val('');
                               $('#txtsearch').val('');
+                              $scope.dispbtnsmart = true;
                               $scope.SearchTwitterSmartSearchdate(response.data);
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
             } else {
+                $scope.dispbtnsmart = false;
                 var geocoder = new google.maps.Geocoder();
                 geocoder.geocode({ 'address': address }, function (results, status) {
                     var location = results[0].geometry.location;
@@ -153,6 +239,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                          .then(function (response) {
                              $("#search_location").val('');
                              $('#txtsearch').val('');
+                             $scope.dispbtnsmart = true;
                              $scope.SearchTwitterSmartSearchdate(response.data);
                          }, function (reason) {
                              $scope.error = reason.data;

@@ -19,7 +19,7 @@ namespace Domain.Socioboard.Models.Mongo
         public virtual string taskId { get; set; }
         public virtual Int64 userId { get; set; }
         public virtual string commentText { get; set; }
-        public virtual long createdOn { get; set; }
+        public virtual double createdOn { get; set; }
 
     }
 }

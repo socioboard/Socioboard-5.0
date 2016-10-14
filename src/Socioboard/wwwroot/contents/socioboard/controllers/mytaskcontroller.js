@@ -3,6 +3,10 @@
 SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http, $timeout,apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
+
+        $scope.dispbtnmark = true;
+        $scope.dispbtndelete = true;
+        $scope.dispbtn = true;
         $scope.userTasks = [];
         $scope.selectedTask = null;
         $scope.selectedTaskIndex = null;
@@ -27,35 +31,60 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
         }
 
 
-        $scope.comment = function (newComment) {
+        $scope.comment = function (newComment)
+        {
             if (newComment == null || newComment == ' ') {
-                return ;
+                $scope.dispbtn = true;
+                return;
             }
+            if ($("#task_rply").val() == null || $("#task_rply").val() == " " || $("#task_rply").val() == "") {
+                $scope.dispbtn = true;
+                return;
+            }
+
             else {
+           
+                $scope.dispbtn = false;
+                debugger;
+                //For taking special character start
+                var updatedmessage = "";
+                var postdata = newComment.split("\n");
+                for (var i = 0; i < postdata.length; i++) {
+                    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                }
+                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+                updatedmessage = updatedmessage.replace("+", 'ppp');
+                updatedmessage = updatedmessage.replace("-+", 'jjj');
+                newComment = updatedmessage;
+                //End
+
                 $http({
                     method: 'POST',
                     url: apiDomain + '/api/Task/AddComment?taskId=' + $scope.selectedTask.tasks.strId + '&userId=' + $rootScope.user.Id + '&commentText=' + newComment,
                 }).then(function (response) {
-                    if (response.data != null)
+                    if (response.data != null);
                     {
+                        $scope.dispbtn = true;
                         var addedComment = {
                             "taskComments": response.data,
                             "user": $rootScope.user
                         }
                         $scope.selectedTask.lstTaskComments.push(addedComment);
-                        $("#task_rply").val(' ');
-                        $scope.newComment = null;
+                        $("#task_rply").val("");
+
                     }
+                    console.log(response);
                 }, function (reason) {
                     console.log(reason);
                 });
             }
-           
 
         }
         $scope.getTasks();
         mytask();
-           $scope.deleteTask = function(){
+        $scope.deleteTask = function () {
+            
 	        	swal({   
 		        title: "Are you sure?",   
 		        text: "You will not be able to send message via this account!",   
@@ -66,27 +95,32 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		        closeOnConfirm: false }, 
 		        function(){   
 		            if ($scope.selectedTask == null) {
+		                $scope.dispbtndelete = true;
 		                return;
 		            }
-
-		            $http({
-		                method: 'POST',
-		                url: apiDomain + '/api/Task/DeleteTask?taskId=' + $scope.selectedTask.tasks.strId ,
-		            }).then(function (response) {
-		                if (response.data == "deleted");
-		                {
-		                    $scope.userTasks.splice($scope.selectedTaskIndex, 1);
-		                    $scope.selectedTask = null;
-		                    $scope.$apply();
-		                    if ($scope.selectedTask + 1 < $scope.userTasks.length) {
-		                        $scope.showTask($scope.selectedTask + 1);
+		            else {
+		                $scope.dispbtndelete = false;
+		                $http({
+		                    method: 'POST',
+		                    url: apiDomain + '/api/Task/DeleteTask?taskId=' + $scope.selectedTask.tasks.strId,
+		                }).then(function (response) { 
+		                    if (response.data == "deleted");
+		                    {
+		                        $scope.dispbtndelete = true;
+		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
+		                        $scope.selectedTask = null;
+                                swal("Deleted!", "Your profile has been deleted.", "success");
+		                        $scope.$apply();
+		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
+		                            $scope.showTask($scope.selectedTask + 1);
+		                        }
+		                        
 		                    }
-		                    swal("Deleted!", "Your profile has been deleted.", "success");
-		                }
-		                console.log(response);
-		            }, function (reason) {
-		                console.log(reason);
-		            });
+		                    console.log(response);
+		                }, function (reason) {
+		                    console.log(reason);
+		                });
+		            }
 		           
 		            });
            }
@@ -103,27 +137,31 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
                },
 		        function () {
 		            if ($scope.selectedTask == null) {
+		                $scope.dispbtnmark = true;
 		                return;
 		            }
-
-		            $http({
-		                method: 'POST',
-		                url: apiDomain + '/api/Task/MarkTaskCompleted?taskId=' + $scope.selectedTask.tasks.strId,
-		            }).then(function (response) {
-		                if (response.data == "deleted");
-		                {
-		                    $scope.userTasks.splice($scope.selectedTaskIndex, 1);
-		                    $scope.selectedTask = null;
-		                    $scope.$apply();
-		                    if ($scope.selectedTask + 1 < $scope.userTasks.length) {
-		                        $scope.showTask($scope.selectedTask + 1);
+		            else {
+		                $scope.dispbtnmark = false;
+		                $http({
+		                    method: 'POST',
+		                    url: apiDomain + '/api/Task/MarkTaskCompleted?taskId=' + $scope.selectedTask.tasks.strId,
+		                }).then(function (response) {
+		                    if (response.data == "deleted");
+		                    {
+		                        $scope.dispbtnmark = true;
+		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
+		                        $scope.selectedTask = null;
+		                        $scope.$apply();
+		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
+		                            $scope.showTask($scope.selectedTask + 1);
+		                        }
+		                        swal("Completed!", "Task has been Completed.", "success");
 		                    }
-		                    swal("Completed!", "Task has been Completed.", "success");
-		                }
-		                console.log(response);
-		            }, function (reason) {
-		                console.log(reason);
-		            });
+		                    console.log(response);
+		                }, function (reason) {
+		                    console.log(reason);
+		                });
+		            }
 
 		        });
            }

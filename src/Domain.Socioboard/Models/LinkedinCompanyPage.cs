@@ -32,6 +32,7 @@ namespace Domain.Socioboard.Models
         public bool IsActive { get; set; }
         public int NumFollowers { get; set; }
         public virtual DateTime lastUpdate { get; set; }
+        public virtual DateTime SchedulerUpdate { get; set; }
         public string ProfileType
         {
             get { return "linkedincompanypage"; }

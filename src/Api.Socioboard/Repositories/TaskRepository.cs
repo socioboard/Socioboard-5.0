@@ -30,8 +30,8 @@ namespace Api.Socioboard.Repositories
                 _Tasks.taskMessage = _TasksViewModel.taskMessage;
                 _Tasks.taskMessageImageUrl = _TasksViewModel.taskMessageImageUrl;
                 _Tasks.taskStatus = Domain.Socioboard.Enum.TaskStatus.Pending;
-                _Tasks.cratedOn = DateTime.UtcNow.ToUnixTimestamp();
-                _Tasks.completeddOn = DateTime.UtcNow.ToUnixTimestamp();
+                _Tasks.cratedOn = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                _Tasks.completeddOn = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
                 _Tasks.feedTableType = _TasksViewModel.feedTableType;
                 _Tasks.feedTableId = _TasksViewModel.feedId;
                 MongoRepository mongorepo = new MongoRepository("Tasks", _appSettings);
@@ -187,7 +187,7 @@ namespace Api.Socioboard.Repositories
                 _TaskComments.userId = userId;
                 _TaskComments.taskId = taskId;
                 _TaskComments.commentText = commentText;
-                _TaskComments.createdOn = DateTime.UtcNow.ToUnixTimestamp();
+                _TaskComments.createdOn = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
                 MongoRepository mongorepo = new MongoRepository("TaskComments", _appSettings);
                 mongorepo.Add<TaskComments>(_TaskComments);
                 return _TaskComments;

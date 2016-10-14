@@ -32,8 +32,17 @@ namespace Api.Socioboard.Controllers
         private readonly IHostingEnvironment _appEnv;
 
 
+        /// <summary>
+        /// To add twitter account
+        /// </summary>
+        /// <param name="userId">Id of user</param>
+        /// <param name="groupId">Id of the group to which account is to be added.</param>
+        /// <param name="requestToken"></param>
+        /// <param name="requestSecret"></param>
+        /// <param name="requestVerifier"></param>
+        /// <returns></returns>
         [HttpPost("AddTwitterAccount")]
-        public IActionResult AddTwitterAccount(long userId, long groupId, string requestToken, string requestSecret, string requestVerifier)
+        public IActionResult AddTwitterAccount(long userId, long groupId, string requestToken, string requestSecret, string requestVerifier,bool follow)
         {
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
@@ -41,7 +50,8 @@ namespace Api.Socioboard.Controllers
             OAuth.AccessToken = requestToken;
             OAuth.AccessTokenSecret = requestVerifier;
             OAuth.AccessTokenGet(requestToken, requestVerifier);
-            string output = Repositories.TwitterRepository.AddTwitterAccount(userId, groupId, dbr, OAuth, _logger, _redisCache, _appSettings);
+            string output = Repositories.TwitterRepository.AddTwitterAccount(userId, groupId,follow, dbr, OAuth, _logger, _redisCache, _appSettings);
+          
             return Ok(output);
         }
 
@@ -157,6 +167,7 @@ namespace Api.Socioboard.Controllers
             });
             IList<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> lstTwitterTweets = task.Result;
             lstTwitterTweets = lstTwitterTweets.GroupBy(y => y.senderId, (key, g) => g.OrderByDescending(t => t.createdDate).First()).OrderByDescending(p => p.createdDate).ToList<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>();
+            lstTwitterTweets = lstTwitterTweets.Where(t => t.profileId != null).ToList();
             return Ok(lstTwitterTweets);
         }
 

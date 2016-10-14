@@ -32,6 +32,8 @@ namespace Domain.Socioboard.Models
         public SBAccountType AccountType { get; set; }
         public SBPaymentStatus PaymentStatus { get; set; }
         public SBUserActivationStatus ActivationStatus { get; set; }
+        public string forgotPasswordKeyToken { get; set; }
+        public DateTime forgotPasswordExpireDate { get; set; }
 
         public SBRegistrationType RegistrationType { get; set; }
 

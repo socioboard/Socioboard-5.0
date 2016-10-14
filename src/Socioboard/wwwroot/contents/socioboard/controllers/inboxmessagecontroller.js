@@ -63,6 +63,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             $rootScope.senderScreenName = senderScreenName;
             $rootScope.senderProfileUrl = senderProfileUrl;
             $scope.Conversation(RecipientId, SenderId);
+            console.log($rootScope.profileId);
              $('#ChatModal').openModal();
         }
 

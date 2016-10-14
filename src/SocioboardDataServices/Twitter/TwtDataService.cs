@@ -15,20 +15,28 @@ namespace SocioboardDataServices.Twitter
         {
             while (true)
             {
-                Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
-
-                oAuthTwitter OAuth = new oAuthTwitter("MbOQl85ZcvRGvp3kkOOJBlbFS", "GF0UIXnTAX28hFhN1ISNf3tURHARZdKWlZrsY4PlHm9A4llYjZ", "http://serv1.socioboard.com/TwitterManager/Twitter");
-
-                List<Domain.Socioboard.Models.TwitterAccount> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isActive).ToList();
-                foreach (var item in lstTwtAccounts)
+                try
                 {
-                    OAuth.AccessToken = item.oAuthToken;
-                    OAuth.AccessTokenSecret = item.oAuthSecret;
-                    Console.WriteLine(item.twitterScreenName + "Updating Started");
-                    TwtFeeds.updateTwitterFeeds(item, OAuth);
-                    Console.WriteLine(item.twitterScreenName + "Updated");
+                    Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
+
+                    oAuthTwitter OAuth = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey, Helper.AppSettings.twitterConsumerScreatKey, Helper.AppSettings.twitterRedirectionUrl);
+                    List<Domain.Socioboard.Models.TwitterAccount> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isActive).ToList();
+                    foreach (var item in lstTwtAccounts)
+                    {
+                        OAuth.AccessToken = item.oAuthToken;
+                        OAuth.AccessTokenSecret = item.oAuthSecret;
+                        OAuth.TwitterScreenName = item.twitterScreenName;
+                        Console.WriteLine(item.twitterScreenName + "Updating Started");
+                        TwtFeeds.updateTwitterFeeds(item, OAuth);
+                        Console.WriteLine(item.twitterScreenName + "Updated");
+                    }
+                    Thread.Sleep(600000);
                 }
-                Thread.Sleep(600000);
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(600000);
+                }
             }
         }
     }

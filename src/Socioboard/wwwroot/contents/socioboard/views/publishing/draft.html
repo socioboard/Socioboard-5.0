@@ -60,7 +60,7 @@
                                 <a class="waves-effect waves-light btn red" ng-click="deleteMsg(draft.id)"><i class="fa fa-times"></i></a>
                             </td>
                             <td>
-                                <a class="waves-effect waves-light btn green" ng-click="scheduledraft(draft.shareMessage)"><i class="fa fa-check"></i></a>
+                                <a class="waves-effect waves-light btn green" ng-click="scheduledraft(draft)"><i class="fa fa-check"></i></a>
                             </td>
                         </tr>
 
@@ -77,7 +77,7 @@
     <!--<script id="editdraftModalContent.html" type="text/ng-template">-->
         <div id="EditDraftModal" class="modal">
             <div class="modal-content">
-                <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
+                <span class="modal-action modal-close right"><i class="fa fa-times fa-2x"></i></span>
                 <h5>Edit Message</h5>
                 <div class="row center">
                     <div class="input-field col s8">

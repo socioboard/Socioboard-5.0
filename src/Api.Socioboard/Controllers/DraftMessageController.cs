@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Api.Socioboard.Model;
 using Microsoft.AspNetCore.Cors;
+using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -54,6 +55,38 @@ namespace Api.Socioboard.Controllers
         [HttpPost("EditDraftMessage")]
         public IActionResult EditDraftMessage(long draftId, long userId, long GroupId,string message)
         {
+
+            string postmessage = "";
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("hhh"))
+                    {
+                        postmessage = postmessage + item.Replace("hhh", "#");
+                    }
+                    if (item.Contains("nnn"))
+                    {
+                        postmessage = postmessage.Replace("nnn", "&");
+                    }
+                    if (item.Contains("ppp"))
+                    {
+                        postmessage = postmessage.Replace("ppp", "+");
+                    }
+                    if (item.Contains("jjj"))
+                    {
+                        postmessage = postmessage.Replace("jjj", "-+");
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            message = postmessage;
+
             DatabaseRepository dbr = new DatabaseRepository(_logger,_env);
             List<Domain.Socioboard.Models.Draft> lstDraft = Repositories.DraftMessageRepository.EditDraftMessage(draftId, userId, GroupId, message,_redisCache, _appSettings, dbr);
             return Ok(lstDraft);

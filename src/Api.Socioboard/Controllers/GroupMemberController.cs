@@ -34,6 +34,14 @@ namespace Api.Socioboard.Controllers
         private Helper.AppSettings _appSettings;
         private Helper.Cache _redisCache;
 
+
+
+        /// <summary>
+        /// To add the member of the group
+        /// </summary>
+        /// <param name="groupId">Id of the group from which account is to be added.</param>
+        /// <param name="members"></param>
+        /// <returns></returns>
         [HttpPost("InviteGroupMembers")]
         public IActionResult InviteGroupMembers(long groupId,  string members)
         {
@@ -93,11 +101,11 @@ namespace Api.Socioboard.Controllers
                 {
                     dbr.Add<Groupmembers>(member);
                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + groupId);
-                    string path = System.IO.Path.Combine(_appEnv.WebRootPath, "views\\mailtemplates\\groupinvitation.html");
+                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\groupinvitation.html";
                     string html = System.IO.File.ReadAllText(path);
                     html = html.Replace("[FirstName]", member.firstName);
-                    html = html.Replace("[[JoinLink]]", _appSettings.Domain + "/Home/GroupInvite?Token=" + member.memberCode + "&email=" + member.email);
-                    _emailSender.SendMail("", "", member.email, "", "", "Socioboard Email conformation Link", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+                    html = html.Replace("[JoinLink]", _appSettings.Domain + "/Home/GroupInvite?Token=" + member.memberCode + "&email=" + member.email);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", member.email, "", "", "Socioboard Group Invitation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
                 }
 
             }
@@ -113,15 +121,25 @@ namespace Api.Socioboard.Controllers
             return Ok(GroupMembersRepository.getGroupMembers(groupId, _redisCache, dbr));
         }
 
-        [HttpGet("ActivateGroupMember")]
+        [HttpPost("ActivateGroupMember")]
         public IActionResult ActivateGroupMember(string code, string email)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             Domain.Socioboard.Models.Groupmembers grpMember = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.email.Equals(email)&&t.memberCode.Equals(code)).FirstOrDefault();
             if(grpMember != null)
             {
-                    grpMember.memberStatus = Domain.Socioboard.Enum.GroupMemberStatus.Accepted;
-                    dbr.Update<Domain.Socioboard.Models.Groupmembers>(grpMember);
+                if(grpMember.userId == 0)
+                {
+                    User inMemUser = _redisCache.Get<User>(email.Trim());
+                    if (inMemUser == null)
+                    {
+                        inMemUser = dbr.Find<User>(t => t.EmailId.Equals(email.Trim())).FirstOrDefault();
+                    }
+                    grpMember.userId = inMemUser.Id;
+                    grpMember.profileImg = inMemUser.ProfilePicUrl;
+                }
+                grpMember.memberStatus = Domain.Socioboard.Enum.GroupMemberStatus.Accepted;
+                dbr.Update<Domain.Socioboard.Models.Groupmembers>(grpMember);
                 return Ok("updated");
             }
             else

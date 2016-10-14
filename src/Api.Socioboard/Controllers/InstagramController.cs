@@ -30,6 +30,15 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
+
+        /// <summary>
+        /// To add instagram profile
+        /// </summary>
+        /// <param name="userId">Id of the user .</param>
+        /// <param name="groupId">Id of the group to which account is to be added. </param>
+        /// <param name="code">Code obtained after successfull authentication from Instagram</param>
+        /// <response code="500">Internal Server Erro.r</response>
+        /// <returns></returns>
         [HttpPost("AddInstagramAccount")]
         public IActionResult AddInstagramAccount(long userId,long groupId,string code)
         {

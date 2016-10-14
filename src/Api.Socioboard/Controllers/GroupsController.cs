@@ -30,7 +30,11 @@ namespace Api.Socioboard.Controllers
         private Helper.AppSettings _appSettings;
         private Helper.Cache _redisCache;
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns></returns>
         [HttpPost("CreateGroup")]
         public IActionResult CreateGroup(Domain.Socioboard.Models.Groups group)
         {

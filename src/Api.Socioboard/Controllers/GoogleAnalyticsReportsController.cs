@@ -27,7 +27,15 @@ namespace Api.Socioboard.Controllers
             private Helper.Cache _redisCache;
             private readonly IHostingEnvironment _appEnv;
 
-            [HttpGet("GetGoogleAnalyticsReportData")]
+
+        /// <summary>
+        /// To provide the report on website traffic.
+        /// </summary>
+        /// <param name="profileId">Id of the user</param>
+        /// <param name="daysCount">for preparing report till counted days</param>
+        /// <response code="500">Internal Server Erro.r</response>
+        /// <returns></returns>
+        [HttpGet("GetGoogleAnalyticsReportData")]
             public IActionResult GetGoogleAnalyticsReportData(string profileId, int daysCount)
             {
                 return Ok(Repositories.GoogleAnalyticsReportRepository.getGoogleAnalyticsReportData(profileId,daysCount,_redisCache,_appSettings));

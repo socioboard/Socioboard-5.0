@@ -23,10 +23,13 @@ namespace SocioboardDataServices.Model
         public MongoRepository(string CollectionName) 
         {
 
-            
-            MongoClient client = new MongoClient(AppSettings.MongoDbConnectionString);
+            MongoClient client = new MongoClient("mongodb://SB3LiveAdmin:SBLive%$#!12345@173.192.35.244:27017/Socioboard3Live");
 
-            _db = client.GetDatabase(AppSettings.MongoDbName);
+            _db = client.GetDatabase("Socioboard3Live");
+
+            //MongoClient client = new MongoClient("mongodb://Socioboard3user:sb8520R$lRo0@173.192.35.244:27017/Socioboard3");
+
+            //_db = client.GetDatabase("Socioboard3");
 
             this.collecionName = CollectionName;
             

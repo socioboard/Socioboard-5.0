@@ -26,6 +26,15 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
+
+
+        /// <summary>
+        /// To provide the report on facebook page.
+        /// </summary>
+        /// <param name="profileId">Profile id of user</param>
+        /// <param name="daysCount">To prepare report in a given counted days provided by the user</param>
+        /// <returns></returns>
+        /// <response code="500">Internal Server Erro.r</response>
         [HttpGet("GetFacebookPageReportData")]
         public IActionResult GetFacebookPageReportData(string profileId, int daysCount)
         {

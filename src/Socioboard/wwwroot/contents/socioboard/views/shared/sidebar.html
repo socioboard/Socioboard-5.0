@@ -1,27 +1,36 @@
-  <!-- START LEFT SIDEBAR NAV-->
+<head>
+    <style type="text/css">
+        a:hover {
+            cursor: pointer;
+        }
+    </style>
+</head> 
+ <!-- START LEFT SIDEBAR NAV-->
+
 <aside id="left-sidebar-nav">
     <ul id="slide-out" class="side-nav fixed leftside-navigation">
         <li class="user-details cyan darken-2">
-            <div class="row">
-                <div class="col col s4 m4 l4">
-                    <img src="https://scontent.fbom1-2.fna.fbcdn.net/v/t1.0-1/c47.0.160.160/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?oh=1ee95684d33391c6a128f7fd68420032&oe=5856F349" ng-show="user.ProfilePicUrl == null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
-                    <img src="{{user.ProfilePicUrl}}" ng-show="user.ProfilePicUrl != null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
-                </div>
-                <div class="col col s8 m8 l8">
+            <div class="row center">
+
+                <div class="col col s12 m12 l12">
                     <ul id="profile-dropdown" class="dropdown-content">
                         <li>
                             <a href="#profilesettings"><i class="mdi-action-settings"></i> Settings</a>
                         </li>
                         <!--<li>
-                            <a href="#"><i class="mdi-communication-live-help"></i> Help</a>
-                        </li>-->
+            <a href="#"><i class="mdi-communication-live-help"></i> Help</a>
+        </li>-->
                         <li class="divider"></li>
                         <li>
                             <a ng-click="logout()"><i class="mdi-hardware-keyboard-tab"></i> Logout</a>
                         </li>
                     </ul>
-                    <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown"><span ng-show="user.FirstName != null">{{user.FirstName +' '}}</span><span ng-show="user.LastName != null"> {{ user.LastName}}</span> <i class="mdi-navigation-arrow-drop-down right"></i></a>
-                    <p class="user-roal">{{user.EmailId}}</p>
+                    <img src="https://scontent.fbom1-2.fna.fbcdn.net/v/t1.0-1/c47.0.160.160/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?oh=1ee95684d33391c6a128f7fd68420032&oe=5856F349" ng-show="user.ProfilePicUrl == null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
+                    <img src="{{user.ProfilePicUrl}}" ng-show="user.ProfilePicUrl != null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
+
+
+                    <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown"><span ng-show="user.FirstName != null">{{user.FirstName +' '}}</span><span ng-show="user.LastName != null && user.LastName != 'null'"> {{ user.LastName}}</span> <i class="mdi-navigation-arrow-drop-down right"></i></a>
+                    <p class="user-roal tooltipped" data-position="top" data-delay="50" data-tooltip="{{user.EmailId}}">{{user.EmailId}}</p>
                 </div>
             </div>
         </li>
@@ -48,7 +57,7 @@
                                 <a href="#/mytask">My Task</a>
                             </li>
                             <li>
-                                <a href="#/sentmessages">Send Message</a>
+                                <a href="#/sentmessages">Sent Message</a>
                             </li>
                         </ul>
                     </div>
@@ -68,7 +77,7 @@
                                         <div class="collapsible-body">
                                             <ul>
                                                 <li ng-repeat="profile in lstProfiles | filter : fbProfileFilter">
-                                                    <a ng-click="$state.go('facebookfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                    <a href="#/facebookfeeds/{{profile.profileId}}" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -80,7 +89,8 @@
                                         <div class="collapsible-body">
                                             <ul>
                                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
-                                                    <a ng-click="$state.go('twitterfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                   <!-- <a ng-click="$state.go('twitterfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>-->
+                                                    <a href="#/twitterfeeds/{{profile.profileId}}" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -92,12 +102,13 @@
                                         <div class="collapsible-body">
                                             <ul>
                                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:8}">
-                                                    <a ng-click="$state.go('instagramfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
-                                                </li>
+                                                    <!--<a style="cursor:context-menu;" ng-click="$state.go('instagramfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>-->
+                                                    <a href="#/instagramfeeds/{{profile.profileId}}" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                 </li>
                                             </ul>
                                         </div>
                                     </li>
-                                    <li class="bold">
+                                    <!--<li class="bold">
                                         <a class="collapsible-header waves-effect waves-cyan">
                                             <i class="fa fa-youtube"></i> Youtube
                                         </a>
@@ -108,10 +119,10 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                    </li>
-                                    <li class="bold">
+                                    </li>-->
+                                    <!--<li class="bold">
                                         <a class="collapsible-header waves-effect waves-cyan">
-                                            <i class="fa fa-linkedin"></i> LinkedIn Page
+                                            <i class="fa fa-linkedin"></i> LinkedIn
                                         </a>
                                         <div class="collapsible-body">
                                             <ul>
@@ -120,7 +131,7 @@
                                                 </li>
                                             </ul>
                                         </div>
-                                    </li>
+                                    </li>-->
                                     <li class="bold">
                                         <a class="collapsible-header waves-effect waves-cyan">
                                             <i class="fa fa-google-plus"></i> Google Plus
@@ -128,9 +139,9 @@
                                         <div class="collapsible-body">
                                             <ul>
                                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:5}">
-
-                                                    <a ng-click="$state.go('googleplusfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
-                                                </li>
+                                                    <!--<a style="cursor:context-menu;" ng-click="$state.go('googleplusfeeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>-->
+                                                    <a href="#/googleplusfeeds/{{profile.profileId}}" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                 </li>
                                             </ul>
                                         </div>
                                     </li>
@@ -146,7 +157,7 @@
                     <div class="collapsible-body">
                         <ul>
                             <li>
-                                <a href="#/schedulemsg">Schedule Messages</a>
+                                <a href="#/schedulemessage">Schedule Messages</a>
                             </li>
                             <li>
                                 <a href="#/socioqueue">SocioQueue</a>
@@ -172,10 +183,27 @@
                             <li class="truncate">
                                 <a href="#/smartsearch">Smart Search</a>
                             </li>
+                            <li class="truncate">
+                                <a href="#/facebookgrouppost">Facebook Group Post</a>
+                            </li>
+                            <li class="truncate">
+                                <a href="#/linkedingrouppost">LinkedIn Group Post</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
-
+                <!--<li class="bold">
+                    <a class="collapsible-header waves-effect waves-cyan">
+                        <i class="icon-share-alt"></i> Competetive Analysis
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li>
+                                <a href="#/facebookanalysis">Facebook</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>-->
                 <li class="bold">
                     <a class="collapsible-header waves-effect waves-orange">
                         <i class="icon-rocket"></i> AutoMate Rss Feeds
@@ -236,7 +264,7 @@
                                 <a href="#/instagramreport.html">Instagram Report</a>
                             </li>
                             <li class="truncate">
-                                <a href="">Google Analytics</a>
+                                <a href="#/googleanalyticsreport">Google Analytics</a>
                             </li>
                             <!--<li class="truncate">
                                 <a href="">Socioboard Team Report</a>
@@ -318,11 +346,11 @@
                 <i class="icon-layers"></i> Affiliates
             </a>
         </li>  -->
-        <!--<li class="bold">
+        <li class="bold">
             <a href="#/boardlist" class="waves-effect waves-cyan">
                 <i class="icon-briefcase"></i> Board Me
             </a>
-        </li>-->
+        </li>
     </ul>
     <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu"></i></a>
 </aside>

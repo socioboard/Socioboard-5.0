@@ -108,5 +108,8 @@
 
         //groupreport
         public const string CacheGroupdailyReports = "CacheGroupdailyReports_";
+
+        //boardMe
+        public const string CacheBoard = "CacheBoard_";
     }
 }

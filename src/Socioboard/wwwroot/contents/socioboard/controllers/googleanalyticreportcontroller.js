@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope, $scope, $http, $timeout) {
+SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope, $scope, $http, $timeout,apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
 

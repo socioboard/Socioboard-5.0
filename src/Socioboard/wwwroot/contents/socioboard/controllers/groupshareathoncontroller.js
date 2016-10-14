@@ -49,8 +49,9 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
 
 
         $scope.editgrouphareathon = function (grouphareathon) {
+            console.log(grouphareathon);
             $rootScope.grouphareathondata = grouphareathon;
-            $http.get(apiDomain + '/api/Facebook/GetFacebookGroup?profileId=' + $rootScope.grouphareathondata.Facebookaccountid)
+            $http.get(apiDomain + '/api/Facebook/GetFacebookGroup?profileId=' + $rootScope.grouphareathondata.facebookaccountid)
                      .then(function (response) {
                          $rootScope.lstfacebookgroup = response.data;
                      }, function (reason) {

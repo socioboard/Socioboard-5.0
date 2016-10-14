@@ -3,18 +3,34 @@
 SocioboardApp.controller('CreateBoardController', function ($rootScope, $scope,$state ,$http, $timeout, apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
+        $scope.dispbtn = true;
         $scope.board = {};
-        $scope.createBoard = function () {
+        $scope.createBoard = function (board) {
+
+            if (board.name == "" || board.name == '' || board.name == undefined) {
+                alertify.set({ delay: 5000 });
+                alertify.error("board name should not be empty.");
+                return;
+            }
+            if (board.name.length > 20) {
+                alertify.set({ delay: 5000 });
+                alertify.error("board name length should be less than 20.");
+                return;
+            }
+
+            $scope.dispbtn = false;
             $http({
                 method: 'POST',
-                url: apiDomain + '/api/BoardMe/createBoard?boardName=' + $scope.name + '&fbHashTag=' + $scope.facebookHashTag + '&twitterHashTag=' + $scope.twitterHashTag + '&instagramHashTag=' + $scope.board.instagramHashTag + '&gplusHashTag=' + $scope.gpluHashTag + '&userId=' + $rootScope.user.Id,
+                url: apiDomain + '/api/BoardMe/createBoard?boardName=' + board.name + '&fbHashTag=' + board.facebookHashTag + '&twitterHashTag=' + board.twitterHashTag + '&instagramHashTag=' + board.instagramHashTag + '&gplusHashTag=' + board.gpluHashTag + '&userId=' + $rootScope.user.Id,
                // data: { boardName: $scope.board.name, fbHashTag: $scope.board.facebookHashTag, twitterHashTag: $scope.board.twitterHashTag, instagramHashTag: $scope.board.instagramHashTag, gplusHashTag: $scope.board.gpluHashTag, userId: $rootScope.user.Id }
             }).then(function (response) {
                 if (response.data == 'board Exist') {
+                    $scope.dispbtn = true;
                     alertify.set({ delay: 5000 });
                     alertify.error(response.data);
                 }
                 else if (response.data == 'successfulyy added.') {
+                    $scope.dispbtn = true;
                     $state.go('boardlist');
                 }
                 console.log(response);

@@ -71,8 +71,12 @@
                                   <option value="2">Kilometers</option>
                                 </select>
                               </div>
+                              <div ng-init="dispbtn= {{dispbtnsmart}}"></div>
                               <div class="col l12 center">
-                                  <a  ng-click="DiscoverySmartSearch()" class="btn waves-effect waves-light">Search</a>
+                                  <a ng-show="dispbtn" ng-click="DiscoverySmartSearch()" class="btn waves-effect waves-light">Search</a>
+                                  <a ng-show="!dispbtn" class="btn">
+                                      <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                                  </a>
                               </div>
                           </div>
                         </div>

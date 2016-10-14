@@ -33,7 +33,7 @@ namespace Api.Socioboard.Repositories
             }
             catch { }
 
-            List<Domain.Socioboard.Models.Instagramaccounts> lstInstagramaccounts = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId.Equals(instagramUserId)).ToList();
+            List<Domain.Socioboard.Models.Instagramaccounts> lstInstagramaccounts = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId.Equals(instagramUserId) && t.IsActive).ToList();
             if (lstInstagramaccounts != null && lstInstagramaccounts.Count() > 0)
             {
                 _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramAccount + instagramUserId, lstInstagramaccounts.First());
@@ -223,7 +223,7 @@ namespace Api.Socioboard.Repositories
                             Domain.Socioboard.Models.Mongo.InstagramFeed objInstagramFeed = new Domain.Socioboard.Models.Mongo.InstagramFeed();
                             try
                             {
-                                objInstagramFeed.FeedDate = Helper.DateExtension.ConvertToUnixTimestamp(Convert.ToDateTime(item["created_time"].ToString()));
+                                objInstagramFeed.FeedDate = Convert.ToDouble(item["created_time"].ToString());
                             }
                             catch { }
                             try
@@ -327,7 +327,7 @@ namespace Api.Socioboard.Repositories
                                     catch { }
                                     try
                                     {
-                                        objInstagramComment.CommentDate = Helper.DateExtension.ConvertToUnixTimestamp(Convert.ToDateTime(usercmts.data[cmt].created_time.ToString()));
+                                        objInstagramComment.CommentDate = Convert.ToDouble(usercmts.data[cmt].created_time.ToString());
                                     }
                                     catch { }
                                     try
@@ -873,6 +873,7 @@ namespace Api.Socioboard.Repositories
         public static string AddInstagramComment(string FeedId, string Text, string InstagramId, long groupId, Helper.AppSettings _appSettings, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
             MongoRepository instagarmCommentRepo = new MongoRepository("InstagramComment", _appSettings);
+            MongoRepository instagramFeedRepo = new MongoRepository("InstagramFeed", _appSettings);
             Domain.Socioboard.Models.Mongo.InstagramComment _InstagramComment = new Domain.Socioboard.Models.Mongo.InstagramComment();
             Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = Repositories.InstagramRepository.getInstagramAccount(InstagramId, _redisCache, dbr);
             CommentController objComment = new CommentController();
@@ -892,10 +893,21 @@ namespace Api.Socioboard.Repositories
                     _InstagramComment.InstagramId = InstagramId;
                     _InstagramComment.FromProfilePic = profilepic;
                     _InstagramComment.FromName = username;
-                    _InstagramComment.CommentDate = Helper.DateExtension.ConvertToUnixTimestamp(Convert.ToDateTime(time));
+                    _InstagramComment.CommentDate = Convert.ToDouble(time);
                     _InstagramComment.Comment = Text;
                     _InstagramComment.CommentId = commentid;
                     instagarmCommentRepo.Add<Domain.Socioboard.Models.Mongo.InstagramComment>(_InstagramComment);
+
+                    var retcomment = instagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.FeedId == FeedId);
+                    var task=Task.Run(async()=>{
+                        return await retcomment;
+                    });
+                    List<Domain.Socioboard.Models.Mongo.InstagramFeed> lstfeed = task.Result.ToList();
+                    Domain.Socioboard.Models.Mongo.InstagramFeed feed = lstfeed.First();
+                    feed.CommentCount = feed.CommentCount + 1;
+                    FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", FeedId);
+                    var update = Builders<BsonDocument>.Update.Set("CommentCount", feed.CommentCount);
+                    instagramFeedRepo.Update<Domain.Socioboard.Models.Mongo.InstagramFeed>(update, filter);
                     return "comment";
                 }
                 catch (Exception ex)
@@ -912,7 +924,7 @@ namespace Api.Socioboard.Repositories
 
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
-            Domain.Socioboard.Models.Instagramaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId.Equals(profileId) && t.UserId == userId).FirstOrDefault();
+            Domain.Socioboard.Models.Instagramaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
                 fbAcc.IsActive = false;

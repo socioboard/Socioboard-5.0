@@ -9,7 +9,8 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         $scope.loadmore = "Loading More data..";
-        .
+        
+
         $scope.lstGpFeeds = [];
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds

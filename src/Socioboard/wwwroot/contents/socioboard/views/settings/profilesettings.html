@@ -1,232 +1,241 @@
     <!-- START MAIN -->
-    <div  data-ng-controller="ProfileSettingController">
-        <!-- START WRAPPER -->
-        <div class="wrapper">
+<div data-ng-controller="ProfileSettingController">
+    <!-- START WRAPPER -->
+    <div class="wrapper">
 
-            <!-- START CONTENT -->
-            <section id="content">
+        <!-- START CONTENT -->
+        <section id="content">
 
-                <!--start container-->
-                <div class="container">
+            <!--start container-->
+            <div class="container">
 
-                    <div class="col m12">
-                        <h4>Profile Settings</h4>
-                    </div>
+                <div class="col m12">
+                    <h4>Profile Settings</h4>
+                </div>
 
-                     <div class="row">
-                        <div class="col s12">
-                          <ul class="tabs">
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs">
                             <li class="tab col s3"><a class="active" href="#Profile_tab">Profile</a></li>
-                            <li class="tab col s3"><a href="#Password_tab">Password</a></li>
+                            <li class="tab col s3"><a href="#Password_tab" ng-if="user.Password != null">Password</a></li>
                             <li class="tab col s3"><a href="#Notification_tab">Notification</a></li>
                             <!--<li class="tab col s3"><a href="#Referral_tab">Referral</a></li>-->
-                          </ul>
-                        </div>
-                        <div id="Profile_tab" class="col s12">
-                          <div class="row">
+                        </ul>
+                    </div>
+                    <div id="Profile_tab" class="col s12">
+                        <div class="row">
                             <div class="col s12 m12 l12">
-                              <div class="card-panel">
-                                <div class="row">
-                                  <div class="col s12">
+                                <div class="card-panel">
                                     <div class="row">
-                                      <div class="input-field col s6">
-                                        <input placeholder="First Name" id="first_name" ng-model="updateUser.firstName" type="text">
-                                        <label for="first_name">First Name</label>
-                                      </div>                                        
-                                      <div class="input-field col s6">
-                                        <input placeholder="Last Name" id="last_name"  ng-model="updateUser.lastName" type="text"> 
-                                        <label for="last_name">Last Name</label>
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="input-field col s6">
-                                        <input placeholder="User Name" id="userName" ng-model="updateUser.userName" type="text" class="validate">
-                                        <label for="email">User Name</label>
-                                      </div>
-                                      <div class="input-field col s6">
-                                        <input placeholder="Phone Number" id="" type="tel" ng-model="updateUser.phoneNumber" class="validate">
-                                        <label for="password">Phone Number</label>
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <!--<div class="input-field col s6">
-                                        <select>
-                                          <option value="" disabled selected>Choose your profile</option>
-                                          <option value="1">Manager</option>
-                                          <option value="2">Developer</option>
-                                          <option value="3">Business</option>
-                                        </select>
-                                        <label>Select Profile</label>
-                                      </div>-->                        
-                                      <div class="input-field col s6">
-                                        <input type="date"  ng-model="updateUser.dob" class="datepicker">
-                                        <label for="dob">DOB</label>
-                                      </div>                      
-                                    </div>                    
-                                    <div class="row">
-                                      <div class="file-field input-field col s12">
-                                          <input type="file" id="profileImage" class="dropify" data-default-file="" />
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="input-field col s12">
-                                        <textarea placeholder="About Me" id="message5" ng-model="updateUser.aboutMe" class="materialize-textarea" length="120"></textarea>
-                                        <label for="message">About Me</label>
-                                      </div>
-                                      <div class="row">
-                                        <div class="input-field col s12">
-                                          <button class="btn cyan waves-effect waves-light right" ng-click="UpdateUser(updateUser)" name="action">Submit
-                                            <i class="mdi-content-send right"></i>
-                                          </button>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div id="Password_tab" class="col s12">
-                            <div class="row">
-                                <div class="col s12 m12 l12">
-                                    <div class="card-panel">
-                                        <div class="row">
-                                            <div class="col s12">
+                                        <div class="col s12">
+                                            <div class="row">
+                                                <div class="input-field col s6">
+                                                    <input placeholder="First Name" id="first_name" ng-model="updateUser.firstName" type="text">
+                                                    <label for="first_name">First Name</label>
+                                                </div>
+                                                <div class="input-field col s6">
+                                                    <input placeholder="Last Name" id="last_name" ng-model="updateUser.lastName" type="text">
+                                                    <label for="last_name">Last Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s6">
+                                                    <input placeholder="User Name" id="userName" ng-model="updateUser.userName" type="text" class="validate">
+                                                    <label for="email">User Name</label>
+                                                </div>
+                                                <ng-form name="myForm">
+                                                    <div class="input-field col s6">
+                                                        <input placeholder="Phone Number" id="" type="text" ng-pattern="phoneNumbr" ng-minlength="10" ng-maxlength="10" name="phone" ng-model="updateUser.phoneNumber" class="validate">
+                                                        <label for="password">Phone Number</label>
+                                                        <span class="error" ng-show="myForm.phone.$error.required">Required!</span>
+                                                        <span class="error" ng-show="myForm.phone.$error.minlength">Phone no not less that 10 char.</span>
+                                                        <span class="error" ng-show="myForm.phone.$error.maxlength">Phone no not more than 10 char.</span>
+                                                        <br><span class="error" ng-show="myForm.phone.$error.pattern">Please match pattern [9889509889 || 9912399123]</span>
+                                                     </div>
+                                                </ng-form>
+                                            </div>
+                                            <div class="row">
+                                                <!--<div class="input-field col s6">
+                                                  <select>
+                                                    <option value="" disabled selected>Choose your profile</option>
+                                                    <option value="1">Manager</option>
+                                                    <option value="2">Developer</option>
+                                                    <option value="3">Business</option>
+                                                  </select>
+                                                  <label>Select Profile</label>
+                                                </div>-->
+                                                <div class="input-field col s6">
+                                                    <input type="date" ng-model="updateUser.dob" class="datepicker">
+                                                    <label for="dob">DOB</label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="file-field input-field col s12">
+                                                    <input type="file" id="profileImage" class="dropify" data-default-file="" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <textarea placeholder="About Me" id="message5" ng-model="updateUser.aboutMe" class="materialize-textarea" length="120"></textarea>
+                                                    <label for="message">About Me</label>
+                                                </div>
                                                 <div class="row">
                                                     <div class="input-field col s12">
-                                                        <i class="mdi-action-lock-outline prefix"></i>
-                                                        <input ng-model="updatePassword.currentPassword" type="password" class="validate">
-                                                        <label for="password">Current Password</label>
+                                                        <button class="btn cyan waves-effect waves-light right" ng-click="UpdateUser(updateUser)" name="action">
+                                                            Submit
+                                                            <i class="mdi-content-send right"></i>
+                                                        </button>
                                                     </div>
                                                 </div>
-                                              <div class="row">
-                                                <div class="input-field col s12">
-                                                  <i class="mdi-action-lock-outline prefix"></i>
-                                                  <input ng-model="updatePassword.newPassword" type="password" class="validate">
-                                                  <label for="password">New Password</label>
-                                                </div>
-                                              </div>
-                                              <div class="row">
-                                                <div class="input-field col s12">
-                                                  <i class="mdi-action-lock-outline prefix"></i>
-                                                  <input ng-model="updatePassword.conformPassword" type="password" class="validate">
-                                                  <label for="Confirmpassword">Confirm Password</label>
-                                                </div>
-                                              </div>
-                                              <div class="row">
-                                                <div class="input-field col s12">
-                                                 <div class="btn cyan waves-effect waves-light right" ng-click="UpdatePassword(updatePassword)" name="action">Submit
-                                                  <i class="mdi-content-send right"></i>
-                                                 </div>
-                                                </div>
-                                              </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div id="Notification_tab" class="col s12">
-                            <div class="row">
-                                <div class="col s12 m12 l12">
-                                    <div class="card-panel">
-                                        <div class="row">
-                                            <form class="col s12">
-                                                <h4>Newsletter Subscription Settings</h4>
-                                                <p>Uncheck the lists you no longer wish to be on and then click the button below to complete your unsubscription.</p>
-                                                <p>
-                                                  <input type="checkbox" id="checkbox1"  ng-model="mailSettings.dailyGrpReportsSummery" />
-                                                  <label for="checkbox1" >Daily Group Report Summary</label>
-                                                </p>
-                                                <p>
-                                                  <input type="checkbox" id="checkbox2" ng-model="mailSettings.weeklyGrpReportsSummery"/>
-                                                  <label for="checkbox2">Weekly Group Report Summary</label>
-                                                </p>
-                                                <p>
-                                                  <input type="checkbox" id="checkbox3" ng-model="mailSettings.days15GrpReportsSummery"/>
-                                                  <label for="checkbox3">15 Days Group Report Summary</label>
-                                                </p>
-                                                <p>
-                                                    <input type="checkbox" id="checkbox4" ng-model="mailSettings.monthlyGrpReportsSummery"/>
-                                                    <label for="checkbox4">Monthly Group Report Summary</label>
-                                                </p>
-                                                <p>
-                                                  <input type="checkbox" id="checkbox5" ng-model="mailSettings.days60GrpReportsSummery"/>
-                                                  <label for="checkbox5">60 Days Group Report Summary</label>
-                                                </p>
-                                                <p>
-                                                  <input type="checkbox" id="checkbox6" ng-model="mailSettings.days90GrpReportsSummery"/>
-                                                  <label for="checkbox6">90 Days Group Report Summary</label>
-                                                </p>
-                                                <p>
-                                                  <input type="checkbox" id="checkbox7" ng-model="mailSettings.otherNewsLetters"/>
-                                                  <label for="checkbox7">Other Newsletters</label>
-                                                </p>
-                                                <p>Click the button to confirm you wish to unsubscribe.</p>
-                                            </form>
-                                        </div>
-                                        <div class="row">
-                                            <div class="input-field col s12">
-                                             <div class="btn cyan waves-effect waves-light right" ng-click="UpdateMailSettings(mailSettings)" name="action">Update my subscription
-                                             </div>
-                                            </div>
-                                          </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--<div id="Referral_tab" class="col s12">
-                            <div class="row">
-                                <div class="col s12 m12 l12">
-                                    <div class="card-panel">
-                                        <div class="center-align">
-                                            <i></i>
-                                            <h6>Do You and Your friends wants to earn a month free ? </h6>
-                                            <p>Give your friends a free month of Membership. You'll get a free month when they sign up. *</p>
-                                            <a class="waves-effect waves-light btn col s12">Invite Friends using Gmail</a>
-                                            <hr>
-                                            <p>Manual Enter Email Address </p>
+                    </div>
+                    <div id="Password_tab" class="col s12" ng-if="user.Password != null">
+                        <div class="row">
+                            <div class="col s12 m12 l12">
+                                <div class="card-panel">
+                                    <div class="row">
+                                        <div class="col s12">
                                             <div class="row">
-                                              <form class="col s12">
-                                                <div class="row">
-                                                  <div class="input-field col s12">
-                                                    <input id="input_text" type="text" length="10">
-                                                    <label for="input_text">Email addresses (separate emails by commas)</label>
-                                                  </div>
+                                                <div class="input-field col s12">
+                                                    <i class="mdi-action-lock-outline prefix"></i>
+                                                    <input ng-model="updatePassword.currentPassword" type="password" class="validate">
+                                                    <label for="password">Current Password</label>
                                                 </div>
-                                                <div class="row">
-                                                  <div class="input-field col s12">
-                                                    <textarea id="textarea1" class="materialize-textarea" length="120" placeholder="Fashion Tuts has hundreds of amazing online classes. Use the link below to get a free month of Fashion Tuts Membership and unlimited access to these classes."></textarea>
-                                                    <label for="textarea1">Textarea</label>
-                                                  </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <i class="mdi-action-lock-outline prefix"></i>
+                                                    <input ng-model="updatePassword.newPassword" type="password" class="validate">
+                                                    <label for="password">New Password</label>
                                                 </div>
-                                                <a class="waves-effect waves-light btn col s12">Invite By Email</a>
-                                                <hr>
-                                                <a class="waves-effect waves-light btn blue darken-4">Share on Facebook</a>
-                                                <a class="waves-effect waves-light btn blue">Share on Twitter</a>
-                                                <a class="waves-effect waves-light btn">Http://link</a>
-                                                <hr>
-                                                <a class="waves-effect waves-light btn grey">Invite Sent </a>
-                                                <a class="waves-effect waves-light btn grey">Month Earned </a>
-                                                <a class="waves-effect waves-light btn grey">Month Remaining </a>
-                                                <p class="center-align">* For every friend who signs up with a paid membership you will get a month free</p>
-
-                                              </form>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <i class="mdi-action-lock-outline prefix"></i>
+                                                    <input ng-model="updatePassword.conformPassword" type="password" class="validate">
+                                                    <label for="Confirmpassword">Confirm Password</label>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="input-field col s12">
+                                                    <div class="btn cyan waves-effect waves-light right" ng-click="UpdatePassword(updatePassword)" name="action">
+                                                        Submit
+                                                        <i class="mdi-content-send right"></i>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>-->
-                      </div>
-                </div>
-                <!--end container-->
-            </section>
-            <!-- END CONTENT -->
+                        </div>
+                    </div>
+                    <div id="Notification_tab" class="col s12">
+                        <div class="row">
+                            <div class="col s12 m12 l12">
+                                <div class="card-panel">
+                                    <div class="row">
+                                        <form class="col s12">
+                                            <h4>Newsletter Subscription Settings</h4>
+                                            <p>Uncheck the lists you no longer wish to be on and then click the button below to complete your unsubscription.</p>
+                                            <p>
+                                                <input type="checkbox" id="checkbox1" ng-model="mailSettings.dailyGrpReportsSummery" />
+                                                <label for="checkbox1">Daily Group Report Summary</label>
+                                            </p>
+                                            <p>
+                                                <input type="checkbox" id="checkbox2" ng-model="mailSettings.weeklyGrpReportsSummery" />
+                                                <label for="checkbox2">Weekly Group Report Summary</label>
+                                            </p>
+                                            <p>
+                                                <input type="checkbox" id="checkbox3" ng-model="mailSettings.days15GrpReportsSummery" />
+                                                <label for="checkbox3">15 Days Group Report Summary</label>
+                                            </p>
+                                            <p>
+                                                <input type="checkbox" id="checkbox4" ng-model="mailSettings.monthlyGrpReportsSummery" />
+                                                <label for="checkbox4">Monthly Group Report Summary</label>
+                                            </p>
+                                            <p>
+                                                <input type="checkbox" id="checkbox5" ng-model="mailSettings.days60GrpReportsSummery" />
+                                                <label for="checkbox5">60 Days Group Report Summary</label>
+                                            </p>
+                                            <p>
+                                                <input type="checkbox" id="checkbox6" ng-model="mailSettings.days90GrpReportsSummery" />
+                                                <label for="checkbox6">90 Days Group Report Summary</label>
+                                            </p>
+                                            <p>
+                                                <input type="checkbox" id="checkbox7" ng-model="mailSettings.otherNewsLetters" />
+                                                <label for="checkbox7">Other Newsletters</label>
+                                            </p>
+                                            <p>Click the button to confirm you wish to unsubscribe.</p>
+                                        </form>
+                                    </div>
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <div class="btn cyan waves-effect waves-light right" ng-click="UpdateMailSettings(mailSettings)" name="action">
+                                                Update my subscription
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div id="Referral_tab" class="col s12">
+                        <div class="row">
+                            <div class="col s12 m12 l12">
+                                <div class="card-panel">
+                                    <div class="center-align">
+                                        <i></i>
+                                        <h6>Do You and Your friends wants to earn a month free ? </h6>
+                                        <p>Give your friends a free month of Membership. You'll get a free month when they sign up. *</p>
+                                        <a class="waves-effect waves-light btn col s12">Invite Friends using Gmail</a>
+                                        <hr>
+                                        <p>Manual Enter Email Address </p>
+                                        <div class="row">
+                                          <form class="col s12">
+                                            <div class="row">
+                                              <div class="input-field col s12">
+                                                <input id="input_text" type="text" length="10">
+                                                <label for="input_text">Email addresses (separate emails by commas)</label>
+                                              </div>
+                                            </div>
+                                            <div class="row">
+                                              <div class="input-field col s12">
+                                                <textarea id="textarea1" class="materialize-textarea" length="120" placeholder="Fashion Tuts has hundreds of amazing online classes. Use the link below to get a free month of Fashion Tuts Membership and unlimited access to these classes."></textarea>
+                                                <label for="textarea1">Textarea</label>
+                                              </div>
+                                            </div>
+                                            <a class="waves-effect waves-light btn col s12">Invite By Email</a>
+                                            <hr>
+                                            <a class="waves-effect waves-light btn blue darken-4">Share on Facebook</a>
+                                            <a class="waves-effect waves-light btn blue">Share on Twitter</a>
+                                            <a class="waves-effect waves-light btn">Http://link</a>
+                                            <hr>
+                                            <a class="waves-effect waves-light btn grey">Invite Sent </a>
+                                            <a class="waves-effect waves-light btn grey">Month Earned </a>
+                                            <a class="waves-effect waves-light btn grey">Month Remaining </a>
+                                            <p class="center-align">* For every friend who signs up with a paid membership you will get a month free</p>
 
-        </div>
-        <!-- END WRAPPER -->
+                                          </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+            </div>
+            <!--end container-->
+        </section>
+        <!-- END CONTENT -->
 
     </div>
-    <!-- END MAIN -->
+    <!-- END WRAPPER -->
+
+</div>
+<!-- END MAIN -->

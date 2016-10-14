@@ -29,6 +29,14 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="friendId"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
         [HttpGet("AddAffiliate")]
         public IActionResult AddAffiliate(long userId, long friendId, double amount)
         {

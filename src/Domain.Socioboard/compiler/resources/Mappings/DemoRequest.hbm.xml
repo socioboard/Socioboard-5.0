@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+
+  <class name="DemoRequest" table="DemoRequest" lazy="false">
+
+    <id name="id" column="id" />
+
+    <property name="firstName">
+      <column name="firstName" />
+    </property>
+    <property name="lastName">
+      <column name="lastName" />
+    </property>
+    <property name="designation">
+      <column name="designation"  />
+    </property>
+    <property name="emailId">
+      <column name="emailId"  />
+    </property>
+    <property name="company">
+      <column name="company"  />
+    </property>
+    <property name="phoneNumber">
+      <column name="phoneNumber"  />
+    </property>
+
+    <property name="location">
+      <column name="location"  />
+    </property>
+
+    <property name="skype">
+      <column name="skype"  />
+    </property>
+
+
+    <property name="message">
+      <column name="message"  />
+    </property>
+
+    <property name="companyWebsite">
+      <column name="companyWebsite"  />
+    </property>
+
+    <property name="demoPlanType">
+      <column name="demoPlanType"  />
+    </property>
+
+    <property name="emailValidationTokenId">
+      <column name="emailValidationTokenId"  />
+    </property>
+  </class>
+</hibernate-mapping>

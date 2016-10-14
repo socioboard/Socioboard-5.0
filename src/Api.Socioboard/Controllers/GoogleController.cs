@@ -41,7 +41,11 @@ namespace Api.Socioboard.Controllers
 
 
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns
         [HttpPost("GoogleLogin")]
         public IActionResult GoogleLogin(string code)
         {
@@ -206,6 +210,7 @@ namespace Api.Socioboard.Controllers
                 return Ok(ret);
             }
             Domain.Socioboard.Models.Googleplusaccounts gplusAcc = Api.Socioboard.Repositories.GplusRepository.getGPlusAccount(Convert.ToString(userinfo["id"]), _redisCache, dbr);
+           
             if (gplusAcc != null && gplusAcc.IsActive == true)
             {
                 return Ok("GPlus account added by other user.");
@@ -303,7 +308,7 @@ namespace Api.Socioboard.Controllers
             profiledata = data.Split(',');
             foreach (var item in profiledata)
             {
-                int j = Repositories.GplusRepository.AddGaSites(item, userId, groupId, _redisCache, _appSettings, dbr);
+                int j = Repositories.GplusRepository.AddGaSites(item, userId, groupId, _redisCache, _appSettings, dbr,_appEnv);
             }
             return Ok("Added Successfully");
         }

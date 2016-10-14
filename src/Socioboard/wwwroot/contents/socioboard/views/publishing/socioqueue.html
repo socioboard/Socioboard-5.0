@@ -48,11 +48,11 @@
                                     </div>
                                   </td>
                                   <td class="center">
-                                    <span>
+                                    <span style="word-break : break-all">
                                       {{socioqueue.shareMessage}}
                                     </span>
                                     <br>                                    
-                                      <img ng-if="socioqueue.url!=''" src="{{socioqueue.url}}" class="responsive-img">
+                                      <img ng-if="socioqueue.url!='' && socioqueue.url != null" src="{{getProperURL(socioqueue.url)}}" class="responsive-img">
                                   </td>
                                   <td class="center">
                                     <div class="col s12">
@@ -83,23 +83,28 @@
           <!-- Modal Structure -->
         <!--<script id="editschedulemessageModalContent.html" type="text/ng-template">-->
             <div id="SocioqueueModal" class="modal">
-                <div class="modal-content">
-                    <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
-                    <h5>Edit Message</h5>
-                    <div class="row center">
-                        <div class="input-field col s8">
-                            <textarea id="editScheduleMsg" class="materialize-textarea" length="500" value="">{{sharemessage}}</textarea>
-                            <!--<label for="ScheduleMsg">Edit Message Here</label>-->
+                <form class="col s12" name="editscheduleform">
+                    <div class="modal-content">
+                        <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
+                        <h5>Edit Message</h5>
+                        <div class="row center">
+                            <div class="input-field col s8">
+                                <div >
+                                    <input type="text" id="editScheduleMsg" ng-model="editscdmessage" class="materialize-textarea" length="500"  />
+                                    <!--<label for="editScheduleMsg">Edit Message Here</label>-->
+                                </div>
+
+                            </div>
+                            <!--<div class="col s4">
+                    <img src="../../images/SocioboardCore_logo.png" class="responsive-img">
+                </div>-->
                         </div>
-                        <!--<div class="col s4">
-                            <img src="../../images/SocioboardCore_logo.png" class="responsive-img">
-                        </div>-->
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="savesocioqueueedit()">Save</a>
-                </div>
-            </div>
+                    <div class="modal-footer">
+                        <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="savesocioqueueedit()">Save</a>
+                    </div>
+                    </form>
+</div>
             <!--</script>-->
 
 </div>

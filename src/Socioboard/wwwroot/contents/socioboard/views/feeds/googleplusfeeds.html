@@ -9,23 +9,23 @@
                                     <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>Google plus Live feeds</h5>
                                     <ul class="collection gplusfeeds">
                                         <li class="collection-item avatar" ng-repeat="gplusfeed in lstGpFeeds">
-                                          <img src="{{gplusfeed.FromProfileImage}}" alt="{{gplusfeed.FromUserName}}" class="circle">
-                                          <span class="email-title">{{gplusfeed.FromUserName}}</span>
+                                          <img src="{{gplusfeed.fromProfileImage}}" alt="{{gplusfeed.fromUserName}}" class="circle">
+                                          <span class="email-title">{{gplusfeed.fromUserName}}</span>
                                           <div class="row feeds_post z-depth-1 hoverable">
                                             <div class="col m8">
-                                              <p class="break_word ultra-small">{{gplusfeed.Title}}.</p>
+                                              <p class="break_word ultra-small">{{gplusfeed.title}}</p>
                                             </div>
-                                            <div class="col m4 center" ng-if="gplusfeed.AttachmentType=='photo'">
-                                              <img src="{{gplusfeed.Attachment}}" class="responsive-img ">
+                                            <div class="col m4 center" ng-if="gplusfeed.attachmentType=='photo'">
+                                              <img src="{{gplusfeed.attachment}}" class="responsive-img ">
                                             </div>
-                                              <div class="col m4 center" ng-if="gplusfeed.AttachmentType=='article'">
-                                                  <img src="{{gplusfeed.Attachment}}" class="responsive-img ">
+                                              <div class="col m4 center" ng-if="gplusfeed.attachmentType=='article'">
+                                                  <img src="{{gplusfeed.attachment}}" class="responsive-img ">
                                               </div>
-                                              <div class="col m4 center" ng-if="gplusfeed.AttachmentType=='event'">
-                                                  {{gplusfeed.Content}}
+                                              <div class="col m4 center" ng-if="gplusfeed.attachmentType=='event'">
+                                                  {{gplusfeed.content}}
                                               </div>
                                           </div>                                         
-                                          <a class="tooltipped secondary-content" data-position="left">{{gplusfeed.PublishedDate}}</a>
+                                          <a class="tooltipped secondary-content" data-position="left">{{gplusfeed.publishedDate}}</a>
                                         </li>
                                         <!--<div class="center">
                                           <div class="preloader-wrapper big active">

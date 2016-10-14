@@ -1,5 +1,6 @@
 ﻿using Api.Socioboard.Model;
 using Domain.Socioboard.Models.Mongo;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -31,7 +32,7 @@ namespace Api.Socioboard.Repositories
             }
             catch { }
 
-            List<Domain.Socioboard.Models.Googleplusaccounts> lstGPlusAcc = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(GPlusUserId)).ToList();
+            List<Domain.Socioboard.Models.Googleplusaccounts> lstGPlusAcc = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(GPlusUserId) && t.IsActive).ToList();
             if (lstGPlusAcc != null && lstGPlusAcc.Count() > 0)
             {
                 _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusAccount + GPlusUserId, lstGPlusAcc.First());
@@ -501,7 +502,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static int AddGaSites(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
+        public static int AddGaSites(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, IHostingEnvironment _appEnv)
         {
             int isSaved = 0;
             Analytics _Analytics = new Analytics(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
@@ -541,7 +542,7 @@ namespace Api.Socioboard.Repositories
                     }
                     _GoogleAnalyticsAccount.Views = Double.Parse(pageviews);
                     _GoogleAnalyticsAccount.Visits = Double.Parse(visits);
-                    _GoogleAnalyticsAccount.ProfilePicUrl = "https://www.socioboard.com/Themes/Socioboard/Contents/img/analytics_img.png";
+                    _GoogleAnalyticsAccount.ProfilePicUrl = _appEnv.WebRootPath + "\\images\\analytics_img.png";
                     _GoogleAnalyticsAccount.EntryDate = DateTime.UtcNow;
 
 
@@ -705,7 +706,7 @@ namespace Api.Socioboard.Repositories
 
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
-            Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(profileId) && t.UserId == userId).FirstOrDefault();
+            Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
                 fbAcc.IsActive = false;
@@ -721,7 +722,7 @@ namespace Api.Socioboard.Repositories
 
         public static string DeleteGplusProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
-            Domain.Socioboard.Models.Googleplusaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(profileId) && t.UserId == userId).FirstOrDefault();
+            Domain.Socioboard.Models.Googleplusaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
                 fbAcc.IsActive = false;

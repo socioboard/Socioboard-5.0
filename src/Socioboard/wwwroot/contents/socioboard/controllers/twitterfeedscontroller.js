@@ -76,7 +76,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                       type: "warning",
                       showCancelButton: true,
                       confirmButtonColor: "#DD6B55",
-                      confirmButtonText: "Yes, Retweet it!",
+                      confirmButtonText: "Yes, Favorite it!",
                       closeOnConfirm: false
                   },
                function () {
@@ -103,8 +103,8 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                   scope: $scope
               });
           }
-
-
+          $rootScope.taskNotification = {};
+          $rootScope.tasktweetNotification = {};
           $scope.tasktwtfeedModel = function (notification) {
               $rootScope.taskNotification = notification;
               $('#TasktwtfeedModal').openModal();
@@ -115,15 +115,16 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               $('#TasktwttweetModal').openModal();
 
           }
+
           $scope.addtwtfeedTask = function (feedTableType) {
 
               var memberId = $('.task-user-member:checked');
               var taskComment = $('#tasktwtfeedComment').val();
               if (!memberId.val()) {
-                  swal('please select any member for assign task')
+                  swal('please select any member for assign task');
               }
               else if (!taskComment) {
-                  swal('please write any comment for assign task')
+                  swal('please write any comment for assign task');
               }
               else {
                   var assignUserId = memberId.val();

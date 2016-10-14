@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Api.Socioboard.Model;
+using MongoDB.Driver;
+using Newtonsoft.Json.Linq;
 using Socioboard.Twitter.Authentication;
 using Socioboard.Twitter.Twitter.Core.UserMethods;
 using System;
@@ -22,7 +24,7 @@ namespace Api.Socioboard.Repositories
                 oAuthTwitter oauth = new oAuthTwitter();
                 Domain.Socioboard.Models.Discovery _discovery = new Domain.Socioboard.Models.Discovery();
                 List<Domain.Socioboard.Models.TwitterAccount> lsttwtaccount = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.oAuthSecret != null).Take(20).ToList();
-                List<Domain.Socioboard.Models.Discovery> lstdiscovery = dbr.Find<Domain.Socioboard.Models.Discovery>(t => t.SearchKeyword.Equals(keyword) && t.userId==userId).ToList();
+                List<Domain.Socioboard.Models.Discovery> lstdiscovery = dbr.Find<Domain.Socioboard.Models.Discovery>(t => t.SearchKeyword.Equals(keyword) && t.userId == userId).ToList();
                 if (lstdiscovery.Count == 0)
                 {
                     _discovery.createTime = DateTime.UtcNow;
@@ -38,7 +40,7 @@ namespace Api.Socioboard.Repositories
                     oauth.TwitterUserId = item.twitterUserId;
                     oauth.TwitterScreenName = item.twitterScreenName;
                     SetCofigDetailsForTwitter(oauth, _appSeetings);
-                    
+
                     try
                     {
                         Users _Users = new Users();
@@ -63,7 +65,7 @@ namespace Api.Socioboard.Repositories
 
         }
 
-        public static void SetCofigDetailsForTwitter(oAuthTwitter OAuth,Helper.AppSettings _appSettings)
+        public static void SetCofigDetailsForTwitter(oAuthTwitter OAuth, Helper.AppSettings _appSettings)
         {
             OAuth.ConsumerKey = _appSettings.twitterConsumerKey;
             OAuth.ConsumerKeySecret = _appSettings.twitterConsumerScreatKey;
@@ -115,7 +117,7 @@ namespace Api.Socioboard.Repositories
             else
             {
                 Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.AccessToken != null).FirstOrDefault();
-                List<Domain.Socioboard.Models.InstagramDiscoveryFeed> lstnstagramDiscoveryFeed = Helper.InstagramHelper.DiscoverySearchinstagram(keyword, _Instagramaccounts.AccessToken,_appSettings.InstagramClientKey);
+                List<Domain.Socioboard.Models.InstagramDiscoveryFeed> lstnstagramDiscoveryFeed = Helper.InstagramHelper.DiscoverySearchinstagram(keyword, _Instagramaccounts.AccessToken, _appSettings.InstagramClientKey);
                 if (lstnstagramDiscoveryFeed != null)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheDiscoveryInstagram + keyword, lstnstagramDiscoveryFeed);
@@ -124,10 +126,12 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static List<Domain.Socioboard.Models.Discovery> DiscoveryHistory(long userId,Model.DatabaseRepository dbr)
+        public static List<Domain.Socioboard.Models.Discovery> DiscoveryHistory(long userId, Model.DatabaseRepository dbr)
         {
             List<Domain.Socioboard.Models.Discovery> lstdiscovery = dbr.Find<Domain.Socioboard.Models.Discovery>(t => t.userId == userId).ToList();
             return lstdiscovery;
         }
+
+       
     }
 }

@@ -29,7 +29,7 @@ namespace Api.Socioboard.Repositories
 
             try
             {
-                List<Domain.Socioboard.Models.LinkedInAccount> lstLiAcc = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.LinkedinUserId.Equals(LIUserId)).ToList();
+                List<Domain.Socioboard.Models.LinkedInAccount> lstLiAcc = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.LinkedinUserId.Equals(LIUserId) && t.IsActive).ToList();
                 if (lstLiAcc != null)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheLinkedInAccount + LIUserId, lstLiAcc.First());
@@ -63,7 +63,7 @@ namespace Api.Socioboard.Repositories
 
             try
             {
-                List<Domain.Socioboard.Models.LinkedinCompanyPage> lstLiAcc = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.LinkedinPageId.Equals(LICompanyPageUserId)).ToList();
+                List<Domain.Socioboard.Models.LinkedinCompanyPage> lstLiAcc = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.LinkedinPageId.Equals(LICompanyPageUserId) && t.IsActive).ToList();
                 if (lstLiAcc != null)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheLinkedInCompanyPage + LICompanyPageUserId, lstLiAcc.First());
@@ -416,7 +416,7 @@ namespace Api.Socioboard.Repositories
 
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
-            Domain.Socioboard.Models.LinkedInAccount fbAcc = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.LinkedinUserId.Equals(profileId) && t.UserId == userId).FirstOrDefault();
+            Domain.Socioboard.Models.LinkedInAccount fbAcc = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.LinkedinUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
                 fbAcc.IsActive = false;
@@ -432,7 +432,7 @@ namespace Api.Socioboard.Repositories
 
         public static string DeleteCompanyPageProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
-            Domain.Socioboard.Models.LinkedinCompanyPage fbAcc = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.LinkedinPageId.Equals(profileId) && t.UserId == userId).FirstOrDefault();
+            Domain.Socioboard.Models.LinkedinCompanyPage fbAcc = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.LinkedinPageId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
                 fbAcc.IsActive = false;
