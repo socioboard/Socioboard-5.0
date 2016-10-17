@@ -144,8 +144,9 @@ Step 6:Select the SQL text file which you have saved and click on open button.
 Fig 8)
 ![](http://i.imgur.com/cR3Lle0.png)
 
-Fig 9)  
 Its all Done : Now you can use your database :
+
+Fig 9)
 
 ![](http://i.imgur.com/PX14MUT.png)
 
