@@ -144,6 +144,8 @@ Its all Done : Now you can use your database :
 
 ![](http://i.imgur.com/PX14MUT.png)
 
+![](http://i.imgur.com/5HFe0qm.png)
+
 Step 7: Build Instructions: Once you load the project in visual studio, you can see a solution project with the following structure. 
 
 ![](http://i.imgur.com/IIXh8ms.png)
