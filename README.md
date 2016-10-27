@@ -114,15 +114,47 @@ Unzip it and select the file named socioboard.sln and click over it to open eith
 
 ![](http://i.imgur.com/c9eLgGg.png)
 
-Step 3: Build Instructions: Once you load the project in visual studio, you can see a solution project with the following structure. 
+
+Step 3:Database access procedure:https://github.com/socioboard/Socioboard-Core-3.0/tree/master/src :
+
+Copy the sql file which is in text format from the above given path.
+![](http://i.imgur.com/wsYh0we.png) 
+
+Copy it in text file and store in your local drive.
+
+![](http://i.imgur.com/DDHGqzD.png)
+
+Step 4:Provide proper setup value for HeidiSQL and open it.
+
+![](http://i.imgur.com/us9QNGn.png)
+
+HeidiSql window
+
+![](http://i.imgur.com/l5K57Ds.png)
+
+Step 5: Right click on query section  and select Load SQL file.
+
+![](http://i.imgur.com/rbFLead.png)
+
+Step 6:Select the SQL text file which you have saved and click on open button. 
+
+![](http://i.imgur.com/cR3Lle0.png)
+
+Its all Done : Now you can use your database :
+
+![](http://i.imgur.com/PX14MUT.png)
+
+![](http://i.imgur.com/5HFe0qm.png)
+
+Step 7: Build Instructions: Once you load the project in visual studio, you can see a solution project with the following structure. 
 
 ![](http://i.imgur.com/IIXh8ms.png)
 
-Step 4: Right click on the socioboard project and select the properties .
+Step 8: Right click on the socioboard project and select the properties .
 
 ![](http://i.imgur.com/jAYtz4r.png)
 
-Step 5: When you click on properties it open property window. Follow the instruction given below.
+Step 9: When you click on properties it open property window. Follow the instruction given below.
 
 Instructions:
 
@@ -144,18 +176,17 @@ Build the project if you face any build error:
 
 ![](http://i.imgur.com/cd9V3hL.png)
 
-Step 6: For Editing the Database server files and Connection string, go to “hibernate.cfg.xml” and edit It directly.
+Step 10: For Editing the Database server files and Connection string, go to “hibernate.cfg.xml” and edit It directly.
 
 ![](http://i.imgur.com/UXvQ59w.png)
 
-Step 7:To edit the Social network settings, Go to “app.setting” and change it as per your requirements.
+Step 11:To edit the Social network settings, Go to “app.setting” and change it as per your requirements.
 
 ![](http://i.imgur.com/zGzGRd3.png)
 
 For local url,server and database setting follow same path :Api.Socioboard>appsetting.json
 
 ![](http://i.imgur.com/J3VemGp.png)
-
 
 ![](http://i.imgur.com/scXIBYJ.png)
 
@@ -166,6 +197,5 @@ Edit in startup class : follow the path  src>Api.Sociboard>Startup.cs
 Now Everything is ready you can start project.
 
 ![](http://i.imgur.com/CRtFmke.png)
-
 
 Thank You for reading....
