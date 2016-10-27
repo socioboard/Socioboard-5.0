@@ -6,6 +6,8 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
     
         groupreport();
 
+        $scope.chart1Data = [];
+
         $scope.getReports = function (groupId, days) {
             //codes to load  fb page profiles start
             $http.get(apiDomain + '/api/GroupReport/getgroupReportData?groupId=' + $rootScope.groupId + '&daysCount=' + days)
@@ -19,10 +21,12 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
         }
         $scope.getOnPageLoadReports = function () {
-                $scope.getReports($rootScope.groupId, 90)
+            $scope.getReports($rootScope.groupId, 90);
+           // $scope.getfacebookpageGroupReportData($rootScope.groupId, 90);
+           // $scope.getTwitterGroupReportData($rootScope.groupId, 90);
         }
 
-        $scope.getOnPageLoadReports();
+        
 
 
         $scope.getData = function (days) {
@@ -55,7 +59,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     twtretweets = twtretweets + value.twtretweets;
                     malecount = malecount + value.malecount;
                     femalecount = femalecount + value.femalecount;
-                    uniqueusers = uniqueusers + valu.uniqueusers;
+                    uniqueusers = uniqueusers + value.uniqueusers;
                     twitter_account_count = twitter_account_count + value.twitter_account_count;
                     linkstoPages = linkstoPages + value.linkstoPages;
                     photoLinks = photoLinks + value.photoLinks;
@@ -87,8 +91,8 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.linkstoPages = linkstoPages;
             $scope.photoLinks = photoLinks;
             $scope.plainText = plainText;
-            $scope.getfacebookpageGroupReportData(days);
-            $scope.getTwitterGroupReportData(days);
+            $scope.getfacebookpageGroupReportData($rootScope.groupId, days);
+            $scope.getTwitterGroupReportData($rootScope.groupId, days);
         }
 
 
@@ -127,17 +131,17 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             var sharingperFemaleper = 0;
             angular.forEach($scope.generatefacebookGraphData, function (value, key) {
                 if (value.date > startDate) {
-                    totalLikes = totalLikes + value.totalLikes;
-                    talkingAbout = talkingAbout + value.talkingAbout;
-                    newFans = newFans + value.likes;
-                    unliked = unliked + value.unlikes;
-                    impressions = impressions + value.impression;
-                    usersBy = usersBy + value.uniqueUser;
-                    impressionsMaleper = impressionsMaleper + value.m_13_17 + value.m_18_24 + value.m_25_34 + value.m_35_44 + value.m_45_54 + value.m_55_64 + value.m_65;
-                    impressionsFemaleper = impressionsFemaleper + value.f_13_17 + value.f_18_24 + value.f_25_34 + value.f_35_44 + value.f_45_54 + value.f_55_64 + value.f_65;
-                    storiesCreated = storiesCreated + value.storyShare;
-                    sharingMaleper = sharingMaleper + value.sharing_M_13_17 + value.sharing_M_18_24 + value.sharing_M_25_34 + value.sharing_M_35_44 + value.sharing_M_45_54 + value.sharing_M_55_64 + value.sharing_M_65;
-                    sharingperFemaleper = sharingperFemaleper + value.sharing_F_13_17 + value.sharing_F_18_24 + value.sharing_F_25_34 + value.sharing_F_35_44 + value.sharing_F_45_54 + value.sharing_F_55_64 + value.sharing_F_65;
+                    totalLikes = totalLikes + parseInt(value.totalLikes);
+                    talkingAbout = talkingAbout + parseInt(value.talkingAbout);
+                    newFans = newFans + parseInt(value.likes);
+                    unliked = unliked + parseInt(value.unlikes);
+                    impressions = impressions + parseInt(value.impression);
+                    usersBy = usersBy + parseInt(value.uniqueUser);
+                    impressionsMaleper = impressionsMaleper + parseInt(value.m_13_17) + parseInt(value.m_18_24) + parseInt(value.m_25_34) + parseInt(value.m_35_44) + parseInt(value.m_45_54) + parseInt(value.m_55_64) + parseInt(value.m_65);
+                    impressionsFemaleper = impressionsFemaleper + parseInt(value.f_13_17) + parseInt(value.f_18_24) + parseInt(value.f_25_34) + parseInt(value.f_35_44) + parseInt(value.f_45_54) + parseInt(value.f_55_64) + parseInt(value.f_65);
+                    storiesCreated = storiesCreated + parseInt(value.storyShare);
+                    sharingMaleper = sharingMaleper + parseInt(value.sharing_M_13_17) + parseInt(value.sharing_M_18_24) + parseInt(value.sharing_M_25_34) + parseInt(value.sharing_M_35_44) + parseInt(value.sharing_M_45_54) + parseInt(value.sharing_M_55_64) + parseInt(value.sharing_M_65);
+                    sharingperFemaleper = sharingperFemaleper + parseInt(value.sharing_F_13_17) + parseInt(value.sharing_F_18_24) + parseInt(value.sharing_F_25_34) + parseInt(value.sharing_F_35_44) + parseInt(value.sharing_F_45_54) + parseInt(value.sharing_F_55_64) + parseInt(value.sharing_F_65);
                 }
             });
             impressionsByAgeMaleFollower = ((impressionsMaleper * 100) / (impressionsMaleper + impressionsFemaleper))
@@ -178,7 +182,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.generatesharebygenderGraph(days);
             $scope.generatePAGEIMPRESSIONSGraph(days);
             $scope.generatePageLikeUnlikeGraph(days);
-            $scope.GetFacebookPagePostData(profileId, days);
+           // $scope.GetFacebookPagePostData(profileId, days);
 
         }
         //end facebook group report data
@@ -294,39 +298,99 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
 
 
-
-
-        $scope.sparkGraph = [5, 6, 7, 9, 9, 5, 3, 2, 2, 4, 6, 7, 5, 6, 7, 9, 9, 5, 3, 2, 2, 4, 6, 7];
-        // Project Line chart ( Project Box )
-        $(".project-line-1").sparkline($scope.sparkGraph, {
-            type: 'line',
-            width: '100%',
-            height: '30',
-            lineWidth: 2,
-            lineColor: '#00bcd4',
-            fillColor: 'rgba(0, 188, 212, 0.5)',
-        });
-
         // IMPRESSIONS BREAKDOWN //
 
         $scope.generateIMPRESSIONS1Graph = function (days) {
             $scope.generateChart1Data(days);
+            console.log($scope.chart1Data);
+
+
             var chart = AmCharts.makeChart("BREAKDOWN_1", {
-                "type": "pie",
+                "type": "serial",
                 "theme": "light",
-                "path": "http://www.amcharts.com/lib/3/",
                 "legend": {
-                    "markerType": "circle",
-                    "position": "right",
-                    "marginRight": 80,
-                    "autoMargins": false
+                    "useGraphSettings": true
                 },
                 "dataProvider": $scope.chart1Data,
-                "valueField": "litres",
-                "titleField": "country",
-                "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+                "valueAxes": [{
+                    "integersOnly": true,
+                    "maximum": 6,
+                    "minimum": 1,
+                    "reversed": false,
+                    "axisAlpha": 0,
+                    "dashLength": 5,
+                    "gridCount": 10,
+                    "position": "left"
+                }],
+                "startDuration": 0.5,
+                "graphs": [{
+                    "balloonText": "Events : [[value]]",
+                    "bullet": "round",
+                    "hidden": true,
+                    "title": "Event",
+                    "valueField": "Event",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "checkins : [[value]]",
+                    "bullet": "round",
+                    "title": "checkin",
+                    "valueField": "checkin",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "fans : [[value]]",
+                    "bullet": "round",
+                    "title": "fans",
+                    "valueField": "fans",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "mention : [[value]]",
+                    "bullet": "round",
+                    "title": "mention",
+                    "valueField": "mention",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "other : [[value]]",
+                    "bullet": "round",
+                    "title": "other",
+                    "valueField": "other",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "pagePost : [[value]]",
+                    "bullet": "round",
+                    "title": "pagePost",
+                    "valueField": "pagePost",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "question : [[value]]",
+                    "bullet": "round",
+                    "title": "question",
+                    "valueField": "question",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "userPost : [[value]]",
+                    "bullet": "round",
+                    "title": "userPost",
+                    "valueField": "userPost",
+                    "fillAlphas": 0
+                }
+                ],
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    "zoomable": false
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "fillAlpha": 0.05,
+                    "fillColor": "#000000",
+                    "gridAlpha": 0,
+                    "position": "bottom",
+                    "parseDates": true,
+                },
                 "export": {
-                    "enabled": true
+                    "enabled": true,
+                    "position": "bottom-right"
                 }
             });
         }
@@ -342,7 +406,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             var impressionQuestion = 0;
             var impressionEvent = 0;
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {
                 if (value.date > startDate) {
                     impressionFans = impressionFans + value.impressionFans
                     impressionPagePost = impressionPagePost + value.impressionPagePost;
@@ -352,19 +416,23 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     impressionCheckin = impressionCheckin + value.impressionCheckin;
                     impressionQuestion = impressionQuestion + value.impressionQuestion;
                     impressionEvent = impressionEvent + value.impressionEvent;
+
+                    $scope.chart1Data.push({
+                        fans: value.impressionFans,
+                        pagePost: value.impressionPagePost,
+                        userPost: value.impressionuserPost,
+                        other: value.impressionOther,
+                        mention: value.impressionMention,
+                        checkin: value.impressionCheckin,
+                        question: value.impressionQuestion,
+                        Event: value.impressionEvent,
+                        date: value.date
+                    });
+
                 }
             });
 
-            $scope.chart1Data.push({
-                fans: impressionFans,
-                pagePost: impressionPagePost,
-                userPost: impressionuserPost,
-                other: impressionOther,
-                mention: impressionMention,
-                checkin: impressionCheckin,
-                question: impressionQuestion,
-                Event: impressionEvent
-            });
+            
 
 
         }
@@ -372,45 +440,89 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         $scope.generateIMPRESSIONS2Graph = function (days) {
             $scope.generateChart2Data(days);
             var chart = AmCharts.makeChart("BREAKDOWN_2", {
-                "type": "pie",
+                "type": "serial",
                 "theme": "light",
-                "path": "http://www.amcharts.com/lib/3/",
                 "legend": {
-                    "markerType": "circle",
-                    "position": "right",
-                    "marginRight": 80,
-                    "autoMargins": false
+                    "useGraphSettings": true
                 },
                 "dataProvider": $scope.chart2Data,
-                "valueField": "litres",
-                "titleField": "country",
-                "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+                "valueAxes": [{
+                    "integersOnly": true,
+                    "maximum": 6,
+                    "minimum": 1,
+                    "reversed": false,
+                    "axisAlpha": 0,
+                    "dashLength": 5,
+                    "gridCount": 10,
+                    "position": "left"
+                }],
+                "startDuration": 0.5,
+                "graphs": [{
+                    "balloonText": "organic : [[value]]",
+                    "bullet": "round",
+                    "hidden": true,
+                    "title": "organic",
+                    "valueField": "organic",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "paid : [[value]]",
+                    "bullet": "round",
+                    "title": "paid",
+                    "valueField": "paid",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "viral : [[value]]",
+                    "bullet": "round",
+                    "title": "viral",
+                    "valueField": "viral",
+                    "fillAlphas": 0
+                }],
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    "zoomable": false
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "fillAlpha": 0.05,
+                    "fillColor": "#000000",
+                    "gridAlpha": 0,
+                    "position": "bottom",
+                    "parseDates": true,
+                },
                 "export": {
-                    "enabled": true
+                    "enabled": true,
+                    "position": "bottom-right"
                 }
             });
         }
 
-        $scope.generate2ChartData = function (days) {
+        $scope.chart2Data = [];
+
+        $scope.generateChart2Data = function (days) {
             $scope.chart2Data = [];
             var organic = 0;
             var viral = 0;
             var paid = 0;
 
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {
                 if (value.date > startDate) {
                     organic = organic + value.organic
                     viral = viral + value.viral;
                     paid = paid + value.paid;
+
+                    $scope.chart2Data.push({
+                        organic: organic,
+                        viral: viral,
+                        paid: paid,
+                        date: new Date((value.date * 1000))
+                    });
                 }
             });
 
-            $scope.chart2Data.push({
-                organic: organic,
-                viral: viral,
-                paid: paid
-            });
+            
 
 
         }
@@ -418,83 +530,65 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         // male & female
         $scope.generateIMPRESSIONSmalefemaleGraph = function (days) {
             $scope.generateimpressionmalefemaleChartData(days);
+
             var chart = AmCharts.makeChart("male_female", {
                 "type": "serial",
                 "theme": "light",
-                "path": "http://www.amcharts.com/lib/3/",
                 "legend": {
-                    "horizontalGap": 10,
-                    "maxColumns": 1,
-                    "position": "right",
-                    "useGraphSettings": true,
-                    "markerSize": 10
+                    "useGraphSettings": true
                 },
-                "dataProvider": [{
-                    "age": 13 - 17,
-                    "Male": $scope.m_13_17,
-                    "Female": $scope.f_13_17,
-                }, {
-                    "age": 18 - 24,
-                    "Male": $scope.m_18_24,
-                    "Female": $scope.f_18_24,
-                }, {
-                    "age": 25 - 34,
-                    "Male": $scope.m_25_34,
-                    "Female": $scope.m_25_34,
-                }, {
-                    "age": 35 - 44,
-                    "Male": $scope.m_35_44,
-                    "Female": $scope.f_35_44,
-                }, {
-                    "year": 45 - 54,
-                    "Male": $scope.m_45_54,
-                    "Female": $scope.f_45_54,
-                }, {
-                    "age": 55 - 64,
-                    "Male": $scope.m_55_64,
-                    "Female": $scope.f_55_64,
-                }, {
-                    "age": 65,
-                    "Male": $scope.m_65,
-                    "Female": $scope.f_65,
-                }],
+                "dataProvider": $scope.chartImpressionMaleFemaleGraphData,
+                "synchronizeGrid": true,
                 "valueAxes": [{
-                    "stackType": "regular",
-                    "axisAlpha": 0.5,
-                    "gridAlpha": 0
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
+                }, {
+                    "id": "v2",
+                    "axisColor": "#FCD202",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "right"
                 }],
                 "graphs": [{
-                    "balloonText": "<b>[[title]]</b><br><span style='font-size:24px'>[[category]]: <b>[[value]]</b></span>",
-                    "fillAlphas": 0.8,
-                    "labelText": "[[value]]",
-                    "lineAlpha": 0.3,
-                    "title": "Male (100)",
-                    "type": "column",
-                    "color": "#000000",
-                    "valueField": "Male"
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "male",
+                    "valueField": "male",
+                    "fillAlphas": 0
                 }, {
-                    "balloonText": "<b>[[title]]</b><br><span style='font-size:24px'>[[category]]: <b>[[value]]</b></span>",
-                    "fillAlphas": 0.8,
-                    "labelText": "[[value]]",
-                    "lineAlpha": 0.3,
-                    "title": "Female (99)",
-                    "type": "column",
-                    "color": "#000000",
-                    "valueField": "Female"
+                    "valueAxis": "v2",
+                    "lineColor": "#FCD202",
+                    "bullet": "square",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "female",
+                    "valueField": "female",
+                    "fillAlphas": 0
                 }],
-                "rotate": true,
-                "categoryField": "age",
+                "chartScrollbar": {},
+                "chartCursor": {
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "date",
                 "categoryAxis": {
-                    "gridPosition": "start",
-                    "axisAlpha": 0,
-                    "gridAlpha": 0,
-                    "position": "left"
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
                 },
                 "export": {
-                    "enabled": true
+                    "enabled": true,
+                    "position": "bottom-right"
                 }
             });
         }
+
+        $scope.chartImpressionMaleFemaleGraphData = [];
         $scope.generateimpressionmalefemaleChartData = function (days) {
             var m_13_17 = 0;
             var m_18_24 = 0;
@@ -527,8 +621,17 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     f_45_54 = f_45_54 + value.f_45_54;
                     f_55_64 = f_55_64 + value.f_55_64;
                     f_65 = f_65 + value.f_65;
+
+
+                    $scope.chartImpressionMaleFemaleGraphData.push({
+                        female: parseInt(value.f_13_17) + parseInt(value.f_18_24) + parseInt(value.f_25_34) + parseInt(value.f_35_44) + parseInt(value.f_45_54) + parseInt(value.f_55_64) + parseInt(value.f_65),
+                        male: parseInt(value.m_13_17) + parseInt(value.m_18_24) + parseInt(value.m_25_34) + parseInt(value.m_35_44) + parseInt(value.m_45_54) + parseInt(value.m_55_64) + parseInt(value.m_65),
+                        date: new Date((value.date * 1000))
+                    });
+
                 }
             });
+
             $scope.m_13_17 = m_13_17;
             $scope.m_18_24 = m_18_24;
             $scope.m_25_34 = m_25_34;
@@ -545,749 +648,48 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.f_65 = f_65;
         }
 
+       
 
-        // world 
-
-        var chart = AmCharts.makeChart("world", {
-            "theme": "light",
-            "type": "serial",
-            "path": "http://www.amcharts.com/lib/3/",
-            "dataProvider": [{
-                "year": 2005,
-                "income": 23.5
-            }, {
-                "year": 2006,
-                "income": 26.2
-            }, {
-                "year": 2007,
-                "income": 30.1
-            }, {
-                "year": 2008,
-                "income": 29.5
-            }, {
-                "year": 2009,
-                "income": 24.6
-            }],
-            "valueAxes": [{
-                "title": "Income in millions, USD"
-            }],
-            "graphs": [{
-                "balloonText": "Income in [[category]]:[[value]]",
-                "fillAlphas": 1,
-                "lineAlpha": 0.2,
-                "title": "Income",
-                "type": "column",
-                "valueField": "income"
-            }],
-            "depth3D": 20,
-            "angle": 30,
-            "rotate": true,
-            "categoryField": "year",
-            "categoryAxis": {
-                "gridPosition": "start",
-                "fillAlpha": 0.05,
-                "position": "left"
-            },
-            "export": {
-                "enabled": true
-            }
-        });
-        jQuery('.chart-input').off().on('input change', function () {
-            var property = jQuery(this).data('property');
-            var target = chart;
-            chart.startDuration = 0;
-
-            if (property == 'topRadius') {
-                target = chart.graphs[0];
-                if (this.value == 0) {
-                    this.value = undefined;
-                }
-            }
-
-            target[property] = this.value;
-            chart.validateNow();
-        });
-
-
-        var chart = AmCharts.makeChart("DAILYENGAGEMENT", {
-            "type": "serial",
-            "theme": "light",
-            "marginRight": 80,
-            "autoMarginOffset": 20,
-            "dataDateFormat": "YYYY-MM-DD",
-            "valueAxes": [{
-                "id": "v1",
-                "axisAlpha": 0,
-                "position": "left"
-            }],
-            "balloon": {
-                "borderThickness": 1,
-                "shadowAlpha": 0
-            },
-            "graphs": [{
-                "id": "g1",
-                "bullet": "round",
-                "bulletBorderAlpha": 1,
-                "bulletColor": "#FFFFFF",
-                "bulletSize": 5,
-                "hideBulletsCount": 50,
-                "lineThickness": 2,
-                "title": "red line",
-                "useLineColorForBulletBorder": true,
-                "valueField": "value",
-                "balloonText": "<div style='margin:5px; font-size:19px;'><span style='font-size:13px;'>[[category]]</span><br>[[value]]</div>"
-            }],
-            "chartScrollbar": {
-                "graph": "g1",
-                "oppositeAxis": false,
-                "offset": 30,
-                "scrollbarHeight": 80,
-                "backgroundAlpha": 0,
-                "selectedBackgroundAlpha": 0.1,
-                "selectedBackgroundColor": "#888888",
-                "graphFillAlpha": 0,
-                "graphLineAlpha": 0.5,
-                "selectedGraphFillAlpha": 0,
-                "selectedGraphLineAlpha": 1,
-                "autoGridCount": true,
-                "color": "#AAAAAA"
-            },
-            "chartCursor": {
-                "pan": true,
-                "valueLineEnabled": true,
-                "valueLineBalloonEnabled": true,
-                "cursorAlpha": 0,
-                "valueLineAlpha": 0.2
-            },
-            "categoryField": "date",
-            "categoryAxis": {
-                "parseDates": true,
-                "dashLength": 1,
-                "minorGridEnabled": true
-            },
-            "export": {
-                "enabled": true
-            },
-            "dataProvider": [{
-                "date": "2012-07-27",
-                "value": 13
-            }, {
-                "date": "2012-07-28",
-                "value": 11
-            }, {
-                "date": "2012-07-29",
-                "value": 15
-            }, {
-                "date": "2012-07-30",
-                "value": 16
-            }, {
-                "date": "2012-07-31",
-                "value": 18
-            }, {
-                "date": "2012-08-01",
-                "value": 13
-            }, {
-                "date": "2012-08-02",
-                "value": 22
-            }, {
-                "date": "2012-08-03",
-                "value": 23
-            }, {
-                "date": "2012-08-04",
-                "value": 20
-            }, {
-                "date": "2012-08-05",
-                "value": 17
-            }, {
-                "date": "2012-08-06",
-                "value": 16
-            }, {
-                "date": "2012-08-07",
-                "value": 18
-            }, {
-                "date": "2012-08-08",
-                "value": 21
-            }, {
-                "date": "2012-08-09",
-                "value": 26
-            }, {
-                "date": "2012-08-10",
-                "value": 24
-            }, {
-                "date": "2012-08-11",
-                "value": 29
-            }, {
-                "date": "2012-08-12",
-                "value": 32
-            }, {
-                "date": "2012-08-13",
-                "value": 18
-            }, {
-                "date": "2012-08-14",
-                "value": 24
-            }, {
-                "date": "2012-08-15",
-                "value": 22
-            }, {
-                "date": "2012-08-16",
-                "value": 18
-            }, {
-                "date": "2012-08-17",
-                "value": 19
-            }, {
-                "date": "2012-08-18",
-                "value": 14
-            }, {
-                "date": "2012-08-19",
-                "value": 15
-            }, {
-                "date": "2012-08-20",
-                "value": 12
-            }, {
-                "date": "2012-08-21",
-                "value": 8
-            }, {
-                "date": "2012-08-22",
-                "value": 9
-            }, {
-                "date": "2012-08-23",
-                "value": 8
-            }, {
-                "date": "2012-08-24",
-                "value": 7
-            }, {
-                "date": "2012-08-25",
-                "value": 5
-            }, {
-                "date": "2012-08-26",
-                "value": 11
-            }, {
-                "date": "2012-08-27",
-                "value": 13
-            }, {
-                "date": "2012-08-28",
-                "value": 18
-            }, {
-                "date": "2012-08-29",
-                "value": 20
-            }, {
-                "date": "2012-08-30",
-                "value": 29
-            }, {
-                "date": "2012-08-31",
-                "value": 33
-            }, {
-                "date": "2012-09-01",
-                "value": 42
-            }, {
-                "date": "2012-09-02",
-                "value": 35
-            }, {
-                "date": "2012-09-03",
-                "value": 31
-            }, {
-                "date": "2012-09-04",
-                "value": 47
-            }, {
-                "date": "2012-09-05",
-                "value": 52
-            }, {
-                "date": "2012-09-06",
-                "value": 46
-            }, {
-                "date": "2012-09-07",
-                "value": 41
-            }, {
-                "date": "2012-09-08",
-                "value": 43
-            }, {
-                "date": "2012-09-09",
-                "value": 40
-            }, {
-                "date": "2012-09-10",
-                "value": 39
-            }, {
-                "date": "2012-09-11",
-                "value": 34
-            }, {
-                "date": "2012-09-12",
-                "value": 29
-            }, {
-                "date": "2012-09-13",
-                "value": 34
-            }, {
-                "date": "2012-09-14",
-                "value": 37
-            }, {
-                "date": "2012-09-15",
-                "value": 42
-            }, {
-                "date": "2012-09-16",
-                "value": 49
-            }, {
-                "date": "2012-09-17",
-                "value": 46
-            }, {
-                "date": "2012-09-18",
-                "value": 47
-            }, {
-                "date": "2012-09-19",
-                "value": 55
-            }, {
-                "date": "2012-09-20",
-                "value": 59
-            }, {
-                "date": "2012-09-21",
-                "value": 58
-            }, {
-                "date": "2012-09-22",
-                "value": 57
-            }, {
-                "date": "2012-09-23",
-                "value": 61
-            }, {
-                "date": "2012-09-24",
-                "value": 59
-            }, {
-                "date": "2012-09-25",
-                "value": 67
-            }, {
-                "date": "2012-09-26",
-                "value": 65
-            }, {
-                "date": "2012-09-27",
-                "value": 61
-            }, {
-                "date": "2012-09-28",
-                "value": 66
-            }, {
-                "date": "2012-09-29",
-                "value": 69
-            }, {
-                "date": "2012-09-30",
-                "value": 71
-            }, {
-                "date": "2012-10-01",
-                "value": 67
-            }, {
-                "date": "2012-10-02",
-                "value": 63
-            }, {
-                "date": "2012-10-03",
-                "value": 46
-            }, {
-                "date": "2012-10-04",
-                "value": 32
-            }, {
-                "date": "2012-10-05",
-                "value": 21
-            }, {
-                "date": "2012-10-06",
-                "value": 18
-            }, {
-                "date": "2012-10-07",
-                "value": 21
-            }, {
-                "date": "2012-10-08",
-                "value": 28
-            }, {
-                "date": "2012-10-09",
-                "value": 27
-            }, {
-                "date": "2012-10-10",
-                "value": 36
-            }, {
-                "date": "2012-10-11",
-                "value": 33
-            }, {
-                "date": "2012-10-12",
-                "value": 31
-            }, {
-                "date": "2012-10-13",
-                "value": 30
-            }, {
-                "date": "2012-10-14",
-                "value": 34
-            }, {
-                "date": "2012-10-15",
-                "value": 38
-            }, {
-                "date": "2012-10-16",
-                "value": 37
-            }, {
-                "date": "2012-10-17",
-                "value": 44
-            }, {
-                "date": "2012-10-18",
-                "value": 49
-            }, {
-                "date": "2012-10-19",
-                "value": 53
-            }, {
-                "date": "2012-10-20",
-                "value": 57
-            }, {
-                "date": "2012-10-21",
-                "value": 60
-            }, {
-                "date": "2012-10-22",
-                "value": 61
-            }, {
-                "date": "2012-10-23",
-                "value": 69
-            }, {
-                "date": "2012-10-24",
-                "value": 67
-            }, {
-                "date": "2012-10-25",
-                "value": 72
-            }, {
-                "date": "2012-10-26",
-                "value": 77
-            }, {
-                "date": "2012-10-27",
-                "value": 75
-            }, {
-                "date": "2012-10-28",
-                "value": 70
-            }, {
-                "date": "2012-10-29",
-                "value": 72
-            }, {
-                "date": "2012-10-30",
-                "value": 70
-            }, {
-                "date": "2012-10-31",
-                "value": 72
-            }, {
-                "date": "2012-11-01",
-                "value": 73
-            }, {
-                "date": "2012-11-02",
-                "value": 67
-            }, {
-                "date": "2012-11-03",
-                "value": 68
-            }, {
-                "date": "2012-11-04",
-                "value": 65
-            }, {
-                "date": "2012-11-05",
-                "value": 71
-            }, {
-                "date": "2012-11-06",
-                "value": 75
-            }, {
-                "date": "2012-11-07",
-                "value": 74
-            }, {
-                "date": "2012-11-08",
-                "value": 71
-            }, {
-                "date": "2012-11-09",
-                "value": 76
-            }, {
-                "date": "2012-11-10",
-                "value": 77
-            }, {
-                "date": "2012-11-11",
-                "value": 81
-            }, {
-                "date": "2012-11-12",
-                "value": 83
-            }, {
-                "date": "2012-11-13",
-                "value": 80
-            }, {
-                "date": "2012-11-14",
-                "value": 81
-            }, {
-                "date": "2012-11-15",
-                "value": 87
-            }, {
-                "date": "2012-11-16",
-                "value": 82
-            }, {
-                "date": "2012-11-17",
-                "value": 86
-            }, {
-                "date": "2012-11-18",
-                "value": 80
-            }, {
-                "date": "2012-11-19",
-                "value": 87
-            }, {
-                "date": "2012-11-20",
-                "value": 83
-            }, {
-                "date": "2012-11-21",
-                "value": 85
-            }, {
-                "date": "2012-11-22",
-                "value": 84
-            }, {
-                "date": "2012-11-23",
-                "value": 82
-            }, {
-                "date": "2012-11-24",
-                "value": 73
-            }, {
-                "date": "2012-11-25",
-                "value": 71
-            }, {
-                "date": "2012-11-26",
-                "value": 75
-            }, {
-                "date": "2012-11-27",
-                "value": 79
-            }, {
-                "date": "2012-11-28",
-                "value": 70
-            }, {
-                "date": "2012-11-29",
-                "value": 73
-            }, {
-                "date": "2012-11-30",
-                "value": 61
-            }, {
-                "date": "2012-12-01",
-                "value": 62
-            }, {
-                "date": "2012-12-02",
-                "value": 66
-            }, {
-                "date": "2012-12-03",
-                "value": 65
-            }, {
-                "date": "2012-12-04",
-                "value": 73
-            }, {
-                "date": "2012-12-05",
-                "value": 79
-            }, {
-                "date": "2012-12-06",
-                "value": 78
-            }, {
-                "date": "2012-12-07",
-                "value": 78
-            }, {
-                "date": "2012-12-08",
-                "value": 78
-            }, {
-                "date": "2012-12-09",
-                "value": 74
-            }, {
-                "date": "2012-12-10",
-                "value": 73
-            }, {
-                "date": "2012-12-11",
-                "value": 75
-            }, {
-                "date": "2012-12-12",
-                "value": 70
-            }, {
-                "date": "2012-12-13",
-                "value": 77
-            }, {
-                "date": "2012-12-14",
-                "value": 67
-            }, {
-                "date": "2012-12-15",
-                "value": 62
-            }, {
-                "date": "2012-12-16",
-                "value": 64
-            }, {
-                "date": "2012-12-17",
-                "value": 61
-            }, {
-                "date": "2012-12-18",
-                "value": 59
-            }, {
-                "date": "2012-12-19",
-                "value": 53
-            }, {
-                "date": "2012-12-20",
-                "value": 54
-            }, {
-                "date": "2012-12-21",
-                "value": 56
-            }, {
-                "date": "2012-12-22",
-                "value": 59
-            }, {
-                "date": "2012-12-23",
-                "value": 58
-            }, {
-                "date": "2012-12-24",
-                "value": 55
-            }, {
-                "date": "2012-12-25",
-                "value": 52
-            }, {
-                "date": "2012-12-26",
-                "value": 54
-            }, {
-                "date": "2012-12-27",
-                "value": 50
-            }, {
-                "date": "2012-12-28",
-                "value": 50
-            }, {
-                "date": "2012-12-29",
-                "value": 51
-            }, {
-                "date": "2012-12-30",
-                "value": 52
-            }, {
-                "date": "2012-12-31",
-                "value": 58
-            }, {
-                "date": "2013-01-01",
-                "value": 60
-            }, {
-                "date": "2013-01-02",
-                "value": 67
-            }, {
-                "date": "2013-01-03",
-                "value": 64
-            }, {
-                "date": "2013-01-04",
-                "value": 66
-            }, {
-                "date": "2013-01-05",
-                "value": 60
-            }, {
-                "date": "2013-01-06",
-                "value": 63
-            }, {
-                "date": "2013-01-07",
-                "value": 61
-            }, {
-                "date": "2013-01-08",
-                "value": 60
-            }, {
-                "date": "2013-01-09",
-                "value": 65
-            }, {
-                "date": "2013-01-10",
-                "value": 75
-            }, {
-                "date": "2013-01-11",
-                "value": 77
-            }, {
-                "date": "2013-01-12",
-                "value": 78
-            }, {
-                "date": "2013-01-13",
-                "value": 70
-            }, {
-                "date": "2013-01-14",
-                "value": 70
-            }, {
-                "date": "2013-01-15",
-                "value": 73
-            }, {
-                "date": "2013-01-16",
-                "value": 71
-            }, {
-                "date": "2013-01-17",
-                "value": 74
-            }, {
-                "date": "2013-01-18",
-                "value": 78
-            }, {
-                "date": "2013-01-19",
-                "value": 85
-            }, {
-                "date": "2013-01-20",
-                "value": 82
-            }, {
-                "date": "2013-01-21",
-                "value": 83
-            }, {
-                "date": "2013-01-22",
-                "value": 88
-            }, {
-                "date": "2013-01-23",
-                "value": 85
-            }, {
-                "date": "2013-01-24",
-                "value": 85
-            }, {
-                "date": "2013-01-25",
-                "value": 80
-            }, {
-                "date": "2013-01-26",
-                "value": 87
-            }, {
-                "date": "2013-01-27",
-                "value": 84
-            }, {
-                "date": "2013-01-28",
-                "value": 83
-            }, {
-                "date": "2013-01-29",
-                "value": 84
-            }, {
-                "date": "2013-01-30",
-                "value": 81
-            }]
-        });
 
         $scope.generatePAGEIMPRESSIONSGraph = function (days) {
             $scope.generatepageimressionChartData(days);
-            var charts = function () {
-                var chart = AmCharts.makeChart("PAGEIMPRESSIONS", {
-                    "type": "serial",
-                    "theme": "light",
-                    "pathToImages": Metronic.getGlobalPluginsPath() + "amcharts/amcharts/images/",
-                    "autoMargins": false,
-                    "marginLeft": 30,
-                    "marginRight": 8,
-                    "marginTop": 10,
-                    "marginBottom": 26,
+            var chart = AmCharts.makeChart("PAGEIMPRESSIONS", {
+                "type": "serial",
+                "theme": "light",
+                // "pathToImages": Metronic.getGlobalPluginsPath() + "amcharts/amcharts/images/",
+                "autoMargins": false,
+                "marginLeft": 30,
+                "marginRight": 8,
+                "marginTop": 10,
+                "marginBottom": 26,
 
-                    "fontFamily": 'Open Sans',
-                    "color": '#888',
+                "fontFamily": 'Open Sans',
+                "color": '#888',
 
-                    "dataProvider": $scope.chartimpressionData,
-                    "valueAxes": [{
-                        "axisAlpha": 0,
-                        "position": "left"
-                    }],
-                    "startDuration": 1,
-                    "graphs": [{
-                        "alphaField": "alpha",
-                        "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b> [[additional]]</span>",
-                        "dashLengthField": "dashLengthColumn",
-                        "fillAlphas": 1,
-                        "title": "Income",
-                        "type": "column",
-                        "valueField": "income"
-                    }, {
-                        "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b> [[additional]]</span>",
-                        "bullet": "round",
-                        "dashLengthField": "dashLengthLine",
-                        "lineThickness": 3,
-                        "bulletSize": 7,
-                        "bulletBorderAlpha": 1,
-                        "bulletColor": "#FFFFFF",
-                        "useLineColorForBulletBorder": true,
-                        "bulletBorderThickness": 3,
-                        "fillAlphas": 0,
-                        "lineAlpha": 1,
-                        "title": "Expenses",
-                        "valueField": "expenses"
-                    }],
-                    "categoryField": "year",
-                    "categoryAxis": {
-                        "gridPosition": "start",
-                        "axisAlpha": 0,
-                        "tickLength": 0
-                    }
-                });
-            }
+                "dataProvider": $scope.chartimpressionData,
+                "valueAxes": [{
+                    "axisAlpha": 0,
+                    "position": "left"
+                }],
+                "startDuration": 1,
+                "graphs": [{
+                    "alphaField": "alpha",
+                    "balloonText": "<span style='font-size:13px;'>[[title]] in [[category]]:<b>[[value]]</b> [[additional]]</span>",
+                    "dashLengthField": "dashLengthColumn",
+                    "fillAlphas": 1,
+                    "title": "impression",
+                    "type": "column",
+                    "valueField": "impression"
+                }],
+                "categoryField": "date",
+                "categoryAxis": {
+                    "parseDates": true,
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "tickLength": 0
+                }
+            });
+
         }
         $scope.generatepageimressionChartData = function (days) {
             $scope.chartimpressionData = [];
@@ -1301,136 +703,71 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             });
         }
 
-
+        $scope.chartlikeunlikeData = [];
         $scope.generatePageLikeUnlikeGraph = function (days) {
             $scope.generatefacebookpageLikeUnlikeGraph(days);
-            var charts = function () {
-                var chart = AmCharts.makeChart("MyFacebookPages", {
-                    "type": "serial",
-                    "theme": "light",
 
-                    "fontFamily": 'Open Sans',
-                    "color": '#888888',
+            var chart = AmCharts.makeChart("MyFacebookPages", {
+                "type": "serial",
+                "theme": "light",
+                "legend": {
+                    "useGraphSettings": true
+                },
+                "dataProvider": $scope.chartlikeunlikeData,
+                "synchronizeGrid": true,
+                "valueAxes": [{
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
+                }, {
+                    "id": "v2",
+                    "axisColor": "#FCD202",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "right"
+                }],
+                "graphs": [{
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "like",
+                    "valueField": "like",
+                    "fillAlphas": 0
+                }, {
+                    "valueAxis": "v2",
+                    "lineColor": "#FCD202",
+                    "bullet": "square",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "unlike",
+                    "valueField": "unlike",
+                    "fillAlphas": 0
+                }],
+                "chartScrollbar": {},
+                "chartCursor": {
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
+                },
+                "export": {
+                    "enabled": true,
+                    "position": "bottom-right"
+                }
+            });
 
-                    "legend": {
-                        "equalWidths": false,
-                        "useGraphSettings": true,
-                        "valueAlign": "left",
-                        "valueWidth": 120
-                    },
-                    "dataProvider": $scope.chartlikeunlikeData,
-                    "valueAxes": [{
-                        "id": "distanceAxis",
-                        "axisAlpha": 0,
-                        "gridAlpha": 0,
-                        "position": "left",
-                        "title": "distance"
-                    }, {
-                        "id": "latitudeAxis",
-                        "axisAlpha": 0,
-                        "gridAlpha": 0,
-                        "labelsEnabled": false,
-                        "position": "right"
-                    }, {
-                        "id": "durationAxis",
-                        "duration": "mm",
-                        "durationUnits": {
-                            "hh": "h ",
-                            "mm": "min"
-                        },
-                        "axisAlpha": 0,
-                        "gridAlpha": 0,
-                        "inside": true,
-                        "position": "right",
-                        "title": "duration"
-                    }],
-                    "graphs": [{
-                        "alphaField": "alpha",
-                        "balloonText": "[[value]] miles",
-                        "dashLengthField": "dashLength",
-                        "fillAlphas": 0.7,
-                        "legendPeriodValueText": "total: [[value.sum]] mi",
-                        "legendValueText": "[[value]] mi",
-                        "title": "distance",
-                        "type": "column",
-                        "valueField": "distance",
-                        "valueAxis": "distanceAxis"
-                    }, {
-                        "balloonText": "latitude:[[value]]",
-                        "bullet": "round",
-                        "bulletBorderAlpha": 1,
-                        "useLineColorForBulletBorder": true,
-                        "bulletColor": "#FFFFFF",
-                        "bulletSizeField": "townSize",
-                        "dashLengthField": "dashLength",
-                        "descriptionField": "townName",
-                        "labelPosition": "right",
-                        "labelText": "[[townName2]]",
-                        "legendValueText": "[[description]]/[[value]]",
-                        "title": "latitude/city",
-                        "fillAlphas": 0,
-                        "valueField": "latitude",
-                        "valueAxis": "latitudeAxis"
-                    }, {
-                        "bullet": "square",
-                        "bulletBorderAlpha": 1,
-                        "bulletBorderThickness": 1,
-                        "dashLengthField": "dashLength",
-                        "legendValueText": "[[value]]",
-                        "title": "duration",
-                        "fillAlphas": 0,
-                        "valueField": "duration",
-                        "valueAxis": "durationAxis"
-                    }],
-                    "chartCursor": {
-                        "categoryBalloonDateFormat": "DD",
-                        "cursorAlpha": 0.1,
-                        "cursorColor": "#000000",
-                        "fullWidth": true,
-                        "valueBalloonsEnabled": false,
-                        "zoomable": false
-                    },
-                    "dataDateFormat": "YYYY-MM-DD",
-                    "categoryField": "date",
-                    "categoryAxis": {
-                        "dateFormats": [{
-                            "period": "DD",
-                            "format": "DD"
-                        }, {
-                            "period": "WW",
-                            "format": "MMM DD"
-                        }, {
-                            "period": "MM",
-                            "format": "MMM"
-                        }, {
-                            "period": "YYYY",
-                            "format": "YYYY"
-                        }],
-                        "parseDates": true,
-                        "autoGridCount": false,
-                        "axisColor": "#555555",
-                        "gridAlpha": 0.1,
-                        "gridColor": "#FFFFFF",
-                        "gridCount": 50
-                    },
-                    "exportConfig": {
-                        "menuBottom": "20px",
-                        "menuRight": "22px",
-                        "menuItems": [{
-                            "icon": Metronic.getGlobalPluginsPath() + "amcharts/amcharts/images/export.png",
-                            "format": 'png'
-                        }]
-                    }
-                });
 
-                $('#MyFacebookPages').closest('.portlet').find('.fullscreen').click(function () {
-                    chart.invalidateSize();
-                });
-            }
         }
         $scope.generatefacebookpageLikeUnlikeGraph = function (days) {
-            $scope.chartlikeunlikeData = [];
 
+            $scope.chartlikeunlikeData = [];
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
             angular.forEach($scope.dailyReportsList, function (value, key) {
                 $scope.chartlikeunlikeData.push({
@@ -1439,47 +776,59 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     unlike: value.perDayUnlikes
                 });
             });
+
         }
 
-        $('#PAGEIMPRESSIONS').closest('.portlet').find('.fullscreen').click(function () {
-            chart.invalidateSize();
-        });
 
+       
 
 
         // stories graph
         $scope.generateStoryGraph = function (days) {
             $scope.generatestoryGraph(days);
+
+
             var chart = AmCharts.makeChart("FacebookStories", {
                 "type": "serial",
                 "theme": "light",
+                "legend": {
+                    "useGraphSettings": true
+                },
                 "dataProvider": $scope.chartstoryData,
-                "gridAboveGraphs": true,
-                "startDuration": 1,
-                "graphs": [{
-                    "balloonText": "[[category]]: <b>[[value]]</b>",
-                    "fillAlphas": 0.8,
-                    "lineAlpha": 0.2,
-                    "type": "column",
-                    "valueField": "share"
+                "synchronizeGrid": true,
+                "valueAxes": [{
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
                 }],
+                "graphs": [{
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "story",
+                    "valueField": "story",
+                    "fillAlphas": 0
+                }],
+                "chartScrollbar": {},
                 "chartCursor": {
-                    "categoryBalloonEnabled": false,
-                    "cursorAlpha": 0,
-                    "zoomable": false
+                    "cursorPosition": "mouse"
                 },
                 "categoryField": "date",
                 "categoryAxis": {
-                    "gridPosition": "start",
-                    "gridAlpha": 0,
-                    "tickPosition": "start",
-                    "tickLength": 20
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
                 },
                 "export": {
-                    "enabled": true
+                    "enabled": true,
+                    "position": "bottom-right"
                 }
-
             });
+
         }
         $scope.generatestoryGraph = function (days) {
             $scope.chartstoryData = [];
@@ -1497,45 +846,96 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         // SHARE TYPE
         $scope.generatesharetypeGraph = function (days) {
             $scope.generatesharechart(days);
+
+            console.log('ShareType');
+            console.log($scope.chartshareData);
+
             var chart = AmCharts.makeChart("ShareType", {
-                "type": "pie",
-                "startDuration": 0,
+                "type": "serial",
                 "theme": "light",
-                "addClassNames": true,
                 "legend": {
-                    "position": "right",
-                    "marginRight": 100,
-                    "autoMargins": false
-                },
-                "innerRadius": "30%",
-                "defs": {
-                    "filter": [{
-                        "id": "shadow",
-                        "width": "200%",
-                        "height": "200%",
-                        "feOffset": {
-                            "result": "offOut",
-                            "in": "SourceAlpha",
-                            "dx": 0,
-                            "dy": 0
-                        },
-                        "feGaussianBlur": {
-                            "result": "blurOut",
-                            "in": "offOut",
-                            "stdDeviation": 5
-                        },
-                        "feBlend": {
-                            "in": "SourceGraphic",
-                            "in2": "blurOut",
-                            "mode": "normal"
-                        }
-                    }]
+                    "useGraphSettings": true
                 },
                 "dataProvider": $scope.chartshareData,
-                "valueField": "litres",
-                "titleField": "country",
+                "valueAxes": [{
+                    "integersOnly": true,
+                    "maximum": 6,
+                    "minimum": 1,
+                    "reversed": false,
+                    "axisAlpha": 0,
+                    "dashLength": 5,
+                    "gridCount": 10,
+                    "position": "left"
+                }],
+                "startDuration": 0.5,
+                "graphs": [{
+                    "balloonText": "checkin : [[value]]",
+                    "bullet": "round",
+                    "hidden": true,
+                    "title": "checkin",
+                    "valueField": "sharecheckin",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "event : [[value]]",
+                    "bullet": "round",
+                    "title": "event",
+                    "valueField": "shareevent",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "fans : [[value]]",
+                    "bullet": "round",
+                    "title": "fans",
+                    "valueField": "sharefan",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "mention : [[value]]",
+                    "bullet": "round",
+                    "title": "mention",
+                    "valueField": "sharementions",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "other : [[value]]",
+                    "bullet": "round",
+                    "title": "other",
+                    "valueField": "shareother",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "pagePost : [[value]]",
+                    "bullet": "round",
+                    "title": "page post",
+                    "valueField": "sharepagePost",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "question : [[value]]",
+                    "bullet": "round",
+                    "title": "question",
+                    "valueField": "sharequestion",
+                    "fillAlphas": 0
+                }, {
+                    "balloonText": "user post : [[value]]",
+                    "bullet": "round",
+                    "title": "user post",
+                    "valueField": "shareuserPost",
+                    "fillAlphas": 0
+                }
+                ],
+                "chartCursor": {
+                    "cursorAlpha": 0,
+                    "zoomable": false
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "fillAlpha": 0.05,
+                    "fillColor": "#000000",
+                    "gridAlpha": 0,
+                    "position": "bottom",
+                    "parseDates": true,
+                },
                 "export": {
-                    "enabled": true
+                    "enabled": true,
+                    "position": "bottom-right"
                 }
             });
         }
@@ -1564,117 +964,97 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     story_Event = story_Event + value.story_Event
                     story_Question = story_Question + value.story_Question;
                     story_Checkin = story_Checkin + value.story_Checkin;
+
+
+
+
+                    $scope.chartshareData.push({
+                        sharefan: value.story_Fans,
+                        sharepagepost: value.story_PagePost,
+                        shareuserpost: value.story_UserPost,
+                        shareother: value.story_Other,
+                        sharementions: value.story_Mention,
+                        shareevent: value.story_Event,
+                        sharequestion: value.story_Question,
+                        sharecheckin: value.story_Checkin,
+                        date: new Date((value.date * 1000))
+                    });
                 }
             });
 
-            $scope.chartshareData.push({
-                sharefan: story_Fans,
-                sharepagepost: story_PagePost,
-                shareuserpost: story_UserPost,
-                shareother: story_Other,
-                sharementions: story_Mention,
-                shareevent: story_Event,
-                sharequestion: story_Question,
-                sharecheckin: story_Checkin
-            });
-        }
-        chart.addListener("init", handleInit);
 
-        chart.addListener("rollOverSlice", function (e) {
-            handleRollOver(e);
-        });
-
-        function handleInit() {
-            chart.legend.addListener("rollOverItem", handleRollOver);
         }
 
-        function handleRollOver(e) {
-            var wedge = e.dataItem.wedge.node;
-            wedge.parentNode.appendChild(wedge);
-        }
 
 
         // sharing by age and gender
         $scope.generatesharebygenderGraph = function (days) {
             $scope.generatesharebygendermalefemaleGraph(days);
+
             var chart = AmCharts.makeChart("share_male_female", {
                 "type": "serial",
                 "theme": "light",
-                "path": "http://www.amcharts.com/lib/3/",
                 "legend": {
-                    "horizontalGap": 10,
-                    "maxColumns": 1,
-                    "position": "right",
-                    "useGraphSettings": true,
-                    "markerSize": 10
+                    "useGraphSettings": true
                 },
-                "dataProvider": [{
-                    "age": 13 - 17,
-                    "Male": $scope.sharing_m_13_17,
-                    "Female": $scope.sharing_f_13_17,
-                }, {
-                    "age": 18 - 24,
-                    "Male": $scope.sharing_m_18_24,
-                    "Female": $scope.sharing_f_18_24,
-                }, {
-                    "age": 25 - 34,
-                    "Male": $scope.sharing_m_25_34,
-                    "Female": $scope.sharing_f_25_34,
-                }, {
-                    "age": 35 - 44,
-                    "Male": $scope.sharing_m_35_44,
-                    "Female": $scope.sharing_f_35_44,
-                }, {
-                    "year": 45 - 54,
-                    "Male": $scope.sharing_m_45_54,
-                    "Female": $scope.sharing_f_45_54,
-                }, {
-                    "age": 55 - 64,
-                    "Male": $scope.sharing_m_55_64,
-                    "Female": $scope.sharing_f_55_64,
-                }, {
-                    "age": 65,
-                    "Male": $scope.sharing_m_65,
-                    "Female": $scope.sharing_f_65,
-                }],
+                "dataProvider": $scope.chartMaleFemaleGraphData,
+                "synchronizeGrid": true,
                 "valueAxes": [{
-                    "stackType": "regular",
-                    "axisAlpha": 0.5,
-                    "gridAlpha": 0
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
+                }, {
+                    "id": "v2",
+                    "axisColor": "#FCD202",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "right"
                 }],
                 "graphs": [{
-                    "balloonText": "<b>[[title]]</b><br><span style='font-size:24px'>[[category]]: <b>[[value]]</b></span>",
-                    "fillAlphas": 0.8,
-                    "labelText": "[[value]]",
-                    "lineAlpha": 0.3,
-                    "title": "Male (100)",
-                    "type": "column",
-                    "color": "#000000",
-                    "valueField": "Male"
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "male",
+                    "valueField": "male",
+                    "fillAlphas": 0
                 }, {
-                    "balloonText": "<b>[[title]]</b><br><span style='font-size:24px'>[[category]]: <b>[[value]]</b></span>",
-                    "fillAlphas": 0.8,
-                    "labelText": "[[value]]",
-                    "lineAlpha": 0.3,
-                    "title": "Female (99)",
-                    "type": "column",
-                    "color": "#000000",
-                    "valueField": "Female"
+                    "valueAxis": "v2",
+                    "lineColor": "#FCD202",
+                    "bullet": "square",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "female",
+                    "valueField": "female",
+                    "fillAlphas": 0
                 }],
-                "rotate": true,
-                "categoryField": "year",
+                "chartScrollbar": {},
+                "chartCursor": {
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "date",
                 "categoryAxis": {
-                    "gridPosition": "start",
-                    "axisAlpha": 0,
-                    "gridAlpha": 0,
-                    "position": "left"
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
                 },
                 "export": {
-                    "enabled": true
+                    "enabled": true,
+                    "position": "bottom-right"
                 }
             });
 
+
         }
+
+        $scope.chartMaleGraphData = [];
+        $scope.chartFemaleGraphData = [];
+        $scope.chartMaleFemaleGraphData = [];
+
+
         $scope.generatesharebygendermalefemaleGraph = function (days) {
             var sharing_m_13_17 = 0;
             var sharing_m_18_24 = 0;
@@ -1696,10 +1076,27 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     sharing_m_13_17 = sharing_m_13_17 + value.sharing_m_13_17
                     sharing_m_18_24 = sharing_m_18_24 + value.sharing_m_18_24;
                     sharing_m_25_34 = sharing_m_25_34 + value.sharing_m_25_34;
-                    sharing_m_35_44 = sharing_m_35_44 + value.sharing_m_35_44
+                    sharing_m_35_44 = sharing_m_35_44 + value.sharing_m_35_44;
                     sharing_m_45_54 = sharing_m_45_54 + value.sharing_m_45_54;
                     sharing_m_55_64 = sharing_m_55_64 + value.sharing_m_55_64;
                     sharing_m_65 = sharing_m_65 + value.sharing_m_65
+
+
+                    $scope.chartMaleGraphData.push({
+                        sharing_m_13_17: value.sharing_m_13_17,
+                        sharing_m_18_24: value.sharing_m_18_24,
+                        sharing_m_25_34: value.sharing_m_25_34,
+                        sharing_m_35_44: value.sharing_m_35_44,
+                        sharing_m_45_54: value.sharing_m_45_54,
+                        sharing_m_55_64: value.sharing_m_55_64,
+                        sharing_m_65: value.sharing_m_65,
+                        date: new Date((value.date * 1000))
+                    });
+
+
+
+
+
                     sharing_f_13_17 = sharing_f_13_17 + value.sharing_f_13_17;
                     sharing_f_18_24 = sharing_f_18_24 + value.sharing_f_18_24;
                     sharing_f_25_34 = sharing_f_25_34 + value.sharing_f_25_34
@@ -1707,6 +1104,26 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     sharing_f_45_54 = sharing_f_45_54 + value.sharing_f_45_54;
                     sharing_f_55_64 = sharing_f_55_64 + value.sharing_f_55_64;
                     sharing_f_65 = sharing_f_65 + value.sharing_f_65;
+
+
+                    $scope.chartFemaleGraphData.push({
+                        sharing_f_13_17: value.sharing_f_13_17,
+                        sharing_f_18_24: value.sharing_f_18_24,
+                        sharing_f_25_34: value.sharing_f_25_34,
+                        sharing_f_35_44: value.sharing_f_35_44,
+                        sharing_f_45_54: value.sharing_f_45_54,
+                        sharing_f_55_64: value.sharing_f_55_64,
+                        sharing_f_65: value.sharing_f_65,
+                        date: new Date((value.date * 1000))
+                    });
+
+
+                    $scope.chartMaleFemaleGraphData.push({
+                        female: parseInt(value.sharing_f_13_17) + parseInt(value.sharing_f_18_24) + parseInt(value.sharing_f_25_34) + parseInt(value.sharing_f_35_44) + parseInt(value.sharing_f_45_54) + parseInt(value.sharing_f_55_64) + parseInt(value.sharing_f_65),
+                        male: parseInt(value.sharing_m_13_17) + parseInt(value.sharing_m_18_24) + parseInt(value.sharing_m_25_34) + parseInt(value.sharing_m_35_44) + parseInt(value.sharing_m_45_54) + parseInt(value.sharing_m_55_64) + parseInt(value.sharing_m_65),
+                        date: new Date((value.date * 1000))
+                    });
+
                 }
             });
             $scope.sharing_m_13_17 = sharing_m_13_17;
@@ -1723,7 +1140,21 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.sharing_f_45_54 = sharing_f_45_54;
             $scope.sharing_f_55_64 = sharing_f_55_64;
             $scope.sharing_f_65 = sharing_f_65;
+
+            //var maleShare = sharing_m_13_17 + sharing_m_18_24 + sharing_m_25_34 + sharing_m_35_44 + sharing_m_45_54 + sharing_m_55_64 + sharing_m_65;
+
+            // var femaleShare = sharing_f_13_17 + sharing_f_18_24 + sharing_f_25_34 + sharing_f_35_44 + sharing_f_45_54 + sharing_f_55_64 + sharing_f_65;
+
+            //$scope.sharingByAgeMaleFollower = (maleShare * 100) / (maleShare + femaleShare);
+            //$scope.sharingByAgeFemaleFollower = (femaleShare * 100) / (maleShare + femaleShare);
+
+
+
+
         }
+
+
+        $scope.getOnPageLoadReports();
 
   });
 

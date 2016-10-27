@@ -3,7 +3,7 @@
     <!-- Page name -->
     <div class="container">
         <div class="col m12">
-            <h4>Listen</h4>
+            <h4>{{boardName}}</h4>
         </div>
     </div>
     <!-- statr products list -->
@@ -37,8 +37,8 @@
                         </div>
                     </div>
                     <div class="card-action center">
-                        <a href="#">Schedule</a>
-                        <a href="#" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                        <a ng-click="scheduledraft(feed)">Schedule</a>
+                        <a ng-click="openComposeMessage(feed)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                 <div class="card hoverable">
                     <div class="card-content">
                         <div class="row">
-                            <div class="col l6 m6 s6 margin-top-10 center">
+                            <div class="col l12 m12 s12 margin-top-10 center">
                                 <img class="responsive-img circle " src="{{feed.fromPicUrl}}">
                             </div>
                             <div class="col l12 s12 m12 center">
@@ -70,8 +70,8 @@
                         </div>
                     </div>
                     <div class="card-action center">
-                        <a href="#">Schedule</a>
-                        <a href="#" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                        <a ng-click="scheduledraft(feed)">Schedule</a>
+                        <a ng-click="openComposeMessage(feed)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
                 <div class="card hoverable">
                     <div class="card-content">
                         <div class="row">
-                            <div class="col l6 m6 s6 margin-top-10 center">
+                            <div class="col l12 m12 s12 margin-top-10 center">
                                 <img class="responsive-img circle " src="{{feed.fromPicUrl}}">
                             </div>
                             <div class="col l12 s12 m12 center">
@@ -103,8 +103,8 @@
                         </div>
                     </div>
                     <div class="card-action center">
-                        <a href="#">Schedule</a>
-                        <a href="#" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                        <a ng-click="scheduledraft(feed)">Schedule</a>
+                        <a ng-click="openComposeMessage(feed)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
                     </div>
                 </div>
             </div>
@@ -156,5 +156,71 @@
             </div>
         </div>
     </div>
+
+
+    <div id="ComposePostModal" class="modal">
+        <div class="modal-content">
+            <nav class="red">
+                <div class="nav-wrapper">
+                    <div class="left col s12 m5 l5">
+                        <ul>
+                            <li>
+                                <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                            </li>
+                            <li>
+                                <a href="#!" class="email-type">Compose</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col s12 m7 l7 hide-on-med-and-down">
+                        <ul class="right">
+                            <li>
+                                <div ng-show="cmpbtn" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                                <div ng-show="!cmpbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                            </li>
+                            <!--<li>
+                                <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                            </li>-->
+                        </ul>
+                    </div>
+
+                </div>
+            </nav>
+        </div>
+        <div class="model-email-content">
+            <div class="row">
+                <form class="col s12">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <select multiple id="composeProfiles">
+                                <option value="" disabled selected>Choose your option</option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--Default version-->
+                    <div class="row section">
+                        <!--<div class="col s12 m4 l3">
+                            <p>Select your file</p>
+                        </div>-->
+                        <!--<div class="col s12 m8 l9">
+                            <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
+                        </div>-->
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="composeMessage" class="materialize-textarea" length="5000">{{boardComposeMessage.shareMessage + " " + boardComposeMessage.picUrl}}</textarea>
+                            <label for="compose">Message</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
 </div>

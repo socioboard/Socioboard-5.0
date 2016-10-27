@@ -16,7 +16,7 @@
                           <thead>
                               <tr>
                                   <th>#</th>
-                                  <th>Sent From</th>
+                                  <!--<th>Sent From</th>-->
                                   <th>Message</th>
                                   <th>Network</th>
                                   <th>RssFeedUrl</th>
@@ -33,32 +33,34 @@
                           <tbody>
                               <tr ng-repeat="postrssfeed in PostedRssFeeds">
                                   <td>{{$index +1}}</td>
-                                <td class="center">
+                                <!--<td class="center">
                                     <div class="col s12">
-                                        <img src="{{user.ProfilePicUrl}}" class="responsive-img profilePic" >
+                                        <img src="{{user.profilePicUrl}}" class="responsive-img profilePic" >
                                     </div>
                                     <div class="col s12">
-                                        <span>{{user.UserName}}</span>
+                                        <span>{{user.ProfileName}}</span>
                                     </div>
-                                  </td>
+                                  </td>-->
                                   <td>
                                     <span>
-                                     {{postrssfeed.Message}}
+                                     {{postrssfeed.message}}
                                     </span>
                                   </td>
                                   <td class="center">
-                                    <div class="col s12" ng-if="postrssfeed.ProfileType==0 ||postrssfeed.ProfileType==1 ">
-                                        <img src="https://graph.facebook.com/{{postrssfeed.ProfileId}}/picture?type=small" class="responsive-img profilePic" >
+                                    <div class="col s12" ng-if="postrssfeed.profileType==0 ||postrssfeed.profileType==1 ">
+                                        <img src="https://graph.facebook.com/{{postrssfeed.profileId}}/picture?type=small" class="responsive-img profilePic" style="float: left;" >
+                                        <img src="/contents/socioboard/images/fb_icon.png"  style="float: left; z-index: 999; margin-top: 70px; margin-left: -11px;">
                                     </div>
-                                      <div class="col s12" ng-if="postrssfeed.ProfileType==2">
-                                          <img src="{{postrssfeed.ProfileImageUrl}}" class="responsive-img profilePic">
+                                      <div class="col s12" ng-if="postrssfeed.profileType==2">
+                                          <img src="{{postrssfeed.profileImageUrl}}" class="responsive-img profilePic" style="float: left;">
+                                          <img src="/contents/socioboard/images/twticon.png" style="float: left; z-index: 999; margin-top: 70px; margin-left: -11px;">
                                       </div>
                                     <div class="col s12">
-                                        <span>{{postrssfeed.ProfileName}}</span>
+                                        <span>{{postrssfeed.profileName}}</span>
                                     </div>
                                   </td>
                                   <td>
-                                    <span>{{postrssfeed.RssFeedUrl}}</span>
+                                    <span>{{postrssfeed.rssFeedUrl}}</span>
                                   </td>
                               </tr>      
                               

@@ -4,9 +4,10 @@
                 <div class="col m12">
                     <h4 class="pull-left">
                         <div class="input-field">
-                            <select class="icons">
-                              <option value="" data-icon=""><img src="http://pbs.twimg.com/profile_images/507048905217802240/MjAkkHK__normal.jpeg"  class="circle">sb_1</option>
-                              <option value="" data-icon="http://pbs.twimg.com/profile_images/507048905217802240/MjAkkHK__normal.jpeg" class="circle">sb_2</option>
+                            <select class="icons" ng-model="selectedProfile" ng-change="getReports(selectedProfile, 90)">
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} " my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
+                                    <img src="http://graph.facebook.com/{{profile.profileId}}/picture?type=small" class="circle">{{profile.profileName}}
+                                </option>
                             </select>
                         </div>
                         <span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>

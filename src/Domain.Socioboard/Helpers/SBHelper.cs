@@ -62,16 +62,16 @@ namespace Domain.Socioboard.Helpers
                 case SBAccountType.Deluxe:
                     ret = 50;
                     break;
-                case SBAccountType.SocioBasic:
+                case SBAccountType.Topaz:
                     ret = 100;
                     break;
-                case SBAccountType.SocioStandard:
+                case SBAccountType.Ruby:
                     ret = 200;
                     break;
-                case SBAccountType.SocioPremium:
+                case SBAccountType.Gold:
                     ret = 500;
                     break;
-                case SBAccountType.SocioDeluxe:
+                case SBAccountType.Platinum:
                     ret = 1000;
                     break;
                 default:

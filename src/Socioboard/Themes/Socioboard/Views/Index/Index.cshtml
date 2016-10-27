@@ -305,7 +305,7 @@
                 <h4 id="RequestForDemo" class="Righteous_font grey-text text-darken-2">Sign up for Enterprise demo</h4>
                 <img class="responsive-img" src="~/contents/socioboard/images//enterprise_demo_pic.png">
                 <div class="row">
-                    <form class="col s12">
+                    <form class="col s12" onsubmit="CreateDemoReq(); return false;">
                         <div class="row">
                             <div class="input-field col s6">
                                 <input id="req_first_name" name="req_first_name" type="text" required class="validate" pattern="^[a-zA-Z0-9]+$">
@@ -354,7 +354,7 @@
                                 <a href="https://play.google.com/store/apps/details?id=com.socioboard&amp;hl=en" target="_blank"><i class="fa fa-android fa-3x white-text"></i></a>
                             </p>
                             <p class="md-checkbox">
-                                <a href="" target="_blank"> <i class="fa fa-apple fa-3x white-text"></i></a>
+                                <a href="https://itunes.apple.com/sg/app/socioboard/id923398550?mt=8" target="_blank"> <i class="fa fa-apple fa-3x white-text"></i></a>
                             </p>
                         </div>
                     </form>
@@ -403,6 +403,13 @@
                     $('#req_Company').val("");
                     $('#req_phone').val("");
                     $('#req_skype').val("");
+                },
+                error: function (msg) {
+                    alertify.set({ delay: 5000 });
+                    alertify.error(msg.responseText);
+                    $('#ImgLoading').hide();
+                    $('#submitButton').show();
+                    return false;
                 }
 
             });
@@ -420,6 +427,10 @@
         </script>
 
     }
+<script>
+    $(document).ready(function () {
+        gotohome();
 
-
+    });
+    </script>
 }

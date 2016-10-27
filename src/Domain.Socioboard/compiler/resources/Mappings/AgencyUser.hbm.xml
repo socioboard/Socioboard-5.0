@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="AgencyUser" table="agencyuser" lazy="false">
+    <id name="id" column="id" />
+    <property name="userName">
+      <column name="userName" />
+    </property>
+    <property name="email">
+      <column name="email"  />
+    </property>
+    <property name="company">
+      <column name="company"  />
+    </property>
+    <property name="message">
+      <column name="message"  />
+    </property>
+    <property name="phnNumber">
+      <column name="phnNumber"  />
+    </property>
+    <property name="planType">
+      <column name="planType"  />
+    </property>
+    <property name="createdDate">
+      <column name="createdDate"  />
+    </property>
+    <property name="amount">
+      <column name="amount"  />
+    </property>
+  </class>
+</hibernate-mapping>

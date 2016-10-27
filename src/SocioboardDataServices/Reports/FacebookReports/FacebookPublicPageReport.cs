@@ -4,6 +4,7 @@ using SocioboardDataServices.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SocioboardDataServices.Reports.FacebookReports
@@ -15,17 +16,25 @@ namespace SocioboardDataServices.Reports.FacebookReports
             Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
             while(true)
             {
-                Model.DatabaseRepository dbr = new Model.DatabaseRepository();
-                List<Domain.Socioboard.Models.Facebookaccounts> lstFbacc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPublicPage && t.IsActive).ToList();
-                foreach (var item in lstFbacc)
+                try
                 {
-                    if(item.lastpagereportgenerated.AddHours(24)>=DateTime.UtcNow)
+                    Model.DatabaseRepository dbr = new Model.DatabaseRepository();
+                    List<Domain.Socioboard.Models.Facebookaccounts> lstFbacc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPublicPage && t.IsActive).ToList();
+                    foreach (var item in lstFbacc)
                     {
-                        CreateReport(item.FbUserId, item.Is90DayDataUpdated);
-                        item.Is90DayDataUpdated = true;
-                        item.lastpagereportgenerated = DateTime.UtcNow;
-                        dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(item);
+                        if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
+                        {
+                            CreateReport(item.FbUserId, item.Is90DayDataUpdated);
+                            item.Is90DayDataUpdated = true;
+                            item.lastpagereportgenerated = DateTime.UtcNow;
+                            dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(item);
+                        }
                     }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(600000);
                 }
             }
         }
@@ -37,7 +46,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             {
                 day = 90;
             }
-            for (int i = 1; i < day; i++)
+            for (int i = 0; i < day; i++)
             {
                 DateTime date = DateTime.UtcNow.AddDays(-1 * i);
                 Domain.Socioboard.Models.Mongo.Fbpublicpagedailyreports _Fbpublicpagedailyreports = new Domain.Socioboard.Models.Mongo.Fbpublicpagedailyreports();

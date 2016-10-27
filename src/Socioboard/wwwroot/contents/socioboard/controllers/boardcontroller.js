@@ -1,11 +1,11 @@
 ﻿'use strict';
 
-SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http, $timeout, $stateParams, apiDomain) {
+SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http, $timeout, $stateParams, $state, apiDomain) {
     $scope.$on('$viewContentLoaded', function () {
-
+        $rootScope.boardComposeMessage = {};
         $scope.lstBoardFeeds = [];
       //  $scope.lstBoardFeeds.length = 1;
-
+        $scope.boardName = $stateParams.boardName;
         var starttwitter = 0; // where to start data
         var endingtwitter = starttwitter + 30; // how much data need to add on each function call
         var twitterReachLast = false; // to check the page ends last or not
@@ -110,8 +110,120 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         }
 
 
+        $scope.scheduledraft = function (schedulemessage) {
+            debugger;
+           
+             if (schedulemessage.gplusboardaccprofileid != null) {
+                var message = {
+                    "shareMessage": schedulemessage.title,
+                    "picUrl": schedulemessage.imageurl
+                };
+                console.log(message);
+                console.log("google");
+                $rootScope.schedulemessage = message;
+            }
+            else if (schedulemessage.twitterprofileid != null) {
+                var message = {
+                    "shareMessage": schedulemessage.text,
+                    "picUrl": schedulemessage.imageurl
+                };
+                console.log(message);
+                console.log("twitter");
+                $rootScope.schedulemessage = message;
+            }
+            else if (schedulemessage.feedid != null) {
+                var message = {
+                    "shareMessage": schedulemessage.tags,
+                    "picUrl": schedulemessage.imageurl
+                };
+                console.log(message);
+                console.log("instagram");
+                $rootScope.schedulemessage = message;
+            }
 
+
+
+            $rootScope.grppost = false;
+            $state.go('schedulemessage');
+        }
       
+        $scope.cmpbtn = true;
+
+        $scope.openComposeMessage = function (schedulemessage) {
+
+            if (schedulemessage.gplusboardaccprofileid != null) {
+                var message = {
+                    "shareMessage": schedulemessage.title,
+                    "picUrl": schedulemessage.imageurl
+                };
+                console.log(message);
+                console.log("google");
+                $rootScope.boardComposeMessage = message;
+            }
+            else if (schedulemessage.twitterprofileid != null) {
+                var message = {
+                    "shareMessage": schedulemessage.text,
+                    "picUrl": schedulemessage.imageurl
+                };
+                console.log(message);
+                console.log("twitter");
+                $rootScope.boardComposeMessage = message;
+            }
+            else if (schedulemessage.feedid != null) {
+                var message = {
+                    "shareMessage": schedulemessage.tags,
+                    "picUrl": schedulemessage.imageurl
+                };
+                console.log(message);
+                console.log("instagram");
+                $rootScope.boardComposeMessage = message;
+
+            }
+
+            $('#ComposePostModal').openModal();
+            $('select').material_select();
+
+
+        }
+
+        $scope.ComposeMessage = function () {
+            $scope.cmpbtn = false;
+            var profiles = $('#composeProfiles').val();
+            var message = $('#composeMessage').val();
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            if (profiles.length > 0 && message != '') {
+                    var formData = new FormData();
+                    //  formData.append('files', $("#composeImage").get(0).files[0]);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        if (response.data == "Posted") {
+                            $scope.cmpbtn = true;
+                            $('#ComposePostModal').closeModal();
+                            swal('Message compose successfully');
+                        }
+
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+               
+            }
+            else {
+                $scope.dispbtn = true;
+                swal('please select profile and type message for compose');
+            }
+        }
 
     });
 
@@ -122,7 +234,7 @@ SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
         if (scope.$last === true) {
             $timeout(function () {
                 console.log("myRepeatFeedTimeoutDirective Called");
-                var $containerProducts = $("#products");
+                var $containerProducts = $(".products");
                 $containerProducts.imagesLoaded(function () {
                     $containerProducts.masonry({
                         itemSelector: ".product",

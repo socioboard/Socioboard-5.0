@@ -77,6 +77,8 @@
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataServices\Facebook\FacebookPageFeed.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataServices\Facebook\FbDataServices.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataServices\Facebook\FbFeeds.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataServices\Gplus\GooglePlusDataService.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataServices\Gplus\GooglePlusFeed.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataServices\Helper\AppSettings.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataServices\Helper\Cache.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataServices\Helper\DatabaseRepository.cs"

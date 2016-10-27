@@ -8,6 +8,7 @@ using Socioboard.Helpers;
 using System.Net.Http;
 using Domain.Socioboard.Models;
 
+
 namespace Socioboard.Controllers
 {
     public class HomeController : Controller
@@ -18,12 +19,24 @@ namespace Socioboard.Controllers
         {
             _appSettings = settings.Value;
         }
-       
-        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+       // [ResponseCache(Duration = 100)]
+      [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
+            {
+                return RedirectToAction("Index", "Index");
+            }
+            try
+            {
+                if (user.ExpiryDate < DateTime.UtcNow)
+                {
+                    return RedirectToAction("UpgradePlans", "Index");
+
+                }
+            }
+            catch (Exception)
             {
                 return RedirectToAction("Index", "Index");
             }
@@ -86,7 +99,7 @@ namespace Socioboard.Controllers
             HttpContext.Session.SetObjectAsJson("selectedGroupId", groupId);
             return "changed";
         }
-
+        [ResponseCache(Duration = 100)]
         [HttpGet]
         public IActionResult Logout()
         {
@@ -294,22 +307,22 @@ namespace Socioboard.Controllers
                             package = "Premium";
 
                         }
-                        else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.SocioBasic)
+                        else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Topaz)
                         {
                             package = "SocioBasic";
 
                         }
-                        else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.SocioDeluxe)
+                        else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Platinum)
                         {
                             package = "SocioDeluxe";
 
                         }
-                        else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.SocioPremium)
+                        else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Gold)
                         {
                             package = "SocioPremium";
 
                         }
-                        else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.SocioStandard)
+                        else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Ruby)
                         {
                             package = "SocioStandard";
 

@@ -17,29 +17,45 @@ namespace SocioboardDataServices.Reports
             Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
             while (true)
             {
-                DatabaseRepository dbr = new DatabaseRepository();
-                List<Domain.Socioboard.Models.TwitterAccount> lstTwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isAccessTokenActive && t.isActive).ToList();
-               foreach(var item in lstTwtAcc)
+                try
                 {
-                    CreateReports(item.twitterUserId, DateTime.UtcNow);
-                    cache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterMessageReportsByProfileId + item.twitterUserId);
+                    DatabaseRepository dbr = new DatabaseRepository();
+                    List<Domain.Socioboard.Models.TwitterAccount> lstTwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isAccessTokenActive && t.isActive).ToList();
+                    foreach (var item in lstTwtAcc)
+                    {
+                        CreateReports(item.twitterUserId, DateTime.UtcNow);
+                        cache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterMessageReportsByProfileId + item.twitterUserId);
+                    }
+                    Thread.Sleep(120000);
                 }
-                Thread.Sleep(120000);
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(600000);
+                }
             }
         }
 
         public static void CreateTwitterPrevious90DaysReports()
         {
-            Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
-            DatabaseRepository dbr = new DatabaseRepository();
-            List<Domain.Socioboard.Models.TwitterAccount> lstTwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isAccessTokenActive && t.isActive).ToList();
-            foreach (var item in lstTwtAcc)
+            try
             {
-                for(int i=1;i<90; i++)
+                Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+                DatabaseRepository dbr = new DatabaseRepository();
+                List<Domain.Socioboard.Models.TwitterAccount> lstTwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isAccessTokenActive && t.isActive).ToList();
+                foreach (var item in lstTwtAcc)
                 {
-                    CreateReports(item.twitterUserId, DateTime.UtcNow.AddDays(-1 * i));
+                    for (int i = 1; i < 90; i++)
+                    {
+                        CreateReports(item.twitterUserId, DateTime.UtcNow.AddDays(-1 * i));
+                    }
+                    cache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterMessageReportsByProfileId + item.twitterUserId);
                 }
-                cache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterMessageReportsByProfileId + item.twitterUserId);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                Thread.Sleep(600000);
             }
         }
 

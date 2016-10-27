@@ -219,12 +219,12 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
             //codes to logout from all session
             $http.get(domain + '/Home/Logout')
                           .then(function (response) {
+            localStorage.removeItem("user");
                               window.location.href = '../Index/Index';
                               window.location.reload();
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
-            localStorage.removeItem("user");
 
             // end codes to logout from all session
         }
@@ -243,9 +243,14 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
         // Layout.initSidebar(); // init sidebar
 
 
-
-
-
+        $scope.getHttpsURL = function (obj) {
+            if (obj.includes("wwwroot\\")) {
+                return apiDomain + "/api/Media/get?id=" + obj.split("wwwroot\\upload\\")[1];
+            }
+            else {
+                return obj;
+            }
+        };
     });
 });
 
@@ -543,6 +548,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                          files: [
                              '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/controllers/facebookfeedscontroller.js',
+                             '../contents/socioboard/js/admin/moment.min.js',
                             '../contents/socioboard/services/grouptask.js'
                          ]
                      });
@@ -812,8 +818,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                             '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
                             '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/controllers/twitterreportscontroller.js',
                             '../contents/socioboard/js/admin/moment.min.js',
+                            '../contents/socioboard/controllers/twitterreportscontroller.js',
                         ]
                     });
                 }]
@@ -936,6 +942,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                             '../contents/socioboard/global/plugins/amcharts/amcharts/pie.js',
                             '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
                             '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/js/admin/moment.min.js',
                             '../contents/socioboard/controllers/instagramreportcontroller.js'
 
                         ]
@@ -1150,7 +1157,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
 
          // Create Board me controller
         .state('board', {
-            url: "/board/{boardId}",
+            url: "/board/{boardId}/{boardName}",
             templateUrl: "../contents/socioboard/views/boardme/board.html",
             data: { pageTitle: 'BoardMe', pageSubTitle: 'updated' },
             controller: "BoardController",

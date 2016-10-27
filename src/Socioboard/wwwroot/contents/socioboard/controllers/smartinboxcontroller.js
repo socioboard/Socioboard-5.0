@@ -61,7 +61,7 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
         $scope.taskModel = function (notification) {
             $('#TaskModal').openModal();
             $rootScope.taskNotification = notification;
-
+            Materialize.updateTextFields();
         }
 
         $scope.addTask = function (feedTableType) {

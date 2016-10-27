@@ -33,7 +33,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                               if (response.data != "") {
                                   $scope.date(response.data);
                               } else {
-                                  swal("No Schedule Post To Display");
+                                  swal("No ScheduleMessage Posted to Display");
                               }
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -44,8 +44,13 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
 
         $scope.getProperURL = function (obj) {
             console.log(obj);
-            var img = obj.split("wwwroot/")[1];
-            return apiDomain + "/api/Media/get?id=" + img;
+            if (obj.includes("wwwroot\\")) {
+                var img = obj.split("wwwroot\\upload\\")[1];
+                return apiDomain + "/api/Media/Get?id=" + img;
+            }
+            else {
+                return obj;
+            }
         };
 
         $scope.editscheulemessage = function (sharemessage, socioqueueId)

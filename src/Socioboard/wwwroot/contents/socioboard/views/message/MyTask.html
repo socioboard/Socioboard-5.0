@@ -43,7 +43,7 @@
                                         <img src="{{task.user.profilePicUrl}}" ng-if="task.user.profilePicUrl != null|| task.user.profilePicUrl != ' '" alt="" class="circle">
                                         <span class="email-title truncate">{{task.taskMessage}}</span>
                                         <p class="truncate grey-text ultra-small">Assigned by <span>{{task.user.firstName }}</span></p>
-                                        <span class="secondary-content email-time"><span class="blue-text ultra-small truncate" data-position="top" data-delay="50" data-tooltip="{{task.tasks.cratedOn * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}" >{{task.tasks.cratedOn * 1000 | date:'yyyy-MM-dd HH:mm:ss'}} </span></span>
+                                       <span class="icon-calendar" data-tooltip="{{task.tasks.cratedOn * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}" ></span>
                                     </li>
                                 </ul>
                             </div>

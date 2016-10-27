@@ -17,26 +17,42 @@ namespace SocioboardDataServices.Reports
             Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
             while (true)
             {
-                DatabaseRepository dbr = new DatabaseRepository();
-                List<Domain.Socioboard.Models.Groups> lstTwtAcc = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
-                foreach (var item in lstTwtAcc)
+                try
                 {
-                    CreateReports(item.id, DateTime.UtcNow);
+                    DatabaseRepository dbr = new DatabaseRepository();
+                    List<Domain.Socioboard.Models.Groups> lstTwtAcc = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
+                    foreach (var item in lstTwtAcc)
+                    {
+                        CreateReports(item.id, DateTime.UtcNow);
+                    }
+                    Thread.Sleep(120000);
                 }
-                Thread.Sleep(120000);
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(600000);
+                }
             }
         }
         public static void CreateGroupPrevious90DaysReports()
         {
-            Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
-            DatabaseRepository dbr = new DatabaseRepository();
-            List<Domain.Socioboard.Models.Groups> lstTwtAcc = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
-            foreach (var item in lstTwtAcc)
+            try
             {
-                for (int i = 1; i < 90; i++)
+                Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+                DatabaseRepository dbr = new DatabaseRepository();
+                List<Domain.Socioboard.Models.Groups> lstTwtAcc = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
+                foreach (var item in lstTwtAcc)
                 {
-                    CreateReports(item.id, DateTime.UtcNow.AddDays(-1 * i));
+                    for (int i = 0; i < 90; i++)
+                    {
+                        CreateReports(item.id, DateTime.UtcNow.AddDays(-1 * i));
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                Thread.Sleep(600000);
             }
         }
 
@@ -47,23 +63,112 @@ namespace SocioboardDataServices.Reports
             string getsexratiodata = gettwittersexdivision(groupId, date);
             string[] ratiodata = getsexratiodata.Split(',');
             _GroupdailyReports.date = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-            _GroupdailyReports.fbfan = getfbfans(groupId, date);
+            try
+            {
+                _GroupdailyReports.fbfan = getfbfans(groupId, date);
+            }
+            catch (Exception)
+            {
+            }
             _GroupdailyReports.femalecount = Convert.ToInt64(ratiodata[1]);
             _GroupdailyReports.GroupId = groupId;
             _GroupdailyReports.id = ObjectId.GenerateNewId();
-            _GroupdailyReports.inbox = getinboxcount(groupId, date);
-            _GroupdailyReports.interaction = getinteractions(groupId, date);
+            try
+            {
+                _GroupdailyReports.inbox = getinboxcount(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.inbox = 0;
+            }
+            try
+            {
+                _GroupdailyReports.interaction = getinteractions(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.interaction = 0;
+            }
             _GroupdailyReports.malecount = Convert.ToInt64(ratiodata[0]);
-            _GroupdailyReports.sent = getsentmessage(groupId, date);
-            _GroupdailyReports.twitterfollower = gettwitterfollowers(groupId,date);
-            _GroupdailyReports.twitter_account_count = total_twitter_accounts(groupId);
-            _GroupdailyReports.twtmentions = gettwtmentions(groupId,date);
-            _GroupdailyReports.twtretweets = gettwtretweets(groupId, date);
-            _GroupdailyReports.uniqueusers = uniquetwitteruser(groupId, date);
-            _GroupdailyReports.plainText = getsentmessagePlainText(groupId, date);
-            _GroupdailyReports.photoLinks = getsentmessagephotoLinks(groupId, date);
-            _GroupdailyReports.linkstoPages = getsentmessagelinkstoPages(groupId, date);
-            _GroupdailyReports.facebookPageCount = facebookPageCount(groupId);
+            try
+            {
+                _GroupdailyReports.sent = getsentmessage(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.sent = 0;
+            }
+            try
+            {
+                _GroupdailyReports.twitterfollower = gettwitterfollowers(groupId, date);
+            }
+            catch {
+                _GroupdailyReports.twitterfollower = 0;
+            }
+            try
+            {
+                _GroupdailyReports.twitter_account_count = total_twitter_accounts(groupId);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.twitter_account_count = 0;
+            }
+            try
+            {
+                _GroupdailyReports.twtmentions = gettwtmentions(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.twtmentions = 0;
+            }
+            try
+            {
+                _GroupdailyReports.twtretweets = gettwtretweets(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.twtretweets = 0;
+            }
+            try
+            {
+                _GroupdailyReports.uniqueusers = uniquetwitteruser(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.uniqueusers = 0;
+            }
+            try
+            {
+                _GroupdailyReports.plainText = getsentmessagePlainText(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.plainText = 0;
+            }
+            try
+            {
+                _GroupdailyReports.photoLinks = getsentmessagephotoLinks(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.photoLinks = 0;
+            }
+            try
+            {
+                _GroupdailyReports.linkstoPages = getsentmessagelinkstoPages(groupId, date);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.linkstoPages = 0;
+            }
+            try
+            {
+                _GroupdailyReports.facebookPageCount = facebookPageCount(groupId);
+            }
+            catch (Exception)
+            {
+                _GroupdailyReports.facebookPageCount = 0;
+            }
             var ret = mongoreppo.Find<Domain.Socioboard.Models.Mongo.GroupdailyReports>(t => t.date == SBHelper.ConvertToUnixTimestamp(date) && t.GroupId == groupId);
             var task=Task.Run(async()=>
             {

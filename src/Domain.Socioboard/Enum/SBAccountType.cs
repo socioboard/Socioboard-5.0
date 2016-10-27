@@ -8,10 +8,10 @@ namespace Domain.Socioboard.Enum
         Standard =1,
         Premium =2,
         Deluxe =3,
-        SocioBasic =4,
-        SocioStandard =5,
-        SocioPremium =6,
-        SocioDeluxe =7
+        Topaz = 4,
+        Ruby = 5,
+        Gold = 6,
+        Platinum = 7
 
     }
 }

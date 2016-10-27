@@ -1,4 +1,10 @@
-    <div data-ng-controller="SentMessagesController">
+<style>
+   button:focus {
+  outline: 2px solid #000;
+  outline-offset: 1px;
+}
+</style>    
+<div data-ng-controller="SentMessagesController">
             <!-- START CONTENT -->
             <section id="content">
                 <!--start container-->
@@ -8,7 +14,7 @@
                                 <div class="card" id="feeds">
                                     <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Sent Messages</h5>
                                     <ul class="collection smartinbox_slider">
-                                        <li class="collection-item avatar" ng-repeat="sentmessage in lstsentessage | orderBy:'scheduleTime':true">
+                                        <li class="collection-item avatar" ng-repeat="sentmessage in lstsentessage ">
                                           <img src="{{sentmessage.picUrl}}" alt="{{sentmessage.socialprofileName}}" class="circle">
                                           <span class="email-title">{{sentmessage.socialprofileName}}</span>
                                           <div class="row feeds_post z-depth-1 hoverable">
@@ -78,42 +84,48 @@
                                       </div>
                                     </div>-->
                                     <div class="row valign-wrapper">
-                                      <div class="col s12 btn waves-effect waves-light">
+                                        <button id="submitButton" type="submit" class="col s12 btn waves-effect waves-light" ng-click="LoadSentmsgByDay('0')">Today</button>
+                                      <!--<div class="col s12 btn waves-effect waves-light">
                                         <a class="" ng-click="LoadSentmsgByDay('0')">Today</a>
-                                      </div>
+                                      </div>-->
                                     </div>
                                     <div class="row valign-wrapper">
-                                      <div class="col s12 btn waves-effect waves-light">
+                                        <button id="submitButton" type="submit" class="col s12 btn waves-effect waves-light" ng-click="LoadSentmsgByDay('1')">Yesterday</button>
+                                      <!--<div class="col s12 btn waves-effect waves-light">
                                         <a class="" ng-click="LoadSentmsgByDay('1')">Yesterday</a>
-                                      </div>
+                                      </div>-->
                                     </div>
                                     <div class="row valign-wrapper">
-                                      <div class="col s12 btn waves-effect waves-light">
+                                        <button id="submitButton" type="submit" class="col s12 btn waves-effect waves-light" ng-click="LoadSentmsgByDays('7')">Last 7 Days</button>
+                                      <!--<div class="col s12 btn waves-effect waves-light">
                                         <a class="" ng-click="LoadSentmsgByDays('7')">Last 7 Days</a>
-                                      </div>
+                                      </div>-->
                                     </div>
                                     <div class="row valign-wrapper">
-                                      <div class="col s12 btn waves-effect waves-light">
+                                        <button id="submitButton" type="submit" class="col s12 btn waves-effect waves-light" ng-click="LoadSentmsgByDays('30')">Last 30 Days</button>
+                                      <!--<div class="col s12 btn waves-effect waves-light">
                                         <a class="" ng-click="LoadSentmsgByDays('30')">Last 30 Days</a>
-                                      </div>
+                                      </div>-->
                                     </div>
                                     <div class="row valign-wrapper">
-                                      <div class="col s12 btn waves-effect waves-light">
+                                        <button id="submitButton" type="submit" class="col s12 btn waves-effect waves-light" ng-click="LoadSentmsgByMonth('0')">This Month</button>
+                                      <!--<div class="col s12 btn waves-effect waves-light">
                                         <a class="" ng-click="LoadSentmsgByMonth('0')">This Month</a>
-                                      </div>
+                                      </div>-->
                                     </div>
                                     <div class="row valign-wrapper">
-                                      <div class="col s12 btn waves-effect waves-light">
+                                        <button id="submitButton" type="submit" class="col s12 btn waves-effect waves-light" ng-click="LoadSentmsgByMonth('1')">Last Month</button>
+                                      <!--<div class="col s12 btn waves-effect waves-light">
                                         <a class="" ng-click="LoadSentmsgByMonth('1')">Last Month</a>
-                                      </div>
+                                      </div>-->
                                     </div>                                    
-                                    <div class="row valign-wrapper">
+                                    <!--<div class="row valign-wrapper">
                                       <div class="col s12 btn waves-effect waves-light">
                                         <a class="">Custom Range</a>
                                         <input type="date" class="datepicker">
                                       </div>
 
-                                    </div>
+                                    </div>-->
                                 </div>
                               </div>
                             </div>                                

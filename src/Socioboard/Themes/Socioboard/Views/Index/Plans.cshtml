@@ -38,7 +38,7 @@
                             <li>Manage up to 5 profiles</li>
                             <li>1 profile per network</li>
                         </ul><!-- end pricing-list -->
-                        <div class="pricing-cta">
+                        <div class="pricing-cta" onclick="$('#planName').html('Free');">
                             <a onclick="SingUpmodal('0')" class="waves-effect waves-light btn-large btn-pricing">Try Now</a>
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -63,7 +63,7 @@
                             <li>World Class 24*7 Training &amp; Support</li>
                             <li>Manage up to 10 profiles</li>
                         </ul><!-- end pricing-list -->
-                        <div class="pricing-cta">
+                        <div class="pricing-cta" onclick="$('#planName').html('Standard');">
                             <a onclick="SingUpmodal('1')" class="waves-effect waves-light btn-large  btn-pricing">Try Now</a>
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -89,7 +89,7 @@
                             <li>RSS Feeds</li>
                             <li>Manage up to 20 profiles</li>
                         </ul><!-- end pricing-list -->
-                        <div class="pricing-cta">
+                        <div class="pricing-cta" onclick="$('#planName').html('Premium');">
                             <a onclick="SingUpmodal('2')" class="waves-effect waves-light btn-large btn-pricing-popular">Try Now</a>
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -114,7 +114,7 @@
                             <li>World Class 24*7 Training &amp; Support</li>
                             <li>Manage up to 50 profiles</li>
                         </ul><!-- end pricing-list -->
-                        <div class="pricing-cta">
+                        <div class="pricing-cta" onclick="$('#planName').html('Deluxe');">
                             <a onclick="SingUpmodal('3')" class="waves-effect waves-light btn-large btn-pricing">Try Now</a>
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -128,7 +128,7 @@
                 <div class="col m3 hoverable">
                     <div class="pricing-box ">
                         <div class="pricing-heading">
-                            Topaz
+                            
                         </div><!-- end pricing-heading -->
                         <div class="pricing-price">
                             $29.99 Per User/Month
@@ -140,12 +140,12 @@
                             <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
-                            <li>Team Collaboration Tools</li>
+                            <li>Team Collaboration Tools</li>Topaz
                             <li>Social CRM</li>
                             <li>World Class 24*7 Training &amp; Support</li>
                             <li>Manage up to 100 profiles</li>
                         </ul><!-- end pricing-list -->
-                        <div class="pricing-cta">
+                        <div class="pricing-cta" onclick="$('#planName').html('Topaz');">
                             <a onclick="SingUpmodal('4')" class="waves-effect waves-light btn-large btn-pricing">TRY Now</a>
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -170,7 +170,7 @@
                             <li>World Class 24*7 Training &amp; Support</li>
                             <li>Manage up to 200 profiles</li>
                         </ul><!-- end pricing-list -->
-                        <div class="pricing-cta">
+                        <div class="pricing-cta" onclick="$('#planName').html('Ruby');">
                             <a onclick="SingUpmodal('5')" class="waves-effect waves-light btn-large btn-pricing">Try Now</a>
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -195,7 +195,7 @@
                             <li>World Class 24*7 Training &amp; Support</li>
                             <li>Manage up to 500 profiles</li>
                         </ul><!-- end pricing-list -->
-                        <div class="pricing-cta">
+                        <div class="pricing-cta" onclick="$('#planName').html('Gold');">
                             <a onclick="SingUpmodal('6')" class="waves-effect waves-light btn-large btn-pricing-popular">Try Now</a>
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -220,7 +220,7 @@
                             <li>World Class 24*7 Training &amp; Support</li>
                             <li>Manage up to 1000 profiles</li>
                         </ul><!-- end pricing-list -->
-                        <div class="pricing-cta">
+                        <div class="pricing-cta" onclick="$('#planName').html('Platinum');">
                             <a onclick="SingUpmodal('7')" class="waves-effect waves-light btn-large btn-pricing">Try Now</a>
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -232,8 +232,22 @@
     <div id="SignUpModal" class="modal modal-fixed-footer" style="width: 600px;">
         <form onsubmit="myFunction(); return false;" id="RegistrationForm">
             <div class="modal-content">
-                <h4>Create a free account</h4>
+                <h4>Create a <span class="red-text text-darken-2" id="planName">"Free"</span> account</h4>
                 <div class="row">
+                    <div class="row">
+                        <div class="input-field col s12 m12">
+                            <div class="center">
+                                <a id="fb_account" href="#" onclick="googleplusLogin();">
+                                    <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                                </a><br>
+                                <a id="fb_account" href="#" onclick="facebookLogin();">
+                                    <img src="~/contents/socioboard/images/fb_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="styleOR">
+
                     <div class="row">
                         <div class="input-field col s12 m12">
                             <select id="AccountType" name="AccountType">
@@ -366,6 +380,8 @@
         function SingUpmodal(ele)
         {
             $('#SignUpModal').openModal();
+
+           
             $('#AccountType').val(ele);
             $('select').material_select();
         }

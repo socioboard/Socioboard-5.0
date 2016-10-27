@@ -33,5 +33,6 @@ namespace Domain.Socioboard.Models.Mongo
         public double negative { get; set; }
         public string RecipientId { get; set; }
         public string RecipientName { get; set; }
+        public string mediaUrl { get; set; }
     }
 }

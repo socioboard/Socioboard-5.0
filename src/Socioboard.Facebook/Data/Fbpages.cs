@@ -15,8 +15,8 @@ namespace Socioboard.Facebook.Data
             List<Domain.Socioboard.Models.Facebookpage> lstpages = new List<Domain.Socioboard.Models.Facebookpage>();
             FacebookClient fb = new FacebookClient();
             fb.AccessToken = accesstoken;
-            dynamic profile = fb.Get("v2.1/me");
-            dynamic output = fb.Get("v2.1/me/accounts");
+            dynamic profile = fb.Get("v2.7/me");//v2.1
+            dynamic output = fb.Get("v2.7/me/accounts");//v2.1
             foreach (var item in output["data"])
             {
                 try
@@ -25,8 +25,8 @@ namespace Socioboard.Facebook.Data
                     objAddFacebookPage.ProfilePageId = item["id"].ToString();
                     try
                     {
-                        dynamic postlike = fb.Get("v2.1/" + item["id"] + "?fields=likes,name,username");
-                        objAddFacebookPage.LikeCount = postlike["likes"].ToString();
+                        dynamic postlike = fb.Get("v2.7/" + item["id"] + "?fields=likes,name,username,fan_count");
+                        objAddFacebookPage.LikeCount = postlike["fan_count"].ToString();
                     }
                     catch (Exception ex)
                     {
@@ -61,7 +61,7 @@ namespace Socioboard.Facebook.Data
            
             try
             {
-                return  fb.Get("v2.1/me?fields=id,name,username,likes");
+                return  fb.Get("v2.7/me?fields=id,name,username,likes,fan_count");
             }
             catch (Exception ex)
             {

@@ -32,7 +32,8 @@ namespace Socioboard.Controllers
 
 
         // GET: /<controller>/
-       // [ResponseCache(Duration = 604800)]
+        // [ResponseCache(Duration = 604800)]
+      [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Index()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
@@ -44,6 +45,18 @@ namespace Socioboard.Controllers
             }
             else
             {
+                try
+                {
+                    if (user.ExpiryDate < DateTime.UtcNow)
+                    {
+                        return RedirectToAction("UpgradePlans", "Index");
+
+                    }
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Index");
+                }
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -142,6 +155,8 @@ namespace Socioboard.Controllers
 
         public IActionResult UpgradePlans()
         {
+           ViewBag.user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+
             return View();
         }
 
@@ -164,7 +179,7 @@ namespace Socioboard.Controllers
                     {
                         Domain.Socioboard.Models.Package _Package = await response.Content.ReadAsAsync<Domain.Socioboard.Models.Package>();
                         HttpContext.Session.SetObjectAsJson("Package", _Package);
-                        return Content(Helpers.Payment.RecurringPaymentWithPayPal(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, "", "", _appSettings.PaypalURL));
+                        return Content(Helpers.Payment.RecurringPaymentWithPayPalUpgrade(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, "", "", _appSettings.PaypalURL));
                     }
                     catch { }
 
@@ -189,6 +204,47 @@ namespace Socioboard.Controllers
             return RedirectToAction("Index", "Index");
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> AgencyPlan(string firstName,string lastName,string company,string emailId,string phoneNumber,string message,string demoPlanType,string amount)
+        {
+            Domain.Socioboard.Models.AgencyUser _AgencyUser = new Domain.Socioboard.Models.AgencyUser();
+            _AgencyUser.userName = firstName + " " + lastName;
+            _AgencyUser.company = company;
+            _AgencyUser.email = emailId;
+            _AgencyUser.message = message;
+            _AgencyUser.phnNumber = phoneNumber;
+            _AgencyUser.planType = demoPlanType;
+            _AgencyUser.amount = double.Parse(amount);
+            HttpContext.Session.SetObjectAsJson("AgencyUser", _AgencyUser);
+            return Content(Helpers.Payment.AgencyPayment(amount, demoPlanType, firstName + " " + lastName, phoneNumber, emailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.AgencycallBackUrl, _appSettings.cancelurl, "", "", _appSettings.PaypalURL));
+        }
+
+        public async Task<IActionResult> AgencyPaymentSuccessful()
+        {
+            Domain.Socioboard.Models.AgencyUser _AgencyUser = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.AgencyUser>("AgencyUser");
+            List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Add(new KeyValuePair<string, string>("userName", _AgencyUser.userName));
+            Parameters.Add(new KeyValuePair<string, string>("planType", _AgencyUser.planType));
+            Parameters.Add(new KeyValuePair<string, string>("phnNumber", _AgencyUser.phnNumber));
+            Parameters.Add(new KeyValuePair<string, string>("message", _AgencyUser.message));
+            Parameters.Add(new KeyValuePair<string, string>("email", _AgencyUser.email));
+            Parameters.Add(new KeyValuePair<string, string>("company", _AgencyUser.company));
+            Parameters.Add(new KeyValuePair<string, string>("amount", _AgencyUser.amount.ToString()));
+
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/AgencyUser/UpdateUserInfo", Parameters, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    string returndata = await response.Content.ReadAsStringAsync();
+                    return Content("");
+                }
+                catch { }
+
+            }
+            return Content("");
+        }
 
 
         public IActionResult Company()

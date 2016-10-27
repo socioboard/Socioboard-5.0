@@ -15,20 +15,28 @@ namespace SocioboardDataServices.Twitter
         {
             while (true)
             {
+                
                 try
                 {
-                    Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
 
-                    oAuthTwitter OAuth = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey, Helper.AppSettings.twitterConsumerScreatKey, Helper.AppSettings.twitterRedirectionUrl);
+                    Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
+                    oAuthTwitter OAuth = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey,Helper.AppSettings.twitterConsumerScreatKey,Helper.AppSettings.twitterRedirectionUrl);
                     List<Domain.Socioboard.Models.TwitterAccount> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isActive).ToList();
                     foreach (var item in lstTwtAccounts)
                     {
-                        OAuth.AccessToken = item.oAuthToken;
-                        OAuth.AccessTokenSecret = item.oAuthSecret;
-                        OAuth.TwitterScreenName = item.twitterScreenName;
-                        Console.WriteLine(item.twitterScreenName + "Updating Started");
-                        TwtFeeds.updateTwitterFeeds(item, OAuth);
-                        Console.WriteLine(item.twitterScreenName + "Updated");
+                        try
+                        {
+                            OAuth.AccessToken = item.oAuthToken;
+                            OAuth.AccessTokenSecret = item.oAuthSecret;
+                            OAuth.TwitterScreenName = item.twitterScreenName;
+                            Console.WriteLine(item.twitterScreenName + "Updating Started");
+                            TwtFeeds.updateTwitterFeeds(item, OAuth);
+                            Console.WriteLine(item.twitterScreenName + "Updated");
+                        }
+                        catch (Exception ex)
+                        {
+                            Thread.Sleep(600000);
+                        }
                     }
                     Thread.Sleep(600000);
                 }

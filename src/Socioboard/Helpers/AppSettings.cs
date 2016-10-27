@@ -48,5 +48,7 @@ namespace Socioboard.Helpers
         public string callBackUrl { get; set; }
         public string cancelurl { get; set; }
         public string paypalemail { get; set; }
+
+        public string AgencycallBackUrl { get; set; }
     }
 }

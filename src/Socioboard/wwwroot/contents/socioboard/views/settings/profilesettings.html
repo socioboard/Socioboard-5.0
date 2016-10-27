@@ -17,74 +17,82 @@
                     <div class="col s12">
                         <ul class="tabs">
                             <li class="tab col s3"><a class="active" href="#Profile_tab">Profile</a></li>
-                            <li class="tab col s3"><a href="#Password_tab" ng-if="user.Password != null">Password</a></li>
+                            <li class="tab col s3" ng-if="user.Password != null"><a href="#Password_tab" >Password</a></li>
                             <li class="tab col s3"><a href="#Notification_tab">Notification</a></li>
                             <!--<li class="tab col s3"><a href="#Referral_tab">Referral</a></li>-->
                         </ul>
                     </div>
-                    <div id="Profile_tab" class="col s12">
-                        <div class="row">
-                            <div class="col s12 m12 l12">
-                                <div class="card-panel">
-                                    <div class="row">
-                                        <div class="col s12">
-                                            <div class="row">
-                                                <div class="input-field col s6">
-                                                    <input placeholder="First Name" id="first_name" ng-model="updateUser.firstName" type="text">
-                                                    <label for="first_name">First Name</label>
-                                                </div>
-                                                <div class="input-field col s6">
-                                                    <input placeholder="Last Name" id="last_name" ng-model="updateUser.lastName" type="text">
-                                                    <label for="last_name">Last Name</label>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="input-field col s6">
-                                                    <input placeholder="User Name" id="userName" ng-model="updateUser.userName" type="text" class="validate">
-                                                    <label for="email">User Name</label>
-                                                </div>
-                                                <ng-form name="myForm">
+                    <form name="myform1" ng-submit="UpdateUser(updateUser)">
+                        <div id="Profile_tab" >
+                            <div class="row">
+                                <div class="col s12 m12 l12">
+                                    <div class="card-panel">
+                                        <div class="row">
+                                            <div class="col s12">
+                                                <div class="row">
                                                     <div class="input-field col s6">
-                                                        <input placeholder="Phone Number" id="" type="text" ng-pattern="phoneNumbr" ng-minlength="10" ng-maxlength="10" name="phone" ng-model="updateUser.phoneNumber" class="validate">
-                                                        <label for="password">Phone Number</label>
-                                                        <span class="error" ng-show="myForm.phone.$error.required">Required!</span>
-                                                        <span class="error" ng-show="myForm.phone.$error.minlength">Phone no not less that 10 char.</span>
-                                                        <span class="error" ng-show="myForm.phone.$error.maxlength">Phone no not more than 10 char.</span>
-                                                        <br><span class="error" ng-show="myForm.phone.$error.pattern">Please match pattern [9889509889 || 9912399123]</span>
-                                                     </div>
-                                                </ng-form>
-                                            </div>
-                                            <div class="row">
-                                                <!--<div class="input-field col s6">
-                                                  <select>
-                                                    <option value="" disabled selected>Choose your profile</option>
-                                                    <option value="1">Manager</option>
-                                                    <option value="2">Developer</option>
-                                                    <option value="3">Business</option>
-                                                  </select>
-                                                  <label>Select Profile</label>
-                                                </div>-->
-                                                <div class="input-field col s6">
-                                                    <input type="date" ng-model="updateUser.dob" class="datepicker">
-                                                    <label for="dob">DOB</label>
+                                                        <input placeholder="First Name" id="first_name" ng-model="updateUser.firstName" required class="validate" type="text" pattern="^[a-zA-Z0-9]+$">
+                                                        <label for="first_name">First Name</label>
+                                                    </div>
+                                                    <div class="input-field col s6">
+                                                        <input placeholder="Last Name" id="last_name" ng-model="updateUser.lastName" type="text" required class="validate" pattern="^[a-zA-Z0-9]+$">
+                                                        <label for="last_name">Last Name</label>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="file-field input-field col s12">
-                                                    <input type="file" id="profileImage" class="dropify" data-default-file="" />
+                                                <div class="row">
+                                                    <div class="input-field col s6">
+                                                        <input placeholder="User Name" id="userName" ng-model="updateUser.userName" type="text" required class="validate">
+                                                        <label for="email">User Name</label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="input-field col s6">
+                                                            <input placeholder="Phone Number"  type="tel" title="Enter 10 digit phone number" required class="validate" maxlength="10" pattern="[0-9]{10}" ng-model="updateUser.phoneNumber">
+                                                            <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
+                                                        </div>
+                                                    </div>
+                                                    <!--<ng-form name="row">
+                                                        <div class="input-field col s6">
+                                                            <input placeholder="Phone Number" id="" type="tel" title="Please Enter 10 digit Phone Number" ng-pattern="phoneNumbr"  maxlength="10" name="phone" ng-model="updateUser.phoneNumber" required  oninvalid="setCustomValidity('Please Enter 10 digit Phone Number ')" pattern="[0-9]{10}">
+                                                            <label for="password">Phone Number</label>
+                                                            <span class="error" ng-show="myForm.phone.$error.required">Required!</span>
+                                                            <span class="error" ng-show="myForm.phone.$error.minlength">Phone no not less that 10 char.</span>
+                                                            <span class="error" ng-show="myForm.phone.$error.maxlength">Phone no not more than 10 char.</span>
+                                                            <br><span class="error" ng-show="myForm.phone.$error.pattern">Please match pattern [9889509889 || 9912399123]</span>
+                                                        </div>
+                                                    </ng-form>-->
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="input-field col s12">
-                                                    <textarea placeholder="About Me" id="message5" ng-model="updateUser.aboutMe" class="materialize-textarea" length="120"></textarea>
-                                                    <label for="message">About Me</label>
+                                                <div class="row">
+                                                    <!--<div class="input-field col s6">
+                                      <select>
+                                        <option value="" disabled selected>Choose your profile</option>
+                                        <option value="1">Manager</option>
+                                        <option value="2">Developer</option>
+                                        <option value="3">Business</option>
+                                      </select>
+                                      <label>Select Profile</label>
+                                    </div>-->
+                                                    <div class="input-field col s6">
+                                                        <input type="date" ng-model="updateUser.dob" class="datepicker">
+                                                        <label for="dob">DOB</label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="file-field input-field col s12">
+                                                        <input type="file" id="profileImage" class="dropify" data-default-file="" />
+                                                    </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="input-field col s12">
-                                                        <button class="btn cyan waves-effect waves-light right" ng-click="UpdateUser(updateUser)" name="action">
-                                                            Submit
-                                                            <i class="mdi-content-send right"></i>
-                                                        </button>
+                                                        <textarea placeholder="About Me" id="message5" ng-model="updateUser.aboutMe" class="materialize-textarea" length="120"></textarea>
+                                                        <label for="message">About Me</label>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <button class="btn cyan waves-effect waves-light right" name="action" type="submit">
+                                                                Submit
+                                                                <i class="mdi-content-send right"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -93,39 +101,42 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div id="Password_tab" class="col s12" ng-if="user.Password != null">
-                        <div class="row">
-                            <div class="col s12 m12 l12">
-                                <div class="card-panel">
-                                    <div class="row">
-                                        <div class="col s12">
+                        </form>
+                        <form name="myform" ng-submit="UpdatePassword(updatePassword)">
+                            <div id="Password_tab" class="col s12" ng-if="user.Password != null">
+                                <div class="row">
+                                    <div class="col s12 m12 l12">
+                                        <div class="card-panel">
                                             <div class="row">
-                                                <div class="input-field col s12">
-                                                    <i class="mdi-action-lock-outline prefix"></i>
-                                                    <input ng-model="updatePassword.currentPassword" type="password" class="validate">
-                                                    <label for="password">Current Password</label>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="input-field col s12">
-                                                    <i class="mdi-action-lock-outline prefix"></i>
-                                                    <input ng-model="updatePassword.newPassword" type="password" class="validate">
-                                                    <label for="password">New Password</label>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="input-field col s12">
-                                                    <i class="mdi-action-lock-outline prefix"></i>
-                                                    <input ng-model="updatePassword.conformPassword" type="password" class="validate">
-                                                    <label for="Confirmpassword">Confirm Password</label>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="input-field col s12">
-                                                    <div class="btn cyan waves-effect waves-light right" ng-click="UpdatePassword(updatePassword)" name="action">
-                                                        Submit
-                                                        <i class="mdi-content-send right"></i>
+                                                <div class="col s12">
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <i class="mdi-action-lock-outline prefix"></i>
+                                                            <input ng-model="updatePassword.currentPassword" type="password" class="validate">
+                                                            <label for="password">Current Password</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <i class="mdi-action-lock-outline prefix"></i>
+                                                            <input ng-model="updatePassword.newPassword" type="password" required class="validate" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
+                                                            <label for="password">New Password</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <i class="mdi-action-lock-outline prefix"></i>
+                                                            <input ng-model="updatePassword.conformPassword" name="CnfPassword" type="password" required class="validate" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
+                                                            <label for="Confirmpassword">Confirm Password</label>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="input-field col s12">
+                                                            <button id="submitButton" type="submit" class="btn cyan waves-effect waves-light right"> Register</button>
+                                                            <!--<div class="btn cyan waves-effect waves-light right" ng-click="UpdatePassword(updatePassword)" name="action">
+                                            Submit
+                                            <i class="mdi-content-send right"></i>-->
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -133,8 +144,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                        </form>
+</div>
                     <div id="Notification_tab" class="col s12">
                         <div class="row">
                             <div class="col s12 m12 l12">
@@ -171,7 +182,7 @@
                                                 <input type="checkbox" id="checkbox7" ng-model="mailSettings.otherNewsLetters" />
                                                 <label for="checkbox7">Other Newsletters</label>
                                             </p>
-                                            <p>Click the button to confirm you wish to unsubscribe.</p>
+                                            
                                         </form>
                                     </div>
                                     <div class="row">

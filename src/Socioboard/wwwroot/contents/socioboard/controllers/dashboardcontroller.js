@@ -111,7 +111,12 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
                 else {
                     $scope.dispbtn = true;
-                    swal('please select profile and type message for compose');
+                    if (profiles.length < 0) {
+                        swal('please select profile');
+                    }
+                    else {
+                        swal('please type message for compose');
+                    }
                 }
             }
 
@@ -348,7 +353,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
             };
             $scope.selectedFbPageProfiles = [];
-
+           // toggleGAeProfileSelection();
             $scope.AddFacebookPages = function () {
                 if ($scope.selectedFbPageProfiles.length > 0) {
                     //$scope.modalinstance.dismiss('cancel');
@@ -380,8 +385,8 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
 
             //code to add Ga Sites
-            $scope.toggleGAeProfileSelection = function (AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl) {
-                var idx = $scope.selectedLinkedinProfiles.indexOf(AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl);
+            $scope.toggleGAeProfileSelection = function (AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl,internalWebPropertyId) {
+                var idx = $scope.selectedLinkedinProfiles.indexOf(AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl, internalWebPropertyId);
                 var data = "";
                 // is currently selected
                 if (idx > -1) {
@@ -390,7 +395,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
                     // is newly selected
                 else {
-                    data = AccessToken + '<:>' + RefreshToken + '<:>' + AccountId + '<:>' + AccountName + '<:>' + EmailId + '<:>' + ProfileId + '<:>' + ProfileName + '<:>' + WebPropertyId + '<:>' + WebsiteUrl;
+                    data = AccessToken + '<:>' + RefreshToken + '<:>' + AccountId + '<:>' + AccountName + '<:>' + EmailId + '<:>' + ProfileId + '<:>' + ProfileName + '<:>' + WebPropertyId + '<:>' + WebsiteUrl + '<:>' + internalWebPropertyId;
                     $scope.selectedGAPageProfiles.push(data);
                 }
             }

@@ -19,7 +19,7 @@ dashboard = function () {
         inDuration: 300,
         outDuration: 225,
         constrain_width: false, // Does not change width of dropdown to that of the activator
-        hover: true, // Activate on hover
+       // hover: true, // Activate on hover
         gutter: 0, // Spacing from edge
         belowOrigin: false, // Displays dropdown below the button
         alignment: 'right' // Displays dropdown with edge aligned to the right of button
@@ -254,14 +254,16 @@ smartinbox = function () {
         color: '#1976D2',
         size: '10px',
         height: '600px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 
     $('.smartinbox_filter_slider').slimScroll({
         color: '#424242',
         size: '10px',
         height: '200px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 }
 
@@ -316,14 +318,16 @@ inboxmessage = function () {
         color: '#1976D2',
         size: '10px',
         height: '600px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 
     $('.inboxmsg_filter_slider').slimScroll({
         color: '#424242',
         size: '10px',
         height: '600px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 }
 
@@ -374,21 +378,24 @@ mytask = function () {
         color: '#3B5998',
         size: '10px',
         height: '400px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 
     $('.twtfeeds').slimScroll({
         color: '#90caf9',
         size: '10px',
         height: '400px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 
     $('#social_profile_list').slimScroll({
         color: '#424242',
         size: '10px',
         height: '400px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 
 
@@ -396,7 +403,8 @@ mytask = function () {
         color: '#424242',
         size: '10px',
         height: '400px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 }
 
@@ -451,14 +459,16 @@ sentmessages = function () {
         color: '#1976D2',
         size: '10px',
         height: '600px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 
     $('.smartinbox_filter_slider').slimScroll({
         color: '#424242',
         size: '10px',
         height: '200px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 }
 
@@ -514,7 +524,8 @@ facebookfeeds = function () {
         color: '#3B5998',
         size: '10px',
         height: '600px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 }
 
@@ -569,7 +580,8 @@ twitterfeeds = function () {
         color: '#90CAF9',
         size: '10px',
         height: '600px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 }
 
@@ -623,14 +635,16 @@ instagramfeeds = function () {
         color: '-webkit-gradient(linear,left top,right top,color-stop(32%,#FAB51C),color-stop(60%,#EF0915),color-stop(100%,#BE039C))',
         size: '10px',
         height: '600px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 
     $('.instagramcommand').slimScroll({
         color: '-webkit-gradient(linear,left top,right top,color-stop(32%,#FAB51C),color-stop(60%,#EF0915),color-stop(100%,#BE039C))',
         size: '10px',
         height: '300px',
-        alwaysVisible: true
+        alwaysVisible: true,
+        allowPageScroll: true
     });
 }
 
@@ -687,6 +701,7 @@ googleplusfeeds = function () {
         size: '10px',
         height: '600px',
         alwaysVisible: true,
+        allowPageScroll: true,
         allowPageScroll: true
     });
 }

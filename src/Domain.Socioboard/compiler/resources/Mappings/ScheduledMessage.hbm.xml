@@ -35,5 +35,8 @@
     <property name="socialprofileName">
       <column name="socialprofileName"  />
     </property>
+    <property name="url">
+      <column name="url"  />
+    </property>
   </class>
 </hibernate-mapping>

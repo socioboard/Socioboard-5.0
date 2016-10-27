@@ -26,12 +26,13 @@ namespace SocioboardDataServices.Instagram
         {
             apiHitsCount = 0;
             DatabaseRepository dbr = new DatabaseRepository();
+            Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(insAcc.InstagramId));
             if (insAcc.lastUpdate.AddHours(1)<=DateTime.UtcNow)
             {
                 if(insAcc.IsActive)
                 {
 
-                    Domain.Socioboard.Models.Instagramaccounts Instagramaccounts = new Domain.Socioboard.Models.Instagramaccounts();
+                  //  Domain.Socioboard.Models.Instagramaccounts Instagramaccounts = new Domain.Socioboard.Models.Instagramaccounts();
                     Domain.Socioboard.Models.Instagramaccounts objInstagramAccount;
                     UserController objusercontroller = new UserController();
                     ConfigurationIns configi = new ConfigurationIns("https://api.instagram.com/oauth/authorize/", "d89b5cfa3796458ebbb2520d70eeb498", "e4663d0a287243f88ac619b5692119c8", "https://www.socioboard.com/InstagramManager/Instagram", "https://api.instagram.com/oauth/access_token", "https://api.instagram.com/v1/", "");
@@ -39,62 +40,88 @@ namespace SocioboardDataServices.Instagram
                     _api = oAuthInstagram.GetInstance(configi);
                     InstagramResponse<User> objuser = objusercontroller.GetUserDetails(insAcc.InstagramId,insAcc.AccessToken);
 
-                    objInstagramAccount = new Domain.Socioboard.Models.Instagramaccounts();
+                  //  objInstagramAccount = new Domain.Socioboard.Models.Instagramaccounts();
 
 
                     if (objuser!=null)
                     {
                         try
                         {
-                            objInstagramAccount.ProfileUrl = objuser.data.profile_picture;
+                            insAcc.ProfileUrl = objuser.data.profile_picture;
+                            _grpProfile.profilePic= objuser.data.profile_picture;
                         }
                         catch (Exception ex)
                         {
-                            objInstagramAccount.ProfileUrl = insAcc.ProfileUrl;
+                            insAcc.ProfileUrl = insAcc.ProfileUrl;
+                            _grpProfile.profilePic = insAcc.ProfileUrl;
                         }
                         try
                         {
-                            objInstagramAccount.TotalImages = objuser.data.counts.media;
+                            insAcc.TotalImages = objuser.data.counts.media;
                         }
                         catch (Exception ex)
                         {
-                            objInstagramAccount.TotalImages = insAcc.TotalImages;
+                            insAcc.TotalImages = insAcc.TotalImages;
                         }
                         try
                         {
-                            objInstagramAccount.FollowedBy = objuser.data.counts.followed_by;
+                            insAcc.FollowedBy = objuser.data.counts.followed_by;
                         }
                         catch (Exception ex)
                         {
-                            objInstagramAccount.FollowedBy = insAcc.FollowedBy;
+                            insAcc.FollowedBy = insAcc.FollowedBy;
                         }
                         try
                         {
-                            objInstagramAccount.Followers = objuser.data.counts.follows;
+                            insAcc.Followers = objuser.data.counts.follows;
                         }
                         catch (Exception ex)
                         {
-                            objInstagramAccount.Followers = insAcc.Followers;
+                            insAcc.Followers = insAcc.Followers;
                         }
                         try
                         {
-                            objInstagramAccount.bio = objuser.data.bio;
+                            insAcc.bio = objuser.data.bio;
                         }
                         catch (Exception ex)
                         {
-                            objInstagramAccount.bio = insAcc.bio;
+                            insAcc.bio = insAcc.bio;
                         }
-
-                        dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(objInstagramAccount); 
+                        dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
+                        dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(insAcc); 
                     }
                     while (apiHitsCount<MaxapiHitsCount)
                     {
-                        GetInstagramSelfFeeds(insAcc.InstagramId, insAcc.AccessToken);
-                        GetInstagramUserDetails(insAcc.InstagramId, insAcc.AccessToken, insAcc);
-                        GetInstagramPostLikes(insAcc.InstagramId, insAcc.AccessToken);
-                        GetInstagramPostComments(insAcc.InstagramId, insAcc.AccessToken);
-                        GetInstagramFollowing(insAcc.InstagramId, insAcc.AccessToken, 1);
-                        GetInstagramFollower(insAcc.InstagramId, insAcc.AccessToken, 1);
+                        try
+                        {
+                            GetInstagramSelfFeeds(insAcc.InstagramId, insAcc.AccessToken);
+                        }
+                        catch { }
+                        try
+                        {
+                            GetInstagramUserDetails(insAcc.InstagramId, insAcc.AccessToken, insAcc);
+                        }
+                        catch { }
+                        try
+                        {
+                            GetInstagramPostLikes(insAcc.InstagramId, insAcc.AccessToken);
+                        }
+                        catch { }
+                        try
+                        {
+                            GetInstagramPostComments(insAcc.InstagramId, insAcc.AccessToken);
+                        }
+                        catch { }
+                        try
+                        {
+                            GetInstagramFollowing(insAcc.InstagramId, insAcc.AccessToken, 1);
+                        }
+                        catch { }
+                        try
+                        {
+                            GetInstagramFollower(insAcc.InstagramId, insAcc.AccessToken, 1);
+                        }
+                        catch { }
                     }
                     insAcc.lastUpdate = DateTime.UtcNow;
                     dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(insAcc);

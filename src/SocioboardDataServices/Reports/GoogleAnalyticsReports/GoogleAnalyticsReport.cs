@@ -23,25 +23,33 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
             Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
             while (true)
             {
-                DatabaseRepository dbr = new DatabaseRepository();
-                List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstFbAcc = dbr.FindAll<Domain.Socioboard.Models.GoogleAnalyticsAccount>().ToList();
-                foreach (var item in lstFbAcc)
+                try
                 {
-                    if (item.LastUpdate.AddHours(24)<=DateTime.UtcNow)
+                    DatabaseRepository dbr = new DatabaseRepository();
+                    List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstFbAcc = dbr.FindAll<Domain.Socioboard.Models.GoogleAnalyticsAccount>().ToList();
+                    foreach (var item in lstFbAcc)
                     {
-                        if (item.IsActive)
+                        if (item.LastUpdate.AddHours(24) <= DateTime.UtcNow)
                         {
-                            GetTwitterWebMentions(item.WebsiteUrl);
-                            DailyMotionPost(item.WebsiteUrl);
-                            GetYoutubeSearchData(item.WebsiteUrl);
-                            GoogleAnalyticsreportData(item.GaProfileId, item.AccessToken, item.WebsiteUrl, item.Is90DayDataUpdated);
-                            item.LastUpdate = DateTime.UtcNow;
-                            item.Is90DayDataUpdated = true;
-                            dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(item);  
+                            if (item.IsActive)
+                            {
+                                GetTwitterWebMentions(item.WebsiteUrl);
+                                DailyMotionPost(item.WebsiteUrl);
+                                GetYoutubeSearchData(item.WebsiteUrl);
+                                GoogleAnalyticsreportData(item.GaProfileId, item.AccessToken, item.WebsiteUrl, item.Is90DayDataUpdated);
+                                item.LastUpdate = DateTime.UtcNow;
+                                item.Is90DayDataUpdated = true;
+                                dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(item);
+                            }
                         }
                     }
+                    Thread.Sleep(120000);
                 }
-                Thread.Sleep(120000);
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(600000);
+                }
             }
         }
         public static void GoogleAnalyticsreportData(string ProfileId, string AccessToken, string HostName, bool is90daysupdated)

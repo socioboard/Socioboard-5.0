@@ -80,6 +80,7 @@
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Web.Extensions.dll"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Program.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Helper\AppSettings.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Helper\SessionFactory.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Model\DatabaseRepository.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Model\MongoRepository.cs"

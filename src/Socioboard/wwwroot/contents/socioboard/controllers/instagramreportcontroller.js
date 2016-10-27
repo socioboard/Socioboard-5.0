@@ -18,6 +18,248 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
             // end codes to load instgarm profiles
 
         }
+
+
+        $scope.instagramReportsData = [];
+
+
+        $scope.generateGraphs = function () {
+
+            var chart = AmCharts.makeChart("FollowersGraph", {
+                "type": "serial",
+                "theme": "light",
+                "legend": {
+                    "useGraphSettings": true
+                },
+                "dataProvider": $scope.instagramReportsData,
+                "synchronizeGrid": true,
+                "valueAxes": [{
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
+                }, {
+                    "id": "v2",
+                    "axisColor": "#FCD202",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "right"
+                }],
+                "graphs": [{
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "followcount",
+                    "valueField": "followcount",
+                    "fillAlphas": 0
+                }],
+                "chartScrollbar": {},
+                "chartCursor": {
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
+                },
+                "export": {
+                    "enabled": true,
+                    "position": "bottom-right"
+                }
+            });
+
+            var chart = AmCharts.makeChart("FOLLOWINGGraph", {
+                "type": "serial",
+                "theme": "light",
+                "legend": {
+                    "useGraphSettings": true
+                },
+                "dataProvider": $scope.instagramReportsData,
+                "synchronizeGrid": true,
+                "valueAxes": [{
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
+                }, {
+                    "id": "v2",
+                    "axisColor": "#FCD202",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "right"
+                }],
+                "graphs": [{
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "followingcount",
+                    "valueField": "followingcount",
+                    "fillAlphas": 0
+                }],
+                "chartScrollbar": {},
+                "chartCursor": {
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
+                },
+                "export": {
+                    "enabled": true,
+                    "position": "bottom-right"
+                }
+            });
+
+            var chart = AmCharts.makeChart("POSTCOMMENTSGraph", {
+                "type": "serial",
+                "theme": "light",
+                "legend": {
+                    "useGraphSettings": true
+                },
+                "dataProvider": $scope.instagramReportsData,
+                "synchronizeGrid": true,
+                "valueAxes": [{
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
+                }, {
+                    "id": "v2",
+                    "axisColor": "#FCD202",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "right"
+                }],
+                "graphs": [{
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "postcomment",
+                    "valueField": "postcomment",
+                    "fillAlphas": 0
+                }],
+                "chartScrollbar": {},
+                "chartCursor": {
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
+                },
+                "export": {
+                    "enabled": true,
+                    "position": "bottom-right"
+                }
+            });
+
+            var chart = AmCharts.makeChart("POSTLIKESGraph", {
+                "type": "serial",
+                "theme": "light",
+                "legend": {
+                    "useGraphSettings": true
+                },
+                "dataProvider": $scope.instagramReportsData,
+                "synchronizeGrid": true,
+                "valueAxes": [{
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
+                }, {
+                    "id": "v2",
+                    "axisColor": "#FCD202",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "right"
+                }],
+                "graphs": [{
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "postlike",
+                    "valueField": "postlike",
+                    "fillAlphas": 0
+                }],
+                "chartScrollbar": {},
+                "chartCursor": {
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
+                },
+                "export": {
+                    "enabled": true,
+                    "position": "bottom-right"
+                }
+            });
+            
+            var chart = AmCharts.makeChart("MEDIAGraph", {
+                "type": "serial",
+                "theme": "light",
+                "legend": {
+                    "useGraphSettings": true
+                },
+                "dataProvider": $scope.instagramReportsData,
+                "synchronizeGrid": true,
+                "valueAxes": [{
+                    "id": "v1",
+                    "axisColor": "#FF6600",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "left"
+                }, {
+                    "id": "v2",
+                    "axisColor": "#FCD202",
+                    "axisThickness": 2,
+                    "axisAlpha": 1,
+                    "position": "right"
+                }],
+                "graphs": [{
+                    "valueAxis": "v1",
+                    "lineColor": "#FF6600",
+                    "bullet": "round",
+                    "bulletBorderThickness": 1,
+                    "hideBulletsCount": 30,
+                    "title": "mediaCount",
+                    "valueField": "mediaCount",
+                    "fillAlphas": 0
+                }],
+                "chartScrollbar": {},
+                "chartCursor": {
+                    "cursorPosition": "mouse"
+                },
+                "categoryField": "date",
+                "categoryAxis": {
+                    "parseDates": true,
+                    "axisColor": "#DADADA",
+                    "minorGridEnabled": true
+                },
+                "export": {
+                    "enabled": true,
+                    "position": "bottom-right"
+                }
+            });
+        }
         $scope.getData = function (profileId, days) {
             $scope.getprofileData(profileId);
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
@@ -38,14 +280,29 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
                     totalFollowing = totalFollowing + value.followingcount;
                     totalPOSTCOMMENTS = totalPOSTCOMMENTS + value.postcomment;
                     totalPOSTLIKES = totalPOSTLIKES + value.postlike;
+
+                    $scope.instagramReportsData.push({
+                        mediaCount: value.mediaCount,
+                        followcount: value.followcount,
+                        followingcount: value.followingcount,
+                        postcomment: value.postcomment,
+                        postlike : value.postlike,
+                        date : new Date((value.date * 1000))
+                    });
+
                 }
             });
+
+            console.log('asasfd');
+            console.log($scope.instagramReportsData);
 
             $scope.totalMedia = totalMedia;
             $scope.totalFollower = totalFollower;
             $scope.totalFollowing = totalFollowing;
             $scope.totalPOSTCOMMENTS = totalPOSTCOMMENTS;
             $scope.totalPOSTLIKES = totalPOSTLIKES;
+            $scope.generateGraphs();
+
         }
 
         $scope.getprofileData = function (profileId) {
@@ -71,21 +328,6 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
         }
 
         $scope.getOnPageLoadReports();
-
-
-$scope.sparkGraph = [5, 6, 7, 9, 9, 5, 3, 2, 2, 4, 6, 7, 5, 6, 7, 9, 9, 5, 3, 2, 2, 4, 6, 7];
-         // Project Line chart ( Project Box )
-	    $(".project-line-1").sparkline($scope.sparkGraph, {
-	        type: 'line',
-	        width: '100%',
-	        height: '30',
-	        lineWidth: 2,
-	        lineColor: '#00bcd4',
-	        fillColor: 'rgba(0, 188, 212, 0.5)',
-	    });       
-
-
-
 
   });
 

@@ -1,5 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using Domain.Socioboard.Helpers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +14,7 @@ namespace Domain.Socioboard.Models.Mongo
     public class Rss
     {
         [BsonId]
+        [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
 
         public string strId { get; set; }
@@ -23,6 +26,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string ProfileName { get; set; }
         public string ProfileImageUrl { get; set; }
 
+        [JsonPropertyAttribute("rssFeedUrls")]
         public Domain.Socioboard.Models.RssFeedUrl rssFeedUrl { get; set; }
     }
 }

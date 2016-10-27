@@ -1,7 +1,7 @@
 ﻿'use strict';
 SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $scope, $http, $modal, $timeout, $mdpDatePicker, $mdpTimePicker, $stateParams, apiDomain) {
     $scope.$on('$viewContentLoaded', function () {
-
+       
         $scope.check = false;
         $scope.dispbtn = true;
 
@@ -84,8 +84,16 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                 swal("Date value must be current or future");
                 return false;
             }
-            var ampm = new Date().getHours >= 12 ? 'PM' : 'AM';
-            var t1 = new Date().getHours() + ":" + new Date().getMinutes() + " " + ampm;
+            var ampm = new Date().getHours() >= 12 ? 'PM' : 'AM';
+
+            function addZero(i) {
+                if (i < 10) {
+                    i = "0" + i;
+                }
+                return i;
+            }
+            var t1 = new Date().getHours() + ":" + ("0" + new Date().getMinutes()).substr(-2) + " " + ampm;
+            //var t1 = new Date().getHours() + ":" + new Date().getMinutes() + " " + ampm;
 
             var dt = new Date();
             var mm = new Date().getMonth() + 1;
@@ -112,7 +120,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate,
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1,
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -135,7 +143,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate,
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1,
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -194,35 +202,86 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         $scope.draftmsg = function () {
             var message = $('#ScheduleMsg').val();
-            var date_value = $('#input_0').val();
+            // var date_value = $('#input_0').val();
+            var date_value = ($('.md-input')[0]).value;
             var date = date_value.split("/");
             date_value = date[1] + "/" + date[0] + "/" + date[2];
-            var time_value = $('#input_1').val();
+            //var time_value = $('#input_1').val();
+            var time_value = ($('.md-input')[1]).value;
             var scheduletime = date_value + ' ' + time_value;
+            var newdate1 = new Date(scheduletime.replace("AM", "").replace("PM", "")).toUTCString();
+            var d = new Date(newdate1);
+            var d4 = d.setHours(d.getHours() + 5);
+            var date = moment(d4);
+            var newdate = new Date(date).toUTCString();
+
             if (message != "" && message != undefined) {
-                var formData = new FormData();
-                formData.append('files', $("#input-file-now").get(0).files[0]);
-                $scope.dispbtn = false;
-                $http({
-                    method: 'POST',
-                    url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + scheduletime + '&groupId=' + $rootScope.groupId,
-                    data: formData,
-                    headers: {
-                        'Content-Type': undefined
-                    },
-                    transformRequest: angular.identity,
-                }).then(function (response) {
-                    $('#ScheduleMsg').val('');
-                    $('#ScheduleTime').val('');
-                    $scope.dispbtn = true;
-                    swal("message saved in draft successfully");
-                }, function (reason) {
-                    console.log(reason);
-                });
+                $scope.checkfile();//added on 19/10/2016
+                if ($scope.check == true)
+                {
+                    var formData = new FormData();
+                    formData.append('files', $("#input-file-now").get(0).files[0]);
+                    $scope.dispbtn = false;
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate + '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#ScheduleMsg').val('');
+                        $('#ScheduleTime').val('');
+                        $scope.dispbtn = true;
+                        swal("message saved in draft successfully");
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+
+                else if ($scope.check == false) 
+                {
+                    var formData = new FormData();
+                    $scope.dispbtn = false;
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate + '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#ScheduleMsg').val('');
+                        $('#ScheduleTime').val('');
+                        $scope.dispbtn = true;
+                        swal("message saved in draft successfully");
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+                else {
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File Extention is not valid. Please upload any image file");
+                    $('#input-file-now').val('');
+                }
             }
             else {
                 swal('please type any message for save in draft');
             }
         }
+
+       
+
+ $('.dropify').dropify();
     });
 });
+
+SocioboardApp.directive('afterRender', function ($timeout) {
+    return function (scope, element, attrs) {
+            $timeout(function () {
+                $('.dropify').dropify();
+            });
+    };
+})

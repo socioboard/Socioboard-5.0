@@ -36,9 +36,9 @@
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="profile in lstProfiles">
                                             <div class="card-panel social_profile">
-                                                <div class="card-image">
+                                                <div class="card-image center">
                                                     <div ng-click="deleteProfile(profile.profileId, grp.id)" class="delet_icon"></div>
-                                                    <img src="{{profile.profilePic}}" class="responsive-img">
+                                                    <img src="{{profile.profilePic}}" class="responsive-img group-profile-image">
                                                     <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon">
@@ -61,9 +61,9 @@
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profilesToConnect">
                                             <div class="card-panel social_profile">
-                                                <div class="card-image">
+                                                <div class="card-image center">
                                                     <div ng-click="addProfileToGroup(grp.id, profile.profileId, profile.profileType)" class="add_icon" role="button" tabindex="0"></div>
-                                                    <img src="{{profile.profilePic}}" class="responsive-img">
+                                                    <img src="{{profile.profilePic}}" class="responsive-img group-profile-image">
                                                     <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon">
@@ -86,8 +86,8 @@
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
                                             <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="{{member.profileImg}}" class="responsive-img" ng-if="member.profileImg != ''">
+                                                <div class="card-image center">
+                                                    <img src="{{member.profileImg}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
 
                                                     <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
@@ -105,8 +105,8 @@
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}">
                                             <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="{{member.profileImg}}" class="responsive-img" ng-if="member.profileImg != ''">
+                                                <div class="card-image center">
+                                                    <img src="{{member.profileImg}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
                                                     <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
                                                 </div>
@@ -125,9 +125,9 @@
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profiles ">
                                             <div class="card-panel social_profile">
-                                                <div class="card-image">
+                                                <div class="card-image center">
                                                     <div ng-click="deleteProfile(profile.profileId, grp.id)" class="delet_icon"></div>
-                                                    <img src="{{profile.profilePic}}" class="responsive-img" ng-if="profile.ProfilePic != ''">
+                                                    <img src="{{profile.profilePic}}" class="responsive-img group-profile-image" ng-if="profile.ProfilePic != ''">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="profile.profilePic == ''">
                                                     <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
@@ -152,9 +152,9 @@
                                     <div class="row" id="social_profile_list" ng-if="grp.groupName != 'Socioboard'">
                                         <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profilesToConnect">
                                             <div class="card-panel social_profile">
-                                                <div class="card-image">
+                                                <div class="card-image center">
                                                     <div ng-click="addProfileToGroup(grp.id, profile.profileId, profile.profileType)" class="add_icon" role="button" tabindex="0"></div>
-                                                    <img src="{{profile.profilePic}}" class="responsive-img">
+                                                    <img src="{{profile.profilePic}}" class="responsive-img group-profile-image">
                                                     <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon">
@@ -179,8 +179,8 @@
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
                                             <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="{{member.profileImg}}" class="responsive-img" ng-if="member.profileImg != ''">
+                                                <div class="card-image center">
+                                                    <img src="{{member.profileImg}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
 
                                                     <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
@@ -198,8 +198,8 @@
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}">
                                             <div class="card-panel social_profile">
-                                                <div class="card-image">
-                                                    <img src="{{member.profileImg}}" class="responsive-img" ng-if="member.profileImg != ''">
+                                                <div class="card-image center">
+                                                    <img src="{{member.profileImg}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
 
                                                     <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>

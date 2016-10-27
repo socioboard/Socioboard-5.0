@@ -8,8 +8,12 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         var ending = 0; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         $scope.dispbtn = false;
+        $scope.disbtncom = true;
         //  $scope.loadmore = "Loading More data..";
         $scope.continue = true;
+        $scope.$watch('continue', function () {
+            console.log("watch" + $scope.continue);
+        });
         $rootScope.categories = '';
         designfeeds();
        
@@ -27,6 +31,78 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
 	            //todo: code to delete profile
 	            swal("Deleted!", "Your profile has been deleted.", "success"); 
 	            });
+        }
+
+        $scope.ComposeMessage = function () {
+            $scope.disbtncom = false;
+            var profiles = $('#composeProfiles').val();
+            var message = $('#composeMessage').val();
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            if (profiles.length > 0 && message != '') {
+                $scope.checkfile();
+                if ($scope.check == true) {
+                    var formData = new FormData();
+                    formData.append('files', $("#composeImage").get(0).files[0]);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        if (response.data == "Posted") {
+                            $scope.disbtncom = true;
+                            $('#ComposePostModal').closeModal();
+                            swal('Message compose successfully');
+                        }
+
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+                else {
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File Extention is not valid. Please upload any image file");
+                    $('#input-file-now').val('');
+                }
+            }
+            else {
+                $scope.disbtncom = true;
+                if (profiles.length < 0) {
+                    swal('please select profile');
+                }
+                else {
+                    swal('please type message for compose');
+                }
+            }
+        }
+
+        $scope.checkfile = function () {
+            var filesinput = $('#composeImage');
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            if (filesinput != undefined && filesinput[0].files[0] != null) {
+                if ($scope.hasExtension('#composeImage', fileExtension)) {
+                    $scope.check = true;
+                }
+                else {
+
+                    $scope.check = false;
+                }
+            }
+            else {
+                $scope.check = true;
+            }
+        }
+        $scope.hasExtension = function (inputID, exts) {
+            var fileName = $('#composeImage').val();
+            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }
 
         $scope.GetCategories = function () {
@@ -80,8 +156,8 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         }
 
         $scope.discoveryList = function () {
-            alert('hello');
             $scope.dispbtn = true;
+            $scope.continue = false;
             var categories = $rootScope.categories;
             if (categories != "" && categories != undefined) {
                 $rootScope.categories = categories;
@@ -98,6 +174,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                                           ending = ending + 30;
                                           $scope.dispbtn = true;
                                           $scope.continue = true;
+                                          console.log($scope.continue);
                                       }
                                       // $scope.lstDiscoverySearchLinkedIn=response.data;
                                   }
@@ -165,11 +242,10 @@ SocioboardApp.directive("scroll", function ($window) {
             //alert(this.pageYOffset);
             if (this.pageYOffset >= 1900) {
                 scope.boolChangeClass = true;
-
                 if (scope.continue) {
                     scope.discoveryList();
                 }
-                scope.continue = false;
+                
 
             } else {
                 scope.boolChangeClass = false;

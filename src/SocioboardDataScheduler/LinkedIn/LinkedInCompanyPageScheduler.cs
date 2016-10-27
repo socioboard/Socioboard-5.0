@@ -66,8 +66,10 @@ namespace SocioboardDataScheduler.LinkedIn
             string json = "";
             Domain.Socioboard.Models.LinkedinCompanyPage objlicompanypage = objLinkedinCompanyPage;
             oAuthLinkedIn Linkedin_oauth = new oAuthLinkedIn();
-            Linkedin_oauth.ConsumerKey = Helper.AppSettings.LinkedinApiKey;
-            Linkedin_oauth.ConsumerSecret = Helper.AppSettings.LinkedinSecretKey;
+            //Linkedin_oauth.ConsumerKey = "81k55eukagnqfa";
+            //Linkedin_oauth.ConsumerSecret = "d9rqHEf7ewdSbsF1";
+            Linkedin_oauth.ConsumerKey = "754ysxdp72ulk5";
+            Linkedin_oauth.ConsumerSecret = "vbU52SjK7xS6cT8H";
             Linkedin_oauth.Verifier = objlicompanypage.OAuthVerifier;
             Linkedin_oauth.TokenSecret = objlicompanypage.OAuthSecret;
             Linkedin_oauth.Token = objlicompanypage.OAuthToken;

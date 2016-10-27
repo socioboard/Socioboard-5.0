@@ -20,21 +20,30 @@ namespace SocioboardDataServices.Reports.FacebookReports
             Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
             while (true)
             {
-                DatabaseRepository dbr = new DatabaseRepository();
-                List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.IsActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
-                foreach (var item in lstFbAcc)
+                try
                 {
-                    if (item.lastpagereportgenerated.AddHours(24)<=DateTime.UtcNow)
+                    DatabaseRepository dbr = new DatabaseRepository();
+                    List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.IsActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
+                    lstFbAcc = lstFbAcc.Where(t => t.FbUserName.Contains("Newsocioboard")).ToList();
+                    foreach (var item in lstFbAcc)
                     {
-                        CreateReports(item.FbUserId, item.AccessToken, item.Is90DayDataUpdated);
-                        item.Is90DayDataUpdated = true;
-                        item.lastpagereportgenerated = DateTime.UtcNow;
-                        dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(item);
-                        cache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterMessageReportsByProfileId + item.FbUserId); 
+                        if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
+                        {
+                            CreateReports(item.FbUserId, item.AccessToken, item.Is90DayDataUpdated);
+                            item.Is90DayDataUpdated = true;
+                            item.lastpagereportgenerated = DateTime.UtcNow;
+                            dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(item);
+                            cache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterMessageReportsByProfileId + item.FbUserId);
+                        }
                     }
+                    Thread.Sleep(120000);
                 }
-                Thread.Sleep(120000);
-            } 
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(600000);
+                }
+            }
         }
 
         public static void CreateReports(string ProfileId, string AccessToken, bool is90daysupdated)
@@ -46,92 +55,275 @@ namespace SocioboardDataServices.Reports.FacebookReports
             }
             double since = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow.AddDays(-day));
             double until = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+            JObject pageobj = new JObject();
+            JArray likesobj = new JArray();
+            JArray unlikesobj = new JArray();
+            JArray impressionobj = new JArray();
+            JArray uniqueobj = new JArray();
+            JArray facebookstory_typeUrlobj90 = new JArray();
+            JArray facebookorganicobj90 = new JArray();
+            JArray facebookviralobj90 = new JArray();
+            JArray facebookpaidobj90 = new JArray();
+            JArray facebookimpressionbyageobj = new JArray();
+            JArray facebookstoriesobj = new JArray();
+            JArray facebooksharing_typeUrlobj = new JArray();
+            JArray facebookagegenderUrlobj = new JArray();
+            JObject jounlikes = new JObject();
+            JObject joimpressionobj = new JObject();
+            JObject jouniqueobj = new JObject();
+            JObject jofacebookstory_typeUrlobj = new JObject();
+            JObject jofacebookorganicobj = new JObject();
+            JObject jofacebookviralobj = new JObject();
+            JObject jofacebookpaidobj = new JObject();
+            JObject jofacebookimpressionbyageobj = new JObject();
+            JObject jofacebookstoriesobj = new JObject();
+            JObject jofacebooksharing_typeUrlobj = new JObject();
+            JObject jofacebookagegenderUrlobj = new JObject();
+
 
             #region likes
-            string facebookpageUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "?access_token=" + AccessToken;
-            string outputfacepageUrl = getFacebookResponse(facebookpageUrl);
-            JObject pageobj = JObject.Parse(outputfacepageUrl);
+            try
+            {
+                string facebookpageUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "?fields=fan_count,talking_about_count&access_token=" + AccessToken;
+                string outputfacepageUrl = getFacebookResponse(facebookpageUrl);
+                pageobj = JObject.Parse(outputfacepageUrl);
+            }
+            catch (Exception ex)
+            {
+            }
 
-            string facebooknewfanUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_fan_adds?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputface = getFacebookResponse(facebooknewfanUrl);
-            JArray likesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputface)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebooknewfanUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_fan_adds?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputface = getFacebookResponse(facebooknewfanUrl);
+                likesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputface)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+            }
             #endregion
             #region unlikes
-            string facebookunlikjeUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_fan_removes?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceunlike = getFacebookResponse(facebookunlikjeUrl);
-            JArray unlikesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunlike)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookunlikjeUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_fan_removes?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceunlike = getFacebookResponse(facebookunlikjeUrl);
+                unlikesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunlike)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+            }
             #endregion
             #region impression
-            string facebookimpressionUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceunimpression = getFacebookResponse(facebookimpressionUrl);
-            JArray impressionobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunimpression)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookimpressionUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceunimpression = getFacebookResponse(facebookimpressionUrl);
+                impressionobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunimpression)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+            }
             #endregion
             #region impression user
-            string facebookuniqueUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_unique?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceununoque = getFacebookResponse(facebookuniqueUrl);
-            JArray uniqueobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceununoque)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookuniqueUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_unique?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceununoque = getFacebookResponse(facebookuniqueUrl);
+                uniqueobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceununoque)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+            }
             #endregion
             #region impression breakdown
-            string facebookstory_typeUrl90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_by_story_type?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceunstory_type90 = getFacebookResponse(facebookstory_typeUrl90);
-            JArray facebookstory_typeUrlobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunstory_type90)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookstory_typeUrl90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_by_story_type?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceunstory_type90 = getFacebookResponse(facebookstory_typeUrl90);
+                facebookstory_typeUrlobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunstory_type90)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+            }
             #endregion
             #region impression breakdown organic
-            string facebookorganic90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_organic?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceorganic90 = getFacebookResponse(facebookorganic90);
-            JArray facebookorganicobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceorganic90)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookorganic90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_organic?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceorganic90 = getFacebookResponse(facebookorganic90);
+                facebookorganicobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceorganic90)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+
+            }
             #endregion
             #region imression breakdowm viral
-            string facebookviral90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_viral?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceviral90 = getFacebookResponse(facebookviral90);
-            JArray facebookviralobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceviral90)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookviral90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_viral?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceviral90 = getFacebookResponse(facebookviral90);
+                facebookviralobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceviral90)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+            }
             #endregion
             #region impression breakdown paid
-            string facebookpaid90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_paid?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfacepaid90 = getFacebookResponse(facebookpaid90);
-            JArray facebookpaidobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfacepaid90)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookpaid90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_paid?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfacepaid90 = getFacebookResponse(facebookpaid90);
+                facebookpaidobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfacepaid90)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+            }
             #endregion
             #region page imression by age and gender
-            string facebookimpressionbyage = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_by_age_gender_unique?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceimpressionbyage = getFacebookResponse(facebookimpressionbyage);
-            JArray facebookimpressionbyageobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceimpressionbyage)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookimpressionbyage = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_by_age_gender_unique?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceimpressionbyage = getFacebookResponse(facebookimpressionbyage);
+                facebookimpressionbyageobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceimpressionbyage)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+
+            }
             #endregion
             #region story sharing
-            string facebookstories = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_stories?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfacestories = getFacebookResponse(facebookstories);
-            JArray facebookstoriesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfacestories)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebookstories = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_stories?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfacestories = getFacebookResponse(facebookstories);
+                facebookstoriesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfacestories)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+            }
             #endregion
             #region sroty sharing by share type
-            string facebooksharing_typeUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_stories_by_story_type?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceunsharing_type = getFacebookResponse(facebooksharing_typeUrl);
-            JArray facebooksharing_typeUrlobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunsharing_type)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebooksharing_typeUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_stories_by_story_type?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceunsharing_type = getFacebookResponse(facebooksharing_typeUrl);
+                facebooksharing_typeUrlobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunsharing_type)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+
+            }
             #endregion
             #region story sharing by age and gender
-            string facebooksharingagegenderUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_storytellers_by_age_gender?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
-            string outputfaceunagegender = getFacebookResponse(facebooksharingagegenderUrl);
-            JArray facebookagegenderUrlobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunagegender)["data"].ToString())[0]["values"].ToString());
+            try
+            {
+                string facebooksharingagegenderUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_storytellers_by_age_gender?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string outputfaceunagegender = getFacebookResponse(facebooksharingagegenderUrl);
+                facebookagegenderUrlobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunagegender)["data"].ToString())[0]["values"].ToString());
+            }
+            catch (Exception ex)
+            {
+
+            }
             #endregion
             foreach (JObject obj in likesobj)
             {
                 Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports facebookReportViewModal = new Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports();
                 string key = obj["end_time"].ToString();
-                JObject jounlikes = unlikesobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject joimpressionobj = impressionobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jouniqueobj = uniqueobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jofacebookstory_typeUrlobj = facebookstory_typeUrlobj90.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jofacebookorganicobj = facebookorganicobj90.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jofacebookviralobj = facebookviralobj90.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jofacebookpaidobj = facebookpaidobj90.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jofacebookimpressionbyageobj = facebookimpressionbyageobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jofacebookstoriesobj = facebookstoriesobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jofacebooksharing_typeUrlobj = facebooksharing_typeUrlobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
-                JObject jofacebookagegenderUrlobj = facebookagegenderUrlobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                try
+                {
+                    jounlikes = unlikesobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    joimpressionobj = impressionobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    jouniqueobj = uniqueobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    jofacebookstory_typeUrlobj = facebookstory_typeUrlobj90.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    jofacebookorganicobj = facebookorganicobj90.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    jofacebookviralobj = facebookviralobj90.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    jofacebookpaidobj = facebookpaidobj90.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    jofacebookimpressionbyageobj = facebookimpressionbyageobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    jofacebookstoriesobj = facebookstoriesobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+                }
+                try
+                {
+                    jofacebooksharing_typeUrlobj = facebooksharing_typeUrlobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
+                try
+                {
+                    jofacebookagegenderUrlobj = facebookagegenderUrlobj.Children<JObject>().FirstOrDefault(o => o["end_time"].ToString() == key);
+                }
+                catch (Exception ex)
+                {
+
+                }
                 DateTime dt = DateTime.Parse(key).Date;
                 facebookReportViewModal.pageId = ProfileId;
                 facebookReportViewModal.date = SBHelper.ConvertToUnixTimestamp(dt);
                 try
                 {
-                    facebookReportViewModal.totalLikes = pageobj["likes"].ToString();
+                    facebookReportViewModal.totalLikes = pageobj["fan_count"].ToString();
                 }
                 catch
                 {
@@ -191,7 +383,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
                 }
                 catch
                 {
-                    facebookReportViewModal.perDayImpression ="0";
+                    facebookReportViewModal.perDayImpression = "0";
                 }
                 try
                 {
@@ -624,17 +816,24 @@ namespace SocioboardDataServices.Reports.FacebookReports
                     facebookReportViewModal.sharing_M_65 = 0;
                 }
                 facebookReportViewModal.id = ObjectId.GenerateNewId();
-                MongoRepository mongorepo = new MongoRepository("FacaebookPageDailyReports");
-                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports>(t => t.date == facebookReportViewModal.date);
-                var task=Task.Run(async()=>{
-                    return await ret;
-                });
-                if (task.Result!=null)
+                try
                 {
-                    if (task.Result.Count() < 1)
+                    MongoRepository mongorepo = new MongoRepository("FacaebookPageDailyReports");
+                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports>(t => t.date == facebookReportViewModal.date);
+                    var task = Task.Run(async () =>
                     {
-                        mongorepo.Add<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports>(facebookReportViewModal);
-                    } 
+                        return await ret;
+                    });
+                    if (task.Result != null)
+                    {
+                        if (task.Result.Count() < 1)
+                        {
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports>(facebookReportViewModal);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
                 }
             }
 

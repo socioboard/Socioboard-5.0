@@ -21,11 +21,9 @@ namespace SociobordRssDataServices.Model
 
         public MongoRepository(string CollectionName) 
         {
-            MongoClient client = new MongoClient("mongoconnectiong string");
+            MongoClient client = new MongoClient(Helper.AppSettings.MongoDbConnectionString);
 
-            _db = client.GetDatabase("databasename");
-
-          
+            _db = client.GetDatabase(Helper.AppSettings.MongoDbName);
 
             this.collecionName = CollectionName;
             

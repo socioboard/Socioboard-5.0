@@ -27,5 +27,6 @@ namespace Domain.Socioboard.Models
         public virtual DateTime EntryDate { get; set; }
         public virtual DateTime LastUpdate { get; set; }
         public virtual bool Is90DayDataUpdated { get; set; }
+        public virtual string internalWebPropertyId { get; set; }
     }
 }

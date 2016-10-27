@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Socioboard.Models.Mongo
 {
+    [BsonIgnoreExtraElements]
     public class GroupdailyReports
     {
         [BsonId]

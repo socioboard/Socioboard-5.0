@@ -29,209 +29,250 @@ namespace SocioboardDataServices.Facebook
                     if (Convert.ToString(profile) != "Invalid Access Token")
                     {
                         fbAcc.Friends = Socioboard.Facebook.Data.FbUser.getFbFriends(fbAcc.AccessToken);
-                    apiHitsCount++;
-                    try
-                    {
-                        fbAcc.EmailId = (Convert.ToString(profile["email"]));
-                    }
-                    catch
-                    {
-                        fbAcc.EmailId = fbAcc.EmailId;
-                    }
-                    try
-                    {
-                        fbAcc.ProfileUrl = (Convert.ToString(profile["link"]));
-                    }
-                    catch {
-                        fbAcc.ProfileUrl = fbAcc.ProfileUrl;
-                    }
-                    try
-                    {
-                        fbAcc.gender = (Convert.ToString(profile["gender"]));
-                    }
-                    catch {
-                        fbAcc.gender = fbAcc.gender;
-                    }
-                    try
-                    {
-                        fbAcc.bio = (Convert.ToString(profile["bio"]));
-                    }
-                    catch {
-                        fbAcc.bio = fbAcc.bio;
-                    }
-                    try
-                    {
-                        fbAcc.about = (Convert.ToString(profile["about"]));
-                    }
-                    catch {
-                        fbAcc.about = fbAcc.about;
-                    }
-                    try
-                    {
-                        fbAcc.coverPic = (Convert.ToString(profile["cover"]["source"]));
-                    }
-                    catch {
-                        fbAcc.coverPic = fbAcc.coverPic;
-                    }
-                    try
-                    {
-                        fbAcc.birthday = (Convert.ToString(profile["birthday"]));
-                    }
-                    catch {
-                        fbAcc.birthday = fbAcc.birthday;
-                    }
-                    try
-                    {
-                        JArray arry = JArray.Parse(profile["education"]);
-                        if (arry.Count > 0)
-                        {
-                            fbAcc.college  = Convert.ToString(arry[arry.Count - 1]["school"]["name"]);
-                            fbAcc.education = Convert.ToString(arry[arry.Count - 1]["concentration"]["name"]);
-                        }
-                    }
-                    catch {
-                        fbAcc.college = fbAcc.college;
-                        fbAcc.education = fbAcc.education;
-                    }
-                    try
-                    {
-                        JArray arry = JArray.Parse(profile["work"]);
-                        if (arry.Count > 0)
-                        {
-                            fbAcc.workPosition = Convert.ToString(arry[0]["position"]["name"]);
-                            fbAcc.workCompany = Convert.ToString(arry[0]["employer"]["name"]);
-                        }
-                    }
-                    catch {
-                        fbAcc.workPosition = fbAcc.workPosition;
-                         fbAcc.workCompany = fbAcc.workCompany;
-                    }
-
-                    try
-                    {
-
-                        dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
-                    }
-                    catch { }
-
-                    while (apiHitsCount < MaxapiHitsCount && feeds != null && feeds["data"] != null)
-                    {
-
                         apiHitsCount++;
-                        if (feeds["data"] != null)
-                        {
-                            Console.WriteLine(feeds["data"]);
-                            foreach (var result in feeds["data"])
-                            {
-                                MongoFacebookFeed objFacebookFeed = new MongoFacebookFeed();
-                                objFacebookFeed.Type = "fb_feed";
-                                objFacebookFeed.ProfileId = fbAcc.FbUserId;
-                                objFacebookFeed.Id = MongoDB.Bson.ObjectId.GenerateNewId();
-                                objFacebookFeed.FromProfileUrl = "http://graph.facebook.com/" + result["from"]["id"] + "/picture?type=small";
-                                objFacebookFeed.FromName = result["from"]["name"].ToString();
-                                objFacebookFeed.FromId = result["from"]["id"].ToString();
-                                objFacebookFeed.FeedId = result["id"].ToString();
-                                objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
-                                objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
-                                objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
-
-                                try
-                                {
-                                    objFacebookFeed.Picture = result["picture"].ToString();
-                                }
-                                catch (Exception ex)
-                                {
-                                    objFacebookFeed.Picture = "";
-                                }
-
-                                string message = string.Empty;
-
-                                try
-                                {
-                                    if (result["message"] != null)
-                                    {
-                                        message = result["message"];
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    try
-                                    {
-                                        if (result["description"] != null)
-                                        {
-                                            message = result["description"];
-                                        }
-                                    }
-                                    catch (Exception exx)
-                                    {
-                                        try
-                                        {
-                                            if (result["story"] != null)
-                                            {
-                                                message = result["story"];
-                                            }
-                                        }
-                                        catch (Exception exxx)
-                                        {
-                                            message = string.Empty;
-                                        }
-                                    }
-
-                                }
-
-                                if (message == null)
-                                {
-                                    message = "";
-                                }
-                                objFacebookFeed.FeedDescription = message;
-                                objFacebookFeed.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-
-
-
-                                try
-                                {
-                                    MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed");
-                                    var ret = mongorepo.Find<MongoFacebookFeed>(t => t.FeedId == objFacebookFeed.FeedId && t.ProfileId == objFacebookFeed.ProfileId);
-                                    var task = Task.Run(async () =>
-                                      {
-                                          return await ret;
-
-                                      });
-                                    int count = task.Result.Count;
-                                    if (count < 1)
-                                    {
-                                        mongorepo.Add<MongoFacebookFeed>(objFacebookFeed);
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    //_logger.LogInformation(ex.Message);
-                                    //_logger.LogError(ex.StackTrace);
-                                }
-
-                                AddFbPostComments(objFacebookFeed.FeedId, fbAcc.AccessToken);
-                            }
-
-                        }
-                        else
-                        {
-                            apiHitsCount = MaxapiHitsCount;
-                        }
                         try
                         {
-                            feeds = Socioboard.Facebook.Data.FbUser.fbGet(fbAcc.AccessToken, feeds["paging"]["next"]);
+                            fbAcc.EmailId = (Convert.ToString(profile["email"]));
                         }
                         catch
                         {
-                            apiHitsCount = MaxapiHitsCount;
+                            fbAcc.EmailId = fbAcc.EmailId;
+                        }
+                        try
+                        {
+                            fbAcc.ProfileUrl = (Convert.ToString(profile["link"]));
+                        }
+                        catch
+                        {
+                            fbAcc.ProfileUrl = fbAcc.ProfileUrl;
+                        }
+                        try
+                        {
+                            fbAcc.gender = (Convert.ToString(profile["gender"]));
+                        }
+                        catch
+                        {
+                            fbAcc.gender = fbAcc.gender;
+                        }
+                        try
+                        {
+                            fbAcc.bio = (Convert.ToString(profile["bio"]));
+                        }
+                        catch
+                        {
+                            fbAcc.bio = fbAcc.bio;
+                        }
+                        try
+                        {
+                            fbAcc.about = (Convert.ToString(profile["about"]));
+                        }
+                        catch
+                        {
+                            fbAcc.about = fbAcc.about;
+                        }
+                        try
+                        {
+                            fbAcc.coverPic = (Convert.ToString(profile["cover"]["source"]));
+                        }
+                        catch
+                        {
+                            fbAcc.coverPic = fbAcc.coverPic;
+                        }
+                        try
+                        {
+                            fbAcc.birthday = (Convert.ToString(profile["birthday"]));
+                        }
+                        catch
+                        {
+                            fbAcc.birthday = fbAcc.birthday;
+                        }
+                        try
+                        {
+                            JArray arry = JArray.Parse(profile["education"]);
+                            if (arry.Count > 0)
+                            {
+                                fbAcc.college = Convert.ToString(arry[arry.Count - 1]["school"]["name"]);
+                                fbAcc.education = Convert.ToString(arry[arry.Count - 1]["concentration"]["name"]);
+                            }
+                        }
+                        catch
+                        {
+                            fbAcc.college = fbAcc.college;
+                            fbAcc.education = fbAcc.education;
+                        }
+                        try
+                        {
+                            JArray arry = JArray.Parse(profile["work"]);
+                            if (arry.Count > 0)
+                            {
+                                fbAcc.workPosition = Convert.ToString(arry[0]["position"]["name"]);
+                                fbAcc.workCompany = Convert.ToString(arry[0]["employer"]["name"]);
+                            }
+                        }
+                        catch
+                        {
+                            fbAcc.workPosition = fbAcc.workPosition;
+                            fbAcc.workCompany = fbAcc.workCompany;
                         }
 
+                        try
+                        {
+
+                            dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+                        }
+                        catch { }
+
+                        while (apiHitsCount < MaxapiHitsCount && feeds != null && feeds["data"] != null)
+                        {
+
+                            apiHitsCount++;
+                            if (feeds["data"] != null)
+                            {
+                                Console.WriteLine(feeds["data"]);
+                                foreach (var result in feeds["data"])
+                                {
+                                    MongoFacebookFeed objFacebookFeed = new MongoFacebookFeed();
+                                    objFacebookFeed.Type = "fb_feed";
+                                    objFacebookFeed.ProfileId = fbAcc.FbUserId;
+                                    objFacebookFeed.Id = MongoDB.Bson.ObjectId.GenerateNewId();
+                                    try
+                                    {
+                                        objFacebookFeed.FromProfileUrl = "http://graph.facebook.com/" + result["from"]["id"] + "/picture?type=small";
+                                    }
+                                    catch (Exception)
+                                    {
+                                        objFacebookFeed.FromProfileUrl = "http://graph.facebook.com/" + fbAcc.FbUserId + "/picture?type=small";
+                                    }
+                                    try
+                                    {
+                                        objFacebookFeed.FromName = result["from"]["name"].ToString();
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                        objFacebookFeed.FromName = fbAcc.FbUserName;
+                                    }
+                                    try
+                                    {
+                                        objFacebookFeed.FromId = result["from"]["id"].ToString();
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                        objFacebookFeed.FromId = fbAcc.FbUserId;
+                                    }
+                                    objFacebookFeed.FeedId = result["id"].ToString();
+                                    objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                                    try
+                                    {
+                                        objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
+                                        objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                    }
+
+                                    try
+                                    {
+                                        objFacebookFeed.Picture = result["picture"].ToString();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        objFacebookFeed.Picture = "";
+                                    }
+
+                                    string message = string.Empty;
+
+                                    try
+                                    {
+                                        if (result["message"] != null)
+                                        {
+                                            message = result["message"];
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        try
+                                        {
+                                            if (result["description"] != null)
+                                            {
+                                                message = result["description"];
+                                            }
+                                        }
+                                        catch (Exception exx)
+                                        {
+                                            try
+                                            {
+                                                if (result["story"] != null)
+                                                {
+                                                    message = result["story"];
+                                                }
+                                            }
+                                            catch (Exception exxx)
+                                            {
+                                                message = string.Empty;
+                                            }
+                                        }
+
+                                    }
+
+                                    if (message == null)
+                                    {
+                                        message = "";
+                                    }
+                                    objFacebookFeed.FeedDescription = message;
+                                    objFacebookFeed.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+
+
+
+                                    try
+                                    {
+                                        MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed");
+                                        var ret = mongorepo.Find<MongoFacebookFeed>(t => t.FeedId == objFacebookFeed.FeedId && t.ProfileId == objFacebookFeed.ProfileId);
+                                        var task = Task.Run(async () =>
+                                          {
+                                              return await ret;
+
+                                          });
+                                        int count = task.Result.Count;
+                                        if (count < 1)
+                                        {
+                                            mongorepo.Add<MongoFacebookFeed>(objFacebookFeed);
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        //_logger.LogInformation(ex.Message);
+                                        //_logger.LogError(ex.StackTrace);
+                                    }
+                                    if (apiHitsCount < MaxapiHitsCount)
+                                    {
+                                        AddFbPostComments(objFacebookFeed.FeedId, fbAcc.AccessToken);
+                                    }
+
+                                }
+
+                            }
+                            else
+                            {
+                                apiHitsCount = MaxapiHitsCount;
+                            }
+                            try
+                            {
+                                feeds = Socioboard.Facebook.Data.FbUser.fbGet(fbAcc.AccessToken, feeds["paging"]["next"]);
+                            }
+                            catch
+                            {
+                                apiHitsCount = MaxapiHitsCount;
+                            }
+
+                        }
+
+                        fbAcc.LastUpdate = DateTime.UtcNow;
+
+                        dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
                     }
-
-                    fbAcc.LastUpdate = DateTime.UtcNow;
-
-                    dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
-                     }
                 }
             }
             else

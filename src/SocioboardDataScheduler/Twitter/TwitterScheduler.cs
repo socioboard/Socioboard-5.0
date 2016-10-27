@@ -38,8 +38,7 @@ namespace SocioboardDataScheduler.Twitter
                                     }
                                 }
                             }
-                            //_TwitterAccount.lastUpdate = DateTime.UtcNow;
-                            //dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
+                           
                         }
                         else
                         {

@@ -16,11 +16,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>User</th>
-                            <th>Message</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                            <th>Schedule</th>
+                            <th class="center">User</th>
+                            <th class="center">Message</th>
+                            <th class="center" style="width: 10%">Edit</th>
+                            <th class="center" style="width: 10%">Delete</th>
+                            <th class="center" style="width: 10%">Schedule</th>
                         </tr>
                     </thead>
                     <!--<tfoot>
@@ -33,7 +33,7 @@
                         </tr>
                     </tfoot>-->
                     <tbody>
-                        <tr ng-repeat="draft in lstdraftmessage">
+                        <tr ng-repeat="draft in lstdraftmessage | orderBy:'scheduleTime':true ">
                             <td>{{$index +1}}</td>
                             <td class="center">
                                 <div class="col s12">
@@ -42,16 +42,17 @@
                                 <div class="col s12">
                                     <span>
                                         {{user.UserName}}<br>
-                                        <a class="tooltipped" data-position="bottom" data-delay="50">{{draft.scheduleTime}}</a>
+                                        <span>{{draft.scheduleTime}}</span>
                                     </span>
                                 </div>
                             </td>
                             <td class="center">
-                                <span>
+                                <span style="word-break : break-all">
                                     {{draft.shareMessage}}
                                 </span>
                                 <br>
-                                <img ng-if="draft.picUrl!=''" src="{{draft.picUrl}}" class="responsive-img">
+                                <img ng-if="draft.picUrl!='' && draft.picUrl != null" src="{{getProperURL(draft.picUrl)}}" class="responsive-img" style="width:200px">
+                               <!-- <img ng-if="draft.picUrl!=''" src="{{draft.picUrl}}" class="responsive-img">-->
                             </td>
                             <td>
                                 <a class="waves-effect waves-light btn modal-trigger yellow" ng-click="editdraft(draft.shareMessage,draft.id)"><i class="fa fa-pencil"></i></a>

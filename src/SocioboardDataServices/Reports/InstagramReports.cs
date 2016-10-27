@@ -17,19 +17,29 @@ namespace SocioboardDataServices.Reports
         {
             while (true)
             {
-                DatabaseRepository dbr = new DatabaseRepository();
-                List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.IsActive).ToList();
-                foreach (var item in lstInsAcc)
+                try
                 {
-                    if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
+
+                    DatabaseRepository dbr = new DatabaseRepository();
+                    List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.IsActive).ToList();
+                    //lstInsAcc = lstInsAcc.Where(t => t.InstagramId.Contains("1479225281")).ToList();
+                    foreach (var item in lstInsAcc)
                     {
-                        CreateReports(item.InstagramId, item.Is90DayDataUpdated);
-                        item.Is90DayDataUpdated = true;
-                        item.lastpagereportgenerated = DateTime.UtcNow;
-                        dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(item);
+                        if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
+                        {
+                            CreateReports(item.InstagramId, item.Is90DayDataUpdated);
+                            item.Is90DayDataUpdated = true;
+                            item.lastpagereportgenerated = DateTime.UtcNow;
+                            dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(item);
+                        }
                     }
+                    Thread.Sleep(120000);
                 }
-                Thread.Sleep(120000);
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(600000);
+                }
             }
         }
 
@@ -91,7 +101,7 @@ namespace SocioboardDataServices.Reports
         {
             MongoRepository instagramFeedRepo = new MongoRepository("InstagramFeed");
 
-            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-90).Year, DateTime.UtcNow.AddDays(-90).Month, DateTime.UtcNow.AddDays(-90).Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
             var ret = instagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.InstagramId == profileId && t.FeedDate <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.FeedDate >= SBHelper.ConvertToUnixTimestamp(dayStart) && t.Type == "video");
             var task = Task.Run(async () =>
@@ -104,7 +114,7 @@ namespace SocioboardDataServices.Reports
         public static List<Domain.Socioboard.Models.Mongo.InstagramFeed> GetImagePosts(string profileId, int daysCount)
         {
             MongoRepository instagramFeedRepo = new MongoRepository("InstagramFeed");
-            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-90).Year, DateTime.UtcNow.AddDays(-90).Month, DateTime.UtcNow.AddDays(-90).Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
             var ret = instagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.InstagramId == profileId && t.FeedDate <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.FeedDate >= SBHelper.ConvertToUnixTimestamp(dayStart) && t.Type == "image");
             var task = Task.Run(async () =>
@@ -124,7 +134,7 @@ namespace SocioboardDataServices.Reports
         public static List<Domain.Socioboard.Models.Mongo.InstagramPostComments> GetInstagramPostComments(string profileId, int daysCount)
         {
             MongoRepository instagarmCommentRepo = new MongoRepository("InstagramComment");
-            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-90).Year, DateTime.UtcNow.AddDays(-90).Month, DateTime.UtcNow.AddDays(-90).Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
             var ret = instagarmCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramPostComments>(t => t.Profile_Id == profileId && t.Created_Time <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.Created_Time >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
@@ -137,7 +147,7 @@ namespace SocioboardDataServices.Reports
         public static List<Domain.Socioboard.Models.Mongo.InstagramPostLikes> GetInstagramPostLikes(string profileId, int daysCount)
         {
             MongoRepository InstagramPostLikesRepo = new MongoRepository("InstagramPostLikes");
-            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-90).Year, DateTime.UtcNow.AddDays(-90).Month, DateTime.UtcNow.AddDays(-90).Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
             var ret = InstagramPostLikesRepo.Find<Domain.Socioboard.Models.Mongo.InstagramPostLikes>(t => t.Profile_Id == profileId && t.Created_Date <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.Created_Date >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
@@ -151,7 +161,7 @@ namespace SocioboardDataServices.Reports
         public static List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> GetInstagramFollwerFollowing(string profileId, int daysCount)
         {
             MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-90).Year, DateTime.UtcNow.AddDays(-90).Month, DateTime.UtcNow.AddDays(-90).Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
             var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId == profileId && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart) && (t.type==Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower || t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing));
             var task = Task.Run(async () => {

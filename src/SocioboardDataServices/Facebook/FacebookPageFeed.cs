@@ -20,6 +20,8 @@ namespace SocioboardDataServices.Facebook
         public static int updateFacebookPageFeeds(Domain.Socioboard.Models.Facebookaccounts fbAcc)
         {
             apiHitsCount = 0;
+            Model.DatabaseRepository dbr = new DatabaseRepository();
+           
             if (fbAcc.LastUpdate.AddHours(1) <= DateTime.UtcNow)
             {
                 if (fbAcc.IsAccessTokenActive)
@@ -36,7 +38,7 @@ namespace SocioboardDataServices.Facebook
                         {
                             fbAcc.Friends = fbAcc.Friends;
                         }
-                        Model.DatabaseRepository dbr = new DatabaseRepository();
+                        
                         try
                         {
 
@@ -45,9 +47,9 @@ namespace SocioboardDataServices.Facebook
                         catch { }
                         while (apiHitsCount < MaxapiHitsCount)
                         {
-                            SaveFacebookFeeds(fbAcc.AccessToken, fbAcc.FbUserId);
+                            SaveFacebookFeeds(fbAcc.AccessToken, fbAcc.FbUserId,fbAcc.FbUserName);
                             SavePageConversations(fbAcc.AccessToken, fbAcc.FbUserId);
-                            SaveFacebookPageFeed(fbAcc.AccessToken, fbAcc.FbUserId);
+                            SaveFacebookPageFeed(fbAcc.AccessToken, fbAcc.FbUserId,fbAcc.FbUserName);
                             // SavePageNotification(fbAcc.AccessToken, fbAcc.FbUserId);
                         }
                     }
@@ -61,7 +63,7 @@ namespace SocioboardDataServices.Facebook
             return 0;
         }
 
-        public static void SaveFacebookFeeds(string AccessToken, string ProfileId)
+        public static void SaveFacebookFeeds(string AccessToken, string ProfileId,string UserName)
         {
             dynamic feeds = FbUser.getFeeds(AccessToken);
 
@@ -74,13 +76,43 @@ namespace SocioboardDataServices.Facebook
                     objFacebookFeed.Type = "fb_feed";
                     objFacebookFeed.ProfileId = ProfileId;
                     objFacebookFeed.Id = MongoDB.Bson.ObjectId.GenerateNewId();
-                    objFacebookFeed.FromProfileUrl = "http://graph.facebook.com/" + result["from"]["id"] + "/picture?type=small";
-                    objFacebookFeed.FromName = result["from"]["name"].ToString();
-                    objFacebookFeed.FromId = result["from"]["id"].ToString();
+                    try
+                    {
+                        objFacebookFeed.FromProfileUrl = "http://graph.facebook.com/" + result["from"]["id"] + "/picture?type=small";
+                    }
+                    catch (Exception)
+                    {
+                        objFacebookFeed.FromProfileUrl= "http://graph.facebook.com/" +ProfileId + "/picture?type=small";
+                    }
+                    try
+                    {
+                        objFacebookFeed.FromName = result["from"]["name"].ToString();
+                    }
+                    catch (Exception)
+                    {
+
+                        objFacebookFeed.FromName = UserName;
+                    }
+                    try
+                    {
+                        objFacebookFeed.FromId = result["from"]["id"].ToString();
+                    }
+                    catch (Exception)
+                    {
+
+                        objFacebookFeed.FromId = ProfileId;
+                    }
                     objFacebookFeed.FeedId = result["id"].ToString();
                     objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
-                    objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
-                    objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
+                    try
+                    {
+                        objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
+                        objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
 
                     try
                     {
@@ -152,8 +184,10 @@ namespace SocioboardDataServices.Facebook
                     {
                         apiHitsCount = MaxapiHitsCount;
                     }
-
-                    AddFbPostComments(objFacebookFeed.FeedId, AccessToken);
+                    if (apiHitsCount < MaxapiHitsCount) {
+                         AddFbPostComments(objFacebookFeed.FeedId, AccessToken);
+                    }
+                       
                 }
 
             }
@@ -310,7 +344,7 @@ namespace SocioboardDataServices.Facebook
             }
         }
 
-        public static void SaveFacebookPageFeed(string accesstoken, string facebookid)
+        public static void SaveFacebookPageFeed(string accesstoken, string facebookid,string PageName)
         {
             try
             {
@@ -331,7 +365,9 @@ namespace SocioboardDataServices.Facebook
                             {
                                 _FacebookPagePost.PageName = _feed["from"]["name"].ToString();
                             }
-                            catch { }
+                            catch {
+                                _FacebookPagePost.PageName = PageName;
+                            }
                             try
                             {
                                 _FacebookPagePost.PostId = _feed["id"].ToString();
@@ -524,106 +560,106 @@ namespace SocioboardDataServices.Facebook
             }
         }
 
-        //public static void SavePageNotification(string AccessToken, string ProfileIds)
-        //{
-        //    try
-        //    {
-        //        dynamic data = FbUser.notifications(AccessToken);
-        //        Domain.Socioboard.Models.Mongo.MongoTwitterMessage _InboxMessages;
-        //        if (data != null)
-        //        {
-        //            apiHitsCount++;
-        //            foreach (var item in data["data"])
-        //            {
-        //                _InboxMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
+        public static void SavePageNotification(string AccessToken, string ProfileIds)
+        {
+            try
+            {
+                dynamic data = FbUser.notifications(AccessToken);
+                Domain.Socioboard.Models.Mongo.MongoTwitterMessage _InboxMessages;
+                if (data != null)
+                {
+                    apiHitsCount++;
+                    foreach (var item in data["data"])
+                    {
+                        _InboxMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
 
-        //                _InboxMessages.profileId = ProfileIds;
-        //                _InboxMessages.type = Domain.Socioboard.Enum.TwitterMessageType.FacebookPageNotification;
-        //                _InboxMessages.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-        //                try
-        //                {
-        //                    _InboxMessages.twitterMsg = item["title"].ToString();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                }
-        //                try
-        //                {
-        //                    _InboxMessages.messageId = item["id"].ToString();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                }
-        //                try
-        //                {
-        //                    _InboxMessages.fromId = item["from"]["id"].ToString();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                }
-        //                try
-        //                {
-        //                    _InboxMessages.fromName = item["from"]["name"].ToString();
-        //                    _InboxMessages.fromScreenName = item["from"]["name"].ToString();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                }
-        //                try
-        //                {
-        //                    _InboxMessages.fromProfileUrl = "http://graph.facebook.com/" + _InboxMessages.fromId + "/picture?type=small";
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                }
-        //                try
-        //                {
-        //                    _InboxMessages.RecipientId = item["to"]["id"].ToString();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                }
-        //                try
-        //                {
-        //                    _InboxMessages.RecipientName = item["to"]["name"].ToString();
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                }
-        //                //try
-        //                //{
-        //                //    _InboxMessages.r = "http://graph.facebook.com/" + _InboxMessages.RecipientId + "/picture?type=small";
-        //                //}
-        //                //catch (Exception ex)
-        //                //{
-        //                //    _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //                //}
-        //                try
-        //                {
-        //                    _InboxMessages.messageDate = Convert.ToDateTime(item["created_time"].ToString());
-        //                }
-        //                catch (Exception ex)
-        //                {
-        //                }
-        //                MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-        //                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId == _InboxMessages.profileId && t.messageId == _InboxMessages.messageId);
-        //                var task = Task.Run(async () =>
-        //                {
-        //                    return await ret;
-        //                });
-        //                int count = task.Result.Count;
-        //                if (count < 1)
-        //                {
-        //                    mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(_InboxMessages);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        apiHitsCount = MaxapiHitsCount;
-        //    }
-        //}
+                        _InboxMessages.profileId = ProfileIds;
+                        _InboxMessages.type = Domain.Socioboard.Enum.TwitterMessageType.FacebookPageNotification;
+                        _InboxMessages.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                        try
+                        {
+                            _InboxMessages.twitterMsg = item["title"].ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            _InboxMessages.messageId = item["id"].ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            _InboxMessages.fromId = item["from"]["id"].ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            _InboxMessages.fromName = item["from"]["name"].ToString();
+                            _InboxMessages.fromScreenName = item["from"]["name"].ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            _InboxMessages.fromProfileUrl = "http://graph.facebook.com/" + _InboxMessages.fromId + "/picture?type=small";
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            _InboxMessages.RecipientId = item["to"]["id"].ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            _InboxMessages.RecipientName = item["to"]["name"].ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        //try
+                        //{
+                        //    _InboxMessages.r = "http://graph.facebook.com/" + _InboxMessages.RecipientId + "/picture?type=small";
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                        //}
+                        try
+                        {
+                            _InboxMessages.messageDate = Convert.ToDateTime(item["created_time"].ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
+                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId == _InboxMessages.profileId && t.messageId == _InboxMessages.messageId);
+                        var task = Task.Run(async () =>
+                        {
+                            return await ret;
+                        });
+                        int count = task.Result.Count;
+                        if (count < 1)
+                        {
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(_InboxMessages);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                apiHitsCount = MaxapiHitsCount;
+            }
+        }
 
         public static string AddFbPostComments(string postid, string AccessToken)
         {

@@ -9,6 +9,7 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
 
 
         $scope.getfacebookgroup = function () {
+            $scope.lstfacebookgroup = '123';
            var profileId = $('#groupshareathonfacebookaccount').val();
             //codes to get facebook group
             $http.get(apiDomain + '/api/Facebook/GetFacebookGroup?profileId=' + profileId)

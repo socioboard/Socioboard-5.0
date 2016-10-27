@@ -66,6 +66,7 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="https://graph.facebook.com/{{fbProfile.fbUserId}}/picture?type=small" alt="{{fbProfile.fbUserName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="/contents/socioboard/images/fb_icon.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
@@ -93,7 +94,8 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="{{getHttpsURL(twtProfile.profileImageUrl)}}" alt="{{twtProfile.twitterScreenName}}" class="circle responsive-img activator card-profile-image">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                        <img src="/contents/socioboard/images/twticon.png" class="card_profile_socio_icon">
+                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{twtProfile.twitterScreenName}}</span>
@@ -121,19 +123,20 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="{{gplusProfile.gpProfileImage}}" alt="{{gplusProfile.gpUserName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="/contents/socioboard/images/gplus-icon.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.inYourCircles}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> {{gplusProfile.inYourCircles}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.haveYouInCircles}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> {{gplusProfile.emailId}}</p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <!--<p>{{gplusProfile.description}}</p>-->
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="In Your Circle"></i> {{gplusProfile.inYourCircles}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.haveYouInCircles}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i>{{gplusProfile.description}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.haveYouInCircles}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i>{{gplusProfile.emailId}}</p>
                                         <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>-->
                                         <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Location"></i> {{gplusProfile.location}}</p>
                                     </div>
@@ -145,10 +148,11 @@
                             <div class="col s12 m6 l4" ng-repeat="gAProfile in lstAProfiles">
                                 <div id="profile-card" class="card">
                                     <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{gAProfile.profilePicUrl}}" alt="{{gAProfile.gaProfileName}}">
+                                        <img class="activator" src="/contents/socioboard/images/google-analytics.jpg" alt="{{gAProfile.gaProfileName}}">
                                     </div>
                                     <div class="card-content">
-                                        <img src="{{gAProfile.profilePicUrl}}" alt="{{gAProfile.gaProfileName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="/contents/socioboard/images/G-Ana-icon.png" alt="{{gAProfile.gaProfileName}}" class="circle responsive-img activator card-profile-image">
+                                         <img src="/contents/socioboard/images/g_ana_icon.png" class="card_profile_socio_icon" style="height: 9%;">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
@@ -176,13 +180,14 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="{{insProfile.profileUrl}}" alt="{{insProfile.insUserName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="/contents/socioboard/images/instagram.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{insProfile.insUserName}}</span>
                                         <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> {{insProfile.followers}}</p>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i> {{insProfile.followedBy}}</p>
-                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>
+                                        <!--<p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>-->
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate" >{{insProfile.insUserName}}<i class="mdi-navigation-close right"></i></span>
@@ -204,10 +209,11 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="{{linProfile.logoUrl}}" alt="{{linProfile.linkedinPageName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="/contents/socioboard/images/linkedin.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="mdi-editor-mode-edit"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.logoUrl}}</span>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinPageName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Followers"></i> {{linProfile.numFollowers}}</p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Location"></i> {{insProfile.locations}}</p>
                                     </div>
@@ -494,13 +500,14 @@
                                 <div class="card-panel social_profile">
                                     <div class="card-image">
                                         <div class="delet_icon" role="button" tabindex="0" ng-click="deleteProfile(profile.profileId)"></div>
-                                        <img src="{{getHttpsURL(profile.profilePic)}}" title="{{profile.profileName}}" class="responsive-img">
-                                        <a target="_blank" href="https://www.facebook.com/{{profile.profileId}}"> <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon"></a>
+                                        <img src="{{getHttpsURL(profile.profilePic)}}" title="{{profile.profileName}}" ng-if="profile.profileType != 10" class="responsive-img">
+                                        <img src="/contents/socioboard/images/G-Ana-icon.png" title="{{profile.profileName}}" ng-if="profile.profileType == 10" class="responsive-img">                                      
+                                         <a target="_blank" href="https://www.facebook.com/{{profile.profileId}}"> <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon"></a>
                                         <a target="_blank" href="https://www.facebook.com/{{profile.profileId}}"><img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==1" class="profile_socio_icon"></a>
                                         <a target="_blank" href="https://www.facebook.com/{{profile.profileId}}"> <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==11" class="profile_socio_icon"></a>
                                         <a target="_blank" href="https://plus.google.com/{{profile.profileId}}/posts"><img src="/contents/socioboard/images/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon"></a>
                                         <a target="_blank" href="https://twitter.com/{{profile.profileName}}"> <img src="/contents/socioboard/images/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon"></a>
-                                        <a target="_blank" title="{{profile.profileName}}" href="https://analytics.google.com/analytics/web/"><img src="/contents/socioboard/images/analytics_icon.png" style="width: 24px; height: 24px; margin-top: 26%;" ng-if="profile.profileType==10" class="profile_socio_icon"></a>
+                                        <a target="_blank" title="{{profile.profileName}}" href="https://analytics.google.com/analytics/web/"><img src="/contents/socioboard/images/g_ana_icon.png" style="width: 24px; height: 24px; margin-top: -12%;" ng-if="profile.profileType==10" class="profile_socio_icon"></a>
                                         <a target="_blank" href="http://www.linkedin.com/profile/view?id={{profile.profileId}}"><img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon"></a>
                                         <a target="_blank" href="https://www.linkedin.com/company/{{profile.profileId}}"><img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -10%;" ng-if="profile.profileType==4" class="profile_socio_icon"></a>
                                         <a target="_blank" href="http://instagram.com/{{profile.profileName}}"><img src="/contents/socioboard/images/instagram.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==8" class="profile_socio_icon"></a>
@@ -509,7 +516,7 @@
                             </div>
                             <div class="col s12 m6 l6">
                                 <div class="card-panel">
-                                    <div class="card-image">
+                                    <div class="card-image center">
                                         <a class="waves-effect waves-light modal-trigger" href="#addprofile">
                                             <i class="icon-user-follow fa-3x"></i>
                                         </a>
@@ -672,10 +679,10 @@
                 </div>
                 <div id="facebook" class="col s12">
                     <div class="center-align">
-                        <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand’s Facebook page.</p>
-                        <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
-                        <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
-                        <a  class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i> Get Facebook Fanpage Analytics</a>
+                        <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
+                        <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
+                        <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
+                        <a  class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i> Get Facebook Fanpage Analytics</a>
                         <div class="form-group input-group margin-top-10">
                             <input type="text" placeholder="Ex: https://www.facebook.com/socioboard" id="_txtinputurl" class="form-control">
                             <span class="input-group-btn">
@@ -695,8 +702,8 @@
                 <div id="linkedin" class="col s12">
                     <div class="center-align">
                         <p>Grant access to your profile to share updates and view your feed.</p>
-                        <a href="../LinkedinManager/AuthenticateLinkedin" class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
-                        <a href="../LinkedinManager/AuthenticateLinkedin?Op=page" class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                        <a href="../LinkedinManager/AuthenticateLinkedin" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                        <a href="../LinkedinManager/AuthenticateLinkedin?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
                     </div>
                 </div>
                 <div id="instagram" class="col s12">
@@ -803,19 +810,19 @@
                 <ul class="collection">
                     <li class="collection-item avatar" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==0">
                         <div class="left">
-                            <img class="circle" alt="Socioboard" src="https://www.socioboard.com/Themes/Socioboard/Contents/img/analytics_img.png">
+                            <img class="circle" alt="Socioboard" src="../../images/google-analytics.jpg">
                             <span class="title">{{ganalytics.ProfileName}}</span>
 
                         </div>
                         <p class="right">
-                            <input type="checkbox" value="{{ganalytics.AccessToken}}" id="GA_{{ganalytics.ProfileId}}" ng-click="toggleGAeProfileSelection(ganalytics.AccessToken,ganalytics.RefreshToken,ganalytics.AccountId,ganalytics.AccountName,ganalytics.EmailId,ganalytics.ProfileId,ganalytics.ProfileName,ganalytics.WebPropertyId,ganalytics.WebsiteUrl)">
+                            <input type="checkbox" value="{{ganalytics.AccessToken}}" id="GA_{{ganalytics.ProfileId}}" ng-click="toggleGAeProfileSelection(ganalytics.AccessToken,ganalytics.RefreshToken,ganalytics.AccountId,ganalytics.AccountName,ganalytics.EmailId,ganalytics.ProfileId,ganalytics.ProfileName,ganalytics.WebPropertyId,ganalytics.WebsiteUrl,ganalytics.internalWebPropertyId)">
                             <label for="GA_{{ganalytics.ProfileId}}"></label>
                         </p>
                     </li>
 
                     <li class="collection-item avatar disabled" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==1">
                         <div class="left">
-                            <img class="circle" alt="Socioboard" src="https://www.socioboard.com/Themes/Socioboard/Contents/img/analytics_img.png">
+                            <img class="circle" alt="Socioboard" src="/contents/socioboard/images/G-Ana-icon.png">
                             <span class="title">{{ganalytics.ProfileName}}</span>
 
                         </div>

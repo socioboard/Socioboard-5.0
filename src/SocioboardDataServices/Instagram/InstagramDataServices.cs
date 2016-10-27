@@ -17,11 +17,20 @@ namespace SocioboardDataServices.Instagram
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Instagramaccounts> lstInstagramaccount = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.IsActive).ToList();
+                
                     foreach (var item in lstInstagramaccount)
                     {
-                        Console.WriteLine(item.InsUserName + "Updating Started");
-                        InstagramFeeds.updateInstagramFeeds(item);
-                        Console.WriteLine(item.InsUserName + "Updated");
+                        try
+                        {
+                            Console.WriteLine(item.InsUserName + "Updating Started");
+                            InstagramFeeds.updateInstagramFeeds(item);
+                            Console.WriteLine(item.InsUserName + "Updated");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("issue in Updation" + ex.StackTrace);
+                            Thread.Sleep(600000);
+                        }
                     }
                     Thread.Sleep(60000);
                 }

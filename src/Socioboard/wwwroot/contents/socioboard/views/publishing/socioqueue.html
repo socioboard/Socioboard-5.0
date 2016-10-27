@@ -16,9 +16,9 @@
                           <thead>
                               <tr>
                                   <th>#</th>
-                                  <th>Sent From</th>
-                                  <th>Message</th>
-                                  <th>Network</th>
+                                  <th class="center">Sent From</th>
+                                  <th class="center">Message</th>
+                                  <th class="center">Network</th>
                                   <th>Status</th>
                                   <th>Delete</th>
                                   <th>Edit</th>
@@ -35,7 +35,7 @@
                               </tr>
                           </tfoot>-->
                           <tbody>
-                              <tr ng-repeat="socioqueue in lstsocioqueuemessage">
+                              <tr ng-repeat="socioqueue in lstsocioqueuemessage | orderBy:'scheduleTime':true ">
                                   <td>{{$index +1}}</td>
                                   <td class="center">
                                     <div class="col s12">
@@ -52,7 +52,7 @@
                                       {{socioqueue.shareMessage}}
                                     </span>
                                     <br>                                    
-                                      <img ng-if="socioqueue.url!='' && socioqueue.url != null" src="{{getProperURL(socioqueue.url)}}" class="responsive-img">
+                                      <img ng-if="socioqueue.url!='' && socioqueue.url != null" src="{{getProperURL(socioqueue.url)}}" class="responsive-img" style="width:200px">
                                   </td>
                                   <td class="center">
                                     <div class="col s12">
@@ -90,7 +90,8 @@
                         <div class="row center">
                             <div class="input-field col s8">
                                 <div >
-                                    <input type="text" id="editScheduleMsg" ng-model="editscdmessage" class="materialize-textarea" length="500"  />
+                                    <textarea id="editScheduleMsg" class="materialize-textarea" length="500" ng-model="editscdmessage" value=""></textarea>
+                                    <!--<input type="text" id="editScheduleMsg" ng-model="editscdmessage" class="materialize-textarea" length="500"  />-->
                                     <!--<label for="editScheduleMsg">Edit Message Here</label>-->
                                 </div>
 

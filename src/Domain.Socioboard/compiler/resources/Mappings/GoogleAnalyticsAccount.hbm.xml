@@ -62,5 +62,8 @@
     <property name="Is90DayDataUpdated">
       <column name="Is90DayDataUpdated"/>
     </property>
+    <property name="internalWebPropertyId">
+      <column name="internalWebPropertyId"/>
+    </property>
   </class>
 </hibernate-mapping>

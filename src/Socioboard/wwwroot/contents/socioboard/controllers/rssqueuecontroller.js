@@ -57,11 +57,12 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
         $scope.editrssurl = function (oldurl, rssId) {
             $rootScope.oldurl = oldurl;
             $rootScope.rssId = rssId;
-            $scope.modalinstance = $modal.open({
-                templateUrl: 'editsrssfeedModalContent.html',
-                controller: 'RssQueueController',
-                scope: $scope
-            });
+            $('#EditModal').openModal();
+            //$scope.modalinstance = $modal.open({
+            //    templateUrl: 'editsrssfeedModalContent.html',
+            //    controller: 'RssQueueController',
+            //    scope: $scope
+            //});
         }
         $scope.closeModal = function () {
             $scope.modalinstance.dismiss('cancel');
@@ -72,6 +73,10 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
             if(rssQueue==$rootScope.oldurl)
             {
                 swal('Please modify Url for edit');
+            }
+            else if(rssQueue==''){
+                swal('please enter new url to update');
+                return;
             }
             else {
                 //codes to edit  rss url

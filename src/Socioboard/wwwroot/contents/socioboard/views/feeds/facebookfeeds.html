@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                     <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook recents 5 feeds</h5>
+                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook live feeds</h5>
                         <ul class="collection" id="facebookfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
                                 <img src="https://graph.facebook.com/{{fbfeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
@@ -28,10 +28,10 @@
                                     <div class="col m12">
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li>
-                                                <div class="collapsible-header" ng-click="renderComments(fbfeed.feedId)"><i class="icon-speech"></i>Comments</div>
+                                                <div class="collapsible-header" ng-click="renderComments(fbfeed.feedId,$index)"><i class="icon-speech"></i>Comments</div>
                                                 <div class="collapsible-body">
                                                     <ul class="collection facebookfeeds">
-                                                        <li class="collection-item avatar" ng-repeat="fbcomments in lstFbComments|limitTo:5">
+                                                        <li class="collection-item avatar" ng-repeat="fbcomments in lstFbComments[$index]|limitTo:5">
                                                             <img src="http://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
                                                             <span class="email-title">{{fbcomments.fromName}}</span>
                                                             <div class="row dashboard_feeds z-depth-1 hoverable">

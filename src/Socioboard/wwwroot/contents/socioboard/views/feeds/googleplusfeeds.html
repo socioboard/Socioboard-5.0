@@ -77,75 +77,8 @@
                         </div>
                 <!--end container-->
 
-                <!-- Compose Email Trigger -->
-                <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-                  <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
-                    <i class="large mdi-editor-mode-edit"></i>
-                  </a>
-                </div>
-
-                <!-- Compose Email Structure -->
-                <div id="ComposePostModal" class="modal">
-                    <div class="modal-content">
-                        <nav class="red">
-                            <div class="nav-wrapper">
-                                <div class="left col s12 m5 l5">
-                                    <ul>
-                                        <li>
-                                            <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                                        </li>
-                                        <li>
-                                            <a href="#!" class="email-type">Compose</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col s12 m7 l7 hide-on-med-and-down">
-                                    <ul class="right">
-                                        <li>
-                                            <div ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
-                                        </li>
-                                        <li>
-                                            <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-
-                            </div>
-                        </nav>
-                    </div>
-                    <div class="model-email-content">
-                        <div class="row">
-                            <form class="col s12">
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        <select multiple id="composeProfiles">
-                                            <option value="" disabled selected>Choose your option</option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:0}" value="fb_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:1}" value="fb_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{ProfileType:2}" value="tw_{{profile.ProfileId}}" my-repeat-dropdown-directive>  {{profile.ProfileName}} </option>
-
-                                        </select>
-                                    </div>
-                                </div>
-                                <!--Default version-->
-                                <div class="row section">
-                                    <div class="col s12 m4 l3">
-                                        <p>Select your file</p>
-                                    </div>
-                                    <div class="col s12 m8 l9">
-                                        <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="input-field col s12">
-                                        <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
-                                        <label for="compose">Message</label>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+               
+                
             </section>
             <!-- END CONTENT -->   
     </div>

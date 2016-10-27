@@ -17,9 +17,9 @@
                         <tr>
                             <th>#</th>
                             <th>Url</th>
-                            <th>Profile</th>
-                            <th>Delete</th>
-                            <th>Edit</th>
+                            <th class="center">Profile</th>
+                            <th class="center">Delete</th>
+                            <th class="center" >Edit</th>
                         </tr>
                     </thead>
                     <!--<tfoot>
@@ -35,24 +35,26 @@
                             <td>{{$index +1}}</td>
                             <td>
                                 <span>
-                                    {{rssqueue.RssFeedUrl}}
+                                    {{rssqueue.rssFeedUrl}}
                                 </span>
                             </td>
                             <td class="center">
-                                <div class="col s12" ng-if="rssqueue.ProfileType==0 ||rssqueue.ProfileType==1 ">
-                                    <img src="https://graph.facebook.com/{{rssqueue.ProfileId}}/picture?type=small" class="responsive-img profilePic">
+                                <div class="col s12" ng-if="rssqueue.profileType==0 ||rssqueue.profileType==1 ">
+                                    <img src="https://graph.facebook.com/{{rssqueue.profileId}}/picture?type=small" class="responsive-img profilePic" style="float: left;">
+                                    <img src="/contents/socioboard/images/fb_icon.png" style="float: left; z-index: 999; margin-top: 70px; margin-left: -11px;">
                                 </div>
-                                <div class="col s12" ng-if="rssqueue.ProfileType==2">
-                                    <img src="{{rssqueue.ProfileImageUrl}}" class="responsive-img profilePic">
+                                <div class="col s12" ng-if="rssqueue.profileType==2">
+                                    <img src="{{rssqueue.profileImageUrl}}" class="responsive-img profilePic" style="float: left;">
+                                    <img src="/contents/socioboard/images/twticon.png" style="float: left; z-index: 999; margin-top: 70px; margin-left: -11px;">
                                 </div>
                                 <div class="col s12">
-                                    <span>{{rssqueue.ProfileName}}</span>
+                                    <span>{{rssqueue.profileName}}</span>
                                 </div>
                             </td>
-                            <td>
+                            <td class="center">
                                 <a class="waves-effect waves-light btn red" ng-click="deleteRss(rssqueue.strId)"><i class="fa fa-times"></i></a>
                             </td>
-                            <td>
+                            <td class="center">
                                 <a class="waves-effect waves-light btn modal-trigger" ng-click="editrssurl(rssqueue.RssFeedUrl,rssqueue.strId)"><i class="fa fa-pencil"></i></a>
                             </td>
                         </tr>
@@ -63,8 +65,8 @@
     </section>
     <!-- END CONTENT -->
     <!-- Modal Structure -->
-    <script id="editsrssfeedModalContent.html" type="text/ng-template">
-        <div id="EditModal" class="" modal="showModal" style="z-index:1005;display:block;opacity:1;transform:scaleX(1);">
+    <!--<script id="editsrssfeedModalContent.html" type="text/ng-template">-->
+        <div id="EditModal" class="modal">
             <div class="modal-content">
                 <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
                 <h5>Edit</h5>
@@ -82,7 +84,7 @@
             </div>
         </div>
 
-    </script>
+    <!--</script>-->
 </div>
 
 

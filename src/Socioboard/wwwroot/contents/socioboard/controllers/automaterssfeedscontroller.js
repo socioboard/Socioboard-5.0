@@ -16,12 +16,14 @@ SocioboardApp.controller('AutoMateRssFeedsController', function ($rootScope, $sc
                     //codes to add  rss Feeds url
                     $http.post(apiDomain + '/api/RssFeed/AddRssUrl?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId + '&rssUrl=' + rssfeedurl)
                                   .then(function (response) {
-                                      $('#schedulerssprofiles').val('');
+                                     // $('#schedulerssprofiles').val('');
                                       $('#rssfeedurl').val('');
-                                      console.log(response.data);
                                       if (response.data == "This Url Does't  Conatin Rss Feed")
                                       {
                                           swal("This Url Does't  Conatin Rss Feed");
+                                      } else {
+                                          $scope.dispbtn = true;
+                                          swal(response.data);
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;

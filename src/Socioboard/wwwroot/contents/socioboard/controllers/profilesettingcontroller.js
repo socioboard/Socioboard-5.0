@@ -26,6 +26,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 $rootScope.user.LastName = response.data.lastName;
                 $rootScope.user.UserName = response.data.userName;
                 $rootScope.user.PhoneNumber = response.data.phoneNumber;
+                $rootScope.user.dateOfBirth = response.data.dateOfBirth;
                 if (response.data.aboutMe != 'null') {
                     console.log(response.data.aboutMe)
 

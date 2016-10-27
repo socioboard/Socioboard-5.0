@@ -21,6 +21,8 @@ namespace SocioboardDataServices.Twitter
         public static int updateTwitterFeeds(Domain.Socioboard.Models.TwitterAccount twtaccount, oAuthTwitter oAuth)
         {
             apiHitsCount = 0;
+            Model.DatabaseRepository dbr = new DatabaseRepository();
+            Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(twtaccount.twitterUserId));
             if (twtaccount.lastUpdate.AddMinutes(15) <= DateTime.UtcNow)
             {
                 if (twtaccount.isActive)
@@ -29,87 +31,96 @@ namespace SocioboardDataServices.Twitter
                     Users userinfo = new Users();
                     JArray profile = userinfo.Get_Users_LookUp_ByScreenName(oAuth, oAuth.TwitterScreenName);
                     TwitterUser twtuser;
-                    if (profile!=null)
+                    if (profile != null)
                     {
                         var item = profile[0];
-                        Domain.Socioboard.Models.TwitterAccount twitterAccount = new Domain.Socioboard.Models.TwitterAccount();
+
 
                         try
                         {
-                            twitterAccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
+                            twtaccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
                         }
                         catch (Exception ex)
                         {
-                            twitterAccount.followingCount = twtaccount.followingCount;
+                            twtaccount.followingCount = twtaccount.followingCount;
                         }
                         try
                         {
-                            twitterAccount.followersCount = Convert.ToInt64(item["followers_count"].ToString());
+                            twtaccount.followersCount = Convert.ToInt64(item["followers_count"].ToString());
                         }
                         catch (Exception ex)
                         {
-                            twitterAccount.followersCount = twtaccount.followersCount;
+                            twtaccount.followersCount = twtaccount.followersCount;
                         }
 
                         try
                         {
-                            twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
-                        }
-                        catch (Exception ex)
-                        {
-
-                        }
-                        try
-                        {
-                            twitterAccount.location = item["location"].ToString().TrimStart('"').TrimEnd('"');
-                        }
-                        catch (Exception ex)
-                        {
-                        }
-                        try
-                        {
-                            twitterAccount.description = item["description"].ToString().TrimStart('"').TrimEnd('"');
-                        }
-                        catch (Exception ex)
-                        {
-                        }
-                        try
-                        {
-                            twitterAccount.profileUrl = string.Empty;
-                        }
-                        catch (Exception ex)
-                        {
-                        }
-                        try
-                        {
-                            twitterAccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
-                        }
-                        catch (Exception ex)
-                        {
-                        }
-                        try
-                        {
-                            twitterAccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
-
+                            twtaccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+                            _grpProfile.profilePic= item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
 
                         }
-                        Model.DatabaseRepository dbr = new DatabaseRepository();
-                        dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twitterAccount);
+                        try
+                        {
+                            twtaccount.location = item["location"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            twtaccount.description = item["description"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            twtaccount.profileUrl = string.Empty;
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            twtaccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        try
+                        {
+                            twtaccount.profileBackgroundImageUrl = item["profile_banner_url"].ToString().TrimStart('"').TrimEnd('"');
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                       
+                        dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount);
+                        dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
                         while (apiHitsCount < MaxapiHitsCount)
                         {
-                            SaveTwitterMessages(twtaccount.twitterUserId, oAuth);
-                            SaveUserRetweets(twtaccount.twitterUserId, oAuth);
-                            SaveUserTweets(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
-                            SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
-                            SaveUserFollowers(oAuth, twtaccount.twitterScreenName, twtaccount.twitterUserId);
-                            SaveTwitterDirectMessageSent(oAuth,twtaccount.twitterUserId);
-                            SaveTwittwrDirectMessageRecieved(oAuth,twtaccount.twitterUserId);
+                            try
+                            {
+                                SaveTwitterMessages(twtaccount.twitterUserId, oAuth);
+                                SaveUserRetweets(twtaccount.twitterUserId, oAuth);
+                                SaveUserTweets(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
+                                SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
+                                SaveUserFollowers(oAuth, twtaccount.twitterScreenName, twtaccount.twitterUserId);
+                                SaveTwitterDirectMessageSent(oAuth, twtaccount.twitterUserId);
+                                SaveTwittwrDirectMessageRecieved(oAuth, twtaccount.twitterUserId);
+                            }
+                            catch (Exception exs)
+                            {
+
+                            }
                         }
                         twtaccount.lastUpdate = DateTime.UtcNow;
-                        dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount); 
+                        dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount);
                     }
                 }
             }
@@ -135,7 +146,7 @@ namespace SocioboardDataServices.Twitter
                     apiHitsCount = MaxapiHitsCount;
                 }
                 Domain.Socioboard.Models.Mongo.MongoTwitterMessage objTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
-                if (data!=null)
+                if (data != null)
                 {
                     apiHitsCount++;
                     foreach (var item in data)
@@ -235,7 +246,7 @@ namespace SocioboardDataServices.Twitter
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
                         mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
 
-                    } 
+                    }
                 }
                 else
                 {
@@ -264,10 +275,10 @@ namespace SocioboardDataServices.Twitter
                 {
                     Console.WriteLine(ex.StackTrace);
                     apiHitsCount = MaxapiHitsCount;
-                    
+
                 }
                 Domain.Socioboard.Models.Mongo.MongoTwitterMessage objTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
-                if (Retweet!=null)
+                if (Retweet != null)
                 {
                     apiHitsCount++;
                     foreach (var item in Retweet)
@@ -356,7 +367,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
                         mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
-                    } 
+                    }
                 }
                 else
                 {
@@ -396,6 +407,14 @@ namespace SocioboardDataServices.Twitter
                         try
                         {
                             objTwitterMessage.sourceUrl = item["source"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.StackTrace);
+                        }
+                        try
+                        {
+                            objTwitterMessage.mediaUrl = item["extended_entities"]["media"][0]["media_url_https"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -479,7 +498,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
                         mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
-                    } 
+                    }
                 }
                 else
                 {
@@ -501,7 +520,7 @@ namespace SocioboardDataServices.Twitter
             {
                 JArray Home_Timeline = twtuser.GetStatuses_Home_Timeline(oAuth);
                 Domain.Socioboard.Models.Mongo.MongoTwitterFeed objTwitterFeed = new Domain.Socioboard.Models.Mongo.MongoTwitterFeed();
-                if (Home_Timeline!=null)
+                if (Home_Timeline != null)
                 {
                     apiHitsCount++;
                     foreach (var item in Home_Timeline)
@@ -617,7 +636,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed");
                         mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>(objTwitterFeed);
-                    } 
+                    }
                 }
                 else
                 {
@@ -738,7 +757,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
                         mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(objTwitterDirectMessages);
-                    } 
+                    }
                 }
                 else
                 {
@@ -754,7 +773,7 @@ namespace SocioboardDataServices.Twitter
         }
 
 
-        private static void SaveTwittwrDirectMessageRecieved(oAuthTwitter OAuth, string profileId )
+        private static void SaveTwittwrDirectMessageRecieved(oAuthTwitter OAuth, string profileId)
         {
             #region Add Twitter Direct Message
             TwitterUser twtuser = new TwitterUser();
@@ -763,7 +782,7 @@ namespace SocioboardDataServices.Twitter
                 JArray Messages_Sent = twtuser.GetDirect_Messages(OAuth, 20);
 
                 Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages objTwitterDirectMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages();
-                if (Messages_Sent!=null)
+                if (Messages_Sent != null)
                 {
                     foreach (var item in Messages_Sent)
                     {
@@ -859,7 +878,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
                         mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(objTwitterDirectMessages);
-                    } 
+                    }
                 }
                 else
                 {
@@ -896,7 +915,7 @@ namespace SocioboardDataServices.Twitter
                 {
                     curser = curser_next;
                     Domain.Socioboard.Models.Mongo.MongoTwitterMessage _InboxMessages;
-                    if (jdata!=null)
+                    if (jdata != null)
                     {
                         apiHitsCount++;
                         foreach (var item in user_data)
@@ -984,7 +1003,7 @@ namespace SocioboardDataServices.Twitter
                             {
                             }
 
-                        } 
+                        }
                     }
                     else
                     {

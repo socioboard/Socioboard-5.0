@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -23,7 +24,7 @@ namespace SociobordRssDataServices.Rss
         public static void updateRssFeeds(Domain.Socioboard.Models.Mongo.Rss _rss)
         {
             ParseFeedUrl(_rss.rssFeedUrl.rssurl, _rss.ProfileType, _rss.ProfileId, _rss.UserId, _rss.ProfileName, _rss.ProfileImageUrl);
-           
+
         }
 
         public static string ParseFeedUrl(string TextUrl, Domain.Socioboard.Enum.SocialProfileType profiletype, string profileid, long userId, string profileName, string profileImageUrl)
@@ -40,256 +41,246 @@ namespace SociobordRssDataServices.Rss
                 {
                     Model.DatabaseRepository dbr = new DatabaseRepository();
                     Domain.Socioboard.Models.Facebookaccounts _Facebookaccounts = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == profileid).First();
-                    //if (_Facebookaccounts.SchedulerUpdate.AddHours(1) <= DateTime.UtcNow)
-                    //{
-                        if (_Facebookaccounts != null)
+                    
+                    if (_Facebookaccounts != null)
+                    {
+                        if (_Facebookaccounts.IsActive)
                         {
-                            if (_Facebookaccounts.IsActive)
-                            {
 
-                                foreach (XmlElement item in abc)
+                            foreach (XmlElement item in abc)
+                            {
+                                Domain.Socioboard.Models.Mongo.RssFeed objRssFeeds = new Domain.Socioboard.Models.Mongo.RssFeed();
+                                try
                                 {
-                                    Domain.Socioboard.Models.Mongo.RssFeed objRssFeeds = new Domain.Socioboard.Models.Mongo.RssFeed();
+                                    objRssFeeds.Id = ObjectId.GenerateNewId();
+                                    objRssFeeds.strId = ObjectId.GenerateNewId().ToString();
+                                    objRssFeeds.ProfileName = profileName;
+                                    objRssFeeds.ProfileImageUrl = profileImageUrl;
+
                                     try
                                     {
-                                        objRssFeeds.Id = ObjectId.GenerateNewId();
-                                        objRssFeeds.strId = ObjectId.GenerateNewId().ToString();
-                                        objRssFeeds.ProfileName = profileName;
-                                        objRssFeeds.ProfileImageUrl = profileImageUrl;
+                                        objRssFeeds.Message = item.ChildNodes[9].InnerText;
+                                        objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                        objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
 
+                                    }
+                                    catch (Exception ex)
+                                    {
                                         try
                                         {
-                                            objRssFeeds.Message = item.ChildNodes[9].InnerText;
-                                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
-                                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            try
-                                            {
-                                                if (item.ChildNodes[2].InnerText.Contains("www") && item.ChildNodes[2].InnerText.Contains("http"))
-                                                {
-                                                    objRssFeeds.Message = item.ChildNodes[1].InnerText;
-                                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
-                                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
-                                                }
-                                                else
-                                                {
-                                                    objRssFeeds.Message = item.ChildNodes[2].InnerText;
-                                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
-                                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
-                                                }
-                                            }
-                                            catch
+                                            if (item.ChildNodes[2].InnerText.Contains("www") && item.ChildNodes[2].InnerText.Contains("http"))
                                             {
                                                 objRssFeeds.Message = item.ChildNodes[1].InnerText;
                                                 objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
                                                 objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                             }
-                                        }
-
-
-                                        try
-                                        {
-                                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
-                                        }
-
-                                        objRssFeeds.Title = item.ChildNodes[0].InnerText;
-
-                                        if (item.ChildNodes[1].InnerText.Contains("www") || item.ChildNodes[1].InnerText.Contains("http"))
-                                        {
-                                            try
+                                            else
                                             {
-                                                objRssFeeds.Link = item.ChildNodes[1].InnerText;
-
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                                objRssFeeds.Message = item.ChildNodes[2].InnerText;
+                                                objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                                objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                             }
                                         }
-                                        else
+                                        catch
                                         {
-                                            objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                            objRssFeeds.Message = item.ChildNodes[1].InnerText;
+                                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                         }
-                                        objRssFeeds.RssFeedUrl = TextUrl;
-                                        objRssFeeds.ProfileId = profileid;
-                                        objRssFeeds.ProfileType = profiletype;
-                                        objRssFeeds.Status = false;
-                                        var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Link.Equals(objRssFeeds.Link) && t.ProfileId.Equals(profileid) && t.ProfileType.Equals(profiletype));
-                                        var task = Task.Run(async () =>
-                                        {
-                                            return await ret;
-                                        });
-                                        int count = task.Result.Count;
-                                        if (count < 1)
-                                        {
-                                            _RssFeedRepository.Add<Domain.Socioboard.Models.Mongo.RssFeed>(objRssFeeds);
-                                        }
+                                    }
 
+
+                                    try
+                                    {
+                                        objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
                                     }
                                     catch (Exception ex)
                                     {
-
+                                        objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
                                     }
-                                    if (apiHitsCount < MaxapiHitsCount)
-                                    {
-                                        string facebookdata = FacebookComposeMessageRss(objRssFeeds.Message, _Facebookaccounts.AccessToken, _Facebookaccounts.FbUserId, objRssFeeds.Title, objRssFeeds.Link, objRssFeeds.strId);
-                                        if (!string.IsNullOrEmpty(facebookdata))
-                                        {
-                                            apiHitsCount++;
 
+                                    objRssFeeds.Title = item.ChildNodes[0].InnerText;
+
+                                    if (item.ChildNodes[1].InnerText.Contains("www") || item.ChildNodes[1].InnerText.Contains("http"))
+                                    {
+                                        try
+                                        {
+                                            objRssFeeds.Link = item.ChildNodes[1].InnerText;
+
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            objRssFeeds.Link = item.ChildNodes[2].InnerText;
                                         }
                                     }
                                     else
                                     {
-                                        apiHitsCount = 0;
-                                        return "ok";
+                                        objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                    }
+                                    objRssFeeds.RssFeedUrl = TextUrl;
+                                    objRssFeeds.ProfileId = profileid;
+                                    objRssFeeds.ProfileType = profiletype;
+                                    objRssFeeds.Status = false;
+                                    var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Link.Equals(objRssFeeds.Link) && t.ProfileId.Equals(profileid) && t.ProfileType.Equals(profiletype));
+                                    var task = Task.Run(async () =>
+                                    {
+                                        return await ret;
+                                    });
+                                    int count = task.Result.Count;
+                                    if (count < 1)
+                                    {
+                                        _RssFeedRepository.Add<Domain.Socioboard.Models.Mongo.RssFeed>(objRssFeeds);
+                                    }
+
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                                if (apiHitsCount < MaxapiHitsCount)
+                                {
+                                    string facebookdata = FacebookComposeMessageRss(objRssFeeds.Message, _Facebookaccounts.AccessToken, _Facebookaccounts.FbUserId, objRssFeeds.Title, objRssFeeds.Link, objRssFeeds.strId);
+                                    if (!string.IsNullOrEmpty(facebookdata))
+                                    {
+                                        apiHitsCount++;
+
                                     }
                                 }
-                                _Facebookaccounts.SchedulerUpdate = DateTime.UtcNow;
-                                dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(_Facebookaccounts);
-
+                                else
+                                {
+                                    apiHitsCount = 0;
+                                    return "ok";
+                                }
                             }
+                            _Facebookaccounts.SchedulerUpdate = DateTime.UtcNow;
+                            dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(_Facebookaccounts);
+
                         }
-                    //}
-                    //else
-                    //{
-                    //    apiHitsCount = 0;
-                    //}
+                    }
+                   
                 }
                 if (profiletype == Domain.Socioboard.Enum.SocialProfileType.Twitter)
                 {
                     Model.DatabaseRepository dbr = new DatabaseRepository();
                     Domain.Socioboard.Models.TwitterAccount _TwitterAccount = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId == profileid).First();
-                    //if (_TwitterAccount.SchedulerUpdate.AddMinutes(15) <= DateTime.UtcNow)
-                    //{
-                        if (_TwitterAccount != null)
+                  
+                    if (_TwitterAccount != null)
+                    {
+                        if (_TwitterAccount.isActive)
                         {
-                            if (_TwitterAccount.isActive)
-                            {
 
-                                foreach (XmlElement item in abc)
+                            foreach (XmlElement item in abc)
+                            {
+                                Domain.Socioboard.Models.Mongo.RssFeed objRssFeeds = new Domain.Socioboard.Models.Mongo.RssFeed();
+                                try
                                 {
-                                    Domain.Socioboard.Models.Mongo.RssFeed objRssFeeds = new Domain.Socioboard.Models.Mongo.RssFeed();
+                                    objRssFeeds.Id = ObjectId.GenerateNewId();
+                                    objRssFeeds.strId = ObjectId.GenerateNewId().ToString();
+                                    objRssFeeds.ProfileName = profileName;
+                                    objRssFeeds.ProfileImageUrl = profileImageUrl;
+
                                     try
                                     {
-                                        objRssFeeds.Id = ObjectId.GenerateNewId();
-                                        objRssFeeds.strId = ObjectId.GenerateNewId().ToString();
-                                        objRssFeeds.ProfileName = profileName;
-                                        objRssFeeds.ProfileImageUrl = profileImageUrl;
+                                        objRssFeeds.Message = item.ChildNodes[9].InnerText;
+                                        objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                        objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
 
+                                    }
+                                    catch (Exception ex)
+                                    {
                                         try
                                         {
-                                            objRssFeeds.Message = item.ChildNodes[9].InnerText;
-                                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
-                                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
-
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            try
-                                            {
-                                                if (item.ChildNodes[2].InnerText.Contains("www") && item.ChildNodes[2].InnerText.Contains("http"))
-                                                {
-                                                    objRssFeeds.Message = item.ChildNodes[1].InnerText;
-                                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
-                                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
-                                                }
-                                                else
-                                                {
-                                                    objRssFeeds.Message = item.ChildNodes[2].InnerText;
-                                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
-                                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
-                                                }
-                                            }
-                                            catch
+                                            if (item.ChildNodes[2].InnerText.Contains("www") && item.ChildNodes[2].InnerText.Contains("http"))
                                             {
                                                 objRssFeeds.Message = item.ChildNodes[1].InnerText;
                                                 objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
                                                 objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                             }
-                                        }
-
-
-                                        try
-                                        {
-                                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
-                                        }
-
-                                        objRssFeeds.Title = item.ChildNodes[0].InnerText;
-
-                                        if (item.ChildNodes[1].InnerText.Contains("www") || item.ChildNodes[1].InnerText.Contains("http"))
-                                        {
-                                            try
+                                            else
                                             {
-                                                objRssFeeds.Link = item.ChildNodes[1].InnerText;
-
-                                            }
-                                            catch (Exception ex)
-                                            {
-                                                objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                                objRssFeeds.Message = item.ChildNodes[2].InnerText;
+                                                objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                                objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                             }
                                         }
-                                        else
+                                        catch
                                         {
-                                            objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                            objRssFeeds.Message = item.ChildNodes[1].InnerText;
+                                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                         }
-                                        objRssFeeds.RssFeedUrl = TextUrl;
-                                        objRssFeeds.ProfileId = profileid;
-                                        objRssFeeds.ProfileType = profiletype;
-                                        objRssFeeds.Status = false;
-                                        var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Link.Equals(objRssFeeds.Link) && t.ProfileId.Equals(profileid) && t.ProfileType.Equals(profiletype));
-                                        var task = Task.Run(async () =>
-                                        {
-                                            return await ret;
-                                        });
-                                        int count = task.Result.Count;
-                                        if (count < 1)
-                                        {
-                                            _RssFeedRepository.Add<Domain.Socioboard.Models.Mongo.RssFeed>(objRssFeeds);
-                                        }
+                                    }
 
+
+                                    try
+                                    {
+                                        objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
                                     }
                                     catch (Exception ex)
                                     {
-
+                                        objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
                                     }
-                                    if (twtapiHitsCount < twtMaxapiHitsCount)
+
+                                    objRssFeeds.Title = item.ChildNodes[0].InnerText;
+
+                                    if (item.ChildNodes[1].InnerText.Contains("www") || item.ChildNodes[1].InnerText.Contains("http"))
                                     {
-
-                                        string twitterdata = TwitterComposeMessageRss(objRssFeeds.Message, _TwitterAccount.oAuthToken, _TwitterAccount.oAuthSecret, _TwitterAccount.twitterUserId, _TwitterAccount.twitterScreenName, objRssFeeds.strId);
-                                        if (!string.IsNullOrEmpty(twitterdata))
+                                        try
                                         {
-                                            twtapiHitsCount++;
+                                            objRssFeeds.Link = item.ChildNodes[1].InnerText;
 
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            objRssFeeds.Link = item.ChildNodes[2].InnerText;
                                         }
                                     }
                                     else
                                     {
-                                        twtapiHitsCount = 0;
-                                        return "ok";
+                                        objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                    }
+                                    objRssFeeds.RssFeedUrl = TextUrl;
+                                    objRssFeeds.ProfileId = profileid;
+                                    objRssFeeds.ProfileType = profiletype;
+                                    objRssFeeds.Status = false;
+                                    var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Link.Equals(objRssFeeds.Link) && t.ProfileId.Equals(profileid) && t.ProfileType.Equals(profiletype));
+                                    var task = Task.Run(async () =>
+                                    {
+                                        return await ret;
+                                    });
+                                    int count = task.Result.Count;
+                                    if (count < 1)
+                                    {
+                                        _RssFeedRepository.Add<Domain.Socioboard.Models.Mongo.RssFeed>(objRssFeeds);
                                     }
 
                                 }
-                                _TwitterAccount.SchedulerUpdate = DateTime.UtcNow;
-                                dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
+                                catch (Exception ex)
+                                {
+
+                                }
+                                if (twtapiHitsCount < twtMaxapiHitsCount)
+                                {
+
+                                    string twitterdata = TwitterComposeMessageRss(objRssFeeds.Message, _TwitterAccount.oAuthToken, _TwitterAccount.oAuthSecret, _TwitterAccount.twitterUserId, _TwitterAccount.twitterScreenName, objRssFeeds.strId);
+                                    if (!string.IsNullOrEmpty(twitterdata))
+                                    {
+                                        twtapiHitsCount++;
+
+                                    }
+                                }
+                                else
+                                {
+                                    twtapiHitsCount = 0;
+                                    return "ok";
+                                }
+
                             }
+                            _TwitterAccount.SchedulerUpdate = DateTime.UtcNow;
+                            dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
                         }
-                    //}
-                    //else
-                    //{
-                    //    twtapiHitsCount = 0;
-                    //}
+                    }
+                   
                 }
 
 
@@ -314,12 +305,12 @@ namespace SociobordRssDataServices.Rss
                 var args = new Dictionary<string, object>();
                 args["message"] = message;
                 args["link"] = link;
-                ret = fb.Post("v2.1/" + FbUserId + "/feed", args).ToString();
+                ret = fb.Post("v2.7/" + FbUserId + "/feed", args).ToString();
                 var builders = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", rssFeedId);
                 var update = Builders<BsonDocument>.Update.Set("Status", true);
                 rssfeedRepo.Update<Domain.Socioboard.Models.Mongo.RssFeed>(update, filter);
-
+                Thread.Sleep(1000 * 60 * 10);
                 return ret = "Messages Posted Successfully";
             }
             catch (Exception ex)
@@ -334,8 +325,8 @@ namespace SociobordRssDataServices.Rss
         public static string TwitterComposeMessageRss(string message, string OAuthToken, string OAuthSecret, string profileid, string TwitterScreenName, string rssFeedId)
         {
             string ret = "";
-            oAuthTwitter OAuthTwt = new oAuthTwitter("h4FT0oJ46KBBMwbcifqZMw", "yfowGI2g21E2mQHjtHjUvGqkfbI7x26WDCvjiSZOjas", "https://www.socioboard.com/TwitterManager/Twitter");
-            // oAuthTwitter OAuthTwt = new oAuthTwitter("MbOQl85ZcvRGvp3kkOOJBlbFS", "GF0UIXnTAX28hFhN1ISNf3tURHARZdKWlZrsY4PlHm9A4llYjZ", "http://serv1.socioboard.com/TwitterManager/Twitter");
+            oAuthTwitter OAuthTwt = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey, Helper.AppSettings.twitterConsumerScreatKey, Helper.AppSettings.twitterRedirectionUrl);
+           
             OAuthTwt.AccessToken = OAuthToken;
             OAuthTwt.AccessTokenSecret = OAuthSecret;
             OAuthTwt.TwitterScreenName = TwitterScreenName;
@@ -350,7 +341,7 @@ namespace SociobordRssDataServices.Rss
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", rssFeedId);
                 var update = Builders<BsonDocument>.Update.Set("Status", true);
                 rssfeedRepo.Update<Domain.Socioboard.Models.Mongo.RssFeed>(update, filter);
-
+                Thread.Sleep(1000 * 60 * 10);
                 return ret = "Messages Posted Successfully";
             }
             catch (Exception ex)

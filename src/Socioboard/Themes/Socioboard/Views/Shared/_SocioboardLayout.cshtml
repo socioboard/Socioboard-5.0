@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
    
      <script>
@@ -14,7 +14,7 @@
 
             $('.modal-trigger').leanModal();
         });
-    </script>
+    </script>*@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>
@@ -162,6 +162,16 @@
                 <div class="row">
                     <div class="row">
                         <div class="input-field col s12 m12">
+                            <div class="center">
+                                <a id="fb_account" href="#" onclick="googleplusLogin();">
+                                    <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                                </a><br>
+                                <a id="fb_account" href="#" onclick="facebookLogin();">
+                                    <img src="~/contents/socioboard/images/fb_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="input-field col s12 m12">
                             <select id="AccountType" name="AccountType">
                                 <optgroup label="Basic Plans">
                                     <option value="0">Basic(Free)</option>
@@ -260,7 +270,7 @@
 
                     <img class='img-portfolio img-responsive hide' id="logLoading" src='~/contents/socioboard/images/loading-spinner-grey.gif'>
 
-                    <div id="btnlogin" onclick="Login();">
+                    <div id="btnlogin">
                         <button type="submit" class="modal-action waves-effect waves-green btn">Submit</button>
                     </div>
                 </form>
@@ -426,12 +436,12 @@ analytics" href="http://statcounter.com/shopify/"
             color: #a94442;
         }
     </style>
-    <script>
+    @*<script>
         $(document).ready(function () {
 
             $('.modal-trigger').leanModal();
         });
-    </script>
+    </script>*@
 
     <script>
         function myFunction() {
@@ -527,8 +537,10 @@ analytics" href="http://statcounter.com/shopify/"
                 success: function (msg) {
                     $("#fb-gp-login").css("display", "none");
                     if (msg == "UpgradePlans") {
-                        window.top.location = '/Index/UpgradePlans'
-
+                        alertify.alert("your account has been expired.Please upgrade it.");
+                        setTimeout(function () {
+                            window.top.location = '/Index/UpgradePlans'
+                        }, 3000);
                     }
                     if (msg == "1") {
                         $('input[type="submit"]').attr('disabled', false);

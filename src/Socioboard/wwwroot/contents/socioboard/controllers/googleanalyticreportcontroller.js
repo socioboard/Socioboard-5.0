@@ -23,6 +23,7 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
         }
 
         $scope.getReports = function (profileId, days) {
+            alert('hellogetReports');
             //codes to load profiles start
             $http.get(apiDomain + '/api/GoogleAnalyticsReport/GetGoogleAnalyticsReportData?profileId=' + profileId + '&daysCount=' + days)
                           .then(function (response) {
@@ -79,6 +80,8 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
             $scope.views = views;
             $scope.article_Blogs = article_Blogs;
             $scope.graphData = $scope.graphData.concat(value);
+            $scope.fromDate = moment(new Date((startDate * 1000))).format('YYYY/MM/DD');
+            $scope.toDate = moment(new Date((endDate * 1000))).format('YYYY/MM/DD');
         }
 
 
@@ -162,6 +165,7 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
 
 
         $scope.getOnPageLoadReports = function () {
+            alert('hellogetgetOnPageLoadReports');
             var canContinue = true;
             angular.forEach($rootScope.lstProfiles, function (value, key) {
                 if (canContinue && value.profileType == 10) {

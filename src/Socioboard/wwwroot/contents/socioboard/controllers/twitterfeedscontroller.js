@@ -97,18 +97,49 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               $rootScope.profileId = profileId;
               $rootScope.messageId = messageId;
               $rootScope.screenName = screenName;
-              $scope.modalinstance = $modal.open({
-                  templateUrl: 'twitterModalContent.html',
-                  controller: 'twittermodalcontroller',
-                  scope: $scope
-              });
+              //$scope.modalinstance = $modal.open({
+              //    templateUrl: 'twitterModalContent.html',
+              //    controller: 'twittermodalcontroller',
+              //    scope: $scope
+              //});
+              $('#Tiwtter_Modal').openModal();
           }
+
+
+        $scope.saveCommentReply = function () {
+              debugger;
+              var message = $('#comment_text').val();
+              swal({
+                  title: "Are you sure?",
+                  text: "Reply this message to " + $rootScope.screenName,
+                  type: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#DD6B55",
+                  confirmButtonText: "Yes, Reply it!",
+                  closeOnConfirm: false
+              },
+                    function () {
+                        // $scope.modalinstance.dismiss('cancel');
+                        //code for favorite Post
+                        $http.post(apiDomain + '/api/Twitter/TwitterReplyUpdate?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + $rootScope.profileId + '&messageId=' + $rootScope.messageId + '&message=' + message + '&screenName='+$rootScope.screenName)
+                                    .then(function (response) {
+                                        $('#comment_text').val('');
+                                        response.data;
+                                        swal(response.data);
+                                    }, function (reason) {
+                                        $scope.error = reason.data;
+                                    });
+                        // end codes favorite Post
+
+                    });
+          }
+
           $rootScope.taskNotification = {};
           $rootScope.tasktweetNotification = {};
           $scope.tasktwtfeedModel = function (notification) {
               $rootScope.taskNotification = notification;
               $('#TasktwtfeedModal').openModal();
-              
+              Materialize.updateTextFields();
           }
           $scope.tasktwttweetModel = function (twtnotification) {
               $rootScope.tasktweetNotification = twtnotification;
@@ -156,31 +187,5 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
 SocioboardApp.controller('twittermodalcontroller', function ($rootScope, $scope, $http, apiDomain) {
     $scope.closeModal = function () {
         $scope.modalinstance.dismiss('cancel');
-    }
-  
-    $scope.saveCommentReply = function () {
-        var message=$('#comment_text').val();
-        swal({
-            title: "Are you sure?",
-            text: "Reply this message by " + $rootScope.screenName,
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#DD6B55",
-            confirmButtonText: "Yes, Reply it!",
-            closeOnConfirm: false
-        },
-              function () {
-                  $scope.modalinstance.dismiss('cancel');
-                  //code for favorite Post
-                  $http.post(apiDomain + '/api/Twitter/TwitterReplyUpdate?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + $rootScope.profileId + '&messageId=' + $rootScope.messageId + '&message=' + message)
-                              .then(function (response) {
-                                  $('#comment_text').val('');
-                                  swal(response.data);
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-                  // end codes favorite Post
-
-              });
     }
 });

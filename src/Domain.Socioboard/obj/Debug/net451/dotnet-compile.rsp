@@ -52,6 +52,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Affiliates.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Affiliates.hbm.xml
+--resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AgencyUser.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AgencyUser.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DemoRequest.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DemoRequest.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Discovery.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Discovery.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Draft.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Draft.hbm.xml
@@ -101,6 +102,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Reposit
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Services\IEmailSender.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Services\ISmsSender.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Affiliates.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AgencyUser.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DemoRequest.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Discovery.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Draft.cs
@@ -129,6 +131,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\F
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupPost.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupPostComments.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\LinkedGroupPost.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\LinkedInCompanyPagePost.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ArticlesAndBlogs.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacaebookPageDailyReports.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPagePost.cs

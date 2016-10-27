@@ -9,6 +9,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         $scope.loadmore = "Loading More data..";
+        $scope.lstFbComments = [];
 
         $scope.lstFbFeeds = [];
         $scope.LoadTopFeeds = function () {
@@ -16,8 +17,8 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             $http.get(apiDomain + '/api/Facebook/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
-                              $scope.lstFbFeeds = response.data;
-                             
+                             // $scope.lstFbFeeds = response.data;
+                              $scope.feeddate(response.data);
                               if (response.data == null) {
                                   reachLast = true;
                               }
@@ -28,6 +29,22 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         }
         $scope.LoadTopFeeds();
 
+
+        $scope.feeddate = function (parm) {
+
+            for (var i = 0; i < parm.length; i++) {
+                var date = moment(parm[i].feedDate);
+                var d = new Date(parm[i].feedDate);
+                var d4 = d.setTime(d.getTime() + 37800000);;
+                var date1 = moment(d4);
+                var newdate = date1.toString();
+                var splitdate = newdate.split(" ");
+                date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3] + " " + splitdate[4];
+                parm[i].feedDate = date;
+            }
+            $scope.lstFbFeeds = parm;
+
+        }
 
 
         $scope.listData = function () {
@@ -56,23 +73,40 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
         facebookfeeds();
 
-        $scope.renderComments = function (feedId) {
-            $scope.LoadTopComments(feedId);
+        $scope.renderComments = function (feedId, index) {
+            $scope.LoadTopComments(feedId,index);
             $('.collapsible').collapsible({
                 accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
             });
         }
 
-        $scope.LoadTopComments = function (feedId) {
+        $scope.LoadTopComments = function (feedId,index) {
             //codes to load  recent Feed Commets
             $http.get(apiDomain + '/api/Facebook/GetFacebookPostComment?postId=' + feedId)
                           .then(function (response) {
-                              $scope.lstFbComments = response.data;
-                             
+                             // $scope.lstFbComments = response.data;
+                              $scope.commentdate(response.data,index);
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
             // end codes to load  Feed Commets
+        }
+
+
+        $scope.commentdate = function (parm,index) {
+
+            for (var i = 0; i < parm.length; i++) {
+                var date = moment(parm[i].commentdate);
+                var d = new Date(parm[i].commentdate);
+                var d4 = d.setTime(d.getTime() + 37800000);
+                var date1 = moment(d4);
+                var newdate = date1.toString();
+                var splitdate = newdate.split(" ");
+                date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3] + " " + splitdate[4];
+                parm[i].commentdate = date;
+            }
+            $scope.lstFbComments[index] = parm;
+
         }
 
 
@@ -98,6 +132,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         $scope.taskfbfeedModel = function (notification) {
             $('#TaskfbfeedModal').openModal();
             $rootScope.taskNotification = notification;
+            Materialize.updateTextFields();
         }
         $scope.addTask = function (feedTableType) {
 

@@ -10,51 +10,56 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
 
 
 
-         $scope.ComposeMessage = function () {
-                $scope.dispbtn = false;
-                var profiles = $('#composeProfiles').val();
-                var message = $('#composeMessage').val();
-                var updatedmessage = "";
-                var postdata = message.split("\n");
-                for (var i = 0; i < postdata.length; i++) {
-                    updatedmessage = updatedmessage + "<br>" + postdata[i];
-                }
-                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-                if (profiles.length > 0 && message!='') {
-                    $scope.checkfile();
-                    if ($scope.check == true) {
-                        var formData = new FormData();
-                        formData.append('files', $("#composeImage").get(0).files[0]);
-                        $http({
-                            method: 'POST',
-                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
-                            data: formData,
-                            headers: {
-                                'Content-Type': undefined
-                            },
-                            transformRequest: angular.identity,
-                        }).then(function (response) {
-                            if (response.data == "Posted") {
-                                $scope.dispbtn = true;
-                                $('#ComposePost').closeModal();
-                                swal('Message compose successfully');
-                            }
+        $scope.ComposeMessage = function () {
+            $scope.dispbtn = false;
+            var profiles = $('#composeProfiles').val();
+            var message = $('#composeMessage').val();
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            if (profiles.length > 0 && message != '') {
+                $scope.checkfile();
+                if ($scope.check == true) {
+                    var formData = new FormData();
+                    formData.append('files', $("#composeImage").get(0).files[0]);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        if (response.data == "Posted") {
+                            $scope.dispbtn = true;
+                            $('#ComposePostModal').closeModal();
+                            swal('Message compose successfully');
+                        }
 
-                        }, function (reason) {
-                            console.log(reason);
-                        });
-                    }
-                    else {
-                        alertify.set({ delay: 3000 });
-                        alertify.error("File Extention is not valid. Please upload any image file");
-                        $('#input-file-now').val('');
-                    }
+                    }, function (reason) {
+                        console.log(reason);
+                    });
                 }
                 else {
-                    $scope.dispbtn = true;
-                    swal('please select profile and type message for compose');
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File Extention is not valid. Please upload any image file");
+                    $('#input-file-now').val('');
                 }
             }
+            else {
+                $scope.dispbtn = true;
+                if (profiles.length < 0) {
+                    swal('please select profile');
+                }
+                else {
+                    swal('please type message for compose');
+                }
+            }
+        }
 
             $scope.checkfile = function () {
                 var filesinput = $('#composeImage');

@@ -35,7 +35,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
                                  if (response.data != "") {
                                   $scope.date(response.data);
                               } else {
-                                  swal("No Draft Post To Display");
+                                  swal("No Draft Saved To Display");
                               }
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -43,6 +43,18 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
             // end codes to load draft messages
         }
         $scope.fetchdraftmessage();
+
+
+        $scope.getProperURL = function (obj) {
+            console.log(obj);
+            if (obj.includes("wwwroot\\")) {
+                var img = obj.split("wwwroot\\")[1];
+                return apiDomain + "/api/Media/Get?id=" + img;
+            }
+            else {
+                return obj;
+            }
+        };
 
 
         $scope.editdraft = function (message, draftId)

@@ -36,7 +36,7 @@ namespace SociobordRssDataServices.Rss
                                 {
                                     RssFeed.updateRssFeeds(item_Rss);
                                 }).Start();
-                                
+
                                 Console.WriteLine(item.rssurl + "rssdata");
                                 item.LastUpdate = DateTime.UtcNow;
                                 dbr.Update<Domain.Socioboard.Models.RssFeedUrl>(item);

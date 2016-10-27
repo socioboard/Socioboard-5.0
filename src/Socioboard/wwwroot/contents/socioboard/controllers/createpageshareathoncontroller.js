@@ -42,8 +42,9 @@ SocioboardApp.controller('CreatePageShareathonController', function ($rootScope,
         $scope.EditPageShareathon = function (PageShareathodId) {
             var accountId = $('#shraeathonfacebookaccount').val();
             var pageId = $('#shraeathonfacebookpage').val();
+         //   alert(pageId);
             var timeInterval = $('#shraeathontimeinterval').val();
-            console.log(accountId + ":" + pageId + ":" + timeInterval)
+           // console.log(accountId + ":" + pageId + ":" + timeInterval)
             if (accountId != null && pageId != '' && timeInterval != null) {
                 $scope.dispbtn = false;
                 var formData = new FormData();

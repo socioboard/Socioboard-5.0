@@ -27,10 +27,10 @@
                                     <td>{{$index +1}}</td>
                                     <td>{{board.boardName}}</td>
                                     <td>
-                                        <a class="btn green"  ng-click="$state.go('board', { 'boardId':board.objId})"><i class="fa fa-eye fa-fw"></i>VIEW</a>
+                                        <a class="btn green" href="#/board/{{board.objId}}/{{board.boardName}}"  ><i class="fa fa-eye fa-fw"></i>VIEW</a>
                                     </td>
                                     <td>
-                                        <a class="btn" ng-click="$state.go('boardanalytics', { 'boardName': board.boardName})"><i class="fa fa-bar-chart fa-fw"></i>ANALYTICS</a>
+                                        <a class="btn" href="#/boardanalytics/{{board.boardName}}"><i class="fa fa-bar-chart fa-fw"></i>ANALYTICS</a>
                                     </td>
                                      <td>
                                         <a class="btn red" ng-click="deleteBoard(board.objId)"><i class="fa fa-times fa-fw"></i>Delete</a>
