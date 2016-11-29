@@ -198,4 +198,30 @@ Now Everything is ready you can start project.
 
 ![](http://i.imgur.com/CRtFmke.png)
 
-Thank You for reading....
+Now you can see some modules feature after login shown below ......
+
+Dashboard:
+
+![](http://i.imgur.com/VhP3x36.png)
+
+Compose message:
+
+![](http://i.imgur.com/L8XjniD.png)
+
+Inbox message:
+
+![](http://i.imgur.com/6011Jr0.png)
+
+Schedule message:
+
+![](http://i.imgur.com/ZqttWT5.png)
+
+Discovery:
+
+![](http://i.imgur.com/7jPqa7h.png)
+
+Report:
+
+![](http://i.imgur.com/6vqkBRK.png)
+
+![](http://i.imgur.com/onT0cUf.png)
