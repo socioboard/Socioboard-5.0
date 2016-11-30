@@ -198,7 +198,7 @@ Now Everything is ready you can start project.
 
 ![](http://i.imgur.com/CRtFmke.png)
 
-After login you can see some modules feature shown below ......
+after login you can see some modules feature as shown below ......
 
 Dashboard:
 
@@ -239,3 +239,5 @@ Report:
 ![](http://i.imgur.com/Hohy012.png)
 
 ![](http://i.imgur.com/qZxc8UN.png)
+
+![](http://i.imgur.com/450LSFv.png)
