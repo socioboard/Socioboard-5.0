@@ -542,7 +542,7 @@ namespace Api.Socioboard.Repositories
                     }
                     _GoogleAnalyticsAccount.Views = Double.Parse(pageviews);
                     _GoogleAnalyticsAccount.Visits = Double.Parse(visits);
-                    _GoogleAnalyticsAccount.ProfilePicUrl = _appEnv.WebRootPath + "\\images\\analytics_img.png";
+                    _GoogleAnalyticsAccount.ProfilePicUrl = "https://www.socioboard.com/Contents/Socioboard/images/analytics_img.png";
                     _GoogleAnalyticsAccount.EntryDate = DateTime.UtcNow;
 
 
@@ -624,7 +624,7 @@ namespace Api.Socioboard.Repositories
             MongoGoogleplusComments _GoogleplusComments = new MongoGoogleplusComments();
             try
             {
-                string _Comments = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetCommentListByActivityId.Replace("[ActivityId]", feedId) + "?key=" + settings.GoogleRedirectUri, AccessToken);
+                string _Comments = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetCommentListByActivityId.Replace("[ActivityId]", feedId) + "?key=" + settings.GoogleApiKey, AccessToken);
                 JObject J_Comments = JObject.Parse(_Comments);
                 List<MongoGoogleplusComments> lstGoogleplusComments = new List<MongoGoogleplusComments>();
                 foreach (var item in J_Comments["items"])

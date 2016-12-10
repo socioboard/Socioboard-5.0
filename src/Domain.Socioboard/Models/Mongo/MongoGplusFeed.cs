@@ -1,9 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using Domain.Socioboard.Helpers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Domain.Socioboard.Models.Mongo
 {
@@ -11,6 +9,8 @@ namespace Domain.Socioboard.Models.Mongo
     public class MongoGplusFeed
     {
         [BsonId]
+        [JsonConverter(typeof(ObjectIdConverter))]
+
         public ObjectId Id { get; set; }
         public string GpUserId { get; set; }
         public string ActivityId { get; set; }

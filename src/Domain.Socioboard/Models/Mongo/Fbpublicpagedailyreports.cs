@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using Domain.Socioboard.Helpers;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +13,8 @@ namespace Domain.Socioboard.Models.Mongo
     public class Fbpublicpagedailyreports
     {
         [BsonId]
-        public virtual Object id { get; set; }
+        [JsonConverter(typeof(ObjectIdConverter))]
+        public virtual ObjectId id { get; set; }
         public virtual double date { get; set; }
         public virtual string pageid { get; set; }
         public virtual float likescount { get; set; }

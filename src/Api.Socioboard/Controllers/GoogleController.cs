@@ -47,7 +47,7 @@ namespace Api.Socioboard.Controllers
         /// <param name="code"></param>
         /// <returns></returns
         [HttpPost("GoogleLogin")]
-        public IActionResult GoogleLogin(string code)
+        public IActionResult GoogleLogin(string code,Domain.Socioboard.Enum.SBAccountType accType)
         {
             string ret = string.Empty;
             string objRefresh = string.Empty;
@@ -128,11 +128,50 @@ namespace Api.Socioboard.Controllers
 
 
                 Domain.Socioboard.Models.User user = new Domain.Socioboard.Models.User();
-                user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+                if (accType == Domain.Socioboard.Enum.SBAccountType.Free)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Deluxe;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Premium)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Premium;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Topaz)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Topaz;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Platinum)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Platinum;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Gold)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Gold;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Ruby)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Ruby;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Standard)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Standard;
+
+                }
+                user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
                 user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
                 user.CreateDate = DateTime.UtcNow;
                 user.EmailId = EmailId;
-                user.ExpiryDate = DateTime.UtcNow.AddDays(30);
+                user.ExpiryDate = DateTime.UtcNow.AddDays(1);
                 user.UserName = "Socioboard";
                 user.EmailValidateToken = "Google";
                 user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
@@ -213,6 +252,10 @@ namespace Api.Socioboard.Controllers
            
             if (gplusAcc != null && gplusAcc.IsActive == true)
             {
+                if (gplusAcc.UserId == userId)
+                {
+                    return Ok("GPlus account already added by you.");
+                }
                 return Ok("GPlus account added by other user.");
             }
             Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();

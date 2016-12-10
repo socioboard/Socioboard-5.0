@@ -9,7 +9,12 @@ SocioboardApp.controller('AutoMateRssFeedsController', function ($rootScope, $sc
         $scope.AddRssUrl = function () {
             var profiles = $('#schedulerssprofiles').val();
             var rssfeedurl = $('#rssfeedurl').val();
-
+            console.log(profiles);
+            if (profiles == null)
+            {
+                swal('please select profile for rss post');
+                return;
+            }
             if (profiles.length > 0) {
                 if (rssfeedurl != '') {
                     $scope.dispbtn = false;

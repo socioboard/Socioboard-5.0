@@ -5,14 +5,14 @@
                     <h4 class="pull-left">
                         <div class="input-field">
                             <select class="icons" ng-model="selectedProfile" ng-change="getReports(selectedProfile, 90)">
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} " my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} " my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
                                     <img src="http://graph.facebook.com/{{profile.profileId}}/picture?type=small" class="circle">{{profile.profileName}}
                                 </option>
                             </select>
                         </div>
                         <span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>
                     </h4> 
-                    <h6 class="pull-right margin-top-20">
+                    <h6 class="pull-right margin-top-20" ng-if="user.TrailStatus!=2">
                         <a ng-click="getData(selectedProfile,15)" class="btn">15</a>
                         <a ng-click="getData(selectedProfile,30)" class="btn">30</a>
                         <a ng-click="getData(selectedProfile,60)" class="btn">60</a>
@@ -65,7 +65,7 @@
                                         <h5> <i class="fa fa-male fa-fw"></i>IMPRESSIONS BY AGE &amp; GENDER</h5>
                                     </blockquote>
                                     <div id="male_female" class="charts" style="height: 200px;"></div>
-                                    <div class="row center">
+                                    <!--<div class="row center">
                                         <div class="col m6 blue-text">
                                          <i class="icon-user fa-5x"></i>
                                          <h5><strong>{{impressionsByAgeMaleFollower}}%</strong></h5>
@@ -76,7 +76,7 @@
                                           <h5><strong>{{impressionsByAgeFemaleFollower}}%</strong></h5>
                                           <span>FEMALE FOLLOWERS</span>                            
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div>
 
                                 <!--<div class="col l6 m6 s12">
@@ -141,7 +141,7 @@
                                         <h5> <i class="fa fa-male fa-fw"></i>SHARING BY AGE &amp; GENDER</h5>
                                     </blockquote>
                                     <div id="share_male_female" class="charts" style="height: 200px;"></div>
-                                    <div class="row center">
+                                    <!--<div class="row center">
                                         <div class="col m6 blue-text">
                                          <i class="icon-user fa-5x"></i>
                                          <h5><strong>{{sharingByAgeMaleFollower}}%</strong></h5>
@@ -152,7 +152,7 @@
                                           <h5><strong>{{sharingByAgeFemaleFollower}}%</strong></h5>
                                           <span>FEMALE FOLLOWERS</span>                            
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div>
 
                             </div>
@@ -175,7 +175,7 @@
                                         <p>A breakdown of how your individual posts performed.</p>
                                     </blockquote>
 
-                                    <table id="CONTENT_BREAKDOWN_table" class="display" cellspacing="0" width="100%">
+                                    <table class="display" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
                                                 <th>Message Sent</th>
@@ -204,7 +204,9 @@
                                             <tr ng-repeat="facebookpagepost in FacebookPagePost">
                                                 <td>
                                                     <img src="http://graph.facebook.com/{{facebookpagepost.pageId}}/picture?type=small" class="responsive-img" style="height: 30px; width: 30px; float: left;">
-                                                    <a href="#" target="_blank" class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.pageName}}</a>
+                                                    <a ng-if="facebookpagepost.name != null && facebookpagepost.name != '' " class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.name}}</a>
+                                                    <a ng-if="facebookpagepost.name == null || facebookpagepost.name == '' " class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.message}}</a>
+
                                                 </td>
                                                 <td>{{facebookpagepost.reach}}</td>
                                                 <td>{{facebookpagepost.engagedUsers}}</td>

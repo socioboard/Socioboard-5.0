@@ -239,7 +239,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     "bullet": "round",
                     "bulletBorderThickness": 1,
                     "hideBulletsCount": 30,
-                    "title": "red line",
+                    "title": "mentions",
                     "valueField": "mentions",
                     "fillAlphas": 0
                 }, {
@@ -248,7 +248,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     "bullet": "square",
                     "bulletBorderThickness": 1,
                     "hideBulletsCount": 30,
-                    "title": "yellow line",
+                    "title": "retweets",
                     "valueField": "retweets",
                     "fillAlphas": 0
                 }, {
@@ -257,7 +257,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                     "bullet": "triangleUp",
                     "bulletBorderThickness": 1,
                     "hideBulletsCount": 30,
-                    "title": "green line",
+                    "title": "followers",
                     "valueField": "followers",
                     "fillAlphas": 0
                 }],

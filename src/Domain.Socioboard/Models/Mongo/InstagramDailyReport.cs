@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using Domain.Socioboard.Helpers;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +13,8 @@ namespace Domain.Socioboard.Models.Mongo
     public class InstagramDailyReport
     {
         [BsonId]
-        public Object id { get; set; }
+        [JsonConverter(typeof(ObjectIdConverter))]
+        public ObjectId id { get; set; }
         public double date { get; set; }
         public string profileId { get; set; }
         public string instaName { get; set; }

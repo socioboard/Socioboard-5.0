@@ -46,12 +46,37 @@ SocioboardApp.directive('myRepeatTimeoutDirective', function ($timeout) {
         if (scope.$last === true) {
             $timeout(function () {
                 $('select').material_select();
-
+                $('select').change(function () {
+                    var newValuesArr = [],
+                        select = $(this),
+                        ul = select.prev();
+                    ul.children('li').toArray().forEach(function (li, i) {
+                        if ($(li).hasClass('active')) {
+                            newValuesArr.push(select.children('option').toArray()[i].value);
+                        }
+                    });
+                    select.val(newValuesArr);
+                });
 
             });
         }
     };
 })
+
+SocioboardApp.directive('myRepeatTimeoutGroupsDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+                $('select').material_select();
+                
+            });
+        }
+    };
+})
+
+
+
+
 
 
 
@@ -361,7 +386,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         files: [
                             '../contents/socioboard/js/admin/plugins.js',
                             '../contents/socioboard/controllers/mytaskcontroller.js',
-                             '../contents/socioboard/services/grouptask.js'
+                             '../contents/socioboard/services/grouptask.js',
+                             '../contents/socioboard/services/utility.js'
                         ]
                     });
                 }]
@@ -431,7 +457,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                              '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/js/admin/moment.min.js',
                              '../contents/socioboard/css/admin/custom.css',
-                             '../contents/socioboard/controllers/draftmsgcontroller.js'
+                             '../contents/socioboard/controllers/draftmsgcontroller.js',
+                             '../contents/socioboard/services/utility.js'
                          ]
                      });
                  }]
@@ -549,7 +576,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                              '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/controllers/facebookfeedscontroller.js',
                              '../contents/socioboard/js/admin/moment.min.js',
-                            '../contents/socioboard/services/grouptask.js'
+                            '../contents/socioboard/services/grouptask.js',
+                            '../contents/socioboard/directives/directives.js'
                          ]
                      });
                  }]
@@ -572,6 +600,30 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                       files: [
                           '../contents/socioboard/js/admin/plugins.js',
                           '../contents/socioboard/services/userservice.js',
+                          '../contents/socioboard/controllers/profilesettingcontroller.js'
+                      ]
+                  });
+              }]
+          }
+      })
+
+
+
+      .state('upgradeplan', {
+          url: "/upgradeplan",
+          templateUrl: "../contents/socioboard/views/settings/upgradeplan.html",
+          data: { pageTitle: 'Upgrade Plans', pageSubTitle: 'updated' },
+          controller: "ProfileSettingController",
+
+          resolve: {
+              deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                  return $ocLazyLoad.load({
+                      name: 'SocioboardApp',
+                      insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                      files: [
+                          '../contents/socioboard/js/admin/plugins.js',
+                          '../contents/socioboard/services/userservice.js',
+                          '../contents/socioboard/css/frontend/style.css',
                           '../contents/socioboard/controllers/profilesettingcontroller.js'
                       ]
                   });
@@ -828,7 +880,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
 
          // googleanalytic report
 
-        .state('googleanalyticreport', {
+        .state('googleanalyticsreport', {
             url: "/googleanalyticsreport",
             templateUrl: "../contents/socioboard/views/reports/googleanalyticsreport.html",
             data: { pageTitle: 'googleanalytic Report', pageSubTitle: 'updated' },
@@ -845,7 +897,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                             '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
                             '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/controllers/googleanalyticreportcontroller.js'
+                            '../contents/socioboard/js/admin/moment.min.js',
+                            '../contents/socioboard/controllers/googleanalyticreportcontroller.js',
 
                         ]
                     });
@@ -942,7 +995,6 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                             '../contents/socioboard/global/plugins/amcharts/amcharts/pie.js',
                             '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/js/admin/moment.min.js',
                             '../contents/socioboard/controllers/instagramreportcontroller.js'
 
                         ]
@@ -1101,7 +1153,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/controllers/groupscontroller.js'
+                            '../contents/socioboard/controllers/groupscontroller.js',
+                            '../contents/socioboard/services/utility.js'
                         ]
                     });
                 }]
@@ -1169,6 +1222,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                              '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                             '../contents/socioboard/global/plugins/moment.js',
                             '../contents/socioboard/js/admin/plugins.js',
                             '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
                              '../contents/socioboard/controllers/boardcontroller.js'

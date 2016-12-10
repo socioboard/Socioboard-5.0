@@ -3,7 +3,7 @@
     Layout = "~/Themes/" + path + "/Views/Shared/_SocioboardLayout.cshtml";
     Domain.Socioboard.Models.User user = ViewBag.user;
 }
-    <!--Import jQuery before materialize.js-->
+<!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="~/contents/socioboard/global/plugins/materialize/js/materialize.min.js"></script>
 <script type="text/javascript" src="~/contents/socioboard/js/frontend/init.js"></script>
@@ -39,9 +39,18 @@
                             <li>Manage up to 5 profiles</li>
                             <li>1 profile per network</li>
                         </ul><!-- end pricing-list -->
-                        @*<div class="pricing-cta">
-                            <a  onclick="UpgradeAccount('Free')"  class="waves-effect waves-light btn-large btn-pricing">Upgrade</a>
-                        </div>*@<!-- end pricing-cta -->
+                        <div class="pricing-cta">
+                            @if ((int)user.AccountType > 0)
+                            {
+                                <a onclick="UpgradeAccount('Free')" class="waves-effect waves-light btn-large btn-pricing">Downgrade</a>
+
+                            }
+                            else
+                            {
+                                @*<a onclick="UpgradeAccount('Free')" class="waves-effect waves-light btn-large btn-pricing">Upgrade</a>*@
+                            }
+                        </div>
+                        <!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
                 </div><!-- end col-md-3 -->
                 <div class="col m3 hoverable">
@@ -67,11 +76,11 @@
                         <div class="pricing-cta">
                             @if ((int)user.AccountType > 1)
                             {
-                                <a onclick="UpgradeAccount('Standard')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
+                                <a onclick="UpgradeAccount('Standard')" class="waves-effect waves-light btn-large btn-pricing">Downgrade</a>
                             }
                             else
                             {
-                                <a onclick="UpgradeAccount('Standard')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
+                                <a onclick="UpgradeAccount('Standard')" class="waves-effect waves-light btn-large btn-pricing">Upgrade</a>
                             }
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -88,7 +97,7 @@
                             Package you need to efficiently manage an expanding social media network.
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li>All Standard Plan Features</li>
+                            <li>All Basic & Standard Plan Features</li>
                             <li>Social Discovery</li>
                             <li>Helpdesk Integration</li>
                             <li>Powerful Statistics Engine</li>
@@ -98,14 +107,14 @@
                             <li>Manage up to 20 profiles</li>
                         </ul><!-- end pricing-list -->
                         <div class="pricing-cta">
-                        @if ((int)user.AccountType > 2)
-                        {
-                            <a onclick="UpgradeAccount('Premium')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
-                        }
-                        else
-                        {
-                            <a onclick="UpgradeAccount('Premium')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
-                        }
+                            @if ((int)user.AccountType > 2)
+                            {
+                                <a onclick="UpgradeAccount('Premium')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
+                            }
+                            else
+                            {
+                                <a onclick="UpgradeAccount('Premium')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
+                            }
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
                 </div><!-- end col-md-3 -->
@@ -121,7 +130,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li>All Basic, Standard &amp; Deluxe Features</li>
+                            <li>All Basic, Standard &amp; Premium Features</li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -132,11 +141,11 @@
                         <div class="pricing-cta">
                             @if ((int)user.AccountType > 3)
                             {
-                                <a onclick="UpgradeAccount('Deluxe')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
+                                <a onclick="UpgradeAccount('Deluxe')" class="waves-effect waves-light btn-large btn-pricing">Downgrade</a>
                             }
                             else
                             {
-                                <a onclick="UpgradeAccount('Deluxe')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
+                                <a onclick="UpgradeAccount('Deluxe')" class="waves-effect waves-light btn-large btn-pricing">Upgrade</a>
                             }
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -159,7 +168,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
+                            <li><strong>All Basic, Standard,Premium, &amp; Deluxe Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -170,11 +179,11 @@
                         <div class="pricing-cta">
                             @if ((int)user.AccountType > 4)
                             {
-                                <a onclick="UpgradeAccount('SocioBasic')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
+                                <a onclick="UpgradeAccount('Topaz')" class="waves-effect waves-light btn-large btn-pricing">Downgrade</a>
                             }
                             else
                             {
-                                <a onclick="UpgradeAccount('SocioBasic')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
+                                <a onclick="UpgradeAccount('Topaz')" class="waves-effect waves-light btn-large btn-pricing">Upgrade</a>
                             }
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -191,7 +200,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
+                            <li><strong>All Basic, Standard,Premium, Deluxe &amp; Topaz Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -202,11 +211,11 @@
                         <div class="pricing-cta">
                             @if ((int)user.AccountType > 5)
                             {
-                                <a onclick="UpgradeAccount('SocioStandard')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
+                                <a onclick="UpgradeAccount('Ruby')" class="waves-effect waves-light btn-large btn-pricing">Downgrade</a>
                             }
                             else
                             {
-                                <a onclick="UpgradeAccount('SocioStandard')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
+                                <a onclick="UpgradeAccount('Ruby')" class="waves-effect waves-light btn-large btn-pricing">Upgrade</a>
                             }
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -223,7 +232,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
+                            <li><strong>All Basic, Standard,Premium, Deluxe, Topaz &amp; Ruby Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -234,11 +243,11 @@
                         <div class="pricing-cta">
                             @if ((int)user.AccountType > 6)
                             {
-                                <a onclick="UpgradeAccount('SocioPremium')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
+                                <a onclick="UpgradeAccount('Gold')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
                             }
                             else
                             {
-                                <a onclick="UpgradeAccount('SocioPremium')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
+                                <a onclick="UpgradeAccount('Gold')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
                             }
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -255,7 +264,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
+                            <li><strong>All Basic, Standard,Premium, Deluxe, Topaz, Ruby &amp; Gold Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -266,11 +275,11 @@
                         <div class="pricing-cta">
                             @if ((int)user.AccountType > 6)
                             {
-                                <a onclick="UpgradeAccount('SocioDeluxe')" class="waves-effect waves-light btn-large btn-pricing-popular">Downgrade</a>
+                                <a onclick="UpgradeAccount('Platinum')" class="waves-effect waves-light btn-large btn-pricing">Downgrade</a>
                             }
                             else
                             {
-                                <a onclick="UpgradeAccount('SocioDeluxe')" class="waves-effect waves-light btn-large btn-pricing-popular">Upgrade</a>
+                                <a onclick="UpgradeAccount('Platinum')" class="waves-effect waves-light btn-large btn-pricing">Upgrade</a>
                             }
                         </div><!-- end pricing-cta -->
                     </div><!-- end pricing-box -->
@@ -278,16 +287,15 @@
             </div><!-- end row -->
         </div><!-- end container -->
     </section>
- 
+
 </div>
-  
+
 
 <script>
-       
 
 
-    function UpgradeAccount(packagename)
-    {
+
+    function UpgradeAccount(packagename) {
         $.ajax({
             type: "GET",
             url: "../Index/UpgradeAccount?packagename=" + packagename,
@@ -306,5 +314,5 @@
 
     }
 
-     
+
 </script>

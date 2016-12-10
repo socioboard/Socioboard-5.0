@@ -11,43 +11,59 @@
     <div id="card-stats">
         <div class="row">
             <div class="col s12 m6 l3">
-                <div class="card">
-                    <div class="card-content red white-text">
+                <div class="card red white-text">
+                    <div class="card-content ">
                         <p class="card-stats-title"><i class="fa fa-comments fa-fw d_card_icon"></i>Incoming Messages</p>
                         <h4 class="card-stats-number">{{TotaltIncommingMessage}}</h4>
                     </div>
+                    <div class="card-action center">
+                        <a href="#/inboxmessage" class="white-text">View Details</a>
+                    </div>
                 </div>
+               
             </div>
             <div class="col s12 m6 l3">
-                <div class="card">
-                    <div class="card-content green white-text">
+                <div class="card green white-text">
+                    <div class="card-content">
                         <p class="card-stats-title"><i class="fa fa-mail-reply-all fa-fw d_card_icon"></i>Sent Messages</p>
                         <h4 class="card-stats-number">{{TotalSetMessages}}</h4>
                     </div>
+                    <div class="card-action center">
+                        <a href="#/sentmessages" class="white-text">View Details</a>
+                    </div>
                 </div>
+
+
             </div>
             <div class="col s12 m6 l3">
-                <div class="card">
-                    <div class="card-content cyan lighten-4 white-text">
+                <div class="card cyan lighten-4 white-text">
+                    <div class="card-content ">
                         <p class="card-stats-title"><i class="fa fa-twitter fa-fw d_card_icon"></i> Twitter Followers</p>
                         <h4 class="card-stats-number">{{TwitterFollowerCount}}</h4>
                     </div>
-                </div>
-            </div>
-            <div class="col s12 m6 l3">
-                <div class="card">
-                    <div class="card-content light-blue darken-4 white-text">
-                        <p class="card-stats-title"><i class="fa fa-facebook fa-fw d_card_icon"></i> Facebook Fans</p>
-                        <h4 class="card-stats-number">{{FacebookfanPageCount}}</h4>
+                    <div class="card-action center">
+                        <a href="#/twitterreports" class="white-text">View Details</a>
                     </div>
                 </div>
+               
             </div>
+            <div class="col s12 m6 l3">
+                <div class="card light-blue darken-4 white-text">
+                    <div class="card-content ">
+                        <p class="card-stats-title"><i class="fa fa-facebook fa-fw d_card_icon"></i>Facebook Fans</p>
+                        <h4 class="card-stats-number">{{FacebookfanPageCount}}</h4>
+                    </div>
+                    <div class="card-action center">
+                        <a href="#/facebookreport.html" class="white-text">View Details</a>
+                    </div>
+                </div>
+                
+            </div>
+
         </div>
     </div>
     <!--card stats end-->
-
-
-
+    
     <!-- START CONTENT -->
     <section id="content">
         <div class="row">
@@ -62,13 +78,14 @@
                             <div class="col s12 m6 l4"  ng-repeat="fbProfile in  lstFbProfiles ">
                                 <div id="profile-card" class="card">
                                     <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{fbProfile.coverPic}}" alt="{{fbProfile.fbUserName}}">
+                                        <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}" >
+                                        <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}" >
                                     </div>
                                     <div class="card-content">
                                         <img src="https://graph.facebook.com/{{fbProfile.fbUserId}}/picture?type=small" alt="{{fbProfile.fbUserName}}" class="circle responsive-img activator card-profile-image">
                                         <img src="/contents/socioboard/images/fb_icon.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="mdi-editor-mode-edit"></i>
+                                            <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Friends"></i> {{fbProfile.friends}}</p>
@@ -90,13 +107,13 @@
                             <div class="col s12 m6 l4" ng-repeat="twtProfile in lstTwtProfiles">
                                 <div id="profile-card" class="card">
                                     <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{twtProfile.profileBackgroundImageUrl}}" alt="{{twtProfile.twitterScreenName}}">
+                                        <img class="activator" src="{{twtProfile.profileBackgroundImageUrl}}" >
                                     </div>
                                     <div class="card-content">
                                         <img src="{{getHttpsURL(twtProfile.profileImageUrl)}}" alt="{{twtProfile.twitterScreenName}}" class="circle responsive-img activator card-profile-image">
                                         <img src="/contents/socioboard/images/twticon.png" class="card_profile_socio_icon">
                                          <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="mdi-editor-mode-edit"></i>
+                                            <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{twtProfile.twitterScreenName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i> {{twtProfile.followersCount}}</p>
@@ -119,13 +136,13 @@
                             <div class="col s12 m6 l4" ng-repeat="gplusProfile in lstGplusProfiles">
                                 <div id="profile-card" class="card">
                                     <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{gplusProfile.coverPic}}" alt="{{gplusProfile.gpUserName}}">
+                                        <img class="activator" src="{{gplusProfile.coverPic}}" >
                                     </div>
                                     <div class="card-content">
                                         <img src="{{gplusProfile.gpProfileImage}}" alt="{{gplusProfile.gpUserName}}" class="circle responsive-img activator card-profile-image">
                                         <img src="/contents/socioboard/images/gplus-icon.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="mdi-editor-mode-edit"></i>
+                                            <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.haveYouInCircles}}</p>
@@ -154,7 +171,7 @@
                                         <img src="/contents/socioboard/images/G-Ana-icon.png" alt="{{gAProfile.gaProfileName}}" class="circle responsive-img activator card-profile-image">
                                          <img src="/contents/socioboard/images/g_ana_icon.png" class="card_profile_socio_icon" style="height: 9%;">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="mdi-editor-mode-edit"></i>
+                                            <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gAProfile.gaProfileName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> {{gAProfile.visits}}</p>
@@ -176,13 +193,13 @@
                             <div class="col s12 m6 l4" ng-repeat="insProfile in lstinsProfiles">
                                 <div id="profile-card" class="card">
                                     <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{insProfile.profileUrl}}" alt="{{insProfile.insUserName}}">
+                                        <img class="activator" src="{{insProfile.profileUrl}}" >
                                     </div>
                                     <div class="card-content">
                                         <img src="{{insProfile.profileUrl}}" alt="{{insProfile.insUserName}}" class="circle responsive-img activator card-profile-image">
                                         <img src="/contents/socioboard/images/instagram.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="mdi-editor-mode-edit"></i>
+                                            <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{insProfile.insUserName}}</span>
                                         <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> {{insProfile.followers}}</p>
@@ -211,7 +228,7 @@
                                         <img src="{{linProfile.logoUrl}}" alt="{{linProfile.linkedinPageName}}" class="circle responsive-img activator card-profile-image">
                                         <img src="/contents/socioboard/images/linkedin.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="mdi-editor-mode-edit"></i>
+                                            <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinPageName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Followers"></i> {{linProfile.numFollowers}}</p>
@@ -575,11 +592,16 @@
             </div>
         </div>
         <!-- Compose Email Trigger -->
-        <div class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
-            <div class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+        <div ng-show="user.TrailStatus!=2"  class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
+            <div  class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
                 <i class="large mdi-editor-mode-edit"></i>
             </div>
         </div>
+       <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan" >
+                    <i class="large mdi-editor-mode-edit"></i>
+                </a>
+       </div>
     </section>
 
 
@@ -590,9 +612,9 @@
                 <div class="nav-wrapper">
                     <div class="left col s12 m5 l5">
                         <ul>
-                            <li>
+                            <!--<li>
                                 <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                            </li>
+                            </li>-->
                             <li>
                                 <a href="#!" class="email-type">Compose</a>
                             </li>
@@ -632,7 +654,7 @@
                     <!--Default version-->
                     <div class="row section">
                         <div class="col s12 m4 l3">
-                            <p>Select your file</p>
+                            <p>Select image</p>
                         </div>
                         <div class="col s12 m8 l9">
                             <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />

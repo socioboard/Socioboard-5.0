@@ -11,28 +11,28 @@
                         <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook live feeds</h5>
                         <ul class="collection" id="facebookfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
-                                <img src="https://graph.facebook.com/{{fbfeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
-                                <span class="email-title">{{fbfeed.fromName}}</span>
+                                <img src="https://graph.facebook.com/{{fbfeed._facebookFeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
+                                <span class="email-title">{{fbfeed._facebookFeed.fromName}}</span>
                                 <div class="row feeds_post">
                                     <div class="col m8">
-                                        <p class="break_word ultra-small">{{fbfeed.feedDescription}}</p>
+                                        <p class="break_word ultra-small">{{fbfeed._facebookFeed.feedDescription}}</p>
                                     </div>
                                     <div class="col m4 center">
-                                        <img src="{{fbfeed.picture}} " ng-if="fbfeed.picture!= ''" class="responsive-img">
+                                        <img src="{{getHttpsURL(fbfeed._facebookFeed.picture)}} " ng-if="fbfeed._facebookFeed.picture!= ''" class="responsive-img">
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <a ng-click="taskfbfeedModel(fbfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
+                                    <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed._facebookFeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
                                         <i class="icon-pin"></i>
                                     </a>
                                     <div class="col m12">
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li>
-                                                <div class="collapsible-header" ng-click="renderComments(fbfeed.feedId,$index)"><i class="icon-speech"></i>Comments</div>
+                                                <div class="collapsible-header" ><i class="icon-speech"></i>Comments</div>
                                                 <div class="collapsible-body">
                                                     <ul class="collection facebookfeeds">
-                                                        <li class="collection-item avatar" ng-repeat="fbcomments in lstFbComments[$index]|limitTo:5">
-                                                            <img src="http://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
+                                                        <li  class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive >
+                                                            <img src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
                                                             <span class="email-title">{{fbcomments.fromName}}</span>
                                                             <div class="row dashboard_feeds z-depth-1 hoverable">
                                                                 <div class="col m8">
@@ -41,19 +41,19 @@
                                                                 <a class="tooltipped secondary-content" data-position="left" data-delay="50" data-tooltip="">{{fbcomments.commentdate}}</a>
                                                         </li>
 
-                                                        <li class="collection-item">
+                                                        <li class="collection-item" ng-if="user.TrailStatus!=2">
                                                             <div class="row">
                                                                 <form class="col s10">
                                                                     <div class="row">
                                                                         <div class="input-field col s12">
                                                                             <i class="icon-pencil prefix"></i>
-                                                                            <input type="text" id="postcomment_{{fbfeed.feedId}}" class="materialize-textarea" />
+                                                                            <input type="text" id="postcomment_{{fbfeed._facebookFeed.feedId}}" class="materialize-textarea" />
                                                                             <label for="icon_prefix2">Type your comment here...</label>
                                                                         </div>
                                                                     </div>
                                                                 </form>
                                                                 <span class="col s12 center">
-                                                                    <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed.feedId,fbfeed.profileId)"><i class="icon-cursor"></i></a>
+                                                                    <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed._facebookFeed.feedId,fbfeed._facebookFeed.profileId)"><i class="icon-cursor"></i></a>
                                                                 </span>
                                                             </div>
                                                         </li>
@@ -63,10 +63,10 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{fbfeed.feedDate}}">{{fbfeed.feedDate}}</a>
+                                <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{fbfeed._facebookFeed.feedDate}}">{{fbfeed._facebookFeed.feedDate}}</a>
                             </li>
                         </ul>
-                        <div class="col-md-10 portfolio-item" ng-click="listData()">
+                        <div class="col-md-10 portfolio-item" ng-if="user.TrailStatus!=2" ng-click="listData()">
                             {{loadmore}}
                         </div>
 

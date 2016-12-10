@@ -99,7 +99,7 @@ namespace Api.Socioboard.Controllers
                     _intafeed._InstagramComment = _lstInstagramComment.ToList();
                     lstintafeed.Add(_intafeed);
                 }
-                return Ok(lstintafeed);
+                return Ok(lstintafeed.OrderByDescending(t=>t._InstagramFeed.FeedDate));
             }
 
         }

@@ -1,8 +1,13 @@
 'use strict';
 
-SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http, $timeout, apiDomain,groupmember) {
+SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http, $timeout, apiDomain,groupmember,utility) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.lstInviteTeamMembers = []; // array contains list of needs to invite for current group
+
+        
+
+
+        $scope.utility = utility;
 
         $scope.deleteProfile = function(profileId, groupId){
             swal({
@@ -24,7 +29,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                    if (response.data == "Deleted") {
                        swal("Deleted!", "Your profile has been deleted.", "success");
                        $scope.getGroupsData($rootScope.index, groupId);
-                       //window.location.reload();
+                       window.location.reload();
                    }
                    else {
                        swal("Deleted!", response.data, "success");
@@ -56,6 +61,10 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 
         $scope.addgroupmodal = function () {
             $('#CreateGroupModal').openModal();
+        }
+
+        $scope.closegroupmodal = function () {
+            $('.lean-overlay').remove();
         }
 
         $scope.addGroup = function (groupName) {
@@ -170,6 +179,8 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                 }).then(function (response) {
                     $('#InviteMembersModal').closeModal();
                     swal('mail send successfully');
+                    window.location.reload();
+
                 }, function (reason) {
                     console.log(reason);
                 });

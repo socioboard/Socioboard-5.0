@@ -20,7 +20,7 @@ namespace Api.Socioboard.Repositories
             {
                 DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-90).Year, DateTime.UtcNow.AddDays(-90).Month, DateTime.UtcNow.AddDays(-90).Day, 0, 0, 0, DateTimeKind.Utc);
                 DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports>(t => t.pageId == profileId && t.date <= Helper.DateExtension.ConvertToUnixTimestamp(dayEnd) && t.date >= Helper.DateExtension.ConvertToUnixTimestamp(dayStart));
+                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports>(t => t.pageId.Equals(profileId) && (t.date <= Helper.DateExtension.ConvertToUnixTimestamp(dayEnd)) && (t.date >= Helper.DateExtension.ConvertToUnixTimestamp(dayStart)));
                 var task = Task.Run(async () =>
                 {
                     return await ret;
@@ -45,7 +45,7 @@ namespace Api.Socioboard.Repositories
 
             DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-90).Year, DateTime.UtcNow.AddDays(-90).Month, DateTime.UtcNow.AddDays(-90).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPagePost>(t => t.PageId == profileId && t.CreatedTime <= Helper.DateExtension.ToUnixTimestamp(dayEnd) && t.CreatedTime >= Helper.DateExtension.ToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPagePost>(t => t.PageId == profileId && (t.CreatedTime <= Helper.DateExtension.ToUnixTimestamp(dayEnd) && t.CreatedTime >= Helper.DateExtension.ToUnixTimestamp(dayStart)));
             var task = Task.Run(async () =>
             {
                 return await ret;

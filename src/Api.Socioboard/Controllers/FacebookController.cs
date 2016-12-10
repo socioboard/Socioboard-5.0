@@ -202,6 +202,48 @@ namespace Api.Socioboard.Controllers
             return Ok();
         }
 
+
+        [HttpGet("GetTopFeeds")]
+        public IActionResult GetTopFeeds(string profileId, long userId, int skip, int count)
+        {
+            if (skip + count < 100)
+            {
+                return Ok(Repositories.FacebookRepository.GetTopFacebookFeed(profileId, userId, _redisCache, _appSettings,skip,count));
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
+                MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
+                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
+                var sort = builder.Descending(t => t.FeedDate);
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+
+                foreach (var item in lstFbFeeds.ToList())
+                {
+                    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", _appSettings);
+                    var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId);
+                    var taskcomment = Task.Run(async () =>
+                    {
+                        return await resultcomment;
+                    });
+                    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                    _intafeed._facebookFeed = item;
+                    _intafeed._facebookComment = lstFbPostComment.ToList();
+                    lstfacebookfeed.Add(_intafeed);
+                }
+             return Ok(lstfacebookfeed);
+
+            }
+           // return Ok();
+        }
+
         [HttpGet("GetFacebookProfiles")]
         public IActionResult GetFacebookProfiles(long groupId)
         {
@@ -296,6 +338,10 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string postcomment = Repositories.FacebookRepository.PostFacebookComment(dbr, message, profileId, postId, _redisCache, _appSettings, _logger);
+            if(postcomment.Contains("Invalid Access Token"))
+            {
+                return Ok("Invalid Access Token");
+            }
             if (!string.IsNullOrEmpty(postcomment))
             {
                 return Ok("Posted");

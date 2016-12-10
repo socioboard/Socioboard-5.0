@@ -22,7 +22,7 @@ namespace Api.Socioboard.Helper
     public static class TwitterHelper
     {
 
-        public static string PostTwitterMessage(AppSettings _AppSettings, Cache _redisCache, string message, string profileid, long userid, string picurl, bool isScheduled, DatabaseRepository dbr, ILogger _logger, string sscheduledmsgguid = "")
+        public static string PostTwitterMessage(AppSettings _AppSettings, Cache _redisCache, string message, string profileid, long userid,string url,bool isScheduled, DatabaseRepository dbr, ILogger _logger, string sscheduledmsgguid = "")
         {
             bool rt = false;
             string ret = "";
@@ -36,13 +36,13 @@ namespace Api.Socioboard.Helper
             OAuthTwt.TwitterUserId = objTwitterAccount.twitterUserId;
 
             Tweet twt = new Tweet();
-            if (!string.IsNullOrEmpty(picurl))
+            if (!string.IsNullOrEmpty(url))
             {
                 try
                 {
                     PhotoUpload ph = new PhotoUpload();
                     string res = string.Empty;
-                    rt = ph.NewTweet(picurl, message, OAuthTwt, ref res);
+                    rt = ph.NewTweet(url, message, OAuthTwt, ref res);
                 }
                 catch (Exception ex)
                 {
@@ -69,14 +69,15 @@ namespace Api.Socioboard.Helper
 
                 ScheduledMessage scheduledMessage = new ScheduledMessage();
                 scheduledMessage.createTime = DateTime.UtcNow;
-                scheduledMessage.picUrl = picurl;
+                scheduledMessage.picUrl = objTwitterAccount.profileImageUrl;
                 scheduledMessage.profileId = profileid;
                 scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.Twitter;
                 scheduledMessage.scheduleTime = DateTime.UtcNow;
                 scheduledMessage.shareMessage = message;
+                scheduledMessage.socialprofileName = objTwitterAccount.twitterScreenName;
                 scheduledMessage.userId = userid;
                 scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                scheduledMessage.url = ret;
+                scheduledMessage.url = url;
                 dbr.Add<ScheduledMessage>(scheduledMessage);
 
 
@@ -295,6 +296,7 @@ namespace Api.Socioboard.Helper
                 ret = twtuser.PostDirect_Messages_New(OAuthTwt, message, toId);
                 _TwitterDirectMessages.messageId = ret[0]["id_str"].ToString();
                 _TwitterDirectMessages.message = ret[0]["text"].ToString();
+                _TwitterDirectMessages.profileId = objTwitterAccount.twitterUserId;
                 _TwitterDirectMessages.createdDate= DateTime.ParseExact(ret[0]["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
                 _TwitterDirectMessages.timeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(ret[0]["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
                 _TwitterDirectMessages.entryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");

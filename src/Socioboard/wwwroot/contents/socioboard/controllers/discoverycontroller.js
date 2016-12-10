@@ -136,11 +136,21 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
         $scope.discovery = function (SearchKeyword)
         {
             if (SearchKeyword != undefined) {
-                $scope.searchText = SearchKeyword;
+                if ($rootScope.user.TrailStatus!=2) {
+                    $scope.searchText = SearchKeyword;
+                } else {
+                    swal("your trail has beed expired.so you can't use paid features");
+                    return false;
+                }
 
             }
             else {
-                $scope.searchText = $('#discoverytext').val();
+                if ($rootScope.user.TrailStatus!=2) {
+                    $scope.searchText = $('#discoverytext').val();
+                } else {
+                    swal("your trail has beed expired.so you can't use paid features");
+                    return false;
+                }
             }
             if ($scope.searchText != '') {
                 $scope.dispbtn = false;

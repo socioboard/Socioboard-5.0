@@ -33,7 +33,7 @@ namespace Api.Socioboard.Repositories
             }
             catch { }
 
-            List<Domain.Socioboard.Models.Instagramaccounts> lstInstagramaccounts = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId.Equals(instagramUserId) && t.IsActive).ToList();
+            List<Domain.Socioboard.Models.Instagramaccounts> lstInstagramaccounts = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId.Equals(instagramUserId) ).ToList();
             if (lstInstagramaccounts != null && lstInstagramaccounts.Count() > 0)
             {
                 _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramAccount + instagramUserId, lstInstagramaccounts.First());
@@ -163,6 +163,7 @@ namespace Api.Socioboard.Repositories
                 }
                 else
                 {
+                    objInstagramAccount.id = Instagramaccounts.id;
                     int isSaved = dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(objInstagramAccount);
                     if (isSaved == 1)
                     {
@@ -382,68 +383,80 @@ namespace Api.Socioboard.Repositories
            
             Domain.Socioboard.Models.Mongo.MongoTwitterMessage _MongoTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
             JObject post_data = new JObject();
-            string url = "https://api.instagram.com/v1/users/" + profile_id + "/follows?access_token=" + access_token + "&count=100";
-            try
+            string url = "https://api.instagram.com/v1/users/self/follows?access_token=" + access_token + "&count=100";
+            bool hasData = true;
+            while (hasData)
             {
-                post_data = JObject.Parse(ApiInstagramHttp(url));
-
-            }
-            catch (Exception ex)
-            {
-               
-            }
-            try
-            {
-                dynamic items = post_data["data"];
-                foreach (var item in items)
+                try
                 {
-                    try
+                    post_data = JObject.Parse(ApiInstagramHttp(url));
+
+                }
+                catch (Exception ex)
+                {
+                    hasData = false;
+                }
+                try
+                {
+                    dynamic items = post_data["data"];
+                    if(items == null)
                     {
-                        Guid Id = Guid.NewGuid();
-
-                        string user_name = item["username"].ToString();
-                        string id = item["id"].ToString();
-                        string full_name = item["full_name"].ToString();
-                        DateTime CreatedTime = DateTime.Now;
-
-                        _MongoTwitterMessage.id = ObjectId.GenerateNewId();
-                        _MongoTwitterMessage.messageId = "";
-                        _MongoTwitterMessage.profileId = profile_id;
-                        _MongoTwitterMessage.fromId = profile_id;
-                        _MongoTwitterMessage.fromName = "";
-                        _MongoTwitterMessage.RecipientId = id;
-                        _MongoTwitterMessage.RecipientName = full_name;
-                        _MongoTwitterMessage.twitterMsg = "";
-                        _MongoTwitterMessage.fromProfileUrl = "";
-                        _MongoTwitterMessage.RecipientName = "";
-                        _MongoTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing;
-                        _MongoTwitterMessage.messageDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                        _MongoTwitterMessage.FollowerCount = 0;
-                        _MongoTwitterMessage.FollowingCount =0;
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage",_appSettings);
-                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == _MongoTwitterMessage.RecipientId && t.fromId == _MongoTwitterMessage.fromId && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing);
-                        var task = Task.Run(async () => {
-                            return await ret;
-                        });
-                        if (task.Result != null)
+                        hasData = false;
+                    }
+                    foreach (var item in items)
+                    {
+                        try
                         {
-                            int count = task.Result.Count;
-                            if (count < 1)
+                            Guid Id = Guid.NewGuid();
+
+                            string user_name = item["username"].ToString();
+                            string id = item["id"].ToString();
+                            string full_name = item["full_name"].ToString();
+                            DateTime CreatedTime = DateTime.Now;
+
+                            _MongoTwitterMessage.id = ObjectId.GenerateNewId();
+                            _MongoTwitterMessage.messageId = "";
+                            _MongoTwitterMessage.profileId = profile_id;
+                            _MongoTwitterMessage.fromId = id;
+                            _MongoTwitterMessage.fromName = "";
+                            _MongoTwitterMessage.RecipientId = profile_id;
+                            _MongoTwitterMessage.messageId = id;
+                            _MongoTwitterMessage.RecipientName = full_name;
+                            _MongoTwitterMessage.twitterMsg = "";
+                            _MongoTwitterMessage.fromProfileUrl = "";
+                            _MongoTwitterMessage.RecipientName = "";
+                            _MongoTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing;
+                            _MongoTwitterMessage.messageDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                            _MongoTwitterMessage.FollowerCount = 0;
+                            _MongoTwitterMessage.FollowingCount = 0;
+                            _MongoTwitterMessage.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
+                            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == _MongoTwitterMessage.RecipientId && t.fromId == _MongoTwitterMessage.fromId && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing);
+                            var task = Task.Run(async () => {
+                                return await ret;
+                            });
+                            if (task.Result != null)
                             {
-                                mongorepo.Add(_MongoTwitterMessage);
+                                int count = task.Result.Count;
+                                if (count < 1)
+                                {
+                                    mongorepo.Add(_MongoTwitterMessage);
+                                }
                             }
                         }
+                        catch (Exception ex)
+                        {
+
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                       
-                    }
+                    url = post_data["pagination"]["next_url"].ToString();
+                }
+                catch (Exception ex)
+                {
+                    hasData = false;
                 }
             }
-            catch (Exception ex)
-            {
-                
-            }
+           
        
            
         }
@@ -453,63 +466,75 @@ namespace Api.Socioboard.Repositories
 
             Domain.Socioboard.Models.Mongo.MongoTwitterMessage _MongoTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
             JObject post_data = new JObject();
-            string url = "https://api.instagram.com/v1/users/" + profile_id + "/followed-by?access_token=" + access_token + "&cout=100";
-            try
+            string url = "https://api.instagram.com/v1/users/self/followed-by?access_token=" + access_token + "&cout=100";
+            bool hasData = true;
+            while (hasData)
             {
-                post_data = JObject.Parse(ApiInstagramHttp(url));
-            }
-            catch (Exception ex)
-            {
-            }
-            try
-            {
-                dynamic items = post_data["data"];
-                foreach (var item in items)
+                try
                 {
-                    try
+                    post_data = JObject.Parse(ApiInstagramHttp(url));
+                }
+                catch (Exception ex)
+                {
+                    hasData = false;
+                }
+                try
+                {
+                    dynamic items = post_data["data"];
+                    if (items == null)
                     {
-                        Guid Id = Guid.NewGuid();
-                        string user_name = item["username"].ToString();
-                        string id = item["id"].ToString();
-                        string full_name = item["full_name"].ToString();
-                        string image_url = item["profile_picture"].ToString();
-                        DateTime CreatedTime = DateTime.UtcNow;
-                        _MongoTwitterMessage.id = ObjectId.GenerateNewId();
-                        _MongoTwitterMessage.profileId = profile_id;
-                        _MongoTwitterMessage.fromId = id;
-                        _MongoTwitterMessage.fromName = user_name;
-                        _MongoTwitterMessage.RecipientId = profile_id;
-                        _MongoTwitterMessage.RecipientName = "";
-                        _MongoTwitterMessage.fromProfileUrl = image_url;
-                        _MongoTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower;
-                        _MongoTwitterMessage.FollowerCount = 0;
-                        _MongoTwitterMessage.FollowingCount = 0;
-                        _MongoTwitterMessage.readStatus = status;
-                        _MongoTwitterMessage.messageTimeStamp = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow);
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
-                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == _MongoTwitterMessage.RecipientId && t.fromId == _MongoTwitterMessage.fromId && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower);
-                        var task = Task.Run(async () => {
-                            return await ret;
-                        });
-                        if (task.Result != null)
+                        hasData = false;
+                    }
+                    foreach (var item in items)
+                    {
+                        try
                         {
-                            int count = task.Result.Count;
-                            if (count < 1)
+                            Guid Id = Guid.NewGuid();
+                            string user_name = item["username"].ToString();
+                            string id = item["id"].ToString();
+                            string full_name = item["full_name"].ToString();
+                            string image_url = item["profile_picture"].ToString();
+                            DateTime CreatedTime = DateTime.UtcNow;
+                            _MongoTwitterMessage.id = ObjectId.GenerateNewId();
+                            _MongoTwitterMessage.profileId = profile_id;
+                            _MongoTwitterMessage.messageId = id;
+                            _MongoTwitterMessage.fromId = id;
+                            _MongoTwitterMessage.fromName = user_name;
+                            _MongoTwitterMessage.RecipientId = profile_id;
+                            _MongoTwitterMessage.RecipientName = "";
+                            _MongoTwitterMessage.fromProfileUrl = image_url;
+                            _MongoTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower;
+                            _MongoTwitterMessage.FollowerCount = 0;
+                            _MongoTwitterMessage.FollowingCount = 0;
+                            _MongoTwitterMessage.readStatus = status;
+                            _MongoTwitterMessage.messageTimeStamp = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow);
+                            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
+                            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == _MongoTwitterMessage.RecipientId && t.fromId == _MongoTwitterMessage.fromId && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower);
+                            var task = Task.Run(async () => {
+                                return await ret;
+                            });
+                            if (task.Result != null)
                             {
-                                mongorepo.Add(_MongoTwitterMessage);
+                                int count = task.Result.Count;
+                                if (count < 1)
+                                {
+                                    mongorepo.Add(_MongoTwitterMessage);
+                                }
                             }
                         }
+                        catch (Exception ex)
+                        {
+
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                       
-                    }
+                    url = post_data["pagination"]["next_url"].ToString();
+                }
+                catch (Exception ex)
+                {
+                    hasData = false;
                 }
             }
-            catch (Exception ex)
-            {
-                
-            }
+           
 
           
         }
@@ -690,7 +715,18 @@ namespace Api.Socioboard.Repositories
 
                     try
                     {
-                        dynamic likes = item["likes"]["data"];
+                        dynamic likes = null;
+                        string url1 = "https://api.instagram.com/v1/media/" + feed_id + "/likes?access_token=" + access_token ;
+                        try
+                        {
+                            likes = JObject.Parse(ApiInstagramHttp(url1));
+                            likes = likes["data"];
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+
+                       
                         foreach (var like in likes)
                         {
                             try

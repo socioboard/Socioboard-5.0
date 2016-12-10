@@ -3,6 +3,13 @@
     Layout = "~/Themes/" + path + "/Views/Shared/_SocioboardLayout.cshtml";
 }
 
+<script>
+    $('ul.tabs').tabs({
+        onShow: function (tab) {
+            $('.carousel').carousel();
+        }
+    });
+</script>
 <div class="container">
 
     <div class="section z-depth-1">
@@ -25,7 +32,7 @@
                 <div class="row">
                     <div class="col s8">
                         <h4 class="Righteous_font grey-text text-darken-2">About Socioboard</h4>
-                        <blockquote><p>Socioboard is world’s first open source social technology enabler and first open source product company from India. We build social technology which helps businesses and brands to better understand social media and harness its real power.Our vision is to provide easy to use tools to businesses and brands which covers 360 degree use cases when it comes to Social Media.We are building innovative products for various social networks which fill the critical gap - Social Networks were meant for user’s not for businesses. Our tools and products view Social from a business point of view and fill those gaps which social networks cannot fill exquisitely.Business should own their social data and they should be incharge of what they want to do with it, generate reports and analyze data to make informed and improved business decisions. This is possible when things are open and businesses have freedom to choose, we believe open source is a way to make this possible. So that brands and businesses can embrace social technology with an open mind in an open and connected world.We believe in providing our users with choice, we don’t push useless buggy bloatware to their throat and force them to pay for it.Our products resonate with our vision to make social technologies more open.</p></blockquote>
+                        <blockquote><p style="text-align: justify;">Socioboard is world’s first open source social technology enabler and first open source product company from India. We build social technology which helps businesses and brands to better understand social media and harness its real power.Our vision is to provide easy to use tools to businesses and brands which covers 360 degree use cases when it comes to Social Media.We are building innovative products for various social networks which fill the critical gap - Social Networks were meant for user’s not for businesses. Our tools and products view Social from a business point of view and fill those gaps which social networks cannot fill exquisitely.Business should own their social data and they should be incharge of what they want to do with it, generate reports and analyze data to make informed and improved business decisions. This is possible when things are open and businesses have freedom to choose, we believe open source is a way to make this possible. So that brands and businesses can embrace social technology with an open mind in an open and connected world.We believe in providing our users with choice, we don’t push useless buggy bloatware to their throat and force them to pay for it.Our products resonate with our vision to make social technologies more open.</p></blockquote>
 </div>
                     <div class="col s4">
                         <img src="http://i.imgur.com/pp1DrxP.gif" class="responsive-img">

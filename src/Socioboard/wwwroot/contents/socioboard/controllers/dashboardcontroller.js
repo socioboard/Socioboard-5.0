@@ -12,7 +12,6 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         $scope.getHttpsURL = function (obj) {
             return obj.replace("http:", "https:")
         };
-
             if ($rootScope.lstAddFbPages != undefined) {
                 $('#FbFanpage_Modal').openModal();
             }
@@ -74,11 +73,12 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 var profiles = $('#composeProfiles').val();
                 var message = $('#composeMessage').val();
                 var updatedmessage = "";
-                var postdata = message.split("\n");
-                for (var i = 0; i < postdata.length; i++) {
-                    updatedmessage = updatedmessage + "<br>" + postdata[i];
-                }
-                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                message = encodeURIComponent(message);
+                //var postdata = message.split("\n");
+                //for (var i = 0; i < postdata.length; i++) {
+                //    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                //}
+                // updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
                 if (profiles.length > 0 && message!='') {
                     $scope.checkfile();
                     if ($scope.check == true) {
@@ -86,7 +86,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         formData.append('files', $("#composeImage").get(0).files[0]);
                         $http({
                             method: 'POST',
-                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
+                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message,
                             data: formData,
                             headers: {
                                 'Content-Type': undefined

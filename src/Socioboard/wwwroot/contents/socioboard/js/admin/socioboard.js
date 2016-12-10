@@ -19,7 +19,7 @@ dashboard = function () {
         inDuration: 300,
         outDuration: 225,
         constrain_width: false, // Does not change width of dropdown to that of the activator
-       // hover: true, // Activate on hover
+        // hover: true, // Activate on hover
         gutter: 0, // Spacing from edge
         belowOrigin: false, // Displays dropdown below the button
         alignment: 'right' // Displays dropdown with edge aligned to the right of button
@@ -174,7 +174,7 @@ profilesetting = function () {
     });
     $('.datepicker').pickadate({
         selectMonths: 15, // Creates a dropdown to control month
-        selectYears:15 // Creates a dropdown of 15 years to control year
+        selectYears: 15 // Creates a dropdown of 15 years to control year
     });
     Materialize.updateTextFields();
 
@@ -882,7 +882,7 @@ calendar = function () {
     }
     );
 
-    
+
 
     // Basic
     $('.dropify').dropify();
@@ -972,7 +972,7 @@ likedinfeeds = function () {
 discovery = function () {
     // initialize core components
 
-   // $('.modal-trigger').leanModal();
+    // $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
     $('select').material_select();
     $('.tooltipped').tooltip({ delay: 50 });
@@ -1507,7 +1507,7 @@ pageshareathon = function () {
 groups = function () {
     // initialize core components
 
-    $('.modal-trigger').leanModal();
+   // $('.modal-trigger').leanModal();
     //$('ul.tabs').tabs();
     $('select').material_select();
     $('.dropdown-button').dropdown({
@@ -1946,7 +1946,7 @@ instagramreport = function () {
 // design feeds sample
 designfeeds = function () {
     // initialize core components
-   // $('#searchcatagory').openModal();
+    // $('#searchcatagory').openModal();
     $('ul.tabs').tabs();
     $('.modal-trigger').leanModal();
     $('select').material_select();
@@ -1989,10 +1989,15 @@ designfeeds = function () {
     });
 
 };
+
+
+
+// boardme 
+
 // design feeds sample
-designfeeds = function () {
+boardme = function () {
     // initialize core components
-   // $('#searchcatagory').openModal();
+    // $('#searchcatagory').openModal();
     $('ul.tabs').tabs();
     $('.modal-trigger').leanModal();
     $('select').material_select();
@@ -2034,4 +2039,9 @@ designfeeds = function () {
         alert('File deleted');
     });
 
+};
+
+
+googleanalyticreport = function () {
+    $('ul.tabs').tabs();
 };

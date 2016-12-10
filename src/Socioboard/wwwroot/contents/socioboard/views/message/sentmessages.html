@@ -21,8 +21,11 @@
                                             <div class="col m8">
                                               <p class="break_word ultra-small">{{sentmessage.shareMessage}}.</p>
                                             </div>
-                                            <div class="col m4 center" ng-if="sentmessage.url">
+                                            <!--<div class="col m4 center" ng-if="sentmessage.url">
                                               <img src="{{sentmessage.url}}" class="responsive-img ">
+                                            </div>-->
+                                            <div class="col m4 center" ng-if="sentmessage.url">
+                                                <img src="{{getProperURL(sentmessage.url)}}" class="responsive-img ">
                                             </div>
                                           </div>                                         
                                           <a class="tooltipped secondary-content" data-position="left"  data-tooltip="{{sentmessage.scheduleTime}}">{{sentmessage.scheduleTime}}</a>

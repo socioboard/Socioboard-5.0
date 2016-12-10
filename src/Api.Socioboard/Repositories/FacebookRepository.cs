@@ -198,6 +198,7 @@ namespace Api.Socioboard.Repositories
             {
                 fbAcc.IsActive = true;
                 fbAcc.UserId = userId;
+                fbAcc.Is90DayDataUpdated = false;
                 try
                 {
                     fbAcc.Friends = (Convert.ToInt64(profile["fan_count"]));
@@ -205,6 +206,14 @@ namespace Api.Socioboard.Repositories
                 catch (Exception)
                 {
                     fbAcc.Friends = 0;
+                }
+                try
+                {
+                    fbAcc.coverPic = (Convert.ToString(profile["cover"]["source"]));
+                }
+                catch (Exception)
+                {
+
                 }
                 fbAcc.AccessToken = accessToken;
                 isSaved = dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
@@ -226,6 +235,14 @@ namespace Api.Socioboard.Repositories
                 fbAcc.AccessToken = accessToken;
                 fbAcc.FbUserId = (Convert.ToString(profile["id"]));
                 fbAcc.FbUserName = (Convert.ToString(profile["name"]));
+                try
+                {
+                    fbAcc.coverPic = (Convert.ToString(profile["cover"]["source"]));
+                }
+                catch (Exception)
+                {
+                    
+                }
                 try
                 {
                     fbAcc.EmailId = (Convert.ToString(profile["email"]));
@@ -256,7 +273,7 @@ namespace Api.Socioboard.Repositories
                              FacebookRepository.SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                              FacebookRepository.SaveFacebookPageFeed(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings);
                              FacebookRepository.SavePageConversations(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
-                            // FacebookRepository.SavePageNotification(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
+                             // FacebookRepository.SavePageNotification(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                          }).Start();
 
                         UpdateGroupShareathonPage(fbAcc, userId, settings);
@@ -346,7 +363,7 @@ namespace Api.Socioboard.Repositories
 
             try
             {
-                List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(FbUserId) && t.IsActive).ToList();
+                List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(FbUserId)).ToList();
                 if (lstFbAcc != null && lstFbAcc.Count() > 0)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + FbUserId, lstFbAcc.First());
@@ -528,13 +545,18 @@ namespace Api.Socioboard.Repositories
                     objFacebookFeed.Type = "fb_feed";
                     objFacebookFeed.ProfileId = ProfileId;
                     objFacebookFeed.Id = MongoDB.Bson.ObjectId.GenerateNewId();
-                    objFacebookFeed.FromProfileUrl = "http://graph.facebook.com/" + result["from"]["id"] + "/picture?type=small";
-                    objFacebookFeed.FromName = result["from"]["name"].ToString();
-                    objFacebookFeed.FromId = result["from"]["id"].ToString();
-                    objFacebookFeed.FeedId = result["id"].ToString();
-                    objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
-                    objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
-                    objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
+                    try
+                    {
+                        objFacebookFeed.FromProfileUrl = "http://graph.facebook.com/" + result["from"]["id"] + "/picture?type=small";
+                        objFacebookFeed.FromName = result["from"]["name"].ToString();
+                        objFacebookFeed.FromId = result["from"]["id"].ToString();
+                        objFacebookFeed.FeedId = result["id"].ToString();
+                        objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                        objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
+                        objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
+
+                    }
+                    catch (Exception ex) { }
 
                     try
                     {
@@ -745,111 +767,111 @@ namespace Api.Socioboard.Repositories
         }
 
 
-        //public static void SavePageNotification(string AccessToken, string ProfileId, Helper.AppSettings settings, ILogger _logger)
-        //{
-        //    try
-        //    {
-        //        dynamic data = FbUser.notifications(AccessToken);
-        //        Domain.Socioboard.Models.Mongo.MongoTwitterMessage _InboxMessages;
+        public static void SavePageNotification(string AccessToken, string ProfileId, Helper.AppSettings settings, ILogger _logger)
+        {
+            try
+            {
+                dynamic data = FbUser.notifications(AccessToken);
+                Domain.Socioboard.Models.Mongo.MongoTwitterMessage _InboxMessages;
 
-        //        foreach (var item in data["data"])
-        //        {
-        //            _InboxMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
+                foreach (var item in data["data"])
+                {
+                    _InboxMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
 
-        //            _InboxMessages.profileId = ProfileId;
-        //            _InboxMessages.type = Domain.Socioboard.Enum.TwitterMessageType.FacebookPageNotification;
-        //            _InboxMessages.messageTimeStamp = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow);
-        //            try
-        //            {
-        //                _InboxMessages.twitterMsg = item["title"].ToString();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            }
-        //            try
-        //            {
-        //                _InboxMessages.messageId = item["id"].ToString();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            }
-        //            try
-        //            {
-        //                _InboxMessages.fromId = item["from"]["id"].ToString();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            }
-        //            try
-        //            {
-        //                _InboxMessages.fromName = item["from"]["name"].ToString();
-        //                _InboxMessages.fromScreenName = item["from"]["name"].ToString();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            }
-        //            try
-        //            {
-        //                _InboxMessages.fromProfileUrl = "http://graph.facebook.com/" + _InboxMessages.fromId + "/picture?type=small";
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            }
-        //            try
-        //            {
-        //                _InboxMessages.RecipientId = item["to"]["id"].ToString();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            }
-        //            try
-        //            {
-        //                _InboxMessages.RecipientName = item["to"]["name"].ToString();
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            }
-        //            //try
-        //            //{
-        //            //    _InboxMessages.r = "http://graph.facebook.com/" + _InboxMessages.RecipientId + "/picture?type=small";
-        //            //}
-        //            //catch (Exception ex)
-        //            //{
-        //            //    _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            //}
-        //            try
-        //            {
-        //                _InboxMessages.messageDate = Convert.ToDateTime(item["created_time"].ToString());
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
-        //            }
-        //            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", settings);
-        //            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId == _InboxMessages.profileId && t.messageId == _InboxMessages.messageId);
-        //            var task = Task.Run(async () =>
-        //              {
-        //                  return await ret;
-        //              });
-        //            int count = task.Result.Count;
-        //            if (count < 1)
-        //            {
-        //                mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(_InboxMessages);
-        //            }
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
+                    _InboxMessages.profileId = ProfileId;
+                    _InboxMessages.type = Domain.Socioboard.Enum.TwitterMessageType.FacebookPageNotification;
+                    _InboxMessages.messageTimeStamp = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow);
+                    try
+                    {
+                        _InboxMessages.twitterMsg = item["title"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    }
+                    try
+                    {
+                        _InboxMessages.messageId = item["id"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    }
+                    try
+                    {
+                        _InboxMessages.fromId = item["from"]["id"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    }
+                    try
+                    {
+                        _InboxMessages.fromName = item["from"]["name"].ToString();
+                        _InboxMessages.fromScreenName = item["from"]["name"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    }
+                    try
+                    {
+                        _InboxMessages.fromProfileUrl = "http://graph.facebook.com/" + _InboxMessages.fromId + "/picture?type=small";
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    }
+                    try
+                    {
+                        _InboxMessages.RecipientId = item["to"]["id"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    }
+                    try
+                    {
+                        _InboxMessages.RecipientName = item["to"]["name"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    }
+                    //try
+                    //{
+                    //    _InboxMessages.r = "http://graph.facebook.com/" + _InboxMessages.RecipientId + "/picture?type=small";
+                    //}
+                    //catch (Exception ex)
+                    //{
+                    //    _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    //}
+                    try
+                    {
+                        _InboxMessages.messageDate = Convert.ToDateTime(item["created_time"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Facebook.asmx = > getUserNotifications = > " + ex.Message);
+                    }
+                    MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", settings);
+                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId == _InboxMessages.profileId && t.messageId == _InboxMessages.messageId);
+                    var task = Task.Run(async () =>
+                      {
+                          return await ret;
+                      });
+                    int count = task.Result.Count;
+                    if (count < 1)
+                    {
+                        mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(_InboxMessages);
+                    }
+                }
+            }
+            catch (Exception)
+            {
 
-        //    }
-        //}
+            }
+        }
 
         public static void SaveFacebookPageFeed(string accesstoken, string facebookid, Helper.AppSettings _appSettings)
         {
@@ -1200,6 +1222,37 @@ namespace Api.Socioboard.Repositories
 
         }
 
+        public static List<Domain.Socioboard.Models.Mongo.facebookfeed> GetTopFacebookFeed(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count)
+        {
+            List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
+            MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
+            var builder = Builders<MongoFacebookFeed>.Sort;
+            var sort = builder.Descending(t => t.FeedDate);
+            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+
+            foreach (var item in lstFbFeeds.ToList())
+            {
+                Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
+                var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId);
+                var taskcomment = Task.Run(async () =>
+                {
+                    return await resultcomment;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                _intafeed._facebookFeed = item;
+                _intafeed._facebookComment = lstFbPostComment.ToList();
+                lstfacebookfeed.Add(_intafeed);
+            }
+            return lstfacebookfeed;
+        }
+
         public static List<Domain.Socioboard.Models.Mongo.MongoFbPostComment> GetFbPostComment(string postId, Helper.Cache _redisCache, Helper.AppSettings setting)
         {
             List<Domain.Socioboard.Models.Mongo.MongoFbPostComment> inMemFeeds = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoFbPostComment>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheFbPostComment + postId);
@@ -1253,7 +1306,7 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.Facebookaccounts inMemFbAcc = _redisCache.Get<Domain.Socioboard.Models.Facebookaccounts>(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + profileId);
             if (inMemFbAcc == null)
             {
-                lstFbAcc = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId));
+                lstFbAcc = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.IsActive);
                 if (lstFbAcc != null)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + profileId, lstFbAcc);
@@ -1265,6 +1318,10 @@ namespace Api.Socioboard.Repositories
                 lstFbAcc = inMemFbAcc;
             }
             string commentId = FbUser.postComments(lstFbAcc.AccessToken, postId, message);
+            if (commentId.Contains("Invalid Access Token"))
+            {
+                return "Invalid Access Token";
+            }
             if (!string.IsNullOrEmpty(commentId))
             {
                 MongoFbPostComment fbPostComment = new MongoFbPostComment();
@@ -1323,10 +1380,10 @@ namespace Api.Socioboard.Repositories
             }
             else
             {
-                lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType==Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage)).ToList();
+                lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage)).ToList();
             }
             profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-            long FacebookfanPageCount = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => profileids.Contains(t.FbUserId)).Sum(t => t.Friends);
+            long FacebookfanPageCount = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => profileids.Contains(t.FbUserId) && t.IsActive).Sum(t => t.Friends);
             if (FacebookfanPageCount > 1000000)
             {
                 long r = FacebookfanPageCount % 1000000;

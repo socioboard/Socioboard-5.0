@@ -59,10 +59,15 @@
                 </div>
 
                 <!-- Compose Email Trigger -->
-                <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                <div ng-if="user.TrailStatus!=2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
                   <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
                     <i class="large mdi-editor-mode-edit  animated bounceIn infinite"></i>
                   </a>
+                </div>
+                <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                    <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
+                        <i class="large mdi-editor-mode-edit"></i>
+                    </a>
                 </div>
 
                 <!-- Compose Email Structure -->
@@ -275,10 +280,15 @@
 
 
         <!-- Compose Email Trigger -->
-        <div class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
+        <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
             <div class="btn-floating btn-large red modal-trigger" href="#ComposePost">
                 <i class="large mdi-editor-mode-edit"></i>
             </div>
+        </div>
+        <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+            <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
+                <i class="large mdi-editor-mode-edit"></i>
+            </a>
         </div>
         <div id="ComposePost" class="modal">
             <div class="modal-content">

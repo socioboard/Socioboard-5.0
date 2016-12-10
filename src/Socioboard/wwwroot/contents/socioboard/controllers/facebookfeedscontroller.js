@@ -8,24 +8,34 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         var start = 0; // where to start data
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
+        var count = 30;
         $scope.loadmore = "Loading More data..";
         $scope.lstFbComments = [];
-
+        $scope.getHttpsURL = function (obj) {
+            console.log(obj);
+            return obj.replace("http:", "https:")
+        };
         $scope.lstFbFeeds = [];
+        if ($rootScope.user.TrailStatus == 2) {
+            count = 5
+        }
         $scope.LoadTopFeeds = function () {
-            //codes to load  recent Feeds
-            $http.get(apiDomain + '/api/Facebook/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
-                          .then(function (response) {
-                              // $scope.lstProfiles = response.data;
-                             // $scope.lstFbFeeds = response.data;
-                              $scope.feeddate(response.data);
-                              if (response.data == null) {
-                                  reachLast = true;
-                              }
-                          }, function (reason) {
-                              $scope.error = reason.data;
-                          });
-            // end codes to load  recent Feeds
+           
+                //codes to load  recent Feeds
+            $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
+                              .then(function (response) {
+                                  // $scope.lstProfiles = response.data;
+                                  $scope.lstFbFeeds = response.data;
+                                  // $scope.feeddate(response.data);
+                                  console.log(response.data);
+                                  if (response.data == null) {
+                                      reachLast = true;
+                                  }
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+                // end codes to load  recent Feeds
+            
         }
         $scope.LoadTopFeeds();
 
@@ -33,14 +43,27 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         $scope.feeddate = function (parm) {
 
             for (var i = 0; i < parm.length; i++) {
-                var date = moment(parm[i].feedDate);
+                var date = moment(parm[i]._facebookFeed.feedDate);
                 var d = new Date(parm[i].feedDate);
                 var d4 = d.setTime(d.getTime() + 37800000);;
                 var date1 = moment(d4);
                 var newdate = date1.toString();
                 var splitdate = newdate.split(" ");
                 date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3] + " " + splitdate[4];
-                parm[i].feedDate = date;
+                parm[i]._facebookFeed.feedDate = date;
+                if (parm[i]._facebookComment.length > 0) {
+                    for (var j = 0; j < parm[i]._facebookComment.length; j++) {
+                        var datecomment = moment(parm[i]._facebookComment[j].commentdate);
+                        var dcomment = new Date(parm[i]._facebookComment[j].commentdate);
+                        var d4comment = dcomment.setTime(d.getTime() + 37800000);
+                        var date1comment = moment(d4comment);
+                        var newdatecomment = date1comment.toString();
+                        var splitdatecomment = newdatecomment.split(" ");
+                        datecomment = splitdatecomment[0] + " " + splitdatecomment[1] + " " + splitdatecomment[2] + " " + splitdatecomment[3] + " " + splitdatecomment[4];
+                        parm[i]._facebookComment[j].commentdate = datecomment;
+                    }
+                }
+
             }
             $scope.lstFbFeeds = parm;
 
@@ -48,11 +71,11 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
 
         $scope.listData = function () {
-           
+
             if (reachLast) {
                 return false;
             }
-            $http.get(apiDomain + '/api/Facebook/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
+            $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
                          .then(function (response) {
                              console.log(response.data);
                              // $scope.lstProfiles = response.data;
@@ -74,18 +97,18 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         facebookfeeds();
 
         $scope.renderComments = function (feedId, index) {
-            $scope.LoadTopComments(feedId,index);
+            $scope.LoadTopComments(feedId, index);
             $('.collapsible').collapsible({
                 accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
             });
         }
 
-        $scope.LoadTopComments = function (feedId,index) {
+        $scope.LoadTopComments = function (feedId, index) {
             //codes to load  recent Feed Commets
             $http.get(apiDomain + '/api/Facebook/GetFacebookPostComment?postId=' + feedId)
                           .then(function (response) {
-                             // $scope.lstFbComments = response.data;
-                              $scope.commentdate(response.data,index);
+                              // $scope.lstFbComments = response.data;
+                              $scope.commentdate(response.data, index);
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -93,7 +116,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         }
 
 
-        $scope.commentdate = function (parm,index) {
+        $scope.commentdate = function (parm, index) {
 
             for (var i = 0; i < parm.length; i++) {
                 var date = moment(parm[i].commentdate);
@@ -110,16 +133,16 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         }
 
 
-        $scope.PostFacebookComment = function (feedId, ProfileId)
-        {
+        $scope.PostFacebookComment = function (feedId, ProfileId) {
             var postcomment = $('#postcomment_' + feedId).val();
-           
-            if (postcomment!='' && postcomment!=null) {
+
+            if (postcomment != '' && postcomment != null) {
                 $http.post(apiDomain + '/api/Facebook/PostFacebookComment?postId=' + feedId + '&profileId=' + ProfileId + '&message=' + postcomment)
                                      .then(function (response) {
+                                         swal(response.data);
                                          $('#postcomment_' + feedId).val('');
-                                         $scope.LoadTopComments(feedId);
-
+                                         // $scope.LoadTopComments(feedId);
+                                         $scope.LoadTopFeeds();
                                      }, function (reason) {
                                          $scope.error = reason.data;
                                      });
@@ -151,6 +174,8 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             }
         }
 
+
+
     });
 });
 
@@ -159,11 +184,21 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-               
                 $('.collapsible').collapsible({
-                    accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+                    accordion: true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
                 });
             });
         }
     };
 })
+
+//SocioboardApp.directive('myRepeatTimeoutfacebookpostsDirective', function ($timeout) {
+//    return function (scope, element, attrs) {
+//if (scope.$last === true) {
+//            $timeout(function () {
+//                $('.collapsible').collapsible({});
+
+//            });
+// }
+//    };
+//})

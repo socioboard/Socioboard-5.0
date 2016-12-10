@@ -96,5 +96,7 @@ namespace Domain.Socioboard.Helpers
             TimeSpan diff = date.ToUniversalTime() - origin;
             return Math.Floor(diff.TotalSeconds);
         }
+
+
     }
 }

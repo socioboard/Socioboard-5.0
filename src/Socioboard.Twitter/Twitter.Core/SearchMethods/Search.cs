@@ -117,7 +117,7 @@ namespace Socioboard.Twitter.Twitter.Core.SearchMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetSearchTweetsUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("q", SearchKeyword);
-            strdic.Add("count", "20");
+            strdic.Add("count", "30");
             string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";

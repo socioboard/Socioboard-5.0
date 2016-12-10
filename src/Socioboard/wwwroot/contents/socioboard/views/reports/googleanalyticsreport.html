@@ -12,7 +12,7 @@
                 </div>
                 <span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>
             </h4>
-            <h6 class="pull-right margin-top-20">
+            <h6 class="pull-right margin-top-20" ng-if="user.TrailStatus!=2">
                 <a ng-click="getData(selectedProfile,15)" class="btn">15</a>
                 <a ng-click="getData(selectedProfile,30)" class="btn">30</a>
                 <a ng-click="getData(selectedProfile,60)" class="btn">60</a>
@@ -93,108 +93,25 @@
                                         </li>
 
 
-                                        <div class="center">
-                                            <div class="preloader-wrapper big active">
-                                                <div class="spinner-layer spinner-blue">
-                                                    <div class="circle-clipper left">
-                                                        <div class="circle"></div>
-                                                    </div><div class="gap-patch">
-                                                        <div class="circle"></div>
-                                                    </div><div class="circle-clipper right">
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="spinner-layer spinner-red">
-                                                    <div class="circle-clipper left">
-                                                        <div class="circle"></div>
-                                                    </div><div class="gap-patch">
-                                                        <div class="circle"></div>
-                                                    </div><div class="circle-clipper right">
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="spinner-layer spinner-yellow">
-                                                    <div class="circle-clipper left">
-                                                        <div class="circle"></div>
-                                                    </div><div class="gap-patch">
-                                                        <div class="circle"></div>
-                                                    </div><div class="circle-clipper right">
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="spinner-layer spinner-green">
-                                                    <div class="circle-clipper left">
-                                                        <div class="circle"></div>
-                                                    </div><div class="gap-patch">
-                                                        <div class="circle"></div>
-                                                    </div><div class="circle-clipper right">
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </ul>
                                 </div>
                                 <div id="Web" class="col s12">
                                     <ul class="collection gplusfeeds">
                                         <li class="collection-item avatar" ng-repeat="webpost in ArticlesAndBlogsReports">
-                                            <img src="{{webpost.videoUrl}}" alt="Chanchal Santra" class="circle">
-                                            <span class="email-title">{{webpost.hostName}}</span>
+                                            
+                                          <img src="{{webpost.videoUrl}}" alt="Chanchal Santra" class="circle">
+                                            <span class="email-title">{{webpost.title}}</span>
                                             <div class="row feeds_post z-depth-1 hoverable">
                                                 <div class="col m8">
-                                                    <p class="break_word ultra-small">{{webpost.description}}.</p>
+                                                    <p class="break_word ultra-small">{{webpost.description}}</p>
                                                 </div>
                                             </div>
-                                            <a class="tooltipped secondary-content" data-position="left" data-tooltip="09">{{webpost.created_Time}}</a>
+                                            <!--<a class="tooltipped secondary-content" data-position="left" data-tooltip="{{webpost.created_Time}}">{{webpost.created_Time}}</a>-->
                                         </li>
 
 
-                                        <div class="center">
-                                            <div class="preloader-wrapper big active">
-                                                <div class="spinner-layer spinner-blue">
-                                                    <div class="circle-clipper left">
-                                                        <div class="circle"></div>
-                                                    </div><div class="gap-patch">
-                                                        <div class="circle"></div>
-                                                    </div><div class="circle-clipper right">
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="spinner-layer spinner-red">
-                                                    <div class="circle-clipper left">
-                                                        <div class="circle"></div>
-                                                    </div><div class="gap-patch">
-                                                        <div class="circle"></div>
-                                                    </div><div class="circle-clipper right">
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="spinner-layer spinner-yellow">
-                                                    <div class="circle-clipper left">
-                                                        <div class="circle"></div>
-                                                    </div><div class="gap-patch">
-                                                        <div class="circle"></div>
-                                                    </div><div class="circle-clipper right">
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="spinner-layer spinner-green">
-                                                    <div class="circle-clipper left">
-                                                        <div class="circle"></div>
-                                                    </div><div class="gap-patch">
-                                                        <div class="circle"></div>
-                                                    </div><div class="circle-clipper right">
-                                                        <div class="circle"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        
                                     </ul>
                                 </div>
                             </div>

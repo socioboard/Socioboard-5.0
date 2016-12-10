@@ -48,13 +48,17 @@
                                   </td>
                                   <td class="center">
                                     <div class="col s12" ng-if="postrssfeed.profileType==0 ||postrssfeed.profileType==1 ">
-                                        <img src="https://graph.facebook.com/{{postrssfeed.profileId}}/picture?type=small" class="responsive-img profilePic" style="float: left;" >
-                                        <img src="/contents/socioboard/images/fb_icon.png"  style="float: left; z-index: 999; margin-top: 70px; margin-left: -11px;">
+                                        <img src="https://graph.facebook.com/{{postrssfeed.profileId}}/picture?type=small" class="responsive-img profilePic"  >
+                                        <img src="/contents/socioboard/images/fb_icon.png"  class="responsive-img msgiconPoss">
                                     </div>
                                       <div class="col s12" ng-if="postrssfeed.profileType==2">
-                                          <img src="{{postrssfeed.profileImageUrl}}" class="responsive-img profilePic" style="float: left;">
-                                          <img src="/contents/socioboard/images/twticon.png" style="float: left; z-index: 999; margin-top: 70px; margin-left: -11px;">
+                                          <img src="{{postrssfeed.profileImageUrl}}" class="responsive-img profilePic">
+                                          <img src="/contents/socioboard/images/twticon.png" class="responsive-img msgiconPoss">
                                       </div>
+                                      <!--<div class="col s12">
+                                          <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="responsive-img profilePic">
+                                          <img class="responsive-img msgiconPoss" src="../../images/twticon.png">
+                                      </div>-->
                                     <div class="col s12">
                                         <span>{{postrssfeed.profileName}}</span>
                                     </div>

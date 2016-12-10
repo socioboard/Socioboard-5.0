@@ -330,6 +330,7 @@ ul.side-nav.leftside-navigation li.active > a{
 }
 .profile-image {
     display: flex;
+    height:80px;
     width: 50%;
     margin-left: auto;
     margin-right: auto;

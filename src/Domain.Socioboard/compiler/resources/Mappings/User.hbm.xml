@@ -98,5 +98,14 @@
     <property name="otherNewsLetters">
       <column name="otherNewsLetters" />
     </property>
+    <property name="PayPalAccountStatus">
+      <column name="PayPalAccountStatus" />
+    </property>
+    <property name="PaymentType">
+      <column name="PaymentType" />
+    </property>
+    <property name="TrailStatus">
+      <column name="TrailStatus" />
+    </property>
   </class>
 </hibernate-mapping>

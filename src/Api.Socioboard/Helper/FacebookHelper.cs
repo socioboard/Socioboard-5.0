@@ -52,7 +52,7 @@ namespace Api.Socioboard.Helper
                     byte[] img = webClient.DownloadData(imagePath);
                     media.SetValue(img);
                     args["source"] = media;
-                    ret = fb.Post("v2.1/" + fbUserId + "/photos", args).ToString();
+                    ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();//v2.1
                 }
                 else
                 {
@@ -60,19 +60,19 @@ namespace Api.Socioboard.Helper
                     {
                         args["link"] = link;
                     }
-                    ret = fb.Post("v2.1/" + fbUserId + "/feed", args).ToString();
+                    ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
 
                 }
                 ScheduledMessage scheduledMessage = new ScheduledMessage();
                 scheduledMessage.createTime = DateTime.UtcNow;
-                scheduledMessage.picUrl = imagePath;
+                scheduledMessage.picUrl = "https://graph.facebook.com/" + fbUserId + "/picture?type=small";//imagePath;
                 scheduledMessage.profileId = profileId;
                 scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.Facebook;
                 scheduledMessage.scheduleTime = DateTime.UtcNow;
                 scheduledMessage.shareMessage = message;
                 scheduledMessage.userId = userId;
                 scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                scheduledMessage.url = ret;
+                scheduledMessage.url = imagePath;//"https://graph.facebook.com/"+ fbUserId + "/picture?type=small";
                 dbr.Add<ScheduledMessage>(scheduledMessage);
 
             }
@@ -235,7 +235,7 @@ namespace Api.Socioboard.Helper
             try
             {
                 System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
-                dynamic friends = fb.Get("v2.1/" + _facebookpage.ProfilePageId);
+                dynamic friends = fb.Get("v2.7/" + _facebookpage.ProfilePageId);//v2.1
                 fancountPage = Convert.ToInt32(friends["likes"].ToString());
             }
             catch 

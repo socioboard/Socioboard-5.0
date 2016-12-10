@@ -68,6 +68,7 @@
 -resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\PaymentTransaction.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.PaymentTransaction.hbm.xml
 -resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\RssFeedUrl.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.RssFeedUrl.hbm.xml
 -resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\ScheduledMessage.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.ScheduledMessage.hbm.xml
+-resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Training.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Training.hbm.xml
 -resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\TwitterAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.TwitterAccount.hbm.xml
 -resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\TwitterNameTable.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.TwitterNameTable.hbm.xml
 -resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\User.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.User.hbm.xml
@@ -79,6 +80,8 @@
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\FeedTableType.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\GPlusProfileType.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\GroupMemberStatus.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PaymentType.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PayPalAccountStatus.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBAccountType.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBGroupUserStatus.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBPaymentStatus.cs"
@@ -89,6 +92,7 @@
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SocialProfileType.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\TaskStatus.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\TwitterMessageType.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\UserTrailStatus.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\ObjectIdConverter.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\SBHelper.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Models\ISocialProfile.cs"
@@ -121,6 +125,7 @@
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\PaymentTransaction.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\RssFeedUrl.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\ScheduledMessage.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Training.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterAccount.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterNameTable.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterRecentFollower.cs"

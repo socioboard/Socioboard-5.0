@@ -63,7 +63,13 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                 updatedmessage = updatedmessage + "<br>" + postdata[i];
             }
             updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
             message = updatedmessage;
+            //updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+           // message = encodeURIComponent(message);
+            console.log(message);
             //var scheduletime = $('#ScheduleTime').val();
             var date_value = ($('.md-input')[0]).value;
             var date = date_value.split("/");
@@ -97,7 +103,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
             var dt = new Date();
             var mm = new Date().getMonth() + 1;
-            var d1 = mm + "/" + dt.getDate() + "/" + dt.getFullYear();
+            var d1 = mm + "/" +("0"+ dt.getDate()).substr(-2) + "/" + dt.getFullYear();
             if (date_value <= d1)
             {
                 if (time_value < t1)
@@ -114,25 +120,36 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                     if (scheduletime != "") {
                         // if (date_value != "") {
                         $scope.checkfile();
+
+                        console.log('FILE CHECK');
+                        console.log(encodeURIComponent($('#imageUrl').val()));
+
                         if ($scope.check == true) {
                             var formData = new FormData();
                             formData.append('files', $("#input-file-now").get(0).files[0]);
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1,
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1 + '&imagePath=' +encodeURIComponent($('#imageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
                                 },
                                 transformRequest: angular.identity,
                             }).then(function (response) {
-                                $('#ScheduleMsg').val('');
-                                $('#ScheduleTime').val('');
-                                $('#input_0').val('');
-                                $('#input_1').val('');
-                                $scope.dispbtn = true;
-                                swal("message scheduled successfully");
+
+                                if (response.data == "scheduled") {
+                                    $('#ScheduleMsg').val('');
+                                    $('#ScheduleTime').val('');
+                                    $('#input_0').val('');
+                                    $('#input_1').val('');
+                                    $scope.dispbtn = true;
+                                    swal("message scheduled successfully");
+                                }
+                                else {
+                                    swal(response.data);
+                                }
+                                
                             }, function (reason) {
                                 console.log(reason);
                             });
@@ -143,7 +160,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1,
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1 + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -181,6 +198,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         $scope.checkfile = function () {
             var filesinput = $('#input-file-now');
+            console.log('sadfkjasdf');
+            console.log(filesinput);
             var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
             if (filesinput != undefined && filesinput[0].files[0] != null) {
                 if ($scope.hasExtension('#input-file-now', fileExtension)) {
@@ -202,6 +221,19 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         $scope.draftmsg = function () {
             var message = $('#ScheduleMsg').val();
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+            message = updatedmessage;
+            //updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+           // message = encodeURIComponent(message);
+
             // var date_value = $('#input_0').val();
             var date_value = ($('.md-input')[0]).value;
             var date = date_value.split("/");

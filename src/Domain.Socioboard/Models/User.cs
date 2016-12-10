@@ -36,7 +36,7 @@ namespace Domain.Socioboard.Models
         public DateTime forgotPasswordExpireDate { get; set; }
 
         public SBRegistrationType RegistrationType { get; set; }
-
+        public PayPalAccountStatus PayPalAccountStatus { get; set; }
         public bool dailyGrpReportsSummery { get; set; }
         public bool weeklyGrpReportsSummery { get;  set; }
         public bool days15GrpReportsSummery { get;  set; }
@@ -44,6 +44,8 @@ namespace Domain.Socioboard.Models
         public bool days60GrpReportsSummery { get; set; }
         public bool days90GrpReportsSummery { get; set; }
         public bool otherNewsLetters { get; set; }
-        public string Ewallet { get; set; }
+        public string Ewallet { get; set; }  
+        public PaymentType PaymentType { get; set; }
+        public UserTrailStatus TrailStatus { get; set; }
     }
 }

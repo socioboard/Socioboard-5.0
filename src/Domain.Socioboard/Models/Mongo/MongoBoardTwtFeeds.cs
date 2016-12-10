@@ -1,5 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using Domain.Socioboard.Helpers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace Domain.Socioboard.Models.Mongo
 {
@@ -7,6 +9,7 @@ namespace Domain.Socioboard.Models.Mongo
     public class MongoBoardTwtFeeds
     {
         [BsonId]
+        [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
         public double Publishedtime { get; set; }
         public string Feedid { get; set; }

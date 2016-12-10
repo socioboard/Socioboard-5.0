@@ -19,7 +19,7 @@ namespace Api.Socioboard.Repositories
                 return null;
             }
         }
-        public static int AddPaymentTransaction(long userId,string amount,string email,Model.DatabaseRepository dbr)
+        public static int AddPaymentTransaction(long userId,string amount,string email,Domain.Socioboard.Enum.PaymentType PaymentType, string paymentId,string trasactionId, Model.DatabaseRepository dbr)
         {
             try
             {
@@ -28,6 +28,9 @@ namespace Api.Socioboard.Repositories
                 _PaymentTransaction.email = email;
                 _PaymentTransaction.paymentdate = DateTime.UtcNow;
                 _PaymentTransaction.userid = userId;
+                _PaymentTransaction.PaymentType = PaymentType;
+                _PaymentTransaction.trasactionId = trasactionId;
+                _PaymentTransaction.paymentId = paymentId;
                int isaved= dbr.Add<Domain.Socioboard.Models.PaymentTransaction>(_PaymentTransaction);
                 return isaved;
             }
@@ -36,5 +39,6 @@ namespace Api.Socioboard.Repositories
                 return 0;
             }
         }
+
     }
 }

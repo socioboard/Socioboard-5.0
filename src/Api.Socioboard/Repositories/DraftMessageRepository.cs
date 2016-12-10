@@ -16,7 +16,7 @@ namespace Api.Socioboard.Repositories
             }
             else
             {
-                List<Domain.Socioboard.Models.Draft> lstDraftMessage = dbr.Find<Domain.Socioboard.Models.Draft>(t => t.userId == userId && t.GroupId== GroupId).ToList();
+                List<Domain.Socioboard.Models.Draft> lstDraftMessage = dbr.Find<Domain.Socioboard.Models.Draft>(t => t.userId == userId && t.GroupId == GroupId).ToList();
                 if (lstDraftMessage != null && lstDraftMessage.Count > 0)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheDraftMessage + userId, lstDraftMessage);

@@ -34,7 +34,7 @@ namespace Api.Socioboard.Repositories
                     {
                         _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramDailyReport + profileId, lstfbpagereportdata.ToList());
                     }
-                    return lstfbpagereportdata.ToList();
+                    return lstfbpagereportdata.OrderBy(t=>t.date).ToList();
                 }
                 return new List<Domain.Socioboard.Models.Mongo.InstagramDailyReport>();
             }

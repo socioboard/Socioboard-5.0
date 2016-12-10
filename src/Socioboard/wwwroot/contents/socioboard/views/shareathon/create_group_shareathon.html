@@ -11,15 +11,15 @@
         <!-- Compose Email Structure -->
         <div class="row">
             <div class="col offset-s2 s8 offset-m2 m8 offset-l2 l8">
-                <div class="card" id="feeds">
+                <div  id="feeds">
                     <h5 class="feeds_title blue darken-4 white-text"><i class="icon-pencil"></i>Create An Shareathon through which you can automate your page posts</h5>
-                    <div class="collection">
+                    <div >
                         <div class="row">
                             <form class="col s12">
-                                <div class="input-field col s12">
-                                    <select id="groupshareathonfacebookaccount" ng-model="selected" ng-change="getfacebookgroup()">
+                                <div class="input-field col s12" ng-controller="CreateGroupShareathonController">
+                                    <select id="groupshareathonfacebookaccount" ng-model="selected" ng-change="getfacebookgroup(selected)">
                                         <option value="" disabled selected>Choose your option</option>
-                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} " value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="{{profile.profileId}}" my-repeat-timeout-groups-directive>  {{profile.profileName}} </option>
                                     </select>
                                     <label>Selects An Account To Automate Post</label>
                                 </div>
@@ -29,7 +29,7 @@
                                 <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup!=''">
                                     <select multiple id="facebookgroupid">
                                         <option value="" disabled selected>Choose your option</option>
-                                        <option value="{{group.name}}<:>{{group.profileGroupId}}" ng-repeat="group in lstfacebookgroup" my-repeat-timeout-directive my-repeat-dropdown-directive>{{group.name}}</option>
+                                        <option value="{{group.name}}<:>{{group.profileGroupId}}" ng-repeat="group in lstfacebookgroup" my-repeat-timeout-groups-directive>{{group.name}}</option>
                                     </select>
                                     <label>Selects Groups To Automate Post</label>
                                 </div>

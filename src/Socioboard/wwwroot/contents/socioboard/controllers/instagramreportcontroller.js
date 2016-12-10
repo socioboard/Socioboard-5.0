@@ -24,6 +24,8 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
 
 
         $scope.generateGraphs = function () {
+            console.log('generate graph');
+            console.log($scope.instagramReportsData);
 
             var chart = AmCharts.makeChart("FollowersGraph", {
                 "type": "serial",
@@ -39,12 +41,6 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
                     "axisThickness": 2,
                     "axisAlpha": 1,
                     "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
                 }],
                 "graphs": [{
                     "valueAxis": "v1",
@@ -86,12 +82,6 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
                     "axisThickness": 2,
                     "axisAlpha": 1,
                     "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
                 }],
                 "graphs": [{
                     "valueAxis": "v1",
@@ -119,52 +109,95 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
                 }
             });
 
+            //var chart = AmCharts.makeChart("POSTCOMMENTSGraph", {
+            //    "type": "serial",
+            //    "theme": "light",
+            //    "legend": {
+            //        "useGraphSettings": true
+            //    },
+            //    "dataProvider": $scope.instagramReportsData,
+            //    "synchronizeGrid": true,
+            //    "valueAxes": [{
+            //        "id": "v1",
+            //        "axisColor": "#FF6600",
+            //        "axisThickness": 2,
+            //        "axisAlpha": 1,
+            //        "inside": true,
+            //        "position": "left"
+            //    }],
+            //    "graphs": [{
+            //        "id": "g1",
+            //        "balloonText": "<div style='margin:5px; font-size:19px;'><span style='font-size:13px;'>[[category]]</span><br>[[value]]</div>",
+            //        "bullet": "round",
+            //        "bulletBorderAlpha": 1,
+            //        "bulletBorderColor": "#FFFFFF",
+            //        "hideBulletsCount": 50,
+            //        "lineThickness": 2,
+            //        "lineColor": "#fdd400",
+            //        "negativeLineColor": "#67b7dc",
+            //        "valueField": "postcomment"       
+            //    }],
+            //    "chartScrollbar": {},
+            //    "chartCursor": {
+            //       // "cursorPosition": "mouse"
+            //    },
+            //    "categoryField": "date",
+            //    "categoryAxis": {
+            //        "parseDates": true,
+            //        "axisAlpha": 0,
+            //        "minHorizontalGap": 55
+            //    },
+            //    "export": {
+            //        "enabled": true,
+            //        "position": "bottom-right"
+            //    }
+            //});
+
+
             var chart = AmCharts.makeChart("POSTCOMMENTSGraph", {
-                "type": "serial",
                 "theme": "light",
-                "legend": {
-                    "useGraphSettings": true
-                },
+                "type": "serial",
                 "dataProvider": $scope.instagramReportsData,
-                "synchronizeGrid": true,
                 "valueAxes": [{
-                    "id": "v1",
-                    "axisColor": "#FF6600",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
+                    "inside": true,
+                    "axisAlpha": 0
                 }],
                 "graphs": [{
-                    "valueAxis": "v1",
-                    "lineColor": "#FF6600",
+                    "id": "g1",
+                    "balloonText": "<div style='margin:5px; font-size:19px;'><span style='font-size:13px;'>[[category]]</span><br>[[value]]</div>",
                     "bullet": "round",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "postcomment",
-                    "valueField": "postcomment",
-                    "fillAlphas": 0
+                    "bulletBorderAlpha": 1,
+                    "bulletBorderColor": "#FFFFFF",
+                    "hideBulletsCount": 50,
+                    "lineThickness": 2,
+                    "lineColor": "#fdd400",
+                    "negativeLineColor": "#67b7dc",
+                    "valueField": "postcomment"
                 }],
-                "chartScrollbar": {},
-                "chartCursor": {
-                    "cursorPosition": "mouse"
+                "chartScrollbar": {
+
                 },
+                "chartCursor": {},
                 "categoryField": "date",
                 "categoryAxis": {
                     "parseDates": true,
-                    "axisColor": "#DADADA",
-                    "minorGridEnabled": true
+                    "axisAlpha": 0,
+                    "minHorizontalGap": 55
                 },
-                "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
-                }
+              //  "listeners": [{
+                 //   "event": "dataUpdated",
+                    //"method": function () {
+                    //    if (chart) {
+                    //        if (chart.zoomToIndexes) {
+                    //            chart.zoomToIndexes(130, chartData.length - 1);
+                    //        }
+                    //    }
+                    //}
+               // }]
             });
+
+        
+
 
             var chart = AmCharts.makeChart("POSTLIKESGraph", {
                 "type": "serial",
@@ -180,12 +213,6 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
                     "axisThickness": 2,
                     "axisAlpha": 1,
                     "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
                 }],
                 "graphs": [{
                     "valueAxis": "v1",
@@ -227,12 +254,6 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
                     "axisThickness": 2,
                     "axisAlpha": 1,
                     "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
                 }],
                 "graphs": [{
                     "valueAxis": "v1",

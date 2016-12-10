@@ -11,7 +11,7 @@
                         </div>
                         <span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>
                     </h4> 
-                    <h6 class="pull-right margin-top-20">
+                    <h6 class="pull-right margin-top-20" ng-if="user.TrailStatus!=2">
                         <a ng-click="getData(15)" class="btn">15</a>
                         <a ng-click="getData(30)" class="btn">30</a>
                         <a ng-click="getData(60)" class="btn">60</a>
@@ -117,7 +117,7 @@
 
                             </div>
 
-                            <div class="col l6">                                        
+                            <div class="col l6" ng-if="user.TrailStatus!=2">                                        
                                 <blockquote class="groupbox_padding grey lighten-1">
                                     <h5>Top Five fans</h5>
                                 </blockquote>

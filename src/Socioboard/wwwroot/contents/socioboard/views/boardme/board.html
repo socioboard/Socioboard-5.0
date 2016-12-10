@@ -1,5 +1,5 @@
 ﻿
-<div data-ng-controller="BoardController">
+<div data-ng-controller="BoardController" ng-lazy-scroll="loadMore()" lazy-scroll-trigger="40" lazy-no-scroll="false">
     <!-- Page name -->
     <div class="container">
         <div class="col m12">
@@ -7,7 +7,7 @@
         </div>
     </div>
     <!-- statr products list -->
-    <div id="products" class="row" ng-lazy-scroll="loadMore()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+    <div id="products" class="row" >
         <div class="product-sizer"></div>
         <div ng-if="lstBoardFeeds.length!=0" ng-repeat="feed in  lstBoardFeeds | orderBy:'publishedtime':true" my-repeat-feed-timeout-directive>
             <div class="product" ng-if="feed.twitterprofileid != undefined">
@@ -108,7 +108,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
         <div ng-if="lstBoardFeeds.length==0">
             <span>
@@ -164,11 +163,9 @@
                 <div class="nav-wrapper">
                     <div class="left col s12 m5 l5">
                         <ul>
+                            
                             <li>
-                                <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                            </li>
-                            <li>
-                                <a href="#!" class="email-type">Compose</a>
+                                <a  class="email-type">Compose</a>
                             </li>
                         </ul>
                     </div>
@@ -204,16 +201,21 @@
                     </div>
                     <!--Default version-->
                     <div class="row section">
-                        <!--<div class="col s12 m4 l3">
+                        <div class="col s12 m4 l3">
                             <p>Select your file</p>
-                        </div>-->
-                        <!--<div class="col s12 m8 l9">
-                            <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
-                        </div>-->
+                        </div>
+                        <input type="hidden" id="imageUrl" value="{{boardComposeMessage.picUrl}}" />
+                        <div class="col s12 m8 l9" ng-if="boardComposeMessage">
+                            <input type="file" id="composeImage" class="dropify"  after-render  data-default-file="{{boardComposeMessage.picUrl}}" />
+                        </div>
+
+                        <div class="col s12 m8 l9" ng-if="!boardComposeMessage">
+                            <input type="file" id="composeImage" class="dropify"  after-render data-default-file="" />
+                        </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <textarea id="composeMessage" class="materialize-textarea" length="5000">{{boardComposeMessage.shareMessage + " " + boardComposeMessage.picUrl}}</textarea>
+                            <textarea id="composeMessage" class="materialize-textarea" length="5000">{{boardComposeMessage.shareMessage }}</textarea>
                             <label for="compose">Message</label>
                         </div>
                     </div>

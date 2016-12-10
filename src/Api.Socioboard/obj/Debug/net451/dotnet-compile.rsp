@@ -6,7 +6,7 @@
 --suppress-warning:CS1701
 --suppress-warning:CS1702
 --suppress-warning:CS1705
---platform:x64
+--platform:anycpu32bitpreferred
 --optimize:False
 --emit-entry-point:True
 --generate-xml-documentation:True
@@ -216,6 +216,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\RssFeedCo
 D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\ShareathonController.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\SocialMessagesController.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\TaskController.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\Training.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\TwitterController.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\TwitterReportsController.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\UserController.cs

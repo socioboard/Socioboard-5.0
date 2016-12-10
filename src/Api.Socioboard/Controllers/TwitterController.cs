@@ -172,10 +172,10 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("TwitterReplyUpdate")]
-        public IActionResult TwitterReplyUpdate(long groupId, long userId, string profileId, string messageId, string message)
+        public IActionResult TwitterReplyUpdate(long groupId, long userId, string profileId, string messageId, string message,string screenName)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            string TwitterReplyUpdate = Repositories.TwitterRepository.Post_ReplyStatusesUpdate(profileId, message, messageId, userId, groupId, dbr, _logger, _redisCache, _appSettings);
+            string TwitterReplyUpdate = Repositories.TwitterRepository.Post_ReplyStatusesUpdate(profileId, message, messageId, userId, groupId, dbr, _logger, _redisCache, _appSettings,screenName);
             return Ok(TwitterReplyUpdate);
         }
 

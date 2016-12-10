@@ -87,7 +87,7 @@
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
                                             <div class="card-panel social_profile">
                                                 <div class="card-image center">
-                                                    <img src="{{member.profileImg}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
+                                                    <img src="{{utility.getHttpsUrl(member.profileImg)}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
 
                                                     <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
@@ -106,7 +106,7 @@
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}">
                                             <div class="card-panel social_profile">
                                                 <div class="card-image center">
-                                                    <img src="{{member.profileImg}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
+                                                    <img src="{{utility.getHttpsUrl(member.profileImg)}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
                                                     <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
                                                 </div>
@@ -180,7 +180,7 @@
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
                                             <div class="card-panel social_profile">
                                                 <div class="card-image center">
-                                                    <img src="{{member.profileImg}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
+                                                    <img src="{{utility.getHttpsUrl(member.profileImg)}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
 
                                                     <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
@@ -199,7 +199,7 @@
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}">
                                             <div class="card-panel social_profile">
                                                 <div class="card-image center">
-                                                    <img src="{{member.profileImg}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
+                                                    <img src="{{utility.getHttpsUrl(member.profileImg)}}" class="responsive-img group-profile-image" ng-if="member.profileImg != '' ">
                                                     <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
 
                                                     <h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>
@@ -271,7 +271,7 @@
     </div>
     <!--Invite Team member modal end-->
     <!-- Create Group Modal Structure -->
-    <div id="CreateGroupModal" class="modal">
+    <div id="CreateGroupModal" class="modal" >
         <div class="modal-content">
             <h4>Create a <b class="orange-text text-darken-4">Group</b></h4>
             <p>Groups help you organize your social profiles and team members. Name your group and you can begin connecting social profiles and adding team members to it. Twitter or Facebook required to create a group.</p>
@@ -286,7 +286,7 @@
             </form>
         </div>
         <div class="modal-footer">
-            <a href="" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+            <a href="" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="closegroupmodal()" >Close</a>
             <a href="" ng-click="addGroup(groupName)" class="modal-action waves-effect waves-green btn-flat">Create</a>
         </div>
     </div>

@@ -28,6 +28,27 @@ namespace Socioboard.Helpers
             return response;
         }
 
+        public static async Task<HttpResponseMessage> PostReqPayUMoney(string Url, List<KeyValuePair<string, string>> Parameters, string AccessTokenType, string AccessToken, string BaseUrl,string AuthorizationKey)
+        {
+            HttpResponseMessage response;
+            using (var client = new HttpClient())
+            {
+                // New code:
+                client.BaseAddress = new Uri(BaseUrl);
+                // client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Add("contentType", "application/x-www-form-urlencoded");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+                client.DefaultRequestHeaders.Add("Authorization", AuthorizationKey);
+                if (string.IsNullOrEmpty(AccessTokenType) && !string.IsNullOrEmpty(AccessToken))
+                {
+                    client.DefaultRequestHeaders.Add("Authorization", AccessTokenType + " " + AccessToken);
+                }
+                var content = new FormUrlEncodedContent(Parameters);
+                response = await client.PostAsync(Url, content);
+            }
+            return response;
+        }
+
         public static async Task<HttpResponseMessage> GetReq(string Url, string AccessTokenType, string AccessToken, string BaseUrl)
         {
             HttpResponseMessage response;

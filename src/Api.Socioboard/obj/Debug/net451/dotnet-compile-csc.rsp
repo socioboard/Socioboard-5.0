@@ -4,7 +4,7 @@
 -nowarn:CS1701
 -nowarn:CS1702
 -nowarn:CS1705
--platform:x64
+-platform:anycpu32bitpreferred
 -doc:"D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\bin\Debug\net451\Api.Socioboard.xml"
 -debug:full
 -nostdlib
@@ -212,6 +212,7 @@
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\ShareathonController.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\SocialMessagesController.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\TaskController.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\Training.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\TwitterController.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\TwitterReportsController.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\UserController.cs"

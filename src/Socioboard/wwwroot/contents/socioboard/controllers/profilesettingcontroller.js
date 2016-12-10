@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scope, $http, $timeout, apiDomain, userservice) {
+SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scope, $http, $timeout, apiDomain, userservice, domain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         // initialize core components
@@ -146,6 +146,25 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 alertify.set({ delay: 5000 });
                 alertify.error(reason.data);
                 console.log(reason.data);
+            });
+        }
+
+
+        $scope.UpgradeAccount = function (packagename) {
+            $http({
+                method: 'GET',
+                url: domain + '/Index/UpgradeAccount?packagename=' + packagename,
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+            }).then(function (response) {
+                if(response.data!="")
+                {
+                    window.top.location = response.data;
+                } else {
+                    window.top.location = "../Home/Index";
+                }
+                
+            }, function (reason) {
+
             });
         }
 

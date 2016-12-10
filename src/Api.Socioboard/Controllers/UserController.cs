@@ -49,13 +49,13 @@ namespace Api.Socioboard.Controllers
         public IActionResult Register(User user)
         {
             user.CreateDate = DateTime.UtcNow;
-            user.ExpiryDate = DateTime.UtcNow.AddDays(30);
+            user.ExpiryDate = DateTime.UtcNow.AddDays(1);
             user.EmailValidateToken = SBHelper.RandomString(20);
             user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
             user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.MailSent;
             user.Password = SBHelper.MD5Hash(user.Password);
             user.UserName = "Socioboard";
-
+            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -231,6 +231,21 @@ namespace Api.Socioboard.Controllers
 
         }
 
+        [HttpGet("GetUserData")]
+        public IActionResult GetUserData(string emailId)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger,_appEnv);
+            User user = dbr.Single<User>(t => t.EmailId == emailId);
+            if(user!=null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
 
         /// <summary>
         /// For varifying the emailId after registration
@@ -259,6 +274,10 @@ namespace Api.Socioboard.Controllers
                     if (user.ValidateTokenExpireDate >= DateTime.UtcNow)
                     {
                         user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
+                        if (user.PayPalAccountStatus!=Domain.Socioboard.Enum.PayPalAccountStatus.added)
+                        {
+                            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.inprogress; 
+                        }
                         int result = dbr.Update<User>(user);
                         if (result == 1)
                         {
@@ -334,8 +353,10 @@ namespace Api.Socioboard.Controllers
         /// <param name="AccessToken">Code obtained after successfull authentication from facebook.</param>
         /// <returns>Success:added su</returns>
         [HttpPost("FacebookLogin")]
-        public IActionResult FacebookLogin(string AccessToken)
+        public IActionResult FacebookLogin(string AccessToken , Domain.Socioboard.Enum.SBAccountType accType)
         {
+
+
             dynamic profile = FbUser.getFbUser(AccessToken);
 
             if (Convert.ToString(profile) == "Invalid Access Token")
@@ -385,11 +406,51 @@ namespace Api.Socioboard.Controllers
                     }
 
                     Domain.Socioboard.Models.User user = new Domain.Socioboard.Models.User();
-                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+                    if (accType == Domain.Socioboard.Enum.SBAccountType.Free)
+                    {
+                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+                    }
+                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
+                    {
+                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Deluxe;
+
+                    }
+                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Premium)
+                    {
+                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Premium;
+
+                    }
+                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Topaz)
+                    {
+                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Topaz;
+
+                    }
+                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Platinum)
+                    {
+                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Platinum;
+
+                    }
+                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Gold)
+                    {
+                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Gold;
+
+                    }
+                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Ruby)
+                    {
+                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Ruby;
+
+                    }
+                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Standard)
+                    {
+                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Standard;
+
+                    }
+                   
                     user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
                     user.CreateDate = DateTime.UtcNow;
                     user.EmailId = EmailId;
-                    user.ExpiryDate = DateTime.UtcNow.AddDays(30);
+                    user.ExpiryDate = DateTime.UtcNow.AddDays(1);
+                    user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
                     user.UserName = "Socioboard";
                     user.EmailValidateToken = "Facebook";
                     try
@@ -481,7 +542,7 @@ namespace Api.Socioboard.Controllers
                             .Parse(files.ContentDisposition)
                             .FileName
                             .Trim('"');
-                    imgPath = _appEnv.WebRootPath + $@"\{fileName}";
+                    imgPath = _appEnv.WebRootPath + "\\upload" + $@"\{Domain.Socioboard.Helpers.SBHelper.RandomString(11) + '.' + fileName.Split('.')[1]}";
                     // size += file.Length;
                     try
                     {
@@ -635,6 +696,14 @@ namespace Api.Socioboard.Controllers
             }
             if (user != null)
             {
+                if (user.EmailValidateToken.Equals("Facebook"))
+                {
+                    return Ok("you can login wiht facebook.");
+                }
+                else if (user.EmailValidateToken.Equals("Google"))
+                {
+                    return Ok("you can login wiht Google.");
+                }
                 user.forgotPasswordKeyToken = SBHelper.RandomString(20);
                 user.forgotPasswordExpireDate = DateTime.UtcNow.AddDays(1);
                 user.EmailId = emailId;
@@ -871,6 +940,20 @@ namespace Api.Socioboard.Controllers
                 _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Paid;
                 _user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                 _user.Id = Convert.ToInt64(userId);
+                dbr.Update<User>(_user);
+            }
+            return Ok(_user);
+        }
+
+        [HttpPost("UpdateTrialStatus")]
+        public IActionResult UpdateTrialStatus(Int64 Id)
+        {
+            Model.DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User _user = dbr.Single<User>(t => t.Id == Id);
+            if(_user!=null)
+            {
+                _user.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.inactive;
+                _user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                 dbr.Update<User>(_user);
             }
             return Ok(_user);

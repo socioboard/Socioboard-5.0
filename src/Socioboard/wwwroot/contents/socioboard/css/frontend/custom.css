@@ -51,3 +51,188 @@ body{
     position: absolute;
     top: 15px;
     }
+
+ md-dialog{
+      opacity: 1 !important;      
+     }
+     .md-dialog-container{
+        z-index: 9999 !important;
+     }
+
+/*----------------------------------------
+    Products
+------------------------------------------*/
+/* ---- Product Card ----- */
+.product-card .card .card-content .card-title, .product-card .card .card-reveal .card-title {
+  font-size: 1.1rem;
+  line-height: 1.6rem;
+  font-weight: 400;
+}
+
+.product-card .card {
+  margin: 0;
+}
+
+.product-card .card .card-content {
+  padding: 5px 10px;
+}
+
+.product-card .card .btn-price {
+  width: 65px;
+  height: 65px;
+  font-weight: 600;
+  font-size: 1.0rem;
+  line-height: 65px;
+  margin: 10px;
+  position: absolute;
+  top: 0;
+  letter-spacing: 0;
+}
+
+.product-card ul.card-action-buttons {
+  margin: -26px 10px 0 0;
+  text-align: right;
+}
+
+.product-card ul.card-action-buttons li {
+  display: inline-block;
+  padding-left: 5px;
+}
+
+/* -----Products Masonery ----- */
+.product .card .card-content .card-title, .product .card .card-reveal .card-title {
+  font-size: 1.1rem;
+  line-height: 1.6rem;
+  font-weight: 400;
+}
+
+.product {
+  width: 20%;
+  padding: 10px;
+}
+
+.product .card {
+  margin: 0;
+}
+
+.product .card .card-content {
+  padding: 5px 10px;
+}
+
+.product .card .btn-price {
+  width: 65px;
+  height: 65px;
+  font-weight: 600;
+  font-size: 1.0rem;
+  line-height: 65px;
+  margin: 10px;
+  position: absolute;
+  top: 0;
+  letter-spacing: 0;
+}
+
+.product ul.card-action-buttons {
+  margin: -26px 10px 0 0;
+  text-align: right;
+}
+
+.product ul.card-action-buttons li {
+  display: inline-block;
+  padding-left: 5px;
+}
+
+.product-sizer {
+  width: 20%;
+}
+
+.description_listen {
+    font-size: inherit !important;
+    word-wrap: break-word;
+    line-height: 1.5rem;
+}
+
+/*  blog page media queries */
+@media screen and (max-width: 2200px) {
+  .product-sizer {
+    width: 20%;
+  }
+  .product {
+    width: 20%;
+  }
+}
+
+@media screen and (max-width: 1800px) {
+  .product-sizer {
+    width: 30%;
+  }
+  .product {
+    width: 30%;
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  .product-sizer {
+    width: 25%;
+  }
+  .product {
+    width: 25%;
+  }
+}
+
+@media screen and (max-width: 1224px) {
+  .product-sizer {
+    width: 33.33%;
+  }
+  .product {
+    width: 33.33%;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  .product-sizer {
+    width: 50%;
+  }
+  .product {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  .product-sizer {
+    width: 50%;
+  }
+  .product {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .product-sizer {
+    width: 100%;
+  }
+  .product {
+    width: 100%;
+  }
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+.no-margin {
+  margin: 0 !important;
+}
+.no-bottom-space {
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
+}
+.no-top-space {
+  padding-top: 0 !important;
+  margin-top: 0 !important;
+}
+.no-space {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+.no-text-shadow {
+  text-shadow: none !important;
+}

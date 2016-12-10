@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 
 namespace Socioboard.Helpers
@@ -12,7 +15,6 @@ namespace Socioboard.Helpers
         public static  string RecurringPaymentWithPayPal(string amount, string itemInfo, string name, string phone, string email, string currency, string paypalemail, string successUrl, string failUrl, string callBackUrl, string cancelurl, string notifyurl, string custom,string PaypalURL)
         {
             string redirecturl = "";
-
             try
             {
               
@@ -85,7 +87,7 @@ namespace Socioboard.Helpers
                 //Failed return page url
                 redirecturl += "&cancel_return=" +
                              cancelurl;
-                //redirecturl += "&notify_url=" + notifyurl;
+                redirecturl += "&notify_url=" + notifyurl;
 
                 redirecturl += "&custom=" + custom;
 
@@ -169,7 +171,7 @@ namespace Socioboard.Helpers
                 //The default is 0.
 
                 //redirecturl += "&subscr_effective=2014-05-05T10%3A27%3A52.000Z";
-               
+               // redirecturl += "&srt=2";//instalments value* instead of 2 you can put any value
 
             }
             catch (Exception ex)
@@ -182,7 +184,6 @@ namespace Socioboard.Helpers
         public static string RecurringPaymentWithPayPalUpgrade(string amount, string itemInfo, string name, string phone, string email, string currency, string paypalemail, string successUrl, string failUrl, string callBackUrl, string cancelurl, string notifyurl, string custom, string PaypalURL)
         {
             string redirecturl = "";
-
             try
             {
 
@@ -255,7 +256,7 @@ namespace Socioboard.Helpers
                 //Failed return page url
                 redirecturl += "&cancel_return=" +
                              cancelurl;
-                //redirecturl += "&notify_url=" + notifyurl;
+                redirecturl += "&notify_url=" + notifyurl;
 
                 redirecturl += "&custom=" + custom;
 
@@ -339,7 +340,7 @@ namespace Socioboard.Helpers
                 //The default is 0.
 
                 //redirecturl += "&subscr_effective=2014-05-05T10%3A27%3A52.000Z";
-
+               // redirecturl += "&srt=2";//instalments value* instead of 2 you can put any value
 
             }
             catch (Exception ex)
@@ -520,6 +521,6 @@ namespace Socioboard.Helpers
             return redirecturl;
         }
 
-
+      
     }
 }

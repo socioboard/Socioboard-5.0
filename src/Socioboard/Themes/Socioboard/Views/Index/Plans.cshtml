@@ -80,7 +80,7 @@
                             Package you need to efficiently manage an expanding social media network.
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li>All Standard Plan Features</li>
+                            <li>All Basic & Standard Plan Features</li>
                             <li>Social Discovery</li>
                             <li>Helpdesk Integration</li>
                             <li>Powerful Statistics Engine</li>
@@ -106,7 +106,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li>All Basic, Standard &amp; Deluxe Features</li>
+                            <li>All Basic, Standard &amp; Premium Features</li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -128,7 +128,7 @@
                 <div class="col m3 hoverable">
                     <div class="pricing-box ">
                         <div class="pricing-heading">
-                            
+                            Topaz
                         </div><!-- end pricing-heading -->
                         <div class="pricing-price">
                             $29.99 Per User/Month
@@ -137,10 +137,10 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
+                            <li><strong>All Basic, Standard,Premium, &amp; Deluxe Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
-                            <li>Team Collaboration Tools</li>Topaz
+                            <li>Team Collaboration Tools</li>
                             <li>Social CRM</li>
                             <li>World Class 24*7 Training &amp; Support</li>
                             <li>Manage up to 100 profiles</li>
@@ -162,7 +162,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
+                            <li><strong>All Basic, Standard,Premium, Deluxe &amp; Topaz Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -187,7 +187,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
+                            <li><strong>All Basic, Standard,Premium, Deluxe, Topaz &amp; Ruby Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -212,7 +212,7 @@
                             Includes sophisticated tools for complex objectives
                         </div><!-- end pricing-description -->
                         <ul class="pricing-list">
-                            <li><strong>All Basic, Standard &amp; Deluxe Features</strong></li>
+                            <li><strong>All Basic, Standard,Premium, Deluxe, Topaz, Ruby &amp; Gold Features</strong></li>
                             <li>Prompt Feeds</li>
                             <li>Constant Real-time Monitoring</li>
                             <li>Team Collaboration Tools</li>
@@ -232,12 +232,12 @@
     <div id="SignUpModal" class="modal modal-fixed-footer" style="width: 600px;">
         <form onsubmit="myFunction(); return false;" id="RegistrationForm">
             <div class="modal-content">
-                <h4>Create a <span class="red-text text-darken-2" id="planName">"Free"</span> account</h4>
+                <h4 class="center">Create a <span  id="planName">Free</span> account</h4>
                 <div class="row">
                     <div class="row">
                         <div class="input-field col s12 m12">
                             <div class="center">
-                                <a id="fb_account" href="#" onclick="googleplusLogin();">
+                                <a id="fb_account" href="#" onclick="googleLogin();">
                                     <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
                                 </a><br>
                                 <a id="fb_account" href="#" onclick="facebookLogin();">
@@ -262,6 +262,15 @@
                                     <option value="5">Ruby</option>
                                     <option value="6">Gold</option>
                                     <option value="7">Platinum</option>
+                                </optgroup>
+                            </select>
+                            <label>Choose your option</label>
+                        </div>
+                        <div class="input-field col s12 m12">
+                            <select id="PaymentType" name="PaymentType">
+                                <optgroup label="PaymentType">
+                                    <option value="0">paypal</option>
+                                    <option value="1">payumoney</option>
                                 </optgroup>
                             </select>
                             <label>Choose your option</label>
@@ -328,7 +337,8 @@
             var Phone = $('#PhoneNumber').val();
             var password = $('#Password').val();
             var cnfPassword = $('#CnfPassword').val();
-            var accountType = $('#AccountType').val()
+            var accountType = $('#AccountType').val();
+            var PaymentType = $('#PaymentType').val();
             if (password != cnfPassword) {
                 alert('password not match');
                 $('#ImgLoading').hide();
@@ -342,7 +352,7 @@
 
                 url: "@ViewBag.ApiDomain/api/user/Register",
 
-                data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": Phone, "password": password, "AccountType": accountType },
+                data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": Phone, "password": password, "AccountType": accountType, "PaymentType": PaymentType },
 
                 //contentType: "application/json; charset=utf-8",
 
@@ -361,6 +371,27 @@
                     $('#ImgLoading').hide();
                     $('#submitButton').show();
                     // $('#req_skype').val("");
+                    if (accountType != "0") {
+                        $.ajax({
+
+                            type: "GET",
+
+                            url: "@ViewBag.Domain/Home/PayPalAccount",
+
+                            data: { "emailId": email, "IsLogin": false },
+
+                            dataType: "html",
+                            success: function (msg) {
+                                alertify.set({ delay: 5000 });
+                                alertify.error("please submit Payment detail.");
+                                window.top.location = msg;
+                            },
+                            error: function (msg) {
+
+                                return false;
+                            }
+                        });
+                    }
                 },
                 error: function (msg) {
                     alertify.set({ delay: 5000 });

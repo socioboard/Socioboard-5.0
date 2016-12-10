@@ -1,5 +1,7 @@
-﻿using MongoDB.Bson;
+﻿using Domain.Socioboard.Helpers;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +13,7 @@ namespace Domain.Socioboard.Models.Mongo
     public class MongoBoards
     {
         [BsonId]
+        [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId id { get; set; }
         public string boardName { get; set; }
         public string objId { get; set; }

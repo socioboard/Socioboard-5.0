@@ -105,5 +105,17 @@ SocioboardApp.controller('SentMessagesController', function ($rootScope, $scope,
         $scope.lstsentessage = parm;
 
     }
+
+    $scope.getProperURL = function (obj) {
+        console.log(obj);
+        if (obj.includes("wwwroot\\")) {
+            var img = obj.split("wwwroot\\upload\\")[1];
+            return apiDomain + "/api/Media/Get?id=" + img;
+        }
+        else {
+            return obj;
+        }
+    };
+
     });
 });

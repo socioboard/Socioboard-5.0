@@ -66,6 +66,7 @@ namespace Api.Socioboard.Helper
                                 _GoogleAnalyticsProfiles.ProfileName = item_profile["name"].ToString();
                                 _GoogleAnalyticsProfiles.WebPropertyId = item_profile["webPropertyId"].ToString();
                                 _GoogleAnalyticsProfiles.WebsiteUrl = item_profile["websiteUrl"].ToString();
+                                _GoogleAnalyticsProfiles.internalWebPropertyId = item_profile["internalWebPropertyId"].ToString();
                                 lstGoogleAnalyticsProfiles.Add(_GoogleAnalyticsProfiles);
                             }
                             catch (Exception ex)

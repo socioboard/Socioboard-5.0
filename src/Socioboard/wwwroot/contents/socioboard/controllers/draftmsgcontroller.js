@@ -1,7 +1,8 @@
 ﻿'use strict';
-SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope, $http, $modal, $timeout, $stateParams, apiDomain,$state) {
+SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope, $http, $modal, $timeout, $stateParams, apiDomain,$state,utility) {
     $scope.$on('$viewContentLoaded', function () {
         draft();
+        $scope.utility = utility;
         $scope.deleteMsg = function (draftId) {
             swal({
                 title: "Are you sure?",
@@ -77,7 +78,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
         $scope.scheduledraft = function (schedulemessage)
         {
             console.log(schedulemessage);
-            $rootScope.schedulemessage = schedulemessage;
+            $rootScope.schedulemessage = encodeURIComponent(schedulemessage);
             $rootScope.grppost = false;
             // window.location.href = "#/schedulemsg";
             $state.go('schedulemessage');

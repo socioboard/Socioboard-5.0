@@ -100,7 +100,7 @@ namespace Api.Socioboard.Controllers
                
 
             }
-            return Ok();
+            return Ok("Added Successfully");
         }
 
         [HttpGet("GetPostedRssDataByUser")]
@@ -123,6 +123,20 @@ namespace Api.Socioboard.Controllers
         [HttpPost("EditFeedUrl")]
         public IActionResult EditFeedUrl(string NewFeedUrl, string OldFeedUrl, string RssId)
         {
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
+                xmlDoc.Load(NewFeedUrl);
+                var abc = xmlDoc.DocumentElement.GetElementsByTagName("item");
+                if (abc.Count == 0)
+                {
+                    return Ok("This Url Does't  Conatin Rss Feed");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok("This Url Does't  Conatin Rss Feed");
+            }
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string editdata = Repositories.RssFeedRepository.EditFeedUrl(NewFeedUrl, OldFeedUrl, RssId, _appSettings, dbr);
             return Ok(editdata);

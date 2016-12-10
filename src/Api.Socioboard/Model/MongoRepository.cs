@@ -22,7 +22,6 @@ namespace Api.Socioboard.Model
 
         public MongoRepository(string CollectionName, Helper.AppSettings settings) 
         {
-
             _appSettings = settings;
             MongoClient client = new MongoClient(_appSettings.MongoDbConnectionString);
 
@@ -37,12 +36,13 @@ namespace Api.Socioboard.Model
         public void Delete<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
      where T : class, new()
         {
+            _db.GetCollection<T>(collecionName, settings).DeleteOneAsync(expression);
             //var items = All<T>().Where(expression);
             //foreach (T item in items)
             //{
             //    Delete(item);
             //}
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         public void Delete<T>(FilterDefinition<T> filter) where T : class, new()

@@ -8,9 +8,10 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
         $scope.dispbtn = true;
 
 
-        $scope.getfacebookgroup = function () {
+        $scope.getfacebookgroup = function (tested) {
+            $('select').material_select();
             $scope.lstfacebookgroup = '123';
-           var profileId = $('#groupshareathonfacebookaccount').val();
+            var profileId = tested;
             //codes to get facebook group
             $http.get(apiDomain + '/api/Facebook/GetFacebookGroup?profileId=' + profileId)
                               .then(function (response) {
@@ -33,6 +34,12 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
             var FacebookUrl = $('#postpage_url').val();
             var FacebookGroupId = $('#facebookgroupid').val();
             var Timeintervalminutes = $('#grouptimerinterval').val();
+
+            if (FacebookUrl.indexOf("facebook") == -1 || FacebookUrl.indexOf("https") == -1 || FacebookUrl.indexOf("http") == -1)
+            {
+                swal("please enter url like https://www.facebook.com/bollycrazy");
+                return false;
+            }
           
             if (Facebookaccountid != null && FacebookUrl != '' && FacebookGroupId != '' && Timeintervalminutes != null) {
                 $scope.dispbtn = false;

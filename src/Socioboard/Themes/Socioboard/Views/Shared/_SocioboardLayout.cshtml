@@ -1,20 +1,21 @@
-﻿@{
+﻿
+@{
     Layout = null;
 }
 
 <!DOCTYPE html>
 <html>
 <head>
-    @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
-   
-     <script>
-        $(document).ready(function () {
-           // debugger;
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
 
-            $('.modal-trigger').leanModal();
-        });
-    </script>*@
+         <script>
+            $(document).ready(function () {
+               // debugger;
+
+                $('.modal-trigger').leanModal();
+            });
+        </script>
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>
@@ -156,14 +157,14 @@
 
     <!-- SignUp Modal -->
     <div id="SignUpModal" class="modal modal-fixed-footer" style="width: 600px;">
-        <form onsubmit="myFunction(); return false;"  id="RegistrationForm">
+        <form onsubmit="myFunction(); return false;" id="RegistrationForm">
             <div class="modal-content">
-                <h4>Create a free account</h4>
+                <h4 class="center">Create a free account</h4>
                 <div class="row">
                     <div class="row">
                         <div class="input-field col s12 m12">
                             <div class="center">
-                                <a id="fb_account" href="#" onclick="googleplusLogin();">
+                                <a id="fb_account" onclick="googleLogin();">
                                     <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
                                 </a><br>
                                 <a id="fb_account" href="#" onclick="facebookLogin();">
@@ -188,6 +189,15 @@
                             </select>
                             <label>Choose your option</label>
                         </div>
+                        <div class="input-field col s12 m12">
+                            <select id="PaymentType" name="PaymentType">
+                                <optgroup label="PaymentType">
+                                    <option value="0">paypal</option>
+                                    <option value="1">payumoney</option>
+                                </optgroup>
+                            </select>
+                            <label>Choose your option</label>
+                        </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s6">
@@ -201,13 +211,13 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="EmailId" name="EmailId" type="email" required class="validate" pattern="^([a-zA-Z0-9_\-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" >
+                            <input id="EmailId" name="EmailId" type="email" required class="validate" pattern="^([a-zA-Z0-9_\-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$">
                             <label for="EmailId" data-error="wrong" data-success="right">Email</label>
                         </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="PhoneNumber" name="PhoneNumber" type="tel"  class="validate" maxlength="10" pattern="[0-9]{10}">
+                            <input id="PhoneNumber" name="PhoneNumber" type="tel" class="validate" maxlength="10" pattern="[0-9]{10}">
                             <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
                         </div>
                     </div>
@@ -281,7 +291,7 @@
                             <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
                         </a><br>
                         <a id="fb_account" href="#" onclick="facebookLogin();">
-   <img src="~/contents/socioboard/images/fb_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                            <img src="~/contents/socioboard/images/fb_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
                         </a>
                         <p>Not Yet Registered? &nbsp; <a class="modal-action modal-close modal-trigger" href="#SignUpModal">Register Now</a></p>
                     </div>
@@ -437,17 +447,16 @@ analytics" href="http://statcounter.com/shopify/"
         }
     </style>
     @*<script>
-        $(document).ready(function () {
+            $(document).ready(function () {
 
-            $('.modal-trigger').leanModal();
-        });
-    </script>*@
+                $('.modal-trigger').leanModal();
+            });
+        </script>*@
 
     <script>
         function myFunction() {
             $('#ImgLoading').show();
             $('#submitButton').hide();
-
             var firstName = $('#FirstName').val();
             var lastName = $('#LastName').val();
             var email = $('#EmailId').val();
@@ -455,7 +464,8 @@ analytics" href="http://statcounter.com/shopify/"
             var Phone = $('#PhoneNumber').val();
             var password = $('#Password').val();
             var cnfPassword = $('#CnfPassword').val();
-            var accountType = $('#AccountType').val()
+            var accountType = $('#AccountType').val();
+            var PaymentType = $('#PaymentType').val();
             if (password != cnfPassword) {
                 alert('password not match');
                 $('#ImgLoading').hide();
@@ -469,7 +479,7 @@ analytics" href="http://statcounter.com/shopify/"
 
                 url: "@ViewBag.ApiDomain/api/user/Register",
 
-                data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": Phone, "password": password, "AccountType": accountType },
+                data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": Phone, "password": password, "AccountType": accountType, "PaymentType": PaymentType },
 
                 //contentType: "application/json; charset=utf-8",
 
@@ -488,6 +498,28 @@ analytics" href="http://statcounter.com/shopify/"
                     $('#ImgLoading').hide();
                     $('#submitButton').show();
                     // $('#req_skype').val("");
+
+                    if (accountType != "0") {
+                        $.ajax({
+
+                            type: "GET",
+
+                            url: "@ViewBag.Domain/Home/PayPalAccount",
+
+                            data: { "emailId": email, "IsLogin": false },
+
+                            dataType: "html",
+                            success: function (msg) {
+                                alertify.set({ delay: 5000 });
+                                alertify.error("please submit Payment detail.");
+                                window.top.location = msg;
+                            },
+                            error: function (msg) {
+
+                                return false;
+                            }
+                        });
+                    }
                 },
                 error: function (msg) {
                     alertify.set({ delay: 5000 });
@@ -505,8 +537,8 @@ analytics" href="http://statcounter.com/shopify/"
 
         //function RegisterNow()
         //{
-       //     $('#SignInModal').hide();
-       //     $("#SignUpModal").modal();
+        //     $('#SignInModal').hide();
+        //     $("#SignUpModal").modal();
         //}
     </script>
 
@@ -542,7 +574,7 @@ analytics" href="http://statcounter.com/shopify/"
                             window.top.location = '/Index/UpgradePlans'
                         }, 3000);
                     }
-                    if (msg == "1") {
+                  else if (msg == "1") {
                         $('input[type="submit"]').attr('disabled', false);
                         if ($("#RememberMe").is(':checked')) {
 
@@ -550,6 +582,33 @@ analytics" href="http://statcounter.com/shopify/"
 
                         }
                         window.top.location = '/home/index'
+                  }else if(msg=="Trail Expire"){
+                      alertify.error("your trail has beed expired.so you can't use paid features");
+                      setTimeout(function () {
+                          window.top.location = '/home/index';
+                      }, 3000);
+                  }
+                   else if(msg == "2")
+                    {
+                        alertify.error("Payment details is not submitted.Please submit paypal detail.");
+                        $.ajax({
+
+                            type: "GET",
+
+                            url: "@ViewBag.Domain/Home/PayPalAccount",
+
+                            data: { "emailId": userName, "IsLogin": false },
+
+                            dataType: "html",
+                            success: function (msg) {
+                                window.top.location = msg;
+                            },
+                            error: function (msg) {
+
+                                return false;
+                            }
+                        });
+
                     }
                     else {
                         alertify.set({ delay: 5000 });
@@ -687,12 +746,12 @@ analytics" href="http://statcounter.com/shopify/"
     @*Facebook Login JS Start*@
     <script>
         function facebookLogin() {
-            $("#fb-gp-login").css("display","block");
+            $("#fb-gp-login").css("display", "block");
             $.ajax({
 
                 type: "GET",
 
-                url: "../FacebookManager/getFbLoginUrl",
+                url: "../FacebookManager/getFbLoginUrl?plan="+$('#AccountType').val(),
 
                 dataType: "html",
 
@@ -720,7 +779,7 @@ analytics" href="http://statcounter.com/shopify/"
 
                 type: "GET",
 
-                url: "../GoogleManager/getGoogleLoginUrl",
+                url: "../GoogleManager/getGoogleLoginUrl?plan="+$('#AccountType').val(),
 
                 dataType: "html",
 
@@ -738,9 +797,10 @@ analytics" href="http://statcounter.com/shopify/"
     </script>
     @*Google Login JS End*@
 
-    
+
     <script>
         function gotohome() {
+           // alert('hello calling');
             $.ajax({
                 type: "GET",
                 url: "../Home/IsSessionExist",

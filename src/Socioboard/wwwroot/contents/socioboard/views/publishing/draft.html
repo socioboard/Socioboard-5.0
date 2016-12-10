@@ -37,17 +37,17 @@
                             <td>{{$index +1}}</td>
                             <td class="center">
                                 <div class="col s12">
-                                    <img src="{{user.ProfilePicUrl}}" class="responsive-img profilePic">
+                                    <img src="{{utility.getHttpsUrl(user.ProfilePicUrl)}}" class="responsive-img profilePic"/>
                                 </div>
                                 <div class="col s12">
                                     <span>
-                                        {{user.UserName}}<br>
+                                        {{user.FirstName}}<br>
                                         <span>{{draft.scheduleTime}}</span>
                                     </span>
                                 </div>
                             </td>
                             <td class="center">
-                                <span style="word-break : break-all">
+                                <span style="white-space:pre-line; line-break:auto">
                                     {{draft.shareMessage}}
                                 </span>
                                 <br>

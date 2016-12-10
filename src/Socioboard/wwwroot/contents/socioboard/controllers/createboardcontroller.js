@@ -7,6 +7,11 @@ SocioboardApp.controller('CreateBoardController', function ($rootScope, $scope,$
         $scope.board = {};
         $scope.createBoard = function (board) {
 
+            if ($rootScope.user.TrailStatus == 2) {
+                swal("your trail has beed expired.so you can't use paid features");
+                return false;
+            }
+
             if (board.name == "" || board.name == '' || board.name == undefined) {
                 alertify.set({ delay: 5000 });
                 alertify.error("board name should not be empty.");

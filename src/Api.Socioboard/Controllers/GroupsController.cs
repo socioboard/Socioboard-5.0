@@ -68,7 +68,7 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("Group Name Already Exist");
             }
-            return Ok();
+            return Ok("No Group Found With this Name.");
         }
 
 

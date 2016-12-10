@@ -17,6 +17,14 @@
     <property name="paymentdate">
       <column name="paymentdate"  />
     </property>
-    
+    <property name="PaymentType">
+      <column name="PaymentType"  />
+    </property>
+    <property name="paymentId">
+      <column name="paymentId"  />
+    </property>
+    <property name="trasactionId">
+      <column name="trasactionId"  />
+    </property>
   </class>
 </hibernate-mapping>

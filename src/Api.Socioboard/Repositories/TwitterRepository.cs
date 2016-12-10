@@ -75,7 +75,11 @@ namespace Api.Socioboard.Repositories
                 twitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(twitterUserId, _redisCache, dbr);
                 if (twitterAccount != null && twitterAccount.isActive == true)
                 {
-                    return "This Account is added by some body else.";
+                    if (twitterAccount.userId == userId)
+                    {
+                        return ("Twitter account already added by you.");
+                    }
+                    return "This Account is added by other user.";
                 }
             }
             else
@@ -118,11 +122,12 @@ namespace Api.Socioboard.Repositories
                 }
                 try
                 {
-                    twitterAccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+                    twitterAccount.profileBackgroundImageUrl = item["profile_banner_url"].ToString().TrimStart('"').TrimEnd('"');
 
                 }
                 catch (Exception ex)
                 {
+                    twitterAccount.profileBackgroundImageUrl=item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
                     _logger.LogError(ex.StackTrace);
 
                 }
@@ -461,7 +466,7 @@ namespace Api.Socioboard.Repositories
             }
 
             profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-            long TwitterFollowerCount = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => profileids.Contains(t.twitterUserId)).Sum(t => t.followersCount);
+            long TwitterFollowerCount = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => profileids.Contains(t.twitterUserId) && t.isActive).Sum(t => t.followersCount);
             if (TwitterFollowerCount > 1000000)
             {
                 long r = TwitterFollowerCount % 1000000;
@@ -825,6 +830,14 @@ namespace Api.Socioboard.Repositories
                     try
                     {
                         objTwitterMessage.sourceUrl = item["source"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        objTwitterMessage.mediaUrl = item["extended_entities"]["media"][0]["media_url_https"].ToString().TrimStart('"').TrimEnd('"');
                     }
                     catch (Exception ex)
                     {
@@ -1437,7 +1450,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static string Post_ReplyStatusesUpdate(string profileId, string message, string messageId, long userId, long groupId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static string Post_ReplyStatusesUpdate(string profileId, string message, string messageId, long userId, long groupId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings, string screenName)
         {
             Domain.Socioboard.Models.TwitterAccount twtAcc = new Domain.Socioboard.Models.TwitterAccount();
             Domain.Socioboard.Models.TwitterAccount inMemTwtAcc = _redisCache.Get<Domain.Socioboard.Models.TwitterAccount>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterAccount + profileId);
@@ -1465,7 +1478,7 @@ namespace Api.Socioboard.Repositories
             {
                 if (!string.IsNullOrEmpty(messageId))
                 {
-                    replypost = twt.Post_StatusesUpdate(OAuthTwt, message, messageId);
+                    replypost = twt.Post_StatusesUpdate(OAuthTwt, message, screenName, messageId);
                     return "reply post successfully";
                 }
                 else

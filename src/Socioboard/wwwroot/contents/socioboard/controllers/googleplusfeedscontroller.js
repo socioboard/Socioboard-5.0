@@ -16,12 +16,17 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
-                              $scope.date(response.data);
+                              if (response.data != "") {
+                                  $scope.date(response.data);
+                              } else {
+                                  swal("No Post To Display");
+                              }
+                             // $scope.date(response.data);comment by sweta
                             //  $scope.lstGpFeeds = response.data;
 
-                              if (response.data == null) {
-                                  reachLast = true;
-                              }
+                              //if (response.data == null) { by me
+                              //    reachLast = true; by me
+                              //}
                           }, function (reason) {
                               $scope.error = reason.data;
                           });

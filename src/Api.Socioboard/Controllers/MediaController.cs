@@ -78,7 +78,7 @@ namespace Api.Socioboard.Controllers
             }
 
            
-            return null;
+            return BadRequest();
         }
 
 

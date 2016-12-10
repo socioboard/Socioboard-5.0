@@ -51,7 +51,7 @@ namespace Api.Socioboard.Repositories
                 List<TaskCommentsViewModel> lstTaskCommentsViewModel = new List<TaskCommentsViewModel>();
                 MongoRepository taskmongorepo = new MongoRepository("Tasks", _appSettings);
                 MongoRepository taskcommentmongorepo = new MongoRepository("TaskComments", _appSettings);
-                var ret = taskmongorepo.Find<Tasks>(t => t.groupId == groupId && t.recipientUserId == recipientUserId);
+                var ret = taskmongorepo.Find<Tasks>(t => t.groupId == groupId && t.recipientUserId == recipientUserId && t.senderUserId == recipientUserId);
                 var task = Task.Run(async () =>
                 {
                     return await ret;

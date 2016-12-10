@@ -20,14 +20,14 @@
                                     </div>
                                 </div>
                                 <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{twtfeed.feedDate}}">{{twtfeed.feedDate}}</a>
-                                <div >
+                                <div ng-if="user.TrailStatus!=2">
                                     <span ng-click="twitterretweet(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                         <i class="fa fa-retweet fa-fw"></i>
                                     </span>
                                     <span ng-click="twitterfavorite(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                         <i class="fa fa-star fa-fw"></i>
                                     </span>
-                                    <span ng-click="twitterreply(twtfeed.fromScreenName,twtfeed.profileId,twtfeed.messageId)">
+                                    <span ng-click="twitterreply(twtfeed.fromName,twtfeed.profileId,twtfeed.messageId)">
                                         <i class="fa fa-share fa-fw"></i>
                                     </span>
                                     <!--<a class="waves-effect waves-light  modal-trigger" ng-click="twitterreply(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)"><i class="fa fa-share fa-fw"></i></a>-->
@@ -105,7 +105,7 @@
                                     <div class="col m4 center">
                                         <img src="{{tweet.mediaUrl}}" ng-if="tweet.mediaUrl != ''" class="responsive-img ">
                                     </div>
-                                    <span ng-click="tasktwttweetModel(tweet)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
+                                    <span ng-if="user.TrailStatus!=2" ng-click="tasktwttweetModel(tweet)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
                                         <i class="icon-pin"></i>
                                     </span>
                                 </div>
@@ -223,6 +223,7 @@
                 </div>
             </div>
         </script>-->
+    </div>
 
         <!--end modal codes to twitter reply -->
         <!--Task Modal-->

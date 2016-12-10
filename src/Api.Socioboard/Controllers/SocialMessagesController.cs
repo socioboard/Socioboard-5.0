@@ -10,6 +10,7 @@ using Domain.Socioboard.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System;
 
 
 
@@ -49,7 +50,7 @@ namespace Api.Socioboard.Controllers
         {
             var filename = "";
             var apiimgPath = "";
-            var uploads = _appEnv.WebRootPath + "\\upload" ;
+            var uploads = string.Empty;
             string postmessage = "";
 
             if (files != null)
@@ -63,37 +64,39 @@ namespace Api.Socioboard.Controllers
                             .Parse(files.ContentDisposition)
                             .FileName
                             .Trim('"');
-                    apiimgPath = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{fileName}";
-                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{fileName}";
+                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                    //apiimgPath = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+
+                    uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
                     // size += file.Length;
-                    using (FileStream fs = System.IO.File.Create(filename))
+                    try
                     {
-                        files.CopyTo(fs);
-                        fs.Flush();
+                        using (FileStream fs = System.IO.File.Create(filename))
+                        {
+                            files.CopyTo(fs);
+                            fs.Flush();
+                        }
+                        filename = uploads;
+                    }
+                    catch (System.Exception ex)
+                    {
+                        if (!string.IsNullOrEmpty(imagePath))
+                        {
+                            uploads = imagePath;
+                        }
                     }
                 }
+            }
+            else if (!string.IsNullOrEmpty(imagePath))
+            {
+                uploads = imagePath;
             }
 
-            string[] updatedmessgae = Regex.Split(message, "<br>");
-            foreach (var item in updatedmessgae)
-            {
-                if (!string.IsNullOrEmpty(item))
-                {
-                    if (item.Contains("https://") || item.Contains("http://"))
-                    {
-                        link = item;
-                    }
-                    else if(item.Contains("hhh"))
-                    {
-                        postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
-                    }
-                    else
-                    {
-                        postmessage = postmessage + "\n\r" + item;
-                    }
-                }
-            }
-            message = postmessage;
+            //string[] updatedmessgae = Regex.Split(message, "<br>");
+
+            //message = postmessage;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string[] lstProfileIds = null;
             if (profileId != null)
@@ -112,25 +115,25 @@ namespace Api.Socioboard.Controllers
                 {
                     string prId = item.Substring(3, item.Length - 3);
                     Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                    string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, filename, link, dbr, _logger);
+                    string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, uploads, link, dbr, _logger);
 
                 }
                 if (item.StartsWith("tw"))
                 {
                     string prId = item.Substring(3, item.Length - 3);
-                    string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, message, prId, userId, filename, true, dbr, _logger);
+                    string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, message, prId, userId, uploads, true, dbr, _logger);
 
                 }
                 if (item.StartsWith("lin"))
                 {
                     string prId = item.Substring(4, item.Length - 4);
-                    string ret = Helper.LinkedInHelper.PostLinkedInMessage(apiimgPath, userId, message, prId, apiimgPath, _redisCache, _appSettings, dbr);
+                    string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, filename, _redisCache, _appSettings, dbr);
 
                 }
                 if (item.StartsWith("Cmpylinpage"))
                 {
                     string prId = item.Substring(12, item.Length - 12);
-                    string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(apiimgPath, userId, message, prId, _redisCache, dbr, _appSettings);
+                    string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, userId, message, prId, _redisCache, dbr, _appSettings);
 
                 }
             }
@@ -156,14 +159,24 @@ namespace Api.Socioboard.Controllers
                             .Parse(files.ContentDisposition)
                             .FileName
                             .Trim('"');
-                    filename = _appEnv.WebRootPath +"\\upload\\"+$@"\{fileName}";
+                    //apiimgPath = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1]}";
+                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+
+                    uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+
                     // size += file.Length;
                     using (FileStream fs = System.IO.File.Create(filename))
                     {
                         files.CopyTo(fs);
                         fs.Flush();
                     }
+                    filename = uploads;
                 }
+            }
+            else if (!string.IsNullOrEmpty(imagePath))
+            {
+                filename = imagePath;
             }
 
 
@@ -176,9 +189,12 @@ namespace Api.Socioboard.Controllers
                     {
                         link = item;
                     }
-                    else if (item.Contains("hhh"))
+                    if (item.Contains("hhh") || item.Contains("nnn"))
                     {
-                        postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                        }
                     }
                     else
                     {
@@ -206,33 +222,76 @@ namespace Api.Socioboard.Controllers
             {
                 if (item.StartsWith("fb"))
                 {
-                    string prId = item.Substring(3, item.Length - 3);
-                    Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                     Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    try
+                    {
+                        string prId = item.Substring(3, item.Length - 3);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                        //return Ok("Issue With Facebook schedulers");
+                    }
                 }
                 if (item.StartsWith("page"))
                 {
-                    string prId = item.Substring(5, item.Length - 5);
-                    Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                    Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    try
+                    {
+                        string prId = item.Substring(5, item.Length - 5);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                        // return Ok("Issue With Facebook Page schedulers");
+                    }
                 }
                 if (item.StartsWith("tw"))
                 {
-                    string prId = item.Substring(3, item.Length - 3);
-                    Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
-                    Helper.ScheduleMessageHelper.ScheduleMessage(prId, objTwitterAccount.twitterName, message, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, filename, objTwitterAccount.profileImageUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    try
+                    {
+                        string prId = item.Substring(3, item.Length - 3);
+                        Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objTwitterAccount.twitterScreenName, message, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, filename, objTwitterAccount.profileImageUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                        // return Ok("Issue With Twitter schedulers");
+                    }
                 }
                 if (item.StartsWith("lin"))
                 {
-                    string prId = item.Substring(4, item.Length - 4);
-                    Domain.Socioboard.Models.LinkedInAccount objLinkedInAccount = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedInAccount(prId, _redisCache, dbr);
-                    Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, filename, objLinkedInAccount.ProfileImageUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    try
+                    {
+                        string prId = item.Substring(4, item.Length - 4);
+                        Domain.Socioboard.Models.LinkedInAccount objLinkedInAccount = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedInAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, filename, objLinkedInAccount.ProfileImageUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                        // return Ok("Issue With Linkedin schedulers");
+                    }
                 }
                 if (item.StartsWith("Cmpylinpage"))
                 {
-                    string prId = item.Substring(12, item.Length - 12);
-                    Domain.Socioboard.Models.LinkedinCompanyPage objLinkedinCompanyPage = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(prId, _redisCache, dbr);
-                    Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId, filename, objLinkedinCompanyPage.LogoUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    try
+                    {
+                        string prId = item.Substring(12, item.Length - 12);
+                        Domain.Socioboard.Models.LinkedinCompanyPage objLinkedinCompanyPage = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId, filename, objLinkedinCompanyPage.LogoUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                        // return Ok("Issue With Linkedin Page schedulers");
+                    }
                 }
 
             }
@@ -242,7 +301,9 @@ namespace Api.Socioboard.Controllers
         [HttpPost("DraftScheduleMessage")]
         public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId, IFormFile files)
         {
+            var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\";
             var filename = "";
+            string postmessage = "";
             if (files != null)
             {
 
@@ -254,15 +315,41 @@ namespace Api.Socioboard.Controllers
                             .Parse(files.ContentDisposition)
                             .FileName
                             .Trim('"');
-                    filename = _appEnv.WebRootPath + $@"\{fileName}";
+                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                    //filename = _appEnv.WebRootPath + $@"\{tempName}";
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+                    uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+
                     // size += file.Length;
                     using (FileStream fs = System.IO.File.Create(filename))
                     {
                         files.CopyTo(fs);
                         fs.Flush();
                     }
+                    filename = uploads;
                 }
             }
+
+
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("hhh") || item.Contains("nnn"))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                        }
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            message = postmessage;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             Helper.ScheduleMessageHelper.DraftScheduleMessage(message, userId, groupId, filename, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
             return Ok();
@@ -294,21 +381,24 @@ namespace Api.Socioboard.Controllers
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    if (item.Contains("hhh"))
+                    if (item.Contains("hhh") || item.Contains("nnn"))
                     {
-                        postmessage = postmessage + item.Replace("hhh", "#");
-                    }
-                    if (item.Contains("nnn"))
-                    {
-                        postmessage = postmessage.Replace("nnn", "&");
-                    }
-                    if (item.Contains("ppp"))
-                    {
-                        postmessage = postmessage.Replace("ppp", "+");
-                    }
-                    if (item.Contains("jjj"))
-                    {
-                        postmessage = postmessage.Replace("jjj", "-+");
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + item.Replace("hhh", "#");
+                        }
+                        if (item.Contains("nnn"))
+                        {
+                            postmessage = postmessage.Replace("nnn", "&");
+                        }
+                        if (item.Contains("ppp"))
+                        {
+                            postmessage = postmessage.Replace("ppp", "+");
+                        }
+                        if (item.Contains("jjj"))
+                        {
+                            postmessage = postmessage.Replace("jjj", "-+");
+                        }
                     }
                     else
                     {
@@ -329,7 +419,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.GetAllSentMessages(userId, groupId, _redisCache, _appSettings, dbr);
-            return Ok(lstScheduledMessage);
+            return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
 
         [HttpGet("GetAllSentMessagesCount")]
@@ -345,7 +435,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsforADay(userId, groupId, int.Parse(day), _redisCache, _appSettings, dbr);
-            return Ok(lstScheduledMessage);
+            return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
 
         [HttpGet("getAllSentMessageDetailsByDays")]
@@ -353,7 +443,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsByDays(userId, groupId, int.Parse(days), _redisCache, _appSettings, dbr);
-            return Ok(lstScheduledMessage);
+            return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
 
         [HttpGet("getAllSentMessageDetailsByMonth")]
@@ -361,7 +451,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsByMonth(userId, groupId, int.Parse(month), _redisCache, _appSettings, dbr);
-            return Ok(lstScheduledMessage);
+            return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
 
 
@@ -369,7 +459,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetAllScheduleMessageCalendar(long userId, long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getUsreScheduleMessage(userId, groupId, _redisCache, _appSettings, dbr);
+            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getUserAllScheduleMessage(userId, groupId, _redisCache, _appSettings, dbr);
 
             var eventList = from e in lstScheduledMessage
                             select new
@@ -377,9 +467,12 @@ namespace Api.Socioboard.Controllers
                                 id = e.id,
                                 title = e.shareMessage,
                                 //  start = new DateTime(e.ScheduleTime.Year, e.ScheduleTime.Month, e.ScheduleTime.Day, e.ScheduleTime.Hour, e.ScheduleTime.Minute, e.ScheduleTime.Second).ToString("yyyy-MM-dd HH':'mm':'ss"),
-                                start = e.scheduleTime,
-                                //url
-                                allDay = false,
+
+                                // start = (DateTime.Parse(e.scheduleTime.ToString()).ToLocalTime()),
+                                // start= Convert.ToDateTime(TimeZoneInfo.ConvertTimeFromUtc(e.scheduleTime, TimeZoneInfo.Local)),
+                                start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(),e.scheduleTime.ToString())),
+            //url
+                                    allDay = false,
                                 description = e.shareMessage,
                                 profileId = e.profileId,
                                 Image = e.picUrl,
@@ -388,6 +481,43 @@ namespace Api.Socioboard.Controllers
                             };
             var rows = eventList.ToArray();
             return Ok(rows);
+        }
+
+
+        public static string CompareDateWithclient(string clientdate, string scheduletime)
+        {
+            try
+            {
+                var dt = DateTime.Parse(scheduletime);
+                var clientdt = DateTime.Parse(clientdate);
+                //  DateTime client = Convert.ToDateTime(clientdate);
+                DateTime client = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(clientdt, TimeZoneInfo.Local));
+                DateTime server = DateTime.UtcNow;
+                DateTime schedule = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
+                {
+                    var kind = schedule.Kind; // will equal DateTimeKind.Unspecified
+                    if (DateTime.Compare(client, server) > 0)
+                    {
+                        double minutes = (server - client).TotalMinutes;
+                        schedule = schedule.AddMinutes(minutes);
+                    }
+                    else if (DateTime.Compare(client, server) == 0)
+                    {
+                    }
+                    else if (DateTime.Compare(client, server) < 0)
+                    {
+                        double minutes = (server - client).TotalMinutes;
+                        schedule = schedule.AddMinutes(minutes);
+                    }
+                }
+                return TimeZoneInfo.ConvertTimeFromUtc(schedule, TimeZoneInfo.Local).ToString();
+               // return schedule.ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return "";
+            }
         }
 
 

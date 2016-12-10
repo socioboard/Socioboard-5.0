@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using Domain.Socioboard.Helpers;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +13,8 @@ namespace Domain.Socioboard.Models.Mongo
     public class GroupPostKeyWords
     {
         [BsonId]
-        public Object id { get; set; }
+        [JsonConverter(typeof(ObjectIdConverter))]
+        public ObjectId id { get; set; }
         public string strId { get; set; }
         public string keyword { get; set; }
         public double createdTime { get; set; }

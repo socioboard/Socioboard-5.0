@@ -4,7 +4,7 @@
 -nowarn:CS1701
 -nowarn:CS1702
 -nowarn:CS1705
--platform:x64
+-platform:anycpu32bitpreferred
 -debug:full
 -nostdlib
 -nologo

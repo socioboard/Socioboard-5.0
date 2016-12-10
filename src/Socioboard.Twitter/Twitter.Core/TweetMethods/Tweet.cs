@@ -18,7 +18,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
     public class Tweet
     {
         private JObject jobjResult;
-       
+
         public Tweet()
         {
 
@@ -39,7 +39,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
-        } 
+        }
         #endregion
 
         #region Get_Statuses_ShowById
@@ -57,7 +57,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
-        } 
+        }
         #endregion
 
         #region Post_Statuses_DestroyById
@@ -75,7 +75,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
-        } 
+        }
         #endregion
 
         #region Post_Statuses_Update
@@ -90,7 +90,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             try
             {
                 SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-                strdic.Add("status",statuses);
+                strdic.Add("status", statuses);
                 string RequestUrl = Socioboard.Twitter.App.Core.Globals.StatusUpdateUrl;
                 response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
                 if (!response.StartsWith("["))
@@ -100,9 +100,9 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             {
                 Console.WriteLine(ex.StackTrace);
             }
-            
+
             return JArray.Parse(response);
-        } 
+        }
         #endregion
 
         #region Post_Statuses_RetweetsById
@@ -121,7 +121,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
-        } 
+        }
         #endregion
 
         #region Post_Statuses_Update_With_Media
@@ -140,7 +140,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
         //    return response;
         //}
 
-       
+
         #endregion
 
         #region Get_Statuses_retweetersById
@@ -176,17 +176,18 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             return JArray.Parse(response);
         }
         //post reply
-        public JArray Post_StatusesUpdate(oAuthTwitter oAuth, string statuses, string statusid)
+        public JArray Post_StatusesUpdate(oAuthTwitter oAuth, string statuses, string screen_name, string statusid)
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.StatusUpdateUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            strdic.Add("status", statuses);
+            strdic.Add("status", "@" + screen_name + " " + statuses);
             strdic.Add("in_reply_to_status_id", statusid);
             string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
         }
+
 
         #region post status favorite
         public JArray Post_favorites(oAuthTwitter oAuth, string desirestatusId)

@@ -18,19 +18,22 @@ namespace Api.Socioboard.Helper
             scheduledMessage.shareMessage = shareMessage;
             try
             {
-                // var dt = DateTime.Parse(scheduleTime);
-                //scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
-                scheduledMessage.scheduleTime = Convert.ToDateTime(scheduleTime) ;
+                _logger.LogError("ScheduleMessageHelperscheduleTime>>>>" + scheduleTime);
+                var dt = DateTime.Parse(scheduleTime);
+                 scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
+                //scheduledMessage.scheduleTime = Convert.ToDateTime(scheduleTime) ;
+                // scheduledMessage.scheduleTime = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(),scheduleTime));
             }
             catch (Exception ex)
             {
-
+                _logger.LogError(ex.StackTrace);
             }
             DateTime fromTime = scheduledMessage.scheduleTime.AddMinutes(-scheduledMessage.scheduleTime.Minute);
             DateTime toTime = scheduledMessage.scheduleTime.AddMinutes(-scheduledMessage.scheduleTime.Minute).AddHours(1);
-            int count = dbr.Find<ScheduledMessage>(t => t.scheduleTime > fromTime && t.scheduleTime <= toTime).Count();
+            int count = dbr.Find<ScheduledMessage>(t => t.scheduleTime > fromTime && t.scheduleTime <= toTime && t.profileId == profileId).Count();
             if (count > _AppSettings.FacebookScheduleMessageMaxLimit)
             {
+                _logger.LogError("Facebook Max limit Reached.");
                 return "Max limit Reached.";
             }
             scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Pending;
@@ -40,6 +43,7 @@ namespace Api.Socioboard.Helper
             scheduledMessage.url = url;
             scheduledMessage.picUrl = picUrl;
             scheduledMessage.createTime = DateTime.UtcNow;
+            scheduledMessage.socialprofileName = socialprofileName;
           int ret =  dbr.Add<ScheduledMessage>(scheduledMessage);
             if (ret == 1)
             {
@@ -56,7 +60,16 @@ namespace Api.Socioboard.Helper
         {
             Draft _Draft = new Draft();
             _Draft.shareMessage = shareMessage;
-            _Draft.scheduleTime = DateTime.Parse(scheduleTime);
+
+            try
+            {
+                _Draft.scheduleTime = Convert.ToDateTime(scheduleTime);
+            }
+            catch(Exception ex)
+            {
+
+            }
+            //_Draft.scheduleTime = DateTime.Parse(scheduleTime);
             _Draft.userId = userId;
             _Draft.GroupId = groupId;
             _Draft.picUrl = picUrl;
@@ -71,9 +84,9 @@ namespace Api.Socioboard.Helper
             try
             {
                 var dt = DateTime.Parse(scheduletime);
-                
-                DateTime client = Convert.ToDateTime(clientdate);
-
+                var clientdt = DateTime.Parse(clientdate);
+                //  DateTime client = Convert.ToDateTime(clientdate);
+                DateTime client = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(clientdt, TimeZoneInfo.Local));
                 DateTime server = DateTime.UtcNow;
                 DateTime schedule = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
                 {

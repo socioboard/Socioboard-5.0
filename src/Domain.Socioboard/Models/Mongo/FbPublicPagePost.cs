@@ -1,4 +1,7 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using Domain.Socioboard.Helpers;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +13,8 @@ namespace Domain.Socioboard.Models.Mongo
     public class FbPublicPagePost
     {
         [BsonId]
-        public Object Id { get; set; }
+        [JsonConverter(typeof(ObjectIdConverter))]
+        public ObjectId Id { get; set; }
         public string PageId { get; set; }
         public string FromId { get; set; }
         public string FromName { get; set; }

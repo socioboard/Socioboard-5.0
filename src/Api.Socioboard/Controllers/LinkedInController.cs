@@ -57,6 +57,10 @@ namespace Api.Socioboard.Controllers
                 Domain.Socioboard.Models.LinkedInAccount linaccount = Repositories.LinkedInAccountRepository.getLinkedInAccount(linkedinId, _redisCache, dbr);
                 if (linaccount != null && linaccount.IsActive == true)
                 {
+                    if (linaccount.UserId == userId)
+                    {
+                        return Ok("LinkedIn account already added by you.");
+                    }
                     return Ok("LinkedIn account added by other user.");
                 }
                 else

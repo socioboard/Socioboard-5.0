@@ -4,7 +4,7 @@
 -nowarn:CS1701
 -nowarn:CS1702
 -nowarn:CS1705
--platform:x64
+-platform:anycpu32bitpreferred
 -debug:full
 -nostdlib
 -nologo
@@ -181,6 +181,7 @@
 -resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard\obj\Debug\net451\Socioboarddotnet-compile.deps.json",Socioboard.deps.json
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard\Program.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard\Startup.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard\Controllers\BoardMeController.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard\Controllers\FacebookManagerController.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard\Controllers\GoogleManagerController.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard\Controllers\HomeController.cs"

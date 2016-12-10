@@ -14,6 +14,7 @@ using Google.Apis.Analytics.v3;
 using Api.Socioboard.Helper;
 using Api.Socioboard.Repositories.BoardMeRepository;
 
+
 namespace Api.Socioboard.Controllers
 {
     [EnableCors("AllowAll")]
@@ -172,6 +173,21 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpGet("getBoardByName")]
+        public IActionResult getBoardByName(string boardName)
+        {
+            try
+            {
+
+                return Ok(BoardMeRepository.getBoardByName(boardName, _redisCache, _appSettings, _logger));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return BadRequest("Something Went Wrong");
+            }
+        }
+
         [HttpGet("getAnalytics")]
         public IActionResult getAnalytics(string boardId)
         {
@@ -252,6 +268,7 @@ namespace Api.Socioboard.Controllers
 
         }
 
+       
         [HttpGet("getTwitterFeeds")]
         public IActionResult getTwitterFeeds(string boardId, int skip, int count)
         {
@@ -276,7 +293,7 @@ namespace Api.Socioboard.Controllers
             }
         }
 
-
+       
         [HttpGet("getInstagramFeeds")]
         public IActionResult getInstagramFeeds(string boardId, int skip, int count)
         {
@@ -305,7 +322,7 @@ namespace Api.Socioboard.Controllers
 
         }
 
-
+        
         [HttpGet("getGplusfeeds")]
         public IActionResult getGplusfeeds(string boardId, string skip, string count)
         {

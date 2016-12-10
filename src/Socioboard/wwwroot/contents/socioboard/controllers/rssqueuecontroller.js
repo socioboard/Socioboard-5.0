@@ -58,6 +58,7 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
             $rootScope.oldurl = oldurl;
             $rootScope.rssId = rssId;
             $('#EditModal').openModal();
+           // alert($rootScope.oldurl);
             //$scope.modalinstance = $modal.open({
             //    templateUrl: 'editsrssfeedModalContent.html',
             //    controller: 'RssQueueController',
@@ -83,8 +84,14 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
                 $http.post
                     (apiDomain + '/api/RssFeed/EditFeedUrl?NewFeedUrl=' + rssQueue + '&OldFeedUrl=' + $rootScope.oldurl + '&RssId=' + $rootScope.rssId)
                               .then(function (response) {
-                                  $scope.modalinstance.dismiss('cancel');
-                                  $scope.rssqueue();
+                                 // alert(response.data);
+                                  if (response.data == "Success") {
+                                      swal(response.data);
+                                      $scope.rssqueue();
+                                  }
+                                  else if (response.data == "This Url Does't  Conatin Rss Feed") {
+                                      swal("This Url Does't  Conatin Rss Feed");
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });

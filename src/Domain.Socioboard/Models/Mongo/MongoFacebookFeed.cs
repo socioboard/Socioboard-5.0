@@ -31,4 +31,10 @@ namespace Domain.Socioboard.Models.Mongo
         public double Negative { get; set; }
        
     }
+
+    public class facebookfeed
+    {
+        public MongoFacebookFeed _facebookFeed { get; set; }
+        public List<MongoFbPostComment> _facebookComment { get; set; }
+    }
 }

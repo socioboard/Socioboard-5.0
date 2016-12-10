@@ -1,9 +1,10 @@
 'use strict';
 
-SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http, $timeout,apiDomain) {
+SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http, $timeout,apiDomain,utility) {
     //alert('helo');
+    
     $scope.$on('$viewContentLoaded', function () {
-
+        $scope.utility = utility;
         $scope.dispbtnmark = true;
         $scope.dispbtndelete = true;
         $scope.dispbtn = true;

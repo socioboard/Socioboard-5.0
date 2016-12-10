@@ -21,9 +21,13 @@ namespace Socioboard.Controllers
             _logger = logger;
         }
         [HttpGet]
-        public ActionResult getFbLoginUrl()
+        public ActionResult getFbLoginUrl(string plan)
         {
             HttpContext.Session.SetObjectAsJson("fblogin", "Fb_Login");
+            if (!string.IsNullOrEmpty(plan))
+            {
+                HttpContext.Session.SetObjectAsJson("RegisterPlan", plan);
+            }
             return Content(Socioboard.Facebook.Auth.Authentication.GetFacebookRedirectLink(_appSettings.FacebookAuthUrl, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl));
         }
         [HttpGet]
@@ -31,6 +35,8 @@ namespace Socioboard.Controllers
         {
             string fbLogin = HttpContext.Session.GetObjectFromJson<string>("fblogin");
             string fbSocial = HttpContext.Session.GetObjectFromJson<string>("fbSocial");
+            string plan = HttpContext.Session.GetObjectFromJson<string>("RegisterPlan");
+
             if (!string.IsNullOrEmpty(fbLogin) && fbLogin.Equals("Fb_Login"))
             {
                 HttpContext.Session.SetObjectAsJson("fblogin", null);
@@ -49,6 +55,7 @@ namespace Socioboard.Controllers
                  Domain.Socioboard.Models.User user = null;
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("AccessToken", accessToken));
+                Parameters.Add(new KeyValuePair<string, string>("accType", plan));
                 HttpResponseMessage response = await WebApiReq.PostReq("/api/User/FacebookLogin", Parameters, "", "", _appSettings.ApiDomain);
                 if (response.IsSuccessStatusCode)
                 {
@@ -56,9 +63,21 @@ namespace Socioboard.Controllers
                     {
                         user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
                         HttpContext.Session.SetObjectAsJson("User", user);
-                        if (user.ExpiryDate < DateTime.UtcNow)
+                        if (user.ExpiryDate < DateTime.UtcNow && user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
                         {
-                            return RedirectToAction("UpgradePlans", "Index");
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else if ((user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.notadded || user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.inprogress) && (user.AccountType != Domain.Socioboard.Enum.SBAccountType.Free))
+                        {
+                            if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
+                            {
+                                return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId, IsLogin = true });
+                            }
+                            else
+                            {
+                                return RedirectToAction("paymentWithPayUMoney", "Index");
+                            }
+                            //return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId, IsLogin = true });
                         }
                     }
                     catch (Exception ex)

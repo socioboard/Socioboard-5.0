@@ -23,11 +23,13 @@ namespace Socioboard.Controllers
         {
             string googleLogin = HttpContext.Session.GetObjectFromJson<string>("googlepluslogin");
             string googleSocial = HttpContext.Session.GetObjectFromJson<string>("Google");
+            string plan = HttpContext.Session.GetObjectFromJson<string>("RegisterPlan");
             if (googleLogin!= null && googleLogin.Equals("Google_Login"))
             {
                 Domain.Socioboard.Models.User user = null;
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("code", code));
+                Parameters.Add(new KeyValuePair<string, string>("accType", plan));
                 HttpResponseMessage response = await WebApiReq.PostReq("/api/Google/GoogleLogin", Parameters, "", "",_appSettings.ApiDomain);
                 if (response.IsSuccessStatusCode)
                 {
@@ -35,6 +37,22 @@ namespace Socioboard.Controllers
                     {
                         user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
                         HttpContext.Session.SetObjectAsJson("User", user);
+                        if (user.ExpiryDate < DateTime.UtcNow && user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
+                        else if ((user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.notadded || user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.inprogress) && (user.AccountType != Domain.Socioboard.Enum.SBAccountType.Free))
+                        {
+                            if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
+                            {
+                                return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId, IsLogin = true });
+                            }
+                            else
+                            {
+                                return RedirectToAction("paymentWithPayUMoney", "Index");
+                            }
+                            // return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId, IsLogin = true });
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -64,9 +82,13 @@ namespace Socioboard.Controllers
         }
 
 
-        public ActionResult getGoogleLoginUrl()
+        public ActionResult getGoogleLoginUrl(string plan)
         {
             HttpContext.Session.SetObjectAsJson("googlepluslogin","Google_Login");
+            if (!string.IsNullOrEmpty(plan))
+            {
+                HttpContext.Session.SetObjectAsJson("RegisterPlan", plan);
+            }
             string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me&response_type=code&access_type=offline";
             return Content(googleurl);
         }

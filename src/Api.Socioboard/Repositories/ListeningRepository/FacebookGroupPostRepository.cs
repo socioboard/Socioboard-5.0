@@ -40,7 +40,16 @@ namespace Api.Socioboard.Repositories.ListeningRepository
             _GroupPostKeyWords.strId = ObjectId.GenerateNewId().ToString();
             _GroupPostKeyWords.keyword = keyword;
             _GroupPostKeyWords.createdTime = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-            mongoreppo.Add<Domain.Socioboard.Models.Mongo.GroupPostKeyWords>(_GroupPostKeyWords);
+            var retkeyword = mongoreppo.Find<Domain.Socioboard.Models.Mongo.GroupPostKeyWords>(t => t.keyword.Contains(keyword));
+            var taskkeyword = Task.Run(async () =>
+            {
+                return await retkeyword;
+            });
+            int countkeyword = taskkeyword.Result.Count;
+            if (count < 1)
+            {
+                mongoreppo.Add<Domain.Socioboard.Models.Mongo.GroupPostKeyWords>(_GroupPostKeyWords);
+            }
             return lstFbFeeds.ToList();
             //}
         }

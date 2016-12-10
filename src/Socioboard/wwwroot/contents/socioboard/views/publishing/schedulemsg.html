@@ -29,8 +29,8 @@
                                         <div class="input-field col s12">
                                         <select multiple id="scheduleprofiles">
                                             <option value="" disabled selected>Choose your option</option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0}" value="fb_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0}  | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
@@ -39,11 +39,12 @@
                                       </div>
                                     </div>
                                       <!--Default version-->
-                                    <div class="row section">
+                                    <div class="row section" ng-if="user.TrailStatus!=2">
                                       <div class="col s12 m4 l3">
-                                         <p>Select your file</p>
+                                         <p>Select image</p>
                                       </div>
-                                      <div class="col s12 m8 l9">
+                                      <div class="col s12 m8 l9" >
+                                          <input type="hidden" id="imageUrl" value="{{schedulemessage.picUrl}}" />
                                           <div ng-if="schedulemessage">
                                               <input type="file" id="input-file-now"  class="dropify" after-render  data-default-file="{{schedulemessage.picUrl}}" />
                                                <!--<input type="file" id="input-file-now" class="dropify" data-default-file="" />-->

@@ -47,8 +47,19 @@ namespace Socioboard.Helpers
         public string failUrl { get; set; }
         public string callBackUrl { get; set; }
         public string cancelurl { get; set; }
+        public string notifyUrl { get; set; }
         public string paypalemail { get; set; }
 
         public string AgencycallBackUrl { get; set; }
+
+        public string PayUMoneyURL { get; set; }
+
+        public string PayuMoneyemail { get; set; }
+        public string surl { get; set; }
+        public string key { get; set; }
+        public string salt { get; set; }
+        public string moneyconvertion { get; set; }
+        public string payurl { get; set; }
+        public string AuthorizationKey { get; set; }
     }
 }

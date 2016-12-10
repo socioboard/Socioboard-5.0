@@ -6,7 +6,7 @@
 --suppress-warning:CS1701
 --suppress-warning:CS1702
 --suppress-warning:CS1705
---platform:x64
+--platform:anycpu32bitpreferred
 --optimize:False
 --emit-entry-point:True
 --output-name:SocioboardDataServices
