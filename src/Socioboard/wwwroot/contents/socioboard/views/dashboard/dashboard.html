@@ -163,7 +163,7 @@
 
                             <!--gA profiles binding start-->
                             <div class="col s12 m6 l4" ng-repeat="gAProfile in lstAProfiles">
-                                <div id="profile-card" class="card">
+                                <div id="profile-card" class="card cardGa">
                                     <div class="card-image waves-effect waves-block waves-light">
                                         <img class="activator" src="/contents/socioboard/images/google-analytics.jpg" alt="{{gAProfile.gaProfileName}}">
                                     </div>
@@ -591,6 +591,7 @@
                 <!--end container-->
             </div>
         </div>
+            </div>
         <!-- Compose Email Trigger -->
         <div ng-show="user.TrailStatus!=2"  class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
             <div  class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">

@@ -77,6 +77,11 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
             var FacebookUrl = $('#postpage_url').val();
             var FacebookGroupId = $('#facebookgroupid').val();
             var Timeintervalminutes = $('#grouptimerinterval').val();
+
+            if (FacebookUrl.indexOf("facebook") == -1 || FacebookUrl.indexOf("https") == -1 || FacebookUrl.indexOf("http") == -1) {
+                swal("please enter url like https://www.facebook.com/bollycrazy");
+                return false;
+            }
             if (Facebookaccountid != null && FacebookUrl != '' && FacebookGroupId != '' && Timeintervalminutes != null) {
                 $scope.dispbtn = false;
             //codes to edit  page shreathon

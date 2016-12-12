@@ -372,7 +372,7 @@ namespace Socioboard.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> paymentWithPayUMoney()
+        public async Task<IActionResult> paymentWithPayUMoney(bool contesnt)
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             Domain.Socioboard.Models.Package _Package = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.Package>("Package");
@@ -396,7 +396,14 @@ namespace Socioboard.Controllers
             if (response.IsSuccessStatusCode)
             {
                 // string data = await response.Content.ReadAsStringAsync();
-                return Content(response.RequestMessage.RequestUri.OriginalString);
+                if (contesnt!=false)
+                {
+                    return Content(response.RequestMessage.RequestUri.OriginalString);
+                }
+                else
+                {
+                    return Redirect(response.RequestMessage.RequestUri.OriginalString);
+                }
             }
             else
             {

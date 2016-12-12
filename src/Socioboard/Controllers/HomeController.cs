@@ -326,22 +326,22 @@ namespace Socioboard.Controllers
                         }
                         else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Topaz)
                         {
-                            package = "SocioBasic";
+                            package = "Topaz";
 
                         }
                         else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Platinum)
                         {
-                            package = "SocioDeluxe";
+                            package = "Platinum";
 
                         }
                         else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Gold)
                         {
-                            package = "SocioPremium";
+                            package = "Gold";
 
                         }
                         else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Ruby)
                         {
-                            package = "SocioStandard";
+                            package = "Ruby";
 
                         }
                         else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Standard)
@@ -369,7 +369,7 @@ namespace Socioboard.Controllers
                                         }
                                         else
                                         {
-                                            return RedirectToAction("paymentWithPayUMoney", "Index");
+                                            return RedirectToAction("paymentWithPayUMoney", "Index", new {contesnt = false });
                                         }
                                     }
                                     else
@@ -492,7 +492,7 @@ namespace Socioboard.Controllers
                             }
                             else
                             {
-                                return RedirectToAction("paymentWithPayUMoney", "Index");
+                                return RedirectToAction("paymentWithPayUMoney", "Index", new { contesnt = false });
                             }
                         }
                     }

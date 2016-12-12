@@ -41,7 +41,7 @@
                             </li>
 
 
-                            <div class="center">
+                            <!--<div class="center">
                                 <div class="preloader-wrapper big active">
                                     <div class="spinner-layer spinner-blue">
                                         <div class="circle-clipper left">
@@ -83,8 +83,15 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </ul>
+
+                        <div class="center" ng-click="listData1()">
+                            <a href="#" class="loadmorebutton1">
+                                {{loadmore_feed}}
+                            </a>
+
+                        </div>
 
                     </div>
                 </div>
@@ -99,7 +106,7 @@
                                 <img src="{{tweet.fromProfileUrl}}" alt="{{tweet.fromName}}" class="circle">
                                 <span class="email-title">{{tweet.fromName}}</span>
                                 <div class="row feeds_post">
-                                    <div class="col m12">
+                                    <div class="col m8">
                                         <p class="break_word ultra-small">{{tweet.twitterMsg}}</p>
                                     </div>
                                     <div class="col m4 center">
@@ -113,7 +120,7 @@
                             </li>
 
 
-                            <div class="center">
+                            <!--<div class="center">
                                 <div class="preloader-wrapper big active">
                                     <div class="spinner-layer spinner-blue">
                                         <div class="circle-clipper left">
@@ -155,8 +162,15 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
                         </ul>
+
+                        <div class="center" ng-click="listData()">
+                            <link href="#" class="loadmorebutton" style="width:10px; height:5px">
+                                {{loadmore_twt}}
+                            </link>
+
+                        </div>
 
                     </div>
                 </div>
@@ -277,8 +291,8 @@
                                 <span>ASSIGN TASK TO</span><br />
                                 <div class="smartinbox_filter_slider">
                                     <p class="grey lighten-5 z-depth-1" ng-repeat="member in groups[groupIndex].members |filter:{memberStatus:1} ">
-                                        <input name="member" type="radio" id="twt_{{member.userId}}" value="{{member.userId}}" class="with-gap task-user-member" />
-                                        <label for="{{member.userId}}">{{ member.firstName}}</label>
+                                        <input name="member" type="radio" id="twt{{member.userId}}" value="{{member.userId}}" class="with-gap task-user-member" />
+                                        <label for="twt{{member.userId}}">{{ member.firstName}}</label>
                                     </p>
 
                                 </div>

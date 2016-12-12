@@ -9,7 +9,8 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         var TweetsreachLast = false; // to check the user tweets ends last or not
-        $scope.loadmore = "Loading More data..";
+        $scope.loadmore_twt = "Click Here to Load More Data";
+        $scope.loadmore_feed = "Click Here to Load More Data";
         $scope.lstTwtFeeds = [];
         $scope.lstUserTweets = [];
         $scope.LoadTopFeeds = function () {
@@ -43,6 +44,54 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         }
           $scope.LoadTopFeeds();
           $scope.LoadTopTweets();
+        // Code for Loading button twts ..
+        $scope.listData = function () {
+
+              if (TweetsreachLast) {
+                  return false;
+              }
+              $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
+                           .then(function (response) {
+                               console.log(response.data);
+
+                               if (response.data == null || response.data == "") {
+                                   TweetsreachLast = true;
+                                   $scope.loadmore_twt = "Reached at bottom";
+                               }
+                               else {
+                                   $scope.lstUserTweets = $scope.lstUserTweets.concat(response.data);
+
+                                   ending = ending + 30;
+                               }
+                           }, function (reason) {
+                               $scope.error = reason.data;
+                           });
+        };
+        // Code for Loading button feeds ..
+        $scope.listData1 = function () {
+
+              if (reachLast) {
+                  return false;
+              }
+              $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
+                           .then(function (response) {
+                               console.log(response.data);
+
+                               if (response.data == null || response.data == "") {
+                                   reachLast = true;
+                                   $scope.loadmore_feed = "Reached at bottom";
+                               }
+                               else {
+                                   $scope.lstTwtFeeds = $scope.lstTwtFeeds.concat(response.data);
+
+                                   ending = ending + 30;
+                               }
+                           }, function (reason) {
+                               $scope.error = reason.data;
+                           });
+          };
+
+
 
           $scope.twitterretweet = function (screenName, profileId, messageId) {
               swal({
