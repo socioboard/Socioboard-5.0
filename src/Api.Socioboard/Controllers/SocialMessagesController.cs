@@ -113,28 +113,53 @@ namespace Api.Socioboard.Controllers
             {
                 if (item.StartsWith("fb"))
                 {
-                    string prId = item.Substring(3, item.Length - 3);
-                    Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                    string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, uploads, link, dbr, _logger);
+                    try
+                    {
+                        string prId = item.Substring(3, item.Length - 3);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, uploads, link, dbr, _logger);
+                    }
+                    catch(Exception ex)
+                    {
 
+                    }
                 }
                 if (item.StartsWith("tw"))
                 {
-                    string prId = item.Substring(3, item.Length - 3);
-                    string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, message, prId, userId, uploads, true, dbr, _logger);
+                    try
+                    {
+                        string prId = item.Substring(3, item.Length - 3);
+                        string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, message, prId, userId, uploads, true, dbr, _logger);
+                    }
+                    catch(Exception ex)
+                    {
 
+                    }
                 }
                 if (item.StartsWith("lin"))
                 {
-                    string prId = item.Substring(4, item.Length - 4);
-                    string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, filename, _redisCache, _appSettings, dbr);
+                    try
+                    {
+                        string prId = item.Substring(4, item.Length - 4);
+                        string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, filename, _redisCache, _appSettings, dbr);
+                    }
+                    catch(Exception ex)
+                    {
 
+                    }
                 }
                 if (item.StartsWith("Cmpylinpage"))
                 {
-                    string prId = item.Substring(12, item.Length - 12);
-                    string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, userId, message, prId, _redisCache, dbr, _appSettings);
+                    try
+                    {
+                        string prId = item.Substring(12, item.Length - 12);
+                        string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, userId, message, prId, _redisCache, dbr, _appSettings);
 
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
                 }
             }
 

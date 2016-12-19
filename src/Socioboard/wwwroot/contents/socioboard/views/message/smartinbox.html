@@ -13,8 +13,8 @@
                             <span ng-if="notification.type==0" class="email-title">{{notification.fromScreenName}} mention {{notification.recipientName}}</span>
                             <span ng-if="notification.type==1 && notification.fromScreenName!=''" class="email-title">{{notification.fromScreenName}} retweet {{notification.recipientName}} Post</span>
                             <span ng-if="notification.type==1 && notification.fromScreenName==''" class="email-title">{{notification.fromName}} retweet {{notification.recipientName}} Post</span>
-                            <span ng-if="notification.type==6" class="email-title">{{notification.fromScreenName}} New Follower Alert</span>
-                            <span ng-if="notification.type==11" class="email-title">{{notification.fromScreenName}} Facebook Page Notification</span>
+                            <span ng-if="notification.type==6" class="email-title">{{notification.fromName}} New Follower Alert</span>
+                            <span ng-if="notification.type==11" class="email-title">{{notification.fromName}} Facebook Page Notification</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
                                     <p class="break_word ultra-small">{{notification.twitterMsg}}</p>
@@ -241,7 +241,7 @@
                                 </div>
                                 <div class="col s2">
                                     <p>
-                                        <input type="checkbox" name="filterType[]" value="New Followers" ng-click="toggleSelection(2)" ng-checked="filterType.indexOf(2) > -1" id="NewFollowers" />
+                                        <input type="checkbox" name="filterType[]" value="New Followers" ng-click="toggleSelection(6)" ng-checked="filterType.indexOf(6) > -1" id="NewFollowers" />
                                         <label for="NewFollowers"></label>
                                     </p>
                                 </div>

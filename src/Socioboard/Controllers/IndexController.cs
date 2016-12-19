@@ -14,6 +14,7 @@ using System.Compat.Web;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using Facebook;
+using Newtonsoft.Json;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,7 +40,6 @@ namespace Socioboard.Controllers
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Index()
         {
-            //  return RedirectToAction("paymentWithPayUMoney", "Index");
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
             {

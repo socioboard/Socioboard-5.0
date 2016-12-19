@@ -61,7 +61,7 @@ namespace Socioboard.Facebook.Data
            
             try
             {
-                return  fb.Get("v2.7/me?fields=id,name,username,likes,fan_count");
+                return  fb.Get("v2.7/me?fields=id,name,username,likes,fan_count,cover");
             }
             catch (Exception ex)
             {
@@ -75,7 +75,7 @@ namespace Socioboard.Facebook.Data
 
             return FbFansList;
         }
-
+      
         public static string getFacebookRecentPost(string fbAccesstoken, string pageId)
         {
             string output = string.Empty;

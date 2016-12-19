@@ -9,8 +9,8 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         var TweetsreachLast = false; // to check the user tweets ends last or not
-        $scope.loadmore_twt = "Click Here to Load More Data";
-        $scope.loadmore_feed = "Click Here to Load More Data";
+        $scope.loadmore_twt = "click here to load more";
+        $scope.loadmore_feed = "click here to load more";
         $scope.lstTwtFeeds = [];
         $scope.lstUserTweets = [];
         $scope.LoadTopFeeds = function () {

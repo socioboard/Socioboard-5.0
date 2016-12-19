@@ -88,16 +88,16 @@
                                             <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Friends"></i> {{fbProfile.friends}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> {{fbProfile.emailId}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Friends:</span> {{fbProfile.friends}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}}</span> </p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{fbProfile.about}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Designation"></i> {{fbProfile.workPosition}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i>{{fbProfile.emailId}}</p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2" title="DOB"></i> {{fbProfile.birthday}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Gender"></i> {{fbProfile.gender}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Designation"></i><span class="cyan-text text-darken-2">Designation:</span> <span title="{{fbProfile.workPosition}}">{{fbProfile.workPosition}}</span> </p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}} </span> </p>
+                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">DOB:</span> {{fbProfile.birthday}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Gender"></i><span class="cyan-text text-darken-2">Gender:</span> {{fbProfile.gender}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -116,16 +116,16 @@
                                             <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{twtProfile.twitterScreenName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i> {{twtProfile.followersCount}}</p>
-                                        <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Following"></i> {{twtProfile.followingCount}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator"></i><span class="cyan-text text-darken-2">Followers:</span> {{twtProfile.followersCount}}</p>
+                                        <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2 activator"></i><span class="cyan-text text-darken-2">Following:</span> {{twtProfile.followingCount}}</p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate">{{twtProfile.twitterScreenName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{twtProfile.description}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Your Name"></i> {{twtProfile.twitterName}}</p>
-                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Descriptions"></i>{{twtProfile.description}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Following"></i> {{twtProfile.followingCount}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followers"></i> {{twtProfile.followersCount}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Your Name"></i><span class="cyan-text text-darken-2">Name:</span> <span title="{{twtProfile.twitterName}}">{{twtProfile.twitterName}}</span></p>
+                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Descriptions"></i><span class="cyan-text text-darken-2">Descriptions:</span> <span title="{{twtProfile.description}}">{{twtProfile.description}}</span></p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Following"></i><span class="cyan-text text-darken-2">Following:</span> {{twtProfile.followingCount}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followers"></i><span class="cyan-text text-darken-2">followers:</span> {{twtProfile.followersCount}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -145,17 +145,17 @@
                                             <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.haveYouInCircles}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> {{gplusProfile.emailId}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{gplusProfile.haveYouInCircles}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{gplusProfile.emailId}}">{{gplusProfile.emailId}} </span></p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <!--<p>{{gplusProfile.description}}</p>-->
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="In Your Circle"></i> {{gplusProfile.inYourCircles}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Have You In Circles"></i> {{gplusProfile.haveYouInCircles}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i>{{gplusProfile.emailId}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> {{gplusProfile.inYourCircles}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span>{{gplusProfile.haveYouInCircles}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> <span class="cyan-text text-darken-2">Email Id:</span><span title="{{gplusProfile.emailId}}">{{gplusProfile.emailId}}</span></p>
                                         <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>-->
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Location"></i> {{gplusProfile.location}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Location"></i> <span class="cyan-text text-darken-2">Location:</span> <span title="{{gplusProfile.location}}">{{gplusProfile.location}}</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -174,16 +174,16 @@
                                             <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gAProfile.gaProfileName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> {{gAProfile.visits}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Views"></i> {{gAProfile.views}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> <span class="cyan-text text-darken-2">Visits:</span>{{gAProfile.visits}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{gAProfile.views}}</p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{gAProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> {{gAProfile.visits}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Views"></i> {{gAProfile.views}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Website URL"></i>{{gAProfile.websiteUrl}}</p>
-                                      <p><i class="mdi-social-cake cyan-text text-darken-2" title="Have You In Circles"></i> {{gAProfile.haveYouInCircles}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Email Id"></i> {{gplgAProfileusProfile.emailId}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i><span class="cyan-text text-darken-2">Visits:</span> {{gAProfile.visits}}</p>
+                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{gAProfile.views}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Website URL"></i><span class="cyan-text text-darken-2">Website URL:</span> <span title="{{gAProfile.websiteUrl}}">{{gAProfile.websiteUrl}}</span></p>
+                                        <p><i class="mdi-social-cake cyan-text text-darken-2" title="Have You In Circles"></i><span class="cyan-text text-darken-2">followers:</span> {{gAProfile.haveYouInCircles}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Email Id"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{gplgAProfileusProfile.emailId}}">{{gplgAProfileusProfile.emailId}}</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -202,17 +202,17 @@
                                             <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{insProfile.insUserName}}</span>
-                                        <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> {{insProfile.followers}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i> {{insProfile.followedBy}}</p>
+                                        <p><i class="icon-user-follow cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{insProfile.followers}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> {{insProfile.followedBy}}</p>
                                         <!--<p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>-->
                                     </div>
                                     <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate" >{{insProfile.insUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <span class="card-title grey-text text-darken-4 truncate">{{insProfile.insUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{insProfile.bio}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="User Name"></i> {{insProfile.insUserName}}</p>
-                                        <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> {{insProfile.followers}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i> {{insProfile.followedBy}}</p>
-                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="User Name"></i><span class="cyan-text text-darken-2">User Name:</span> <span title="{{insProfile.insUserName}}">{{insProfile.insUserName}}</span></p>
+                                        <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> <span class="cyan-text text-darken-2">Followers:</span>{{insProfile.followers}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i><span class="cyan-text text-darken-2">Following:</span> {{insProfile.followedBy}}</p>
+                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i><span class="cyan-text text-darken-2">Total Images:</span> {{insProfile.totalImages}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -231,16 +231,16 @@
                                             <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinPageName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Followers"></i> {{linProfile.numFollowers}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Location"></i> {{insProfile.locations}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{linProfile.numFollowers}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> {{insProfile.locations}}</p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinPageName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{linProfile.specialties}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Page Name"></i> {{linProfile.linkedinPageName}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Description"></i>{{linProfile.description}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Location"></i> {{linProfile.locations}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i> {{linProfile.numFollowers}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Page Name"></i><span class="cyan-text text-darken-2">Page Name:</span> {{linProfile.linkedinPageName}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Description"></i><span class="cyan-text text-darken-2">Description:</span> <span title="{{linProfile.description}}">{{linProfile.description}}</span></p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Location"></i><span class="cyan-text text-darken-2">Location:</span><span title="{{linProfile.locations}}">{{linProfile.locations}}</span></p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i><span class="cyan-text text-darken-2">Followers:</span>{{linProfile.numFollowers}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -576,7 +576,7 @@
                         <h6 class="r_side_title"><i class="icon-user-following"></i>Recent Followers</h6>
                         <div class="row" id="#recent_followers_list">
                             <div class="col s12 m6 l6" ng-repeat="twtfollower in TwitterRecentFollower">
-                                <div class="card-panel">
+                                <div class="card-panel center">
                                     <a href="https://twitter.com/{{twtfollower.screen_name}}" target="_blank">
                                         <div class="card-image">
                                             <img src="{{twtfollower.profile_image_url}}" title="{{twtfollower.screen_name}}" class="responsive-img">

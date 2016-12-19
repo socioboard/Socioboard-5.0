@@ -43,6 +43,7 @@ namespace Api.Socioboard.Helper
             scheduledMessage.url = url;
             scheduledMessage.picUrl = picUrl;
             scheduledMessage.createTime = DateTime.UtcNow;
+            scheduledMessage.clientTime = DateTime.Now;
             scheduledMessage.socialprofileName = socialprofileName;
           int ret =  dbr.Add<ScheduledMessage>(scheduledMessage);
             if (ret == 1)

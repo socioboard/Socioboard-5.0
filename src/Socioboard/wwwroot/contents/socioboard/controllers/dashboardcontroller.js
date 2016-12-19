@@ -308,7 +308,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
             };
             $scope.selectedLinkedinProfiles = [];
+            $scope.selecteLinkedinProfiles = [];
             $scope.addcompanypages = function () {
+
+                angular.forEach($rootScope.lstProfiles, function (value, key) {
+                    if (value.profileType == 4) {
+                        if ($rootScope.lstGanalytics.indexOf(value.profileId) == -1) {
+
+                            $scope.selecteLinkedinProfiles.push(value.profileId);
+                        }
+
+                    }
+                });
+
                 if ($scope.selectedLinkedinProfiles.length > 0) {
                     // $scope.modalinstance.dismiss('cancel');
                     var formData = new FormData();
@@ -330,6 +342,8 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     }, function (reason) {
                         swal("Error!");
                     });
+                } else if ($scope.selecteLinkedinProfiles.length > 0) {
+                    swal("Page already added");
                 }
                 else {
                     swal("Select Atleast One Page to add!");
@@ -353,8 +367,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
             };
             $scope.selectedFbPageProfiles = [];
+            $scope.selecteFbPageProfiles = [];
            // toggleGAeProfileSelection();
             $scope.AddFacebookPages = function () {
+                angular.forEach($rootScope.lstProfiles, function (value, key) {
+                    if (value.profileType == 1) {
+                        if ($rootScope.lstAddFbPages.indexOf(value.profileId) == -1) {
+                           
+                            $scope.selecteFbPageProfiles.push(value.profileId);
+                        }
+                       
+                    }
+                });
+                console.log($scope.selecteFbPageProfiles);
                 if ($scope.selectedFbPageProfiles.length > 0) {
                     //$scope.modalinstance.dismiss('cancel');
                     var formData = new FormData();
@@ -376,6 +401,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     }, function (reason) {
                         swal("Error!");
                     });
+                } else if ($scope.selecteFbPageProfiles.length > 0)
+                {
+                    swal("Page already added");
                 }
                 else {
                     swal("Select Atleast One Page to add!");
@@ -400,7 +428,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
             }
             $scope.selectedGAPageProfiles = [];
+            $scope.selecteGAPageProfiles = [];
             $scope.AddGaSites = function () {
+                angular.forEach($rootScope.lstProfiles, function (value, key) {
+                    if (value.profileType == 10) {
+                        if ($rootScope.lstGanalytics.indexOf(value.profileId) == -1) {
+
+                            $scope.selecteGAPageProfiles.push(value.profileId);
+                        }
+
+                    }
+                });
+
+
                 if ($scope.selectedGAPageProfiles.length > 0) {
                     var formData = new FormData();
                     formData.append('profileaccesstoken', $scope.selectedGAPageProfiles);
@@ -422,7 +462,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         swal("Error!");
                     });
                 }
-
+                else if ($scope.selecteGAPageProfiles.length > 0) {
+                    swal("Page already added");
+                }
                 else {
                     swal("Select Atleast One Page to add!");
                 }

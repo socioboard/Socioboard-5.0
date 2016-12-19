@@ -50,7 +50,7 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
             }
         };
 
-        $scope.filterType = [9, 0, 1, 2];
+        $scope.filterType = [9, 0, 1, 6];
         $scope.selectedProfiles = [];
 
         angular.forEach($rootScope.lstProfiles, function (item) {

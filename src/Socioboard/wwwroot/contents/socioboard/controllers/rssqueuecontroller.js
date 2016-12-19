@@ -90,7 +90,7 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
                                       $scope.rssqueue();
                                   }
                                   else if (response.data == "This Url Does't  Conatin Rss Feed") {
-                                      swal("This Url Does't  Conatin Rss Feed");
+                                      swal("This Url Does't  Conatin Rss Feed try with another one");
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;

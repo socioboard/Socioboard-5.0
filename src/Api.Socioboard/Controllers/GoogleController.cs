@@ -115,6 +115,11 @@ namespace Api.Socioboard.Controllers
             IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
             if (lstUser != null && lstUser.Count() > 0)
             {
+                DateTime d1 = DateTime.UtcNow;
+                //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
+                //userTable.LastLoginTime = d1;
+                lstUser.First().LastLoginTime = d1;
+                dbr.Update<User>(lstUser.First());
                 _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
                 return Ok(lstUser.First());
             }

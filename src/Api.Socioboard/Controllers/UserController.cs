@@ -147,6 +147,12 @@ namespace Api.Socioboard.Controllers
             {
                 if (lstUser.First().Password != null && lstUser.First().Password.Equals(SBHelper.MD5Hash(user.Password)))
                 {
+                    DateTime d1 = DateTime.UtcNow;
+                    //User userTable = dbr.Single < User>(t => t.EmailId == user.UserName);
+                    lstUser.First().LastLoginTime = d1;
+                    //userTable.LastLoginTime = d1;
+                    dbr.Update < User>(lstUser.First());
+
                     // _memoryCache.Set(lstUser.First().EmailId, lstUser.First());
                     _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
                     if(lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
@@ -394,6 +400,11 @@ namespace Api.Socioboard.Controllers
                 IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
                 if (lstUser != null && lstUser.Count() > 0)
                 {
+                    DateTime d1 = DateTime.UtcNow;
+                    //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
+                    //userTable.LastLoginTime = d1;
+                    lstUser.First().LastLoginTime = d1;
+                    dbr.Update<User>(lstUser.First());
                     _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
                     return Ok(lstUser.First());
                 }
