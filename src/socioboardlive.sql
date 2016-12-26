@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
--- Host:                         127.0.0.1
--- Server version:               10.0.21-MariaDB - mariadb.org binary distribution
+-- Host:                         173.192.35.244
+-- Server version:               10.0.25-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
 -- HeidiSQL Version:             9.3.0.4984
 -- --------------------------------------------------------
@@ -10,12 +10,12 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
--- Dumping database structure for socioboard3
-CREATE DATABASE IF NOT EXISTS `socioboard3` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `socioboard3`;
+-- Dumping database structure for socioboardlive
+CREATE DATABASE IF NOT EXISTS `socioboardlive` /*!40100 DEFAULT CHARACTER SET latin1 */;
+USE `socioboardlive`;
 
 
--- Dumping structure for table socioboard3.affiliates
+-- Dumping structure for table socioboardlive.affiliates
 CREATE TABLE IF NOT EXISTS `affiliates` (
   `Id` bigint(20) NOT NULL,
   `UserId` bigint(20) NOT NULL,
@@ -28,24 +28,7 @@ CREATE TABLE IF NOT EXISTS `affiliates` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.agencyuser
-CREATE TABLE IF NOT EXISTS `agencyuser` (
-  `userName` varchar(50) NOT NULL,
-  `id` bigint(20) NOT NULL,
-  `email` varchar(50) NOT NULL,
-  `company` varchar(50) NOT NULL,
-  `message` varchar(500) NOT NULL,
-  `phnNumber` varchar(50) NOT NULL,
-  `planType` varchar(50) NOT NULL,
-  `createdDate` datetime NOT NULL,
-  `amount` double NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- Data exporting was unselected.
-
-
--- Dumping structure for table socioboard3.demorequest
+-- Dumping structure for table socioboardlive.demorequest
 CREATE TABLE IF NOT EXISTS `demorequest` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `firstName` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
@@ -66,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `demorequest` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.discovery
+-- Dumping structure for table socioboardlive.discovery
 CREATE TABLE IF NOT EXISTS `discovery` (
   `Network` varchar(350) DEFAULT NULL,
   `SearchKeyword` varchar(3502) DEFAULT NULL,
@@ -80,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `discovery` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.draft
+-- Dumping structure for table socioboardlive.draft
 CREATE TABLE IF NOT EXISTS `draft` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `shareMessage` varchar(10000) DEFAULT '0',
@@ -95,7 +78,7 @@ CREATE TABLE IF NOT EXISTS `draft` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.ewalletwithdrawrequest
+-- Dumping structure for table socioboardlive.ewalletwithdrawrequest
 CREATE TABLE IF NOT EXISTS `ewalletwithdrawrequest` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `UserName` varchar(50) NOT NULL,
@@ -115,22 +98,20 @@ CREATE TABLE IF NOT EXISTS `ewalletwithdrawrequest` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.facebookaccounts
+-- Dumping structure for table socioboardlive.facebookaccounts
 CREATE TABLE IF NOT EXISTS `facebookaccounts` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `FbUserId` varchar(100) NOT NULL,
   `FbUserName` varchar(100) NOT NULL,
   `AccessToken` varchar(1000) NOT NULL,
+  `SchedulerUpdate` datetime DEFAULT NULL,
   `Friends` bigint(20) NOT NULL,
   `EmailId` varchar(50) DEFAULT NULL,
   `FbProfileType` tinyint(4) NOT NULL,
   `ProfileUrl` varchar(1000) DEFAULT NULL,
   `IsActive` tinyint(4) NOT NULL,
   `UserId` bigint(20) NOT NULL,
-  `PageShareathonUpdate` datetime DEFAULT NULL,
-  `GroupShareathonUpdate` datetime DEFAULT NULL,
   `LastUpdate` datetime DEFAULT NULL,
-  `SchedulerUpdate` datetime DEFAULT NULL,
   `IsAccessTokenActive` bit(1) NOT NULL,
   `coverPic` varchar(500) DEFAULT NULL,
   `birthday` varchar(50) DEFAULT NULL,
@@ -142,15 +123,18 @@ CREATE TABLE IF NOT EXISTS `facebookaccounts` (
   `bio` varchar(500) DEFAULT NULL,
   `about` varchar(5000) DEFAULT NULL,
   `workCompany` varchar(5000) DEFAULT NULL,
+  `PageShareathonUpdate` datetime DEFAULT NULL,
+  `GroupShareathonUpdate` datetime DEFAULT NULL,
   `Is90DayDataUpdated` bit(1) DEFAULT NULL,
   `lastpagereportgenerated` datetime DEFAULT NULL,
-  PRIMARY KEY (`Id`)
+  PRIMARY KEY (`Id`),
+  UNIQUE KEY `FbUserId` (`FbUserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.googleanalyticsaccount
+-- Dumping structure for table socioboardlive.googleanalyticsaccount
 CREATE TABLE IF NOT EXISTS `googleanalyticsaccount` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `UserId` bigint(20) NOT NULL,
@@ -172,13 +156,14 @@ CREATE TABLE IF NOT EXISTS `googleanalyticsaccount` (
   `IsActive` tinyint(1) unsigned DEFAULT NULL,
   `EntryDate` datetime DEFAULT NULL,
   `Is90DayDataUpdated` bit(1) DEFAULT NULL,
+  `internalWebPropertyId` varchar(500) DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.googleplusaccounts
+-- Dumping structure for table socioboardlive.googleplusaccounts
 CREATE TABLE IF NOT EXISTS `googleplusaccounts` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `UserId` bigint(20) NOT NULL DEFAULT '0',
@@ -210,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `googleplusaccounts` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.groupmembers
+-- Dumping structure for table socioboardlive.groupmembers
 CREATE TABLE IF NOT EXISTS `groupmembers` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `userId` bigint(20) NOT NULL DEFAULT '0',
@@ -222,13 +207,14 @@ CREATE TABLE IF NOT EXISTS `groupmembers` (
   `firstName` varchar(50) DEFAULT NULL,
   `lastName` varchar(50) DEFAULT NULL,
   `email` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `userId_groupid_email` (`userId`,`groupid`,`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.groupprofiles
+-- Dumping structure for table socioboardlive.groupprofiles
 CREATE TABLE IF NOT EXISTS `groupprofiles` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `ProfileOwnerId` bigint(20) NOT NULL DEFAULT '0',
@@ -239,26 +225,25 @@ CREATE TABLE IF NOT EXISTS `groupprofiles` (
   `GroupId` bigint(20) NOT NULL DEFAULT '0',
   `EntryDate` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`),
-  KEY `GroupId` (`GroupId`)
+  UNIQUE KEY `ProfileId_GroupId` (`ProfileId`,`GroupId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.groups
+-- Dumping structure for table socioboardlive.groups
 CREATE TABLE IF NOT EXISTS `groups` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `GroupName` varchar(50) NOT NULL DEFAULT 'Socioboard',
   `CreatedDate` datetime NOT NULL,
   `AdminId` bigint(20) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`Id`),
-  UNIQUE KEY `GroupName_AdminId` (`GroupName`,`AdminId`)
+  PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.instagramaccounts
+-- Dumping structure for table socioboardlive.instagramaccounts
 CREATE TABLE IF NOT EXISTS `instagramaccounts` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `InstagramId` varchar(350) DEFAULT NULL,
@@ -281,11 +266,10 @@ CREATE TABLE IF NOT EXISTS `instagramaccounts` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.linkedinaccount
+-- Dumping structure for table socioboardlive.linkedinaccount
 CREATE TABLE IF NOT EXISTS `linkedinaccount` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `UserId` bigint(20) NOT NULL,
-  `SchedulerUpdate` datetime DEFAULT NULL,
   `LinkedinUserId` varchar(350) DEFAULT NULL,
   `LinkedinUserName` varchar(350) DEFAULT NULL,
   `OAuthToken` varchar(350) DEFAULT NULL,
@@ -296,26 +280,26 @@ CREATE TABLE IF NOT EXISTS `linkedinaccount` (
   `IsActive` tinyint(1) DEFAULT NULL,
   `Connections` int(10) DEFAULT NULL,
   `LastUpdate` datetime DEFAULT NULL,
+  `SchedulerUpdate` datetime DEFAULT NULL,
   `ProfileImageUrl` varchar(350) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `LinkedinUserId` (`LinkedinUserId`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.linkedincompanypage
+-- Dumping structure for table socioboardlive.linkedincompanypage
 CREATE TABLE IF NOT EXISTS `linkedincompanypage` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `UserId` bigint(20) NOT NULL,
   `LinkedinPageId` varchar(350) DEFAULT NULL,
   `LinkedinPageName` varchar(350) DEFAULT NULL,
   `IsActive` tinyint(1) DEFAULT NULL,
-  `SchedulerUpdate` datetime DEFAULT NULL,
   `EmailDomains` varchar(350) DEFAULT NULL,
   `OAuthToken` varchar(350) DEFAULT NULL,
   `lastUpdate` datetime DEFAULT NULL,
   `OAuthSecret` varchar(350) DEFAULT NULL,
+  `SchedulerUpdate` datetime DEFAULT NULL,
   `OAuthVerifier` varchar(350) DEFAULT NULL,
   `Description` text,
   `FoundedYear` varchar(350) DEFAULT NULL,
@@ -338,7 +322,7 @@ CREATE TABLE IF NOT EXISTS `linkedincompanypage` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.package
+-- Dumping structure for table socioboardlive.package
 CREATE TABLE IF NOT EXISTS `package` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `packagename` varchar(50) DEFAULT NULL,
@@ -349,20 +333,23 @@ CREATE TABLE IF NOT EXISTS `package` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.paymenttransaction
+-- Dumping structure for table socioboardlive.paymenttransaction
 CREATE TABLE IF NOT EXISTS `paymenttransaction` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `userid` bigint(20) DEFAULT NULL,
   `email` varchar(50) DEFAULT NULL,
   `amount` varchar(50) DEFAULT NULL,
   `paymentdate` datetime DEFAULT NULL,
+  `trasactionId` varchar(50) DEFAULT NULL,
+  `paymentId` varchar(50) DEFAULT NULL,
+  `PaymentType` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.rssfeedurl
+-- Dumping structure for table socioboardlive.rssfeedurl
 CREATE TABLE IF NOT EXISTS `rssfeedurl` (
   `rssFeedUrlId` bigint(20) NOT NULL AUTO_INCREMENT,
   `rssurl` text,
@@ -373,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `rssfeedurl` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.scheduledmessage
+-- Dumping structure for table socioboardlive.scheduledmessage
 CREATE TABLE IF NOT EXISTS `scheduledmessage` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `shareMessage` varchar(10000) DEFAULT '0',
@@ -387,21 +374,41 @@ CREATE TABLE IF NOT EXISTS `scheduledmessage` (
   `picUrl` varchar(5000) DEFAULT NULL,
   `socialprofileName` varchar(200) DEFAULT NULL,
   `url` varchar(5000) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `scheduleTime` (`scheduleTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.twitteraccount
+-- Dumping structure for table socioboardlive.training
+CREATE TABLE IF NOT EXISTS `training` (
+  `ID` bigint(20) NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) NOT NULL DEFAULT '0',
+  `FirstName` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `LastName` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `Emaild` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `Company` varchar(100) DEFAULT NULL,
+  `PhoneNo` varchar(100) NOT NULL,
+  `Message` varchar(500) DEFAULT NULL,
+  `PaymentAmount` varchar(50) NOT NULL,
+  `PaymentStatus` varchar(50) DEFAULT NULL,
+  `PaymentDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table socioboardlive.twitteraccount
 CREATE TABLE IF NOT EXISTS `twitteraccount` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `twitterUserId` varchar(50) NOT NULL,
   `twitterScreenName` varchar(50) NOT NULL,
   `oAuthToken` varchar(5000) NOT NULL,
   `oAuthSecret` varchar(5000) NOT NULL,
-  `SchedulerUpdate` datetime DEFAULT NULL,
   `userId` bigint(20) NOT NULL,
+  `SchedulerUpdate` datetime DEFAULT NULL,
   `followersCount` bigint(20) NOT NULL DEFAULT '0',
   `followingCount` bigint(20) NOT NULL DEFAULT '0',
   `isActive` bit(1) NOT NULL DEFAULT b'0',
@@ -421,15 +428,15 @@ CREATE TABLE IF NOT EXISTS `twitteraccount` (
 -- Data exporting was unselected.
 
 
--- Dumping structure for table socioboard3.user
+-- Dumping structure for table socioboardlive.user
 CREATE TABLE IF NOT EXISTS `user` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `UserName` varchar(350) CHARACTER SET utf8 NOT NULL,
-  `EmailId` varchar(350) CHARACTER SET utf8 NOT NULL,
+  `EmailId` varchar(250) CHARACTER SET utf8 NOT NULL,
   `ProfilePicUrl` varchar(350) CHARACTER SET utf8 DEFAULT NULL,
   `EmailValidateToken` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
   `ValidateTokenExpireDate` datetime DEFAULT NULL,
-  `AccountType` tinyint(10) NOT NULL DEFAULT '0',
+  `AccountType` tinyint(4) NOT NULL DEFAULT '0',
   `CreateDate` datetime DEFAULT NULL,
   `ExpiryDate` datetime DEFAULT NULL,
   `Password` varchar(350) CHARACTER SET utf8 DEFAULT NULL,
@@ -451,13 +458,13 @@ CREATE TABLE IF NOT EXISTS `user` (
   `days60GrpReportsSummery` bit(1) NOT NULL DEFAULT b'1',
   `days90GrpReportsSummery` bit(1) NOT NULL DEFAULT b'1',
   `otherNewsLetters` bit(1) NOT NULL DEFAULT b'1',
-  `PaymentType` tinyint(4) DEFAULT '0',
   `forgotPasswordKeyToken` varchar(50) COLLATE utf8_unicode_ci DEFAULT '1',
   `forgotPasswordExpireDate` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `PayPalAccountStatus` tinyint(4) DEFAULT '0',
   `TrailStatus` tinyint(4) DEFAULT '0',
+  `PayPalAccountStatus` tinyint(4) DEFAULT '0',
+  `PaymentType` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`Id`),
-  FULLTEXT KEY `EmailId` (`EmailId`)
+  UNIQUE KEY `EmailId` (`EmailId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- Data exporting was unselected.
