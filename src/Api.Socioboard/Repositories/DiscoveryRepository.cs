@@ -110,17 +110,23 @@ namespace Api.Socioboard.Repositories
         public static List<Domain.Socioboard.Models.InstagramDiscoveryFeed> DiscoverySearchinstagram(string keyword, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
             List<Domain.Socioboard.Models.InstagramDiscoveryFeed> iMmemInstagramDiscoveryFeed = _redisCache.Get<List<Domain.Socioboard.Models.InstagramDiscoveryFeed>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheDiscoveryInstagram + keyword);
+            List<Domain.Socioboard.Models.InstagramDiscoveryFeed> lstnstagramDiscoveryFeed = new List<Domain.Socioboard.Models.InstagramDiscoveryFeed>();
             if (iMmemInstagramDiscoveryFeed != null && iMmemInstagramDiscoveryFeed.Count > 0)
             {
                 return iMmemInstagramDiscoveryFeed;
             }
             else
             {
-                Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.AccessToken != null).FirstOrDefault();
-                List<Domain.Socioboard.Models.InstagramDiscoveryFeed> lstnstagramDiscoveryFeed = Helper.InstagramHelper.DiscoverySearchinstagram(keyword, _Instagramaccounts.AccessToken, _appSettings.InstagramClientKey);
-                if (lstnstagramDiscoveryFeed != null)
+               List<Domain.Socioboard.Models.Instagramaccounts> _Instagramaccounts = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.AccessToken != null).ToList();
+               
+                foreach (var item in _Instagramaccounts) 
                 {
-                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheDiscoveryInstagram + keyword, lstnstagramDiscoveryFeed);
+                     lstnstagramDiscoveryFeed = Helper.InstagramHelper.DiscoverySearchinstagram(keyword, item.AccessToken, _appSettings.InstagramClientKey);
+                    if (lstnstagramDiscoveryFeed != null)
+                    {
+                        _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheDiscoveryInstagram + keyword, lstnstagramDiscoveryFeed);
+                        break;
+                    } 
                 }
                 return lstnstagramDiscoveryFeed;
             }

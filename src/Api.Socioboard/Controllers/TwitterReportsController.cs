@@ -56,5 +56,10 @@ namespace Api.Socioboard.Controllers
         {
             return Ok(Repositories.TwitterReportsRepository.GetTopFiveFans(profileId, daysCount, _redisCache, _appSettings));
         }
+        [HttpGet("GetTwitterRecentDetails")]
+        public IActionResult GetTwitterRecentDetails(string profileId)
+        {
+            return Ok(Repositories.TwitterReportsRepository.GetTwitterRecentDetails(profileId, _redisCache, _appSettings));
+        }
     }
 }

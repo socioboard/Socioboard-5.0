@@ -24,7 +24,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.IsActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
-                    lstFbAcc = lstFbAcc.Where(t => t.FbUserName.Contains("Newsocioboard")).ToList();
+                    //lstFbAcc = lstFbAcc.Where(t => t.FbUserName.Contains("Newsocioboard")).ToList();
                     foreach (var item in lstFbAcc)
                     {
                         if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)

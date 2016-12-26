@@ -19,10 +19,9 @@ namespace SocioboardDataServices.Reports
             {
                 try
                 {
-
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.IsActive).ToList();
-                    //lstInsAcc = lstInsAcc.Where(t => t.InstagramId.Contains("1479225281")).ToList();
+                    List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.AccessToken != null).ToList();
+                   // lstInsAcc = lstInsAcc.Where(r => r.InstagramId.Contains("1479225281")).ToList();
                     foreach (var item in lstInsAcc)
                     {
                         if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
@@ -54,35 +53,35 @@ namespace SocioboardDataServices.Reports
             List<Domain.Socioboard.Models.Mongo.InstagramFeed> lstGetVideoPosts = GetVideoPosts(InstagramId, day);
             List<Domain.Socioboard.Models.Mongo.InstagramFeed> lstGetImagePosts = GetImagePosts(InstagramId, day);
             Domain.Socioboard.Models.Instagramaccounts _InstagramUserDetails = GetInstagramUserDeatils(InstagramId);
-            List<Domain.Socioboard.Models.Mongo.InstagramPostComments> lstGetInstagramPostComments = GetInstagramPostComments(InstagramId, day);
+            List<Domain.Socioboard.Models.Mongo.InstagramComment> lstGetInstagramPostComments = GetInstagramPostComments(InstagramId, day);
             List<Domain.Socioboard.Models.Mongo.InstagramPostLikes> lstGetInstagramPostLikes = GetInstagramPostLikes(InstagramId, day);
             List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstMongoTwitterMessage = GetInstagramFollwerFollowing(InstagramId, day);
-            for (int i = 0; i < day; i++)
+            for (int i = 1; i < day; i++)
             {
                 Domain.Socioboard.Models.Mongo.InstagramDailyReport _InstagramDailyReport = new Domain.Socioboard.Models.Mongo.InstagramDailyReport();
-                double since = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow.AddDays(-i));
-                double until = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow.AddDays(-i+1));
-                lstGetVideoPosts = lstGetVideoPosts.Where(t => t.FeedDate <= until && t.FeedDate >= since).ToList();
-                lstGetImagePosts= lstGetImagePosts.Where(t => t.FeedDate <= until && t.FeedDate >= since).ToList();
-                lstGetInstagramPostComments= lstGetInstagramPostComments.Where(t => t.Created_Time <= until && t.Created_Time >= since).ToList();
-                lstGetInstagramPostLikes= lstGetInstagramPostLikes.Where(t => t.Created_Date <= until && t.Created_Date >= since).ToList();
-                lstMongoTwitterMessage= lstMongoTwitterMessage.Where(t => t.messageTimeStamp <= until && t.messageTimeStamp >= since).ToList();
+                double since = SBHelper.ConvertToUnixTimestamp(new DateTime(DateTime.UtcNow.AddDays(-(i)).Year, DateTime.UtcNow.AddDays(-(i)).Month, DateTime.UtcNow.AddDays(-(i)).Day, 0, 0, 0, DateTimeKind.Utc));
+                double until = SBHelper.ConvertToUnixTimestamp(new DateTime(DateTime.UtcNow.AddDays(-i).Year, DateTime.UtcNow.AddDays(-i).Month, DateTime.UtcNow.AddDays(-i ).Day, 23, 59, 59, DateTimeKind.Utc));
+               // lstGetVideoPosts = lstGetVideoPosts.Where(t => t.FeedDate <= until && t.FeedDate >= since).ToList();
+                //lstGetImagePosts= lstGetImagePosts.Where(t => t.FeedDate <= until && t.FeedDate >= since).ToList();
+                //lstGetInstagramPostComments= lstGetInstagramPostComments.Where(t => t.Created_Time <= until && t.Created_Time >= since).ToList();
+                //lstGetInstagramPostLikes= lstGetInstagramPostLikes.Where(t => t.Created_Date <= until && t.Created_Date >= since).ToList();
+                //lstMongoTwitterMessage= lstMongoTwitterMessage.Where(t => t.messageTimeStamp <= until && t.messageTimeStamp >= since).ToList();
 
                 _InstagramDailyReport.id = ObjectId.GenerateNewId();
                 _InstagramDailyReport.date = since;
-                _InstagramDailyReport.followcount = Convert.ToInt64(lstMongoTwitterMessage.Where(t=>t.type==Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower).ToList().Count);
-                _InstagramDailyReport.followingcount = Convert.ToInt64(lstMongoTwitterMessage.Where(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing).ToList().Count);
+                _InstagramDailyReport.followcount = Convert.ToInt64(lstMongoTwitterMessage.Count(t => t.messageTimeStamp <= until && t.messageTimeStamp >= since && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower));
+                _InstagramDailyReport.followingcount = Convert.ToInt64(lstMongoTwitterMessage.Count(t => t.messageTimeStamp <= until && t.messageTimeStamp >= since && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing));
                 _InstagramDailyReport.fullName = _InstagramUserDetails.InsUserName;
-                _InstagramDailyReport.imagepost = Convert.ToInt64(lstGetImagePosts.Count());
+                _InstagramDailyReport.imagepost = Convert.ToInt64(lstGetImagePosts.Count(t => t.FeedDate <= until && t.FeedDate >= since));
                 _InstagramDailyReport.instaName = _InstagramUserDetails.InsUserName;
-                _InstagramDailyReport.mediaCount = Convert.ToInt64(lstGetVideoPosts.Count+lstGetImagePosts.Count);
-                _InstagramDailyReport.postcomment = Convert.ToInt64(lstGetInstagramPostComments.Count);
-                _InstagramDailyReport.postlike = Convert.ToInt64(lstGetInstagramPostLikes.Count);
+                _InstagramDailyReport.mediaCount = Convert.ToInt64(lstGetVideoPosts.Count(t => t.FeedDate <= until && t.FeedDate >= since) + lstGetImagePosts.Count(t => t.FeedDate <= until && t.FeedDate >= since));
+                _InstagramDailyReport.postcomment = Convert.ToInt64(lstGetInstagramPostComments.Count(t => t.CommentDate <= until && t.CommentDate >= since));
+                _InstagramDailyReport.postlike = Convert.ToInt64(lstGetInstagramPostLikes.Count(t => t.Created_Date <= until && t.Created_Date >= since));
                 _InstagramDailyReport.profileId = _InstagramUserDetails.InstagramId;
-                _InstagramDailyReport.videopost = Convert.ToInt64(lstGetVideoPosts.Count);
+                _InstagramDailyReport.videopost = Convert.ToInt64(lstGetVideoPosts.Count(t => t.FeedDate <= until && t.FeedDate >= since));
                 _InstagramDailyReport.profilePicUrl = _InstagramUserDetails.ProfileUrl;
                 MongoRepository mongorepo = new MongoRepository("InstagramDailyReport");
-                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.InstagramDailyReport>(t => t.date == _InstagramDailyReport.date);
+                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.InstagramDailyReport>(t => t.date == _InstagramDailyReport.date && t.profileId == InstagramId);
                 var task=Task.Run(async()=>{
                     return await ret;
                 });
@@ -131,17 +130,17 @@ namespace SocioboardDataServices.Reports
             return _InstagramUserDetails;
         }
         
-        public static List<Domain.Socioboard.Models.Mongo.InstagramPostComments> GetInstagramPostComments(string profileId, int daysCount)
+        public static List<Domain.Socioboard.Models.Mongo.InstagramComment> GetInstagramPostComments(string profileId, int daysCount)
         {
             MongoRepository instagarmCommentRepo = new MongoRepository("InstagramComment");
             DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-            var ret = instagarmCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramPostComments>(t => t.Profile_Id == profileId && t.Created_Time <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.Created_Time >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = instagarmCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.InstagramId == profileId && t.CommentDate <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.CommentDate >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
             });
-            IList<Domain.Socioboard.Models.Mongo.InstagramPostComments> lstInstagramPostComments = task.Result.ToList();
+            IList<Domain.Socioboard.Models.Mongo.InstagramComment> lstInstagramPostComments = task.Result.ToList();
             return lstInstagramPostComments.ToList();
         }
         public static List<Domain.Socioboard.Models.Mongo.InstagramPostLikes> GetInstagramPostLikes(string profileId, int daysCount)

@@ -113,7 +113,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         $scope.discovery = function (keyword) {
             var categories = $('#categories').val();
             if ($rootScope.user.TrailStatus==2) {
-                swal("your trail has beed expired.so you can't use paid features");
+                swal("your trail has been expired.so you can't use paid features");
                 return false;
             }
             if (categories == '') {

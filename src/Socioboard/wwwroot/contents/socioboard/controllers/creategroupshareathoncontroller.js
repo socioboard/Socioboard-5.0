@@ -34,6 +34,7 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
             var FacebookUrl = $('#postpage_url').val();
             var FacebookGroupId = $('#facebookgroupid').val();
             var Timeintervalminutes = $('#grouptimerinterval').val();
+             if (Facebookaccountid != null && FacebookUrl != '' && FacebookGroupId != '' && Timeintervalminutes != null) {
 
             if (FacebookUrl.indexOf("facebook") == -1 || FacebookUrl.indexOf("https") == -1 || FacebookUrl.indexOf("http") == -1)
             {
@@ -41,7 +42,6 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
                 return false;
             }
           
-            if (Facebookaccountid != null && FacebookUrl != '' && FacebookGroupId != '' && Timeintervalminutes != null) {
                 $scope.dispbtn = false;
                 var formData = new FormData();
                 formData.append('FacebookGroupId', FacebookGroupId);

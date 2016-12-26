@@ -26,7 +26,9 @@ dashboard = function () {
     }
     );
     Materialize.updateTextFields();
-
+    $('.collapsible').collapsible({
+        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
 
     // Basic
     $('.dropify').dropify();

@@ -1,10 +1,5 @@
 
-.card_profile_socio_icon{
-    position: absolute;
-    top: 152px;
-    z-index: 2;
-    left: 80px;
-}
+
 .side-nav .collapsible-body li.active a, .side-nav.fixed .collapsible-body li.active a{
 	color: #444;
 }
@@ -46,8 +41,16 @@ ul.side-nav.leftside-navigation li.active > a{
     float: right;
 }
 
+.card_profile_socio_icon{
+    position: absolute;
+    top: 152px;
+    z-index: 1;
+    left: 80px;
+}
 
-
+.card-panel-img{
+    padding: 10px !important;
+}
 
 /*feeds*/
 #feeds .feeds_title{
@@ -165,14 +168,14 @@ ul.side-nav.leftside-navigation li.active > a{
     margin-top: -20px;
     position: relative;
 }
-.social_profile:hover .delet_icon {
-    background: transparent url(/contents/socioboard/images/button-cross.png) no-repeat center;
+/*.social_profile:hover .delet_icon {
+    background: transparent url(../../images/button-cross.png) no-repeat center;
     cursor: pointer;
     width: 20px;
     height: 20px;
     position: absolute;
     z-index: 9999;
-}
+}*/
 .d_card_icon{
     color: #FFFFFF; 
     margin-left: -35px; 
@@ -322,29 +325,21 @@ ul.side-nav.leftside-navigation li.active > a{
     color: #3C3C3C;
     font-weight: 900;
 }
-.card_profile_socio_icon{
-    position: absolute;
-    top: 152px;
-    z-index: 1;
-    left: 80px;
-}
-.profile-image {
-    display: flex;
-    height:80px;
-    width: 50%;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-.group-profile-image {
-    display: flex;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    height: 50px !important;
-}
 
 .description_listen{
     font-size: inherit !important;
     word-wrap: break-word;
 }
+
+.profile-image{
+    display: flex;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+} 
+
+/* group */
+.card-image .profile_images{
+    height: 60px;
+}
+

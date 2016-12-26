@@ -1,4 +1,5 @@
-﻿using Api.Socioboard.Model;
+﻿using Api.Socioboard.Helper;
+using Api.Socioboard.Model;
 using Domain.Socioboard.Models.Mongo;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
@@ -107,6 +108,7 @@ namespace Api.Socioboard.Repositories
                 {
                     _logger.LogError(ex.StackTrace);
                 }
+               
                 twitterAccount.isActive = true;
                 twitterAccount.oAuthSecret = OAuth.AccessTokenSecret;
                 twitterAccount.oAuthToken = OAuth.AccessToken;
@@ -177,8 +179,8 @@ namespace Api.Socioboard.Repositories
                             _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
                             _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
 
-                            new Thread(delegate ()
-                            {
+                            //new Thread(delegate ()
+                            //{
                                 //todo : codes to update feeds 
                                 SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
                                 SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
@@ -187,7 +189,8 @@ namespace Api.Socioboard.Repositories
                                 SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
-                            }).Start();
+                                Savetwitterrecentdetails(profile, _redisCache, _appSettings);
+                           // }).Start();
 
 
                             if (follow)
@@ -288,8 +291,8 @@ namespace Api.Socioboard.Repositories
                         {
                             _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
                             _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                            new Thread(delegate ()
-                            {
+                            //new Thread(delegate ()
+                            //{
                                 //todo : codes to update feeds 
                                 SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
                                 SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
@@ -298,7 +301,8 @@ namespace Api.Socioboard.Repositories
                                 SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
-                            }).Start();
+                                Savetwitterrecentdetails(profile, _redisCache, _appSettings);
+                           // }).Start();
 
                             return "Added_Successfully";
                         }
@@ -401,7 +405,7 @@ namespace Api.Socioboard.Repositories
                 MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", settings);
                 var builder = Builders<MongoTwitterMessage>.Sort;
                 var sort = builder.Descending(t => t.messageDate);
-                var result = mongorepo.FindWithRange<MongoTwitterMessage>(t => t.profileId.Equals(profileId) && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet), sort, 0, 100);
+                var result = mongorepo.FindWithRange<MongoTwitterMessage>(t => t.profileId.Equals(profileId) && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower), sort, 0, 100);
                 var task = Task.Run(async () =>
                 {
                     return await result;
@@ -1447,6 +1451,89 @@ namespace Api.Socioboard.Repositories
             }
             catch (Exception ex)
             {
+            }
+        }
+
+
+        public static void Savetwitterrecentdetails(JArray data, Helper.Cache _redisCache, Helper.AppSettings settings)
+        {
+
+            string TwitterId = string.Empty;
+            Domain.Socioboard.Models.Mongo.TwitterRecentDetails insertdata = new TwitterRecentDetails();
+            MongoRepository mongorepo = new MongoRepository("TwitterRecentDetails", settings);
+            try
+            {
+                TwitterId = data[0]["id_str"].ToString();
+
+            }
+            catch (Exception)
+            {
+
+                TwitterId = string.Empty;
+
+            }
+
+            if (!string.IsNullOrEmpty(TwitterId))
+            {
+                string AccountCreationDate = string.Empty;
+                string LastActivityDate = string.Empty;
+                string lastfeed = string.Empty;
+                string FeedId = string.Empty;
+                string retweetcount = string.Empty;
+                string favoritecount = string.Empty;
+
+                try
+                {
+                    DateTime AccntCreationDate = Utility.ParseTwitterTime((data[0]["created_at"].ToString()));
+                    AccountCreationDate = AccntCreationDate.ToString();
+                }
+                catch (Exception)
+                {
+                    AccountCreationDate = string.Empty;
+
+                }
+
+
+                try
+                {
+                    DateTime lastactivitydate = Utility.ParseTwitterTime((data[0]["status"]["created_at"].ToString()));
+                    LastActivityDate = lastactivitydate.ToString();
+
+                }
+                catch (Exception)
+                {
+
+
+                    LastActivityDate = string.Empty;
+                }
+
+                try
+                {
+                    lastfeed = data[0]["status"]["text"].ToString();
+                    FeedId = data[0]["status"]["id_str"].ToString();
+                    retweetcount = data[0]["status"]["retweet_count"].ToString();
+                    favoritecount = data[0]["status"]["favorite_count"].ToString();
+
+                }
+                catch (Exception)
+                {
+                    lastfeed = string.Empty;
+                    FeedId = string.Empty;
+                    retweetcount = string.Empty;
+                    favoritecount = string.Empty;
+
+                }
+
+                insertdata.Id = ObjectId.GenerateNewId();
+                insertdata.strId = ObjectId.GenerateNewId().ToString();
+                insertdata.TwitterId = TwitterId;
+                insertdata.AccountCreationDate = AccountCreationDate;
+                insertdata.LastActivityDate = LastActivityDate;
+                insertdata.lastfeed = lastfeed;
+                insertdata.FeedId = FeedId;
+                insertdata.retweetcount = Convert.ToInt64(retweetcount);
+                insertdata.favoritecount = Convert.ToInt64(favoritecount);
+                mongorepo.Add<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(insertdata);
             }
         }
 

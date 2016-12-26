@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System;
+using System.Threading;
 
 
 
@@ -115,11 +116,15 @@ namespace Api.Socioboard.Controllers
                 {
                     try
                     {
-                        string prId = item.Substring(3, item.Length - 3);
-                        Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, uploads, link, dbr, _logger);
+                        new Thread(delegate ()
+                        {
+                            string prId = item.Substring(3, item.Length - 3);
+                            Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, uploads, link, dbr, _logger);
+
+                        }).Start();
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
 
                     }
@@ -128,10 +133,15 @@ namespace Api.Socioboard.Controllers
                 {
                     try
                     {
-                        string prId = item.Substring(3, item.Length - 3);
-                        string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, message, prId, userId, uploads, true, dbr, _logger);
-                    }
-                    catch(Exception ex)
+
+                        new Thread(delegate ()
+                        {
+                            string prId = item.Substring(3, item.Length - 3);
+                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, message, prId, userId, uploads, true, dbr, _logger);
+                        }).Start();
+
+                          }
+                    catch (Exception ex)
                     {
 
                     }
@@ -140,10 +150,14 @@ namespace Api.Socioboard.Controllers
                 {
                     try
                     {
-                        string prId = item.Substring(4, item.Length - 4);
-                        string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, filename, _redisCache, _appSettings, dbr);
-                    }
-                    catch(Exception ex)
+                        new Thread(delegate ()
+                        {
+                            string prId = item.Substring(4, item.Length - 4);
+                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, filename, _redisCache, _appSettings, dbr);
+
+                        }).Start();
+                        }
+                    catch (Exception ex)
                     {
 
                     }
@@ -152,11 +166,14 @@ namespace Api.Socioboard.Controllers
                 {
                     try
                     {
-                        string prId = item.Substring(12, item.Length - 12);
+                        new Thread(delegate ()
+                        {
+                            string prId = item.Substring(12, item.Length - 12);
                         string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, userId, message, prId, _redisCache, dbr, _appSettings);
+                        }).Start();
 
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
 
                     }
@@ -495,9 +512,9 @@ namespace Api.Socioboard.Controllers
 
                                 // start = (DateTime.Parse(e.scheduleTime.ToString()).ToLocalTime()),
                                 // start= Convert.ToDateTime(TimeZoneInfo.ConvertTimeFromUtc(e.scheduleTime, TimeZoneInfo.Local)),
-                                start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(),e.scheduleTime.ToString())),
-            //url
-                                    allDay = false,
+                                start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(), e.scheduleTime.ToString())),
+                                //url
+                                allDay = false,
                                 description = e.shareMessage,
                                 profileId = e.profileId,
                                 Image = e.picUrl,
@@ -536,7 +553,7 @@ namespace Api.Socioboard.Controllers
                     }
                 }
                 return TimeZoneInfo.ConvertTimeFromUtc(schedule, TimeZoneInfo.Local).ToString();
-               // return schedule.ToString();
+                // return schedule.ToString();
             }
             catch (Exception ex)
             {

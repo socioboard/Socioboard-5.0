@@ -90,6 +90,16 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
 
         $scope.postdirrectmessage = function () {
             var message = $('#dmmessagecomment').val();
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+            message = updatedmessage;
             //codes to postdirrectmessage
             $http.post(apiDomain + '/api/Twitter/PostTwitterDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message)
                           .then(function (response) {

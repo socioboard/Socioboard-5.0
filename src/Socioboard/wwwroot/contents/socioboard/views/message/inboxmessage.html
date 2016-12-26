@@ -260,7 +260,7 @@
             </div>
 
                 <!--Chat Modal-->
-                <div id="ChatModal" class="modal">
+                <div id="ChatModal" class="modal modal-fixed-footer">
                     <div class="modal-content">
                         <div style="">
                             <img src="{{senderProfileUrl}}" alt="vikash_glb" class="circle"> <b>{{senderScreenName}}</b>
@@ -298,7 +298,8 @@
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <i class="icon-pencil prefix"></i>
-                                        <textarea id="dmmessagecomment" class="materialize-textarea"></textarea>
+                                        <!--<textarea id="dmmessagecomment" class="materialize-textarea"></textarea>-->
+                                        <input type="text" id="dmmessagecomment"/>
                                         <label for="icon_prefix2">Type your Message here...</label>
                                     </div>
                                 </div>

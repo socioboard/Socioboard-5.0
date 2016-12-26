@@ -23,6 +23,18 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
                           });
             // end codes to load fb profiles
         }
+
+        $scope.loadtwitterRecentDetails = function (profileId) {
+
+            //codes to load  fans data
+            $http.get(apiDomain + '/api/TwitterReports/GetTwitterRecentDetails?profileId=' + profileId)
+                          .then(function (response) {
+                              $scope.RecentDetails = response.data;
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to load fb profiles
+        }
         
        
 
@@ -171,6 +183,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
                           });
             // end codes to load fb profiles
             $scope.loadTopFans(profileId, days);
+            $scope.loadtwitterRecentDetails(profileId);
         }
 
         

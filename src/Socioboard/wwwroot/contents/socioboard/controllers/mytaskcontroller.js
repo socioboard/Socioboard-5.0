@@ -152,11 +152,12 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        $scope.dispbtnmark = true;
 		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
 		                        $scope.selectedTask = null;
+                                swal("Completed!", "Task has been Completed.", "success");
 		                        $scope.$apply();
 		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
 		                            $scope.showTask($scope.selectedTask + 1);
 		                        }
-		                        swal("Completed!", "Task has been Completed.", "success");
+		                        
 		                    }
 		                    console.log(response);
 		                }, function (reason) {

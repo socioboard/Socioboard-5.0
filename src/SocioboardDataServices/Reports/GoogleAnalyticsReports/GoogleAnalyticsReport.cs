@@ -36,7 +36,7 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
                                 GetTwitterWebMentions(item.WebsiteUrl);
                                 DailyMotionPost(item.WebsiteUrl);
                                 GetYoutubeSearchData(item.WebsiteUrl);
-                                GoogleAnalyticsreportData(item.GaProfileId, item.AccessToken, item.WebsiteUrl, item.Is90DayDataUpdated);
+                                GoogleAnalyticsreportData(item.GaProfileId, item.RefreshToken, item.WebsiteUrl, item.Is90DayDataUpdated);
                                 item.LastUpdate = DateTime.UtcNow;
                                 item.Is90DayDataUpdated = true;
                                 dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(item);
@@ -64,8 +64,9 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
             {
                 day = 90;
             }
-            oAuthTokenGa objToken = new oAuthTokenGa("AIzaSyDRwxJd7da5BtZmN0M98bSv-D8q9mYMMCI", "e-Y3z41JyVBIJgBOB_jZDA83", "http://localhost:9821/GoogleManager/Google");
+            oAuthTokenGa objToken = new oAuthTokenGa(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
             string finaltoken = objToken.GetAccessToken(AccessToken);
+
             try
             {
                 JObject objArray = JObject.Parse(finaltoken);
@@ -76,7 +77,7 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
                 finalToken = AccessToken;
                 Console.WriteLine(ex.StackTrace);
             }
-            Analytics _Analytics = new Analytics("AIzaSyDRwxJd7da5BtZmN0M98bSv-D8q9mYMMCI", "e-Y3z41JyVBIJgBOB_jZDA83", "http://localhost:9821/GoogleManager/Google");
+            Analytics _Analytics = new Analytics(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
             DateTime startDate = DateTime.UtcNow.Date.AddDays(-day);
             while (startDate.Date < DateTime.UtcNow.Date)
             {
@@ -285,7 +286,7 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
             MongoRepository ArticlesAndBlogsRepo = new MongoRepository("ArticlesAndBlogs");
             try
             {
-                string youtubesearchurl = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&order=relevance&q=" + Url + "&key=AIzaSyDRwxJd7da5BtZmN0M98bSv-D8q9mYMMCI";
+                string youtubesearchurl = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=15&order=relevance&q=" + Url + "&key=AIzaSyBmQ1X1UBnKi3V78EkLuh7UHk5odrGfp5M";
                 string response = WebRequst(youtubesearchurl);
                 var Jdata = Newtonsoft.Json.Linq.JObject.Parse(response);
 

@@ -75,13 +75,53 @@ namespace Socioboard.Facebook.Data
 
             return FbFansList;
         }
-      
+        //public static dynamic subscribed_apps(string accessToken)
+        //{
+        //    FacebookClient fb = new FacebookClient();
+        //    fb.AccessToken = accessToken;
+        //    try
+        //    {
+        //        return fb.Post("v2.7/me/subscribed_apps");//v2.6
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return "Invalid Access Token";
+        //    }
+        //}
         public static string getFacebookRecentPost(string fbAccesstoken, string pageId)
         {
             string output = string.Empty;
             string facebookSearchUrl = "https://graph.facebook.com/v1.0/" + pageId + "/posts?limit=30&access_token=" + fbAccesstoken;
             var facebooklistpagerequest = (HttpWebRequest)WebRequest.Create(facebookSearchUrl);
             facebooklistpagerequest.Method = "GET";
+            facebooklistpagerequest.Credentials = CredentialCache.DefaultCredentials;
+            facebooklistpagerequest.AllowWriteStreamBuffering = true;
+            facebooklistpagerequest.ServicePoint.Expect100Continue = false;
+            facebooklistpagerequest.PreAuthenticate = false;
+            try
+            {
+                using (var response = facebooklistpagerequest.GetResponse())
+                {
+                    using (var stream = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(1252)))
+                    {
+                        output = stream.ReadToEnd();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return output;
+        }
+
+
+        public static string subscribed_apps(string fbAccesstoken, string pageId)
+        {
+            string output = string.Empty;
+            string facebookSearchUrl = "https://graph.facebook.com/v2.7/" + pageId + "/subscribed_apps?access_token=" + fbAccesstoken;
+            var facebooklistpagerequest = (HttpWebRequest)WebRequest.Create(facebookSearchUrl);
+            facebooklistpagerequest.Method = "POST";
             facebooklistpagerequest.Credentials = CredentialCache.DefaultCredentials;
             facebooklistpagerequest.AllowWriteStreamBuffering = true;
             facebooklistpagerequest.ServicePoint.Expect100Continue = false;

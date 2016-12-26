@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Linq;
 using MongoDB.Bson;
 using Domain.Socioboard.ViewModels;
+using Api.Socioboard.Helper;
+using Newtonsoft.Json.Linq;
 
 namespace Api.Socioboard.Repositories
 {
@@ -121,5 +123,25 @@ namespace Api.Socioboard.Repositories
             return lstTwtTopFans;
 
         }
+
+       public static Domain.Socioboard.Models.Mongo.TwitterRecentDetails GetTwitterRecentDetails(string profileId, Helper.Cache _redisCache, Helper.AppSettings settings)
+        {
+            MongoRepository mongorepo = new MongoRepository("TwitterRecentDetails",settings);
+            var result = mongorepo.Find<TwitterRecentDetails>(t =>t.TwitterId.Contains(profileId));
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<TwitterRecentDetails> lstTwitterRecentDetails = task.Result.ToList();
+            if(lstTwitterRecentDetails.Count>0)
+            {
+                return lstTwitterRecentDetails[0];
+            }
+            else
+            {
+                return new TwitterRecentDetails();
+            }
+        }
+
     }
 }

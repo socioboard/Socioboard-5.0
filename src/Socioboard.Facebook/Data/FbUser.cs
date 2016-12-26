@@ -167,7 +167,34 @@ namespace Socioboard.Facebook.Data
             }
         }
 
-       
+        public static dynamic getPageTaggedPostDetails(string accessToken)
+        {
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            try
+            {
+                return fb.Get("v2.7/me/tagged?fields=picture,created_time,message,description,from&limit=99");//v2.6
+            }
+            catch (Exception ex)
+            {
+                return "Invalid Access Token";
+            }
+        }
+
+        public static dynamic getPromotablePostsDetails(string accessToken)
+        {
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            try
+            {
+                return fb.Get("v2.7/me/promotable_posts?fields=picture,created_time,message,description,from&limit=99");//v2.6
+            }
+            catch (Exception ex)
+            {
+                return "Invalid Access Token";
+            }
+        }
+
 
       
 

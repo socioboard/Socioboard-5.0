@@ -139,7 +139,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                 if ($rootScope.user.TrailStatus!=2) {
                     $scope.searchText = SearchKeyword;
                 } else {
-                    swal("your trail has beed expired.so you can't use paid features");
+                    swal("your trail has been expired.so you can't use paid features");
                     return false;
                 }
 
@@ -148,7 +148,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                 if ($rootScope.user.TrailStatus!=2) {
                     $scope.searchText = $('#discoverytext').val();
                 } else {
-                    swal("your trail has beed expired.so you can't use paid features");
+                    swal("your trail has been expired.so you can't use paid features");
                     return false;
                 }
             }

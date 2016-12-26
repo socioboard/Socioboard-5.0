@@ -19,6 +19,7 @@ namespace Socioboard.Controllers
             _appSettings = settings.Value;
             _logger = logger;
         }
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<ActionResult> Google(string code)
         {
             string googleLogin = HttpContext.Session.GetObjectFromJson<string>("googlepluslogin");

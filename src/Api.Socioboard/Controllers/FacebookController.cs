@@ -295,6 +295,7 @@ namespace Api.Socioboard.Controllers
             foreach (var item in accesstoken)
             {
                 dynamic profile = Fbpages.getFbPageData(item);
+                string subscribed_apps= Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));
                 try
                 {
                     string x = Convert.ToString(profile);

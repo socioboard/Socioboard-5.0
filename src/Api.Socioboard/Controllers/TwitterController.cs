@@ -10,6 +10,7 @@ using MongoDB.Driver;
 using Microsoft.AspNetCore.Hosting;
 using Socioboard.Twitter.Authentication;
 using Microsoft.AspNetCore.Cors;
+using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -237,7 +238,32 @@ namespace Api.Socioboard.Controllers
         public IActionResult PostTwitterDirectmessage(string profileId, string SenderId, string RecipientId,string message)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            if(SenderId==profileId)
+            string postmessage = "";
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    //if (item.Contains("https://") || item.Contains("http://"))
+                    //{
+                    //    link = item;
+                    //}
+                    if (item.Contains("hhh") || item.Contains("nnn"))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                        }
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            message = postmessage;
+
+            if (SenderId==profileId)
             {
                 Helper.TwitterHelper.PostTwitterDirectmessage(RecipientId, message,profileId ,dbr, _appSettings, _redisCache);
                 return Ok();

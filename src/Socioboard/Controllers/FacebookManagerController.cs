@@ -31,6 +31,7 @@ namespace Socioboard.Controllers
             return Content(Socioboard.Facebook.Auth.Authentication.GetFacebookRedirectLink(_appSettings.FacebookAuthUrl, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl));
         }
         [HttpGet]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<ActionResult> Facebook(string code)
         {
             string fbLogin = HttpContext.Session.GetObjectFromJson<string>("fblogin");

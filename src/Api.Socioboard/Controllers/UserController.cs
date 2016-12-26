@@ -648,7 +648,8 @@ namespace Api.Socioboard.Controllers
             }
             else
             {
-                return Unauthorized();
+                //return Unauthorized();
+                return BadRequest("Please Follow The Password Policy One Capital letter, One Small letter, One number, One special character and min lenght must be 8");
             }
 
         }

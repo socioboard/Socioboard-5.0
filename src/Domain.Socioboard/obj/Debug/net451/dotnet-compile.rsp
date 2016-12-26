@@ -179,6 +179,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Share
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\SharethonPagePost.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TaskComments.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Tasks.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterRecentDetails.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterUrlMentions.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Properties\AssemblyInfo.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Services\AuthMessageSender.cs

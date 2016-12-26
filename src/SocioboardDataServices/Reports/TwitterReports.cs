@@ -62,7 +62,9 @@ namespace SocioboardDataServices.Reports
         public static void CreateReports(string profileId,DateTime date)
         {
             List<MongoTwitterMessage> lstTwitterMessages = TwitterReports.GetTwitterMessages(profileId,date);
+            List<MongoTwitterMessage> lstreceived= lstTwitterMessages.Where(x=>x.fromId.Contains(profileId)).ToList();
             List<MongoTwitterDirectMessages> lstTwitterDirectMessages = TwitterReports.GetTwitterDirectMessages(profileId,date);
+            List<Domain.Socioboard.Models.ScheduledMessage> lstschedule = GetScheduledMessage(profileId,date);
             MongoRepository mongorepo = new MongoRepository("MongoTwitterDailyReports");
 
             MongoTwitterDailyReports todayReports = new MongoTwitterDailyReports();
@@ -75,6 +77,8 @@ namespace SocioboardDataServices.Reports
             todayReports.directMessagesSent = lstTwitterDirectMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent);
             todayReports.profileId = profileId;
             todayReports.id = ObjectId.GenerateNewId();
+            todayReports.messagesReceived = lstreceived.Count()+ lstTwitterDirectMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived);
+            todayReports.messagesSent = lstschedule.Count();
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
             var result = mongorepo.Find<MongoTwitterDailyReports>(t => t.profileId.Equals(profileId) && (t.timeStamp > SBHelper.ConvertToUnixTimestamp(dayStart)) && (t.timeStamp < SBHelper.ConvertToUnixTimestamp(dayEnd)));
@@ -92,6 +96,8 @@ namespace SocioboardDataServices.Reports
                 lstDailyReports.First().timeStamp = SBHelper.ConvertToUnixTimestamp(date);
                 lstDailyReports.First().directMessagesSent = todayReports.directMessagesSent;
                 lstDailyReports.First().directMessagesReceived = todayReports.directMessagesReceived;
+                lstDailyReports.First().messagesReceived = todayReports.messagesReceived;
+                lstDailyReports.First().messagesSent = todayReports.messagesSent;
                 mongorepo.UpdateReplace(lstDailyReports.First(), t => t.id == lstDailyReports.First().id);
             }
             else
@@ -100,7 +106,17 @@ namespace SocioboardDataServices.Reports
             }
         }
 
-        private static List<MongoTwitterMessage> GetTwitterMessages(string profileId, DateTime date)
+
+        public static List<Domain.Socioboard.Models.ScheduledMessage> GetScheduledMessage(string profileId, DateTime date)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository();
+            DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
+
+            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessages = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => (t.profileId.Equals(profileId) && t.scheduleTime > dayStart && t.scheduleTime< dayEnd)).ToList();
+            return lstScheduledMessages;
+        }
+        public static List<MongoTwitterMessage> GetTwitterMessages(string profileId, DateTime date)
         {
             MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
@@ -114,7 +130,7 @@ namespace SocioboardDataServices.Reports
             return lstTwtMessages.ToList();
         }
 
-        private static List<MongoTwitterDirectMessages> GetTwitterDirectMessages(string profileId, DateTime date)
+        public static List<MongoTwitterDirectMessages> GetTwitterDirectMessages(string profileId, DateTime date)
         {
             MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
