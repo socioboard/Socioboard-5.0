@@ -1,5 +1,7 @@
 ﻿
+using Domain.Socioboard.Models.Mongo;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using Socioboard.Twitter.App.Core;
 using Socioboard.Twitter.Authentication;
@@ -8,6 +10,7 @@ using Socioboard.Twitter.Twitter.Core.UserMethods;
 using SocioboardDataServices.Model;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,7 +55,7 @@ namespace SocioboardDataServices.Twitter
                         {
                             twtaccount.followersCount = twtaccount.followersCount;
                         }
-
+                        
                         try
                         {
                             twtaccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
@@ -97,7 +100,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         catch (Exception ex)
                         {
-
+                            twtaccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
                         }
                        
                         dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount);
@@ -106,6 +109,7 @@ namespace SocioboardDataServices.Twitter
                         {
                             try
                             {
+                                Savetwitterrecentdetails(profile);
                                 SaveTwitterMessages(twtaccount.twitterUserId, oAuth);
                                 SaveUserRetweets(twtaccount.twitterUserId, oAuth);
                                 SaveUserTweets(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
@@ -125,6 +129,91 @@ namespace SocioboardDataServices.Twitter
                 }
             }
             return 0;
+        }
+
+
+        public static void Savetwitterrecentdetails(JArray data)
+        {
+
+            string TwitterId = string.Empty;
+            Domain.Socioboard.Models.Mongo.TwitterRecentDetails insertdata = new TwitterRecentDetails();
+            MongoRepository mongorepo = new MongoRepository("TwitterRecentDetails");
+            try
+            {
+                TwitterId = data[0]["id_str"].ToString();
+
+            }
+            catch (Exception)
+            {
+
+                TwitterId = string.Empty;
+
+            }
+
+            if (!string.IsNullOrEmpty(TwitterId))
+            {
+                string AccountCreationDate = string.Empty;
+                string LastActivityDate = string.Empty;
+                string lastfeed = string.Empty;
+                string FeedId = string.Empty;
+                string retweetcount = string.Empty;
+                string favoritecount = string.Empty;
+
+                try
+                {
+                    DateTime AccntCreationDate = ParseTwitterTime((data[0]["created_at"].ToString()));
+                    AccountCreationDate = AccntCreationDate.ToString();
+                }
+                catch (Exception)
+                {
+                    AccountCreationDate = string.Empty;
+
+                }
+
+
+                try
+                {
+                    DateTime lastactivitydate = ParseTwitterTime((data[0]["status"]["created_at"].ToString()));
+                    LastActivityDate = lastactivitydate.ToString();
+
+                }
+                catch (Exception)
+                {
+
+
+                    LastActivityDate = string.Empty;
+                }
+
+                try
+                {
+                    lastfeed = data[0]["status"]["text"].ToString();
+                    FeedId = data[0]["status"]["id_str"].ToString();
+                    retweetcount = data[0]["status"]["retweet_count"].ToString();
+                    favoritecount = data[0]["status"]["favorite_count"].ToString();
+
+                }
+                catch (Exception)
+                {
+                    lastfeed = string.Empty;
+                    FeedId = string.Empty;
+                    retweetcount = string.Empty;
+                    favoritecount = string.Empty;
+
+                }
+                
+                insertdata.TwitterId = TwitterId;
+                insertdata.AccountCreationDate = AccountCreationDate;
+                insertdata.LastActivityDate = LastActivityDate;
+                insertdata.lastfeed = lastfeed;
+                insertdata.FeedId = FeedId;
+                insertdata.retweetcount = Convert.ToInt64(retweetcount);
+                insertdata.favoritecount = Convert.ToInt64(favoritecount);
+                var builders = Builders<BsonDocument>.Filter;
+                FilterDefinition<BsonDocument> filter = builders.Eq("TwitterId", TwitterId);
+                var update = Builders<BsonDocument>.Update.Set("AccountCreationDate", AccountCreationDate).Set("LastActivityDate", LastActivityDate).Set("lastfeed", lastfeed)
+                    .Set("FeedId", FeedId).Set("retweetcount", retweetcount).Set("favoritecount", favoritecount);
+                mongorepo.Update<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(update, filter);
+            }
         }
 
         private static void SaveTwitterMessages(string profileId, oAuthTwitter oAuth)
@@ -633,6 +722,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         catch (Exception ex)
                         {
+                            objTwitterFeed.mediaUrl = null;
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed");
                         mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>(objTwitterFeed);
@@ -1024,5 +1114,10 @@ namespace SocioboardDataServices.Twitter
             }
         }
 
+        public static DateTime ParseTwitterTime(string date)
+        {
+            const string format = "ddd MMM dd HH:mm:ss zzzz yyyy";
+            return DateTime.ParseExact(date, format, CultureInfo.InvariantCulture);
+        }
     }
 }
