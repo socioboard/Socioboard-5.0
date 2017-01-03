@@ -89,6 +89,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
         }
 
         $scope.postdirrectmessage = function () {
+            alert($rootScope.user.Id);
             var message = $('#dmmessagecomment').val();
             var updatedmessage = "";
             var postdata = message.split("\n");
@@ -101,7 +102,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             updatedmessage = updatedmessage.replace("-+", 'jjj');
             message = updatedmessage;
             //codes to postdirrectmessage
-            $http.post(apiDomain + '/api/Twitter/PostTwitterDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message)
+            $http.post(apiDomain + '/api/Twitter/PostTwitterDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message + '&UserId=' + $rootScope.user.Id)
                           .then(function (response) {
                               $('#dmmessagecomment').val('');
                               $scope.Conversation($rootScope.RecipientId, $rootScope.SenderId);

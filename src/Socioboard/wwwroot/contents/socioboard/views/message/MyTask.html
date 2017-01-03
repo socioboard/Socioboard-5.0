@@ -57,15 +57,19 @@
                                         <div class="email-content-wrap">
                                             <div class="row">
                                                 <div class="col s12 m12 l12">
-                                                    <ul class="collection">
-                                                        <li class="collection-item avatar">
-                                                         <img src="https://scontent.fbom1-2.fna.fbcdn.net/v/t1.0-1/c47.0.160.160/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?oh=1ee95684d33391c6a128f7fd68420032&oe=5856F349" alt="" class="circle">   
-                                                            <span class="email-title">{{comment.user.firstName}}</span>
-                                                            <p class="grey-text ultra-small">{{comment.taskComments.createdOn * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}</p>
-                                                        </li>
-                                                    </ul>
+                                                    <img src="{{utility.getHttpsUrl(comment.user.profilePicUrl)}}" alt="" class="responsive-img profilePic"> <!--ng-if="comment.user.profilePicUrl != null|| comment.user.profilePicUrl != ' '"-->
+                                                    <span class="email-title">{{comment.user.firstName}}</span>
+                                                    <p class="grey-text ultra-small">{{comment.taskComments.createdOn * 1000 | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+                                                    <!--<ul class="collection">
+
+                                                    <li class="collection-item avatar" ng-repeat="task in userTasks">
+                                                    <img src="https://scontent.fbom1-2.fna.fbcdn.net/v/t1.0-1/c47.0.160.160/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?oh=1ee95684d33391c6a128f7fd68420032&oe=5856F349" alt="" class="circle">
+
+                                                    </li>
+                                                    </ul>-->
                                                 </div>
                                             </div>
+
                                             <div class="email-content" style="white-space:pre-wrap; line-break:auto">
                                                 <p>{{comment.taskComments.commentText}}</p>
                                             </div>

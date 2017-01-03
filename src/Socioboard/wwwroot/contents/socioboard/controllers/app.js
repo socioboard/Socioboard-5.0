@@ -598,6 +598,9 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                       name: 'SocioboardApp',
                       insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                       files: [
+                          '../contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css',
+                            '../contents/socioboard/global/plugins/mdPickers/dist/mdPickers.js',
+                            '../contents/socioboard/global/plugins/moment.js',
                           '../contents/socioboard/js/admin/plugins.js',
                           '../contents/socioboard/services/userservice.js',
                           '../contents/socioboard/controllers/profilesettingcontroller.js'

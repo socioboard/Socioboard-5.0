@@ -46,6 +46,36 @@ namespace Api.Socioboard.Controllers
                 try
                 {
                 Domain.Socioboard.Models.Mongo.Tasks _task=    TaskRepository.AddTask(tasksViewModel, _logger, _redisCache, _appSettings);
+                string postmessage = "";
+                string[] updatedmessgae = Regex.Split(tasksViewModel.taskComment, "<br>");
+
+                foreach (var item in updatedmessgae)
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + item.Replace("hhh", "#");
+                        }
+                        if (item.Contains("nnn"))
+                        {
+                            postmessage = postmessage.Replace("nnn", "&");
+                        }
+                        if (item.Contains("ppp"))
+                        {
+                            postmessage = postmessage.Replace("ppp", "+");
+                        }
+                        if (item.Contains("jjj"))
+                        {
+                            postmessage = postmessage.Replace("jjj", "-+");
+                        }
+                        else
+                        {
+                            postmessage = postmessage + "\n\r" + item;
+                        }
+                    }
+                }
+                tasksViewModel.taskComment = postmessage;
                 TaskRepository.AddTaskComment(_task.senderUserId, _task.strId, tasksViewModel.taskComment, _logger, _redisCache, _appSettings);
                 return Ok("task added");
                 }

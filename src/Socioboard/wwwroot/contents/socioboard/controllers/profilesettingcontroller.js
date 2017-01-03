@@ -1,16 +1,39 @@
 'use strict';
 
-SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scope, $http, $timeout, apiDomain, userservice, domain) {
+SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scope, $http, $timeout, $mdpDatePicker, $mdpTimePicker, apiDomain, userservice, domain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
+
+         $scope.currentDate = new Date();
+        $scope.showDatePicker = function (ev) {
+            $mdpDatePicker($scope.currentDate, {
+                targetEvent: ev
+            }).then(function (selectedDate) {
+                $scope.currentDate = selectedDate;
+            });;
+        };
+
+        $scope.filterDate = function (date) {
+            return moment(date).date() % 2 == 0;
+        };
+
+        $scope.showTimePicker = function (ev) {
+            $mdpTimePicker($scope.currentTime, {
+                targetEvent: ev
+            }).then(function (selectedDate) {
+                $scope.currentTime = selectedDate;
+            });;
+        }
+
         // initialize core components
         $scope.updateUser = {};
         $scope.updatePassword = {};
         $scope.mailSettings = {};
 
         $('.datepicker').pickadate({
+            
             selectMonths: true, // Creates a dropdown to control month
-            selectYears: 65 // Creates a dropdown of 15 years to control year
+            selectYears: 100 // Creates a dropdown of 15 years to control year
         });
 
         $scope.phoneNumbr = /^\+?\d{2}[- ]?\d{3}[- ]?\d{5}$/;
@@ -22,6 +45,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 //data: ,
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).then(function (response) {
+                debugger;
                 $rootScope.user.FirstName = response.data.firstName;
                 $rootScope.user.LastName = response.data.lastName;
                 $rootScope.user.UserName = response.data.userName;

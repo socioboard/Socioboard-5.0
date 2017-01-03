@@ -235,7 +235,7 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpPost("PostTwitterDirectmessage")]
-        public IActionResult PostTwitterDirectmessage(string profileId, string SenderId, string RecipientId,string message)
+        public IActionResult PostTwitterDirectmessage(string profileId, string SenderId, string RecipientId,string message,long UserId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string postmessage = "";
@@ -265,12 +265,12 @@ namespace Api.Socioboard.Controllers
 
             if (SenderId==profileId)
             {
-                Helper.TwitterHelper.PostTwitterDirectmessage(RecipientId, message,profileId ,dbr, _appSettings, _redisCache);
+                Helper.TwitterHelper.PostTwitterDirectmessage(RecipientId, message,profileId, UserId, dbr, _appSettings, _redisCache);
                 return Ok();
             }
             else
             {
-                Helper.TwitterHelper.PostTwitterDirectmessage(SenderId, message, profileId, dbr, _appSettings, _redisCache);
+                Helper.TwitterHelper.PostTwitterDirectmessage(SenderId, message, profileId, UserId, dbr, _appSettings, _redisCache);
                 return Ok();
             }
         }

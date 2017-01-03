@@ -22,7 +22,7 @@ namespace Api.Socioboard.Helper
     public static class TwitterHelper
     {
 
-        public static string PostTwitterMessage(AppSettings _AppSettings, Cache _redisCache, string message, string profileid, long userid,string url,bool isScheduled, DatabaseRepository dbr, ILogger _logger, string sscheduledmsgguid = "")
+        public static string PostTwitterMessage(AppSettings _AppSettings, Cache _redisCache, string message, string profileid, long userid, string url, bool isScheduled, DatabaseRepository dbr, ILogger _logger, string sscheduledmsgguid = "")
         {
             bool rt = false;
             string ret = "";
@@ -279,10 +279,17 @@ namespace Api.Socioboard.Helper
             return lstTwitterRecentFollower;
         }
 
-        public static void PostTwitterDirectmessage(string toId, string message, string profileId,Model.DatabaseRepository dbr, Helper.AppSettings _appSettings,Helper.Cache _redisCache)
+        public static void PostTwitterDirectmessage(string toId, string message, string profileId, long UserId, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
         {
             Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages _TwitterDirectMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages();
-            Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Repositories.TwitterRepository.getTwitterAccount(profileId, _redisCache,dbr);
+            // Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Repositories.TwitterRepository.getTwitterAccount(profileId, _redisCache,dbr);
+            Domain.Socioboard.Models.TwitterAccount objTwitterAccount = new TwitterAccount();
+            objTwitterAccount = dbr.Single<TwitterAccount>(t => t.userId == UserId && t.twitterUserId.Contains(profileId));
+            if (objTwitterAccount == null)
+            {
+                objTwitterAccount = dbr.Single<TwitterAccount>(t => t.userId == UserId && t.twitterUserId.Contains(toId));
+                toId = profileId;
+            }
             oAuthTwitter OAuthTwt = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
             OAuthTwt.AccessToken = objTwitterAccount.oAuthToken;
             OAuthTwt.AccessTokenSecret = objTwitterAccount.oAuthSecret;
@@ -297,7 +304,7 @@ namespace Api.Socioboard.Helper
                 _TwitterDirectMessages.messageId = ret[0]["id_str"].ToString();
                 _TwitterDirectMessages.message = ret[0]["text"].ToString();
                 _TwitterDirectMessages.profileId = objTwitterAccount.twitterUserId;
-                _TwitterDirectMessages.createdDate= DateTime.ParseExact(ret[0]["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
+                _TwitterDirectMessages.createdDate = DateTime.ParseExact(ret[0]["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
                 _TwitterDirectMessages.timeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(ret[0]["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
                 _TwitterDirectMessages.entryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                 _TwitterDirectMessages.recipientId = ret[0]["recipient"]["id_str"].ToString();
@@ -309,7 +316,7 @@ namespace Api.Socioboard.Helper
                 _TwitterDirectMessages.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent;
                 MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
                 mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(_TwitterDirectMessages);
-               
+
             }
             catch (Exception ex)
             {

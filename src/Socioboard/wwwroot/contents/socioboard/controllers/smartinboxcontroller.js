@@ -68,6 +68,17 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
           
             var memberId = $('.task-user-member:checked');
             var taskComment = $('#taskComment').val();
+            var updatedmessage = "";
+            var postdata = taskComment.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+
+            taskComment = updatedmessage;
             if (!memberId.val()) {
                 swal('please select any member for assign task')
             }

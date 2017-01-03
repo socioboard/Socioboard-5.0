@@ -1,4 +1,10 @@
-    <!-- START MAIN -->
+ <style type="text/css">
+    md-dialog {
+        opacity: 1 !important;
+        z-index: 9999 !important;
+    }
+</style>
+   <!-- START MAIN -->
 <div data-ng-controller="ProfileSettingController">
     <!-- START WRAPPER -->
     <div class="wrapper">
@@ -61,21 +67,35 @@
                                                         </div>
                                                     </ng-form>-->
                                                 </div>
-                                                <div class="row">
-                                                    <!--<div class="input-field col s6">
-                                      <select>
-                                        <option value="" disabled selected>Choose your profile</option>
-                                        <option value="1">Manager</option>
-                                        <option value="2">Developer</option>
-                                        <option value="3">Business</option>
-                                      </select>
-                                      <label>Select Profile</label>
-                                    </div>-->
-                                                    <div class="input-field col s6">
+                                                <!--<div class="row">
+                                                   <div class="input-field col s6">
                                                         <input type="date" ng-model="updateUser.dob" class="datepicker">
                                                         <label for="dob">DOB</label>
                                                     </div>
+                                                </div>-->
+
+                                                <div class="row">
+                                                    <div class="input-field col s12">
+                                                        <div id="content" layout="column" flex>
+                                                            <md-content flex layout="column" layout-align="center center" layout-padding>
+                                                                <div ng-form="demoForm">
+                                                                    <div>
+                                                                        <div>
+                                                                            <span>DOB</span>
+                                                                            <mdp-date-picker mdp-open-on-click required name="dateFormat" mdp-placeholder="(dd/mm/yyyy)" mdp-format="DD/MM/YYYY" ng-model="updateUser.dob">
+                                                                                <div ng-messages="demoForm.dateFormat.$error">
+                                                                                    <div ng-message="required">This is required</div>
+                                                                                    <div ng-message="format">Invalid format</div>
+                                                                                </div>
+                                                                            </mdp-date-picker>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </md-content>
+                                                        </div>
+                                                    </div>
                                                 </div>
+
                                                 <div class="row">
                                                     <div class="file-field input-field col s12">
                                                         <input type="file" id="profileImage" class="dropify" data-default-file="" />
