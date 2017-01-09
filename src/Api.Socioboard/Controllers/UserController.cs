@@ -930,13 +930,15 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpPost("demoReq")]
-        public ActionResult Mailforsocioboard(DemoRequest demoReq)
+        public ActionResult Mailforsocioboard(DemoRequest demoRequest)
         {
-            string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
-            string html = System.IO.File.ReadAllText(path);
-            html = html.Replace("[FirstName]", demoReq.firstName);
-            html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
-            _emailSender.SendMail("", "", "sumit@socioboard.com", "", "", "Customer requested for demo enterprise plan ", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+            //string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
+            //string html = System.IO.File.ReadAllText(path);
+            //html = html.Replace("[FirstName]", demoReq.firstName);
+            //html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
+            string Body = "Name: " + demoRequest.firstName + "" + demoRequest.lastName + "</br>" + "Email: " + demoRequest.emailId + "</br>" + "Company: " + demoRequest.company + "</br>" + "Message: " + demoRequest.message + "</br>" + "Phone: " + demoRequest.phoneNumber + "</br>";
+            //  _emailSender.SendMail("", "", _appSettings.frommail, "",_appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+            _emailSender.SendMailSendGrid(_appSettings.frommail, "", _appSettings.frommail, "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", Body, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
             return Ok("Mail Sent Successfully.");
            
         }

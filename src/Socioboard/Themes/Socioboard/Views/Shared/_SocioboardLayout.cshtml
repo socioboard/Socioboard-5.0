@@ -149,7 +149,7 @@
         <div class="footer-copyright">
             <div class="container center">
                 <!-- Made by with ♥ <a class="brown-text text-lighten-3" href="https://www.behance.net/chanchalsantra">Chanchal Santra</a> -->
-                Copyright © 2014 - 2016 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
+                Copyright © 2014 - 2017 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
             </div>
         </div>
     </footer>
@@ -217,7 +217,7 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="PhoneNumber" name="PhoneNumber" type="tel" class="validate" maxlength="10" pattern="[0-9]{10}">
+                            <input id="PhoneNumber" name="PhoneNumber" type="tel" class="validate" title="Please enter number only" maxlength="10" pattern="[0-9]{10}">
                             <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
                         </div>
                     </div>
@@ -321,9 +321,7 @@
 
 
     <!--Import jQuery before materialize.js-->
-   
-   
-   <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="~/contents/socioboard/global/plugins/materialize/js/materialize.min.js"></script>
     <script type="text/javascript" src="~/contents/socioboard/js/frontend/init.js"></script>
     <script src="~/contents/socioboard/js/frontend/alertify.min.js"></script>
@@ -448,95 +446,12 @@ analytics" href="http://statcounter.com/shopify/"
             color: #a94442;
         }
     </style>
-    <script>
-        $(document).ready(function () {
+    @*<script>
+            $(document).ready(function () {
 
-            //$.ajax({
-
-            //    url: 'https://api.ontraport.com/1/objects?Api-Appid=2_7861_X3YeBz0j1&Api-Key=NXhYJvz2AsywN80&objectID=5',
-            //    type: 'GET',
-            //    crossDomain: true,
-            //    dataType: 'jsonp',
-            //    headers: { 'Access-Control-Allow-Origin': '*' },
-            //    success: function (msg) {
-            //        var x = JSON.stringify(msg)
-            //        console.log(x);
-            //        alert("Success");
-            //    },
-            //    error: function () { alert('Failed!'); }
-                
-            //})
-           
-
-
-
-
-               // $('.modal-trigger').leanModal();
-                //$.ajax({
-
-                //    type: "GET",
-                //    url: "https://api.ontraport.com/1/objects?Api-Appid=2_7861_X3YeBz0j1&Api-Key=NXhYJvz2AsywN80&objectID=5",
-                //    //dataType: "jsonp",
-                //    contentType: false,
-                //    processData: false,
-                //    //headers: { 'Access-Control-Allow-Origin': '*' },
-                //    crossDomain: true,
-                //    success: function (msg) {
-                //        var v = JSON.parse(msg);
-                //        console.log(v);
-
-                //    }, error: function (err) {
-                //        console.log('error>>',err);
-
-                //    }
-
-                //});
-
-                //$.ajax({
-                //    type: "GET",
-                //    async: true,
-                //    contentType: "application/json; charset=utf-8",
-                //    url: 'https://api.ontraport.com/1/objects?Api-Appid=2_7861_X3YeBz0j1&Api-Key=NXhYJvz2AsywN80&objectID=5',
-                //    dataType: "jsonp",
-                //    cache: false,
-                //    beforeSend: function () {
-                //    },
-                //    success: function (data) {
-                        
-                //    }, error: function (err) {
-                //        console.log('errr', err);
-
-                //    }
-                //});
-
-
-                //$.ajax({
-                //    type: 'GET',
-                //    url: 'https://api.ontraport.com/1/objects?Api-Appid=2_7861_X3YeBz0j1&Api-Key=NXhYJvz2AsywN80&objectID=5',
-                //    async: false,
-                //    dataType: 'json',
-                //    //processData: false,
-                //    contentType: false,
-                //    headers: { 'Access-Control-Allow-Origin': '*' },
-                //    crossDomain: true,
-                //   // data: { 'Api-Appid': '2_7861_X3YeBz0j1', 'Api-Key': 'NXhYJvz2AsywN80','objectID':'5' },
-                //    done: function (results) {
-                //        // uhm, maybe I don't even need this?
-                //        alert('here');
-                //        JSON.parse(results);
-                //        console.log('results',results);
-                //    },
-                //    fail: function (jqXHR, textStatus, errorThrown) {
-                //        console.log('Could not get posts, server response: ' + textStatus + ': ' + errorThrown);
-                //    }
-                //});
-
-
-
-
-
+                $('.modal-trigger').leanModal();
             });
-        </script>
+        </script>*@
 
     <script>
         function myFunction() {

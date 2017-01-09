@@ -22,7 +22,7 @@ namespace Api.Socioboard.Helper
 
         public string frommail { get; set; }
 
-
+        public string ccmail { get; set; }
 
         //Start facebook App Creds
         public string FacebookClientId { get; set; }

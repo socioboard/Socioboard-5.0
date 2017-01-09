@@ -179,7 +179,11 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
 
             }
 
+
             $('#ComposePostModal').openModal();
+            var composeImagedropify = $('#composeImage').parents('.dropify-wrapper');
+            $(composeImagedropify).find('.dropify-render').html('<img src="' + schedulemessage.imageurl + '">');
+            $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
             $('select').material_select();
 
            // $('.dropify').dropify();

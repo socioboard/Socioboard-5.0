@@ -864,8 +864,9 @@ namespace Api.Socioboard.Repositories
                 return await ret;
             });
             IList<Domain.Socioboard.Models.Mongo.InstagramFeed> _lstInstagramFeed = task.Result;
-            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramFeed + instagramId, _lstInstagramFeed.ToList());
-            foreach (var item in _lstInstagramFeed.ToList())
+            var sortt= _lstInstagramFeed.OrderByDescending(t => t.FeedDate);
+            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramFeed + instagramId, sortt.ToList());
+            foreach (var item in sortt.ToList())
             {
                 Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
                 MongoRepository InstagramCommentRepo = new MongoRepository("InstagramComment", _appSettings);

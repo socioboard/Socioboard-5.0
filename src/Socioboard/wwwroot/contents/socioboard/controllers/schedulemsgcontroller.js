@@ -103,8 +103,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
             var dt = new Date();
             var mm = new Date().getMonth() + 1;
-            var d1 = mm + "/" +("0"+ dt.getDate()).substr(-2) + "/" + dt.getFullYear();
-            if (date_value <= d1)
+            var d1 = ("0" + mm).substr(-2) + "/" + ("0" + dt.getDate()).substr(-2) + "/" + dt.getFullYear();
+            if (date_value == d1)
             {
                 if (time_value < t1)
                 {

@@ -170,6 +170,7 @@ namespace Api.Socioboard.Controllers
                 _user.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.active;
                 dbr.Update<Domain.Socioboard.Models.User>(_user);
                 _PaymentTransaction.trasactionId = txn_id;
+                _PaymentTransaction.paymentdate = DateTime.UtcNow;
                 dbr.Update<Domain.Socioboard.Models.PaymentTransaction>(_PaymentTransaction);
             }
             catch (Exception ex)

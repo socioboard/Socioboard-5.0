@@ -79,7 +79,7 @@ namespace Api.Socioboard.Controllers
                 int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, _redisCache, _appSettings, _logger);
                 if (res == 1)
                 {
-                    return Ok("Facebook Added Successfully");
+                    return Ok("Facebook account Added Successfully");
                 }
                 else
                 {

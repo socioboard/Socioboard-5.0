@@ -234,8 +234,8 @@
             //var location = $('#req_Location').val();
             // var companyWebsite = $('#req_CompanyWebsite').val();
             var message = $('#req_Message').val();
-            if (grecaptcha.getResponse() != "")
-            {
+            //if (grecaptcha.getResponse() != "")
+            //{
             $.ajax({
 
                 type: "POST",
@@ -273,12 +273,12 @@
                 }
 
             });
-            }
-            else
-            {
-                alertify.set({ delay: 5000 });
-                alertify.error("You can't leave Captcha Code empty");
-            }
+            //}
+            //else
+            //{
+            //    alertify.set({ delay: 5000 });
+            //    alertify.error("You can't leave Captcha Code empty");
+            //}
 
         }
 

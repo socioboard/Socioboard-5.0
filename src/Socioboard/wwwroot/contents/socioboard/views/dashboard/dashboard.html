@@ -74,9 +74,9 @@
                     <!--card widgets start-->
                     <div id="profiles">
                         <div class="row">
-                            <!--facebook profiles binding start-->
+                            <!--facebook profile binding start-->
                             <div class="col s12 m6 l4" ng-repeat="fbProfile in  lstFbProfiles ">
-                                <div id="profile-card" class="card">
+                                <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType == 0">
                                     <div class="card-image waves-effect waves-block waves-light">
                                         <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}">
                                         <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}">
@@ -102,7 +102,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--facebook profiles binging end-->
+                            <!--facebook profiles binding end-->
+
+                            <!--facebook pages binding start-->
+                            <div class="col s12 m6 l4" ng-repeat="fbProfile in  lstFbProfiles ">
+                                <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType == 1" >
+                                    <div class="card-image waves-effect waves-block waves-light">
+                                        <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}">
+                                        <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}">
+                                    </div>
+                                    <div class="card-content">
+                                        <img src="https://graph.facebook.com/{{fbProfile.fbUserId}}/picture?type=small" alt="{{fbProfile.fbUserName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="/contents/socioboard/images/Fb_page-icon.png" class="card_profile_socio_icon">
+
+                                        <!--<a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                            <i class="icon-info"></i>
+                                        </a>-->
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Fans:</span> {{fbProfile.friends}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}}</span> </p>
+                                    </div>
+                                    <!--<div class="card-reveal">
+                                        <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <p>{{fbProfile.about}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Designation"></i><span class="cyan-text text-darken-2">Designation:</span> <span title="{{fbProfile.workPosition}}">{{fbProfile.workPosition}}</span> </p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}} </span> </p>
+                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">DOB:</span> {{fbProfile.birthday}}</p>
+                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Gender"></i><span class="cyan-text text-darken-2">Gender:</span> {{fbProfile.gender}}</p>
+                                    </div>-->
+                                </div>
+                            </div>
+                            
+                            <!--facebook pages binging end-->
                             <!--twitter profiles bind start-->
                             <div class="col s12 m6 l4" ng-repeat="twtProfile in lstTwtProfiles">
                                 <div id="profile-card" class="card">
@@ -198,7 +229,7 @@
                                             <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{insProfile.insUserName}}</span>
-                                        <p><i class="icon-user-follow cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{insProfile.followers}}</p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{insProfile.followers}}</p>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> {{insProfile.followedBy}}</p>
                                         <!--<p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>-->
                                     </div>
@@ -508,23 +539,31 @@
                         <div class="container" id="social_profile_list">
                             <ul class="collapsible" data-collapsible="accordion">
                                 <li>
+                                    <div class="card center">
+                                        <a class="waves-effect waves-light modal-trigger" href="#addprofile">
+                                            <i class="icon-user-follow fa-3x"></i>
+                                            <div>Add Your Social Profile</div>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li>
                                     <div class="collapsible-header blue-text text-darken-4"><i class="fa fa-facebook fa-fw"></i>Facebook</div>
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                <a href="https://www.facebook.com/{{profile.profileId}}" target="_blank">
                                                     <div class="row card" ng-if="profile.profileType==0">
-                                                        <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                        </div>
-                                                        <div class="col l7 m7 s7">
-                                                            <span class="truncate">{{profile.profileName}}</span>
-                                                        </div>
-                                                        <div class="col l2 m2 s2 margin-top-10">
-                                                            <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                        </div>
+                                                        <a href="https://www.facebook.com/{{profile.profileId}}" target="_blank">
+                                                            <div class="col l3 m3 s3">
+                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            </div>
+                                                            <div class="col l7 m7 s7">
+                                                                <span class="truncate">{{profile.profileName}}</span>
+                                                            </div>
+                                                        </a>
+                                                            <div class="col l2 m2 s2 margin-top-10">
+                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                            </div>
                                                     </div>
-                                                </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -534,19 +573,20 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                <a href="https://www.facebook.com/{{profile.profileName}}" target="_blank">
+                                                
                                                     <div class="row card" ng-if="profile.profileType==1 || profile.profileType==11">
-                                                        <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                        </div>
-                                                        <div class="col l7 m7 s7">
-                                                            <span class="truncate">{{profile.profileName}}</span>
-                                                        </div>
+                                                        <a href="https://www.facebook.com/{{profile.profileName}}" target="_blank">
+                                                            <div class="col l3 m3 s3">
+                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            </div>
+                                                            <div class="col l7 m7 s7">
+                                                                <span class="truncate">{{profile.profileName}}</span>
+                                                            </div>
+                                                        </a>
                                                         <div class="col l2 m2 s2 margin-top-10">
                                                             <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                         </div>
                                                     </div>
-                                                </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -557,19 +597,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                <a href="https://twitter.com/{{profile.profileName}}" target="_blank">
                                                     <div class="row card" ng-if="profile.profileType==2">
-                                                        <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                        </div>
-                                                        <div class="col l7 m7 s7">
-                                                            <span class="truncate">{{profile.profileName}}</span>
-                                                        </div>
-                                                        <div class="col l2 m2 s2 margin-top-10">
-                                                            <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                        </div>
+                                                        <a href="https://twitter.com/{{profile.profileName}}" target="_blank">
+                                                            <div class="col l3 m3 s3">
+                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            </div>
+                                                            <div class="col l7 m7 s7">
+                                                                <span class="truncate">{{profile.profileName}}</span>
+                                                            </div>
+                                                        </a>
+                                                            <div class="col l2 m2 s2 margin-top-10">
+                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                            </div>
                                                     </div>
-                                                </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -579,19 +619,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                <a href="https://plus.google.com/{{profile.profileId}}/posts" target="_blank">
                                                     <div class="row card" ng-if="profile.profileType==5">
-                                                        <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                        </div>
-                                                        <div class="col l7 m7 s7">
-                                                            <span class="truncate">{{profile.profileName}}</span>
-                                                        </div>
-                                                        <div class="col l2 m2 s2 margin-top-10">
-                                                            <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                        </div>
+                                                        <a href="https://plus.google.com/{{profile.profileId}}/posts" target="_blank">
+                                                            <div class="col l3 m3 s3">
+                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            </div>
+                                                            <div class="col l7 m7 s7">
+                                                                <span class="truncate">{{profile.profileName}}</span>
+                                                            </div>
+                                                        </a>
+                                                            <div class="col l2 m2 s2 margin-top-10">
+                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                            </div>
                                                     </div>
-                                                </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -602,19 +642,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                <a href="https://www.linkedin.com/company/{{profile.profileId}}" target="_blank">
                                                     <div class="row card" ng-if="profile.profileType==4">
-                                                        <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                        </div>
-                                                        <div class="col l7 m7 s7">
-                                                            <span class="truncate">{{profile.profileName}}</span>
-                                                        </div>
-                                                        <div class="col l2 m2 s2 margin-top-10">
-                                                            <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                        </div>
-                                                    </div>
-                                                </a>
+                                                        <a href="https://www.linkedin.com/company/{{profile.profileId}}" target="_blank">
+                                                            <div class="col l3 m3 s3">
+                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            </div>
+                                                            <div class="col l7 m7 s7">
+                                                                <span class="truncate">{{profile.profileName}}</span>
+                                                            </div>
+                                                        </a>
+                                                            <div class="col l2 m2 s2 margin-top-10">
+                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                            </div>
+                                                    </div> 
                                             </li>
                                         </ul>
                                     </div>
@@ -624,19 +664,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                <a href="http://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
                                                     <div class="row card" ng-if="profile.profileType==3">
-                                                        <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                        </div>
-                                                        <div class="col l7 m7 s7">
-                                                            <span class="truncate">{{profile.profileName}}</span>
-                                                        </div>
-                                                        <div class="col l2 m2 s2 margin-top-10">
-                                                            <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                        </div>
+                                                        <a href="http://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
+                                                            <div class="col l3 m3 s3">
+                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            </div>
+                                                            <div class="col l7 m7 s7">
+                                                                <span class="truncate">{{profile.profileName}}</span>
+                                                            </div>
+                                                        </a>
+                                                            <div class="col l2 m2 s2 margin-top-10">
+                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                            </div>
                                                     </div>
-                                                </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -646,19 +686,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                <a href="http://instagram.com/{{profile.profileName}}" target="_blank">
                                                     <div class="row card" ng-if="profile.profileType==8">
-                                                        <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                        </div>
-                                                        <div class="col l7 m7 s7">
-                                                            <span class="truncate">{{profile.profileName}}</span>
-                                                        </div>
-                                                        <div class="col l2 m2 s2 margin-top-10">
-                                                            <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                        </div>
+                                                        <a href="http://instagram.com/{{profile.profileName}}" target="_blank">
+                                                            <div class="col l3 m3 s3">
+                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            </div>
+                                                            <div class="col l7 m7 s7">
+                                                                <span class="truncate">{{profile.profileName}}</span>
+                                                            </div>
+                                                        </a>
+                                                            <div class="col l2 m2 s2 margin-top-10">
+                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                            </div>
                                                     </div>
-                                                </a>
                                             </li>
                                         </ul>
                                     </div>
@@ -668,30 +708,30 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                <a href="https://analytics.google.com/analytics/web/" target="_blank">
                                                     <div class="row card" ng-if="profile.profileType==10">
-                                                        <div class="col l3 m3 s3">
-                                                            <img src="/contents/socioboard/images/G-Ana-icon.png" class="responsive-img">
-                                                        </div>
-                                                        <div class="col l7 m7 s7">
-                                                            <span class="truncate">{{profile.profileName}}</span>
-                                                        </div>
-                                                        <div class="col l2 m2 s2 margin-top-10">
-                                                            <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                        </div>
+                                                        <a href="https://analytics.google.com/analytics/web/" target="_blank">
+                                                            <div class="col l3 m3 s3">
+                                                                <img src="/contents/socioboard/images/G-Ana-icon.png" class="responsive-img">
+                                                            </div>
+                                                            <div class="col l7 m7 s7">
+                                                                <span class="truncate">{{profile.profileName}}</span>
+                                                            </div>
+                                                        </a>
+                                                            <div class="col l2 m2 s2 margin-top-10">
+                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                            </div>
                                                     </div>
-                                                </a>
                                             </li>
                                         </ul>
                                     </div>
                                 </li>
-                                <li>
+                                <!--<li>
                                     <div class="card center">
                                         <a class="waves-effect waves-light modal-trigger" href="#addprofile">
                                             <i class="icon-user-follow fa-3x"></i>
                                         </a>
                                     </div>
-                                </li>
+                                </li>-->
                             </ul>
                         </div>
                 </div>

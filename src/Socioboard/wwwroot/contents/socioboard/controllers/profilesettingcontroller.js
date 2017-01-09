@@ -30,11 +30,11 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
         $scope.updatePassword = {};
         $scope.mailSettings = {};
 
-        $('.datepicker').pickadate({
+        //$('.datepicker').pickadate({
             
-            selectMonths: true, // Creates a dropdown to control month
-            selectYears: 100 // Creates a dropdown of 15 years to control year
-        });
+        //    selectMonths: true, // Creates a dropdown to control month
+        //    selectYears: 100 // Creates a dropdown of 15 years to control year
+        //});
 
         $scope.phoneNumbr = /^\+?\d{2}[- ]?\d{3}[- ]?\d{5}$/;
         function personalsettingload() {
@@ -100,10 +100,10 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             } else {
                 $scope.updateUser.aboutMe = $rootScope.UpdatedaboutMe;
             }
-            var $input = $('.datepicker').pickadate();
-            var picker = $input.pickadate('picker');
+           // var $input = $('.datepicker').pickadate();
+           // var picker = $input.pickadate('picker');
 
-            picker.set('select', $rootScope.user.dateOfBirth, { format: 'yyyy-mm-dd HH:MM:ss' });
+           // picker.set('select', $rootScope.user.dateOfBirth, { format: 'yyyy-mm-dd HH:MM:ss' });
         }
         //   $scope.updateUser.dob = $rootScope.user.dateOfBirth;
 
@@ -123,13 +123,17 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
 
         $scope.UpdateUser = function (updateUser) {
 
-            var $input = $('.datepicker').pickadate();
-            var picker = $input.pickadate('picker');
+           // var $input = $('.datepicker').pickadate();
+            // var picker = $input.pickadate('picker');
+            var date_value = ($('.md-input')[0]).value;
+            //var date = date_value.split("/");
+            //date_value = date[1] + "/" + date[0] + "/" + date[2];
+
             var formData = new FormData();
             formData.append('files', $("#profileImage").get(0).files[0]);
             $http({
                 method: 'POST',
-                url: apiDomain + '/api/User/UpdateUser?firstName=' + updateUser.firstName + '&lastName=' + updateUser.lastName + '&userName=' + updateUser.userName + '&phoneNumber=' + updateUser.phoneNumber + '&dob=' + picker.get() + '&aboutMe=' + updateUser.aboutMe + '&userId=' + $rootScope.user.Id,
+                url: apiDomain + '/api/User/UpdateUser?firstName=' + updateUser.firstName + '&lastName=' + updateUser.lastName + '&userName=' + updateUser.userName + '&phoneNumber=' + updateUser.phoneNumber + '&dob=' + date_value + '&aboutMe=' + updateUser.aboutMe + '&userId=' + $rootScope.user.Id,
                 data: formData,
                 headers: {
                     'Content-Type': undefined

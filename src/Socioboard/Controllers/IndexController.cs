@@ -234,12 +234,12 @@ namespace Socioboard.Controllers
 
         public async void PaymentNotify(string code)
         {
-            //_logger.LogError("paypalnotifications start");
-            //foreach (var key in Request.Form.Keys)
-            //{
-            //    _logger.LogError(key+":"+Request.Form[key]);
-            //}
-            //_logger.LogError("paypalnotifications end");
+            _logger.LogError("paypalnotifications start");
+            foreach (var key in Request.Form.Keys)
+            {
+                _logger.LogError(key + ":" + Request.Form[key]);
+            }
+            _logger.LogError("paypalnotifications end");
             //return RedirectToAction("Index", "Index");
             string subscr_id = Request.Form["subscr_id"];
             string payment_status = Request.Form["payment_status"];

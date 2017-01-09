@@ -64,7 +64,8 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             $rootScope.senderProfileUrl = senderProfileUrl;
             $scope.Conversation(RecipientId, SenderId);
             console.log($rootScope.profileId);
-             $('#ChatModal').openModal();
+            $('#ChatModal').openModal();
+          //  $('#ChatModal').scrollTop($('#ChatModal')[0].scrollHeight);
         }
 
         $scope.Conversation = function (RecipientId, SenderId)
@@ -89,7 +90,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
         }
 
         $scope.postdirrectmessage = function () {
-            alert($rootScope.user.Id);
+           // alert($rootScope.user.Id);
             var message = $('#dmmessagecomment').val();
             var updatedmessage = "";
             var postdata = message.split("\n");
@@ -157,3 +158,15 @@ SocioboardApp.filter('notificationbyprofilesfileter', function () {
         return filtered;
     };
 });
+
+
+SocioboardApp.directive('myChatModalDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+if (scope.$last === true) {
+            $timeout(function () {
+                $('#ChatModal').scrollTop($('#ChatModal')[0].scrollHeight);
+
+            });
+ }
+    };
+})

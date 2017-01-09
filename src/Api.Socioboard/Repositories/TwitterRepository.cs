@@ -47,252 +47,142 @@ namespace Api.Socioboard.Repositories
 
         }
 
-        public static string AddTwitterAccount(long userId, long groupId,bool follow, Model.DatabaseRepository dbr, oAuthTwitter OAuth, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static string AddTwitterAccount(long userId, long groupId, bool follow, Model.DatabaseRepository dbr, oAuthTwitter OAuth, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             string twitterUserId = string.Empty;
             Users userinfo = new Users();
             JArray profile = userinfo.Get_Users_LookUp_ByScreenName(OAuth, OAuth.TwitterScreenName);
             Domain.Socioboard.Models.TwitterAccount twitterAccount = new Domain.Socioboard.Models.TwitterAccount();
             TwitterUser twtuser;
-            var item = profile[0];
-            try
+            if (profile.Count != 0)
             {
-                twitterUserId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
-            }
-            catch (Exception er)
-            {
+                var item = profile[0];
                 try
                 {
-                    twitterUserId = item["id"].ToString().TrimStart('"').TrimEnd('"');
+                    twitterUserId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
                 }
-                catch (Exception ex)
+                catch (Exception er)
                 {
-                    _logger.LogError(ex.StackTrace);
-                }
-                _logger.LogError(er.StackTrace);
-            }
-            if (twitterUserId != null)
-            {
-                twitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(twitterUserId, _redisCache, dbr);
-                if (twitterAccount != null && twitterAccount.isActive == true)
-                {
-                    if (twitterAccount.userId == userId)
+                    try
                     {
-                        return ("Twitter account already added by you.");
+                        twitterUserId = item["id"].ToString().TrimStart('"').TrimEnd('"');
                     }
-                    return "This Account is added by other user.";
-                }
-            }
-            else
-            {
-                return "Issue while fetching twitter userId";
-            }
-
-            if (twitterAccount != null)
-            {
-                twitterAccount.twitterUserId = twitterUserId;
-                twitterAccount.lastUpdate = DateTime.UtcNow;
-                try
-                {
-                    twitterAccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.followersCount = Convert.ToInt64(item["followers_count"].ToString());
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-               
-                twitterAccount.isActive = true;
-                twitterAccount.oAuthSecret = OAuth.AccessTokenSecret;
-                twitterAccount.oAuthToken = OAuth.AccessToken;
-                try
-                {
-                    twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
-
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-
-                }
-                try
-                {
-                    twitterAccount.profileBackgroundImageUrl = item["profile_banner_url"].ToString().TrimStart('"').TrimEnd('"');
-
-                }
-                catch (Exception ex)
-                {
-                    twitterAccount.profileBackgroundImageUrl=item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
-                    _logger.LogError(ex.StackTrace);
-
-                }
-                try
-                {
-                    twitterAccount.profileUrl = string.Empty;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.location = item["location"].ToString().TrimStart('"').TrimEnd('"');
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.description = item["description"].ToString().TrimStart('"').TrimEnd('"');
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                twitterAccount.userId = userId;
-                twitterAccount.isAccessTokenActive = true;
-                int isSaved = dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twitterAccount);
-                if (isSaved == 1)
-                {
-                    List<Domain.Socioboard.Models.TwitterAccount> lsttwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(twitterUserId)).ToList();
-                    if (lsttwtAcc != null && lsttwtAcc.Count() > 0)
+                    catch (Exception ex)
                     {
-                        isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lsttwtAcc.First().twitterUserId, lsttwtAcc.First().twitterScreenName, userId, lsttwtAcc.First().profileImageUrl, Domain.Socioboard.Enum.SocialProfileType.Twitter, dbr);
-                        if (isSaved == 1)
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    _logger.LogError(er.StackTrace);
+                }
+                if (twitterUserId != null)
+                {
+                    twitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(twitterUserId, _redisCache, dbr);
+                    if (twitterAccount != null && twitterAccount.isActive == true)
+                    {
+                        if (twitterAccount.userId == userId)
                         {
-                            _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
-                            _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                            return ("Twitter account already added by you.");
+                        }
+                        return "This Account is added by other user.";
+                    }
+                }
+                else
+                {
+                    return "Issue while fetching twitter userId";
+                }
 
-                            //new Thread(delegate ()
-                            //{
-                                //todo : codes to update feeds 
-                                SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveUserTweets(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveTwitterFeeds(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
-                                Savetwitterrecentdetails(profile, _redisCache, _appSettings);
-                           // }).Start();
+                if (twitterAccount != null)
+                {
+                    twitterAccount.twitterUserId = twitterUserId;
+                    twitterAccount.lastUpdate = DateTime.UtcNow;
+                    try
+                    {
+                        twitterAccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.followersCount = Convert.ToInt64(item["followers_count"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
 
+                    twitterAccount.isActive = true;
+                    twitterAccount.oAuthSecret = OAuth.AccessTokenSecret;
+                    twitterAccount.oAuthToken = OAuth.AccessToken;
+                    try
+                    {
+                        twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
 
-                            if (follow)
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                    }
+                    try
+                    {
+                        twitterAccount.profileBackgroundImageUrl = item["profile_banner_url"].ToString().TrimStart('"').TrimEnd('"');
+
+                    }
+                    catch (Exception ex)
+                    {
+                        twitterAccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+                        _logger.LogError(ex.StackTrace);
+
+                    }
+                    try
+                    {
+                        twitterAccount.profileUrl = string.Empty;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.location = item["location"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.description = item["description"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    twitterAccount.userId = userId;
+                    twitterAccount.isAccessTokenActive = true;
+                    int isSaved = dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twitterAccount);
+                    if (isSaved == 1)
+                    {
+                        List<Domain.Socioboard.Models.TwitterAccount> lsttwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(twitterUserId)).ToList();
+                        if (lsttwtAcc != null && lsttwtAcc.Count() > 0)
+                        {
+                            isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lsttwtAcc.First().twitterUserId, lsttwtAcc.First().twitterScreenName, userId, lsttwtAcc.First().profileImageUrl, Domain.Socioboard.Enum.SocialProfileType.Twitter, dbr);
+                            if (isSaved == 1)
                             {
-                                Helper.TwitterHelper.FollowAccount(OAuth, "Socioboard", "");
-            }
+                                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
+                                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
 
-                            return "Added_Successfully";
-                        }
-
-                    }
-                }
-            }
-            else
-            {
-                twitterAccount = new Domain.Socioboard.Models.TwitterAccount();
-                twitterAccount.twitterUserId = twitterUserId;
-                try
-                {
-                    twitterAccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.followersCount = Convert.ToInt64(item["followers_count"].ToString());
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                twitterAccount.isActive = true;
-                twitterAccount.oAuthSecret = OAuth.AccessTokenSecret;
-                twitterAccount.oAuthToken = OAuth.AccessToken;
-                try
-                {
-                    twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-
-                }
-                try
-                {
-                    twitterAccount.location = item["location"].ToString().TrimStart('"').TrimEnd('"');
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.description = item["description"].ToString().TrimStart('"').TrimEnd('"');
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.profileUrl = string.Empty;
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-                }
-                try
-                {
-                    twitterAccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
-
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex.StackTrace);
-
-                }
-                twitterAccount.userId = userId;
-                twitterAccount.isAccessTokenActive = true;
-                int isSaved = dbr.Add<Domain.Socioboard.Models.TwitterAccount>(twitterAccount);
-                if (isSaved == 1)
-                {
-                    List<Domain.Socioboard.Models.TwitterAccount> lsttwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(twitterUserId)).ToList();
-                    if (lsttwtAcc != null && lsttwtAcc.Count() > 0)
-                    {
-                        isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lsttwtAcc.First().twitterUserId, lsttwtAcc.First().twitterScreenName, userId, lsttwtAcc.First().profileImageUrl, Domain.Socioboard.Enum.SocialProfileType.Twitter, dbr);
-                        if (isSaved == 1)
-                        {
-                            _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
-                            _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                            //new Thread(delegate ()
-                            //{
+                                //new Thread(delegate ()
+                                //{
                                 //todo : codes to update feeds 
                                 SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
                                 SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
@@ -302,17 +192,134 @@ namespace Api.Socioboard.Repositories
                                 SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
                                 SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
                                 Savetwitterrecentdetails(profile, _redisCache, _appSettings);
-                           // }).Start();
+                                // }).Start();
 
-                            return "Added_Successfully";
+
+                                if (follow)
+                                {
+                                    Helper.TwitterHelper.FollowAccount(OAuth, "Socioboard", "");
+                                }
+
+                                return "Added_Successfully";
+                            }
+
                         }
                     }
                 }
+                else
+                {
+                    twitterAccount = new Domain.Socioboard.Models.TwitterAccount();
+                    twitterAccount.twitterUserId = twitterUserId;
+                    try
+                    {
+                        twitterAccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.followersCount = Convert.ToInt64(item["followers_count"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    twitterAccount.isActive = true;
+                    twitterAccount.oAuthSecret = OAuth.AccessTokenSecret;
+                    twitterAccount.oAuthToken = OAuth.AccessToken;
+                    try
+                    {
+                        twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                    }
+                    try
+                    {
+                        twitterAccount.location = item["location"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.description = item["description"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.profileUrl = string.Empty;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                    }
+                    twitterAccount.userId = userId;
+                    twitterAccount.isAccessTokenActive = true;
+                    int isSaved = dbr.Add<Domain.Socioboard.Models.TwitterAccount>(twitterAccount);
+                    if (isSaved == 1)
+                    {
+                        List<Domain.Socioboard.Models.TwitterAccount> lsttwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(twitterUserId)).ToList();
+                        if (lsttwtAcc != null && lsttwtAcc.Count() > 0)
+                        {
+                            isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lsttwtAcc.First().twitterUserId, lsttwtAcc.First().twitterScreenName, userId, lsttwtAcc.First().profileImageUrl, Domain.Socioboard.Enum.SocialProfileType.Twitter, dbr);
+                            if (isSaved == 1)
+                            {
+                                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
+                                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                                //new Thread(delegate ()
+                                //{
+                                //todo : codes to update feeds 
+                                SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                SaveUserTweets(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                SaveTwitterFeeds(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
+                                Savetwitterrecentdetails(profile, _redisCache, _appSettings);
+                                // }).Start();
+
+                                return "Added_Successfully";
+                            }
+                        }
+                    }
 
 
+                }
+
+                return "Error while Adding Account";
             }
-
-            return "Error while Adding Account";
+            else
+            {
+                return "Your Twitter profile is not Authorized to add";
+            }
         }
 
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache)
@@ -1459,7 +1466,7 @@ namespace Api.Socioboard.Repositories
         {
 
             string TwitterId = string.Empty;
-            Domain.Socioboard.Models.Mongo.TwitterRecentDetails insertdata = new TwitterRecentDetails();
+         Domain.Socioboard.Models.Mongo.TwitterRecentDetails insertdata = new TwitterRecentDetails();
             MongoRepository mongorepo = new MongoRepository("TwitterRecentDetails", settings);
             try
             {
@@ -1533,7 +1540,7 @@ namespace Api.Socioboard.Repositories
                 insertdata.FeedId = FeedId;
                 insertdata.retweetcount = Convert.ToInt64(retweetcount);
                 insertdata.favoritecount = Convert.ToInt64(favoritecount);
-                mongorepo.Add<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(insertdata);
+               mongorepo.Add<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(insertdata);
             }
         }
 

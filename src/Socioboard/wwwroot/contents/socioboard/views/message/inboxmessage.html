@@ -12,8 +12,8 @@
                                           <img src="{{message.senderProfileUrl}}" alt="{{message.senderScreenName}}" class="circle">
                                           <span class="email-title" >{{message.senderScreenName}}</span>
                                           <div class="row feeds_post z-depth-1 hoverable">
-                                            <div class="col m8" >
-                                              <p  title="{{message.message}}" style="overflow-wrap: break-word;" class="break_word ultra-small" >{{message.message}}</p>
+                                            <div class="col m8">
+                                              <p class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto" >{{message.message}}</p>
                                             </div>
                                             <div class="col m4 center" ng-if="message.image" >
                                               <img src="{{message.image}}" class="responsive-img ">
@@ -260,7 +260,7 @@
             </div>
 
                 <!--Chat Modal-->
-                <div id="ChatModal" class="modal modal-fixed-footer">
+                <div id="ChatModal" class="modal">
                     <div class="modal-content">
                         <div style="">
                             <img src="{{senderProfileUrl}}" alt="vikash_glb" class="circle"> <b>{{senderScreenName}}</b>
@@ -272,12 +272,12 @@
                             <form class="col s12">
                                 <div class="row">
                                     <ul class="collection">
-                                        <li class="collection-item avatar" ng-repeat="dmmessage in lstGetConversation">
+                                        <li class="collection-item avatar" ng-repeat="dmmessage in lstGetConversation"  my-Chat-Modal-Directive>
                                             <img src="{{dmmessage.senderProfileUrl}}" alt="{{dmmessage.senderScreenName}}" class="circle">
                                             <span class="email-title">{{dmmessage.senderScreenName}}</span>
                                             <div class="row feeds_post z-depth-1 hoverable">
                                                 <div class="col m12">
-                                                    <p style="overflow-wrap: break-word;" title="{{dmmessage.message}}" class="break_word ultra-small">{{dmmessage.message}}</p>
+                                                    <p class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{dmmessage.message}}</p>
                                                 </div>
                                                 <a data-tooltip="Task" data-delay="50" data-position="top" href="javascript:void(0);" class="tooltipped modal-trigger" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" ng-click="taskInboxModel(dmmessage)">
                                                     <i class="icon-pin"></i>

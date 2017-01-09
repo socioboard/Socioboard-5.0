@@ -5,7 +5,16 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
     $scope.$on('$viewContentLoaded', function() {   
 
         instagramfeeds();
+        var start = 0;
+        var ending = start + 30;
+        var reachLast = false;
+        var count = 30;
         $scope.dispbtn = true;
+        $scope.loadmore = "Click to Load More..";
+        $scope.lstFbComments = [];
+
+        $scope.lstFbFeeds = [];
+
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
@@ -25,6 +34,30 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         }
 
         $scope.LoadTopFeeds();
+
+        $scope.listData = function () {
+
+            if (reachLast) {
+                return false;
+            }
+            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=90')
+                         .then(function (response) {
+                             console.log(response.data);
+                             // $scope.lstProfiles = response.data;
+                             if (response.data == null || response.data == "") {
+                                 reachLast = true;
+                                 $scope.loadmore = "Reached at bottom";
+                             }
+                             else {
+                                 $scope.lstFbFeeds = $scope.lstFbFeeds.concat(response.data);
+                                 //console.log($scope.lstFbFeeds);
+                                 ending = ending + 30;
+                             }
+                         }, function (reason) {
+                             $scope.error = reason.data;
+                         });
+        };
+
         $scope.date = function (parm) {
             debugger;
             for (var i = 0; i < parm.length; i++) {
