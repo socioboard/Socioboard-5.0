@@ -66,4 +66,13 @@ namespace Socioboard.Helpers
             return response;
         }
     }
+
+    public static class Encode
+    {
+        public static string Decode(string value)
+        {
+            string a = Uri.UnescapeDataString(value);
+            return a;
+        }
+    }
 }

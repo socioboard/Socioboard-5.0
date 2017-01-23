@@ -14,7 +14,8 @@ using System.Compat.Web;
 using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using Facebook;
-using Newtonsoft.Json;
+using Socioboard.Helper;
+
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,6 +41,8 @@ namespace Socioboard.Controllers
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Index()
         {
+           
+            //  return RedirectToAction("paymentWithPayUMoney", "Index");
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
             {
@@ -68,6 +71,9 @@ namespace Socioboard.Controllers
 
         }
 
+
+       
+
         //public IActionResult facebooknotification()
         //{
         //    FacebookClient fb = new FacebookClient();
@@ -86,11 +92,79 @@ namespace Socioboard.Controllers
             HttpResponseMessage response = await WebApiReq.PostReq("/api/User/Login", Parameters, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
+
                 try
                 {
                     Domain.Socioboard.Models.User user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
                     HttpContext.Session.SetObjectAsJson("User", user);
+                    if (user.UserType == "SuperAdmin")
+                    {
+                        return Content("SuperAdmin");
+                        //HttpContext.Session["Id"] = user.Id;
 
+                    }
+                    output = "1";
+                    if (user.ExpiryDate < DateTime.UtcNow)
+                    {
+                        //return RedirectToAction("UpgradePlans", "Index");
+                        // return Content("UpgradePlans");
+                        List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
+                        Param.Add(new KeyValuePair<string, string>("Id", user.Id.ToString()));
+                        HttpResponseMessage respon = await WebApiReq.PostReq("/api/User/UpdateTrialStatus", Param, "", "", _appSettings.ApiDomain);
+                        if (respon.IsSuccessStatusCode)
+                        {
+                            Domain.Socioboard.Models.User _user = await respon.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                            HttpContext.Session.SetObjectAsJson("User", _user);
+                            return Content("Trail Expire");
+                        }
+                    }
+                    else if ((user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.notadded || user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.inprogress) && (user.AccountType != Domain.Socioboard.Enum.SBAccountType.Free))
+                    {
+                        //return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId,IsLogin = false });
+                        return Content("2");
+                    }
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        output = await response.Content.ReadAsStringAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    return Content(output);
+                }
+
+            }
+            return Content(output);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> AjaxPluginLogin()
+        {
+            string output = string.Empty;
+            string uname = Request.Form["email"].ToString();
+            string pass = Request.Form["password"].ToString();
+            List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Add(new KeyValuePair<string, string>("UserName", uname));
+            Parameters.Add(new KeyValuePair<string, string>("Password", pass));
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/User/Login", Parameters, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+
+                try
+                {
+                    Domain.Socioboard.Models.User user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                    HttpContext.Session.SetObjectAsJson("User", user);
+                    if (user.UserType == "SuperAdmin")
+                    {
+                        return Content("SuperAdmin");
+
+                    }
                     output = "1";
                     if (user.ExpiryDate < DateTime.UtcNow)
                     {
@@ -221,6 +295,81 @@ namespace Socioboard.Controllers
 
 
 
+        [HttpGet]
+        public async Task<IActionResult> SBApp(string profileType, string url, string content, string imageUrl, string name, string userImage, string screenName, string tweet, string tweetId, string type)
+        {
+
+            Domain.Socioboard.Helpers.PluginData _PluginData = new Domain.Socioboard.Helpers.PluginData();
+            _PluginData.profileType = profileType;
+            _PluginData.content = content;
+            _PluginData.imageUrl = imageUrl;
+            _PluginData.name = name;
+            _PluginData.screenName = screenName;
+            _PluginData.tweet = tweet;
+            _PluginData.tweetId = tweetId;
+            _PluginData.url = url;
+            _PluginData.userImage = userImage;
+            _PluginData.type = type;
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(url) && profileType != "pinterest")
+                {
+                    Domain.Socioboard.Helpers.ThumbnailDetails plugindata = PluginHelper.CreateThumbnail(url);
+                    _PluginData._ThumbnailDetails = plugindata;
+                }
+
+                ViewBag.plugin = _PluginData;
+
+                List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+                parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+                HttpResponseMessage _response = await WebApiReq.GetReq("/api/GroupProfiles/GetPluginProfile?userId=" + user.Id.ToString(), "", "", _appSettings.ApiDomain);
+                if (_response.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        List<Domain.Socioboard.Helpers.PluginProfile> lstsb = new List<Domain.Socioboard.Helpers.PluginProfile>();
+                        lstsb = await _response.Content.ReadAsAsync<List<Domain.Socioboard.Helpers.PluginProfile>>();
+                        return View("RMain", lstsb);
+                    }
+                    catch { }
+                }
+            }
+            return View("Rlogin");
+        }
+        [HttpPost]
+        public ActionResult IsUserSession()
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user != null)
+            {
+                return Content("user");
+            }
+            else
+            {
+                return Content("");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> PluginSignUp()
+        {
+            string output = "";
+            string name = Request.Form["name"].ToString();
+            string email = Request.Form["email"].ToString();
+            string password = Request.Form["password"].ToString();
+            List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Add(new KeyValuePair<string, string>("FirstName", name));
+            Parameters.Add(new KeyValuePair<string, string>("EmailId", email));
+            Parameters.Add(new KeyValuePair<string, string>("Password", password));
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/User/Register", Parameters, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                output = await response.Content.ReadAsStringAsync();
+            }
+            return Content(output);
+        }
+
+
 
         public IActionResult PaymentFailed()
         {
@@ -234,12 +383,12 @@ namespace Socioboard.Controllers
 
         public async void PaymentNotify(string code)
         {
-            _logger.LogError("paypalnotifications start");
-            foreach (var key in Request.Form.Keys)
-            {
-                _logger.LogError(key + ":" + Request.Form[key]);
-            }
-            _logger.LogError("paypalnotifications end");
+            //_logger.LogError("paypalnotifications start");
+            //foreach (var key in Request.Form.Keys)
+            //{
+            //    _logger.LogError(key+":"+Request.Form[key]);
+            //}
+            //_logger.LogError("paypalnotifications end");
             //return RedirectToAction("Index", "Index");
             string subscr_id = Request.Form["subscr_id"];
             string payment_status = Request.Form["payment_status"];
@@ -396,7 +545,7 @@ namespace Socioboard.Controllers
             if (response.IsSuccessStatusCode)
             {
                 // string data = await response.Content.ReadAsStringAsync();
-                if (contesnt!=false)
+                if (contesnt != false)
                 {
                     return Content(response.RequestMessage.RequestUri.OriginalString);
                 }

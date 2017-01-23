@@ -12,6 +12,12 @@
     <property name="FirstName">
       <column name="FirstName" />
     </property>
+    <property name="RegistrationType">
+      <column name="RegistrationType" />
+    </property>
+    <property name="Ewallet">
+      <column name="Ewallet" />
+    </property>
     <property name="LastName">
       <column name="LastName" />
     </property>
@@ -106,6 +112,33 @@
     </property>
     <property name="TrailStatus">
       <column name="TrailStatus" />
+    </property>
+    <property name="UserType">
+      <column name="UserType" />
+    </property>
+    <property name="MailstatusforAccountExpiry">
+      <column name="MailstatusforAccountExpiry" />
+    </property>
+    <property name="MailstatusbeforeAccountExpire">
+      <column name="MailstatusbeforeAccountExpire" />
+    </property>
+    <property name="lastloginreminder">
+      <column name="lastloginreminder" />
+    </property>
+    <property name="mailstatusforweeklyreport">
+      <column name="mailstatusforweeklyreport" />
+    </property>
+    <property name="mailstatusfor15daysreport">
+      <column name="mailstatusfor15daysreport" />
+    </property>
+    <property name="mailstatusfor30daysreport">
+      <column name="mailstatusfor30daysreport" />
+    </property>
+    <property name="mailstatusfor60daysreport">
+      <column name="mailstatusfor60daysreport" />
+    </property>
+    <property name="mailstatusfor90daysreport">
+      <column name="mailstatusfor90daysreport" />
     </property>
   </class>
 </hibernate-mapping>

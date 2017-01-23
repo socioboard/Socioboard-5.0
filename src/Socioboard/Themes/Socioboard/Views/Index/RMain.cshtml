@@ -1,0 +1,843 @@
+﻿@using Microsoft.Extensions.Options;
+@inject IOptions<Socioboard.Helpers.AppSettings> appSettings
+@{
+
+    Layout = null;
+    string path = @appSettings.Value.Domain;
+    Domain.Socioboard.Helpers.PluginData objplugin = (Domain.Socioboard.Helpers.PluginData)ViewBag.plugin;
+    string content = "";
+    string domainName = @appSettings.Value.Domain;
+    int tweetUrlLength = 0;
+}
+
+<html>
+<head>
+    <title>Modal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Ropa+Sans' rel='stylesheet' type='text/css'>
+    <link href="~/contents/socioboard/pluginassets/css/custom.css" rel="stylesheet" />
+    <link href="~/contents/socioboard/pluginassets/css/datetimepicker.css" rel="stylesheet" />
+    <style>
+        .padding-20 {
+            padding: 20px;
+        }
+
+        .fb_icn {
+            background-color: #3b5998;
+            border: 1px solid #fff;
+            border-radius: 14px;
+            color: #fff;
+            margin: 34px 0 0 -18px;
+            padding: 3px 6px;
+            position: absolute;
+        }
+
+        .twt_icn {
+            background-color: #3298BD;
+            border: 1px solid #fff;
+            border-radius: 14px;
+            color: #fff;
+            margin: 34px 0 0 -18px;
+            padding: 3px 6px;
+            position: absolute;
+        }
+
+        .mrgn-right {
+            margin-right: 8px;
+        }
+
+        .tooltip {
+            z-index: 99999;
+        }
+    </style>
+
+</head>
+<body style="background-color:transparent">
+    <div id="myModal" data-easein="flipBounceYIn" aria-labelledby="gridSystemModalLabel" role="dialog" tabindex="-1" class="in" style="display: block; padding-left: 17px;">
+
+
+        <div class='col-md-2 cancel-btn pull-right z-i btn-t-r m-t-b'>
+            <a><i class="fa fa-comments"> </i> Help</a><span class='s-c'> | </span>
+            <a href="@domainName" target="_blank"><i class="fa fa-chevron-circle-right"> </i> Go to Socioboard</a>
+        </div>
+
+        <div class="modal-dialog" role="document">
+            <div class="modal-content p-r m-t">
+                <div class='close-btn p-a close-btn-dismiss'>
+                    <i class="fa fa-times"></i>
+                </div>
+                <div class="modal-body padding-20 padd-btm-4">
+
+                    <div class="tabbable">
+                        <!-- Only required for left/right tabs -->
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab1" data-toggle="tab" class='f-s-10'>Simple Composer</a></li>
+                            @*<li><a href="#tab2" data-toggle="tab" class='f-s-10'>Power Scheduler</a></li>*@
+                        </ul>
+
+                        <div class="tab-content">
+
+                            <div class="tab-pane active" id="tab1">
+                                <div class='row'>
+                                    <div class="col-md-12" style="overflow-y:auto;max-height:500px">
+                                        <div class='row cus001  padding-20'>
+                                            <!-- Profiles -->
+                                            @foreach (var item in (List<Domain.Socioboard.Helpers.PluginProfile>)Model)
+                                            {
+                                                if (item.type == "twitter")
+                                                {
+                                                    Domain.Socioboard.Models.TwitterAccount objTwitterAccount = (Domain.Socioboard.Models.TwitterAccount)item.twitterprofile;
+
+                                                    <div data-placement="bottom" class='profile-pic selected twitter pull-left mrgn-right' title='@objTwitterAccount.twitterScreenName' id="@objTwitterAccount.twitterUserId~twitter">
+                                                        <img src='@objTwitterAccount.profileImageUrl' class='image-responsive img-res' alt='profile image' width="50" height="50" />
+                                                        <i class="soc-icon fa fa-twitter"></i>
+                                                    </div>
+
+                                                }
+                                                else if (item.type == "facebook")
+                                                {
+                                                    Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = (Domain.Socioboard.Models.Facebookaccounts)item.facebookprofile;
+                                                    if (!string.IsNullOrEmpty(objFacebookAccount.AccessToken))
+                                                    {
+                                                        if (objFacebookAccount.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookProfile)
+                                                        {
+                                                            <div data-placement="bottom" class='profile-pic selected facebook pull-left mrgn-right' title='@objFacebookAccount.FbUserName' id="@objFacebookAccount.FbUserId~facebook">
+                                                                <img src='https://graph.facebook.com/@objFacebookAccount.FbUserId/picture?type=small' class='image-responsive img-res' alt='profile image' width="50" height="50">
+                                                                <i class="soc-icon fa fa-facebook"></i>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div data-placement="bottom" class='profile-pic selected facebook pull-left mrgn-right' title='@objFacebookAccount.FbUserName' id="@objFacebookAccount.FbUserId~facebook">
+                                                                <img src='https://graph.facebook.com/@objFacebookAccount.FbUserId/picture?type=small' class='image-responsive img-res' alt='profile image' width="50" height="50">
+                                                                <i class="soc-icon fa fa-facebook"></i>
+                                                            </div>
+                                                        }
+                                                    }
+
+                                                }
+
+                                            }
+
+                                            <div style="position: relative; display: inline; left: 1px;">
+                                                <a href="@domainName/home" target="_blank">
+                                                    <i class="fa fa-plus-circle" style="font-size: 50px; text-align: center;"></i>
+                                                </a>
+                                            </div>
+
+                                        </div><!-- /Profiles -->
+
+
+
+
+
+                                        <div class='row  padding-10'>
+                                            @if (objplugin.profileType == "facebook" || objplugin.profileType == "pinterest" || objplugin.profileType == "image" || objplugin.profileType == "website")
+                                            {
+                                                if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "twitter"))
+                                                {
+
+                                                    int count = 140;
+                                                    if (!string.IsNullOrEmpty(objplugin.content))
+                                                    {
+                                                        content = objplugin.content;
+                                                    }
+                                                    else
+                                                    {
+                                                        content = "";
+                                                    }
+                                                    if (!string.IsNullOrEmpty(objplugin.url))
+                                                    {
+                                                        content += " ";
+                                                        content += Socioboard.Helper.PluginHelper.GetShortenUrl(objplugin.url);
+
+                                                    }
+                                                    content = content.Trim();
+                                                    count = count - content.Length;
+
+                                                    <div class='form-group twitter-text-show'>
+                                                        <div class='message-to-pages'>
+                                                            <span class='control-label small'>
+                                                                <i class="img-textarea fa fa-twitter " style='color: #28a9e0;'></i>
+                                                                Message for Twitter
+                                                            </span>
+                                                            @if (count > 0)
+                                                            {
+                                                                <span class="pull-right text-success" id="twt-text-count">
+                                                                    @count
+                                                                </span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="small pull-right text-danger" id="twt-text-count">
+                                                                    @count
+                                                                </span>
+                                                            }
+                                                        </div>
+
+                                                        <div>
+                                                            <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-twt-message' onkeyup="countChar()">@content</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                }
+                                                if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "facebook" || t.type == "facebook_page"))
+                                                {
+                                                    <div class='form-group facebook-text-show'>
+                                                        <div class='message-to-pages'>
+                                                            <span class='control-label small'>
+                                                                <i class="img-textarea fa fa-facebook " style='color: #3b5998;'></i> Message for Facebook
+                                                            </span>
+
+                                                        </div>
+
+                                                        <div>
+                                                            @{
+                                                                if (!string.IsNullOrEmpty(objplugin.content))
+                                                                {
+                                                                    content = objplugin.content;
+                                                                }
+                                                                content = content.Trim();
+                                                            }
+                                                            <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@content</textarea>
+                                                        </div>
+                                                    </div>
+                                                    <hr>
+                                                                    }
+                                                                }
+                                                                else if (objplugin.profileType == "twitter")
+                                                                {
+                                                                    if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "twitter"))
+                                                                    {
+                                                                        tweetUrlLength = 25;
+                                                                        <div class='form-group twitter-text-show'>
+                                                                            <div class='message-to-pages'>
+                                                                                <span class='control-label small'>
+                                                                                    <i class="img-textarea fa fa-twitter" style='color: #28a9e0;'></i>
+                                                                                    Message for Twitter
+                                                                                </span>
+                                                                                <span class="pull-right" id="twt-text-count">
+                                                                                    @(140 - tweetUrlLength)
+                                                                                </span>
+                                                                            </div>
+
+                                                                            <div>
+                                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-twt-message' onkeyup="countChar()"></textarea>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <hr>
+
+                                                <!-- retweet start -->
+                                                                        <div class="retweet twitter-text-show">
+                                                                            <!--re tweet-->
+                                                                            <div class="media">
+                                                                                <a class="pull-left" href="#">
+                                                                                    <img class="media-object tweet-img" src="@objplugin.userImage" alt="Media Object">
+                                                                                </a>
+
+                                                                                <div class="media-body">
+                                                                                    <h4 class="media-heading">
+                                                                                        <span class="user-name">@objplugin.name</span>
+                                                                                        @{
+                                                                                            string sn = "@" + objplugin.screenName;
+                                                                                        }
+                                                                                        <span class="page-tweet">@sn</span>
+                                                                                        <span class=""></span>
+                                                                                    </h4>
+                                                                                    @objplugin.tweet
+
+                                                                                    <div class="retweet-ctrl">
+                                                                                        <i class="fa fa-retweet retweet-fa"></i>
+                                                                                        <span class='retweet-link'><a href="javascript:void(0)">Retweeted by You</a></span>
+                                                                                    </div>
+                                                                                </div>
+
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <hr>
+
+                                                                                            }
+                                                                                            if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "facebook" || t.type == "fscebook_page"))
+                                                                                            {
+                                                                                                <div class='form-group facebook-text-show'>
+                                                                                                    <div class='message-to-pages'>
+                                                                                                        <span class='control-label small'>
+                                                                                                            <i class="img-textarea fa fa-facebook " style='color: #3b5998;'></i> Message for Facebook
+                                                                                                        </span>
+                                                                                                    </div>
+                                                                                                    @{
+                                                                                                        if (!string.IsNullOrEmpty(objplugin.content))
+                                                                                                        {
+                                                                                                            content = objplugin.content;
+                                                                                                        }
+                                                                                                        if (!string.IsNullOrEmpty(objplugin.url))
+                                                                                                        {
+                                                                                                            content += " ";
+                                                                                                            content += Socioboard.Helper.PluginHelper.GetShortenUrl(objplugin.url);
+
+                                                                                                        }
+                                                                                                        content = content.Trim();
+                                                                                                    }
+                                                                                                    <div>
+                                                                                                        <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@content</textarea>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <hr>
+                                                                                                            }
+                                                                                                        }
+                                        </div><!-- /Messages -->
+                                        @if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "facebook"))
+                                        {
+                                            if (!string.IsNullOrEmpty(objplugin.url) && objplugin.profileType != "pinterest")
+                                            {
+                                                if (objplugin._ThumbnailDetails != null)
+                                                {
+                                                    <div class='row m-b facebook-text-show' id="thumb-creator">
+                                                        <div class='contain-box p-r'>
+                                                            <span class='fa fa-times img-close-btn pull-right' id="thumb-close"></span>
+                                                            <div class='col-sm-4 img-uploader p-r'>
+
+                                                                @if (!string.IsNullOrEmpty(objplugin._ThumbnailDetails.image))
+                                                                {
+                                                                    <div class='info-holder'>
+
+                                                                        @if (!objplugin._ThumbnailDetails.image.Contains("http"))
+                                                                        {
+                                                                            Uri _uri = new Uri(objplugin._ThumbnailDetails.url);
+                                                                            string _host = _uri.Host;
+                                                                            objplugin._ThumbnailDetails.image = "http://" + _host + "/" + objplugin._ThumbnailDetails.image;
+                                                                        }
+
+                                                                        <img src="@objplugin._ThumbnailDetails.image" class='media-object img-100' alt='image'>
+                                                                    </div>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <div class='info-holder'>
+
+                                                                        <img src="../Themes/Socioboard/Contents/pluginassets/images/video-thumbnail.png" class='media-object img-100' alt='image'>
+
+                                                                    </div>
+                                                                }
+
+                                                            </div>
+
+                                                            <div class='col-sm-8'>
+
+                                                                @if (!string.IsNullOrEmpty(objplugin._ThumbnailDetails.title))
+                                                                {
+                                                                    <h4 class='mar-top'>
+                                                                        @objplugin._ThumbnailDetails.title
+                                                                    </h4>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <h4>
+                                                                        Attached a link
+                                                                    </h4>
+                                                                }
+
+
+                                                                <div class="url">
+                                                                    <a href='@objplugin._ThumbnailDetails.url' target="_blank">
+
+                                                                        @if (!string.IsNullOrEmpty(objplugin._ThumbnailDetails.url))
+                                                                        {
+                                                                            @objplugin._ThumbnailDetails.url
+
+                                                                        }
+
+                                                                    </a>
+                                                                </div>
+
+                                                                @if (!string.IsNullOrEmpty(objplugin._ThumbnailDetails.description))
+                                                                {
+                                                                    <span class='desc'>
+                                                                        @Socioboard.Helpers.Encode.Decode(objplugin._ThumbnailDetails.description)
+                                                                    </span>
+                                                                }
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <hr>
+                                                    </div>
+                                                }
+
+                                            }
+                                        }
+                                        @if (!string.IsNullOrEmpty(objplugin.imageUrl))
+                                        {
+                                            <div class='row m-b fileinput-new'>
+                                                <!-- Image upload -->
+                                                <div class='contain-box p-r'>
+                                                    <span class='fa fa-times img-close-btn t-i-m' id='img-close'></span>
+                                                    <div class='col-sm-3 img-uploader p-r'>
+                                                        <div class='info-holder-thumb'>
+                                                            <img src="@objplugin.imageUrl" id="img-upload-thumb">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /Image upload -->
+                                        }
+                                        else
+                                        {
+                                            <div class='row m-b fileinput-new' style="display:none">
+                                                <!-- Image upload -->
+                                                <div class='contain-box p-r'>
+                                                    <span class='fa fa-times img-close-btn t-i-m' id='img-close'></span>
+                                                    <div class='col-sm-3 img-uploader p-r'>
+                                                        <div class='info-holder-thumb'>
+                                                            <img src="" id="img-upload-thumb" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div><!-- /Image upload -->
+                                        }
+
+                                        <hr>
+
+
+
+
+                                        <div class='row padding-10 p-r'>
+                                            <div class="overlay-share">
+                                                @*<img width="40" src="https://www.socioboard.com/Themes/Socioboard/Contents/img/icon_loading-Recovered.gif" id="img-load-send">*@
+                                                <span id="success-sending-data">Sending from Socioboard..</span>
+                                            </div>
+                                            <!--replace link options -->
+                                            <div class='mob-style'>
+                                                <div class='col-sm-4 m-t-l'>
+
+                                                    <a href="javascript:;" class='r-l-p cg' id='upload-link'>
+                                                        <small><i class="fa fa-file-image-o cb"> </i> Replace link with photo</small>
+                                                    </a>
+                                                    <input id="upload" type="file" onchange="AddImageScheduleMessage()" />
+                                                </div>
+                                                <div class='col-sm-4'>
+                                                    <div class='input-group date' id='datetimepicker1'>
+
+                                                        <span class="input-group-addon" style='display: none;'>
+                                                        </span>
+                                                        <input type='text' class="form-control dt-tb" id="sd-date-time" />
+                                                    </div>
+                                                </div>
+                                                <!--/test-->
+
+                                                <div class='col-sm-4 m-cal-btn'>
+                                                    <div class="btn-group pull-right">
+                                                        <button type="button" class="btn btn-primary bleft btn-share-send" onclick="sharenow()">Share Now</button>
+                                                        <div class="btn-group">
+                                                            <button type="button" class="btn btn-primary dropdown-toggle bright" data-toggle="dropdown">
+                                                                &nbsp; <span class="caret"></span>
+                                                            </button>
+                                                            <ul class="dropdown-menu ul-dup ul-ddn" role="menu">
+                                                                <li><a href="#" id="sb-share-now">Share Now</a></li>
+                                                                <li><a href="#" class='t-dt' id="sb-schedule-post">Schedule Post</a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+                                        </div><!--/replace link options -->
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="tab-pane" id="tab2">
+                                <!-- tab2-->
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="row padding-10 m-t-20">
+                                            <!-- topic -->
+                                            <div class="media">
+                                                <div class="media-left">
+                                                    <a href="#">
+                                                        <img class="media-object img-50" src="4.png" alt="social-image">
+                                                    </a>
+                                                </div>
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">Media heading</h4>
+                                                    <small class='cg'>
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                                                        tempor incididunt ut labore et dolore magna aliqua.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div><!-- /topic -->
+
+                                        <div class='row padding-10 m-t-20'>
+                                            <p class='txt-center'>Choose when you would like to share this link:</p>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div><!-- /tab2-->
+
+                        </div>
+                    </div>
+
+
+
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js"></script>
+    <script src="~/contents/socioboard/pluginassets/js/moment-locales.js"></script>
+    <script src="~/contents/socioboard/pluginassets/js/datetimepicker.js"></script>
+
+    <script type="text/javascript">
+
+        var CSPWhitelist = [
+          'twitter.com',
+          'github.com',
+          'gist.github.com',
+          'education.github.com',
+          'medium.com',
+          'www.npmjs.org',
+          'www.npmjs.com',
+          'www.flickr.com',
+          'localhost:9821'
+        ];
+
+        $(".modal").each(function (index) {
+            $(this).on('show.bs.modal', function (e) {
+                var open = $(this).attr('data-easein');
+                if (open == 'bounce') {
+                    $('.modal-dialog').velocity('callout.' + open);
+                }
+                else {
+                    $('.modal-dialog').velocity('transition.' + open);
+                }
+
+            });
+        });
+
+        $('#datetimepicker1').datetimepicker({
+            // format: 'MMM D, YYYY',
+            widgetPositioning: {
+                vertical: 'top',
+                horizontal: 'left'
+            }
+        });
+
+        $('.profile-pic').tooltip();
+
+        $('#upload-link').click(function (e) {
+            e.preventDefault();
+            $('#upload').trigger('click');
+        });
+
+        $('#img-close').click(function () {
+            $(".fileinput-new").css('display', 'none');
+        });
+
+        $('#thumb-close').click(function () {
+            $("#thumb-creator").css('display', 'none');
+        });
+
+        $('.t-dt').click(function (e) {
+            e.preventDefault();
+            $('span.input-group-addon').trigger("click");
+            console.log('trigger');
+        });
+
+        $('#sb-schedule-post').click(function () {
+            $('.btn-share-send').removeAttr('onclick', 'sharenow()');
+            $('.btn-share-send').attr('onclick', 'schedulenow()');
+            $('.btn-share-send').text('Schedule Post');
+        });
+
+        $('#sb-share-now').click(function () {
+
+            $('.btn-share-send').removeAttr('onclick', 'schedulenow()');
+            $('.btn-share-send').attr('onclick', 'sharenow()');
+            $('.btn-share-send').text('Share Now');
+        });
+
+
+        $('.profile-pic').on('click', function (e) {
+            $(this).toggleClass("selected");
+            e.preventDefault();
+            var f_count = 0;
+            var t_count = 0;
+            $('.selected.twitter').each(function () {
+                t_count++;
+            });
+            $('.selected.facebook').each(function () {
+                f_count++;
+            });
+            if (f_count > 0) {
+                $('.facebook-text-show').css('display', 'block');
+            } else {
+                $('.facebook-text-show').css('display', 'none');
+            }
+            if (t_count > 0) {
+                $('.twitter-text-show').css('display', 'block');
+            }
+            else {
+                $('.twitter-text-show').css('display', 'none');
+            }
+
+
+        });
+        function send() {
+            var arrId = [];
+            $('.selected').each(function () {
+                arrId.push(this.id);
+            });
+            console.log(arrId);
+        }
+
+
+
+        function AddImageScheduleMessage() {
+            debugger;
+            var filesinput = $('#upload');
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            if (filesinput != undefined && filesinput[0].files[0] != null) {
+                if (hasExtension('upload', fileExtension)) {
+                    var fd = new FormData();
+                    var filesimage = document.getElementById('upload').files[0];
+                    if (filesimage != null) {
+                        fd.append('files', filesimage);
+                        $.ajax({
+                            url: '@appSettings.Value.ApiDomain/api/SocialMessages/UploadImageplugin',
+                            type: "Post",
+                           // dataType: 'json',
+                            processData: false,
+                            contentType: false,
+                            data: fd,
+                            success: function (data) {
+                              //  alert('hello' + data);
+                                $("#img-upload-thumb").attr("src", data);
+                                $(".fileinput-new").css('display', 'block');
+                                $("#thumb-creator").css('display', 'none');
+                            },
+                            error: function (msg) {
+                                // console.log(msg.responseText);
+                                $("#img-upload-thumb").attr("src", msg.responseText);
+                                $(".fileinput-new").css('display', 'block');
+                                $("#thumb-creator").css('display', 'none');
+                            }
+
+
+                        });
+                    }
+
+
+                }
+                else {
+                    return;
+                }
+            }
+        }
+        function hasExtension(inputID, exts) {
+            var fileName = document.getElementById(inputID).value;
+            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+        }
+
+        function countChar() {
+            debugger;
+            var tweetUriLength = '@tweetUrlLength';
+            var val = document.getElementById('txt-twt-message').value;
+            var len = +val.length + +tweetUriLength;
+            if (len > 140) {
+                $('#twt-text-count').removeClass('text-success');
+                $('#twt-text-count').addClass('text-danger');
+            } else {
+                $('#twt-text-count').removeClass('text-danger');
+                $('#twt-text-count').addClass('text-success');
+            }
+            $('#twt-text-count').text(140 - len);
+
+        }
+
+        function postData() {
+            debugger;
+            var arrId = [];
+            $('.selected').each(function () {
+                arrId.push(this.id);
+            });
+            if (arrId.length < 1) {
+                return null;
+            }
+
+
+            var twitterText = "";
+            var tweetId = "";
+            var tweetUrl = "";
+            var facebookText = "";
+            var url = "";
+            var imgUrl = "";
+            if ($('.twitter-text-show').css('display') == 'block') {
+                twitterText = $('#txt-twt-message').val();
+                if (twitterText.length + +'@tweetUrlLength' > 140) {
+                    $('#twt-text-count').removeClass('text-success');
+                    $('#twt-text-count').addClass('text-danger');
+                    $('#twt-text-count').text('Your Tweet was over 140 characters.');
+                    return null;
+                }
+                @if(objplugin.profileType=="twitter")
+                {
+                    @:tweetId = "@objplugin.tweetId";
+                                    @:tweetUrl = "https://twitter.com/@objplugin.screenName/status/@objplugin.tweetId";
+                                }
+            }
+            if ($('.facebook-text-show').css('display') == 'block') {
+                facebookText = $('#txt-fb-message').val();
+                @if(objplugin._ThumbnailDetails!=null)
+                {
+                    @:if ($('#thumb-creator').css('display') == 'block') { url = "@objplugin._ThumbnailDetails.url"; }
+                                }
+            }
+            if ($('.fileinput-new').css('display') == 'block') {
+                imgUrl = $('#img-upload-thumb').attr('src');
+            }
+            if (twitterText != "" || tweetId != "" || facebookText != "" || url != "" || imgUrl != "") {
+                var data = { profile: arrId.join(), twitterText: twitterText, tweetId: tweetId, tweetUrl: tweetUrl, facebookText: facebookText, url: url, imgUrl: imgUrl }
+                return data;
+            }
+            else {
+                return null;
+            }
+
+
+        }
+
+
+        function sharenow() {
+            debugger;
+            var post = postData();
+            if (post != null) {
+                $.ajax({
+                    url: '../Home/PluginComposeMessage',
+                    type: 'POST',
+                    data: post,
+                    beforeSend: function (xhr) {
+                        $('.overlay-share').slideToggle();
+                    },
+                    success: function (data) {
+                       // $('#img-load-send').attr('src', '../contents/socioboard/img/products n clients/logo.png');
+                        $('#success-sending-data').text('You have published post from socioboard..');
+                        var param = getParameterByName("windowType");
+                        if (param == "newwin") {
+                            window.close();
+                        } else {
+                            parent.postMessage({ name: "Close" }, "*");
+                        }
+                    }, error: function (msg) {
+                        $('#success-sending-data').text('You have published post from socioboard..');
+                        var param = getParameterByName("windowType");
+                        if (param == "newwin") {
+                            window.close();
+                        } else {
+                            parent.postMessage({ name: "Close" }, "*");
+                        }
+                    }
+                });
+
+            }
+
+
+
+        }
+        function schedulenow() {
+            debugger;
+            var curdate = new Date();
+            var dd = curdate.getDate();
+            if (dd < 10) {
+                dd = '0' + dd
+            }
+            else {
+                dd = curdate.getDate();
+            }
+            var mm = curdate.getMonth() + 1;
+            if (mm < 10) {
+                mm = '0' + mm
+            }
+            else {
+                mm = curdate.getMonth() + 1;
+            }
+            var hh = curdate.getHours();
+            if (hh < 10) {
+                hh = '0' + hh;
+            }
+            else {
+                hh = curdate.getHours();
+            }
+            var minm = curdate.getMinutes();
+            if (minm < 10) {
+                minm = '0' + minm;
+            }
+            else {
+                minm = curdate.getMinutes();
+            }
+            var sec = curdate.getSeconds();
+            if (sec < 10) {
+                sec = '0' + sec;
+            }
+            else {
+                sec = curdate.getSeconds();
+            }
+            var now = curdate.getFullYear() + "/" + mm + "/" + dd + " " + hh + ":" + minm + ":" + sec;
+
+            var sdtime = $('#sd-date-time').val();
+
+            var post = postData();
+
+            if (post != null) {
+                $.ajax({
+                    url: '../Home/PluginScheduleMessage?scheduleTime=' + sdtime + '&clientTime=' + now,
+                    type: 'POST',
+                    data: post,
+                    beforeSend: function () {
+                        $('.overlay-share').slideToggle();
+                    },
+                    success: function (data) {
+                        $('#img-load-send').attr('src', '../Themes/Socioboard/Contents/img/products n clients/logo.png');
+                        $('#success-sending-data').text('You have scheduled post from socioboard..');
+                        var param = getParameterByName("windowType");
+                        if (param == "newwin") {
+                            window.close();
+                        } else {
+                            parent.postMessage({ name: "Close" }, "*");
+                        }
+                    }
+                });
+            }
+        }
+        function getParameterByName(name) {
+            debugger;
+            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+            return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+        }
+
+        $('.close-btn-dismiss').on('click', function () {
+            var param = getParameterByName("windowType");
+            if (param == "newwin") {
+                window.close();
+            } else {
+                parent.postMessage({ name: "Close" }, "*");
+            }
+        });
+
+    </script>
+</body>
+</html>

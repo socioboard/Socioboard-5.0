@@ -53,6 +53,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Affiliates.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Affiliates.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AgencyUser.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AgencyUser.hbm.xml
+--resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Coupons.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Coupons.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DemoRequest.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DemoRequest.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Discovery.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Discovery.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Draft.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Draft.hbm.xml
@@ -66,6 +67,7 @@
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Instagramaccounts.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Instagramaccounts.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\LinkedinAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.LinkedinAccount.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\LinkedinCompanyPage.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.LinkedinCompanyPage.hbm.xml
+--resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\NewsLetter.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.NewsLetter.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Package.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Package.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\PaymentTransaction.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.PaymentTransaction.hbm.xml
 --resource:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\RssFeedUrl.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.RssFeedUrl.hbm.xml
@@ -97,7 +99,10 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\TaskStatus.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\TwitterMessageType.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\UserTrailStatus.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\ObjectIdConverter.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\PluginData.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\PluginProfile.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\SBHelper.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\ThumbnailDetails.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Models\ISocialProfile.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Models\IUser.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Repositories\IDatabaseRepository.cs
@@ -108,6 +113,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Service
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Services\ISmsSender.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Affiliates.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AgencyUser.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Coupons.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DemoRequest.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Discovery.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Draft.cs
@@ -124,6 +130,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\InstagramDi
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\LinkedinAccount.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\LinkedinCompanyPage.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\LinkedInData.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\NewsLetter.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Package.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\PaymentTransaction.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\RssFeedUrl.cs

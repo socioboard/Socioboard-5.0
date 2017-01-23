@@ -6,7 +6,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
     $scope.$on('$viewContentLoaded', function () {
         $scope.dispbtn = true;
         $scope.check = false;
-        //console.log(lstAddFbPages);
+        console.log($rootScope.Downgrade);
        
         //Auth.login().success(function () { });
         $scope.getHttpsURL = function (obj) {
@@ -20,6 +20,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
             if ($rootScope.lstGanalytics != undefined) {
                 $('#GoogleAnalytics_Modal').openModal();
+            }
+            if ($rootScope.Downgrade == true) {
+                $('#ActiveProfileModal').openModal({ dismissible: false });
             }
 
             $scope.TwitterRecentFollower = function () {
@@ -313,7 +316,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
                 angular.forEach($rootScope.lstProfiles, function (value, key) {
                     if (value.profileType == 4) {
-                        if ($rootScope.lstGanalytics.indexOf(value.profileId) == -1) {
+                        if ($rootScope.lstaddlinpages.indexOf(value.profileId) == -1) {
 
                             $scope.selecteLinkedinProfiles.push(value.profileId);
                         }
@@ -414,7 +417,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             //code to add Ga Sites
             $scope.toggleGAeProfileSelection = function (AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl,internalWebPropertyId) {
-                var idx = $scope.selectedLinkedinProfiles.indexOf(AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl, internalWebPropertyId);
+                var idx = $scope.selectedGAPageProfiles.indexOf(AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl, internalWebPropertyId);
                 var data = "";
                 // is currently selected
                 if (idx > -1) {
@@ -470,6 +473,57 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
             }
             //end codes to add Ga Sites
+
+
+        //code for addselected profiles
+            $scope.toggleProfileSelection = function (profileid) {
+                var idx = $scope.selectedProfiles.indexOf(profileid);
+                var data = "";
+                // is currently selected
+                if (idx > -1) {
+                    $scope.selectedProfiles.splice(idx, 1);
+                }
+
+                    // is newly selected
+                else {
+                    data = profileid;
+                    $scope.selectedProfiles.push(data);
+                }
+            };
+        //end code 
+            $scope.selectedProfiles = [];
+
+
+            $scope.AddSelectedProfiles = function () {
+                //console.log($scope.selectedProfiles);
+               // if ($scope.selectedProfiles.length == $rootScope.MaxCount) {
+                    var formData = new FormData();
+                    formData.append('selectedProfiles', $scope.selectedProfiles);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/GroupProfiles/AddSelectedProfiles?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+
+                    }).then(function (response) {
+                        if (response.status == 200) {
+                            $('#ActiveProfileModal').closeModal();
+                            $rootScope.Downgrade = false;
+                            window.location.reload();
+                           // swal(response.data);
+                        }
+                    }, function (reason) {
+                        swal("Error!");
+                    });
+                //}
+                //else {
+                //    swal('please select ' + $rootScope.MaxCount + ' Profiles');
+                //}
+
+            }
 
 
             $scope.Addfacebookpagebyurl = function () {

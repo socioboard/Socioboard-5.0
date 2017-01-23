@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETFramework,Version=v4.5.1/",
-    "signature": "1471fcb854212f880d5aebaab7997fc9888c3ee3"
+    "signature": "7d5182e129e0b417e3cc00cb68711b80ebc90ef1"
   },
   "compilationOptions": {
     "defines": [
@@ -41,7 +41,8 @@
           "Hammock": "1.2.3",
           "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
           "Socioboard.Facebook": "1.0.0",
-          "Serilog": "2.1.0"
+          "Serilog": "2.1.0",
+          "HtmlAgilityPack": "1.4.9.5"
         },
         "compile": {
           "Socioboard.exe": {}
@@ -55,6 +56,11 @@
       "Hammock/1.2.3": {
         "compile": {
           "lib/net40/Hammock.dll": {}
+        }
+      },
+      "HtmlAgilityPack/1.4.9.5": {
+        "compile": {
+          "lib/Net45/HtmlAgilityPack.dll": {}
         }
       },
       "Libuv/1.9.0": {
@@ -1378,7 +1384,8 @@
           "Hammock": "1.2.3",
           "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
           "Socioboard.Facebook": "1.0.0",
-          "Serilog": "2.1.0"
+          "Serilog": "2.1.0",
+          "HtmlAgilityPack": "1.4.9.5"
         },
         "runtime": {
           "Socioboard.exe": {}
@@ -1392,6 +1399,11 @@
       "Hammock/1.2.3": {
         "runtime": {
           "lib/net40/Hammock.dll": {}
+        }
+      },
+      "HtmlAgilityPack/1.4.9.5": {
+        "runtime": {
+          "lib/Net45/HtmlAgilityPack.dll": {}
         }
       },
       "Libuv/1.9.0": {
@@ -2520,6 +2532,11 @@
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-JdYotigd2ZilatoSXL+PXFZERRHkhTN3vn/rkVLrm2FxbXJjW0lhD4qEXF/gTv1RUp4gjgBwCTxv/WxQmAessQ=="
+    },
+    "HtmlAgilityPack/1.4.9.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-i5di/J7GO4y2kx/hhVzctPrBI8G2cefWZDMDU/FdOUD3iVkiidN1q1NDZ0FvqrhB28LSaYaM4Z0hs86Tnp0IzA=="
     },
     "Libuv/1.9.0": {
       "type": "package",

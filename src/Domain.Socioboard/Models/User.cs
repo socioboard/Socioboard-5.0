@@ -38,14 +38,34 @@ namespace Domain.Socioboard.Models
         public SBRegistrationType RegistrationType { get; set; }
         public PayPalAccountStatus PayPalAccountStatus { get; set; }
         public bool dailyGrpReportsSummery { get; set; }
-        public bool weeklyGrpReportsSummery { get;  set; }
-        public bool days15GrpReportsSummery { get;  set; }
+        public bool weeklyGrpReportsSummery { get; set; }
+        public bool days15GrpReportsSummery { get; set; }
         public bool monthlyGrpReportsSummery { get; set; }
         public bool days60GrpReportsSummery { get; set; }
         public bool days90GrpReportsSummery { get; set; }
         public bool otherNewsLetters { get; set; }
-        public string Ewallet { get; set; }  
+        public string Ewallet { get; set; }
         public PaymentType PaymentType { get; set; }
         public UserTrailStatus TrailStatus { get; set; }
+        public string UserType { get; set; }
+        public DateTime MailstatusforAccountExpiry { get; set; }
+        public DateTime MailstatusbeforeAccountExpire { get; set; }
+        public DateTime lastloginreminder { get; set; }
+        public DateTime mailstatusforweeklyreport { get; set; }
+        public DateTime mailstatusfor15daysreport { get; set; }
+        public DateTime mailstatusfor30daysreport { get; set; }
+        public DateTime mailstatusfor60daysreport { get; set; }
+        public DateTime mailstatusfor90daysreport { get; set; }
+    }
+
+   public class PiadUser
+    {
+        public string month { get; set; }
+        public int paiduser { get; set; }
+    }
+    public class UnPiadUser
+    {
+        public string month { get; set; }
+        public int Unpaiduser { get; set; }
     }
 }

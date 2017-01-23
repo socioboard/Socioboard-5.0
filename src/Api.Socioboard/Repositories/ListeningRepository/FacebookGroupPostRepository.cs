@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace Api.Socioboard.Repositories.ListeningRepository
@@ -50,6 +51,7 @@ namespace Api.Socioboard.Repositories.ListeningRepository
             {
                 mongoreppo.Add<Domain.Socioboard.Models.Mongo.GroupPostKeyWords>(_GroupPostKeyWords);
             }
+            lstFbFeeds.Select(s => { s.Message = WebUtility.HtmlDecode(s.Message); return s; }).ToList();
             return lstFbFeeds.ToList();
             //}
         }

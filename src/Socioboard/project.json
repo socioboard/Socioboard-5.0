@@ -1,4 +1,4 @@
-﻿{
+{
   "dependencies": {
     "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
@@ -24,10 +24,11 @@
     "Serilog.Extensions.Logging": "1.1.0",
     "Serilog.Sinks.ColoredConsole": "2.0.0",
     "Serilog.Sinks.RollingFile": "2.1.0",
-    "Hammock": "1.0.0",
+    "Hammock": "1.2.3",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Socioboard.Facebook": "1.0.0-*",
-    "Serilog": "2.1.0"
+    "Serilog": "2.1.0",
+    "HtmlAgilityPack": "1.4.9.5"
   },
 
   "tools": {

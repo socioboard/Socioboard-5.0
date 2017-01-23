@@ -9,13 +9,13 @@
     @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>*@
 
-         <script>
+         @*<script>
             $(document).ready(function () {
                // debugger;
 
                 $('.modal-trigger').leanModal();
             });
-        </script>
+        </script>*@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>
@@ -44,7 +44,7 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://i.imgur.com/1B8wv5m.png">
     <meta property="og:url" content="https://www.facebook.com/SocioBoard">
-
+    <meta name="google-site-verification" content="xCSHLNCGW3vt4KPtqZk8aYo41D1_FNVDaWspZPIc8ac" />
 
 
 
@@ -54,6 +54,7 @@
     <link href="~/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="~/contents/socioboard/css/frontend/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="~/contents/socioboard/global/plugins/animate.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="~/contents/socioboard/global/plugins/simple-line-icons/simple-line-icons.css" rel="stylesheet" />
     @RenderSection("CSS", false)
 </head>
 
@@ -149,7 +150,7 @@
         <div class="footer-copyright">
             <div class="container center">
                 <!-- Made by with ♥ <a class="brown-text text-lighten-3" href="https://www.behance.net/chanchalsantra">Chanchal Santra</a> -->
-                Copyright © 2014 - 2017 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
+                Copyright © 2014 - 2016 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
             </div>
         </div>
     </footer>
@@ -276,7 +277,7 @@
                         <input type="checkbox" id="RememberMe" />
                         <label for="RememberMe">Remember me</label>
                     </p>
-                    <p>Forgot Password? <a class="modal-trigger modal-action modal-close modal-trigger" href="#ForgotPasswdModal">Click here to restore</a></p>
+                    <p>Forgot Password? <a class="modal-trigger modal-action modal-close modal-trigger" href="#ForgotPasswdModal" onclick="chng_btn_val_rev()">Click here to restore</a></p>
 
                     <img class='img-portfolio img-responsive hide' id="logLoading" src='~/contents/socioboard/images/loading-spinner-grey.gif'>
 
@@ -313,8 +314,19 @@
                 </div>
             </div>
 
+            @* For change button content after click.. *@
+            <script>
+                function chng_btn_val() {
+                    document.getElementById("sub_btn").value = "Please Wait...";
+                }
+
+                function chng_btn_val_rev() {
+                    document.getElementById("sub_btn").value = "Submit";
+                }
+            </script>
+
             <div class="modal-footer">
-                <div onclick="forgotPassword()" class="waves-effect waves-green btn-flat">Submit</div>
+                <input type="button" onclick="forgotPassword(); chng_btn_val();" id="sub_btn" class="waves-effect waves-light btn cyan" value="Submit" />
             </div>
         </form>
     </div>
@@ -568,6 +580,9 @@ analytics" href="http://statcounter.com/shopify/"
 
                 success: function (msg) {
                     $("#fb-gp-login").css("display", "none");
+                    if (msg == "SuperAdmin") {
+                        window.top.location = '../AdminHome/Dashboard';
+                    }
                     if (msg == "UpgradePlans") {
                         alertify.alert("your account has been expired.Please upgrade it.");
                         setTimeout(function () {

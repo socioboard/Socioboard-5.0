@@ -1,0 +1,427 @@
+﻿@using Microsoft.Extensions.Options;
+@inject IOptions<Socioboard.Helpers.AppSettings> appSettings
+@{
+    Layout = null;
+    string domainName = @appSettings.Value.Domain;
+}
+<html>
+<head>
+    <title>Modal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Ropa+Sans' rel='stylesheet' type='text/css'>
+    <link href="~/contents/socioboard/pluginassets/css/custom.css" rel="stylesheet" />
+    
+</head>
+<body style="background-color:transparent">
+
+    <div id="myModal" data-easein="flipBounceYIn" aria-labelledby="gridSystemModalLabel" role="dialog" tabindex="-1" class="Modal in" style="display: block; padding-left: 17px;">
+        <div class='col-md-1 col-xs-3 z-i m-t-b'>
+            <a href='javascript:;' class='btn btn-block padding-10 simple text-style cancel-btn close-btn-dismiss'>
+                CANCEL
+            </a>
+        </div>
+
+        <div class='col-md-2 cancel-btn pull-right z-i btn-t-r m-t-b'>
+            <a><i class="fa fa-comments"> </i> Help</a><span class='s-c'> | </span>
+            <a href="@domainName"><i class="fa fa-chevron-circle-right"> </i> Go to Socioboard</a>
+        </div>
+        <div class="modal-dialog modal-dialog-login" role="document">
+            <div class="modal-content p-r m-t">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    
+                </div>
+            
+            
+                <div class="modal-body">
+                    <div class='row'>
+                        <div class='col-md-offset-1  col-md-10'>
+
+                            <div class='row'>
+                                <a class='btn btn-block btn-facebook padding-10 fb text-style' onclick="facebooklogin()" id="facebook-login" style="background:#3B5998; color:#fff;"><!--btn btn-block btn-facebook padding-10 fb text-style-->
+                                    <i class="fa fa-facebook"></i>
+                                    Sign in with Facebook
+                                </a>
+                               <a class='btn btn-block padding-10 gl text-style' onclick="googlelogin()" id="twitter-login" style="background:#DD4B39; color:#fff;"><!--btn btn-block padding-10 gl text-style-->
+                                    <i class="fa fa-google"></i>
+                                    Sign in with Google
+                                </a>
+                            </div>
+
+                            @*<div class='padding-10'></div>*@
+
+                            @*<div class='row'>
+                                    <a class='btn btn-block padding-10 li text-style'>
+                                        <i class="fa fa-linkedin"></i>
+                                        Sign in with Linkedin
+                                    </a>
+                                </div>*@
+
+                            @*<div class='row'>
+                                    <a class='btn btn-block padding-10 gp text-style'>
+                                        <i class="fa fa-google-plus-square "></i>
+                                        Sign in with Google
+                                    </a>
+                                </div>*@
+
+                            <div class='padding-10'></div>
+
+                            <div class='row p-r' style="padding:10px 0;">
+                                <p class='p-a t-pos text-center'>or</p>
+                            </div>
+                            <div class='padding-10'></div>
+
+                            <div class='row signin dis-blk'>
+                                <form class="form-body" role="form" action="#" id="btn-submit-plugin">
+                                    <div class='form-group'>
+                                        <input type='email' class='form-control' placeholder='Email' id="email" name="email" required />
+                                    </div>
+                                    <div class='form-group'>
+                                        <input type='password' class='form-control' placeholder='Password' id="password" name="password" required />
+                                    </div>
+                                    <div class='form-group'>
+                                        <input type="submit" class='btn btn-block padding-10 create-acc-btn text-style ca-btns-txt' value="Sign in" id="login" />
+                                    </div>
+                                    <span class="has-error error-text" data-error='0' id="login-error"></span>
+                                </form>
+                            </div>
+
+                            <div class='row signup'>
+                                <form id="sb-register" role="form" action="#" class="form-body">
+                                    <div class='form-group'>
+                                        <input type='text' class='form-control' placeholder='Name' id="name" name="name" required />
+                                    </div>
+                                    <div class='form-group'>
+                                        <input type='email' class='form-control' placeholder='Email' id="email" name="email" required />
+                                    </div>
+                                    <div class='form-group'>
+                                        <input type='password' class='form-control' placeholder='Password' id="pass" name="password" required />
+                                    </div>
+                                    <div class='form-group'>
+                                        <input type='password' class='form-control' placeholder='Confirm Password' id="cpassword" name="cpassword" required />
+                                    </div>
+                                    <div class='form-group'>
+                                        <input type="submit" value="Create account" class='btn btn-block padding-10 create-acc-btn text-style ca-btns-txt' id="signup" />
+                                    </div>
+                                    <span class="has-error error-text" data-error='0' id="register-error"></span>
+                                </form>
+                            </div>
+                            <div class='padding-10'></div>
+                            <div class='row'>
+                                <div class='form-group txt-center col-md-6'>
+                                    <a href='javascript:;' data-target="#ForgotPasswordModal" data-toggle="modal">
+                                        Forgot password ?
+                                    </a>
+                                </div>
+                                <div class='form-group txt-center col-md-6 ca-link dis-blk text-right'>
+                                    <a href='javascript:;' class='create-account'>
+                                        Create account
+                                    </a>
+                                </div>
+                                <div class='form-group text-center col-md-12 sign-in-link'>
+                                    <a href='javascript:;' class='sign-in btn btn-success btn-large'>
+                                        Sign in
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
+    <div class="modal fade" id="ForgotPasswordModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-login">
+            <div class="modal-content login-modal">
+                <div class="close-btn p-a" data-dismiss="modal">
+                    <i class="fa fa-times"></i>
+                </div>
+                <div class="modal-header login-modal-header">
+                    <h4 class="modal-title text-center" id="loginModalLabel">Forgot Password</h4>
+                </div>
+                <div class="modal-body">
+                    <div class='row'>
+                        <div class='col-md-offset-1  col-md-10'>
+                            <form id="forgot-pass">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><i class="fa fa-user"></i></div>
+                                        <input type="email" class="form-control" id="femail" placeholder="Email" required>
+                                    </div>
+                                    <span class="has-error error-text" data-error='0' id="femail-error"></span>
+                                </div>
+
+                                <button type="submit" id="reset_btn" class="btn btn-block padding-10 create-acc-btn text-style ca-btns-txt" data-loading-text="Please wait....">Forget Password</button>
+                                <div class="clearfix"></div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="ActiveMail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog " role="document">
+            <div class="modal-content">
+                <div class="close-btn p-a " data-dismiss="modal">
+                    <i class="fa fa-times"></i>
+                </div>
+                <div class="modal-header">
+                    <!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="fa fa-times fa-2x"></i></span></button> -->
+                    <h4 class="modal-title" id="myModalLabel">Register Successful</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-success" role="alert"><p><strong>Congratulations</strong> your email is successfully connected to our system. Please click on the confirmation mail sent your inbox or <b>SPAM</b> folder!!!!</p></div>
+                    @*<img src="~/Themes/Socioboard/Contents/img/spam.jpg" class="img-responsive" />*@
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js"></script>
+    <script type="text/javascript">
+        function getParameterByName(name) {
+            debugger;
+            var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
+            return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+        }
+
+        var CSPWhitelist = [
+          'twitter.com',
+          'github.com',
+          'gist.github.com',
+          'education.github.com',
+          'medium.com',
+          'www.npmjs.org',
+          'www.npmjs.com',
+          'www.flickr.com',
+          'localhost:9821'
+        ];
+
+        $(".modal").each(function (index) {
+            $(this).on('show.bs.modal', function (e) {
+                var open = $(this).attr('data-easein');
+                if (open == 'bounce') {
+                    $('.modal-dialog').velocity('callout.' + open);
+                }
+                else {
+                    $('.modal-dialog').velocity('transition.' + open);
+                }
+
+            });
+        });
+        $('.create-account, .sign-in').on('click', function () {
+            $('.signup, .signin, .si-cb, .sign-in-link, .ca-link').toggleClass('dis-blk');
+        });
+
+        $('.close-btn-dismiss').on('click', function () {
+
+            var param = getParameterByName("windowType");
+            if (param == "newwin") {
+                window.close();
+            } else {
+                parent.postMessage({ name: "Close" }, "*");
+            }
+        });
+
+
+        $("#btn-submit-plugin").submit(function (e) {
+            e.preventDefault();
+            $('#login-error').text('');
+            var $form = $(this);
+            $.ajax({
+                url: "../Index/AjaxPluginLogin",
+                type: "POST",
+                data: $form.serialize(),
+                beforeSend: function () {
+                    disable();
+                },
+                success: function (data) {
+                    enable();
+
+                    if (data == "1") {
+                        document.location = document.location.href;
+                    } else if (data == "Account not activated.") {
+                        $('#login-error').text('Please verify your email');
+                    }
+                    else {
+                        $('#login-error').text(data);
+                    }
+                }
+            });
+
+        });
+
+
+        $('#forgot-pass').submit(function (e) {
+            e.preventDefault();
+
+            var emailId = $('#femail').val();
+            $.ajax({
+                url: '@appSettings.Value.ApiDomain/api/User/ForgotPasswordSendMail?emailId=' + emailId,
+                type: 'post',
+                beforeSend: function () {
+                    disable();
+                },
+                success: function (data) {
+                    enable();
+                    $('#reset_btn').removeAttr('disbled');
+                    if (data == 'EmailId does not exist') {
+                        $('#femail-error').text('Email not found');
+                    } else {
+                        $('#ForgotPasswordModal').modal('hide');
+                    }
+                }
+            });
+
+        });
+
+        function facebooklogin() {
+            var windowObjectReference;
+            var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes,width=450, height=450";
+            $.ajax({
+                url: '../FacebookManager/getFbLoginUrl?plan=Free',
+                type: 'get',
+                beforeSend: function () {
+                    disable();
+                },
+                success: function (data) {
+                    debugger;
+                    windowObjectReference = window.open(data, "Socioboard - facebook login", strWindowFeatures);
+
+                    ///windowObjectReference.close();
+                    var timer = setInterval(function () {
+                       if (typeof windowObjectReference == "undefined")
+                        {
+                            $.ajax({
+                                url: "../Index/IsUserSession",
+                                type: "post",
+                                success: function (data)
+                                {
+                                    if (data == "user")
+                                    {
+                                        clearInterval(timer);
+                                        document.location = document.location.href;
+                                        enable();
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            if (windowObjectReference.closed) {
+                                clearInterval(timer);
+                                document.location = document.location.href;
+                                enable();
+                            }
+                        }
+                    }, 500);
+
+                }
+            });
+
+        }
+
+
+        function googlelogin() {
+
+            var windowObjectReference;
+            var strWindowFeatures = "menubar=yes,location=yes,resizable=yes,scrollbars=yes,status=yes,width=350, height=350";
+            $.ajax({
+                url: '../GoogleManager/getGoogleLoginUrl?plan=Free',
+                type: 'get',
+                beforeSend: function () {
+                    disable();
+                },
+                success: function (data) {
+
+                    windowObjectReference = window.open(data, "Socioboard - google login", strWindowFeatures);
+                    ///windowObjectReference.close();
+                    var timer = setInterval(function () {
+                        if (typeof windowObjectReference == "undefined")
+                        {
+                            $.ajax({
+                                url: "../Index/IsUserSession",
+                                type: "post",
+                                success: function (data)
+                                {
+                                    if (data == "user")
+                                    {
+                                        clearInterval(timer);
+                                        document.location = document.location.href;
+                                        enable();
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            if (windowObjectReference.closed) {
+                                clearInterval(timer);
+                                document.location = document.location.href;
+                                enable();
+                            }
+                        }
+
+                    }, 500);
+
+                }
+            });
+        }
+
+        $('#sb-register').submit(function (e) {
+            e.preventDefault();
+            debugger;
+            $('#register-error').text('');
+            var password = $('#pass').val();
+            var cpassword = $('#cpassword').val();
+            var $form = $(this);
+            if (password == cpassword) {
+                $.ajax({
+                    url: '../Index/PluginSignUp',
+                    type: 'post',
+                    data: $form.serialize(),
+                    beforeSend: function (xhr) {
+                        disable();
+                    },
+                    success: function (data) {
+                        enable();
+                        if (data == 'EmailID Exist') {
+                            $('#register-error').text('Your email is already registered with us.');
+                        } else {
+                            $('#ActiveMail').modal();
+                            $('#sb-register')[0].reset();
+                        }
+                    }
+                });
+            }
+            else {
+                $('#register-error').text('Password and confirm password should match');
+            }
+        });
+        function disable() {
+            debugger;
+            $('#signup').attr('disabled', 'disabled');
+            $('#login').attr('disabled', 'disabled');
+            $('#twitter-login').attr('disabled', 'disabled');
+            $('#facebook-login').attr('disabled', 'disabled');
+            $('#reset_btn').attr('disabled', 'disabled');
+        }
+        function enable() {
+            $('#signup').removeAttr('disabled');
+            $('#login').removeAttr('disabled');
+            $('#twitter-login').removeAttr('disabled');
+            $('#facebook-login').removeAttr('disabled');
+            $('#reset_btn').removeAttr('disabled');
+        }
+    </script>
+</body>
+</html>

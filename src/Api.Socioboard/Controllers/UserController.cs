@@ -14,6 +14,7 @@ using Socioboard.Facebook.Data;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using NHibernate.Criterion;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -55,6 +56,7 @@ namespace Api.Socioboard.Controllers
             user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.MailSent;
             user.Password = SBHelper.MD5Hash(user.Password);
             user.UserName = "Socioboard";
+            user.UserType = "User";
             user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
             if (!ModelState.IsValid)
             {
@@ -67,7 +69,7 @@ namespace Api.Socioboard.Controllers
             {
                 return BadRequest("EmailID Exist");
             }
-            IList<User> lstUser1 = dbr.Find < User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
+            IList<User> lstUser1 = dbr.Find<User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
             if (lstUser1 != null && lstUser1.Count() > 0)
             {
                 return BadRequest("Phone Number Exist");
@@ -78,7 +80,7 @@ namespace Api.Socioboard.Controllers
             {
                 Groups group = new Groups();
                 group.adminId = nuser.Id;
-               // group.id = nuser.Id;
+                // group.id = nuser.Id;
                 group.createdDate = DateTime.UtcNow;
                 group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
                 SavedStatus = dbr.Add<Groups>(group);
@@ -147,21 +149,30 @@ namespace Api.Socioboard.Controllers
             {
                 if (lstUser.First().Password != null && lstUser.First().Password.Equals(SBHelper.MD5Hash(user.Password)))
                 {
+                    //if (lstUser.First().UserType == "SuperAdmin")
+                    //{
+                    //    return Ok(lstUser.First());
+                    //}
+
                     DateTime d1 = DateTime.UtcNow;
                     //User userTable = dbr.Single < User>(t => t.EmailId == user.UserName);
                     lstUser.First().LastLoginTime = d1;
                     //userTable.LastLoginTime = d1;
-                    dbr.Update < User>(lstUser.First());
+                    dbr.Update<User>(lstUser.First());
 
                     // _memoryCache.Set(lstUser.First().EmailId, lstUser.First());
                     _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
-                    if(lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                    if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
                     {
                         return Ok(lstUser.First());
                     }
+                    else if(lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.MailSent)
+                    {
+                        return Ok("Activate your account through email");
+                    }
                     else
                     {
-                        return Ok("Account not activated.");
+                        return Ok("Your account is temporarily suspended. Please contact socioboard support for more assistance");
                     }
                 }
                 else
@@ -237,12 +248,445 @@ namespace Api.Socioboard.Controllers
 
         }
 
+        [HttpGet("GetPaidUserAdmin")]
+        public IActionResult GetPaidUserAdmin()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+           
+            List<User>user = dbr.Find<User>(t => t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+           
+          //  return strPaidUserCount.TrimEnd(',') + "_#_" + strUnPaidUserCount.TrimEnd(',') + "_#_" + month;
+
+
+
+
+
+
+
+        }
+
+        [HttpGet("GetUnPaidUserAdmin")]
+        public IActionResult GetUnPaidUserAdmin()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
+            List<User> user = dbr.Find<User>(t => t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.UnPaid).ToList();
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpPost("AdminAddNewsLetter")]
+        public IActionResult AdminAddNewsLetter(string Advertisement, string img_url, DateTime date, IFormFile files)
+        {
+
+            var filename = "";
+            var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\" + Advertisement;
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            NewsLetter newsletter =new NewsLetter();
+            DateTime currentdate = DateTime.Now.AddDays(-1);
+            //if (img_url != null)
+            //{
+            //    img_url = img_url.Replace("C:\\fakepath\\","");
+            //    newsletter.NewsLetterBody = img_url;
+            //}
+
+            //if (files != null)
+            //{
+
+            if (files!=null)
+            {
+                if (currentdate < date)
+                {
+                    var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+                    filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                            .Parse(files.ContentDisposition)
+                            .FileName
+                            .Trim('"');
+                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+                    newsletter.NewsLetterBody = filename;
+                    uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+                    try
+                    {
+                        using (FileStream fs = System.IO.File.Create(filename))
+                        {
+                            files.CopyTo(fs);
+                            fs.Flush();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    filename = uploads;
+                }
+                else
+                {
+                    return Ok("Expiry date must be current or future");
+                }
+            }
+
+
+            else
+            {
+                return Ok("Please select file ");
+            }
+            newsletter.Subject = Advertisement;
+            newsletter.ExpiryDate = date;
+
+            int res = dbr.Add<NewsLetter>(newsletter);
+                if (res == 1)
+                {
+                //Console.WriteLine("News letter saved");
+                    return Ok("News letter saved");
+                }
+                else
+                {
+                    return Ok("issue while saving.");
+                }
+            
+        }
+
+        [HttpPost("AddCoupons")]
+        public IActionResult AddCoupons(string coupon_code, DateTime entrydate, DateTime expirydate, int coupon_dis)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Coupons coupons = new Coupons();
+
+            List<Coupons> cppn = dbr.Find<Coupons>(t => t.CouponCode == coupon_code).ToList();
+            if (!(entrydate.Year == 0001 || expirydate.Year == 0001))
+            {
+                if (!(entrydate == expirydate))
+                {
+                    if (entrydate < expirydate)
+                    {
+                        if (cppn.Count == 0)
+                        {
+                            coupons.CouponCode = coupon_code;
+                            coupons.EntryCouponDate = entrydate;
+                            coupons.ExpCouponDate = expirydate;
+                            coupons.Discount = coupon_dis;
+                            int res = dbr.Add<Coupons>(coupons);
+                            if (res == 1)
+                            {
+                                //_redisCache.Delete(package.EmailId);
+                                return Ok("Coupon saved");
+                            }
+                            else
+                            {
+                                return Ok("Fill the datails to Save");
+                            }
+                        }
+                        else
+                        {
+                            return Ok("Coupon code exists");
+                        }
+                    }
+                    else
+                    {
+                        return Ok("Entry Date Should be Smaller than Expiry Date");
+                    }
+                }
+                else
+                {
+                    return Ok("Entry and Expiry Dates are Should not Equal");
+                }
+            }
+            else
+            {
+                return Ok("Entry Date and Expiry Date Both are Required");
+            }
+
+        }
+        //get user
+        [HttpGet("GetUserAdmin")]
+        public IActionResult GetUserAdmin()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<User> user = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active && t.UserType == "User").ToList();
+            //User user = dbr.Single<User>(t => t.Id == Id);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+
+        
+
+        [HttpGet("GetPackageAdmin")]
+        public IActionResult GetPackageAdmin()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Package> package = dbr.Find<Package>(t => t.packagename != null).ToList();
+            // List<User> user = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active && t.UserType == "").ToList();
+            //User user = dbr.Single<User>(t => t.Id == Id);
+            if (package != null)
+            {
+                return Ok(package);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+
+        [HttpGet("GetNewsLetter")]
+        public IActionResult GetNewsLetter()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<NewsLetter> newsletter = dbr.Find<NewsLetter>(t => t.Subject != null).ToList();
+            
+            if (newsletter != null)
+            {
+                return Ok(newsletter);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+
+        [HttpPost("UpdatePackageAdmin")]
+        public IActionResult UpdatePackageAdmin(string packagename, string amount, long id)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Package package = dbr.Single<Package>(t => t.id == id);
+            if (package != null)
+            {
+                package.packagename = packagename;
+                package.amount = amount;
+
+                int res = dbr.Update<Package>(package);
+                if (res == 1)
+                {
+                    //_redisCache.Delete(package.EmailId);
+                    return Ok("package detail updated");
+                }
+                else
+                {
+                    return Ok("issue while updating.");
+                }
+            }
+            else
+            {
+                return NotFound("package not found");
+            }
+        }
+
+        [HttpPost("UpdateNewsLetterAdmin")]
+        public IActionResult UpdateNewsLetterAdmin(string NewsLetterBody, string Subject, DateTime ExpiryDate, long Id)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            NewsLetter newsletter = dbr.Single<NewsLetter>(t => t.Id == Id);
+            if (newsletter != null)
+            {
+                newsletter.NewsLetterBody = NewsLetterBody;
+                newsletter.Subject = Subject;
+                newsletter.ExpiryDate = ExpiryDate;
+
+                int res = dbr.Update<NewsLetter>(newsletter);
+                if (res == 1)
+                {
+                    //_redisCache.Delete(package.EmailId);
+                    return Ok("News Letter detail updated");
+                }
+                else
+                {
+                    return Ok("issue while updating");
+                }
+            }
+            else
+            {
+                return NotFound("package not found");
+            }
+        }
+
+        [HttpGet("GetDeletedUserAdmin")]
+        public IActionResult GetDeletedUserAdmin()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<User> user = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.InActive).ToList();
+            //User user = dbr.Single<User>(t => t.Id == Id);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpGet("GetCouponsUserAdmin")]
+        public IActionResult GetCouponsUserAdmin()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Coupons> coupon = dbr.FindAll<Coupons>().ToList();
+            //User user = dbr.Single<User>(t => t.Id == Id);
+            if (coupon != null)
+            {
+                return Ok(coupon);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpPost("UpdateCouponrAdmin")]
+        public IActionResult UpdateCouponrAdmin(string coupon, int discount,DateTime entrydate,DateTime expirydate,long userid)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Coupons coupons = dbr.Single<Coupons>(t => t.Id == userid);
+            if (coupon != null)
+            {
+                coupons.CouponCode = coupon;
+                coupons.Discount = discount;
+                coupons.EntryCouponDate = entrydate;
+                coupons.ExpCouponDate = expirydate;
+               
+                int res = dbr.Update<Coupons>(coupons);
+                if (res == 1)
+                {
+                    //_redisCache.Delete(user.EmailId);
+                    return Ok("Coupon detail updated");
+                }
+                else
+                {
+                    return Ok("issue while updating.");
+                }
+            }
+            else
+            {
+                return NotFound("user not found");
+            }
+        }
+
+
+        [HttpGet("GetSchedulemsgAdmin")]
+        public IActionResult GetSchedulemsgAdmin()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<ScheduledMessageAdmin> lstScheduledMessageAdmin = new List<ScheduledMessageAdmin>();
+            List<ScheduledMessage> msg = dbr.Find<ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated || t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending).ToList();
+            var msg1 = msg.GroupBy(t => t.userId).ToList();
+            foreach (var items in msg1)
+            {
+                try
+                {
+
+
+                    Domain.Socioboard.Models.User _User = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == items.Key && t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active);
+
+                    ScheduledMessageAdmin _ScheduledMessageAdmin = new ScheduledMessageAdmin();
+                    _ScheduledMessageAdmin.userName = _User.FirstName + " " + _User.LastName;
+                    int x = items.Count();
+                    _ScheduledMessageAdmin.messageCount = x;
+                    int y = items.Where(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).Count();
+                    _ScheduledMessageAdmin.messagecompletedCount = y;
+                    int remaining = x - y;
+                    _ScheduledMessageAdmin.messageremainingCount = remaining;
+                    lstScheduledMessageAdmin.Add(_ScheduledMessageAdmin);
+                }
+                catch(Exception ex)
+                {
+
+                }
+            }
+
+            if (msg != null)
+            {
+                return Ok(lstScheduledMessageAdmin);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+        [HttpGet("DeleteUserAdmin")]
+        public IActionResult DeleteUserAdmin(long Id)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Domain.Socioboard.Models.User _use = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == Id);
+            _use.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.InActive;
+            dbr.Update<Domain.Socioboard.Models.User>(_use);
+            return Ok();
+
+        }
+
+        [HttpPost("UpdateUserAdmin")]
+        public IActionResult UpdateUserAdmin(string firstName, string lastName, string user_email, Domain.Socioboard.Enum.SBAccountType AccountType, Domain.Socioboard.Enum.SBPaymentStatus PaymentStatus, Domain.Socioboard.Enum.SBUserActivationStatus AccountStatus, long userid)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userid);
+            if (user != null)
+            {
+                user.FirstName = firstName;
+                user.LastName = lastName;
+                user.EmailId = user_email;
+                user.AccountType = AccountType;
+                user.PaymentStatus = PaymentStatus;
+                user.ActivationStatus = AccountStatus;
+                int res = dbr.Update<User>(user);
+                if (res == 1)
+                {
+                    _redisCache.Delete(user.EmailId);
+                    return Ok("User detail updated");
+                }
+                else
+                {
+                    return Ok("issue while updating.");
+                }
+            }
+            else
+            {
+                return NotFound("user not found");
+            }
+        }
+
+
         [HttpGet("GetUserData")]
         public IActionResult GetUserData(string emailId)
         {
-            DatabaseRepository dbr = new Model.DatabaseRepository(_logger,_appEnv);
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.EmailId == emailId);
-            if(user!=null)
+            if (user != null)
             {
                 return Ok(user);
             }
@@ -280,9 +724,9 @@ namespace Api.Socioboard.Controllers
                     if (user.ValidateTokenExpireDate >= DateTime.UtcNow)
                     {
                         user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
-                        if (user.PayPalAccountStatus!=Domain.Socioboard.Enum.PayPalAccountStatus.added)
+                        if (user.PayPalAccountStatus != Domain.Socioboard.Enum.PayPalAccountStatus.added)
                         {
-                            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.inprogress; 
+                            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.inprogress;
                         }
                         int result = dbr.Update<User>(user);
                         if (result == 1)
@@ -359,7 +803,7 @@ namespace Api.Socioboard.Controllers
         /// <param name="AccessToken">Code obtained after successfull authentication from facebook.</param>
         /// <returns>Success:added su</returns>
         [HttpPost("FacebookLogin")]
-        public IActionResult FacebookLogin(string AccessToken , Domain.Socioboard.Enum.SBAccountType accType)
+        public IActionResult FacebookLogin(string AccessToken, Domain.Socioboard.Enum.SBAccountType accType)
         {
 
 
@@ -456,13 +900,14 @@ namespace Api.Socioboard.Controllers
                         user.AccountType = Domain.Socioboard.Enum.SBAccountType.Standard;
 
                     }
-                   
+
                     user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
                     user.CreateDate = DateTime.UtcNow;
                     user.EmailId = EmailId;
                     user.ExpiryDate = DateTime.UtcNow.AddDays(1);
                     user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
                     user.UserName = "Socioboard";
+                    user.UserType = "User";
                     user.EmailValidateToken = "Facebook";
                     try
                     {
@@ -522,7 +967,7 @@ namespace Api.Socioboard.Controllers
         [HttpPost("UpdateUser")]
         public IActionResult UpdateUser(string firstName, string lastName, string userName, string phoneNumber, DateTime dob, string aboutMe, long userId, IFormFile files)
         {
-            
+
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
 
@@ -566,7 +1011,7 @@ namespace Api.Socioboard.Controllers
                     }
                     catch (Exception ex)
                     {
-                        
+
                     }
                 }
 
@@ -618,7 +1063,7 @@ namespace Api.Socioboard.Controllers
             {
                 if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
                 {
-                    if(user.Password.Equals(SBHelper.MD5Hash(newPassword)))
+                    if (user.Password.Equals(SBHelper.MD5Hash(newPassword)))
                     {
                         return Ok("Current Password and New Password are same.Try with New Password");
                     }
@@ -710,11 +1155,11 @@ namespace Api.Socioboard.Controllers
             {
                 if (user.EmailValidateToken.Equals("Facebook"))
                 {
-                    return Ok("you can login wiht facebook.");
+                    return Ok("you can login with facebook.");
                 }
                 else if (user.EmailValidateToken.Equals("Google"))
                 {
-                    return Ok("you can login wiht Google.");
+                    return Ok("you can login with Google.");
                 }
                 user.forgotPasswordKeyToken = SBHelper.RandomString(20);
                 user.forgotPasswordExpireDate = DateTime.UtcNow.AddDays(1);
@@ -734,7 +1179,7 @@ namespace Api.Socioboard.Controllers
                         html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/ForgotPassword?Token=" + user.forgotPasswordKeyToken + "&emailId=" + user.EmailId);
 
                         _emailSender.SendMailSendGrid(_appSettings.frommail, "", user.EmailId, "", "", "You requested for reset password of your account", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
-                        
+
 
                     }
                     catch (Exception ex)
@@ -894,7 +1339,7 @@ namespace Api.Socioboard.Controllers
                     return Ok("Demo Requested Added");
                     // return Ok("Mail Sent Successfully.");
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return Ok("Issue while sending mail.");
                 }
@@ -903,7 +1348,7 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("problem while saving,pls try after some time");
             }
-            
+
         }
 
         [HttpPost("SendAgencyMail")]
@@ -911,10 +1356,10 @@ namespace Api.Socioboard.Controllers
         {
             string ret = string.Empty;
             string tomail = _appSettings.ZohoMailUserName;
-            
+
             string subject = "Socioboard Agency";
             string Body = "Name: " + demoRequest.firstName + "" + demoRequest.lastName + "</br>" + "Email: " + demoRequest.emailId + "</br>" + "Company: " + demoRequest.company + "</br>" + "Message: " + demoRequest.message + "</br>" + "Phone: " + demoRequest.phoneNumber + "</br>";
-            
+
             try
             {
                 ret = _emailSender.SendMail(tomail, "", tomail, "", "", subject, Body, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
@@ -924,23 +1369,21 @@ namespace Api.Socioboard.Controllers
                 _logger.LogError("MailSender = > " + ex.StackTrace);
                 _logger.LogError("MailSender = > " + ex.Message);
             }
-         
+
             return Ok();
         }
 
 
         [HttpPost("demoReq")]
-        public ActionResult Mailforsocioboard(DemoRequest demoRequest)
+        public ActionResult Mailforsocioboard(DemoRequest demoReq)
         {
-            //string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
-            //string html = System.IO.File.ReadAllText(path);
-            //html = html.Replace("[FirstName]", demoReq.firstName);
-            //html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
-            string Body = "Name: " + demoRequest.firstName + "" + demoRequest.lastName + "</br>" + "Email: " + demoRequest.emailId + "</br>" + "Company: " + demoRequest.company + "</br>" + "Message: " + demoRequest.message + "</br>" + "Phone: " + demoRequest.phoneNumber + "</br>";
-            //  _emailSender.SendMail("", "", _appSettings.frommail, "",_appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
-            _emailSender.SendMailSendGrid(_appSettings.frommail, "", _appSettings.frommail, "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", Body, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+            string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
+            string html = System.IO.File.ReadAllText(path);
+            html = html.Replace("[FirstName]", demoReq.firstName);
+            html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
+            _emailSender.SendMail("", "", "sumit@socioboard.com", "", "", "Customer requested for demo enterprise plan ", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
             return Ok("Mail Sent Successfully.");
-           
+
         }
 
 
@@ -964,7 +1407,7 @@ namespace Api.Socioboard.Controllers
         {
             Model.DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User _user = dbr.Single<User>(t => t.Id == Id);
-            if(_user!=null)
+            if (_user != null)
             {
                 _user.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.inactive;
                 _user.ExpiryDate = DateTime.UtcNow.AddDays(30);
@@ -972,6 +1415,16 @@ namespace Api.Socioboard.Controllers
             }
             return Ok(_user);
         }
+
+
+        [HttpGet("GetPlans")]
+        public IActionResult GetPlans(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Package> lstplan = dbr.Find<Package>(t => t.id<8).ToList();
+            return Ok(lstplan);
+        }
+
 
 
     }

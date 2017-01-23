@@ -12,6 +12,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System;
 using System.Threading;
+using Api.Socioboard.Repositories;
 
 
 
@@ -140,7 +141,7 @@ namespace Api.Socioboard.Controllers
                             string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, message, prId, userId, uploads, true, dbr, _logger);
                         }).Start();
 
-                          }
+                    }
                     catch (Exception ex)
                     {
 
@@ -156,7 +157,7 @@ namespace Api.Socioboard.Controllers
                             string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, filename, _redisCache, _appSettings, dbr);
 
                         }).Start();
-                        }
+                    }
                     catch (Exception ex)
                     {
 
@@ -169,7 +170,7 @@ namespace Api.Socioboard.Controllers
                         new Thread(delegate ()
                         {
                             string prId = item.Substring(12, item.Length - 12);
-                        string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, userId, message, prId, _redisCache, dbr, _appSettings);
+                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, userId, message, prId, _redisCache, dbr, _appSettings);
                         }).Start();
 
                     }
@@ -339,6 +340,111 @@ namespace Api.Socioboard.Controllers
             }
             return Ok("scheduled");
         }
+
+        [HttpPost("PluginComposemessage")]
+        public IActionResult PluginComposemessage(string profile, string twitterText, string tweetId, string tweetUrl, string facebookText, string url, string imgUrl, long userId)
+        {
+            string[] profiles = profile.Split(',');
+            foreach (var item in profiles)
+            {
+                string[] ids = item.Split('~');
+                if (ids[1] == "facebook")
+                {
+                    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                    Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(ids[0], _redisCache, dbr);
+                    string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, facebookText, ids[0], userId, imgUrl, url, dbr, _logger);
+                }
+                else
+                {
+                    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                    if (!string.IsNullOrEmpty(twitterText) || !string.IsNullOrEmpty(imgUrl))
+                    {
+                        twitterText = twitterText + " " + tweetUrl;
+                        string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, twitterText, ids[0], userId, imgUrl, true, dbr, _logger);
+                    }
+                    else
+                    {
+                        string data = TwitterRepository.TwitterRetweet_post(ids[0], tweetId, userId, 0, dbr, _logger, _redisCache, _appSettings);
+                    }
+                }
+            }
+            return Ok();
+        }
+
+        [HttpPost("PluginScheduleMessage")]
+        public IActionResult PluginScheduleMessage(string profile, string twitterText, string tweetId, string tweetUrl, string facebookText, string url, string imgUrl, long userId, string scheduleTime)
+        {
+            string[] profiles = profile.Split(',');
+            foreach (var item in profiles)
+            {
+                string[] ids = item.Split('~');
+                if (ids[1] == "facebook")
+                {
+                    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                    Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(ids[0], _redisCache, dbr);
+                    Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objFacebookAccount.FbUserName, facebookText.ToString(), Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, imgUrl, "https://graph.facebook.com/" + ids[0] + "/picture?type=small", scheduleTime, _appSettings, _redisCache, dbr, _logger);
+                }
+                else
+                {
+                    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                    if (!string.IsNullOrEmpty(twitterText) || !string.IsNullOrEmpty(imgUrl))
+                    {
+                        twitterText = twitterText + " " + tweetUrl;
+                        Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(ids[0], _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objTwitterAccount.twitterScreenName, twitterText, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, imgUrl, objTwitterAccount.profileImageUrl, scheduleTime, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    else
+                    {
+                        string data = TwitterRepository.TwitterRetweet_post(ids[0], tweetId, userId, 0, dbr, _logger, _redisCache, _appSettings);
+                    }
+                }
+            }
+            return Ok();
+        }
+
+
+        [HttpPost("UploadImageplugin")]
+        public IActionResult UploadImageplugin(IFormFile files)
+        {
+            string filename = "";
+            string uploads = "";
+            if (files != null)
+            {
+
+                if (files.Length > 0)
+                {
+                    var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+                    // await file.s(Path.Combine(uploads, fileName));
+                    filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                            .Parse(files.ContentDisposition)
+                            .FileName
+                            .Trim('"');
+                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                    //apiimgPath = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+
+                    uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+                    // size += file.Length;
+                    try
+                    {
+                        using (FileStream fs = System.IO.File.Create(filename))
+                        {
+                            files.CopyTo(fs);
+                            fs.Flush();
+                        }
+                        filename = uploads;
+                    }
+                    catch (System.Exception ex)
+                    {
+
+                    }
+                }
+            }
+            return Ok(uploads);
+        }
+
+
 
         [HttpPost("DraftScheduleMessage")]
         public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId, IFormFile files)

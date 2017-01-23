@@ -179,6 +179,7 @@ namespace Api.Socioboard.Controllers
                 user.ExpiryDate = DateTime.UtcNow.AddDays(1);
                 user.UserName = "Socioboard";
                 user.EmailValidateToken = "Google";
+                user.UserType = "User";
                 user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
                 try
                 {

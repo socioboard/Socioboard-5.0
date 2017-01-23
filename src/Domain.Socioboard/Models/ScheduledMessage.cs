@@ -24,4 +24,11 @@ namespace Domain.Socioboard.Models
         public virtual string url { get; set; }
         public virtual string socialprofileName { get; set; }
     }
+    public class ScheduledMessageAdmin
+    {
+        public int messageCount { get; set; }
+        public string userName { get; set; }
+        public int messagecompletedCount { get; set; }
+        public int messageremainingCount { get; set; }
+    }
 }

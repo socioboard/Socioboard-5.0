@@ -83,6 +83,13 @@ dashboard = function () {
         height: '400px',
         alwaysVisible: true
     });
+    $('.active_acc_list').slimScroll({
+        color: '#424242',
+        size: '10px',
+        height: '300px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
 };
 
 

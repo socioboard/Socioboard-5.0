@@ -82,7 +82,7 @@ namespace Socioboard.Controllers
             return View();
         }
 
-
+        [HttpGet]
         public ActionResult getGoogleLoginUrl(string plan)
         {
             HttpContext.Session.SetObjectAsJson("googlepluslogin","Google_Login");

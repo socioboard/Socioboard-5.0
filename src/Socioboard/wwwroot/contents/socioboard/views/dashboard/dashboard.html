@@ -13,7 +13,7 @@
             <div class="col s12 m6 l3">
                 <div class="card red white-text">
                     <div class="card-content ">
-                        <p class="card-stats-title"><i class="fa fa-comments fa-fw d_card_icon"></i>Incoming Messages</p>
+                        <p class="card-stats-title truncate"><i class="fa fa-comments fa-fw d_card_icon"></i>Incoming Messages</p>
                         <h4 class="card-stats-number">{{TotaltIncommingMessage}}</h4>
                     </div>
                     <div class="card-action center">
@@ -88,12 +88,12 @@
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}</span>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{fbProfile.fbUserName}}">{{fbProfile.fbUserName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Friends:</span> {{fbProfile.friends}}</p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}}</span> </p>
                                     </div>
                                     <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <span class="card-title grey-text text-darken-4 truncate" title="{{fbProfile.fbUserName}}">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
                                         <p>{{fbProfile.about}}</p>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Designation"></i><span class="cyan-text text-darken-2">Designation:</span> <span title="{{fbProfile.workPosition}}">{{fbProfile.workPosition}}</span> </p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}} </span> </p>
@@ -118,7 +118,7 @@
                                         <!--<a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>-->
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}</span>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{fbProfile.fbUserName}}">{{fbProfile.fbUserName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Fans:</span> {{fbProfile.friends}}</p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}}</span> </p>
                                     </div>
@@ -146,7 +146,7 @@
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{twtProfile.twitterScreenName}}</span>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{twtProfile.twitterScreenName}}">{{twtProfile.twitterScreenName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator"></i><span class="cyan-text text-darken-2">Followers:</span> {{twtProfile.followersCount}}</p>
                                         <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2 activator"></i><span class="cyan-text text-darken-2">Following:</span> {{twtProfile.followingCount}}</p>
                                     </div>
@@ -173,7 +173,7 @@
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}</span>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{gplusProfile.gpUserName}}">{{gplusProfile.gpUserName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{gplusProfile.haveYouInCircles}}</p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{gplusProfile.emailId}}">{{gplusProfile.emailId}} </span></p>
                                     </div>
@@ -197,11 +197,11 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="/contents/socioboard/images/G-Ana-icon.png" alt="{{gAProfile.gaProfileName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/g_ana_icon.png" class="card_profile_socio_icon" style="height: 9%;">
+                                        <img src="/contents/socioboard/images/g_ana_icon.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{gAProfile.gaProfileName}}</span>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{gAProfile.gaProfileName}}">{{gAProfile.gaProfileName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> <span class="cyan-text text-darken-2">Visits:</span>{{gAProfile.visits}}</p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{gAProfile.views}}</p>
                                     </div>
@@ -228,7 +228,7 @@
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="User Name">{{insProfile.insUserName}}</span>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{insProfile.insUserName}}">{{insProfile.insUserName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{insProfile.followers}}</p>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> {{insProfile.followedBy}}</p>
                                         <!--<p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>-->
@@ -834,7 +834,7 @@
                     <div class="row">
                         <div class="input-field col s12">
                             <select multiple  id="composeProfiles" >
-                                <option value="" disabled selected>Choose your option</option>
+                                <option value="" disabled selected>Select Your Account</option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
@@ -1053,7 +1053,33 @@
             </div>
         </div>
 
-    
+    <!-- Active Account Modal  -->
+    <div id="ActiveProfileModal" class="modal">
+        <div class="modal-content">
+            <h4>SELECT YOUR ACCOUNTS</h4>
+            <h6>As you have downgraded your account, you can only use upto {{MaxCount}} profiles. As a {{AccountType}} user, you have added {{profileCount}} profiles. Please choose which {{MaxCount}} among them you would like to retain</h6>
+            <div class="active_acc_list">
+                <ul class="collection ">
+                    <li class="collection-item avatar" ng-repeat="profile in lstProfiles">
+                        <div class="left">
+                            <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle">
+                            <span class="title">{{profile.profileName}}</span>
+                            <p>Connected</p>
+                        </div>
+                        <p class="right">
+                            <input type="checkbox" id="{{profile.profileId}}" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}"></label>
+                        </p>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>-->
+            <a href="#!" ng-click="AddSelectedProfiles()" class="modal-action waves-effect waves-green btn-flat">Retain Profiles</a>
+        </div>
+    </div>
 </div>
 
 

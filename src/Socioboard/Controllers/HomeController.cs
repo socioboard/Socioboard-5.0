@@ -7,33 +7,75 @@ using Socioboard.Extensions;
 using Socioboard.Helpers;
 using System.Net.Http;
 using Domain.Socioboard.Models;
-
+using Microsoft.Extensions.Logging;
 
 namespace Socioboard.Controllers
 {
     public class HomeController : Controller
     {
         private Helpers.AppSettings _appSettings;
-
-        public HomeController(Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
+        private readonly ILogger _logger;
+        public HomeController(ILogger<HomeController> logger, Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
         {
             _appSettings = settings.Value;
+            _logger = logger;
         }
         // [ResponseCache(Duration = 100)]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+
             if (user == null)
             {
                 return RedirectToAction("Index", "Index");
             }
+
             try
             {
+                if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
+                {
+                    ViewBag.AccountType = "Free";
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
+                {
+                    ViewBag.AccountType = "Deluxe";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Premium)
+                {
+                    ViewBag.AccountType = "Premium";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Topaz)
+                {
+                    ViewBag.AccountType = "Topaz";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Platinum)
+                {
+                    ViewBag.AccountType = "Platinum";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Gold)
+                {
+                    ViewBag.AccountType = "Gold";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Ruby)
+                {
+                    ViewBag.AccountType = "Ruby";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Standard)
+                {
+                    ViewBag.AccountType = "Standard";
+
+                }
                 if (user.ExpiryDate < DateTime.UtcNow)
                 {
                     //return RedirectToAction("UpgradePlans", "Index");
-                    if(user.TrailStatus!=Domain.Socioboard.Enum.UserTrailStatus.inactive)
+                    if (user.TrailStatus != Domain.Socioboard.Enum.UserTrailStatus.inactive)
                     {
                         List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
                         Param.Add(new KeyValuePair<string, string>("Id", user.Id.ToString()));
@@ -72,7 +114,23 @@ namespace Socioboard.Controllers
                         {
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
                             ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
+                            string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+                            int count = Convert.ToInt32(profileCount);
+                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                            ViewBag.profileCount = count;
+                            ViewBag.MaxCount = MaxCount;
+                            ViewBag.AccountType = user.AccountType;
+                            if (count > MaxCount)
+                            {
+                                ViewBag.downgrade = "true";
+                            }
+                            else
+                            {
+                                ViewBag.downgrade = "false";
+                            }
                         }
+
+
 
                     }
                     else
@@ -85,6 +143,19 @@ namespace Socioboard.Controllers
                         {
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
                             ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
+                            string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+                            int count = Convert.ToInt32(profileCount);
+                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                            ViewBag.profileCount = count;
+                            ViewBag.MaxCount = MaxCount;
+                            if (count > MaxCount)
+                            {
+                                ViewBag.downgrade = "true";
+                            }
+                            else
+                            {
+                                ViewBag.downgrade = "false";
+                            }
                         }
 
                     }
@@ -109,6 +180,74 @@ namespace Socioboard.Controllers
             return View();
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> PluginComposeMessage()
+        {
+            string profile = Request.Form["profile"];
+            string twitterText = Request.Form["twitterText"];
+            string tweetId = Request.Form["tweetId"];
+            string tweetUrl = Request.Form["tweetUrl"];
+            string facebookText = Request.Form["facebookText"];
+            string url = Request.Form["url"];
+            string imgUrl = Request.Form["imgUrl"];
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user == null)
+            {
+                return View("Rlogin");
+            }
+            List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
+            Param.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+            Param.Add(new KeyValuePair<string, string>("tweetUrl", tweetUrl));
+            Param.Add(new KeyValuePair<string, string>("facebookText", facebookText));
+            Param.Add(new KeyValuePair<string, string>("url", url));
+            Param.Add(new KeyValuePair<string, string>("imgUrl", imgUrl));
+            Param.Add(new KeyValuePair<string, string>("tweetId", tweetId));
+            Param.Add(new KeyValuePair<string, string>("twitterText", twitterText));
+            Param.Add(new KeyValuePair<string, string>("profile", profile));
+            HttpResponseMessage respon = await WebApiReq.PostReq("/api/SocialMessages/PluginComposemessage", Param, "", "", _appSettings.ApiDomain);
+            if (respon.IsSuccessStatusCode)
+            {
+            }
+            return Content("");
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> PluginScheduleMessage(string scheduleTime, string clientTime)
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user == null)
+            {
+                return View("Rlogin");
+            }
+            string profiles = Request.Form["profile"];
+            string twitterText = Request.Form["twitterText"];
+            string tweetId = Request.Form["tweetId"];
+            string tweetUrl = Request.Form["tweetUrl"];
+            string facebookText = Request.Form["facebookText"];
+            string url = Request.Form["url"];
+            string imgUrl = Request.Form["imgUrl"];
+            string sdTime = Convert.ToDateTime(scheduleTime).ToString("yyyy-MM-dd HH:mm:ss");
+            List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
+            Param.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+            Param.Add(new KeyValuePair<string, string>("tweetUrl", tweetUrl));
+            Param.Add(new KeyValuePair<string, string>("facebookText", facebookText));
+            Param.Add(new KeyValuePair<string, string>("url", url));
+            Param.Add(new KeyValuePair<string, string>("imgUrl", imgUrl));
+            Param.Add(new KeyValuePair<string, string>("tweetId", tweetId));
+            Param.Add(new KeyValuePair<string, string>("twitterText", twitterText));
+            Param.Add(new KeyValuePair<string, string>("profile", profiles));
+            Param.Add(new KeyValuePair<string, string>("scheduleTime", sdTime));
+            HttpResponseMessage respon = await WebApiReq.PostReq("/api/SocialMessages/PluginScheduleMessage", Param, "", "", _appSettings.ApiDomain);
+            if (respon.IsSuccessStatusCode)
+            {
+            }
+            return Content("");
+        }
+
+
+
         [HttpGet]
         public string changeSelectdGroupId(long groupId)
         {
@@ -129,6 +268,21 @@ namespace Socioboard.Controllers
             return Ok();
         }
 
+        [ResponseCache(Duration = 100)]
+        [HttpGet]
+        public IActionResult AdminLogout()
+        {
+            HttpContext.Session.Remove("User");
+            HttpContext.Session.Remove("selectedGroupId");
+            HttpContext.Session.Clear();
+            ViewBag.user = null;
+            ViewBag.selectedGroupId = null;
+            ViewBag.groupProfiles = null;
+            //return View("Company");
+            //return RedirectToAction("Index", "Company");
+            return Ok();
+        }
+
         [HttpGet]
         public bool IsSessionExist()
         {
@@ -142,7 +296,7 @@ namespace Socioboard.Controllers
                 {
                     if (user.ExpiryDate < DateTime.UtcNow)
                     {
-                       // return false;
+                        // return false;
 
                     }
                 }
@@ -360,7 +514,7 @@ namespace Socioboard.Controllers
                                 {
                                     if ((user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.notadded || user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.inprogress) && (user.AccountType != Domain.Socioboard.Enum.SBAccountType.Free))
                                     {
-                                        
+
                                         Domain.Socioboard.Models.Package _Package = await respons.Content.ReadAsAsync<Domain.Socioboard.Models.Package>();
                                         HttpContext.Session.SetObjectAsJson("Package", _Package);
                                         if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
@@ -369,7 +523,7 @@ namespace Socioboard.Controllers
                                         }
                                         else
                                         {
-                                            return RedirectToAction("paymentWithPayUMoney", "Index", new {contesnt = false });
+                                            return RedirectToAction("paymentWithPayUMoney", "Index", new { contesnt = false });
                                         }
                                     }
                                     else

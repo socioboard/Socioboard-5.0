@@ -463,6 +463,15 @@ CREATE TABLE IF NOT EXISTS `user` (
   `TrailStatus` tinyint(4) DEFAULT '0',
   `PayPalAccountStatus` tinyint(4) DEFAULT '0',
   `PaymentType` tinyint(4) DEFAULT '0',
+  `UserType` varchar(350) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `MailstatusforAccountExpiry` datetime(6) DEFAULT NULL,
+  `MailstatusbeforeAccountExpire` datetime(6) DEFAULT NULL,
+  `lastloginreminder` datetime(6) DEFAULT NULL,
+  `mailstatusforweeklyreport` datetime(6) DEFAULT NULL,
+  `mailstatusfor15daysreport` datetime(6) DEFAULT NULL,
+  `mailstatusfor30daysreport` datetime(6) DEFAULT NULL,
+  `mailstatusfor60daysreport` datetime(6) DEFAULT NULL,
+  `mailstatusfor90daysreport` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `EmailId` (`EmailId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -1,0 +1,593 @@
+﻿2017-01-14 12:39:12.168 +05:30 [Debug] Hosting starting
+2017-01-14 12:39:12.405 +05:30 [Debug] Hosting started
+2017-01-14 12:39:12.579 +05:30 [Debug] Connection id ""0HL1S9GV3QMD2"" started.
+2017-01-14 12:39:12.580 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" started.
+2017-01-14 12:39:12.781 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2017-01-14 12:39:12.781 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2017-01-14 12:39:12.911 +05:30 [Information] Request finished in 109.7782ms 200 
+2017-01-14 12:39:13.253 +05:30 [Debug] Connection id ""0HL1S9GV3QMD2"" completed keep alive response.
+2017-01-14 12:39:14.123 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2017-01-14 12:39:14.166 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"d8f10ac0-7224-481e-a8d4-7195156f2e1b"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2017-01-14 12:39:14.777 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2017-01-14 12:39:14.908 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:39:14.911 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-01-14 12:39:14.960 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-01-14 12:39:14.968 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:39:15.118 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:39:15.934 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1103.3568ms
+2017-01-14 12:39:16.310 +05:30 [Information] Request finished in 3590.8865ms 200 application/json; charset=utf-8
+2017-01-14 12:39:16.314 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" completed keep alive response.
+2017-01-14 12:39:16.845 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/favicon.ico  
+2017-01-14 12:39:16.880 +05:30 [Debug] Request did not match any routes.
+2017-01-14 12:39:16.900 +05:30 [Debug] The request path "" does not match the path filter
+2017-01-14 12:39:16.976 +05:30 [Information] Request finished in 382.3494ms 404 
+2017-01-14 12:39:16.977 +05:30 [Debug] Connection id ""0HL1S9GV3QMD2"" completed keep alive response.
+2017-01-14 12:39:58.826 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/Login application/x-www-form-urlencoded 54
+2017-01-14 12:39:58.827 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/Login"'.
+2017-01-14 12:39:58.829 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)"
+2017-01-14 12:40:03.040 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" with arguments (["Domain.Socioboard.ViewModels.UserLoginViewModel"]) - ModelState is Valid
+2017-01-14 12:40:17.097 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:40:17.216 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:40:17.276 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:40:17.486 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" in 18604.7529ms
+2017-01-14 12:40:17.602 +05:30 [Information] Request finished in 18827.9306ms 200 application/json; charset=utf-8
+2017-01-14 12:40:17.603 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" completed keep alive response.
+2017-01-14 12:40:25.709 +05:30 [Debug] Connection id ""0HL1S9GV3QMD2"" received FIN.
+2017-01-14 12:40:25.809 +05:30 [Debug] Connection id ""0HL1S9GV3QMD2"" disconnecting.
+2017-01-14 12:40:25.811 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 12:40:25.813 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 12:40:25.815 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:40:25.876 +05:30 [Debug] Connection id ""0HL1S9GV3QMD2"" sending FIN.
+2017-01-14 12:40:29.333 +05:30 [Debug] Connection id ""0HL1S9GV3QMD2"" sent FIN with status "0".
+2017-01-14 12:40:29.398 +05:30 [Debug] Connection id ""0HL1S9GV3QMD2"" stopped.
+2017-01-14 12:40:31.846 +05:30 [Debug] Connection id ""0HL1S9GV3QMD4"" started.
+2017-01-14 12:40:31.927 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 12:40:31.928 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 12:40:31.929 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:40:32.400 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:40:34.978 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:40:34.979 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:40:35.015 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:40:35.061 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 9212.4918ms
+2017-01-14 12:40:35.268 +05:30 [Information] Request finished in 9409.3024ms 200 application/json; charset=utf-8
+2017-01-14 12:40:35.270 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" completed keep alive response.
+2017-01-14 12:40:35.339 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:40:36.675 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:40:36.675 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:40:36.677 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:40:36.737 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 4753.0199ms
+2017-01-14 12:40:36.761 +05:30 [Information] Request finished in 4900.2488ms 200 application/json; charset=utf-8
+2017-01-14 12:40:36.766 +05:30 [Debug] Connection id ""0HL1S9GV3QMD4"" completed keep alive response.
+2017-01-14 12:42:10.952 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" received FIN.
+2017-01-14 12:42:10.952 +05:30 [Debug] Connection id ""0HL1S9GV3QMD4"" received FIN.
+2017-01-14 12:42:10.953 +05:30 [Debug] Connection id ""0HL1S9GV3QMD5"" started.
+2017-01-14 12:42:10.954 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" disconnecting.
+2017-01-14 12:42:10.992 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" sending FIN.
+2017-01-14 12:42:10.994 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" sent FIN with status "0".
+2017-01-14 12:42:10.995 +05:30 [Debug] Connection id ""0HL1S9GV3QMD3"" stopped.
+2017-01-14 12:42:11.015 +05:30 [Debug] Connection id ""0HL1S9GV3QMD4"" disconnecting.
+2017-01-14 12:42:11.017 +05:30 [Debug] Connection id ""0HL1S9GV3QMD4"" sending FIN.
+2017-01-14 12:42:11.017 +05:30 [Debug] Connection id ""0HL1S9GV3QMD4"" sent FIN with status "0".
+2017-01-14 12:42:11.018 +05:30 [Debug] Connection id ""0HL1S9GV3QMD4"" stopped.
+2017-01-14 12:42:11.037 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 12:42:11.039 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 12:42:11.043 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:42:14.343 +05:30 [Debug] Connection id ""0HL1S9GV3QMD6"" started.
+2017-01-14 12:42:14.394 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 12:42:14.395 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 12:42:14.397 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:42:16.868 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:42:17.978 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:42:18.522 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:42:18.523 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:42:18.524 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:42:18.534 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 7480.2973ms
+2017-01-14 12:42:18.541 +05:30 [Information] Request finished in 7522.7891ms 200 application/json; charset=utf-8
+2017-01-14 12:42:18.542 +05:30 [Debug] Connection id ""0HL1S9GV3QMD5"" completed keep alive response.
+2017-01-14 12:42:21.711 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:42:21.712 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:42:21.715 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:42:21.726 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 7320.1387ms
+2017-01-14 12:42:21.729 +05:30 [Information] Request finished in 7381.9324ms 200 application/json; charset=utf-8
+2017-01-14 12:42:21.730 +05:30 [Debug] Connection id ""0HL1S9GV3QMD6"" completed keep alive response.
+2017-01-14 12:45:12.537 +05:30 [Debug] Connection id ""0HL1S9GV3QMD5"" received FIN.
+2017-01-14 12:45:12.537 +05:30 [Debug] Connection id ""0HL1S9GV3QMD6"" received FIN.
+2017-01-14 12:45:12.538 +05:30 [Debug] Connection id ""0HL1S9GV3QMD5"" disconnecting.
+2017-01-14 12:45:12.541 +05:30 [Debug] Connection id ""0HL1S9GV3QMD6"" disconnecting.
+2017-01-14 12:45:12.543 +05:30 [Debug] Connection id ""0HL1S9GV3QMD5"" sending FIN.
+2017-01-14 12:45:12.544 +05:30 [Debug] Connection id ""0HL1S9GV3QMD6"" sending FIN.
+2017-01-14 12:45:12.544 +05:30 [Debug] Connection id ""0HL1S9GV3QMD5"" sent FIN with status "0".
+2017-01-14 12:45:12.545 +05:30 [Debug] Connection id ""0HL1S9GV3QMD6"" sent FIN with status "0".
+2017-01-14 12:45:12.546 +05:30 [Debug] Connection id ""0HL1S9GV3QMD5"" stopped.
+2017-01-14 12:45:12.547 +05:30 [Debug] Connection id ""0HL1S9GV3QMD6"" stopped.
+2017-01-14 12:46:58.061 +05:30 [Debug] Connection id ""0HL1S9GV3QMD7"" started.
+2017-01-14 12:46:58.091 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/Login application/x-www-form-urlencoded 54
+2017-01-14 12:46:58.092 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/Login"'.
+2017-01-14 12:46:58.094 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)"
+2017-01-14 12:47:01.167 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" with arguments (["Domain.Socioboard.ViewModels.UserLoginViewModel"]) - ModelState is Valid
+2017-01-14 12:47:07.121 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:47:07.122 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:47:07.126 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:47:07.135 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" in 9035.8663ms
+2017-01-14 12:47:07.139 +05:30 [Information] Request finished in 9074.4316ms 200 application/json; charset=utf-8
+2017-01-14 12:47:07.140 +05:30 [Debug] Connection id ""0HL1S9GV3QMD7"" completed keep alive response.
+2017-01-14 12:47:08.850 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 12:47:08.851 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 12:47:08.852 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:47:11.558 +05:30 [Debug] Connection id ""0HL1S9GV3QMD8"" started.
+2017-01-14 12:47:11.573 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 12:47:11.574 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 12:47:11.575 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:47:13.629 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:47:14.650 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:47:16.233 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:47:16.234 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:47:16.235 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:47:16.244 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 7387.1057ms
+2017-01-14 12:47:16.248 +05:30 [Information] Request finished in 7407.5393ms 200 application/json; charset=utf-8
+2017-01-14 12:47:16.250 +05:30 [Debug] Connection id ""0HL1S9GV3QMD7"" completed keep alive response.
+2017-01-14 12:47:18.386 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:47:18.388 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:47:18.394 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:47:18.402 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 6822.9985ms
+2017-01-14 12:47:18.413 +05:30 [Information] Request finished in 6845.6413ms 200 application/json; charset=utf-8
+2017-01-14 12:47:18.415 +05:30 [Debug] Connection id ""0HL1S9GV3QMD8"" completed keep alive response.
+2017-01-14 12:49:12.537 +05:30 [Debug] Connection id ""0HL1S9GV3QMD7"" received FIN.
+2017-01-14 12:49:12.538 +05:30 [Debug] Connection id ""0HL1S9GV3QMD8"" received FIN.
+2017-01-14 12:49:12.539 +05:30 [Debug] Connection id ""0HL1S9GV3QMD7"" disconnecting.
+2017-01-14 12:49:12.543 +05:30 [Debug] Connection id ""0HL1S9GV3QMD7"" sending FIN.
+2017-01-14 12:49:12.546 +05:30 [Debug] Connection id ""0HL1S9GV3QMD7"" sent FIN with status "0".
+2017-01-14 12:49:12.547 +05:30 [Debug] Connection id ""0HL1S9GV3QMD7"" stopped.
+2017-01-14 12:49:12.551 +05:30 [Debug] Connection id ""0HL1S9GV3QMD8"" disconnecting.
+2017-01-14 12:49:12.554 +05:30 [Debug] Connection id ""0HL1S9GV3QMD8"" sending FIN.
+2017-01-14 12:49:12.556 +05:30 [Debug] Connection id ""0HL1S9GV3QMD8"" sent FIN with status "0".
+2017-01-14 12:49:12.557 +05:30 [Debug] Connection id ""0HL1S9GV3QMD8"" stopped.
+2017-01-14 12:50:34.711 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" started.
+2017-01-14 12:50:34.730 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 12:50:34.748 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 12:50:34.749 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:50:40.301 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" started.
+2017-01-14 12:50:40.305 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 12:50:40.306 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 12:50:40.306 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:50:41.465 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:50:43.193 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:50:43.194 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:50:43.196 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:50:43.201 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 8449.7262ms
+2017-01-14 12:50:43.209 +05:30 [Information] Request finished in 8484.5852ms 200 application/json; charset=utf-8
+2017-01-14 12:50:43.211 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" completed keep alive response.
+2017-01-14 12:50:43.641 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:50:44.655 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:50:44.656 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:50:44.664 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:50:44.706 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 4363.6866ms
+2017-01-14 12:50:44.762 +05:30 [Information] Request finished in 4420.4874ms 200 application/json; charset=utf-8
+2017-01-14 12:50:44.763 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" completed keep alive response.
+2017-01-14 12:51:30.059 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 12:51:30.063 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 12:51:30.065 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:51:34.019 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 12:51:34.128 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 12:51:34.129 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:51:35.745 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:51:37.451 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:51:37.452 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:51:37.454 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:51:37.461 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:51:37.483 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 7397.4635ms
+2017-01-14 12:51:37.521 +05:30 [Information] Request finished in 7489.0819ms 200 application/json; charset=utf-8
+2017-01-14 12:51:37.522 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" completed keep alive response.
+2017-01-14 12:51:38.458 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:51:38.459 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:51:38.464 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:51:38.508 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 4339.3653ms
+2017-01-14 12:51:38.516 +05:30 [Information] Request finished in 4637.3587ms 200 application/json; charset=utf-8
+2017-01-14 12:51:38.517 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" completed keep alive response.
+2017-01-14 12:52:15.066 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 12:52:15.068 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 12:52:15.070 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:52:15.080 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 12:52:15.082 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 12:52:15.083 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:52:18.169 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:52:18.218 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:52:19.231 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:52:19.232 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:52:19.234 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:52:19.240 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 4164.5615ms
+2017-01-14 12:52:19.249 +05:30 [Information] Request finished in 4182.9147ms 200 application/json; charset=utf-8
+2017-01-14 12:52:19.250 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" completed keep alive response.
+2017-01-14 12:52:21.249 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:52:21.251 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:52:21.256 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:52:21.270 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 6175.6267ms
+2017-01-14 12:52:21.280 +05:30 [Information] Request finished in 6203.4335ms 200 application/json; charset=utf-8
+2017-01-14 12:52:21.281 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" completed keep alive response.
+2017-01-14 12:55:02.328 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" received FIN.
+2017-01-14 12:55:02.328 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" received FIN.
+2017-01-14 12:55:02.329 +05:30 [Debug] Connection id ""0HL1S9GV3QMDB"" started.
+2017-01-14 12:55:02.330 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" disconnecting.
+2017-01-14 12:55:02.334 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" sending FIN.
+2017-01-14 12:55:02.336 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" sent FIN with status "0".
+2017-01-14 12:55:02.336 +05:30 [Debug] Connection id ""0HL1S9GV3QMD9"" stopped.
+2017-01-14 12:55:02.385 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" disconnecting.
+2017-01-14 12:55:02.406 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" sending FIN.
+2017-01-14 12:55:02.407 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" sent FIN with status "0".
+2017-01-14 12:55:02.408 +05:30 [Debug] Connection id ""0HL1S9GV3QMDA"" stopped.
+2017-01-14 12:55:02.413 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 12:55:02.414 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 12:55:02.418 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:55:05.687 +05:30 [Debug] Connection id ""0HL1S9GV3QMDC"" started.
+2017-01-14 12:55:05.733 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 12:55:05.734 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 12:55:05.736 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 12:55:07.826 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:55:08.999 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:55:09.760 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:55:09.761 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:55:09.869 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:55:09.883 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 7453.5291ms
+2017-01-14 12:55:09.887 +05:30 [Information] Request finished in 7483.5245ms 200 application/json; charset=utf-8
+2017-01-14 12:55:09.889 +05:30 [Debug] Connection id ""0HL1S9GV3QMDB"" completed keep alive response.
+2017-01-14 12:55:10.428 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 12:55:10.429 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:55:10.466 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:55:10.501 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 4736.8678ms
+2017-01-14 12:55:10.584 +05:30 [Information] Request finished in 4821.6828ms 200 application/json; charset=utf-8
+2017-01-14 12:55:10.590 +05:30 [Debug] Connection id ""0HL1S9GV3QMDC"" completed keep alive response.
+2017-01-14 12:57:12.538 +05:30 [Debug] Connection id ""0HL1S9GV3QMDB"" received FIN.
+2017-01-14 12:57:12.538 +05:30 [Debug] Connection id ""0HL1S9GV3QMDC"" received FIN.
+2017-01-14 12:57:12.539 +05:30 [Debug] Connection id ""0HL1S9GV3QMDB"" disconnecting.
+2017-01-14 12:57:12.547 +05:30 [Debug] Connection id ""0HL1S9GV3QMDB"" sending FIN.
+2017-01-14 12:57:12.548 +05:30 [Debug] Connection id ""0HL1S9GV3QMDC"" disconnecting.
+2017-01-14 12:57:12.549 +05:30 [Debug] Connection id ""0HL1S9GV3QMDB"" sent FIN with status "0".
+2017-01-14 12:57:12.555 +05:30 [Debug] Connection id ""0HL1S9GV3QMDC"" sending FIN.
+2017-01-14 12:57:12.559 +05:30 [Debug] Connection id ""0HL1S9GV3QMDB"" stopped.
+2017-01-14 12:57:12.560 +05:30 [Debug] Connection id ""0HL1S9GV3QMDC"" sent FIN with status "0".
+2017-01-14 12:57:12.562 +05:30 [Debug] Connection id ""0HL1S9GV3QMDC"" stopped.
+2017-01-14 12:59:04.329 +05:30 [Debug] Hosting starting
+2017-01-14 12:59:04.713 +05:30 [Debug] Hosting started
+2017-01-14 12:59:04.839 +05:30 [Debug] Connection id ""0HL1S9S2E944R"" started.
+2017-01-14 12:59:04.839 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" started.
+2017-01-14 12:59:05.006 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2017-01-14 12:59:05.030 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2017-01-14 12:59:05.127 +05:30 [Information] Request finished in 125.1369ms 200 
+2017-01-14 12:59:05.519 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" completed keep alive response.
+2017-01-14 12:59:07.833 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2017-01-14 12:59:07.962 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"4b2ef423-6f0c-45bd-8ecb-54965eccc9ae"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2017-01-14 12:59:09.313 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2017-01-14 12:59:09.492 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 12:59:09.496 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-01-14 12:59:09.560 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-01-14 12:59:09.566 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 12:59:09.601 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 12:59:10.454 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 893.6832ms
+2017-01-14 12:59:11.081 +05:30 [Information] Request finished in 6077.175ms 200 application/json; charset=utf-8
+2017-01-14 12:59:11.084 +05:30 [Debug] Connection id ""0HL1S9S2E944R"" completed keep alive response.
+2017-01-14 12:59:55.970 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/Login application/x-www-form-urlencoded 54
+2017-01-14 12:59:55.971 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/Login"'.
+2017-01-14 12:59:55.973 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)"
+2017-01-14 12:59:59.462 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" with arguments (["Domain.Socioboard.ViewModels.UserLoginViewModel"]) - ModelState is Valid
+2017-01-14 13:00:17.516 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:00:17.523 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:00:17.546 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:00:17.772 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" in 21786.3306ms
+2017-01-14 13:00:17.778 +05:30 [Information] Request finished in 21824.3381ms 200 application/json; charset=utf-8
+2017-01-14 13:00:17.780 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" completed keep alive response.
+2017-01-14 13:00:21.343 +05:30 [Debug] Connection id ""0HL1S9S2E944R"" received FIN.
+2017-01-14 13:00:21.349 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:00:21.350 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:00:21.351 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:00:21.371 +05:30 [Debug] Connection id ""0HL1S9S2E944R"" disconnecting.
+2017-01-14 13:00:23.883 +05:30 [Debug] Connection id ""0HL1S9S2E944R"" sending FIN.
+2017-01-14 13:00:23.905 +05:30 [Debug] Connection id ""0HL1S9S2E944R"" sent FIN with status "0".
+2017-01-14 13:00:23.921 +05:30 [Debug] Connection id ""0HL1S9S2E944R"" stopped.
+2017-01-14 13:00:23.922 +05:30 [Debug] Connection id ""0HL1S9S2E944T"" started.
+2017-01-14 13:00:23.924 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 13:00:23.925 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 13:00:23.926 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:00:25.865 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:00:27.276 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:00:29.283 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:00:29.284 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:00:29.353 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:00:29.400 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 8016.105ms
+2017-01-14 13:00:29.490 +05:30 [Information] Request finished in 8110.9647ms 200 application/json; charset=utf-8
+2017-01-14 13:00:29.491 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" completed keep alive response.
+2017-01-14 13:00:35.554 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:00:35.555 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:00:35.626 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:00:35.800 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 11704.4275ms
+2017-01-14 13:00:36.036 +05:30 [Information] Request finished in 12047.065ms 200 application/json; charset=utf-8
+2017-01-14 13:00:36.038 +05:30 [Debug] Connection id ""0HL1S9S2E944T"" completed keep alive response.
+2017-01-14 13:00:51.927 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/Login application/x-www-form-urlencoded 54
+2017-01-14 13:00:51.928 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/Login"'.
+2017-01-14 13:00:51.930 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)"
+2017-01-14 13:00:55.368 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" with arguments (["Domain.Socioboard.ViewModels.UserLoginViewModel"]) - ModelState is Valid
+2017-01-14 13:00:59.274 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:00:59.278 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:00:59.281 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:00:59.286 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" in 7351.9614ms
+2017-01-14 13:00:59.329 +05:30 [Information] Request finished in 7384.0056ms 200 application/json; charset=utf-8
+2017-01-14 13:00:59.330 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" completed keep alive response.
+2017-01-14 13:01:06.000 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:01:06.001 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:01:06.002 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:01:08.331 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:01:11.436 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 13:01:11.437 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 13:01:11.438 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:01:13.414 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:01:13.415 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:01:13.418 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:01:13.424 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 7420.1298ms
+2017-01-14 13:01:13.430 +05:30 [Information] Request finished in 7474.8271ms 200 application/json; charset=utf-8
+2017-01-14 13:01:13.434 +05:30 [Debug] Connection id ""0HL1S9S2E944T"" completed keep alive response.
+2017-01-14 13:01:14.640 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:01:18.849 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:01:18.856 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:01:18.859 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:01:18.918 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 7426.0397ms
+2017-01-14 13:01:18.932 +05:30 [Information] Request finished in 7586.7996ms 200 application/json; charset=utf-8
+2017-01-14 13:01:18.935 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" completed keep alive response.
+2017-01-14 13:03:04.816 +05:30 [Debug] Connection id ""0HL1S9S2E944T"" received FIN.
+2017-01-14 13:03:04.817 +05:30 [Debug] Connection id ""0HL1S9S2E944T"" disconnecting.
+2017-01-14 13:03:04.817 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" received FIN.
+2017-01-14 13:03:04.827 +05:30 [Debug] Connection id ""0HL1S9S2E944T"" sending FIN.
+2017-01-14 13:03:04.828 +05:30 [Debug] Connection id ""0HL1S9S2E944T"" sent FIN with status "0".
+2017-01-14 13:03:04.829 +05:30 [Debug] Connection id ""0HL1S9S2E944T"" stopped.
+2017-01-14 13:03:04.837 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" disconnecting.
+2017-01-14 13:03:04.838 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" sending FIN.
+2017-01-14 13:03:04.839 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" sent FIN with status "0".
+2017-01-14 13:03:04.839 +05:30 [Debug] Connection id ""0HL1S9S2E944S"" stopped.
+2017-01-14 13:05:06.032 +05:30 [Debug] Hosting starting
+2017-01-14 13:05:06.721 +05:30 [Debug] Hosting started
+2017-01-14 13:05:07.009 +05:30 [Debug] Connection id ""0HL1S9VEC6807"" started.
+2017-01-14 13:05:07.016 +05:30 [Debug] Connection id ""0HL1S9VEC6808"" started.
+2017-01-14 13:05:08.242 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2017-01-14 13:05:08.252 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2017-01-14 13:05:09.012 +05:30 [Information] Request finished in 601.3315ms 200 
+2017-01-14 13:05:09.799 +05:30 [Debug] Connection id ""0HL1S9VEC6807"" completed keep alive response.
+2017-01-14 13:05:12.091 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2017-01-14 13:05:12.161 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"ad2de323-c538-42a7-9eff-f4d66446f9a2"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2017-01-14 13:05:13.380 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2017-01-14 13:05:13.795 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:05:13.799 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-01-14 13:05:13.847 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-01-14 13:05:13.853 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:05:13.939 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:05:14.916 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1024.3802ms
+2017-01-14 13:05:16.023 +05:30 [Information] Request finished in 8204.9882ms 200 application/json; charset=utf-8
+2017-01-14 13:05:16.075 +05:30 [Debug] Connection id ""0HL1S9VEC6808"" completed keep alive response.
+2017-01-14 13:05:16.260 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/favicon.ico  
+2017-01-14 13:05:16.265 +05:30 [Debug] Request did not match any routes.
+2017-01-14 13:05:16.288 +05:30 [Debug] The request path "" does not match the path filter
+2017-01-14 13:05:16.321 +05:30 [Information] Request finished in 72.8618ms 404 
+2017-01-14 13:05:16.322 +05:30 [Debug] Connection id ""0HL1S9VEC6807"" completed keep alive response.
+2017-01-14 13:06:38.007 +05:30 [Debug] Connection id ""0HL1S9VEC6808"" received FIN.
+2017-01-14 13:06:38.007 +05:30 [Debug] Connection id ""0HL1S9VEC6807"" received FIN.
+2017-01-14 13:06:38.013 +05:30 [Debug] Connection id ""0HL1S9VEC6808"" disconnecting.
+2017-01-14 13:06:38.030 +05:30 [Debug] Connection id ""0HL1S9VEC6807"" disconnecting.
+2017-01-14 13:06:38.031 +05:30 [Debug] Connection id ""0HL1S9VEC6808"" sending FIN.
+2017-01-14 13:06:38.030 +05:30 [Debug] Connection id ""0HL1S9VEC6809"" started.
+2017-01-14 13:06:38.036 +05:30 [Debug] Connection id ""0HL1S9VEC6807"" sending FIN.
+2017-01-14 13:06:38.040 +05:30 [Debug] Connection id ""0HL1S9VEC6807"" sent FIN with status "0".
+2017-01-14 13:06:38.040 +05:30 [Debug] Connection id ""0HL1S9VEC6808"" sent FIN with status "0".
+2017-01-14 13:06:38.048 +05:30 [Debug] Connection id ""0HL1S9VEC6808"" stopped.
+2017-01-14 13:06:38.048 +05:30 [Debug] Connection id ""0HL1S9VEC6807"" stopped.
+2017-01-14 13:06:38.050 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/Login application/x-www-form-urlencoded 54
+2017-01-14 13:06:38.052 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/Login"'.
+2017-01-14 13:06:38.055 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)"
+2017-01-14 13:06:41.523 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" with arguments (["Domain.Socioboard.ViewModels.UserLoginViewModel"]) - ModelState is Valid
+2017-01-14 13:06:55.206 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:06:55.212 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:06:55.213 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:06:55.390 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)" in 17327.3082ms
+2017-01-14 13:06:55.400 +05:30 [Information] Request finished in 17347.6747ms 200 application/json; charset=utf-8
+2017-01-14 13:06:55.402 +05:30 [Debug] Connection id ""0HL1S9VEC6809"" completed keep alive response.
+2017-01-14 13:07:17.316 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:07:17.317 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:07:17.318 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:07:21.217 +05:30 [Debug] Connection id ""0HL1S9VEC680A"" started.
+2017-01-14 13:07:21.234 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 13:07:21.236 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 13:07:21.241 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:07:22.258 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:07:24.282 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:07:24.575 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:07:24.576 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:07:24.578 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:07:24.597 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 7251.0528ms
+2017-01-14 13:07:24.635 +05:30 [Information] Request finished in 7290.1228ms 200 application/json; charset=utf-8
+2017-01-14 13:07:24.643 +05:30 [Debug] Connection id ""0HL1S9VEC6809"" completed keep alive response.
+2017-01-14 13:07:34.304 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:07:34.311 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:07:34.322 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:07:34.337 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 13082.1036ms
+2017-01-14 13:07:34.347 +05:30 [Information] Request finished in 13115.2159ms 200 application/json; charset=utf-8
+2017-01-14 13:07:34.348 +05:30 [Debug] Connection id ""0HL1S9VEC680A"" completed keep alive response.
+2017-01-14 13:09:06.983 +05:30 [Debug] Connection id ""0HL1S9VEC680A"" received FIN.
+2017-01-14 13:09:06.983 +05:30 [Debug] Connection id ""0HL1S9VEC6809"" received FIN.
+2017-01-14 13:09:06.985 +05:30 [Debug] Connection id ""0HL1S9VEC680A"" disconnecting.
+2017-01-14 13:09:06.991 +05:30 [Debug] Connection id ""0HL1S9VEC6809"" disconnecting.
+2017-01-14 13:09:06.992 +05:30 [Debug] Connection id ""0HL1S9VEC680A"" sending FIN.
+2017-01-14 13:09:07.001 +05:30 [Debug] Connection id ""0HL1S9VEC6809"" sending FIN.
+2017-01-14 13:09:07.006 +05:30 [Debug] Connection id ""0HL1S9VEC6809"" sent FIN with status "0".
+2017-01-14 13:09:07.007 +05:30 [Debug] Connection id ""0HL1S9VEC6809"" stopped.
+2017-01-14 13:09:07.005 +05:30 [Debug] Connection id ""0HL1S9VEC680A"" sent FIN with status "0".
+2017-01-14 13:09:07.009 +05:30 [Debug] Connection id ""0HL1S9VEC680A"" stopped.
+2017-01-14 13:09:26.872 +05:30 [Debug] Connection id ""0HL1S9VEC680B"" started.
+2017-01-14 13:09:26.880 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:09:26.882 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:09:26.885 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:09:30.036 +05:30 [Debug] Connection id ""0HL1S9VEC680C"" started.
+2017-01-14 13:09:30.044 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 13:09:30.046 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 13:09:30.046 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:09:32.088 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:09:33.078 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:09:34.792 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:09:34.794 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:09:34.795 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:09:34.804 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 7913.3102ms
+2017-01-14 13:09:34.814 +05:30 [Information] Request finished in 7933.9154ms 200 application/json; charset=utf-8
+2017-01-14 13:09:34.814 +05:30 [Debug] Connection id ""0HL1S9VEC680B"" completed keep alive response.
+2017-01-14 13:09:36.406 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:09:36.411 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:09:36.414 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:09:36.452 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 6374.1286ms
+2017-01-14 13:09:36.476 +05:30 [Information] Request finished in 6434.3854ms 200 application/json; charset=utf-8
+2017-01-14 13:09:36.490 +05:30 [Debug] Connection id ""0HL1S9VEC680C"" completed keep alive response.
+2017-01-14 13:11:06.983 +05:30 [Debug] Connection id ""0HL1S9VEC680C"" received FIN.
+2017-01-14 13:11:06.984 +05:30 [Debug] Connection id ""0HL1S9VEC680C"" disconnecting.
+2017-01-14 13:11:06.984 +05:30 [Debug] Connection id ""0HL1S9VEC680B"" received FIN.
+2017-01-14 13:11:06.990 +05:30 [Debug] Connection id ""0HL1S9VEC680C"" sending FIN.
+2017-01-14 13:11:06.994 +05:30 [Debug] Connection id ""0HL1S9VEC680C"" sent FIN with status "0".
+2017-01-14 13:11:06.994 +05:30 [Debug] Connection id ""0HL1S9VEC680C"" stopped.
+2017-01-14 13:11:07.008 +05:30 [Debug] Connection id ""0HL1S9VEC680B"" disconnecting.
+2017-01-14 13:11:07.009 +05:30 [Debug] Connection id ""0HL1S9VEC680B"" sending FIN.
+2017-01-14 13:11:07.010 +05:30 [Debug] Connection id ""0HL1S9VEC680B"" sent FIN with status "0".
+2017-01-14 13:11:07.010 +05:30 [Debug] Connection id ""0HL1S9VEC680B"" stopped.
+2017-01-14 13:11:29.600 +05:30 [Debug] Connection id ""0HL1S9VEC680D"" started.
+2017-01-14 13:11:29.923 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:11:29.923 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:11:29.924 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:11:33.533 +05:30 [Debug] Connection id ""0HL1S9VEC680E"" started.
+2017-01-14 13:11:33.633 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 13:11:33.634 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 13:11:33.635 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:11:34.880 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:11:36.901 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:11:37.149 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:11:37.157 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:11:37.160 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:11:37.239 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 7242.012ms
+2017-01-14 13:11:37.245 +05:30 [Information] Request finished in 7610.7479ms 200 application/json; charset=utf-8
+2017-01-14 13:11:37.245 +05:30 [Debug] Connection id ""0HL1S9VEC680D"" completed keep alive response.
+2017-01-14 13:11:38.238 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:11:38.245 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:11:38.428 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:11:38.563 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 4796.0493ms
+2017-01-14 13:11:38.612 +05:30 [Information] Request finished in 4975.8212ms 200 application/json; charset=utf-8
+2017-01-14 13:11:38.613 +05:30 [Debug] Connection id ""0HL1S9VEC680E"" completed keep alive response.
+2017-01-14 13:13:06.984 +05:30 [Debug] Connection id ""0HL1S9VEC680D"" received FIN.
+2017-01-14 13:13:06.984 +05:30 [Debug] Connection id ""0HL1S9VEC680E"" received FIN.
+2017-01-14 13:13:06.989 +05:30 [Debug] Connection id ""0HL1S9VEC680D"" disconnecting.
+2017-01-14 13:13:06.993 +05:30 [Debug] Connection id ""0HL1S9VEC680D"" sending FIN.
+2017-01-14 13:13:06.994 +05:30 [Debug] Connection id ""0HL1S9VEC680D"" sent FIN with status "0".
+2017-01-14 13:13:06.994 +05:30 [Debug] Connection id ""0HL1S9VEC680D"" stopped.
+2017-01-14 13:13:07.006 +05:30 [Debug] Connection id ""0HL1S9VEC680E"" disconnecting.
+2017-01-14 13:13:07.007 +05:30 [Debug] Connection id ""0HL1S9VEC680E"" sending FIN.
+2017-01-14 13:13:07.008 +05:30 [Debug] Connection id ""0HL1S9VEC680E"" sent FIN with status "0".
+2017-01-14 13:13:07.009 +05:30 [Debug] Connection id ""0HL1S9VEC680E"" stopped.
+2017-01-14 13:16:36.553 +05:30 [Debug] Connection id ""0HL1S9VEC680F"" started.
+2017-01-14 13:16:36.631 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:16:36.633 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:16:36.635 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:16:38.799 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:16:42.819 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:16:42.821 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:16:42.823 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:16:42.830 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 6191.5962ms
+2017-01-14 13:16:42.836 +05:30 [Information] Request finished in 6267.8752ms 200 application/json; charset=utf-8
+2017-01-14 13:16:42.838 +05:30 [Debug] Connection id ""0HL1S9VEC680F"" completed keep alive response.
+2017-01-14 13:17:25.387 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:17:25.388 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:17:25.393 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:17:28.509 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:17:29.513 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:17:29.515 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:17:29.521 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:17:29.528 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 4132.9553ms
+2017-01-14 13:17:29.533 +05:30 [Information] Request finished in 4146.8798ms 200 application/json; charset=utf-8
+2017-01-14 13:17:29.534 +05:30 [Debug] Connection id ""0HL1S9VEC680F"" completed keep alive response.
+2017-01-14 13:18:40.117 +05:30 [Debug] Connection id ""0HL1S9VEC680F"" received FIN.
+2017-01-14 13:18:40.119 +05:30 [Debug] Connection id ""0HL1S9VEC680F"" disconnecting.
+2017-01-14 13:18:40.120 +05:30 [Debug] Connection id ""0HL1S9VEC680F"" sending FIN.
+2017-01-14 13:18:40.118 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" started.
+2017-01-14 13:18:40.121 +05:30 [Debug] Connection id ""0HL1S9VEC680F"" sent FIN with status "0".
+2017-01-14 13:18:40.126 +05:30 [Debug] Connection id ""0HL1S9VEC680F"" stopped.
+2017-01-14 13:18:40.136 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:18:40.137 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:18:40.140 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:18:43.185 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:18:44.194 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:18:44.195 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:18:44.196 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:18:44.201 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 4057.3983ms
+2017-01-14 13:18:44.208 +05:30 [Information] Request finished in 4075.8388ms 200 application/json; charset=utf-8
+2017-01-14 13:18:44.209 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" completed keep alive response.
+2017-01-14 13:19:34.966 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:19:34.967 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:19:34.968 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:19:38.505 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:19:41.540 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:19:41.542 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:19:41.544 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:19:41.563 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 6578.557ms
+2017-01-14 13:19:41.604 +05:30 [Information] Request finished in 6631.2786ms 200 application/json; charset=utf-8
+2017-01-14 13:19:41.606 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" completed keep alive response.
+2017-01-14 13:20:19.383 +05:30 [Debug] Connection id ""0HL1S9VEC680H"" started.
+2017-01-14 13:20:19.393 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 13:20:19.395 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 13:20:19.395 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:20:19.401 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:20:19.404 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:20:19.406 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:20:22.691 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:20:22.748 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:20:24.152 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:20:24.157 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:20:24.162 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:20:24.173 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 4768.4449ms
+2017-01-14 13:20:24.179 +05:30 [Information] Request finished in 4800.1371ms 200 application/json; charset=utf-8
+2017-01-14 13:20:24.181 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" completed keep alive response.
+2017-01-14 13:20:27.759 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:20:27.760 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:20:27.768 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:20:27.789 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 8367.353ms
+2017-01-14 13:20:27.807 +05:30 [Information] Request finished in 8408.6912ms 200 application/json; charset=utf-8
+2017-01-14 13:20:27.808 +05:30 [Debug] Connection id ""0HL1S9VEC680H"" completed keep alive response.
+2017-01-14 13:22:01.504 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" received FIN.
+2017-01-14 13:22:01.506 +05:30 [Debug] Connection id ""0HL1S9VEC680I"" started.
+2017-01-14 13:22:01.523 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" disconnecting.
+2017-01-14 13:22:01.524 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" sending FIN.
+2017-01-14 13:22:01.524 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" sent FIN with status "0".
+2017-01-14 13:22:01.525 +05:30 [Debug] Connection id ""0HL1S9VEC680G"" stopped.
+2017-01-14 13:22:01.526 +05:30 [Debug] Connection id ""0HL1S9VEC680H"" received FIN.
+2017-01-14 13:22:01.527 +05:30 [Debug] Connection id ""0HL1S9VEC680H"" disconnecting.
+2017-01-14 13:22:01.528 +05:30 [Debug] Connection id ""0HL1S9VEC680H"" sending FIN.
+2017-01-14 13:22:01.528 +05:30 [Debug] Connection id ""0HL1S9VEC680H"" sent FIN with status "0".
+2017-01-14 13:22:01.529 +05:30 [Debug] Connection id ""0HL1S9VEC680H"" stopped.
+2017-01-14 13:22:01.545 +05:30 [Debug] Connection id ""0HL1S9VEC680J"" started.
+2017-01-14 13:22:01.560 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetPaidUserAdmin  
+2017-01-14 13:22:01.561 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetPaidUserAdmin"'.
+2017-01-14 13:22:01.562 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:22:01.570 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/User/GetUnPaidUserAdmin  
+2017-01-14 13:22:01.579 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/GetUnPaidUserAdmin"'.
+2017-01-14 13:22:01.581 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)"
+2017-01-14 13:22:03.781 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:22:04.622 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-01-14 13:22:06.800 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:22:06.805 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:22:06.811 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:22:06.821 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetUnPaidUserAdmin (Api.Socioboard)" in 5234.2202ms
+2017-01-14 13:22:06.830 +05:30 [Information] Request finished in 5282.875ms 200 application/json; charset=utf-8
+2017-01-14 13:22:06.831 +05:30 [Debug] Connection id ""0HL1S9VEC680J"" completed keep alive response.
+2017-01-14 13:22:08.486 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-01-14 13:22:08.488 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-01-14 13:22:08.518 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-01-14 13:22:08.592 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.GetPaidUserAdmin (Api.Socioboard)" in 6959.2798ms
+2017-01-14 13:22:08.619 +05:30 [Information] Request finished in 7079.0232ms 200 application/json; charset=utf-8
+2017-01-14 13:22:08.619 +05:30 [Debug] Connection id ""0HL1S9VEC680I"" completed keep alive response.
+2017-01-14 13:23:06.983 +05:30 [Debug] Connection id ""0HL1S9VEC680J"" received FIN.
+2017-01-14 13:23:06.984 +05:30 [Debug] Connection id ""0HL1S9VEC680J"" disconnecting.
+2017-01-14 13:23:06.986 +05:30 [Debug] Connection id ""0HL1S9VEC680J"" sending FIN.
+2017-01-14 13:23:06.987 +05:30 [Debug] Connection id ""0HL1S9VEC680J"" sent FIN with status "0".
+2017-01-14 13:23:06.988 +05:30 [Debug] Connection id ""0HL1S9VEC680J"" stopped.
+2017-01-14 13:25:06.983 +05:30 [Debug] Connection id ""0HL1S9VEC680I"" received FIN.
+2017-01-14 13:25:06.989 +05:30 [Debug] Connection id ""0HL1S9VEC680I"" disconnecting.
+2017-01-14 13:25:06.992 +05:30 [Debug] Connection id ""0HL1S9VEC680I"" sending FIN.
+2017-01-14 13:25:06.994 +05:30 [Debug] Connection id ""0HL1S9VEC680I"" sent FIN with status "0".
+2017-01-14 13:25:06.994 +05:30 [Debug] Connection id ""0HL1S9VEC680I"" stopped.
