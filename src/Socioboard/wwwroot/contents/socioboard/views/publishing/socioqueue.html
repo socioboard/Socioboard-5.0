@@ -35,7 +35,7 @@
                               </tr>
                           </tfoot>-->
                           <tbody>
-                              <tr ng-repeat="socioqueue in lstsocioqueuemessage | orderBy:'scheduleTime':true ">
+                              <tr ng-repeat="socioqueue in lstsocioqueuemessage">
                                   <td>{{$index +1}}</td>
                                   <td class="center">
                                       <div class="col s12" ng-if="socioqueue.profileType==0 ||socioqueue.profileType==1 ">
@@ -48,7 +48,7 @@
                                       </div>
                                       <div class="col s12" ng-if="socioqueue.profileType==3 ||socioqueue.profileType==4 ">
                                           <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
-                                          <img src="/contents/socioboard/images/fb_icon.png" class="responsive-img msgiconPoss">
+                                          <img src="/contents/socioboard/images/linkedin.png" class="responsive-img msgiconPoss">
                                       </div>
                                     <div class="col s12">
                                         <span>{{user.UserName}}<br>

@@ -12,6 +12,9 @@
       <property name="Subject">
         <column name="Subject" />
       </property>
+    <property name="startdate">
+      <column name="startdate" />
+    </property>
       <property name="ExpiryDate">
         <column name="ExpiryDate" />
       </property>

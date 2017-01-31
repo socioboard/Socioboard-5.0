@@ -505,7 +505,7 @@ namespace Socioboard.Controllers
             Parameters.Add(new KeyValuePair<string, string>("company", _AgencyUser.company));
             Parameters.Add(new KeyValuePair<string, string>("amount", _AgencyUser.amount.ToString()));
 
-            HttpResponseMessage response = await WebApiReq.PostReq("/api/AgencyUser/UpdateUserInfo", Parameters, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/AgencyUser/updateTrainingDetails", Parameters, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 try
@@ -665,6 +665,53 @@ namespace Socioboard.Controllers
             return hex;
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> TrainingPlan(string firstName, string lastName, string company, string emailId, string phoneNumber, string message, string planType, string amount)
+        {
+            Domain.Socioboard.Models.Training _Training = new Domain.Socioboard.Models.Training();
+            _Training.FirstName = firstName; 
+            _Training.LastName = lastName;
+            _Training.EmailId = emailId;
+            _Training.Message = message;
+            _Training.PhoneNo = phoneNumber;
+            _Training.Company = company;
+           // HttpResponseMessage response = await WebApiReq.PostReq("/api/Training/updateTrainingDetails", Parameters, "", "", _appSettings.ApiDomain);
+            _Training.PaymentStatus = planType;
+            _Training.PaymentAmount = double.Parse(amount);
+            HttpContext.Session.SetObjectAsJson("Training", _Training);
+            return Content(Helpers.Payment.AgencyPayment(amount, planType, firstName + " " + lastName, phoneNumber, emailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl,_appSettings.TrainingcallBackUrl,  _appSettings.cancelurl, "", "", _appSettings.PaypalURL));
+              
+        }
+
+
+        public async Task<IActionResult> TrainingPaymentSuccessful()
+        {
+            Domain.Socioboard.Models.Training _training = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.Training>("Training");
+            List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Add(new KeyValuePair<string, string>("firstname", _training.FirstName));
+            Parameters.Add(new KeyValuePair<string, string>("lastname", _training.LastName));
+            Parameters.Add(new KeyValuePair<string, string>("phoneNo", _training.PhoneNo));
+            Parameters.Add(new KeyValuePair<string, string>("message", _training.Message));
+            Parameters.Add(new KeyValuePair<string, string>("emailId", _training.EmailId));
+            Parameters.Add(new KeyValuePair<string, string>("company", _training.Company));
+            Parameters.Add(new KeyValuePair<string, string>("amount", _training.PaymentAmount.ToString()));
+
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/Training/updateTrainingDetails", Parameters, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    string returndata = await response.Content.ReadAsStringAsync();
+                    return Content("");
+                }
+                catch { }
+
+            }
+            return Content("");
+        }
+
+
 
 
         public IActionResult Company()

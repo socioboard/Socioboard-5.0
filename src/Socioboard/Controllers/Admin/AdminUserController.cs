@@ -14,7 +14,7 @@ using Domain.Socioboard.Models;
 
 namespace Socioboard.Controllers.Admin
 {
-
+    
     public class AdminUserController : Controller
     {
         private Helpers.AppSettings _appSettings;
@@ -46,8 +46,8 @@ namespace Socioboard.Controllers.Admin
                 ViewBag.Domain = _appSettings.Domain;
                 return View("ManageUser");
             }
-
-
+           
+           
             //return Json(user);
 
         }
@@ -72,6 +72,33 @@ namespace Socioboard.Controllers.Admin
                 ViewBag.ApiDomain = _appSettings.ApiDomain;
                 ViewBag.Domain = _appSettings.Domain;
                 return View("DeletedUser");
+            }
+           
+            //return Json(user);
+
+        }
+
+
+        public async Task<IActionResult> DisabledUser()
+        {
+            Domain.Socioboard.Models.User _user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (_user == null)
+            {
+                return RedirectToAction("Index", "Index");
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.User> user = new List<Domain.Socioboard.Models.User>();
+                HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetDisabledUserAdmin", "", "", _appSettings.ApiDomain);
+                if (response.IsSuccessStatusCode)
+                {
+                    user = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.User>>();
+
+                }
+                ViewBag.details = user;
+                ViewBag.ApiDomain = _appSettings.ApiDomain;
+                ViewBag.Domain = _appSettings.Domain;
+                return View("DisabledUser");
             }
 
             //return Json(user);
@@ -104,8 +131,40 @@ namespace Socioboard.Controllers.Admin
 
                 return View("ManageUser");
             }
+           
+        }
+
+        public async Task<IActionResult> UndoUser(long Id)
+        {
+            Domain.Socioboard.Models.User _user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (_user == null)
+            {
+                return RedirectToAction("Index", "Index");
+            }
+            else
+            {
+                bool result = false;
+                int undomessage = 0;
+
+                List<Domain.Socioboard.Models.User> user = new List<Domain.Socioboard.Models.User>();
+
+                HttpResponseMessage response = await WebApiReq.GetReq("/api/User/UndoUserAdmin?Id=" + Id, "", "", _appSettings.ApiDomain);
+                if (response.IsSuccessStatusCode)
+                {
+                    user = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.User>>();
+
+                }
+                if (result == true)
+                {
+                    undomessage = 1;
+                }
+
+                return View("DeletedUser");
+            }
 
         }
+
+
 
     }
 }

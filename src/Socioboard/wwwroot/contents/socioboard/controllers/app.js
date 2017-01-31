@@ -1281,6 +1281,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         files: [
                             '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
                              '../contents/socioboard/js/admin/moment.min.js',
+                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
                             '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/controllers/designfeedscontroller.js'
 

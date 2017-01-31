@@ -145,6 +145,9 @@
                                         <li class="active">
                                             <a href="../AdminUser/DeletedUser">Deleted Users</a>
                                         </li>
+                                        <li>
+                                            <a href="../AdminUser/DisabledUser">Disabled Users</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -256,6 +259,7 @@
                                             <table id="manage_user_table" class="display" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
+                                                        <th>Active</th>
                                                         <th>First Name</th>
                                                         <th>Last Name</th>
                                                         <th>Account Type</th>
@@ -269,6 +273,9 @@
                                                     @foreach (var item in ViewBag.details)
                                                     {
                                                         <tr>
+                                                            <td class="center">
+                                                                <span onclick="undoProfile(@item.Id)"><i class="icon-action-undo blue-text"></i></span>
+                                                            </td>
                                                             <td>@item.FirstName</td>
                                                             <td>@item.LastName</td>
                                                             <td>@item.AccountType</td>
@@ -365,13 +372,57 @@
     <script type="text/javascript">
          $('#manage_user_table').DataTable();
     </script>
+
+    <script type="text/javascript">
+        $('#manage_user_table').DataTable();
+        $('.modal-trigger').leanModal();
+        $('select').material_select();
+
+        undoProfile = function(Id){
+            // console.log(profileId);
+            swal({
+            title: "Are you sure?",
+            text: "This profile will be activated",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#51d168",
+            confirmButtonText: "Yes, Active it!",
+            closeOnConfirm: false },
+            function () {
+                debugger;
+                //todo: code to active profile
+
+                $.ajax({
+
+                    type: "GET",
+
+                    url: '../AdminUser/UndoUser?Id=' + Id,
+                    dataType: "html",
+
+                    success: function (msg) {
+
+                        swal("Activated!", "Profile has been activated.", "success");
+
+                    }
+
+                });
+
+                setTimeout(function () {
+                    swal("Activated!", "Profile has been activated.", "success");
+                    window.location.reload();
+                }, 3000);
+
+                });
+        }
+    </script>
+
     <script>
         function Logout() {
 
 
 
                 debugger;
-                //todo: code to delete profile
+                //todo: code to logout profile
 
                 $.ajax({
 

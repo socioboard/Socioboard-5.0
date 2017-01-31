@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Socioboard.Extensions;
 using Microsoft.Extensions.Logging;
 using Socioboard.Helpers;
+using Hammock.Authentication.OAuth;
+using Hammock;
 using System.Compat.Web;
 using System.Collections.Generic;
 using System.Net.Http;
-using Hammock.Authentication.OAuth;
-using Hammock;
 
 namespace Socioboard.Controllers
 {

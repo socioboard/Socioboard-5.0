@@ -36,5 +36,9 @@
       <column name="PaymentStatus"  />
     </property>
 
+    <property name="CreatedDate">
+      <column name="CreatedDate"  />
+    </property>
+
   </class>
 </hibernate-mapping>

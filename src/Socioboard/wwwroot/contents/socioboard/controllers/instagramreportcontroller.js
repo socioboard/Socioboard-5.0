@@ -10,6 +10,7 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
             //codes to load  instgarm  profiles start
             $http.get(apiDomain + '/api/InstagramReports/GetInstagramReportData?profileId=' + profileId + '&daysCount=' + days)
                           .then(function (response) {
+                              debugger;
                               $scope.dailyReportsList = response.data;
                               $scope.getData(profileId, days);
                           }, function (reason) {
@@ -282,6 +283,7 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
             });
         }
         $scope.getData = function (profileId, days) {
+            debugger;
             $scope.getprofileData(profileId);
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
             var endDate = Date.now() / 1000;
@@ -313,7 +315,8 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
 
                 }
             });
-
+            $scope.fromDate = moment(new Date((startDate * 1000))).format('YYYY/MM/DD');
+            $scope.toDate = moment(new Date((endDate * 1000))).format('YYYY/MM/DD');
             console.log('asasfd');
             console.log($scope.instagramReportsData);
 
@@ -323,7 +326,7 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
             $scope.totalPOSTCOMMENTS = totalPOSTCOMMENTS;
             $scope.totalPOSTLIKES = totalPOSTLIKES;
             $scope.generateGraphs();
-
+           
         }
 
         $scope.getprofileData = function (profileId) {

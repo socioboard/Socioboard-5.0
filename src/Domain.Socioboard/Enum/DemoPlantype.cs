@@ -10,7 +10,8 @@ namespace Domain.Socioboard.Enum
         Demo = 0,
         Enterprise = 1,
         Agency = 2,
-        Professional = 3
+        Professional = 3,
+        Training = 4
 
     }
 }

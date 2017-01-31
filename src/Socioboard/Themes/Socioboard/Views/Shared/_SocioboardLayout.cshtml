@@ -21,6 +21,8 @@
     <title>
         Socioboard - Generate More leads on Social Media| Social CRM | Social Media CMS
     </title>
+
+    <script type="text/javascript" src="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="apple-touch-icon" sizes="57x57" href="~/contents/socioboard/images/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="~/contents/socioboard/images/favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="~/contents/socioboard/images/favicon/apple-icon-72x72.png">
@@ -254,8 +256,9 @@
         <div class="modal-content">
             <h4 class="center-align Righteous_font">Sign In</h4>
             <div class="col-md-12" id="fb-gp-login" style="display:none;">
-                <div class="alert alert-danger">
-                    <strong>Please wait for your login....</strong>
+                <div class="alert">
+                    <strong style="font-weight:600">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Please wait for your login</strong>
+                    <img src="~/contents/socioboard/images/login_loader.gif" style="height:20px" />
                 </div>
             </div>
             <hr>
@@ -856,13 +859,16 @@ analytics" href="http://statcounter.com/shopify/"
 
                 success: function (msg) {
                     console.log(msg);
-                    alertify.set({ delay: 5000 });
+                    alertify.set({ delay: 10000 });
                     alertify.success(msg);
+                        document.getElementById("sub_btn").value = "Submit";
+                   
                     $('#forgotPwdEmail').val("");
                     $('#ImgLoading').hide();
                     $('#submitButton').show();
                 },
                 error: function (msg) {
+                    console.log(msg);
                     alertify.set({ delay: 5000 });
                     alertify.error(msg1.responseText);
                     $('#ImgLoading').hide();
@@ -870,7 +876,10 @@ analytics" href="http://statcounter.com/shopify/"
                     return false;
                 }
 
+
+
             });
+         
             $('#ImgLoading').hide();
             $('#submitButton').show();
             return false;

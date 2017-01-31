@@ -67,14 +67,14 @@
                                                         </div>
                                                     </ng-form>-->
                                                 </div>
-                                                <!--<div class="row">
+                                                <div class="row">
                                                    <div class="input-field col s6">
                                                         <input type="date" ng-model="updateUser.dob" class="datepicker">
                                                         <label for="dob">DOB</label>
                                                     </div>
-                                                </div>-->
+                                                </div>
 
-                                                <div class="row">
+                                                <!--<div class="row">
                                                     <div class="input-field col s12">
                                                         <div id="content" layout="column" flex>
                                                             <md-content flex layout="column" layout-align="center center" layout-padding>
@@ -94,11 +94,11 @@
                                                             </md-content>
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </div>-->
 
                                                 <div class="row">
                                                     <div class="file-field input-field col s12">
-                                                        <input type="file" id="profileImage" class="dropify" data-default-file="" />
+                                                        <input type="file" id="profileImage" onchange="angular.element(this).scope().checkfile(this)" class="dropify" data-default-file="" />
                                                     </div>
                                                 </div>
                                                 <div class="row">
@@ -274,4 +274,10 @@
     <!-- END WRAPPER -->
 
 </div>
+<script>
+    $('.datepicker').pickadate({
+        selectMonths: true,
+        selectYears: 200
+    });
+</script>
 <!-- END MAIN -->

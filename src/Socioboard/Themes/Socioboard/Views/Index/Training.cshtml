@@ -107,7 +107,6 @@
     }
 
     function trainingDetails() {
-
         var firstName = $('#training_firstName').val();
         var lastName = $('#training_lastName').val();
         var email = $('#training_email').val();
@@ -119,7 +118,7 @@
 
             type: "GET",
 
-            url: "@ViewBag.Domain/Index/AgencyPlan",
+            url: "@ViewBag.Domain/Index/TrainingPlan",
 
             data: { "firstName": firstName, "lastName": lastName, "company": company, "emailId": email, "phoneNumber": Phone, "message": message, "planType": planType, "amount": amount },
 
@@ -134,7 +133,7 @@
                 $('#training_Phone').val('');
                 $('#training_Message').val('');
 
-                grecaptcha.reset();
+              //  grecaptcha.reset();
                 window.top.location = msg;
             },
             error: function (msg) {

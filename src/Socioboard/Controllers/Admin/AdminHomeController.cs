@@ -42,8 +42,8 @@ namespace Socioboard.Controllers
                 try
                 {
                     Domain.Socioboard.Models.PiadUser _paidUser = new PiadUser();
-                    List<User> results = user.Where(t => t.CreateDate > date.Date && t.CreateDate < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
-                    _paidUser.month = date.ToString("MMM");
+                    List<User> results = user.Where(t => t.CreateDate.Date > date.Date && t.CreateDate.Date < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
+                    _paidUser.month = date.ToString("MMM yy");
                     _paidUser.paiduser = results.Count();
                     paidUser.Add(_paidUser);
                 }
@@ -84,7 +84,7 @@ namespace Socioboard.Controllers
                 {
                     Domain.Socioboard.Models.UnPiadUser _paidUser = new UnPiadUser();
                     List<User> results = user.Where(t => t.CreateDate > date.Date && t.CreateDate < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.UnPaid).ToList();
-                    _paidUser.month = date.ToString("MMM");
+                    _paidUser.month = date.ToString("MMM yy");
                     _paidUser.Unpaiduser = results.Count();
                     paidUser.Add(_paidUser);
                 }

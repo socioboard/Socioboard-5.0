@@ -127,11 +127,14 @@
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li class="active">
+                                        <li>
                                             <a href="../AdminUser/ManageUser">Manage Users</a>
                                         </li>
                                         <li>
                                             <a href="../AdminUser/DeletedUser">Deleted Users</a>
+                                        </li>
+                                        <li>
+                                            <a href="../AdminUser/DisabledUser">Disabled Users</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -142,7 +145,7 @@
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li class="active">
+                                        <li>
                                             <a href="../AdminPakages/Getpackages">Manage Packages</a>
                                         </li>
                                     </ul>
@@ -172,7 +175,7 @@
                                         <li>
                                             <a href="../AdminNewsLetter/AddNewsLetter">Add News Letter</a>
                                         </li>
-                                        <li>
+                                        <li class="active">
                                             <a href="../AdminNewsLetter/GetNewsLetter">Manage News Letter</a>
                                         </li>
                                     </ul>
@@ -248,6 +251,7 @@
                                                         <th>Id</th>
                                                         <th>NewsLetter Body</th>
                                                         <th>Subject</th>
+                                                        <th>Start Date</th>
                                                         <th>Expiry Date</th>
                                                     </tr>
                                                 </thead>
@@ -264,6 +268,7 @@
                                                             <td>@item.Id</td>
                                                             <td><img style="width:120px; height:90px" src="@item.NewsLetterBody" /></td>
                                                             <td>@item.Subject</td>
+                                                            <td>@item.startdate</td>
                                                             <td>@item.ExpiryDate</td>
                                                         </tr>
                                                     }
@@ -299,16 +304,23 @@
 
                 <div class="row">
                     <label id="setID" edit_id_form="na"></label>
-                    <div class="input-field col l6 m6 s12">
-                        <input type="file" class="dropify" />
-                        <label for="NewsLetterBody" class="active">News Letter Body</label>
+                    <div class="input-field col l6 m6 s12" >
+                        <input id="upload_new_image" type="file" class="dropify" />
+                        <label for="NewsLetterBody" class="active">Upload New</label>
                     </div>
                     <div>
+                        <br />
                         <img id="NewsLetterBody" style="width:120px; height:90px"/>
                     </div>
                     <div class="input-field col l6 m6 s12">
                         <input id="Subject" type="text" class="validate">
                         <label for="Subject" class="active">Subject</label>
+                    </div>
+                    </div>
+                <div class="row">
+                    <div class="input-field col s12 m6 l6">
+                        <input type="date" class="datepicker" id="startDate">
+                        <label>Start Date</label>
                     </div>
                     <div class="input-field col s12 m6 l6">
                         <input type="date" class="datepicker" id="ExpiryDate">
@@ -403,11 +415,14 @@
             var Id = $('#setID').attr('edit_id_form');
             //alert("Val :"+id);
           
-            var NewsLetterBody = $('#NewsLetterBody').val();
+            //var NewsLetterBody = $('#NewsLetterBody').val();
             var Subject = $('#Subject').val();
+            var startDate = $('#startDate').val();
             var ExpiryDate = $('#ExpiryDate').val();
 
-
+            var fd = new FormData();
+            var filesimage = document.getElementById('upload_new_image').files[0];
+            fd.append('files', filesimage);
             
             $.ajax({
 
@@ -417,22 +432,26 @@
                 
                 @*url: "@ViewBag.ApiDomain/api/user/Register",*@
                 
-                url: '@ViewBag.ApiDomain/api/user/UpdateNewsLetterAdmin?NewsLetterBody=' + NewsLetterBody + '&Subject=' + Subject + '&ExpiryDate=' + ExpiryDate + '&Id=' + Id,
+                url: '@ViewBag.ApiDomain/api/user/UpdateNewsLetterAdmin?NewsLetterBody=' + NewsLetterBody + '&Subject=' + Subject + '&startDate=' + startDate + '&ExpiryDate=' + ExpiryDate + '&Id=' + Id,
 
                 //data: { "firstName": firstName, "lastName": lastName, "user_email": email, "AccountType": accountType, "PaymentStatus": PaymentStatus, "AccountStatus": AccountStatus, "userid": id },
 
                 //contentType: "application/json; charset=utf-8",
 
-                dataType: "html",
+                processData: false,
+                contentType: false,
+                data: fd,
 
                 success: function (msg) {
                     console.log(msg);
                     //alertify.set({ delay: 5000 });
                     //alertify.success("User updated");
                     swal(msg);
+                    window.location.reload();
                     $('#NewsLetterBody').val("");
                     $('#Subject').val("");
                     $('#ExpiryDate').val("");
+                    $('#startDate').val("");
 
                 },
 
@@ -470,7 +489,8 @@
              var cells = $('#row_' + Id).find('td');
              //document.getElementById("NewsLetterBody").value = $(cells[2]).html();    // output image when user click newsletter body in update model
              document.getElementById("Subject").value = $(cells[3]).html();
-             document.getElementById("ExpiryDate").value = $(cells[4]).html();
+             document.getElementById("startDate").value = $(cells[4]).html();
+             document.getElementById("ExpiryDate").value = $(cells[5]).html();
              document.getElementById("NewsLetterBody").src = $(cells[2]).find('img').attr('src');
              
          }
@@ -498,10 +518,9 @@
                     }
 
                 });
-
-
         }
     </script>
+   
 </body>
 
 </html>

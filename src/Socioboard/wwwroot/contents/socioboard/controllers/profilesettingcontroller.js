@@ -100,10 +100,14 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             } else {
                 $scope.updateUser.aboutMe = $rootScope.UpdatedaboutMe;
             }
-           // var $input = $('.datepicker').pickadate();
-           // var picker = $input.pickadate('picker');
 
-           // picker.set('select', $rootScope.user.dateOfBirth, { format: 'yyyy-mm-dd HH:MM:ss' });
+
+
+            var $input = $('.datepicker').pickadate();
+            var picker = $input.pickadate('picker');
+
+            picker.set('select', $rootScope.user.dateOfBirth, { format: 'yyyy-mm-dd HH:MM:ss' });
+           
         }
         //   $scope.updateUser.dob = $rootScope.user.dateOfBirth;
 
@@ -123,17 +127,16 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
 
         $scope.UpdateUser = function (updateUser) {
 
-           // var $input = $('.datepicker').pickadate();
-            // var picker = $input.pickadate('picker');
-            var date_value = ($('.md-input')[0]).value;
-            //var date = date_value.split("/");
-            //date_value = date[1] + "/" + date[0] + "/" + date[2];
 
-            var formData = new FormData();
+           
+            //var date_value = ($('.md-input')[0]).value;
+             var $input = $('.datepicker').pickadate();
+             var picker = $input.pickadate('picker');
+             var formData = new FormData();
             formData.append('files', $("#profileImage").get(0).files[0]);
             $http({
                 method: 'POST',
-                url: apiDomain + '/api/User/UpdateUser?firstName=' + updateUser.firstName + '&lastName=' + updateUser.lastName + '&userName=' + updateUser.userName + '&phoneNumber=' + updateUser.phoneNumber + '&dob=' + date_value + '&aboutMe=' + updateUser.aboutMe + '&userId=' + $rootScope.user.Id,
+                url: apiDomain + '/api/User/UpdateUser?firstName=' + updateUser.firstName + '&lastName=' + updateUser.lastName + '&userName=' + updateUser.userName + '&phoneNumber=' + updateUser.phoneNumber + '&dob=' + picker.get() + '&aboutMe=' + updateUser.aboutMe + '&userId=' + $rootScope.user.Id,
                 data: formData,
                 headers: {
                     'Content-Type': undefined
@@ -154,6 +157,32 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 alertify.error(reason.data);
                 console.log(reason.data);
             });
+        }
+
+
+        $scope.checkfile = function () {
+            debugger;
+            var filesinput = $('#profileImage').get(0).files[0];
+            console.log('sadfkjasdf');
+            console.log(filesinput);
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            if (filesinput != undefined && filesinput != null) {
+                if ($scope.hasExtension('#profileImage', fileExtension)) {
+
+                }
+                else {
+
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File Extention is not valid. Please upload any image file");
+                    $('#profileImage').val('');
+                }
+            }
+        }
+
+
+        $scope.hasExtension = function (inputID, exts) {
+            var fileName = $('#profileImage').val();
+            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }
 
 

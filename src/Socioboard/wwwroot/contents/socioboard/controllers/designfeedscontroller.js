@@ -261,3 +261,33 @@ SocioboardApp.directive("scroll", function ($window) {
     };
 });
 
+//var $containerProducts = $("#products");
+//$containerProducts.imagesLoaded(function() {
+//    $containerProducts.masonry({
+//        itemSelector: ".product",
+//        columnWidth: ".product-sizer",
+//    });
+//});
+
+
+SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+                console.log("myRepeatFeedTimeoutDirective Called");
+                var $containerProducts = $("#products");
+                $containerProducts.imagesLoaded(function () {
+                    $containerProducts.masonry({
+                        itemSelector: ".product",
+                        columnWidth: ".product-sizer",
+                    });
+                });
+
+
+            });
+        }
+    };
+})
+ 
+ 
+

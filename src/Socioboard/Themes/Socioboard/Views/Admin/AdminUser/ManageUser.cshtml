@@ -137,6 +137,9 @@
                                         <li>
                                             <a href="../AdminUser/DeletedUser">Deleted Users</a>
                                         </li>
+                                        <li>
+                                            <a href="../AdminUser/DisabledUser">Disabled Users</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -308,6 +311,7 @@
     <div id="edit_user_modal" class="modal modal-fixed-footer">
         <form onsubmit="myFunction(); return false;" id="Updateuser">
             <div class="modal-content">
+                
                 <h4>Edit User Details</h4>
                 
                 <div class="row" >
@@ -353,7 +357,7 @@
                         <select id="AccountStatus" name="AccountStatus">
                             <option value="" disabled selected>Choose your option</option>
                             <option value="0">Enable</option>
-                            <option value="2">Disable</option>
+                            <option value="3">Disable</option>
                             
                         </select>
                         <label>Status</label><text style="color:darkgray; font-size:12px">Current Status : </text><text style="color:darkgray; font-size:12px" id="acc_status"></text>
@@ -451,32 +455,32 @@
             function () {
                 debugger;
                 //todo: code to delete profile
-      
                 $.ajax({
 
                     type: "GET",
 
                     url: '../AdminUser/DeleteUser?Id=' + Id,
-                   // url: '../User/DeleteUserAdmin?Id=' + Id,
-                    dataType: "html",
 
+                    // url: '../User/DeleteUserAdmin?Id=' + Id,
+                    dataType: "html",
                     success: function (msg) {
 
                         swal("Deleted!", "Profile has been deleted.", "success");
 
                     }
+                });
 
-                });
-                swal("Deleted!", "Profile has been deleted.", "success");
-                });
+                setTimeout(function () {
+                    swal("Deleted!", "Profile has been deleted.", "success");
+                    window.location.reload();
+                }, 3000);
+
+            });
+
+
         }
-    </script>
 
 
-
-    <script>
-
-      
 
         function myFunction() {
             debugger;
@@ -485,43 +489,66 @@
             var firstName = $('#first_name').val();
             var lastName = $('#last_name').val();
             var email = $('#user_email').val();
-           
+
             var accountType = $('#AccountType').val();
             var paymentstatus = $('#PaymentStatus').val();
             var accountstatus = $('#AccountStatus').val();
-            
 
-            $.ajax({
 
-               
+            if (accountType == null || paymentstatus == null || accountstatus == null) {
+                $.ajax({
 
-                type: "POST",
-                @*url: "@ViewBag.ApiDomain/api/user/Register",*@
-                url: '@ViewBag.ApiDomain/api/user/UpdateUserAdmin?firstName=' + firstName + '&lastName=' + lastName + '&user_email=' + email + '&AccountType=' + accountType + '&PaymentStatus=' + paymentstatus + '&AccountStatus=' + accountstatus + '&userid=' + id,
+                    dataType: "html",
 
-                //data: { "firstName": firstName, "lastName": lastName, "user_email": email, "AccountType": accountType, "PaymentStatus": PaymentStatus, "AccountStatus": AccountStatus, "userid": id },
+                    success: function (msg) {
+                        swal("You must choose every option!");
+                    },
+                });
 
-                //contentType: "application/json; charset=utf-8",
+            }
+            else if (accountType == "0" && paymentstatus == "0")
+            {
+                $.ajax({
 
-                dataType: "html",
+                    dataType: "html",
 
-                success: function (msg) {
-                    console.log(msg);
-                    //alertify.set({ delay: 5000 });
-                    //alertify.success("User updated");
-                    swal(msg);
-                    $('#firstName').val("");
-                    $('#lastName').val("");
-                    $('#user_email').val("");
-                    $('#AccountType').val("");
-                    $('#PaymentStatus').val("");
-                    $('#AccountStatus').val("")
-                 
-                },
-              
+                    success: function (msg) {
+                        swal("Free user must be unpaid!");
+                    },
+                });
+            }
+            else
+            {
 
-            });
-          
+                $.ajax({
+
+                    type: "POST",
+                    @*url: "@ViewBag.ApiDomain/api/user/Register",*@
+                    url: '@ViewBag.ApiDomain/api/user/UpdateUserAdmin?firstName=' + firstName + '&lastName=' + lastName + '&user_email=' + email + '&AccountType=' + accountType + '&PaymentStatus=' + paymentstatus + '&AccountStatus=' + accountstatus + '&userid=' + id,
+
+                    //data: { "firstName": firstName, "lastName": lastName, "user_email": email, "AccountType": accountType, "PaymentStatus": PaymentStatus, "AccountStatus": AccountStatus, "userid": id },
+
+                    //contentType: "application/json; charset=utf-8",
+
+                    dataType: "html",
+
+                    success: function (msg) {
+                        console.log(msg);
+                        //alertify.set({ delay: 5000 });
+                        //alertify.success("User updated");
+                        swal(msg);
+                        window.location.reload();
+                        $('#firstName').val("");
+                        $('#lastName').val("");
+                        $('#user_email').val("");
+                        $('#AccountType').val("");
+                        $('#PaymentStatus').val("");
+                        $('#AccountStatus').val("")
+
+                    },
+                });
+
+            }
             return false;
         }
 
@@ -543,7 +570,7 @@
              document.getElementById('pymnt_status').innerHTML = $(cells[5]).html();
              document.getElementById('acc_status').innerHTML = $(cells[7]).html();
         }
-     
+
     </script>
 
     <script>

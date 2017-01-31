@@ -61,7 +61,7 @@ namespace Socioboard.Facebook.Data
            
             try
             {
-                return  fb.Get("v2.7/me?fields=id,name,username,likes,fan_count,cover");
+                return  fb.Get("v2.7/me?fields=id,name,username,likes,fan_count,cover,emails");
             }
             catch (Exception ex)
             {

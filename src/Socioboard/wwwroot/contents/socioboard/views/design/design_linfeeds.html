@@ -1,158 +1,125 @@
     <div data-ng-controller="DesignFeedsINController" scroll id="linpage" ng-class="{min:boolChangeClass}" style="height:100%;">
-            <!-- Page name -->
-            <div class="container">
-                <div class="col m12">
-                    <h4>Monitor</h4> 
+    <!-- Page name -->
+    <div class="container">
+        <div class="col m12">
+            <h4>Monitor</h4>
+        </div>
+    </div>
+
+    <!-- START CONTENT -->
+
+    <div id="profiles">
+        <div id="products" class="row">
+            <div class="product-sizer"></div>
+                <div class="product" ng-repeat="linpost in lstDiscoverySearchLinkedIn | orderBy:'publishedtime':true" my-repeat-feed-timeout-directive>
+                    <div class="card hoverable">
+                        <div class="card-content">
+                            <div class="row">
+                                <div class="col l12 m12 s12 margin-top-10 center">
+                                    <img class="responsive-img circle " src="{{linpost.profileImage}}">
+                                </div>
+                                <div class="col l12 s12 m12 center">
+                                    <span class="card-title">{{linpost.profileName}}</span>
+                                    <br>
+                                    <span>
+                                    <a href="#" target="_blank">
+                                        <i class="fa fa-linkedin-square fa-fw"></i>@{{linpost.profileName}}
+                                    </a>
+                                </span>
+                            </div>
+                            <div class="col l12 m12 s12">
+                                <p class="description_listen">
+                                   {{getPostData(linpost.message)}}
+                                    <div class="center">
+                                        <img ng-if="linpost.imageurl != null" src="{{linpost.postImgUrl}}" class="responsive-img">
+                                        <!--<div style="word-break:break-all"> {{getPostData(linpost.message)}} </div>-->
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-action center">
+                        <a ng-click="scheduledraft(linpost.message)">Schedule</a>
+                        <a ng-click="schedulefbpost(linpost.message)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                    </div>
                 </div>
             </div>
 
-            <!-- START CONTENT -->
-            <section id="content">
-                <div class="row">
-                    <div class="col m12">
-                        <!--start container-->
-                            <div class="container">
-                                <!--card widgets start-->
-                                <div id="profiles">
-                                    <div class="row">
-                                        <div class="col s12 m6 l3" ng-repeat="linpost in lstDiscoverySearchLinkedIn">
-                                            <div class="card">
-                                                <div class="card-content">                                                  
-                                                    <div class="row">
-                                                        <div class="col l2 m2 s6 margin-top-10">
-                                                            <img class="responsive-img" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png"> 
-                                                        </div>
-                                                        <div class="col l10 s10 m10">
-                                                            <span class="card-title">{{linpost.profileName}}</span>
-                                                  <br>
-                                                            <span>
-                                                                <a style="cursor:context-menu" href="javascript:;">
-                                                                    <i class="fa fa-linkedin-square fa-fw"></i>@{{linpost.profileName}}
-                                                                </a>
-                                                            </span>
-                                                        </div>
-                                                        <div class="col l12 m12 s12">  
-                                                            <p class="description_listen">
-                                                              <div style="word-break : break-all"> {{linpost.message}} </div> 
-                                                                <img ng-if="linpost.postImgUrl!=''" src="{{linpost.postImgUrl}}" class="responsive-img">
-                                                            </p> 
-                                                        </div>
-                                                    </div>
+
+
+            <!--<div class="row">
+                <div class="col m12">-->
+                    <!--start container-->
+                    <!--<div class="container">-->
+                        <!--card widgets start-->
+                        <!--<div id="profiles">
+                            <div class="row">
+                                <div class="col s12 m6 l3" ng-repeat="linpost in lstDiscoverySearchLinkedIn">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div class="row">
+                                                <div class="col l2 m2 s6 margin-top-10">
+                                                    <img class="responsive-img" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
                                                 </div>
-                                                <div class="card-action center">
-                                                  <a style="cursor:pointer" ng-click="schedulefbpost(linpost.message)">Schedule</a>
-                                                  <!--<a ng-click="schedulefbpost(linpost.message)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>-->
+                                                <div class="col l10 s10 m10">
+                                                    <span class="card-title">{{linpost.profileName}}</span>
+                                                    <br>
+                                                    <span>
+                                                        <a style="cursor:context-menu" href="javascript:;">
+                                                            <i class="fa fa-linkedin-square fa-fw"></i>@{{linpost.profileName}}
+                                                        </a>
+                                                    </span>
+                                                </div>
+                                                <div class="col l12 m12 s12">
+                                                    <p class="description_listen">
+                                                        <div style="word-break : break-all"> {{linpost.message}} </div>
+                                                        <img ng-if="linpost.postImgUrl!=''" src="{{linpost.postImgUrl}}" class="responsive-img">
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
-                                       
+                                        <div class="card-action center">
+                                            <a style="cursor:pointer" ng-click="schedulefbpost(linpost.message)">Schedule</a>-->
+                                            <!--<a ng-click="schedulefbpost(linpost.message)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>-->
+                                        <!--</div>
                                     </div>
                                 </div>
+
                             </div>
-                        <!--end container-->
-                    </div>
-                </div>
+                        </div>
+                    </div>-->
+                    <!--end container-->
+                <!--</div>
+            </div>-->
 
-                <div ng-init="dispbtn= {{dispbtn}}"></div>
-                <div ng-show="dispbtn" class="col-md-10 portfolio-item" href="javascript:;">
-                    <img src="/contents/socioboard/images/sbloader.gif">
-                </div>
+            </div>
+        </div>
 
-                <!-- Compose Email Trigger -->
-                <div ng-if="user.TrailStatus!=2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-                    <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
-                        <i class="large mdi-editor-mode-edit  animated bounceIn infinite"></i>
-                    </a>
-                </div>
-                <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-                    <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
-                        <i class="large mdi-editor-mode-edit"></i>
-                    </a>
-                </div>
-
-                <!-- Compose Email Structure -->
-                <div id="ComposePostModal" class="modal">
-                  <div class="modal-content">
-                    <nav class="red">
-                      <div class="nav-wrapper">
-                        <div class="left col s12 m5 l5">
-                          <ul>
-                            <li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                            </li>
-                            <li><a href="#!" class="email-type">Compose</a>
-                            </li>
-                          </ul>
-                        </div>
-                        <div class="col s12 m7 l7 hide-on-med-and-down">
-                          <ul class="right">
-                            <li><a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
-                            </li>
-                          </ul>
-                        </div>
-
-                      </div>
-                    </nav>
-                  </div>
-                  <div class="model-email-content">
-                    <div class="row">
-                      <form class="col s12">
-                        <div class="row">
-                             <div class="input-field col s12">
-                            <select multiple>
-                              <option value="" disabled selected>Choose your profile</option>
-                              <option value="1"><span class="fa fa-facebook"></span>Chanchal</option>
-                              <option value="2" data-icon="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="circle">Profile_2</option>
-                              <option value="3">Profile_3</option>
-                            </select>
-                            <label>Select Profiles</label>
-                          </div>
-                        </div>
-                          <!--Default version-->
-                        <div class="row section">
-                          <div class="col s12 m4 l3">
-                             <p>Select your file</p>
-                          </div>
-                          <div class="col s12 m8 l9">
-                              <input type="file" id="input-file-now" class="dropify" data-default-file="" />
-                          </div>
-                        </div>
-                        <div class="row">
-                          <div class="input-field col s12">
-                            <textarea id="compose" class="materialize-textarea" length="500"></textarea>
-                            <label for="compose">Compose email</label>
-                          </div>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-            </section>
             <!-- END CONTENT -->
-
             <!-- add profile -->
             <div id="addprofile" class="modal">
                 <div class="modal-content">
-                  <h4>Adding Profiles</h4>
+                    <h4>Adding Profiles</h4>
                     <div class="row">
                         <div class="col s12">
-                          <ul class="tabs tab-demo z-depth-1">
-                            <li class="tab col s1"><a class="active" href="#twitter"><i class="fa fa-twitter fa-fw fa-2x"></i></a></li>
-                            <li class="tab col s1"><a href="#facebook"><i class="fa fa-facebook fa-fw fa-2x"></i></a></li>
-                            <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
-                            <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
-                            <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
-                            <li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>
-                            <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
-                            <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
-                          </ul>
+                            <ul class="tabs tab-demo z-depth-1">
+                                <li class="tab col s1"><a class="active" href="#twitter"><i class="fa fa-twitter fa-fw fa-2x"></i></a></li>
+                                <li class="tab col s1"><a href="#facebook"><i class="fa fa-facebook fa-fw fa-2x"></i></a></li>
+                                <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
+                                <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
+                                <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
+                                <li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>
+                                <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
+                                <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
+                            </ul>
                         </div>
                         <div id="twitter" class="col s12">
                             <div class="center-align">
                                 <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
                                 <a class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
                                 <p>
-                                  <input type="checkbox" id="Follow1" />
-                                  <label for="Follow1">Follow Socioboard on twitter for update &amp; announcements</label>
+                                    <input type="checkbox" id="Follow1" />
+                                    <label for="Follow1">Follow Socioboard on twitter for update &amp; announcements</label>
                                 </p>
                             </div>
                         </div>
@@ -201,7 +168,7 @@
                                 <a class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal GoogleAnalytics</a>
                             </div>
                         </div>
-                  </div>             
+                    </div>
                 </div>
             </div>
 
@@ -217,8 +184,8 @@
                                 <p>Connected</p>
                             </div>
                             <p class="right">
-                              <input type="checkbox" id="Socioboard" />
-                              <label for="Socioboard"></label>
+                                <input type="checkbox" id="Socioboard" />
+                                <label for="Socioboard"></label>
                             </p>
                         </li>
                         <li class="collection-item avatar">
@@ -228,8 +195,8 @@
                                 <p>Connected</p>
                             </div>
                             <p class="right">
-                              <input type="checkbox" id="Globussoft" />
-                              <label for="Globussoft"></label>
+                                <input type="checkbox" id="Globussoft" />
+                                <label for="Globussoft"></label>
                             </p>
                         </li>
                         <li class="collection-item avatar">
@@ -239,119 +206,119 @@
                                 <p>Connected</p>
                             </div>
                             <p class="right">
-                              <input type="checkbox" id="DailyOfficeCocktail" />
-                              <label for="DailyOfficeCocktail"></label>
+                                <input type="checkbox" id="DailyOfficeCocktail" />
+                                <label for="DailyOfficeCocktail"></label>
                             </p>
                         </li>
                     </ul>
                 </div>
                 <div class="modal-footer">
-                  <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-                  <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Connect</a>
+                    <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+                    <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Connect</a>
                 </div>
             </div>
 
             <!-- Modal Structure -->
             <div id="searchcatagory" class="modal">
                 <div class="modal-content">
-                <a href="" class="right modal-action modal-close waves-effect waves-green"><i class="icon-close"></i></a>
-                  <h4 class="center">Categories Featured</h4>
-                  <div class="row">
-                    <div class="col l12 s12 m12">
-                        <div class="input-field">
-                          <input value="" id="categories" type="text" class="validate">
-                          <label class="active" for="categories">Search your categories</label>
+                    <a href="" class="right modal-action modal-close waves-effect waves-green"><i class="icon-close"></i></a>
+                    <h4 class="center">Categories Featured</h4>
+                    <div class="row">
+                        <div class="col l12 s12 m12">
+                            <div class="input-field">
+                                <input value="" id="categories" type="text" class="validate">
+                                <label class="active" for="categories">Search your categories</label>
+                            </div>
+                            <div class="col s2">
+                                <a ng-click="discovery()" class="btn">
+                                    <i class="fa fa-search"></i>
+                                </a>
+                            </div>
                         </div>
-                        <div class="col s2">
-                            <a ng-click="discovery()" class="btn">
-                                <i class="fa fa-search"></i>
-                            </a>
+                        <div class="col l4 m4 s12" ng-repeat="categories in lstcategories">
+                            <div class="collection">
+                                <a ng-click="discovery(categories.keyword)" class="collection-item active">{{categories.keyword}}</a>
+                            </div>
                         </div>
                     </div>
-                      <div class="col l4 m4 s12" ng-repeat="categories in lstcategories">
-                          <div class="collection">
-                              <a ng-click="discovery(categories.keyword)" class="collection-item active">{{categories.keyword}}</a>
-                          </div>
-                      </div>
-                  </div>
                 </div>
             </div>
 
-        <!-- Compose Email Trigger -->
-        <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
-            <div class="btn-floating btn-large red modal-trigger" href="#ComposePost">
-                <i class="large mdi-editor-mode-edit"></i>
-            </div>
-        </div>
-        <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-            <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
-                <i class="large mdi-editor-mode-edit"></i>
-            </a>
-        </div>
-        <div id="ComposePost" class="modal">
-            <div class="modal-content">
-                <nav class="red">
-                    <div class="nav-wrapper">
-                        <div class="left col s12 m5 l5">
-                            <ul>
-                                <li>
-                                    <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!" class="email-type">Compose</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div ng-init="disbtncom= {{disbtncom}}"></div>
-                        <div class="col s12 m7 l7 hide-on-med-and-down">
-                            <ul class="right">
-                                <li>
-                                    <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
-                                    <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
-                                </li>
-                                <!--<li>
-                                <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
-                            </li>-->
-                            </ul>
-                        </div>
-
-                    </div>
-                </nav>
-            </div>
-            <div class="model-email-content">
-                <div class="row">
-                    <form class="col s12">
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <select multiple id="composeProfiles">
-                                    <option value="" disabled selected>Choose your option</option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                </select>
-                            </div>
-                        </div>
-                        <!--Default version-->
-                        <div class="row section">
-                            <div class="col s12 m4 l3">
-                                <p>Select your file</p>
-                            </div>
-                            <div class="col s12 m8 l9">
-                                <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
-                                <label for="compose">Message</label>
-                            </div>
-                        </div>
-                    </form>
+            <!-- Compose Email Trigger -->
+            <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
+                <div class="btn-floating btn-large red modal-trigger" href="#ComposePost">
+                    <i class="large mdi-editor-mode-edit"></i>
                 </div>
             </div>
-        </div>
-        <!-- Compose Email Structure -->
+            <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
+                    <i class="large mdi-editor-mode-edit"></i>
+                </a>
+            </div>
+            <div id="ComposePost" class="modal">
+                <div class="modal-content">
+                    <nav class="red">
+                        <div class="nav-wrapper">
+                            <div class="left col s12 m5 l5">
+                                <ul>
+                                    <li>
+                                        <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                                    </li>
+                                    <li>
+                                        <a href="#!" class="email-type">Compose</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div ng-init="disbtncom= {{disbtncom}}"></div>
+                            <div class="col s12 m7 l7 hide-on-med-and-down">
+                                <ul class="right">
+                                    <li>
+                                        <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                                        <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                                    </li>
+                                    <!--<li>
+                                        <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                                    </li>-->
+                                </ul>
+                            </div>
 
-    </div>
+                        </div>
+                    </nav>
+                </div>
+                <div class="model-email-content">
+                    <div class="row">
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select multiple id="composeProfiles">
+                                        <option value="" disabled selected>Choose your option</option>
+                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--Default version-->
+                            <div class="row section">
+                                <div class="col s12 m4 l3">
+                                    <p>Select your file</p>
+                                </div>
+                                <div class="col s12 m8 l9">
+                                    <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
+                                    <label for="compose">Message</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Compose Email Structure -->
+
+        </div>

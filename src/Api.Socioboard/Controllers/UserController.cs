@@ -58,6 +58,10 @@ namespace Api.Socioboard.Controllers
             user.UserName = "Socioboard";
             user.UserType = "User";
             user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
+            if(user.AccountType== Domain.Socioboard.Enum.SBAccountType.Free)
+            {
+                user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
+            }
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -293,7 +297,7 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("AdminAddNewsLetter")]
-        public IActionResult AdminAddNewsLetter(string Advertisement, string img_url, DateTime date, IFormFile files)
+        public IActionResult AdminAddNewsLetter(string Advertisement, string img_url,DateTime startdate, DateTime date, IFormFile files)
         {
 
             var filename = "";
@@ -321,8 +325,8 @@ namespace Api.Socioboard.Controllers
                             .Trim('"');
                     var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
                     filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
-                    newsletter.NewsLetterBody = filename;
                     uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+                    newsletter.NewsLetterBody = uploads;
                     try
                     {
                         using (FileStream fs = System.IO.File.Create(filename))
@@ -349,7 +353,9 @@ namespace Api.Socioboard.Controllers
                 return Ok("Please select file ");
             }
             newsletter.Subject = Advertisement;
+            newsletter.startdate = startdate;
             newsletter.ExpiryDate = date;
+
 
             int res = dbr.Add<NewsLetter>(newsletter);
                 if (res == 1)
@@ -475,14 +481,14 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpPost("UpdatePackageAdmin")]
-        public IActionResult UpdatePackageAdmin(string packagename, string amount, long id)
+        public IActionResult UpdatePackageAdmin(string amount, long id)
         {
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             Package package = dbr.Single<Package>(t => t.id == id);
             if (package != null)
             {
-                package.packagename = packagename;
+                
                 package.amount = amount;
 
                 int res = dbr.Update<Package>(package);
@@ -503,27 +509,54 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("UpdateNewsLetterAdmin")]
-        public IActionResult UpdateNewsLetterAdmin(string NewsLetterBody, string Subject, DateTime ExpiryDate, long Id)
+        public IActionResult UpdateNewsLetterAdmin(string NewsLetterBody, string Subject,DateTime startDate, DateTime ExpiryDate, long Id, IFormFile files)
         {
-
+            var filename = "";
+            //var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\" + Advertisement;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             NewsLetter newsletter = dbr.Single<NewsLetter>(t => t.Id == Id);
+
             if (newsletter != null)
             {
-                newsletter.NewsLetterBody = NewsLetterBody;
-                newsletter.Subject = Subject;
-                newsletter.ExpiryDate = ExpiryDate;
+                    //newsletter.NewsLetterBody = NewsLetterBody;
 
-                int res = dbr.Update<NewsLetter>(newsletter);
-                if (res == 1)
-                {
-                    //_redisCache.Delete(package.EmailId);
-                    return Ok("News Letter detail updated");
-                }
-                else
-                {
-                    return Ok("issue while updating");
-                }
+                    var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+                    filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                            .Parse(files.ContentDisposition)
+                            .FileName
+                            .Trim('"');
+                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+                    var uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+                    try
+                    {
+                        using (FileStream fs = System.IO.File.Create(filename))
+                        {
+                            files.CopyTo(fs);
+                            fs.Flush();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    filename = uploads;
+
+                    newsletter.NewsLetterBody = uploads;
+                    newsletter.Subject = Subject;
+                    newsletter.startdate = startDate;
+                    newsletter.ExpiryDate = ExpiryDate;
+
+                    int res = dbr.Update<NewsLetter>(newsletter);
+                    if (res == 1)
+                    {
+                        //_redisCache.Delete(package.EmailId);
+                        return Ok("News Letter detail updated");
+                    }
+                    else
+                    {
+                        return Ok("issue while updating");
+                    }
             }
             else
             {
@@ -536,6 +569,24 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<User> user = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.InActive).ToList();
+            //User user = dbr.Single<User>(t => t.Id == Id);
+            if (user != null)
+            {
+                return Ok(user);
+            }
+            else
+            {
+                return NotFound();
+            }
+
+        }
+
+
+        [HttpGet("GetDisabledUserAdmin")]
+        public IActionResult GetDisabledUserAdmin()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<User> user = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable).ToList();
             //User user = dbr.Single<User>(t => t.Id == Id);
             if (user != null)
             {
@@ -644,6 +695,17 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             Domain.Socioboard.Models.User _use = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == Id);
             _use.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.InActive;
+            dbr.Update<Domain.Socioboard.Models.User>(_use);
+            return Ok();
+
+        }
+
+        [HttpGet("UndoUserAdmin")]
+        public IActionResult UndoUserAdmin(long Id)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Domain.Socioboard.Models.User _use = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == Id);
+            _use.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
             dbr.Update<Domain.Socioboard.Models.User>(_use);
             return Ok();
 
@@ -1153,13 +1215,17 @@ namespace Api.Socioboard.Controllers
             }
             if (user != null)
             {
-                if (user.EmailValidateToken.Equals("Facebook"))
+                if (user.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.InActive || user.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
                 {
-                    return Ok("you can login with facebook.");
+                    return Ok("Your account deleted permanently please contact socioboard support team ");
+                }
+                else if (user.EmailValidateToken.Equals("Facebook"))
+                {
+                    return Ok("Password reset is not permitted as you have loggedin through Facebook, please login with Facebook.");
                 }
                 else if (user.EmailValidateToken.Equals("Google"))
                 {
-                    return Ok("you can login with Google.");
+                    return Ok("Password reset is not permitted as you have loggedin through Google, please login with Google.");
                 }
                 user.forgotPasswordKeyToken = SBHelper.RandomString(20);
                 user.forgotPasswordExpireDate = DateTime.UtcNow.AddDays(1);
@@ -1381,7 +1447,7 @@ namespace Api.Socioboard.Controllers
             string html = System.IO.File.ReadAllText(path);
             html = html.Replace("[FirstName]", demoReq.firstName);
             html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
-            _emailSender.SendMail("", "", "sumit@socioboard.com", "", "", "Customer requested for demo enterprise plan ", html, _appSettings.ZohoMailUserName, _appSettings.ZohoMailPassword);
+            _emailSender.SendMailSendGrid("", "", "sumit@socioboard.com", "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
             return Ok("Mail Sent Successfully.");
 
         }

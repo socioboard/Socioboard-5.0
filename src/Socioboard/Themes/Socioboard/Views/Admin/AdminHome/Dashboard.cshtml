@@ -135,6 +135,9 @@
                                         <li>
                                             <a href="../AdminUser/DeletedUser">Deleted Users</a>
                                         </li>
+                                        <li>
+                                            <a href="../AdminUser/DisabledUser">Disabled Users</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -238,7 +241,7 @@
                         <div class="col l12 m12 s12">
                             <div class="card-panel" id="feeds">
                                 <h5 class="feeds_title orange darken-2 white-text">
-                                    Paid User Graph
+                                    Last 12 Months Paid User Graph
                                 </h5>
                                 <div class="card-panel">
                                     <div class="chartdiv" id="paid_chart"></div>
@@ -249,7 +252,7 @@
                         <div class="col l12 m12 s12">
                             <div class="card-panel" id="feeds">
                                 <h5 class="feeds_title orange darken-2 white-text">
-                                    Unpaid User Graph
+                                    Last 12 Months Unpaid User Graph
                                 </h5>
                                 <div class="card-panel">
                                     <div class="chartdiv" id="unpaid_chart"></div>
@@ -334,145 +337,249 @@
 
     <!-- Chart code -->
     <script>
-        // paid_chart
-        function myfunctionPaid(msg) {
-            var chart = AmCharts.makeChart("paid_chart", {
-                "type": "serial",
-                "theme": "light",
-                "marginTop": 0,
-                "marginRight": 80,
-                "dataProvider": msg,
-                "valueAxes": [{
-                    "axisAlpha": 0,
-                    "position": "left"
-                }],
-                "graphs": [{
-                    "id": "g1",
-                    "balloonText": "[[category]]<br><b><span style='font-size:14px;'>[[value]]</span></b>",
-                    "bullet": "round",
-                    "bulletSize": 8,
-                    "lineColor": "#d1655d",
-                    "lineThickness": 2,
-                    "negativeLineColor": "#637bb6",
-                    "type": "smoothedLine",
-                    "valueField": "paiduser"
-                }],
-                "chartScrollbar": {
-                    "graph": "g1",
-                    "gridAlpha": 0,
-                    "color": "#888888",
-                    "scrollbarHeight": 55,
-                    "backgroundAlpha": 0,
-                    "selectedBackgroundAlpha": 0.1,
-                    "selectedBackgroundColor": "#888888",
-                    "graphFillAlpha": 0,
-                    "autoGridCount": true,
-                    "selectedGraphFillAlpha": 0,
-                    "graphLineAlpha": 0.2,
-                    "graphLineColor": "#c2c2c2",
-                    "selectedGraphLineColor": "#888888",
-                    "selectedGraphLineAlpha": 1
-
-                },
-                "chartCursor": {
-                    "categoryBalloonDateFormat": "MM",
-                    "cursorAlpha": 0,
-                    "valueLineEnabled": true,
-                    "valueLineBalloonEnabled": true,
-                    "valueLineAlpha": 0.5,
-                    "fullWidth": true
-                },
-                "dataDateFormat": "MM",
-                "categoryField": "month",
-                "categoryAxis": {
-                    "minPeriod": "MM",
-                    "parseDates": true,
-                    "minorGridAlpha": 1,
-                    "minorGridEnabled": true
-                },
-                "export": {
-                    "enabled": true
+        function myfunctionPaid(array) {
+            debugger;
+            for (var i = 1; i < array.length; i++) {
+                var val = array[0];
+                var val1 = array[1];
+                var val2 = array[2];
+                var val3 = array[3];
+                var val4 = array[4];
+                var val5 = array[5];
+                var val6 = array[6];
+                var val7 = array[7];
+                var val8 = array[8];
+                var val9 = array[9];
+                var val10 = array[10];
+                var val11 = array[11];
+                var chart = AmCharts.makeChart("paid_chart", {
+                    "type": "serial",
+                    "theme": "light",
+                    "marginRight": 70,
+                    "dataProvider": [{
+                        "country": val.month,
+                        "visits": val.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val1.month,
+                        "visits": val1.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val2.month,
+                        "visits": val2.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val3.month,
+                        "visits": val3.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val4.month,
+                        "visits": val4.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val5.month,
+                        "visits": val5.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val6.month,
+                        "visits": val6.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val7.month,
+                        "visits": val7.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val8.month,
+                        "visits": val8.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val9.month,
+                        "visits": val9.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val10.month,
+                        "visits": val10.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val11.month,
+                        "visits": val11.paiduser,
+                        "color": "#FF0F00"
+                    },
+                    ],
+                    "valueAxes": [{
+                        "axisAlpha": 0,
+                        "position": "left",
+                        "title": "Paid user"
+                    }],
+                   // "startDuration": 1,
+                    "graphs": [{
+                        "balloonText": "<b>[[category]]: [[value]]</b>",
+                        "fillColorsField": "color",
+                        "fillAlphas": 0.9,
+                        "lineAlpha": 0.2,
+                        "type": "column",
+                        "valueField": "visits"
+                    }],
+                    "chartCursor": {
+                        "categoryBalloonEnabled": false,
+                        "cursorAlpha": 0,
+                        "zoomable": false
+                    },
+                    "categoryField": "country",
+                    "categoryAxis": {
+                        "gridPosition": "start",
+                        "labelRotation": 45,
+                        "title": "Months"
+                    },
+                    "export": {
+                        "enabled": true
+                    }
                 }
-            });
-
-            chart.addListener("rendered", zoomChart);
-            if (chart.zoomChart) {
-                chart.zoomChart();
-            }
-
-            function zoomChart() {
-                chart.zoomToIndexes(Math.round(chart.dataProvider.length * 0.4), Math.round(chart.dataProvider.length * 0.55));
+                );
             }
         }
+        chart.addListener("rendered", zoomChart);
+if(chart.zoomChart){
+	chart.zoomChart();
+}
+
+function zoomChart(){
+    chart.zoomToIndexes(Math.round(chart.dataProvider.length * 0.4), Math.round(chart.dataProvider.length * 0.55));
+}
     </script>
 
     <script>
-        function myfunctionUnPaid(msg) {
-            // un paid_chart
-            var chart = AmCharts.makeChart("unpaid_chart", {
-                "type": "serial",
-                "theme": "light",
-                "marginTop": 0,
-                "marginRight": 80,
-                "dataProvider": msg,
-                "graphs": [{
-                    "id": "g1",
-                    "balloonText": "[[category]]<br><b><span style='font-size:14px;'>[[value]]</span></b>",
-                    "bullet": "round",
-                    "bulletSize": 8,
-                    "lineColor": "#d1655d",
-                    "lineThickness": 2,
-                    "negativeLineColor": "#637bb6",
-                    "type": "smoothedLine",
-                    "valueField": "Unpaiduser"
-                }],
-                "chartScrollbar": {
-                    "graph": "g1",
-                    "gridAlpha": 0,
-                    "color": "#888888",
-                    "scrollbarHeight": 55,
-                    "backgroundAlpha": 0,
-                    "selectedBackgroundAlpha": 0.1,
-                    "selectedBackgroundColor": "#888888",
-                    "graphFillAlpha": 0,
-                    "autoGridCount": true,
-                    "selectedGraphFillAlpha": 0,
-                    "graphLineAlpha": 0.2,
-                    "graphLineColor": "#c2c2c2",
-                    "selectedGraphLineColor": "#888888",
-                    "selectedGraphLineAlpha": 1
-
-                },
-                "chartCursor": {
-                    "categoryBalloonDateFormat": "MM",
-                    "cursorAlpha": 0,
-                    "valueLineEnabled": true,
-                    "valueLineBalloonEnabled": true,
-                    "valueLineAlpha": 0.5,
-                    "fullWidth": true
-                },
-                "dataDateFormat": "MM",
-                "categoryField": "month",
-                "categoryAxis": {
-                    "minPeriod": "MM",
-                    "parseDates": true,
-                    "minorGridAlpha": 1,
-                    "minorGridEnabled": true
-                },
-                "export": {
-                    "enabled": true
+        function myfunctionUnPaid(array) {
+            debugger;
+            for (var i = 1; i < array.length; i++) {
+                var val = array[0];
+                var val1 = array[1];
+                var val2 = array[2];
+                var val3 = array[3];
+                var val4 = array[4];
+                var val5 = array[5];
+                var val6 = array[6];
+                var val7 = array[7];
+                var val8 = array[8];
+                var val9 = array[9];
+                var val10 = array[10];
+                var val11 = array[11];
+                var chart = AmCharts.makeChart("unpaid_chart", {
+                    "type": "serial",
+                    "theme": "light",
+                    "marginRight": 70,
+                    "dataProvider": [{
+                        "country": val.month,
+                        "visits": val.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val1.month,
+                        "visits": val1.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val2.month,
+                        "visits": val2.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val3.month,
+                        "visits": val3.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val4.month,
+                        "visits": val4.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val5.month,
+                        "visits": val5.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val6.month,
+                        "visits": val6.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val7.month,
+                        "visits": val7.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val8.month,
+                        "visits": val8.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val9.month,
+                        "visits": val9.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val10.month,
+                        "visits": val10.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    {
+                        "country": val11.month,
+                        "visits": val11.Unpaiduser,
+                        "color": "#FF0F00"
+                    },
+                    ],
+                    "valueAxes": [{
+                        "axisAlpha": 0,
+                        "position": "left",
+                        "title": "UnPaid user"
+                    }],
+                   // "startDuration": 1,
+                    "graphs": [{
+                        "balloonText": "<b>[[category]]: [[value]]</b>",
+                        "fillColorsField": "color",
+                        "fillAlphas": 0.9,
+                        "lineAlpha": 0.2,
+                        "type": "column",
+                        "valueField": "visits"
+                    }],
+                    "chartCursor": {
+                        "categoryBalloonEnabled": false,
+                        "cursorAlpha": 0,
+                        "zoomable": false
+                    },
+                    "categoryField": "country",
+                    "categoryAxis": {
+                        "gridPosition": "start",
+                        "labelRotation": 45,
+                         "title": "Months"
+                    },
+                    "export": {
+                        "enabled": true
+                    }
                 }
-            });
-
-            chart.addListener("rendered", zoomChart);
-            if (chart.zoomChart) {
-                chart.zoomChart();
-            }
-
-            function zoomChart() {
-                chart.zoomToIndexes(Math.round(chart.dataProvider.length * 0.4), Math.round(chart.dataProvider.length * 0.55));
+                );
             }
         }
+        chart.addListener("rendered", zoomChart);
+if(chart.zoomChart){
+	chart.zoomChart();
+}
+
+function zoomChart(){
+    chart.zoomToIndexes(Math.round(chart.dataProvider.length * 0.4), Math.round(chart.dataProvider.length * 0.55));
+}
     </script>
     <script>
         function Logout() {

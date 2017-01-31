@@ -131,11 +131,14 @@
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li class="active">
+                                        <li>
                                             <a href="../AdminUser/ManageUser">Manage Users</a>
                                         </li>
                                         <li>
                                             <a href="../AdminUser/DeletedUser">Deleted Users</a>
+                                        </li>
+                                        <li>
+                                            <a href="../AdminUser/DisabledUser">Disabled Users</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -263,9 +266,14 @@
                                             </div>
                                             <div class="row">
                                                 <div class="input-field col s12 m6 l6">
+                                                    <input type="date" class="datepicker" id="startdate">
+                                                    <label>Start Date</label>
+                                                </div>
+                                                <div class="input-field col s12 m6 l6">
                                                     <input type="date" class="datepicker" id="date">
                                                     <label>Expiry Date</label>
                                                 </div>
+                                               
                                                 @*<div class="input-field col s12 m6 l6">
                                                     <select>
                                                         <option value="" disabled selected>Choose your option</option>
@@ -432,7 +440,8 @@
             var Advertisement = $('#Advertisement').val();
             var img_url = $('#imgdropify').val();
                     
-           // var img_url = $('#img_url').val();
+            // var img_url = $('#img_url').val();
+            var startdate = $('#startdate').val();
             var date = $('#date').val();
 
             var fd = new FormData();
@@ -445,7 +454,7 @@
 
                 type: "POST",
                 @*url: "@ViewBag.ApiDomain/api/user/Register",*@
-                url: '@ViewBag.ApiDomain/api/user/AdminAddNewsLetter?Advertisement=' + Advertisement + '&img_url=' + img_url + '&date=' + date,
+                url: '@ViewBag.ApiDomain/api/user/AdminAddNewsLetter?Advertisement=' + Advertisement + '&img_url=' + img_url + '&startdate=' + startdate + '&date=' + date,
                // dataType: 'json',
                 processData: false,
                 contentType: false,

@@ -11,6 +11,7 @@ namespace Domain.Socioboard.Models
         public Int64 Id { get; set; }
         public string NewsLetterBody { get; set; }
         public string Subject { get; set; }
+        public DateTime startdate { get; set; }
         public DateTime ExpiryDate { get; set; }
     }
 }

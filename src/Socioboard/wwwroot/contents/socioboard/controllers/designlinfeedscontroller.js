@@ -84,6 +84,13 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
             }
         }
 
+
+
+        $scope.getPostData = function (obj) {
+            return obj.replace(/%20+/g, " ").replace(/%21+/g, "'").replace(/%27+/g, "'")
+        };
+
+
         $scope.checkfile = function () {
             var filesinput = $('#composeImage');
             var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
@@ -259,3 +266,23 @@ SocioboardApp.directive("scroll", function ($window) {
         });
     };
 });
+
+
+SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+                console.log("myRepeatFeedTimeoutDirective Called");
+                var $containerProducts = $("#products");
+                $containerProducts.imagesLoaded(function () {
+                    $containerProducts.masonry({
+                        itemSelector: ".product",
+                        columnWidth: ".product-sizer",
+                    });
+                });
+
+
+            });
+        }
+    };
+})

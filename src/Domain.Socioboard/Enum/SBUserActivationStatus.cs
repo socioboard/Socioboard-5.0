@@ -5,6 +5,7 @@ namespace Domain.Socioboard.Enum
     {
         Active =0,
         MailSent =1,
-        InActive =2
+        InActive =2,
+        Disable =3
     }
 }
