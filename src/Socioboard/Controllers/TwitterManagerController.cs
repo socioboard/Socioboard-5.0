@@ -9,6 +9,7 @@ using Hammock;
 using System.Compat.Web;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Linq;
 
 namespace Socioboard.Controllers
 {
@@ -27,8 +28,42 @@ namespace Socioboard.Controllers
         public async Task<IActionResult> AddTwitterAccount(bool follow)
         {
             int count = 0;
+            string profileCount = "";
+            List<Domain.Socioboard.Models.Groups> groups = new List<Domain.Socioboard.Models.Groups>();
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    groups = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
+                }
+                catch { }
+            }
+            string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+            if (!string.IsNullOrEmpty(sessionSelectedGroupId))
+            {
+                HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
+                if (groupProfilesResponse.IsSuccessStatusCode)
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                    profileCount = groupProfiles.Count.ToString();
+                }
+            }
+            else
+            {
+                long selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
+                HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
+                ViewBag.selectedGroupId = selectedGroupId;
+                HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
+                if (groupProfilesResponse.IsSuccessStatusCode)
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                    profileCount = groupProfiles.Count.ToString();
+                }
+            }
+
+           // string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
             try
             {
                 count = Convert.ToInt32(profileCount);
@@ -75,8 +110,8 @@ namespace Socioboard.Controllers
                     Path = "request_token"
                 };
                 // Get the response from the request
-                var response = client.Request(request);
-                var collection = HttpUtility.ParseQueryString(response.Content);
+                var _response = client.Request(request);
+                var collection = HttpUtility.ParseQueryString(_response.Content);
                 //string str = collection[1].ToString();
                 //HttpContext.Current.Session["requestSecret"] = collection[1];
                 string rest = "https://api.twitter.com/oauth/authorize?oauth_token=" + collection[0] ;

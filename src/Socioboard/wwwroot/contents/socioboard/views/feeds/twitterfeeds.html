@@ -85,7 +85,7 @@
                                 </div>
                             </div>-->
 
-                            <div>
+                            <!--<div>
                                 <a class="loadmorebutton1" href="" style="font-family:'Times New Roman'; font-weight:600;font-size:16px" ng-click="listData1()">
                                     {{loadmore_feed}}
                                 </a>
@@ -108,39 +108,9 @@
                                         text-decoration: underline;
                                     }
                                 </style>
-                            </div>
+                            </div>-->
 
-
-                        </ul>
-
-                    </div>
-                </div>
-                <!--twitter feeds end-->
-
-                <!--twitter tweets start-->
-                <div class="col s6 m6 l6">
-                    <div class="card" id="feeds">
-                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Tweets</h5>
-                        <ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
-                            <li class="collection-item avatar" ng-repeat="tweet in lstUserTweets">
-                                <img src="{{tweet.fromProfileUrl}}" alt="{{tweet.fromName}}" class="circle">
-                                <span class="email-title">{{tweet.fromName}}</span>
-                                <div class="row feeds_post">
-                                    <div class="col m8">
-                                        <p class="break_word ultra-small">{{tweet.twitterMsg}}</p>
-                                    </div>
-                                    <div class="col m4 center">
-                                        <img src="{{tweet.mediaUrl}}" ng-if="tweet.mediaUrl != ''" class="responsive-img ">
-                                    </div>
-                                    <span ng-if="user.TrailStatus!=2" ng-click="tasktwttweetModel(tweet)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
-                                        <i class="icon-pin"></i>
-                                    </span>
-                                </div>
-                                <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{tweet.messageDate}}">{{tweet.messageDate}}</a>
-                            </li>
-
-
-                            <!--<div class="center">
+                            <div class="center" id="load_circle_feed" ng-class="loaderclassfeed" hidden>
                                 <div class="preloader-wrapper big active">
                                     <div class="spinner-layer spinner-blue">
                                         <div class="circle-clipper left">
@@ -182,33 +152,104 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>-->
-
-                            <div>
-                                <a class="loadmorebutton" href="" style="font-family:'Times New Roman'; font-weight:600;font-size:16px" ng-click="listData()">
-                                    {{loadmore_twt}}
-                                </a>
-                                <br /><br />
-                                <style>
-                                    a:link {
-                                        background-color: transparent;
-                                        text-decoration: none;
-                                    }
-
-                                    a:hover {
-                                        color: darkblue;
-                                        background-color: transparent;
-                                        text-decoration: underline;
-                                    }
-
-                                    a:active {
-                                        color: red;
-                                        background-color: transparent;
-                                        text-decoration: underline;
-                                    }
-                                </style>
                             </div>
 
+                            <h6 style="margin-left:32%; color:lightgray; font-size:20px" ng-if="endtwfeeds==true">No more Feeds to load</h6>
+
+                            <a href="" ng-click="listData1()" style="margin-left:40%" onClick="this.style.visibility = 'hidden'; loadmore_feeds();" ng-if="preloadmorefeeds==true"><img src="http://i.imgur.com/rTD8xIS.png" /></a>
+                            <br />
+                            <div class="cssload-container" ng-if="preloadmorefeeds!=true">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <br />
+                            </div>
+
+                        </ul>
+                       
+                    </div>
+                </div>
+                <!--twitter feeds end-->
+
+                <!--twitter tweets start-->
+                <div class="col s6 m6 l6">
+                    <div class="card" id="feeds">
+                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Tweets</h5>
+                        <ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+                            <li class="collection-item avatar" ng-repeat="tweet in lstUserTweets">
+                                <img src="{{tweet.fromProfileUrl}}" alt="{{tweet.fromName}}" class="circle">
+                                <span class="email-title">{{tweet.fromName}}</span>
+                                <div class="row feeds_post">
+                                    <div class="col m8">
+                                        <p class="break_word ultra-small">{{tweet.twitterMsg}}</p>
+                                    </div>
+                                    <div class="col m4 center">
+                                        <img src="{{tweet.mediaUrl}}" ng-if="tweet.mediaUrl != ''" class="responsive-img ">
+                                    </div>
+                                    <span ng-if="user.TrailStatus!=2" ng-click="tasktwttweetModel(tweet)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
+                                        <i class="icon-pin"></i>
+                                    </span>
+                                </div>
+                                <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{tweet.messageDate}}">{{tweet.messageDate}}</a>
+                            </li>
+
+                                             <div class="center" id="load_circle_twt" ng-class="loaderclasstwt" hidden>
+                                                <div class="preloader-wrapper big active">
+                                                    <div class="spinner-layer spinner-blue">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div><div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div><div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="spinner-layer spinner-red">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div><div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div><div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="spinner-layer spinner-yellow">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div><div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div><div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="spinner-layer spinner-green">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div><div class="gap-patch">
+                                                            <div class="circle"></div>
+                                                        </div><div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                            <h6 style="margin-left:32%; color:lightgray; font-size:20px" ng-if="endtwtweets==true">No more Tweets to load</h6>
+
+                            <a href="" ng-click="listData()" style="margin-left:42%" onClick="this.style.visibility = 'hidden'; loadmore_tweets();" ng-if="preloadmoretweets==true"><img src="http://i.imgur.com/rTD8xIS.png" /></a>
+                            <br />
+                            <div class="cssload-container" ng-if="preloadmoretweets!=true">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <br />
+                            </div>
+                            
                         </ul>
 
                     </div>
@@ -348,4 +389,118 @@
 
     </div>
 
+<!-- //////////////////////////////////////// Script Code //////////////////////////////////////////// -->
+
+<script>
+        function loadmore_tweets() {
+            $('#load_circle_twt').show();
+        }
+        function loadmore_feeds() {
+            $('#load_circle_feed').show();
+        }
+</script>
+
+<!-- //////////////////////////////////////// End Script Code //////////////////////////////////////// -->
+
+<!-- //////////////////////////////////////// Style CSS for Pre Loader /////////////////////////////// -->
+
+<style>
+    .cssload-container{
+		background:rgb(255,255,255);
+	}
+	
+	.cssload-container div {
+	width: 25px;
+	height: 25px;
+	position: absolute;
+	background-color: rgb(255,255,255);
+	top: 5%;
+	border-radius: 50%;
+}
+
+.cssload-container div:nth-child(1) {
+	background-color: rgb(144,202,249);
+	animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(2) {
+	background-color: rgb(144,202,249);
+	animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(3) {
+	background-color: rgb(144,202,249);
+	animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(4) {
+	background-color: rgb(144,202,249);
+	animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+
+
+@keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-o-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-ms-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-webkit-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-moz-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+</style>
+
+<!-- //////////////////////////////////////// End Style CSS for Pre Loader /////////////////////////// -->
     

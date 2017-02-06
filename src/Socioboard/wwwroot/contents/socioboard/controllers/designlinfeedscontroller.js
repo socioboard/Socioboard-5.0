@@ -2,7 +2,9 @@
 
 SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope, $http, $timeout, apiDomain,$state) {
     //alert('helo');
-    $scope.$on('$viewContentLoaded', function() {   
+    $scope.$on('$viewContentLoaded', function () {
+
+        $rootScope.liComposeMessage = {};
     
         var start = 0; // where to start data
         var ending = 0; // how much data need to add on each function call
@@ -32,6 +34,30 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
 	            swal("Deleted!", "Your profile has been deleted.", "success"); 
 	            });
         }
+
+
+
+        $scope.openComposeMessage = function (schedulemessage) {
+
+            if (schedulemessage != null) {
+                var message = {
+                    "shareMessage": schedulemessage.message,
+                    "picUrl": schedulemessage.postImgUrl
+                };
+                console.log(schedulemessage.message);
+                console.log("google");
+                console.log(message);
+                $rootScope.liComposeMessage = message;
+            }
+
+            $('#ComposePostModal').openModal();
+            var composeImagedropify = $('#composeImage').parents('.dropify-wrapper');
+            $(composeImagedropify).find('.dropify-render').html('<img src="' + schedulemessage.postImgUrl + '">');
+            $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
+            $('select').material_select();
+        }
+
+        $scope.cmpbtn = true;
 
         $scope.ComposeMessage = function () {
             $scope.disbtncom = false;
@@ -284,5 +310,14 @@ SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
 
             });
         }
+    };
+})
+
+
+SocioboardApp.directive('afterRender', function ($timeout) {
+    return function (scope, element, attrs) {
+        $timeout(function () {
+            $('.dropify').dropify();
+        });
     };
 })

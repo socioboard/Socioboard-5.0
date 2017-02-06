@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col s12 m8 l8">
                 <div class="card" id="feeds">
-                    <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Smart Inbox Notification</h5>
+                    <h5 class="feeds_title blue darken-2 white-text" style="padding:20px;margin:0;font-weight:300"><i class="icon-folder"></i>Smart Inbox Notification</h5>
                     <ul class="collection smartinbox_slider">
                         <li class="collection-item avatar" ng-repeat="notification in lstNotifications | notificationbyprofilesfileter : filterType : selectedProfiles  ">
                             <img src="{{notification.fromProfileUrl}}" alt="{{notification.fromScreenName}}" class="circle">
@@ -36,9 +36,9 @@
                             </div>
                             <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{notification.messageDate}}">{{notification.messageDate}}</a>
                         </li>
-
-
-                        <!--<div class="center">
+                        <br />
+                        <br />
+                        <div class="center" ng-if="x!=true"> <!--ng-class="loaderclass"-->
                             <div class="preloader-wrapper big active">
                                 <div class="spinner-layer spinner-blue">
                                     <div class="circle-clipper left">
@@ -80,14 +80,13 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>-->
+                        </div>
                     </ul>
-
                 </div>
             </div>
             <div class="col s12 m4 l4">
                 <div class="card" id="feeds">
-                    <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Filter</h5>
+                    <h5 class="feeds_title blue darken-2 white-text" style="padding:20px;margin:0;font-weight:300"><i class="icon-folder"></i>Filter</h5>
                     <div class="section section_filter">
                         <h6>PROFILES</h6>
                         <div class="smartinbox_filter_slider">
@@ -288,3 +287,12 @@
         </div>
     </div>
 </div>
+<script>
+        //function chng_btn_val() {
+        //    $('#gif').show();
+        //}
+        debugger;
+        setTimeout(function () {
+            $('#gif').hide();
+        }, 20000);
+</script>

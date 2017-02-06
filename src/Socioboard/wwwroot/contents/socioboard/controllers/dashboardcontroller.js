@@ -6,7 +6,45 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
     $scope.$on('$viewContentLoaded', function () {
         $scope.dispbtn = true;
         $scope.check = false;
-        console.log($rootScope.Downgrade);
+
+        $scope.selectedvalue = true;
+        $scope.selectclick = function () {
+
+            //  var selectedvals = $scope.composeProfiles;
+            var selectedvals = $('#composeProfiles').val();
+            if (selectedvals.indexOf("selectall") != -1) {
+                var alloptions = $('#composeProfiles option');
+                angular.forEach(alloptions, function (value, key) {
+                    //alert(value);
+                    var tempval = value.value;//$(a).val();
+                    var selectvalindex = selectedvals.indexOf(tempval);
+                    if (selectvalindex == -1) {
+                        if (tempval != "selectall" && tempval != "select") {
+                            selectedvals.push(tempval);
+                            // $('.dropdown-content > li:not(:first-child)').find('input').prop('checked', true)
+                        }
+                    } else {
+                        selectedvals.splice(selectvalindex);
+                        //$('.dropdown-content > li:not(:first-child)').find('input').prop('checked', false)
+                    }
+                });
+                // console.log(selectedvals);
+                // $('#composeProfiles').material_select();
+                if ($scope.selectedvalue == true) {
+                    // $('.dropdown-content > li:not(:first-child)').find('input').prop('checked', true);
+                    $('.dropdown-content > li:not(:first-child)').addClass("active").find('input').prop('checked', true);
+                    $scope.selectedvalue = false;
+
+                }
+                else {
+                    // $('.dropdown-content > li:not(:first-child)').find('input').prop('checked', false);
+                    $('.dropdown-content > li:not(:first-child)').removeClass("active").find('input').prop('checked', false);
+                    $scope.selectedvalue = true;
+
+                }
+            }
+
+        }
        
         //Auth.login().success(function () { });
         $scope.getHttpsURL = function (obj) {
@@ -162,7 +200,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 $http.get(apiDomain + '/api/Facebook/GetFacebookProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   $scope.lstFbProfiles = response.data;
-
+                                  setTimeout(function () {
+                                      $scope.loaderclass = 'hide';
+                                  }, 3000);
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -179,7 +219,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               .then(function (response) {
                                   console.log(response.data);
                                   $scope.lstTwtProfiles = response.data;
-
+                                  setTimeout(function () {
+                                      $scope.loaderclass = 'hide';
+                                  }, 3000);
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -194,7 +236,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 $http.get(apiDomain + '/api/Google/GetGplusProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   $scope.lstGplusProfiles = response.data;
-
+                                  setTimeout(function () {
+                                      $scope.loaderclass = 'hide';
+                                  }, 3000);
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -208,7 +252,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 $http.get(apiDomain + '/api/Google/GetGAProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   $scope.lstAProfiles = response.data;
-
+                                  setTimeout(function () {
+                                      $scope.loaderclass = 'hide';
+                                  }, 3000);
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -222,7 +268,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 $http.get(apiDomain + '/api/Instagram/GetInstagramProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   $scope.lstinsProfiles = response.data;
-
+                                  setTimeout(function () {
+                                      $scope.loaderclass = 'hide';
+                                  }, 3000);
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -238,7 +286,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 $http.get(apiDomain + '/api/LinkedIn/GetLinkedInCompanyPagesProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   $scope.lstlincmpnyProfiles = response.data;
-
+                                  setTimeout(function () {
+                                      $scope.loaderclass = 'hide';
+                                  }, 3000);
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });

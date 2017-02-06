@@ -4,6 +4,10 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
         // initialize core components
+        var preloadmorefeeds = false;
+        var preloadmoretweets = false;
+        var endtwfeeds = false;
+        var endtwtweets = false;
         twitterfeeds();
         var start = 0; // where to start data
         var ending = start + 30; // how much data need to add on each function call
@@ -19,6 +23,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               $scope.lstTwtFeeds = response.data;
+                              $scope.preloadmorefeeds = true;
                               if (response.data == null) {
                                   reachLast = true;
                               }
@@ -30,10 +35,12 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
 
 
           $scope.LoadTopTweets = function () {
-            //codes to load  recent Tweets
+              //codes to load  recent Tweets
+              debugger;
               $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
                               $scope.lstUserTweets = response.data;
+                              $scope.preloadmoretweets = true;
                               if (response.data == null) {
                                   TweetsreachLast = true;
                               }
@@ -57,11 +64,13 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                                if (response.data == null || response.data == "") {
                                    TweetsreachLast = true;
                                    $scope.loadmore_twt = "Reached at bottom";
+                                   $scope.endtwtweets = true;
+                                   $scope.loaderclasstwt = 'hide';
                                }
                                else {
                                    $scope.lstUserTweets = $scope.lstUserTweets.concat(response.data);
-
                                    ending = ending + 30;
+                                   $scope.listData();
                                }
                            }, function (reason) {
                                $scope.error = reason.data;
@@ -80,11 +89,13 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                                if (response.data == null || response.data == "") {
                                    reachLast = true;
                                    $scope.loadmore_feed = "Reached at bottom";
+                                   $scope.endtwfeeds = true;
+                                   $scope.loaderclassfeed = 'hide';
                                }
                                else {
                                    $scope.lstTwtFeeds = $scope.lstTwtFeeds.concat(response.data);
-
                                    ending = ending + 30;
+                                   $scope.listData1();
                                }
                            }, function (reason) {
                                $scope.error = reason.data;

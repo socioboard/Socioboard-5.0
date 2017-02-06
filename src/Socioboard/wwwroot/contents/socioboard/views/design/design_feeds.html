@@ -30,8 +30,8 @@
                                     <div class="col l12 m12 s12">
                                         <p class="description_listen">
                                             {{getPostData(fbpost.message)}}
-                                            <div class="center" ng-if="fbpost.postImgUrl!=null">
-                                                <!--<img  src="{{fbpost.postImgUrl}}" class="responsive-img">-->
+                                            <div class="center" ng-if="fbpost.postImgUrl != null">
+                                                <!--<img    src="{{fbpost.postImgUrl}}" class="responsive-img">-->
                                                 <!--<div style="word-break:break-all"> {{getPostData(fbpost.message)}} </div>-->
                                             </div>
                                         </p>
@@ -39,8 +39,8 @@
                                 </div>
                             </div>
                             <div class="card-action center">
-                                <a ng-click="scheduledraft(fbpost.message)">Schedule</a>
-                                <a ng-click="schedulefbpost(fbpost.message)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                                <a ng-click="scheduledraft(fbpost)">Schedule</a>
+                                <a ng-click="openComposeMessage(fbpost)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
             <!-- END CONTENT -->
 
             <!-- add profile -->
-            <div id="addprofile" class="modal">
+            <!--<div id="addprofile" class="modal">
                 <div class="modal-content">
                   <h4>Adding Profiles</h4>
                     <div class="row">
@@ -154,10 +154,11 @@
                         </div>
                   </div>             
                 </div>
-            </div>
+            </div>-->
+            <!-- add profile -->
 
             <!-- Fb Fanpage Modal  -->
-            <div id="FbFanpageModal" class="modal">
+            <!--<div id="FbFanpageModal" class="modal">
                 <div class="modal-content">
                     <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
                     <ul class="collection">
@@ -200,7 +201,8 @@
                   <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
                   <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Connect</a>
                 </div>
-            </div>
+            </div>-->
+            <!-- Fb Fanpage Modal  -->
 
             <!-- Modal Structure -->
             <div id="searchcatagory" class="modal">
@@ -228,7 +230,7 @@
                   </div>
                 </div>
             </div>
-
+            <!-- Modal Structure -->
 
         <!-- Compose Email Trigger -->
         <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
@@ -241,26 +243,25 @@
                 <i class="large mdi-editor-mode-edit"></i>
             </a>
         </div>
-        <div id="ComposePost" class="modal">
+
+
+        <div id="ComposePostModal" class="modal">
             <div class="modal-content">
                 <nav class="red">
                     <div class="nav-wrapper">
                         <div class="left col s12 m5 l5">
                             <ul>
+
                                 <li>
-                                    <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                                </li>
-                                <li>
-                                    <a href="#!" class="email-type">Compose</a>
+                                    <a class="email-type">Compose</a>
                                 </li>
                             </ul>
                         </div>
-                        <div ng-init="disbtncom= {{disbtncom}}"></div>
                         <div class="col s12 m7 l7 hide-on-med-and-down">
                             <ul class="right">
                                 <li>
-                                    <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
-                                    <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                                    <div ng-show="cmpbtn" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                                    <div ng-show="!cmpbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
                                 </li>
                                 <!--<li>
                                 <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
@@ -271,6 +272,7 @@
                     </div>
                 </nav>
             </div>
+
             <div class="model-email-content">
                 <div class="row">
                     <form class="col s12">
@@ -291,20 +293,24 @@
                             <div class="col s12 m4 l3">
                                 <p>Select your file</p>
                             </div>
-                            <div class="col s12 m8 l9">
-                                <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
+                            <input type="hidden" id="imageUrl" value="{{fbComposeMessage.picUrl}}" />
+                            <div class="col s12 m8 l9" ng-if="fbComposeMessage">
+                                <input type="file" id="composeImage" class="dropify" after-render data-default-file="{{fbComposeMessage.picUrl}}" />
+                            </div>
+
+                            <div class="col s12 m8 l9" ng-if="!fbComposeMessage">
+                                <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-field col s12">
-                                <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
+                                <textarea id="composeMessage" class="materialize-textarea" length="5000">{{fbComposeMessage.shareMessage }}</textarea>
                                 <label for="compose">Message</label>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
-        </div>
-        <!-- Compose Email Structure -->
+            <!-- Compose Email Structure -->
 
-    </div>
+        </div>

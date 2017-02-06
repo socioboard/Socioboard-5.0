@@ -4,6 +4,7 @@ using Socioboard.Extensions;
 using Socioboard.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -99,9 +100,41 @@ namespace Socioboard.Controllers
         public async Task<ActionResult> AddGoogleAccount(string Op)
         {
             int count = 0;
+            string profileCount = "";
+            List<Domain.Socioboard.Models.Groups> groups = new List<Domain.Socioboard.Models.Groups>();
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-
-            string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    groups = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
+                }
+                catch { }
+            }
+            string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+            if (!string.IsNullOrEmpty(sessionSelectedGroupId))
+            {
+                HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
+                if (groupProfilesResponse.IsSuccessStatusCode)
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                    profileCount = groupProfiles.Count.ToString();
+                }
+            }
+            else
+            {
+                long selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
+                HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
+                ViewBag.selectedGroupId = selectedGroupId;
+                HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
+                if (groupProfilesResponse.IsSuccessStatusCode)
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                    profileCount = groupProfiles.Count.ToString();
+                }
+            }
+            //string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
             try
             {
                 count = Convert.ToInt32(profileCount);

@@ -53,7 +53,7 @@ namespace Domain.Socioboard.Helpers
                     ret = 5;
                     break;
                 case SBAccountType.Standard:
-                    ret = 20;
+                    ret = 10;
                     break;
 
                 case SBAccountType.Premium:

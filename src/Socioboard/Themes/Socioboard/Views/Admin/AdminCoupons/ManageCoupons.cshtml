@@ -304,7 +304,7 @@
     <div id="edit_user_modal" class="modal modal-fixed-footer">
         <form onsubmit="myFunction(); return false;" id="Updatecoupon">
             <div class="modal-content">
-                <h4>Edit Manage Coupon</h4>
+                <h4>Edit Coupon</h4>
                 <div class="row">
                     <div class="col l12 m12 s12">
 
@@ -337,7 +337,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="submitButton" type="submit" class="btn btn-flat btn-primary ink-reaction">Update</button>
+                <img id="load_gif" src="~/contents/socioboard/images/admin_loader.gif" hidden />
+                <button id="submitButton" onclick="chng_btn_val()" type="submit" class="btn btn-flat btn-primary ink-reaction">Update</button>
                 @*<a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-orange btn-flat">Update</a>*@
             </div>
         </form>
@@ -469,6 +470,7 @@
                     //alertify.success("User updated");
                     swal(msg);
                     window.location.reload();
+                    $('#load_gif').hide();
                     $('#firstName').val("");
                     $('#lastName').val("");
                     $('#user_email').val("");
@@ -513,6 +515,12 @@
 
 
         }
+    </script>
+    <script>
+        function chng_btn_val() {
+            $('#load_gif').show();
+}
+
     </script>
 </body>
 

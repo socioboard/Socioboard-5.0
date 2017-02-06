@@ -8,6 +8,7 @@ namespace Domain.Socioboard.Models
     public class User : IUser
     {
         [Required]
+        
         public Int64 Id { get; set; }
 
         public string FirstName { get; set; }

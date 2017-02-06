@@ -365,7 +365,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="submitButton" type="submit" class="btn btn-flat btn-primary ink-reaction"> Update</button>
+                <img id="load_gif" src="~/contents/socioboard/images/admin_loader.gif" hidden/>
+                <button id="submitButton" onclick="chng_btn_val()" type="submit" class="btn btn-flat btn-primary ink-reaction"> Update</button>
                 @*<a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-orange btn-flat">Update</a>*@
             </div>
             </form>
@@ -501,6 +502,7 @@
                     dataType: "html",
 
                     success: function (msg) {
+                        $('#load_gif').hide();
                         swal("You must choose every option!");
                     },
                 });
@@ -513,6 +515,7 @@
                     dataType: "html",
 
                     success: function (msg) {
+                        $('#load_gif').hide();
                         swal("Free user must be unpaid!");
                     },
                 });
@@ -538,6 +541,7 @@
                         //alertify.success("User updated");
                         swal(msg);
                         window.location.reload();
+                        $('#load_gif').hide();
                         $('#firstName').val("");
                         $('#lastName').val("");
                         $('#user_email').val("");
@@ -606,6 +610,12 @@
 
 
         }
+    </script>
+    <script>
+        function chng_btn_val() {
+            $('#load_gif').show();
+}
+
     </script>
 </body>
 

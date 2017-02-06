@@ -66,35 +66,9 @@
                                 <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{fbfeed._facebookFeed.feedDate}}">{{fbfeed._facebookFeed.feedDate}}</a>
                             </li>
                         </ul>
-                        <a class="col-md-10 portfolio-item" href="" style="font-family:'Times New Roman'; font-weight:600;font-size:16px" ng-if="user.TrailStatus!=2" ng-click="listData()">
-                            {{loadmore}}
-                        </a>
-                        
-                        <br /><br />
-                        <style>
-                            a:link {
-                                background-color: transparent;
-                                text-decoration: none;
-                            }
-
-                            a:hover {
-                                color: darkblue;
-                                background-color: transparent;
-                                text-decoration: underline;
-                            }
-
-                            a:active {
-                                color: red;
-                                background-color: transparent;
-                                text-decoration: underline;
-                            }
-                        </style>
-
-
-
-
-
-                        <!--<div class="center">
+                        <br />
+                        <h5 style="margin-left:38%; color:lightgray; font-family:Calibri" ng-if="endfeeds==true">No More Feeds to Load</h5>
+                        <div class="center" id="gif" ng-class="loaderclass" hidden>
                             <div class="preloader-wrapper big active">
                                 <div class="spinner-layer spinner-blue">
                                     <div class="circle-clipper left">
@@ -136,7 +110,19 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>-->
+                        </div>
+
+                        <a href="" ng-click="listData()" style="margin-left:44%" onClick = "this.style.visibility = 'hidden'; chng_btn_val();" ng-if="preloadmore==true"><img src="http://i.imgur.com/Y9I2fvH.png" /></a>
+                        
+                        <div class="cssload-container" ng-if="preloadmore!=true"> 
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <br />
+                        </div>
+                        <br />
+
                     </div>
                 </div>
             </div>
@@ -180,3 +166,128 @@
         </div>
     </div>
 </div>
+
+
+
+<!-- //////////////////////////////////////// Script Code //////////////////////////////////////// -->
+
+<script>
+        function chng_btn_val() {
+            $('#gif').show();
+}
+</script>
+
+<!-- //////////////////////////////////////// End Script Code //////////////////////////////////////// -->
+
+
+
+
+<!-- //////////////////////////////////////// Style CSS for Pre Loader //////////////////////////////////////// -->
+
+
+<style>
+.cssload-container{
+		background:rgb(255,255,255);
+	}
+	
+	.cssload-container div {
+	width: 25px;
+	height: 25px;
+	position: absolute;
+	background-color: rgb(204,204,204);
+	top: 67%;
+	border-radius: 50%;
+}
+
+.cssload-container div:nth-child(1) {
+	background-color: rgb(13,71,161);
+	animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(2) {
+	background-color: rgb(13,71,161);
+	animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(3) {
+	background-color: rgb(13,71,161);
+	animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(4) {
+	background-color: rgb(13,71,161);
+	animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+
+
+@keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-o-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-ms-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-webkit-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-moz-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+</style>
+
+
+<!-- //////////////////////////////////////// End Style CSS for Pre Loader //////////////////////////////////////// -->
+
+
+
+
+
+

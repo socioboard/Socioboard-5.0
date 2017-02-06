@@ -63,7 +63,7 @@
                                           </div>
                                         </li>
 
-                                        <div>
+                                        <!--<div>
                                             <a class="col-md-10 portfolio-item" href="" style="font-family:'Times New Roman'; font-weight:600;font-size:16px" ng-click="listData()">
                                                 {{loadmore}}
                                             </a>
@@ -88,9 +88,9 @@
                                                     text-decoration: underline;
                                                 }
                                             </style>
-                                        </div>
-
-                                        <!--<div class="center">
+                                        </div>-->
+                                        <h6 style="margin-left:31%; color:lightgray; font-size:20px" ng-if="endfeeds==true">No more Feeds to load</h6>
+                                        <div class="center" id="load_circle_insta" ng-class="loadmorefeeds" hidden>
                                           <div class="preloader-wrapper big active">
                                             <div class="spinner-layer spinner-blue">
                                               <div class="circle-clipper left">
@@ -132,7 +132,18 @@
                                               </div>
                                             </div>
                                           </div>
-                                        </div>-->
+                                        </div>
+
+                                        <a href="" ng-click="listData()" style="margin-left:41%" onClick="this.style.visibility = 'hidden'; loadmore_feeds();" ng-if="preloadmorefeeds==true"><img src="http://i.imgur.com/qJdCRuG.png" /></a>
+                                        <br />
+                                        
+                                        <div class="cssload-container" ng-if="preloadmorefeeds!=true">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+
                                     </ul>
 
                                 </div>
@@ -178,3 +189,115 @@
             </section>
             <!-- END CONTENT -->   
     </div>
+
+<!-- //////////////////////////////////////// Script Code //////////////////////////////////////////// -->
+
+<script>
+        function loadmore_feeds() {
+            $('#load_circle_insta').show();
+        }
+</script>
+
+<!-- //////////////////////////////////////// End Script Code //////////////////////////////////////// -->
+
+<!-- //////////////////////////////////////// Style CSS for Pre Loader //////////////////////////////////////// -->
+
+<style>
+    .cssload-container{
+		background:rgb(255,255,255);
+	}
+	
+	.cssload-container div {
+	width: 27px;
+	height: 27px;
+	position: absolute;
+	background-color: rgb(204,204,204);
+	top: 5%;
+	border-radius: 50%;
+}
+
+.cssload-container div:nth-child(1) {
+	background-color: rgb(190,3,156);
+	animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(2) {
+	background-color: rgb(239,9,21);
+	animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(3) {
+	background-color: rgb(255,60,0);
+	animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(4) {
+	background-color: rgb(250,181,28);
+	animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+
+
+@keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-o-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-ms-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-webkit-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-moz-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+</style>
+
+ <!--//////////////////////////////////////// End Style CSS for Pre Loader ////////////////////////////////////////--> 

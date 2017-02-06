@@ -45,7 +45,7 @@ namespace Socioboard.Controllers
                 try
                 {
                     accessToken = Socioboard.Facebook.Auth.Authentication.getAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
-                 }
+                }
                 catch (Exception ex)
                 {
                     _logger.LogInformation(ex.Message);
@@ -53,7 +53,7 @@ namespace Socioboard.Controllers
                     return Content(ex.Message);
                 }
 
-                 Domain.Socioboard.Models.User user = null;
+                Domain.Socioboard.Models.User user = null;
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("AccessToken", accessToken));
                 Parameters.Add(new KeyValuePair<string, string>("accType", plan));
@@ -110,9 +110,41 @@ namespace Socioboard.Controllers
         public async Task<ActionResult> AddFacebookAcc(string Op)
         {
             int count = 0;
+            string profileCount = "";
+            List<Domain.Socioboard.Models.Groups> groups = new List<Domain.Socioboard.Models.Groups>();
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-
-            string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                  groups   = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
+                }
+                catch { }
+            }
+            string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+            if (!string.IsNullOrEmpty(sessionSelectedGroupId))
+            {
+                HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
+                if (groupProfilesResponse.IsSuccessStatusCode)
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                    profileCount = groupProfiles.Count.ToString();
+                }
+            }
+            else
+            {
+                long selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
+                HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
+                ViewBag.selectedGroupId = selectedGroupId;
+                HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
+                if (groupProfilesResponse.IsSuccessStatusCode)
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                    profileCount = groupProfiles.Count.ToString();
+                }
+            }
+            //  string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
             try
             {
                 count = Convert.ToInt32(profileCount);
@@ -139,7 +171,7 @@ namespace Socioboard.Controllers
                 else
                 {
                     HttpContext.Session.SetObjectAsJson("fbSocial", "Fb_Page");
-                 
+
                 }
                 return Redirect(Socioboard.Facebook.Auth.Authentication.GetFacebookRedirectLink(_appSettings.FacebookAuthUrl, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl));
             }
@@ -198,7 +230,7 @@ namespace Socioboard.Controllers
             HttpResponseMessage response = await WebApiReq.PostReq("/api/Facebook/GetFacebookPages", Parameters, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
-                List<Domain.Socioboard.Models.Facebookpage>lstpages = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Facebookpage>>();
+                List<Domain.Socioboard.Models.Facebookpage> lstpages = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Facebookpage>>();
                 if (lstpages.Count > 0)
                 {
                     TempData["fbPages"] = Newtonsoft.Json.JsonConvert.SerializeObject(lstpages);

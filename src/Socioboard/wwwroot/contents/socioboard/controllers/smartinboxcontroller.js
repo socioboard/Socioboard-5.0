@@ -4,12 +4,17 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         var reachLast = false;
+        var x = false;
+        debugger;
         $scope.getTwitterNotifications = function () {
             $http.get(apiDomain + '/api/Twitter/GetNotifications?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&skip=0&count=20')
                           .then(function (response) {
                               $scope.lstNotifications = response.data;
+                              $scope.x = true;
+                              //$scope.loaderclass = 'hide';
                               if (response.data == null) {
                                   reachLast = true;
+                                  $scope.loaderclass = 'hide';
                               }
                           }, function (reason) {
                               $scope.error = reason.data;

@@ -6,6 +6,8 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
         instagramfeeds();
         var start = 0;
+        var preloadmorefeeds = false;
+        var endfeeds = false;
         var ending = start + 30;
         var reachLast = false;
         var count = 30;
@@ -24,7 +26,8 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                                if (response.data == null) {
                                   reachLast = true;
                               }
-                              $scope.date(response.data);
+                               $scope.date(response.data);
+                               $scope.preloadmorefeeds = true;
                               // console.log(response.data);
                              
                           }, function (reason) {
@@ -47,11 +50,14 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                              if (response.data == null || response.data == "") {
                                  reachLast = true;
                                  $scope.loadmore = "Reached at bottom";
+                                 $scope.loadmorefeeds = 'hide';
+                                 $scope.endfeeds = true;
                              }
                              else {
                                  $scope.lstFbFeeds = $scope.lstFbFeeds.concat(response.data);
                                  //console.log($scope.lstFbFeeds);
                                  ending = ending + 30;
+                                 $scope.listData();
                              }
                          }, function (reason) {
                              $scope.error = reason.data;

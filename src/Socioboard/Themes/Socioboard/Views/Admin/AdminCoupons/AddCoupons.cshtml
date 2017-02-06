@@ -245,7 +245,7 @@
                         <div class="col offset-l2 l8 offset-m2 m8 s12">
                             <div class="card-panel" id="feeds">
                                 <h5 class="feeds_title orange darken-2 white-text">
-                                    Add Coupons
+                                    Add Coupons<span>&nbsp</span> <span> <img id="load_gif" style="vertical-align:text-bottom; width:30px" class="left-align" src="~/contents/socioboard/images/admin_loader2.gif" hidden /></span>
                                 </h5>
                                 <div class="card-panel">
                                     <div class="row">
@@ -281,7 +281,7 @@
                                                 </div>*@
                                             </div>
                                             <div class="col l12 m12 s12 center">
-                                                <button id="submitButton" type="submit" class="btn grey darken-2">Save</button>
+                                                <button id="submitButton" type="submit" class="btn grey darken-2" onclick="chng_btn_val()">Save</button>
                                                 @*<a href="javascript:void(0);" class="btn grey darken-2">Save</a>*@
                                             </div>
                                         </form>
@@ -460,6 +460,7 @@
                     //alertify.set({ delay: 5000 });
                     //alertify.success("User updated");
                     swal(msg);
+                    $('#load_gif').hide();
                     $('#coupon_code').val("");
                     $('#entrydate').val("");
                     $('#expirydate').val("");
@@ -500,6 +501,19 @@
 
         }
     </script>
+
+    <script>
+        function chng_btn_val() {
+            debugger;
+            var coupon_code = $('#coupon_code').val();
+            var coupon_dis = $('#coupon_dis').val();
+            if (coupon_code != "" && coupon_dis != "") {
+                $('#load_gif').show();
+            }
+}
+
+    </script>
+
 </body>
 
 </html>

@@ -41,9 +41,18 @@ namespace Socioboard.Controllers
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Index()
         {
-           
+
             //  return RedirectToAction("paymentWithPayUMoney", "Index");
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            bool paymentsession = HttpContext.Session.GetObjectFromJson<bool>("paymentsession");
+            if (paymentsession == true)
+            {
+                user = null;
+                HttpContext.Session.Remove("User");
+                HttpContext.Session.Remove("selectedGroupId");
+                HttpContext.Session.Remove("paymentsession");
+                HttpContext.Session.Clear();
+            }
             if (user == null)
             {
 
@@ -72,7 +81,7 @@ namespace Socioboard.Controllers
         }
 
 
-       
+
 
         //public IActionResult facebooknotification()
         //{
@@ -505,7 +514,7 @@ namespace Socioboard.Controllers
             Parameters.Add(new KeyValuePair<string, string>("company", _AgencyUser.company));
             Parameters.Add(new KeyValuePair<string, string>("amount", _AgencyUser.amount.ToString()));
 
-            HttpResponseMessage response = await WebApiReq.PostReq("/api/AgencyUser/updateTrainingDetails", Parameters, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/AgencyUser/UpdateUserInfo", Parameters, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 try
@@ -680,6 +689,7 @@ namespace Socioboard.Controllers
             _Training.PaymentStatus = planType;
             _Training.PaymentAmount = double.Parse(amount);
             HttpContext.Session.SetObjectAsJson("Training", _Training);
+            HttpContext.Session.SetObjectAsJson("paymentsession", true);
             return Content(Helpers.Payment.AgencyPayment(amount, planType, firstName + " " + lastName, phoneNumber, emailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl,_appSettings.TrainingcallBackUrl,  _appSettings.cancelurl, "", "", _appSettings.PaypalURL));
               
         }
@@ -734,10 +744,23 @@ namespace Socioboard.Controllers
             return View();
         }
 
-        public IActionResult Plans()
+        //public IActionResult Plans()
+        //{
+        //    ViewBag.ApiDomain = _appSettings.ApiDomain;
+        //    return View();
+        //}
+
+
+        [HttpGet]
+        public async Task<IActionResult> plans()
         {
-            ViewBag.ApiDomain = _appSettings.ApiDomain;
-            return View();
+            HttpResponseMessage _response = await WebApiReq.GetReq("/api/User/GetPlans", "", "", _appSettings.ApiDomain);
+            List<Domain.Socioboard.Models.Package> lstsb = new List<Domain.Socioboard.Models.Package>();
+            lstsb = await _response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Package>>();
+
+            ViewBag.plugin = lstsb;
+
+            return View("Plans");
         }
 
         public IActionResult Download()
@@ -799,6 +822,9 @@ namespace Socioboard.Controllers
 
             return View();
         }
+
+
+        
 
     }
 }

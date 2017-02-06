@@ -480,15 +480,21 @@ namespace Api.Socioboard.Repositories
             long TwitterFollowerCount = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => profileids.Contains(t.twitterUserId) && t.isActive).Sum(t => t.followersCount);
             if (TwitterFollowerCount > 1000000)
             {
-                long r = TwitterFollowerCount % 1000000;
+                float r = TwitterFollowerCount % 1000000;
                 long t = TwitterFollowerCount / 1000000;
-                FollowerCount = t.ToString() + "." + (r / 10000).ToString() + "M";
+                float s= r / 1000000;
+                float result= t + s;
+                FollowerCount = result + " M";
             }
             else if (TwitterFollowerCount > 1000)
             {
-                long r = TwitterFollowerCount % 1000;
+                float r = TwitterFollowerCount % 1000;
                 long t = TwitterFollowerCount / 1000;
-                FollowerCount = t.ToString() + "." + (r / 100).ToString() + "K";
+                float s = r/1000;
+                float result = t + s;
+                FollowerCount = result+ " K"
+                /*FollowerCount = t.ToString()  + s.ToString() + "K"*/
+                ;
             }
             else
             {

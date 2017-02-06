@@ -2,10 +2,18 @@
     string path = "Socioboard";
     Layout = "~/Themes/" + path + "/Views/Shared/_SocioboardLayout.cshtml";
 }
+
 <!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
 @*<script type="text/javascript" src="~/contents/socioboard/global/plugins/materialize/js/materialize.min.js"></script>*@
 <script type="text/javascript" src="~/contents/socioboard/js/frontend/init.js"></script>
+
+@{
+
+    List<Domain.Socioboard.Models.Package> lstsb = new List<Domain.Socioboard.Models.Package>();
+    lstsb = ViewBag.plugin;
+}
+
 <div class="container">
     <section class="pricing margin-top-50">
         <div class="">
@@ -18,11 +26,10 @@
                 <div class="col m4 hoverable">
                     <div class="pricing-box ">
                         <div class="pricing-heading">
-                            Basic
+                          Basic
                         </div><!-- end pricing-heading -->
                         <div class="pricing-price">
-                            <span id="free_plan"><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /></span>
-
+                           FREE
                         </div><!-- end pricing-price -->
                         <div class="pricing-description">
                             Every plan is a unique package. This one fits for individuals.
@@ -50,7 +57,7 @@
                             Premium
                         </div><!-- end pricing-heading -->
                         <div class="pricing-price">
-                            <span id="dollar_symbol01"></span><span id="premium_plan"></span><span id="peruser_month01"><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px"/></span>
+                        $ @lstsb[2].amount Per User/Month
                         </div><!-- end pricing-price -->
                         <div class="pricing-description">
                             Package you need to efficiently manage an expanding social media network.
@@ -76,7 +83,7 @@
                             Platinum
                         </div><!-- end pricing-heading -->
                         <div class="pricing-price">
-                            <span id="dollar_symbol02"></span><span id="platinum_plan"></span><span id="peruser_month02"><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /></span>
+                            $ @lstsb[7].amount Per User/Month
                         </div><!-- end pricing-price -->
                         <div class="pricing-description">
                             Includes sophisticated tools for complex objectives
@@ -110,7 +117,7 @@
                                 Standard
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                <span id="dollar_symbol03"></span><span id="standard_plan"></span><span id="peruser_month03"><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /></span>
+                                $ @lstsb[1].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Comprises of great tools suitable for small teams.
@@ -135,7 +142,7 @@
                                 Deluxe
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                <span id="dollar_symbol04"></span><span id="deluxe_plan"></span><span id="peruser_month04"><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /></span>
+                                $ @lstsb[3].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Includes sophisticated tools for complex objectives
@@ -160,7 +167,7 @@
                                 Topaz
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                <span id="dollar_symbol05"></span><span id="topaz_plan"></span><span id="peruser_month05"><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /></span>
+                                $ @lstsb[4].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Includes sophisticated tools for complex objectives
@@ -187,7 +194,7 @@
                                 Ruby
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                <span id="dollar_symbol06"></span><span id="ruby_plan"></span><span id="peruser_month06"><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /></span>
+                                $ @lstsb[5].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Includes sophisticated tools for complex objectives
@@ -212,7 +219,7 @@
                                 Gold
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                <span id="dollar_symbol07"></span><span id="gold_plan"></span><span id="peruser_month07"><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /><img src="~/contents/socioboard/images/loading3.gif" style="width:45px" /></span>
+                                $ @lstsb[6].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Includes sophisticated tools for complex objectives
@@ -331,58 +338,6 @@
         </div>
     </form>
 </div>
-
-<script>
-    window.onload = function () {
-        fetchplan();
-    };
-
-    function fetchplan() {
-        //var price = val("");
-
-        $.ajax({
-            type: "GET",
-            url: "@ViewBag.ApiDomain/api/user/GetPlans",
-            data: { "groupId": 0 },
-            dataType: "html",
-            success: function (msg) {
-                console.log("----------------");
-                console.log(msg);
-                var resp = JSON.parse(msg);
-                console.log(resp[0].amount);
-
-                $('#standard_plan').html(resp[1].amount);
-                $('#premium_plan').html(resp[2].amount);
-                $('#deluxe_plan').html(resp[3].amount);
-                $('#topaz_plan').html(resp[4].amount);
-                $('#ruby_plan').html(resp[5].amount);
-                $('#gold_plan').html(resp[6].amount);
-                $('#platinum_plan').html(resp[7].amount);
-                $('#peruser_month01').html(' Per User/Month');
-                $('#dollar_symbol01').html('$');
-                $('#peruser_month02').html(' Per User/Month');
-                $('#dollar_symbol02').html('$');
-                $('#peruser_month03').html(' Per User/Month');
-                $('#dollar_symbol03').html('$');
-                $('#peruser_month04').html(' Per User/Month');
-                $('#dollar_symbol04').html('$');
-                $('#peruser_month05').html(' Per User/Month');
-                $('#dollar_symbol05').html('$');
-                $('#peruser_month06').html(' Per User/Month');
-                $('#dollar_symbol06').html('$');
-                $('#peruser_month07').html(' Per User/Month');
-                $('#dollar_symbol07').html('$');
-                $('#free_plan').html('FREE');
-            },
-            error: function (msg) {
-
-                return false;
-            }
-
-        });
-
-    }
-</script>
 
 <script type="text/javascript">
     $(window).load(function () {

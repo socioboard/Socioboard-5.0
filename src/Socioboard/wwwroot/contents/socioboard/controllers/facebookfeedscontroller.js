@@ -4,12 +4,13 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         // initialize core components
-
+        var preloadmore = false;
+        var endfeeds = false;
         var start = 0; // where to start data
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         var count = 30;
-        $scope.loadmore = "Loading More data..";
+        $scope.loadmore = "Load More Feeds";
         $scope.lstFbComments = [];
         $scope.getHttpsURL = function (obj) {
             console.log(obj);
@@ -20,13 +21,15 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             count = 5
         }
         $scope.LoadTopFeeds = function () {
-           
+            debugger;
                 //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
                               .then(function (response) {
                                   // $scope.lstProfiles = response.data;
                                   $scope.lstFbFeeds = response.data;
+                                  $scope.preloadmore = true;
                                   // $scope.feeddate(response.data);
+                                  //$scope.loaderclass = 'hide';
                                   console.log(response.data);
                                   if (response.data == null) {
                                       reachLast = true;
@@ -81,12 +84,16 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                              // $scope.lstProfiles = response.data;
                              if (response.data == null || response.data == "") {
                                  reachLast = true;
-                                 $scope.loadmore = "Reached at bottom";
+                                 $scope.loadmore = "No more feeds to Load";
+                                 $scope.loaderclass = 'hide';
+                                 $scope.endfeeds = true;
+                                 
                              }
                              else {
                                  $scope.lstFbFeeds = $scope.lstFbFeeds.concat(response.data);
                                  //console.log($scope.lstFbFeeds);
                                  ending = ending + 30;
+                                 $scope.listData();
                              }
                          }, function (reason) {
                              $scope.error = reason.data;

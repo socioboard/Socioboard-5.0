@@ -52,6 +52,8 @@ namespace Socioboard.Helpers
 
         public string AgencycallBackUrl { get; set; }
 
+        public string TrainingcallBackUrl { get; set; }
+
         public string PayUMoneyURL { get; set; }
 
         public string PayuMoneyemail { get; set; }

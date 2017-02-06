@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Net;
+using System.Text.RegularExpressions;
+using System.Compat.Web;
 
 namespace Api.Socioboard.Repositories.ListeningRepository
 {
@@ -43,9 +45,20 @@ namespace Api.Socioboard.Repositories.ListeningRepository
                 {
                     return await result;
                 });
-                IList<Domain.Socioboard.Models.Listening.LinkedGroupPost> lstFbFeeds = task.Result;
-                lstFbFeeds.Select(s => { s.Message = WebUtility.HtmlDecode(s.Message); return s; }).ToList();
-                return lstFbFeeds.ToList();
+                IList<Domain.Socioboard.Models.Listening.LinkedGroupPost> lstLinkFeeds = task.Result;
+
+                for (int i = 0; i < lstLinkFeeds.Count; i++)
+                {
+                    //lstLinkFeeds[i].Message = lstLinkFeeds[i].Message.Replace("%3F", " ").Replace("% 21", " ").Replace("%2C", " ");
+                    //lstLinkFeeds[i].Message = Regex.Replace(lstLinkFeeds[i].Message, "[|%21 %27 %21 %22]"," ");
+                    //                                  // lstLinkFeeds[i].Message = Regex.Replace(lstLinkFeeds[i].Message, @"\r\n?|\n", " ");
+                    lstLinkFeeds[i].Message= lstLinkFeeds[i].Message.Replace("\\n"," ").Replace("\\r", " "); 
+                    lstLinkFeeds[i].Message = System.Compat.Web.HttpUtility.UrlDecode(lstLinkFeeds[i].Message);
+                    
+                }
+
+                lstLinkFeeds.Select(s => { s.Message = WebUtility.HtmlDecode(s.Message); return s; }).ToList();
+                return lstLinkFeeds.ToList();
             }
             catch (Exception ex)
             {

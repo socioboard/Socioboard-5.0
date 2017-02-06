@@ -91,6 +91,7 @@ namespace Socioboard.Controllers
                 }
                 else if ((user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.notadded || user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.inprogress) && (user.AccountType != Domain.Socioboard.Enum.SBAccountType.Free))
                 {
+                    HttpContext.Session.SetObjectAsJson("paymentsession", true);
                     return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId, IsLogin = true });
                 }
             }
@@ -114,8 +115,9 @@ namespace Socioboard.Controllers
                         {
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
                             ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
-                            string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
-                            int count = Convert.ToInt32(profileCount);
+                           // string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+                            // int count = Convert.ToInt32(profileCount);
+                            int count = groupProfiles.Count;
                             int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
                             ViewBag.profileCount = count;
                             ViewBag.MaxCount = MaxCount;
@@ -143,8 +145,9 @@ namespace Socioboard.Controllers
                         {
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
                             ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
-                            string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
-                            int count = Convert.ToInt32(profileCount);
+                            //string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+                            // int count = Convert.ToInt32(profileCount);
+                            int count = groupProfiles.Count;
                             int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
                             ViewBag.profileCount = count;
                             ViewBag.MaxCount = MaxCount;
@@ -519,10 +522,12 @@ namespace Socioboard.Controllers
                                         HttpContext.Session.SetObjectAsJson("Package", _Package);
                                         if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
                                         {
+                                            HttpContext.Session.SetObjectAsJson("paymentsession", true);
                                             return Redirect(Helpers.Payment.RecurringPaymentWithPayPal(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL));
                                         }
                                         else
                                         {
+                                            HttpContext.Session.SetObjectAsJson("paymentsession", true);
                                             return RedirectToAction("paymentWithPayUMoney", "Index", new { contesnt = false });
                                         }
                                     }
@@ -630,11 +635,13 @@ namespace Socioboard.Controllers
                         {
                             if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
                             {
+                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
                                 string paypalUrl = Helpers.Payment.RecurringPaymentWithPayPal(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL);
                                 return Content(paypalUrl);
                             }
                             else
                             {
+                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
                                 return RedirectToAction("paymentWithPayUMoney", "Index");
                             }
                         }
@@ -642,10 +649,12 @@ namespace Socioboard.Controllers
                         {
                             if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
                             {
+                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
                                 return Redirect(Helpers.Payment.RecurringPaymentWithPayPal(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL));
                             }
                             else
                             {
+                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
                                 return RedirectToAction("paymentWithPayUMoney", "Index", new { contesnt = false });
                             }
                         }

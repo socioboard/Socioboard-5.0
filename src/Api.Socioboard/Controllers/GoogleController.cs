@@ -353,12 +353,13 @@ namespace Api.Socioboard.Controllers
             string data = Request.Form["profileaccesstoken"];
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string[] profiledata = null;
-            int i = 0;
+            
             profiledata = data.Split(',');
             foreach (var item in profiledata)
             {
                 int j = Repositories.GplusRepository.AddGaSites(item, userId, groupId, _redisCache, _appSettings, dbr,_appEnv);
             }
+          
             return Ok("Added Successfully");
         }
 

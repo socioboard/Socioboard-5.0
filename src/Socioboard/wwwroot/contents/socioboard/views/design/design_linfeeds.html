@@ -39,8 +39,8 @@
                         </div>
                     </div>
                     <div class="card-action center">
-                        <a ng-click="scheduledraft(linpost.message)">Schedule</a>
-                        <a ng-click="schedulefbpost(linpost.message)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                        <a ng-click="scheduledraft(linpost)">Schedule</a>
+                        <a ng-click="openComposeMessage(linpost)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
                     </div>
                 </div>
             </div>
@@ -255,68 +255,71 @@
                     <i class="large mdi-editor-mode-edit"></i>
                 </a>
             </div>
-            <div id="ComposePost" class="modal">
-                <div class="modal-content">
-                    <nav class="red">
-                        <div class="nav-wrapper">
-                            <div class="left col s12 m5 l5">
-                                <ul>
-                                    <li>
-                                        <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                                    </li>
-                                    <li>
-                                        <a href="#!" class="email-type">Compose</a>
-                                    </li>
-                                </ul>
+
+
+        <div id="ComposePostModal" class="modal">
+            <div class="modal-content">
+                <nav class="red">
+                    <div class="nav-wrapper">
+                        <div class="left col s12 m5 l5">
+                            <ul>
+
+                                <li>
+                                    <a class="email-type">Compose</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col s12 m7 l7 hide-on-med-and-down">
+                            <ul class="right">
+                                <li>
+                                    <div ng-show="cmpbtn" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                                    <div ng-show="!cmpbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                                </li>
+                                <!--<li>
+                                <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                            </li>-->
+                            </ul>
+                        </div>
+
+                    </div>
+                </nav>
+            </div>
+            <div class="model-email-content">
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <select multiple id="composeProfiles">
+                                    <option value="" disabled selected>Choose your option</option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                </select>
                             </div>
-                            <div ng-init="disbtncom= {{disbtncom}}"></div>
-                            <div class="col s12 m7 l7 hide-on-med-and-down">
-                                <ul class="right">
-                                    <li>
-                                        <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
-                                        <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
-                                    </li>
-                                    <!--<li>
-                                        <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
-                                    </li>-->
-                                </ul>
+                        </div>
+                        <!--Default version-->
+                        <div class="row section">
+                            <div class="col s12 m4 l3">
+                                <p>Select your file</p>
+                            </div>
+                            <input type="hidden" id="imageUrl" value="{{liComposeMessage.picUrl}}" />
+                            <div class="col s12 m8 l9" ng-if="liComposeMessage">
+                                <input type="file" id="composeImage" class="dropify" after-render data-default-file="{{liComposeMessage.picUrl}}" />
                             </div>
 
+                            <div class="col s12 m8 l9" ng-if="!liComposeMessage">
+                                <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
+                            </div>
                         </div>
-                    </nav>
-                </div>
-                <div class="model-email-content">
-                    <div class="row">
-                        <form class="col s12">
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <select multiple id="composeProfiles">
-                                        <option value="" disabled selected>Choose your option</option>
-                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                        <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    </select>
-                                </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <textarea id="composeMessage" class="materialize-textarea" length="5000">{{liComposeMessage.shareMessage }}</textarea>
+                                <label for="compose">Message</label>
                             </div>
-                            <!--Default version-->
-                            <div class="row section">
-                                <div class="col s12 m4 l3">
-                                    <p>Select your file</p>
-                                </div>
-                                <div class="col s12 m8 l9">
-                                    <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
-                                    <label for="compose">Message</label>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <!-- Compose Email Structure -->

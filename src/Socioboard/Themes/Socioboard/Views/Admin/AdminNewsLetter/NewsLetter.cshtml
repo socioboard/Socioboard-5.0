@@ -243,8 +243,9 @@
                         <div class="col offset-l2 l8 offset-m2 m8 s12">
                             <div class="card-panel" id="feeds">
                                 <h5 class="feeds_title orange darken-2 white-text">
-                                    Add News Letter
+                                    Add News Letter<span>&nbsp</span> <span> <img id="load_gif" style="vertical-align:text-bottom; width:30px" class="left-align" src="~/contents/socioboard/images/admin_loader2.gif" hidden/></span>
                                 </h5>
+                                
                                 <div class="card-panel">
                                     <div class="row">
                                         <form class="col s12" onsubmit="myFunction(); return false;" id="NewsLetter">
@@ -284,9 +285,11 @@
                                                 </div>*@
                                             </div>
                                             <div class="col l12 m12 s12 center">
-                                                <button id="submitButton" type="submit" class="btn grey darken-2"> Save</button>
+                                                
+                                                <button id="submitButton" type="submit" class="btn grey darken-2" onclick="chng_btn_val()"> Save</button>
                                                 @*<a href="javascript:void(0);" class="btn grey darken-2">Save</a>*@
                                             </div>
+
                                         </form>
                                     </div>
                                 </div>
@@ -465,9 +468,11 @@
                     //alertify.set({ delay: 5000 });
                     //alertify.success("User updated");
                     swal(msg);
+                    $('#load_gif').hide();
                     $('#Advertisement').val("");
                     $('#imgdropify').val("");
                     $('#date').val("");
+                    $('#startdate').val("");
                    
 
                 }, error: function (data) {
@@ -528,6 +533,12 @@
 
 
         }
+    </script>
+    <script>
+        function chng_btn_val() {
+            $('#load_gif').show();
+}
+
     </script>
 </body>
 

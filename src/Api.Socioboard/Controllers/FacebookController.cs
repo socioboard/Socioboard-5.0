@@ -62,7 +62,7 @@ namespace Api.Socioboard.Controllers
             Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
             if (fbacc != null && fbacc.IsActive == true)
             {
-                if(fbacc.UserId == userId)
+                if (fbacc.UserId == userId)
                 {
                     return Ok("Facebook account already added by you.");
                 }
@@ -208,7 +208,7 @@ namespace Api.Socioboard.Controllers
         {
             if (skip + count < 100)
             {
-                return Ok(Repositories.FacebookRepository.GetTopFacebookFeed(profileId, userId, _redisCache, _appSettings,skip,count));
+                return Ok(Repositories.FacebookRepository.GetTopFacebookFeed(profileId, userId, _redisCache, _appSettings, skip, count));
             }
             else
             {
@@ -238,10 +238,10 @@ namespace Api.Socioboard.Controllers
                     _intafeed._facebookComment = lstFbPostComment.ToList();
                     lstfacebookfeed.Add(_intafeed);
                 }
-             return Ok(lstfacebookfeed);
+                return Ok(lstfacebookfeed);
 
             }
-           // return Ok();
+            // return Ok();
         }
 
         [HttpGet("GetFacebookProfiles")]
@@ -268,7 +268,7 @@ namespace Api.Socioboard.Controllers
             try
             {
                 List<Domain.Socioboard.Models.Facebookpage> lstpages = new List<Facebookpage>();
-                 lstpages = Fbpages.Getfacebookpages(accesstoken);
+                lstpages = Fbpages.Getfacebookpages(accesstoken);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
                 lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
@@ -292,10 +292,11 @@ namespace Api.Socioboard.Controllers
         {
             string data = Request.Form["profileaccesstoken"];
             string[] accesstoken = data.Split(',');
+            int addedPageCount = 0;
             foreach (var item in accesstoken)
             {
                 dynamic profile = Fbpages.getFbPageData(item);
-               // string subscribed_apps= Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));
+                // string subscribed_apps= Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));
                 try
                 {
                     string x = Convert.ToString(profile);
@@ -310,7 +311,8 @@ namespace Api.Socioboard.Controllers
                 Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
                 if (fbacc != null && fbacc.IsActive == true)
                 {
-                    return Ok("Facebook Page added by other user.");
+                    addedPageCount++;
+                    //return Ok("Facebook Page added by other user.");
                 }
                 else
                 {
@@ -323,6 +325,14 @@ namespace Api.Socioboard.Controllers
                     int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookPage(profile, dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, item, _redisCache, _appSettings, _logger);
 
                 }
+            }
+            if (addedPageCount == accesstoken.Length)
+            {
+                return Ok("Facebook Page added by other user.");
+            }
+            else if (addedPageCount > 0)
+            {
+                return Ok("Pages added successfully and " + addedPageCount + " pages added by other user");
             }
             return Ok("Page added successfully");
         }
@@ -339,7 +349,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string postcomment = Repositories.FacebookRepository.PostFacebookComment(dbr, message, profileId, postId, _redisCache, _appSettings, _logger);
-            if(postcomment.Contains("Invalid Access Token"))
+            if (postcomment.Contains("Invalid Access Token"))
             {
                 return Ok("Invalid Access Token");
             }
@@ -370,7 +380,7 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpGet("AddFacebookPagesByUrl")]
-        public IActionResult AddFacebookPagesByUrl(long userId, long groupId,string url)
+        public IActionResult AddFacebookPagesByUrl(long userId, long groupId, string url)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             Domain.Socioboard.Models.Facebookpage _facebookpages = Helper.FacebookHelper.GetFbPageDetails(url, _appSettings);
@@ -380,7 +390,7 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("Facebook Page added by other user");
             }
-            if (_facebookpages!=null)
+            if (_facebookpages != null)
             {
                 int adddata = Repositories.FacebookRepository.AddFacebookPagesByUrl(_facebookpages, dbr, userId, groupId, Domain.Socioboard.Enum.FbProfileType.FacebookPublicPage, _facebookpages.AccessToken, _redisCache, _appSettings, _logger);
                 if (adddata == 1)
@@ -390,7 +400,7 @@ namespace Api.Socioboard.Controllers
                 else
                 {
                     return Ok("issue in adding");
-                } 
+                }
             }
             else
             {

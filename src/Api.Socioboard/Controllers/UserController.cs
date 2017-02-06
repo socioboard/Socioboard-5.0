@@ -71,7 +71,7 @@ namespace Api.Socioboard.Controllers
             IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.EmailId));
             if (lstUser != null && lstUser.Count() > 0)
             {
-                return BadRequest("EmailID Exist");
+                return BadRequest("This Email is already registered please login to continue");
             }
             IList<User> lstUser1 = dbr.Find<User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
             if (lstUser1 != null && lstUser1.Count() > 0)
@@ -495,16 +495,16 @@ namespace Api.Socioboard.Controllers
                 if (res == 1)
                 {
                     //_redisCache.Delete(package.EmailId);
-                    return Ok("package detail updated");
+                    return Ok("Package detail updated");
                 }
                 else
                 {
-                    return Ok("issue while updating.");
+                    return Ok("Issue while updating.");
                 }
             }
             else
             {
-                return NotFound("package not found");
+                return NotFound("Package not found");
             }
         }
 
@@ -838,7 +838,7 @@ namespace Api.Socioboard.Controllers
                     string html = System.IO.File.ReadAllText(path);
                     html = html.Replace("[FirstName]", user.FirstName);
                     html = html.Replace("[AccountType]", user.AccountType.ToString());
-                    html = html.Replace("[ActivationLink]", "http://localhost:9821/Home/Active?Token=" + user.EmailValidateToken + "&id=" + user.Id);
+                    html = html.Replace("[ActivationLink]", _appSettings.Domain+"/Home/Active?Token=" + user.EmailValidateToken + "&id=" + user.Id);
 
 
                     _emailSender.SendMailSendGrid(_appSettings.frommail, "", user.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
@@ -1221,11 +1221,15 @@ namespace Api.Socioboard.Controllers
                 }
                 else if (user.EmailValidateToken.Equals("Facebook"))
                 {
-                    return Ok("Password reset is not permitted as you have loggedin through Facebook, please login with Facebook.");
+                    return Ok("Password reset is not permitted as the email address you have entered is already registered in Socioboard with Facebook. Please login through Facebook.");
                 }
                 else if (user.EmailValidateToken.Equals("Google"))
                 {
-                    return Ok("Password reset is not permitted as you have loggedin through Google, please login with Google.");
+                    return Ok("Password reset is not permitted as the email address you have entered is already registered in Socioboard with Google. Please login through Google.");
+                }
+                else if (user.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.MailSent)
+                {
+                    return Ok("Please verify your email address before resetting your password");
                 }
                 user.forgotPasswordKeyToken = SBHelper.RandomString(20);
                 user.forgotPasswordExpireDate = DateTime.UtcNow.AddDays(1);
@@ -1484,7 +1488,7 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpGet("GetPlans")]
-        public IActionResult GetPlans(long groupId)
+        public IActionResult GetPlans()
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Package> lstplan = dbr.Find<Package>(t => t.id<8).ToList();

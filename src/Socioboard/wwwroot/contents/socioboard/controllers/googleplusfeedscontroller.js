@@ -6,6 +6,8 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
 
         googleplusfeeds();
         var start = 0; // where to start data
+        var preloadmorefeeds = false;// disable starter loader after loading feeds
+        var nofeeds = false;
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         $scope.loadmore = "Loading More data..";
@@ -21,8 +23,11 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                           .then(function (response) {
                               if (response.data != "") {
                                   $scope.date(response.data);
+                                  $scope.preloadmorefeeds = true;
                               } else {
-                                  swal("No Post To Display");
+                                  $scope.preloadmorefeeds = true;
+                                  $scope.nofeeds = true;
+                                  //swal("No Post To Display");
                               }
                              // $scope.date(response.data);comment by sweta
                             //  $scope.lstGpFeeds = response.data;

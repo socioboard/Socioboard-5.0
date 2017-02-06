@@ -74,6 +74,55 @@
                     <!--card widgets start-->
                     <div id="profiles">
                         <div class="row">
+                            <div class="col s12 m12 l12" style="">
+                                <div class="card" style="margin: 1px;"></div>
+                                <div class="center" style="display: block; z-index: 1000; position: absolute; margin: auto; top: auto; left: 0; right: 0; bottom:200px;" ng-class="loaderclass">
+
+                                    <div class="preloader-wrapper big active">
+                                        <div class="spinner-layer spinner-blue">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-red">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-yellow">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-green">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
                             <!--facebook profile binding start-->
                             <div class="col s12 m6 l4" ng-repeat="fbProfile in  lstFbProfiles ">
                                 <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType == 0">
@@ -252,7 +301,7 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="{{linProfile.logoUrl}}" alt="{{linProfile.linkedinPageName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/linkedin.png" class="card_profile_socio_icon">
+                                        <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>
@@ -833,14 +882,17 @@
                 <form class="col s12">
                     <div class="row">
                         <div class="input-field col s12">
-                            <select multiple  id="composeProfiles" >
-                                <option value="" disabled selected>Select Your Account</option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+
+                            <select multiple id="composeProfiles" ng-change="selectclick()" ng-model="selectvalue">
+                                <option value="select" disabled my-repeat-dropdown-directive selected>Select Your Account</option>
+                                <option value="selectall">Select all</option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" class="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" class="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" class="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                             </select>
+
                         </div>
                     </div>
                     <!--Default version-->
@@ -1054,10 +1106,10 @@
         </div>
 
     <!-- Active Account Modal  -->
-    <div id="ActiveProfileModal" class="modal">
+    <div id="ActiveProfileModal" class="modal" style="max-height:initial">
         <div class="modal-content">
             <h4>SELECT YOUR ACCOUNTS</h4>
-            <h6>As you have downgraded your account, you can only use upto {{MaxCount}} profiles. As a {{AccountType}} user, you have added {{profileCount}} profiles. Please choose which {{MaxCount}} among them you would like to retain</h6>
+            <h6>As you have modified your account, you can only use upto {{MaxCount}} profiles. As a {{AccountType}} user, you have added {{profileCount}} profiles. Please choose which {{MaxCount}} among them you would like to retain</h6>
             <div class="active_acc_list">
                 <ul class="collection ">
                     <li class="collection-item avatar" ng-repeat="profile in lstProfiles">

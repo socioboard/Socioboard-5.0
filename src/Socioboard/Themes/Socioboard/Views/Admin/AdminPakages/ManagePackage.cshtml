@@ -326,7 +326,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="submitButton" type="submit" class="btn btn-flat btn-primary ink-reaction"> Update</button>
+                <img id="load_gif" src="~/contents/socioboard/images/admin_loader.gif" hidden />
+                <button id="submitButton" onclick="chng_btn_val()" type="submit" class="btn btn-flat btn-primary ink-reaction"> Update</button>
             </div>
         </form>
 </div>
@@ -434,6 +435,7 @@
                     //alertify.success("User updated");
                         swal(msg);
                         window.location.reload();
+                        $('#load_gif').hide();
                 },
 
 
@@ -480,6 +482,12 @@
 
 
         }
+    </script>
+    <script>
+        function chng_btn_val() {
+            $('#load_gif').show();
+}
+
     </script>
 </body>
 

@@ -70,6 +70,13 @@
                                             </div>
                                           </div>
                                         </div>-->
+                                        <div class="cssload-container" ng-if="preloadmorefeeds!=true">
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                            <div></div>
+                                        </div>
+                                        <h6 style="margin-left:37%; color:lightgray; font-size:30px; font-family:Calibri" ng-if="nofeeds==true"><br /><br /><br /><br /><span><img style="margin-left:14%; width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
                                     </ul>
 
                                 </div>
@@ -82,3 +89,106 @@
             </section>
             <!-- END CONTENT -->   
     </div>
+
+
+<!-- //////////////////////////////////////// Style CSS for Pre Loader //////////////////////////////////////// -->
+
+<style>
+    .cssload-container{
+		background:rgb(255,255,255);
+	}
+	
+	.cssload-container div {
+	width: 25px;
+	height: 25px;
+	position: absolute;
+	background-color: rgb(255,255,255);
+	top: 6%;
+	border-radius: 50%;
+}
+
+.cssload-container div:nth-child(1) {
+	background-color: rgb(211,47,47);
+	animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(2) {
+	background-color: rgb(211,47,47);
+	animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(3) {
+	background-color: rgb(211,47,47);
+	animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+.cssload-container div:nth-child(4) {
+	background-color: rgb(211,47,47);
+	animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-o-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-ms-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-webkit-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+		-moz-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+}
+
+
+
+@keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-o-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-ms-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-webkit-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+
+@-moz-keyframes cssload-move {
+	0% {
+		left: 0%;
+	}
+	100% {
+		left: 100%;
+	}
+}
+</style>
+
+<!-- //////////////////////////////////////// End Style CSS for Pre Loader //////////////////////////////////////// -->

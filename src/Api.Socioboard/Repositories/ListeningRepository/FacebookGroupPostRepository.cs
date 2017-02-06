@@ -3,8 +3,10 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Compat.Web;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Api.Socioboard.Repositories.ListeningRepository
@@ -31,6 +33,42 @@ namespace Api.Socioboard.Repositories.ListeningRepository
                     return await result;
                 });
             IList<Domain.Socioboard.Models.Listening.FaceBookGroupPost> lstFbFeeds = task.Result;
+            for (int i=0;i<lstFbFeeds.Count;i++)
+            {
+                // lstFbFeeds[i].Message = lstFbFeeds[i].Message.Replace("%20"," ").Replace("21%", " ").Replace("2%"," ").Replace("\n"," ").Replace("%3F"," ").Replace("% 21"," ");
+
+                //lstFbFeeds[i].Message = Regex.Replace(lstFbFeeds[i].Message,"[%21%27%21%22]"," ");
+                lstFbFeeds[i].Message = lstFbFeeds[i].Message.Replace("\\n", " ").Replace("\\r"," ");
+                lstFbFeeds[i].Message = HttpUtility.UrlDecode(lstFbFeeds[i].Message);
+            }
+            
+
+
+            //foreach(IList<Domain.Socioboard.Models.Listening.FaceBookGroupPost> lstFbFeedss in lstFbFeeds)
+            // {
+            //     lstFbFeedss.First().Message= lstFbFeedss.First().Message.Replace("%", "");
+            //     //lstFbFeeds.FirstOrDefault().Message = lstFbFeeds.FirstOrDefault().Message.Replace("%", "");
+            // }
+            //lstFbFeeds.find.Message = lstFbFeeds.First().Message.Replace("%", "");
+            //lstFbFeeds.FirstOrDefault().Message= lstFbFeeds.FirstOrDefault().Message.Replace("%", "");
+
+            //for (int i = 0; i < lstFbFeeds.Count; i++)
+            //{
+            //    //string data = lstFbFeeds[i].Message;
+            //    lstFbFeeds.First().Message = lstFbFeeds.First().Message.Replace("%", "");
+            //}
+
+            //foreach(IList<Domain.Socioboard.Models.Listening.FaceBookGroupPost> acc in lstFbFeeds)
+            //{
+            //    foreach(object mess in acc)
+            //    {
+            //        string message = mess.ToString();
+            //    }
+            //}
+
+            //List<FacebookGroupPostRepository> lists = new List<FacebookGroupPostRepository>();
+
+
             if (lstFbFeeds.Count > 0)
             {
                 // _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheDiscoveryFacebookGroupPost + keyword, lstFbFeeds.ToList());

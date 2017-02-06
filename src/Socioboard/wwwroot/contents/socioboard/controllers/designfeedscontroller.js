@@ -4,7 +4,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
 
-
+        $rootScope.fbComposeMessage = {};
         var start = 0; // where to start data
         var ending = 0; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
@@ -124,6 +124,8 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                 //codes to load facebook discovery start
                 $http.post(apiDomain + '/api/FacebookGroups/GetFacebookGroupFeeds?skip=' + ending + '&count=30' + '&keyword=' + categories)
                               .then(function (response) {
+                                
+                                 // console.log(urldecode(response.data));
                                   if (response.data != "") {
                                       $('#categories').val('');
                                       $('#searchcatagory').closeModal();
@@ -213,6 +215,88 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
 
         }
 
+        $scope.openComposeMessage = function (schedulemessage) {
+            
+            if (schedulemessage != null)
+            {
+                var message = {
+                    "shareMessage": schedulemessage.message,
+                    "picUrl": schedulemessage.postImgUrl
+                };
+                console.log(schedulemessage.message);
+                console.log("google");
+                console.log(message);
+                $rootScope.fbComposeMessage = message;
+            }
+            
+            $('#ComposePostModal').openModal();
+            var composeImagedropify = $('#composeImage').parents('.dropify-wrapper');
+            $(composeImagedropify).find('.dropify-render').html('<img src="' + schedulemessage.postImgUrl + '">');
+            $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
+            $('select').material_select();
+        }
+
+        $scope.cmpbtn = true;
+
+        $scope.ComposeMessage = function () {
+            debugger;
+            $scope.dispbtn = false;
+            var profiles = $('#composeProfiles').val();
+            var message = $('#composeMessage').val();
+            var image = $('#imageUrl').val();
+            if (image == "N/A")
+            {
+                image = image.replace("N/A","");
+            }
+            var updatedmessage = "";
+            message = encodeURIComponent(message);
+            //var postdata = message.split("\n");
+            //for (var i = 0; i < postdata.length; i++) {
+            //    updatedmessage = updatedmessage + "<br>" + postdata[i];
+            //}
+            // updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            if (profiles.length > 0 && message != '') {
+                $scope.checkfile();
+                if ($scope.check == true) {
+                    var formData = new FormData();
+                    formData.append('files', $("#composeImage").get(0).files[0]);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&imagePath=' + encodeURIComponent(image),
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        if (response.data == "Posted") {
+                            $scope.dispbtn = true;
+                            $('#ComposePostModal').closeModal();
+                            swal('Message compose successfully');
+                        }
+
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+                else {
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File Extention is not valid. Please upload any image file");
+                    $('#input-file-now').val('');
+                }
+            }
+            else {
+                $scope.dispbtn = true;
+                if (profiles.length < 0) {
+                    swal('please select profile');
+                }
+                else {
+                    swal('please type message for compose');
+                }
+            }
+        }
+
+
 
         $scope.schedulefbpost = function (schedulemessage) {
             $rootScope.schedulemessage = schedulemessage;
@@ -286,6 +370,14 @@ SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
 
             });
         }
+    };
+})
+
+SocioboardApp.directive('afterRender', function ($timeout) {
+    return function (scope, element, attrs) {
+        $timeout(function () {
+            $('.dropify').dropify();
+        });
     };
 })
  
