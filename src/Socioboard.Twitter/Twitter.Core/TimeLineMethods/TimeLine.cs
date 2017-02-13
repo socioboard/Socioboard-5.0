@@ -253,8 +253,10 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
 
         public JArray Get_User_FollowersWithCurser(oAuthTwitter oAuth, string curser)
         {
-            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFollowersListUrl + "?cursor="+curser;
+            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFollowersListUrl;
+            //string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFollowersListUrl + "?cursor="+curser;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+            strdic.Add("cursor", curser);
             string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";

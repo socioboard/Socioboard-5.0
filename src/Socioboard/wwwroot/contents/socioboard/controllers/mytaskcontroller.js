@@ -88,7 +88,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
             
 	        	swal({   
 		        title: "Are you sure?",   
-		        text: "You will not be able to send message via this account!",   
+		        text: "You will not be able to send any message via this account!",
 		        type: "warning",   
 		        showCancelButton: true,   
 		        confirmButtonColor: "#DD6B55",   
@@ -110,7 +110,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        $scope.dispbtndelete = true;
 		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
 		                        $scope.selectedTask = null;
-                                swal("Deleted!", "Your profile has been deleted.", "success");
+		                        swal("Deleted!", "Your profile has been deleted.", "Success");
 		                        $scope.$apply();
 		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
 		                            $scope.showTask($scope.selectedTask + 1);
@@ -129,11 +129,11 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
            $scope.markTaskCompleted = function () {
                swal({
                    title: "Are you sure?",
-                   text: "You will not be able to send message via this account!",
+                   text: "You will not be able to send any message via this account!",
                    type: "warning",
                    showCancelButton: true,
                    confirmButtonColor: "#DD6B55",
-                   confirmButtonText: "Yes, Mark as completed it!",
+                   confirmButtonText: "Yes, mark it as completed!",
                    closeOnConfirm: false
                },
 		        function () {
@@ -152,7 +152,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        $scope.dispbtnmark = true;
 		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
 		                        $scope.selectedTask = null;
-                                swal("Completed!", "Task has been Completed.", "success");
+		                        swal("Completed!", "Task has been Completed.", "Success");
 		                        $scope.$apply();
 		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
 		                            $scope.showTask($scope.selectedTask + 1);

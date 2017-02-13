@@ -37,7 +37,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                         if (response.data == "Posted") {
                             $scope.dispbtn = true;
                             $('#ComposePostModal').closeModal();
-                            swal('Message compose successfully');
+                            swal('Message composed successfully');
                         }
 
                     }, function (reason) {
@@ -46,17 +46,17 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                 }
                 else {
                     alertify.set({ delay: 3000 });
-                    alertify.error("File Extention is not valid. Please upload any image file");
+                    alertify.error("File extension is not valid. Please upload an image file");
                     $('#input-file-now').val('');
                 }
             }
             else {
                 $scope.dispbtn = true;
                 if (profiles.length < 0) {
-                    swal('please select profile');
+                    swal('Please select a profile');
                 }
                 else {
-                    swal('please type message for compose');
+                    swal('Please enter some text to compose this message');
                 }
             }
         }
@@ -139,7 +139,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                 if ($rootScope.user.TrailStatus!=2) {
                     $scope.searchText = SearchKeyword;
                 } else {
-                    swal("your trail has been expired.so you can't use paid features");
+                    swal("You cannot use paid features as your trial period has expired");
                     return false;
                 }
 
@@ -148,7 +148,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                 if ($rootScope.user.TrailStatus!=2) {
                     $scope.searchText = $('#discoverytext').val();
                 } else {
-                    swal("your trail has been expired.so you can't use paid features");
+                    swal("You cannot use paid features as your trial period has expired");
                     return false;
                 }
             }
@@ -164,7 +164,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             else
             {
                 $scope.dispbtn = true;
-                swal('enter any keyword for search');
+                swal('Enter a keyword to search');
             }
         }
 

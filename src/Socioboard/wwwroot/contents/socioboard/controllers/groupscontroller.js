@@ -12,7 +12,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         $scope.deleteProfile = function(profileId, groupId){
             swal({
                 title: "Are you sure?",
-                text: "You will not be able to send message via this account!",
+                text: "You will not be able to send any message via this account!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -27,7 +27,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                    url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
                }).then(function (response) {
                    if (response.data == "Deleted") {
-                       swal("Deleted!", "Your profile has been deleted.", "success");
+                       swal("Deleted!", "Your profile has been deleted.", "Success");
                        $scope.getGroupsData($rootScope.index, groupId);
                        window.location.reload();
                    }
@@ -55,7 +55,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 	        closeOnConfirm: false }, 
 	        function(){   
 	            //todo: code to delete profile
-	            swal("Deleted!", "Group has been deleted.", "success"); 
+	            swal("Deleted!", "Group has been deleted", "Success"); 
 	            });
         }
 
@@ -178,7 +178,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                     //transformRequest: angular.identity,
                 }).then(function (response) {
                     $('#InviteMembersModal').closeModal();
-                    swal('mail send successfully');
+                    swal('Email sent successfully');
                     window.location.reload();
 
                 }, function (reason) {
@@ -186,7 +186,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                 });
             }
             else {
-                swal("please click on add");
+                swal("Please click on add button in order add the group members to the folder");
             }
         }
 

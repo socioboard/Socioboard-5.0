@@ -6,6 +6,7 @@ SocioboardApp.controller('SentMessagesController', function ($rootScope, $scope,
 
         var count = 30; // where to start data
         $scope.messagesEnding = 0; // how much data need to add on each function call
+        var lastreach = false;
         $scope.messagesReachLast = false; // to check the page ends last or not
         sentmessages();
        
@@ -18,7 +19,7 @@ SocioboardApp.controller('SentMessagesController', function ($rootScope, $scope,
                           }
                           else {
                               $scope.date(response.data);
-                                 
+                              $scope.lastreach = true;
                               $scope.messagesEnding = $scope.messagesEnding + response.data.length;
 
                           }

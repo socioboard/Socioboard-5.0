@@ -106,7 +106,7 @@
             <response code="500">Internal Server Erro.r</response>
             <returns></returns>
         </member>
-        <!-- Badly formed XML comment ignored for member "M:Api.Socioboard.Controllers.GoogleController.GoogleLogin(System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:Api.Socioboard.Controllers.GoogleController.GoogleLogin(System.String,Domain.Socioboard.Enum.SBAccountType)" -->
         <member name="M:Api.Socioboard.Controllers.GroupMemberController.InviteGroupMembers(System.Int64,System.String)">
             <summary>
             To add the member of the group
@@ -303,7 +303,7 @@
             Wrong Link:when user use false link or unautorize link.
             </returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.UserController.FacebookLogin(System.String)">
+        <member name="M:Api.Socioboard.Controllers.UserController.FacebookLogin(System.String,Domain.Socioboard.Enum.SBAccountType)">
             <summary>
             To validate the access token before login facebook
             </summary>

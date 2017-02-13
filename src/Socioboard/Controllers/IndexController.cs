@@ -759,7 +759,8 @@ namespace Socioboard.Controllers
             lstsb = await _response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Package>>();
 
             ViewBag.plugin = lstsb;
-
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
             return View("Plans");
         }
 

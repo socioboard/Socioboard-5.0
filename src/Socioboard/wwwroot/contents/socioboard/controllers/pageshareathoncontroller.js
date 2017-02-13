@@ -8,7 +8,7 @@ SocioboardApp.controller('PageShareathonController', function ($rootScope, $scop
         $scope.deleteMsg = function(profileId){
         	swal({   
 	        title: "Are you sure?",   
-	        text: "You will not be able to send message via this account!",   
+	        text: "You will not be able to send any message via this account!",
 	        type: "warning",   
 	        showCancelButton: true,   
 	        confirmButtonColor: "#DD6B55",   
@@ -16,7 +16,7 @@ SocioboardApp.controller('PageShareathonController', function ($rootScope, $scop
 	        closeOnConfirm: false }, 
 	        function(){   
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "success"); 
+	            swal("Deleted!", "Your profile has been deleted.", "Success");
 	            });
         }
 

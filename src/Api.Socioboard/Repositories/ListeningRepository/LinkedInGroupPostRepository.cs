@@ -46,7 +46,7 @@ namespace Api.Socioboard.Repositories.ListeningRepository
                     return await result;
                 });
                 IList<Domain.Socioboard.Models.Listening.LinkedGroupPost> lstLinkFeeds = task.Result;
-
+                lstLinkFeeds.Select(s => { s.Message = WebUtility.HtmlDecode(s.Message); return s; }).ToList();
                 for (int i = 0; i < lstLinkFeeds.Count; i++)
                 {
                     //lstLinkFeeds[i].Message = lstLinkFeeds[i].Message.Replace("%3F", " ").Replace("% 21", " ").Replace("%2C", " ");
@@ -56,8 +56,8 @@ namespace Api.Socioboard.Repositories.ListeningRepository
                     lstLinkFeeds[i].Message = System.Compat.Web.HttpUtility.UrlDecode(lstLinkFeeds[i].Message);
                     
                 }
+                lstLinkFeeds = lstLinkFeeds.GroupBy(t => t.Message).Select(g => g.First()).ToList();
 
-                lstLinkFeeds.Select(s => { s.Message = WebUtility.HtmlDecode(s.Message); return s; }).ToList();
                 return lstLinkFeeds.ToList();
             }
             catch (Exception ex)

@@ -21,7 +21,6 @@ namespace SocioboardDataServices.Reports
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.AccessToken != null).ToList();
-                   // lstInsAcc = lstInsAcc.Where(r => r.InstagramId.Contains("1479225281")).ToList();
                     foreach (var item in lstInsAcc)
                     {
                         if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)

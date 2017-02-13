@@ -119,7 +119,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                 // end codes to post comments
             }
             else {
-                swal('please enter an comment');
+                swal('Please enter a comment');
             }
         }
 
@@ -135,10 +135,10 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             var memberId = $('.task-user-member:checked');
             var taskComment = $('#InstagramFeedComment').val();
             if (!memberId.val()) {
-                swal('please select any member for assign task')
+                swal('Please select a member to assign the task')
             }
             else if (!taskComment) {
-                swal('please write any comment for assign task')
+                swal('Please write a comment to assign the task')
             }
             else {
                 var assignUserId = memberId.val();

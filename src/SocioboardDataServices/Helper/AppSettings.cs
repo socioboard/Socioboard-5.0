@@ -36,6 +36,13 @@ namespace SocioboardDataServices.Helper
         //End LinkedIn App Creds 
 
 
+        //LinkedIn App Creds Start
+        public const string InstagramApiKey = "";
+        public const string InstagramSecretKey = "";
+        public const string InstagramCallBackURL = "http://localhost:9821/InstagramManager/Instagram";
+        //End LinkedIn App Creds 
+
+
         //Gplus App Creds Start
         public const string GoogleConsumerKey = "";
         public const string GoogleConsumerSecret = "";

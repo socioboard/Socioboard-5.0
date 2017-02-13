@@ -38,7 +38,25 @@ namespace SocioboardDataServices.Facebook
                         {
                             fbAcc.Friends = fbAcc.Friends;
                         }
-                        
+
+                        try
+                        {
+                            fbAcc.EmailId = (Convert.ToString(profile["emails"]));
+                            fbAcc.EmailId = fbAcc.EmailId.Replace("[","").Replace("]","").Replace("\"","");
+                        }
+                        catch (Exception)
+                        {
+                            fbAcc.EmailId = fbAcc.EmailId;
+                        }
+
+                        try
+                        {
+                            fbAcc.coverPic = (Convert.ToString(profile["cover"]["source"]));
+                        }
+                        catch (Exception)
+                        {
+
+                        }
                         try
                         {
 
@@ -50,6 +68,8 @@ namespace SocioboardDataServices.Facebook
                             SaveFacebookFeeds(fbAcc.AccessToken, fbAcc.FbUserId,fbAcc.FbUserName);
                             SavePageConversations(fbAcc.AccessToken, fbAcc.FbUserId);
                             SaveFacebookPageFeed(fbAcc.AccessToken, fbAcc.FbUserId,fbAcc.FbUserName);
+                            SaveFacebookPagePromotionalDetails(fbAcc.AccessToken, fbAcc.FbUserId);
+                            SaveFacebookPageTaggedDetails(fbAcc.AccessToken, fbAcc.FbUserId);
                             // SavePageNotification(fbAcc.AccessToken, fbAcc.FbUserId);
                         }
                     }
@@ -660,6 +680,218 @@ namespace SocioboardDataServices.Facebook
                 apiHitsCount = MaxapiHitsCount;
             }
         }
+
+        public static void SaveFacebookPageTaggedDetails(string accesstoken, string facebookid)
+        {
+            try
+            {
+                dynamic data = FbUser.getPageTaggedPostDetails(accesstoken);
+                Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails _InboxMessages;
+
+                foreach (var item in data["data"])
+                {
+                    _InboxMessages = new Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails();
+
+                    _InboxMessages.ProfileId = facebookid;
+                    _InboxMessages.type = Domain.Socioboard.Enum.FacebookPagePromotion.tagged;
+                    _InboxMessages.EntryDate = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                    try
+                    {
+                        _InboxMessages.message = item["message"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FeedId = item["id"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FromId = item["from"]["id"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FromName = item["from"]["name"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FromProfileUrl = "http://graph.facebook.com/" + _InboxMessages.FromId + "/picture?type=small";
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.ProfileId = facebookid;
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+
+                    try
+                    {
+                        _InboxMessages.FeedDate = SBHelper.ConvertToUnixTimestamp(Convert.ToDateTime(item["created_time"].ToString()));
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.Picture = item["picture"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FeedDescription = item["description"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    MongoRepository mongorepo = new MongoRepository("FacebookPagePromotionDetails");
+                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails>(t => t.ProfileId == _InboxMessages.ProfileId && t.FeedId == _InboxMessages.FeedId);
+                    var task = Task.Run(async () =>
+                    {
+                        return await ret;
+                    });
+                    int count = task.Result.Count;
+                    if (count < 1)
+                    {
+                        mongorepo.Add<Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails>(_InboxMessages);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+        public static void SaveFacebookPagePromotionalDetails(string accesstoken, string facebookid)
+        {
+            try
+            {
+                dynamic data = FbUser.getPromotablePostsDetails(accesstoken);
+                Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails _InboxMessages;
+
+                foreach (var item in data["data"])
+                {
+                    _InboxMessages = new Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails();
+
+                    _InboxMessages.ProfileId = facebookid;
+                    _InboxMessages.type = Domain.Socioboard.Enum.FacebookPagePromotion.promotable_posts;
+                    _InboxMessages.EntryDate = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                    try
+                    {
+                        _InboxMessages.message = item["message"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FeedId = item["id"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FromId = item["from"]["id"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FromName = item["from"]["name"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FromProfileUrl = "http://graph.facebook.com/" + _InboxMessages.FromId + "/picture?type=small";
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.ProfileId = facebookid;
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+
+                    try
+                    {
+                        _InboxMessages.FeedDate = SBHelper.ConvertToUnixTimestamp(Convert.ToDateTime(item["created_time"].ToString()));
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.Picture = item["picture"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    try
+                    {
+                        _InboxMessages.FeedDescription = item["description"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                    }
+                    MongoRepository mongorepo = new MongoRepository("FacebookPagePromotionDetails");
+                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails>(t => t.ProfileId == _InboxMessages.ProfileId && t.FeedId == _InboxMessages.FeedId);
+                    var task = Task.Run(async () =>
+                    {
+                        return await ret;
+                    });
+                    int count = task.Result.Count;
+                    if (count < 1)
+                    {
+                        mongorepo.Add<Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails>(_InboxMessages);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+
 
         public static string AddFbPostComments(string postid, string AccessToken)
         {

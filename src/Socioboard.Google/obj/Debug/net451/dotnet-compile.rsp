@@ -1,5 +1,5 @@
---temp-output:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\obj\Debug\net451\
---out:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\bin\Debug\net451\Socioboard.Google.dll
+--temp-output:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\obj\Debug\net451\
+--out:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\bin\Debug\net451\Socioboard.Google.dll
 --define:DEBUG
 --define:TRACE
 --define:NET451
@@ -12,8 +12,8 @@
 --version:1.0.0.0
 --informational-version:1.0.0
 --target-framework:.NETFramework,Version=v4.5.1
---reference:C:\Users\GLB-187\.nuget\packages\Microsoft.AspNet.WebApi.Client\5.2.3\lib\net45\System.Net.Http.Formatting.dll
---reference:C:\Users\GLB-187\.nuget\packages\Newtonsoft.Json\6.0.4\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Users\GLB-213\.nuget\packages\Microsoft.AspNet.WebApi.Client\5.2.3\lib\net45\System.Net.Http.Formatting.dll
+--reference:C:\Users\GLB-213\.nuget\packages\Newtonsoft.Json\6.0.4\lib\net45\Newtonsoft.Json.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll
@@ -34,7 +34,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.InteropServices.dll
---reference:C:\Users\GLB-187\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Users\GLB-213\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Numerics.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.Extensions.dll
@@ -51,30 +51,30 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\AccountsController.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\ActivitiesController.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\CommentsController.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\Globals.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\MomentsController.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\PeopleController.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthToken.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenBlogger.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenGa.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenGPlus.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenYoutube.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Blogger.Core\BloggerPost.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Custom\GplusTagSearch.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\GAnalytics.Core\AccountsMethod\Accounts.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\GAnalytics.Core\AnalyticsMethod\Analytics.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\ActivitiesMethod\Activities.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\CommentsMethod\Comments.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\MomentsMethod\Moments.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\PeopleMethod\People.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Properties\AssemblyInfo.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Activities.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Channels.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\PlaylistItems.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Playlists.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Search.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Subscriptions.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Video.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\AccountsController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\ActivitiesController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\CommentsController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\Globals.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\MomentsController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\App.Core\PeopleController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthToken.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenBlogger.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenGa.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenGPlus.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Authentication\oAuthTokenYoutube.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Blogger.Core\BloggerPost.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Custom\GplusTagSearch.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\GAnalytics.Core\AccountsMethod\Accounts.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\GAnalytics.Core\AnalyticsMethod\Analytics.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\ActivitiesMethod\Activities.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\CommentsMethod\Comments.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\MomentsMethod\Moments.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Gplus.Core\PeopleMethod\People.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Properties\AssemblyInfo.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Activities.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Channels.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\PlaylistItems.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Playlists.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Search.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Subscriptions.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\Youtube.Core\Video.cs

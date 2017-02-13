@@ -6,7 +6,6 @@ using System.Web;
 using System.Globalization;
 using System.Compat.Web;
 
-
 namespace Socioboard.Twitter.Authentication
 {
     public class OAuthBase

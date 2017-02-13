@@ -155,7 +155,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                                      });
             }
             else {
-                swal("please type comment");
+                swal("Please type comment");
             }
         }
 
@@ -169,10 +169,10 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             var memberId = $('.task-user-member:checked');
             var taskComment = $('#taskfbfeedComment').val();
             if (!memberId.val()) {
-                swal('please select any member for assign task')
+                swal('Please select a member to assign the task')
             }
             else if (!taskComment) {
-                swal('please write any comment for assign task')
+                swal('Please write a comment to assign the task')
             }
             else {
                 var assignUserId = memberId.val();

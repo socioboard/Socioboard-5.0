@@ -25,7 +25,7 @@ SocioboardApp.controller('AutoMateRssFeedsController', function ($rootScope, $sc
                                       $('#rssfeedurl').val('');
                                       if (response.data == "This Url Does't  Conatin Rss Feed")
                                       {
-                                          swal("This Url Does't  Conatin Rss Feed");
+                                          swal("This URL does not contain RSS Feed");
                                       } else {
                                           $scope.dispbtn = true;
                                           swal(response.data);
@@ -37,12 +37,12 @@ SocioboardApp.controller('AutoMateRssFeedsController', function ($rootScope, $sc
                 }
                 else {
                     $scope.dispbtn = true;
-                    swal('please enter  feed url for rss post');
+                    swal('Please enter feed URL for RSS post');
                 }
             }
             else {
                 $scope.dispbtn = true;
-                swal('please select profile for rss post');
+                swal('Please select a profile for RSS post');
             }
         }
 

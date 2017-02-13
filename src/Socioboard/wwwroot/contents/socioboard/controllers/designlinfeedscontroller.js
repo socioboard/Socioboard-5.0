@@ -23,7 +23,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         	// console.log(profileId);
         	swal({   
 	        title: "Are you sure?",   
-	        text: "You will not be able to send message via this account!",   
+	        text: "You will not be able to send any message via this account!",
 	        type: "warning",   
 	        showCancelButton: true,   
 	        confirmButtonColor: "#DD6B55",   
@@ -31,7 +31,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
 	        closeOnConfirm: false }, 
 	        function(){   
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "success"); 
+	            swal("Deleted!", "Your profile has been deleted.", "Success");
 	            });
         }
 
@@ -86,7 +86,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                         if (response.data == "Posted") {
                             $scope.disbtncom = true;
                             $('#ComposePostModal').closeModal();
-                            swal('Message compose successfully');
+                            swal('Message composed successfully');
                         }
 
                     }, function (reason) {
@@ -95,17 +95,17 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                 }
                 else {
                     alertify.set({ delay: 3000 });
-                    alertify.error("File Extention is not valid. Please upload any image file");
+                    alertify.error("File extension is not valid. Please upload an image file");
                     $('#input-file-now').val('');
                 }
             }
             else {
                 $scope.disbtncom = true;
                 if (profiles.length < 0) {
-                    swal('please select profile');
+                    swal('Please select a profile');
                 }
                 else {
-                    swal('please type message for compose');
+                    swal('Please enter some text to compose this message');
                 }
             }
         }
@@ -154,7 +154,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
           
             var categories = $('#categories').val();
             if ($rootScope.user.TrailStatus == 2) {
-                swal("your trail has been expired.so you can't use paid features");
+                swal("You cannot use paid features as your trial period has expired");
                 return false;
             }
             if (categories == '')
@@ -188,7 +188,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                 // end codes to load facebook discovery
             }
             else {
-                swal('please enter any keyword');
+                swal('Please enter a keyword');
             }
         }
 
@@ -227,7 +227,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                 // end codes to load facebook discovery
             }
             else {
-                swal('please enter any keyword');
+                swal('Please enter a keyword');
             }
         }
 

@@ -26,37 +26,35 @@ namespace Socioboard.Controllers
         public async Task<IActionResult> ManagePaidUser()
         {
             List<Domain.Socioboard.Models.User> user = new List<Domain.Socioboard.Models.User>();
-           
-
+            List<Domain.Socioboard.Models.PiadUser> paidUser = new List<PiadUser>();
             HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetPaidUserAdmin", "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
-                user = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.User>>();
+                paidUser = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.PiadUser>>();
 
-            }
-            List<Domain.Socioboard.Models.PiadUser> paidUser = new List<PiadUser>();
-            string month = string.Empty;
-            DateTime date = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day - 1)).AddMonths(-11);
-            do
-            {
-                try
-                {
-                    Domain.Socioboard.Models.PiadUser _paidUser = new PiadUser();
-                    List<User> results = user.Where(t => t.CreateDate.Date > date.Date && t.CreateDate.Date < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
-                    _paidUser.month = date.ToString("MMM yy");
-                    _paidUser.paiduser = results.Count();
-                    paidUser.Add(_paidUser);
-                }
-                catch (Exception ex)
-                {
-                   
-                }
+            }            //List<Domain.Socioboard.Models.PiadUser> paidUser = new List<PiadUser>();
+                         //string month = string.Empty;
+                         //DateTime date = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day - 1)).AddMonths(-11);
+                         //do
+                         //{
+                         //    try
+                         //    {
+                         //        Domain.Socioboard.Models.PiadUser _paidUser = new PiadUser();
+                         //        List<User> results = user.Where(t => t.CreateDate.Date > date.Date && t.CreateDate.Date < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
+                         //        _paidUser.month = date.ToString("MMM yy");
+                         //        _paidUser.paiduser = results.Count();
+                         //        paidUser.Add(_paidUser);
+                         //    }
+                         //    catch (Exception ex)
+                         //    {
+
+            //    }
 
 
-                date = date.AddMonths(1);
-            }
-            while (DateTime.Now.AddMonths(1).Month != date.Month);
-            
+            //    date = date.AddMonths(1);
+            //}
+            //while (DateTime.Now.AddMonths(1).Month != date.Month);
+
             string abc = JsonConvert.SerializeObject(paidUser);
             return Json(abc);
 
@@ -67,36 +65,37 @@ namespace Socioboard.Controllers
         public async Task<IActionResult> ManageUnPaidUser()
         {
             List<Domain.Socioboard.Models.User> user = new List<Domain.Socioboard.Models.User>();
+            List<Domain.Socioboard.Models.UnPiadUser> paidUser = new List<UnPiadUser>();
             HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetUnPaidUserAdmin", "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
-                user = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.User>>();
+                paidUser = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.UnPiadUser>>();
 
             }
 
 
-            List<Domain.Socioboard.Models.UnPiadUser> paidUser = new List<UnPiadUser>();
-            string month = string.Empty;
-            DateTime date = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day - 1)).AddMonths(-11);
-            do
-            {
-                try
-                {
-                    Domain.Socioboard.Models.UnPiadUser _paidUser = new UnPiadUser();
-                    List<User> results = user.Where(t => t.CreateDate > date.Date && t.CreateDate < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.UnPaid).ToList();
-                    _paidUser.month = date.ToString("MMM yy");
-                    _paidUser.Unpaiduser = results.Count();
-                    paidUser.Add(_paidUser);
-                }
-                catch (Exception ex)
-                {
+            //List<Domain.Socioboard.Models.UnPiadUser> paidUser = new List<UnPiadUser>();
+            //string month = string.Empty;
+            //DateTime date = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day - 1)).AddMonths(-11);
+            //do
+            //{
+            //    try
+            //    {
+            //        Domain.Socioboard.Models.UnPiadUser _paidUser = new UnPiadUser();
+            //        List<User> results = user.Where(t => t.CreateDate > date.Date && t.CreateDate < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.UnPaid).ToList();
+            //        _paidUser.month = date.ToString("MMM yy");
+            //        _paidUser.Unpaiduser = results.Count();
+            //        paidUser.Add(_paidUser);
+            //    }
+            //    catch (Exception ex)
+            //    {
 
-                }
+            //    }
 
 
-                date = date.AddMonths(1);
-            }
-            while (DateTime.Now.AddMonths(1).Month != date.Month);
+            //    date = date.AddMonths(1);
+            //}
+            //while (DateTime.Now.AddMonths(1).Month != date.Month);
             string abc = JsonConvert.SerializeObject(paidUser);
             return Json(abc);
 
@@ -116,9 +115,9 @@ namespace Socioboard.Controllers
                 ViewBag.Domain = _appSettings.Domain;
                 return View();
             }
-           
+
         }
-        
-        
+
+
     }
 }

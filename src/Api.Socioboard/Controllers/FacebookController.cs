@@ -293,6 +293,7 @@ namespace Api.Socioboard.Controllers
             string data = Request.Form["profileaccesstoken"];
             string[] accesstoken = data.Split(',');
             int addedPageCount = 0;
+            int invalidaccessToken = 0;
             foreach (var item in accesstoken)
             {
                 dynamic profile = Fbpages.getFbPageData(item);
@@ -305,30 +306,46 @@ namespace Api.Socioboard.Controllers
                 catch { }
                 if (Convert.ToString(profile) == "Invalid Access Token")
                 {
-                    return Ok("Invalid Access Token");
+                    invalidaccessToken++;
+                    //  return Ok("Invalid Access Token");
                 }
-                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-                Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
-                if (fbacc != null && fbacc.IsActive == true)
+               else
                 {
-                    addedPageCount++;
-                    //return Ok("Facebook Page added by other user.");
-                }
-                else
-                {
-                    Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
-                    if (ngrp == null)
+                    DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                    Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+                    if (fbacc != null && fbacc.IsActive == true)
                     {
-                        return Ok("Wrong Group Id");
+                        addedPageCount++;
+                        //return Ok("Facebook Page added by other user.");
                     }
-                    // Adding Facebook Page
-                    int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookPage(profile, dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, item, _redisCache, _appSettings, _logger);
+                    else
+                    {
+                        Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
+                        if (ngrp == null)
+                        {
+                            return Ok("Wrong Group Id");
+                        }
+                        // Adding Facebook Page
+                        int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookPage(profile, dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, item, _redisCache, _appSettings, _logger);
 
+                    } 
                 }
             }
             if (addedPageCount == accesstoken.Length)
             {
-                return Ok("Facebook Page added by other user.");
+                return Ok("Facebook Pages added by other user.");
+            }
+            else if(addedPageCount == accesstoken.Length)
+            {
+                return Ok("Facebook Pages having Invalid Access Token.");
+            }
+            else if (invalidaccessToken > 0 && addedPageCount>0)
+            {
+                return Ok("Pages added successfully and " + addedPageCount + " pages added by other user or " + invalidaccessToken + " pages having invalid access token issue");
+            }
+            else if (invalidaccessToken > 0)
+            {
+                return Ok("Pages added successfully" + invalidaccessToken + " pages having invalid access token issue");
             }
             else if (addedPageCount > 0)
             {

@@ -8,18 +8,18 @@ SocioboardApp.controller('CreateBoardController', function ($rootScope, $scope,$
         $scope.createBoard = function (board) {
 
             if ($rootScope.user.TrailStatus == 2) {
-                swal("your trail has been expired.so you can't use paid features");
+                swal("You cannot use paid features as your trial period has expired");
                 return false;
             }
 
             if (board.name == "" || board.name == '' || board.name == undefined) {
                 alertify.set({ delay: 5000 });
-                alertify.error("board name should not be empty.");
+                alertify.error("Board name should not be empty");
                 return;
             }
             if (board.name.length > 20) {
                 alertify.set({ delay: 5000 });
-                alertify.error("board name length should be less than 20.");
+                alertify.error("Length of the board name should be less than 20");
                 return;
             }
 
@@ -56,7 +56,7 @@ SocioboardApp.controller('CreateBoardController', function ($rootScope, $scope,$
 	        closeOnConfirm: false }, 
 	        function(){   
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "success"); 
+	            swal("Deleted!", "Your profile has been deleted.", "Success");
 	            });
         }
 

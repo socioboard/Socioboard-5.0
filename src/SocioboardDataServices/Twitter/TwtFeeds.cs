@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SocioboardDataServices.Twitter
@@ -105,7 +107,7 @@ namespace SocioboardDataServices.Twitter
                        
                         dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount);
                         dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
-                        while (apiHitsCount < MaxapiHitsCount)
+                        if (apiHitsCount < MaxapiHitsCount)
                         {
                             try
                             {
@@ -208,11 +210,25 @@ namespace SocioboardDataServices.Twitter
                 insertdata.FeedId = FeedId;
                 insertdata.retweetcount = Convert.ToInt64(retweetcount);
                 insertdata.favoritecount = Convert.ToInt64(favoritecount);
-                var builders = Builders<BsonDocument>.Filter;
-                FilterDefinition<BsonDocument> filter = builders.Eq("TwitterId", TwitterId);
-                var update = Builders<BsonDocument>.Update.Set("AccountCreationDate", AccountCreationDate).Set("LastActivityDate", LastActivityDate).Set("lastfeed", lastfeed)
-                    .Set("FeedId", FeedId).Set("retweetcount", retweetcount).Set("favoritecount", favoritecount);
-                mongorepo.Update<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(update, filter);
+                var result = mongorepo.Find<TwitterRecentDetails>(t => t.TwitterId.Contains(TwitterId));
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<TwitterRecentDetails> lstTwitterRecentDetails = task.Result.ToList();
+                if (lstTwitterRecentDetails.Count > 0)
+                {
+                    var builders = Builders<BsonDocument>.Filter;
+                    FilterDefinition<BsonDocument> filter = builders.Eq("TwitterId", TwitterId);
+                    var update = Builders<BsonDocument>.Update.Set("AccountCreationDate", AccountCreationDate).Set("LastActivityDate", LastActivityDate).Set("lastfeed", lastfeed)
+                        .Set("FeedId", FeedId).Set("retweetcount", retweetcount).Set("favoritecount", favoritecount);
+                    mongorepo.Update<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(update, filter);
+                }
+                else
+                {
+                    mongorepo.Add<TwitterRecentDetails>(insertdata);
+                }
+               
             }
         }
 
@@ -333,7 +349,22 @@ namespace SocioboardDataServices.Twitter
                             Console.WriteLine(ex.StackTrace);
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                        mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                        var ret = mongorepo.Find<MongoTwitterMessage>(t => t.messageId.Equals(objTwitterMessage.messageId));
+                        var task = Task.Run(async () => {
+                            return await ret;
+                        });
+                        int count = task.Result.Count;
+                        if (count<1)
+                        {
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                        }
+                        else
+                        {
+                            var builders = Builders<BsonDocument>.Filter;
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterMessage.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterMessage.fromProfileUrl);
+                            mongorepo.Update<MongoTwitterMessage>(update, filter);
+                        }
 
                     }
                 }
@@ -455,7 +486,22 @@ namespace SocioboardDataServices.Twitter
                             Console.WriteLine(ex.StackTrace);
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                        mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                        var ret = mongorepo.Find<MongoTwitterMessage>(t => t.messageId.Equals(objTwitterMessage.messageId));
+                        var task = Task.Run(async () => {
+                            return await ret;
+                        });
+                        int count = task.Result.Count;
+                        if (count < 1)
+                        {
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                        }
+                        else
+                        {
+                            var builders = Builders<BsonDocument>.Filter;
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterMessage.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterMessage.fromProfileUrl);
+                            mongorepo.Update<MongoTwitterMessage>(update, filter);
+                        }
                     }
                 }
                 else
@@ -586,7 +632,22 @@ namespace SocioboardDataServices.Twitter
                             Console.WriteLine(ex.StackTrace);
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                        mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                        var ret = mongorepo.Find<MongoTwitterMessage>(t => t.messageId.Equals(objTwitterMessage.messageId));
+                        var task = Task.Run(async () => {
+                            return await ret;
+                        });
+                        int count = task.Result.Count;
+                        if (count < 1)
+                        {
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                        }
+                        else
+                        {
+                            var builders = Builders<BsonDocument>.Filter;
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterMessage.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterMessage.fromProfileUrl);
+                            mongorepo.Update<MongoTwitterMessage>(update, filter);
+                        }
                     }
                 }
                 else
@@ -725,7 +786,23 @@ namespace SocioboardDataServices.Twitter
                             objTwitterFeed.mediaUrl = null;
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed");
-                        mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>(objTwitterFeed);
+                       
+                        var ret = mongorepo.Find<MongoTwitterFeed>(t => t.messageId.Equals(objTwitterFeed.messageId));
+                        var task = Task.Run(async () => {
+                            return await ret;
+                        });
+                        int count = task.Result.Count;
+                        if (count < 1)
+                        {
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>(objTwitterFeed);
+                        }
+                        else
+                        {
+                            var builders = Builders<BsonDocument>.Filter;
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterFeed.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterFeed.fromProfileUrl);
+                            mongorepo.Update<MongoTwitterFeed>(update, filter);
+                        }
                     }
                 }
                 else
@@ -846,7 +923,23 @@ namespace SocioboardDataServices.Twitter
                             Console.WriteLine(ex.StackTrace);
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
-                        mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(objTwitterDirectMessages);
+                       
+                        var ret = mongorepo.Find<MongoTwitterDirectMessages>(t => t.messageId.Equals(objTwitterDirectMessages.messageId));
+                        var task = Task.Run(async () => {
+                            return await ret;
+                        });
+                        int count = task.Result.Count;
+                        if (count < 1)
+                        {
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(objTwitterDirectMessages);
+                        }
+                        else
+                        {
+                            var builders = Builders<BsonDocument>.Filter;
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterDirectMessages.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("senderProfileUrl", objTwitterDirectMessages.senderProfileUrl).Set("recipientProfileUrl", objTwitterDirectMessages.recipientProfileUrl);
+                            mongorepo.Update<MongoTwitterDirectMessages>(update, filter);
+                        }
                     }
                 }
                 else
@@ -967,7 +1060,22 @@ namespace SocioboardDataServices.Twitter
                             Console.WriteLine(ex.StackTrace);
                         }
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
-                        mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(objTwitterDirectMessages);
+                        var ret = mongorepo.Find<MongoTwitterDirectMessages>(t => t.messageId.Equals(objTwitterDirectMessages.messageId));
+                        var task = Task.Run(async () => {
+                            return await ret;
+                        });
+                        int count = task.Result.Count;
+                        if (count < 1)
+                        {
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(objTwitterDirectMessages);
+                        }
+                        else
+                        {
+                            var builders = Builders<BsonDocument>.Filter;
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterDirectMessages.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("senderProfileUrl", objTwitterDirectMessages.senderProfileUrl).Set("recipientProfileUrl", objTwitterDirectMessages.recipientProfileUrl);
+                            mongorepo.Update<MongoTwitterDirectMessages>(update, filter);
+                        }
                     }
                 }
                 else
@@ -1016,7 +1124,7 @@ namespace SocioboardDataServices.Twitter
                                 _InboxMessages.id = ObjectId.GenerateNewId();
                                 _InboxMessages.profileId = TwitterUserId;
                                 _InboxMessages.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower;
-                                _InboxMessages.messageId = "";
+                                _InboxMessages.messageId = Generatetxnid(); 
                                 _InboxMessages.readStatus = 1;
                                 try
                                 {
@@ -1118,6 +1226,33 @@ namespace SocioboardDataServices.Twitter
         {
             const string format = "ddd MMM dd HH:mm:ss zzzz yyyy";
             return DateTime.ParseExact(date, format, CultureInfo.InvariantCulture);
+        }
+        public static string Generatetxnid()
+        {
+
+            Random rnd = new Random();
+            string strHash = Generatehash512(rnd.ToString() + DateTime.Now);
+            string txnid1 = strHash.ToString().Substring(0, 20);
+
+            return txnid1;
+        }
+
+        public static string Generatehash512(string text)
+        {
+
+            byte[] message = Encoding.UTF8.GetBytes(text);
+
+            UnicodeEncoding UE = new UnicodeEncoding();
+            byte[] hashValue;
+            SHA512Managed hashString = new SHA512Managed();
+            string hex = "";
+            hashValue = hashString.ComputeHash(message);
+            foreach (byte x in hashValue)
+            {
+                hex += String.Format("{0:x2}", x);
+            }
+            return hex;
+
         }
     }
 }

@@ -137,7 +137,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                             if (response.data == "Posted") {
                                 $scope.dispbtn = true;
                                 $('#ComposePostModal').closeModal();
-                                swal('Message compose successfully');
+                                swal('Message composed successfully');
                             }
 
                         }, function (reason) {
@@ -146,17 +146,17 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     }
                     else {
                         alertify.set({ delay: 3000 });
-                        alertify.error("File Extention is not valid. Please upload any image file");
+                        alertify.error("File extension is not valid. Please upload an image file");
                         $('#input-file-now').val('');
                     }
                 }
                 else {
                     $scope.dispbtn = true;
                     if (profiles.length < 0) {
-                        swal('please select profile');
+                        swal('Please select a profile');
                     }
                     else {
-                        swal('please type message for compose');
+                        swal('Please enter some text to compose this message');
                     }
                 }
             }
@@ -313,7 +313,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 // console.log(profileId);
                 swal({
                     title: "Are you sure?",
-                    text: "You will not be able to send message via this account!",
+                    text: "You will not be able to send any message via this account!",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
@@ -328,7 +328,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
                     }).then(function (response) {
                         if (response.data == "Deleted") {
-                            swal("Deleted!", "Your profile has been deleted.", "success");
+                            swal("Deleted!", "Your profile has been deleted", "Success");
                             window.location.reload();
                         }
                         else {
@@ -396,10 +396,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         swal("Error!");
                     });
                 } else if ($scope.selecteLinkedinProfiles.length > 0) {
-                    swal("Page already added");
+                    swal("This page is already added");
                 }
                 else {
-                    swal("Select Atleast One Page to add!");
+                    swal("Select atleast one page to add!");
                 }
             }
             // end codes to add linkedin pages
@@ -456,10 +456,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     });
                 } else if ($scope.selecteFbPageProfiles.length > 0)
                 {
-                    swal("Page already added");
+                    swal("This page is already added");
                 }
                 else {
-                    swal("Select Atleast One Page to add!");
+                    swal("Select atleast one page to add!");
                 }
             }
             //end codes to add facebook pages
@@ -516,10 +516,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     });
                 }
                 else if ($scope.selecteGAPageProfiles.length > 0) {
-                    swal("Page already added");
+                    swal("This page is already added");
                 }
                 else {
-                    swal("Select Atleast One Page to add!");
+                    swal("Select atleast one page to add!");
                 }
             }
             //end codes to add Ga Sites
@@ -546,7 +546,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             $scope.AddSelectedProfiles = function () {
                 //console.log($scope.selectedProfiles);
-               // if ($scope.selectedProfiles.length == $rootScope.MaxCount) {
+                if ($scope.selectedProfiles.length <= $rootScope.MaxCount) {
                     var formData = new FormData();
                     formData.append('selectedProfiles', $scope.selectedProfiles);
                     $http({
@@ -568,10 +568,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     }, function (reason) {
                         swal("Error!");
                     });
-                //}
-                //else {
-                //    swal('please select ' + $rootScope.MaxCount + ' Profiles');
-                //}
+                }
+                else {
+                    swal('please select ' + $rootScope.MaxCount + ' Profiles');
+                }
 
             }
 

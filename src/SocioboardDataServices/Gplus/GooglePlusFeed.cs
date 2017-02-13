@@ -22,7 +22,7 @@ namespace SocioboardDataServices.Gplus
             {
                 //Domain.Socioboard.Domain.GooglePlusActivities _GooglePlusActivities = null;
                 MongoGplusFeed _GooglePlusActivities;
-                string _Activities = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetActivitiesList.Replace("[ProfileId]", ProfileId) + "?key="+Helper.AppSettings.GoogleApiKey, AcessToken);
+                string _Activities = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetActivitiesList.Replace("[ProfileId]", ProfileId) + "?key=" + Helper.AppSettings.GoogleApiKey, AcessToken);
                 JObject J_Activities = JObject.Parse(_Activities);
                 foreach (var item in J_Activities["items"])
                 {
@@ -167,7 +167,7 @@ namespace SocioboardDataServices.Gplus
             MongoGoogleplusComments _GoogleplusComments = new MongoGoogleplusComments();
             try
             {
-                string _Comments = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetCommentListByActivityId.Replace("[ActivityId]", feedId) + "?key="+Helper.AppSettings.GoogleApiKey, AccessToken);
+                string _Comments = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetCommentListByActivityId.Replace("[ActivityId]", feedId) + "?key=" + Helper.AppSettings.GoogleApiKey, AccessToken);
                 JObject J_Comments = JObject.Parse(_Comments);
                 List<MongoGoogleplusComments> lstGoogleplusComments = new List<MongoGoogleplusComments>();
                 foreach (var item in J_Comments["items"])

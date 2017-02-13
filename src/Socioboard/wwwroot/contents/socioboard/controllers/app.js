@@ -318,8 +318,6 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                              '../contents/socioboard/controllers/dashboardcontroller.js',
                              '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/css/admin/custom.css'
-                            
-
                         ]
                     });
                 }]

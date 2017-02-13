@@ -22,13 +22,21 @@ namespace SocioboardDataServices.LinkedIn
                     List<Domain.Socioboard.Models.LinkedinCompanyPage> lstLinkedinCompanyPage = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.IsActive).ToList();
                     foreach (var item in lstLinkedinCompanyPage)
                     {
-                        oAuthLinkedIn _oauth = new oAuthLinkedIn();
-                        _oauth.ConsumerKey = Helper.AppSettings.LinkedinApiKey;
-                        _oauth.ConsumerSecret = Helper.AppSettings.LinkedinSecretKey;
-                        _oauth.Token = item.OAuthToken;
-                        Console.WriteLine(item.LinkedinPageName + "Updating Started");
-                        LinkedPageFeed.UpdateLinkedInComanyPageFeed(item, _oauth);
-                        Console.WriteLine(item.LinkedinPageName + "Updated");
+                        try
+                        {
+                            oAuthLinkedIn _oauth = new oAuthLinkedIn();
+                            _oauth.ConsumerKey = Helper.AppSettings.LinkedinApiKey;
+                            _oauth.ConsumerSecret = Helper.AppSettings.LinkedinSecretKey;
+                            _oauth.Token = item.OAuthToken;
+                            Console.WriteLine(item.LinkedinPageName + "Updating Started");
+                            LinkedPageFeed.UpdateLinkedInComanyPageFeed(item, _oauth);
+                            Console.WriteLine(item.LinkedinPageName + "Updated");
+                        }
+                        catch (Exception)
+                        {
+
+                            Thread.Sleep(60000);
+                        }
                     }
                     Thread.Sleep(60000);
                 }
@@ -50,15 +58,23 @@ namespace SocioboardDataServices.LinkedIn
                     Model.DatabaseRepository dbr = new Model.DatabaseRepository();
                     AppSettings _appsetting = new AppSettings();
                     List<Domain.Socioboard.Models.LinkedInAccount> lstLinkedinCompanyPage = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.IsActive).ToList();
+                    //lstLinkedinCompanyPage = lstLinkedinCompanyPage.Where(t => t.LinkedinUserName.Contains("AvinashVerma")).ToList();
                     foreach (var item in lstLinkedinCompanyPage)
                     {
-                        oAuthLinkedIn _oauth = new oAuthLinkedIn();
-                        _oauth.ConsumerKey = Helper.AppSettings.LinkedinApiKey;
-                        _oauth.ConsumerSecret = Helper.AppSettings.LinkedinSecretKey;
-                        _oauth.Token = item.OAuthToken;
-                        Console.WriteLine(item.LinkedinUserName + "Updating Started");
-                        LinkedPageFeed.UpdateLinkedIn(item, _oauth);
-                        Console.WriteLine(item.LinkedinUserName + "Updated");
+                        try
+                        {
+                            oAuthLinkedIn _oauth = new oAuthLinkedIn();
+                            _oauth.ConsumerKey = Helper.AppSettings.LinkedinApiKey;
+                            _oauth.ConsumerSecret = Helper.AppSettings.LinkedinSecretKey;
+                            _oauth.Token = item.OAuthToken;
+                            Console.WriteLine(item.LinkedinUserName + "Updating Started");
+                            LinkedPageFeed.UpdateLinkedIn(item, _oauth);
+                            Console.WriteLine(item.LinkedinUserName + "Updated");
+                        }
+                        catch (Exception)
+                        {
+                            Thread.Sleep(60000);
+                        }
                     }
                     Thread.Sleep(60000);
                 }

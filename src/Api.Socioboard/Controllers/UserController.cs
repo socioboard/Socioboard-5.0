@@ -256,18 +256,45 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetPaidUserAdmin()
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-           
-            List<User>user = dbr.Find<User>(t => t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
-            if (user != null)
+
+            //     List<User>user = dbr.Find<User>(t => t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
+            //  List<User> user=dbr.GetUser().Where(t => t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
+            List<Domain.Socioboard.Models.PiadUser> paidUser = new List<PiadUser>();
+            string month = string.Empty;
+            DateTime date = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day - 1)).AddMonths(-11);
+            do
             {
-                return Ok(user);
-            }
-            else
-            {
-                return NotFound();
-            }
+                try
+                {
+                    Domain.Socioboard.Models.PiadUser _paidUser = new PiadUser();
+                    //  List<User> results = dbr.Find<User>(t => t.CreateDate.Date > date.Date && t.CreateDate.Date < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid).ToList();
+                    int PaidUserCount = dbr.GetCount<User>(t => t.CreateDate.Date > date.Date && t.CreateDate.Date < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid);
+                    _paidUser.month = date.ToString("MMM yy");
+                    _paidUser.paiduser = PaidUserCount;
+                    paidUser.Add(_paidUser);
+                }
+                catch (Exception ex)
+                {
+                    Domain.Socioboard.Models.PiadUser _paidUser = new PiadUser();
+                    _paidUser.month = date.ToString("MMM yy");
+                    _paidUser.paiduser = 0;
+                    paidUser.Add(_paidUser);
+                }
 
 
+                date = date.AddMonths(1);
+            }
+            while (DateTime.Now.AddMonths(1).Month != date.Month);
+            //if (user != null)
+            //{
+            //    return Json(user);
+            //}
+            //else
+            //{
+            //    return NotFound();
+            //}
+
+            return Json(paidUser);
            
           //  return strPaidUserCount.TrimEnd(',') + "_#_" + strUnPaidUserCount.TrimEnd(',') + "_#_" + month;
 
@@ -284,16 +311,38 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
 
-            List<User> user = dbr.Find<User>(t => t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.UnPaid).ToList();
-            if (user != null)
+            //List<User> user = dbr.Find<User>(t => t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.UnPaid).ToList();
+            //if (user != null)
+            //{
+            //    return Json(user);
+            //}
+            //else
+            //{
+            //    return NotFound();
+            //}
+            List<Domain.Socioboard.Models.UnPiadUser> paidUser = new List<UnPiadUser>();
+            string month = string.Empty;
+            DateTime date = DateTime.UtcNow.AddDays(-(DateTime.UtcNow.Day - 1)).AddMonths(-11);
+            do
             {
-                return Ok(user);
-            }
-            else
-            {
-                return NotFound();
-            }
+                try
+                {
+                    Domain.Socioboard.Models.UnPiadUser _paidUser = new UnPiadUser();
+                    int unPiadUserCount= dbr.GetCount<User>(t => t.CreateDate > date.Date && t.CreateDate < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.UnPaid);
+                    _paidUser.month = date.ToString("MMM yy");
+                    _paidUser.Unpaiduser = unPiadUserCount;
+                    paidUser.Add(_paidUser);
+                }
+                catch (Exception ex)
+                {
 
+                }
+
+
+                date = date.AddMonths(1);
+            }
+            while (DateTime.Now.AddMonths(1).Month != date.Month);
+            return Json(paidUser);
         }
 
         [HttpPost("AdminAddNewsLetter")]
@@ -1465,6 +1514,10 @@ namespace Api.Socioboard.Controllers
             if (_user != null)
             {
                 _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Paid;
+                if(_user.AccountType==Domain.Socioboard.Enum.SBAccountType.Free)
+                {
+                    _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
+                }
                 _user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                 _user.Id = Convert.ToInt64(userId);
                 dbr.Update<User>(_user);

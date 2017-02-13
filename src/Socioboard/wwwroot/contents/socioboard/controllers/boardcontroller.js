@@ -7,6 +7,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
       //  $scope.lstBoardFeeds.length = 1;
         $scope.boardName = $stateParams.boardName;
         var starttwitter = 0; // where to start data
+        var lastreach = false;
         var endingtwitter = starttwitter + 30; // how much data need to add on each function call
         var twitterReachLast = false; // to check the page ends last or not
         $scope.LoadTopTwitterFeeds = function () {
@@ -18,6 +19,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                                       $scope.lstBoardFeeds.push(feed);
                                   });
                                   starttwitter = starttwitter + response.data.length;
+                                  $scope.lastreach = true;
                                   //$scope.lstBoardFeeds.push(response.data);
                                   console.log($scope.lstBoardFeeds);
                                   if (response.data == null) {
@@ -45,6 +47,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                                       $scope.lstBoardFeeds.push(feed);
                                   });
                                   startGplus = startGplus + response.data.length;
+                                  $scope.lastreach = true;
                                   console.log($scope.lstBoardFeeds);
                                   if (response.data == null) {
                                       GplusReachLast = true;
@@ -69,6 +72,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                                       $scope.lstBoardFeeds.push(feed);
                                   });
                                   startInstagram = startInstagram + response.data.length;
+                                  $scope.lastreach = true;
                                   ////$scope.lstBoardFeeds = response.data;
                                   //$scope.lstBoardFeeds.push(response.data[0]);
                                   //console.log($scope.lstBoardFeeds);
@@ -96,7 +100,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             // console.log(profileId);
             swal({
                 title: "Are you sure?",
-                text: "You will not be able to send message via this account!",
+                text: "You will not be able to send any message via this account!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -105,7 +109,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             },
 	        function () {
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "success");
+	            swal("Deleted!", "Your board has been deleted.", "Success");
 	        });
         }
 
@@ -218,7 +222,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                         if (response.data == "Posted") {
                             $scope.dispbtn = true;
                             $('#ComposePostModal').closeModal();
-                            swal('Message compose successfully');
+                            swal('Message composed successfully');
                         }
 
                     }, function (reason) {
@@ -227,7 +231,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                 }
                 else {
                     alertify.set({ delay: 3000 });
-                    alertify.error("File Extention is not valid. Please upload any image file");
+                    alertify.error("File extension is not valid. Please upload an image file");
                     $('#input-file-now').val('');
                 }
             }
@@ -237,7 +241,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                     swal('please select profile');
                 }
                 else {
-                    swal('please type message for compose');
+                    swal('Please enter some text to compose this message');
                 }
             }
         }

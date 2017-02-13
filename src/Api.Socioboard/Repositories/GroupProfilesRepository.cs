@@ -184,6 +184,13 @@ namespace Api.Socioboard.Repositories
                 }
                 else
                 {
+                    if(grpProfile!=null)
+                    {
+                        dbr.Delete<Domain.Socioboard.Models.Groupprofiles>(grpProfile);
+                        _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                        _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
+                        return "Deleted";
+                    }
                     return res;
                 }
             }

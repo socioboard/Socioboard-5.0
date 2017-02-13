@@ -1,6 +1,8 @@
 ﻿'use strict';
 SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $http, $modal, $timeout, $stateParams, apiDomain) {
     $scope.$on('$viewContentLoaded', function () {
+        var lastreach = false;
+        var nomessages = false;
         socioqueue();
         $scope.deleteMsg = function (socioqueueId) {
             swal({
@@ -32,8 +34,10 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                           .then(function (response) {
                               if (response.data != "") {
                                   $scope.date(response.data);
+                                  $scope.lastreach = true;
                               } else {
-                                  swal("No ScheduleMessage Posted to Display");
+                                  $scope.lastreach = true;
+                                  $scope.nomessages = true;
                               }
                           }, function (reason) {
                               $scope.error = reason.data;

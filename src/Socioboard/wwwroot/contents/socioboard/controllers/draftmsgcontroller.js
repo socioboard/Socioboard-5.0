@@ -36,7 +36,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
                                  if (response.data != "") {
                                   $scope.date(response.data);
                               } else {
-                                  swal("No Draft Saved To Display");
+                                     swal("No draft is saved to the display");
                               }
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -78,7 +78,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
         $scope.scheduledraft = function (schedulemessage)
         {
             console.log(schedulemessage);
-            $rootScope.schedulemessage = encodeURIComponent(schedulemessage);
+            $rootScope.schedulemessage = schedulemessage;
             $rootScope.grppost = false;
             // window.location.href = "#/schedulemsg";
             $state.go('schedulemessage');

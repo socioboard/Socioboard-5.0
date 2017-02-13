@@ -1,5 +1,5 @@
---temp-output:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\obj\Debug\net451\
---out:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\bin\Debug\net451\Socioboard.LinkedIn.dll
+--temp-output:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\obj\Debug\net451\
+--out:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\bin\Debug\net451\Socioboard.LinkedIn.dll
 --define:DEBUG
 --define:TRACE
 --define:NET451
@@ -12,9 +12,9 @@
 --version:1.0.0.0
 --informational-version:1.0.0
 --target-framework:.NETFramework,Version=v4.5.1
---reference:C:\Users\GLB-187\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
---reference:C:\Users\GLB-187\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll
---reference:C:\Users\GLB-187\.nuget\packages\OAuth\1.0.3\lib\net40\OAuth.dll
+--reference:C:\Users\GLB-213\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
+--reference:C:\Users\GLB-213\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Users\GLB-213\.nuget\packages\OAuth\1.0.3\lib\net40\OAuth.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll
@@ -35,7 +35,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.InteropServices.dll
---reference:C:\Users\GLB-187\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Users\GLB-213\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Numerics.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.Extensions.dll
@@ -52,22 +52,22 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\Global.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedinCompanyPage.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInGroup.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInJob.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInNetwork.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedinPageComment.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedinPageUpdate.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInProfile.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInUser.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\Authentication\oAuthBase2.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\Authentication\oAuthLinkedIn.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\CompanyMethods\Company.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\JobsMethods\Jobs.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\JobsMethods\JobSearch.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\PeopleAndConnectionMethods\PeopleAndConnection.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\PeopleMethods\People.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\ShareAndSocialStreamMethods\ShareAndSocialStream.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\SocialStreamMethods\SocialStream.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\Properties\AssemblyInfo.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\Global.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedinCompanyPage.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInGroup.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInJob.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInNetwork.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedinPageComment.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedinPageUpdate.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInProfile.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\App.Core\LinkedInUser.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\Authentication\oAuthBase2.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\Authentication\oAuthLinkedIn.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\CompanyMethods\Company.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\JobsMethods\Jobs.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\JobsMethods\JobSearch.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\PeopleAndConnectionMethods\PeopleAndConnection.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\PeopleMethods\People.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\ShareAndSocialStreamMethods\ShareAndSocialStream.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\LinkedIn.Core\SocialStreamMethods\SocialStream.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\Properties\AssemblyInfo.cs

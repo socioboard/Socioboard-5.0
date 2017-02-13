@@ -27,6 +27,7 @@ namespace Api.Socioboard.Repositories.ListeningRepository
             var builder = Builders<Domain.Socioboard.Models.Listening.FaceBookGroupPost>.Sort;
             var sort = builder.Descending(t => t.DateTimeOfPost);
             var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Listening.FaceBookGroupPost>(t => t.Message.Contains(keyword), sort, skip, count);
+           
             //var result = mongorepo.FindAll<Domain.Socioboard.Models.Listening.FaceBookGroupPost>();
             var task = Task.Run(async () =>
                 {
@@ -41,39 +42,13 @@ namespace Api.Socioboard.Repositories.ListeningRepository
                 lstFbFeeds[i].Message = lstFbFeeds[i].Message.Replace("\\n", " ").Replace("\\r"," ");
                 lstFbFeeds[i].Message = HttpUtility.UrlDecode(lstFbFeeds[i].Message);
             }
-            
-
-
-            //foreach(IList<Domain.Socioboard.Models.Listening.FaceBookGroupPost> lstFbFeedss in lstFbFeeds)
-            // {
-            //     lstFbFeedss.First().Message= lstFbFeedss.First().Message.Replace("%", "");
-            //     //lstFbFeeds.FirstOrDefault().Message = lstFbFeeds.FirstOrDefault().Message.Replace("%", "");
-            // }
-            //lstFbFeeds.find.Message = lstFbFeeds.First().Message.Replace("%", "");
-            //lstFbFeeds.FirstOrDefault().Message= lstFbFeeds.FirstOrDefault().Message.Replace("%", "");
-
-            //for (int i = 0; i < lstFbFeeds.Count; i++)
-            //{
-            //    //string data = lstFbFeeds[i].Message;
-            //    lstFbFeeds.First().Message = lstFbFeeds.First().Message.Replace("%", "");
-            //}
-
-            //foreach(IList<Domain.Socioboard.Models.Listening.FaceBookGroupPost> acc in lstFbFeeds)
-            //{
-            //    foreach(object mess in acc)
-            //    {
-            //        string message = mess.ToString();
-            //    }
-            //}
-
-            //List<FacebookGroupPostRepository> lists = new List<FacebookGroupPostRepository>();
-
-
+            lstFbFeeds =   lstFbFeeds.GroupBy(t => t.Message).Select(g => g.First()).ToList(); 
+         
             if (lstFbFeeds.Count > 0)
             {
                 // _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheDiscoveryFacebookGroupPost + keyword, lstFbFeeds.ToList());
-
             }
+
             Domain.Socioboard.Models.Mongo.GroupPostKeyWords _GroupPostKeyWords = new Domain.Socioboard.Models.Mongo.GroupPostKeyWords();
             _GroupPostKeyWords.id = ObjectId.GenerateNewId();
             _GroupPostKeyWords.strId = ObjectId.GenerateNewId().ToString();

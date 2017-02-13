@@ -9,7 +9,7 @@
       "TRACE",
       "NET451"
     ],
-    "platform": "anycpu32bitpreferred",
+    "platform": "x64",
     "optimize": false,
     "emitEntryPoint": true,
     "xmlDoc": true

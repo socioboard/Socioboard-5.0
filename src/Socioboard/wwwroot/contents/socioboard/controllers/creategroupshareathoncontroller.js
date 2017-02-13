@@ -67,7 +67,7 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
             }
             else {
                 $scope.dispbtn = true;
-                swal('please fill all the details');
+                swal('Please fill in all the details');
             }
         }
 
@@ -109,7 +109,7 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
             }
             else {
                 $scope.dispbtn = true;
-                swal('please fill all the details');
+                swal('Please fill in all the details');
             }
         }
 

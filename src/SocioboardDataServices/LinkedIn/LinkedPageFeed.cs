@@ -77,7 +77,7 @@ namespace SocioboardDataServices.LinkedIn
                     try
                     {
                         List<LinkedinPageUpdate.CompanyPagePosts> objcompanypagepost = objLinkedinPageUpdate.GetPagePosts(_oauth, linacc.LinkedinPageId);
-                        while (apiHitsCount < MaxapiHitsCount && objcompanypagepost != null)
+                        if (apiHitsCount < MaxapiHitsCount && objcompanypagepost != null)
                         {
                             apiHitsCount++;
 
@@ -140,57 +140,60 @@ namespace SocioboardDataServices.LinkedIn
             {
                 DatabaseRepository dbr = new DatabaseRepository();
                 Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(linacc.LinkedinUserId));
-                if (linacc.IsActive)
+                if (_grpProfile!=null)
                 {
-                    try
+                    if (linacc.IsActive)
                     {
-                        dynamic profile = getLinkedInProfile(_oauth);
                         try
                         {
-                            linacc.Connections = Convert.ToInt32(profile.connections.ToString());
+                            dynamic profile = getLinkedInProfile(_oauth);
+                            try
+                            {
+                                linacc.Connections = Convert.ToInt32(profile.connections.ToString());
+                            }
+                            catch (Exception)
+                            {
+
+                                linacc.Connections = linacc.Connections;
+                            }
+                            try
+                            {
+                                linacc.EmailId = profile.email.ToString();
+                            }
+                            catch (Exception ex)
+                            {
+                                linacc.EmailId = linacc.EmailId;
+                            }
+                            try
+                            {
+                                linacc.ProfileImageUrl = profile.picture_url.ToString();
+                                _grpProfile.profilePic = profile.picture_url.ToString();
+                            }
+                            catch (Exception ex)
+                            {
+                                linacc.ProfileImageUrl = linacc.ProfileImageUrl;
+                                _grpProfile.profilePic = linacc.ProfileImageUrl;
+                            }
+                            try
+                            {
+                                linacc.ProfileUrl = profile.profile_url.ToString();
+                            }
+                            catch (Exception ex)
+                            {
+                                linacc.ProfileUrl = linacc.ProfileUrl;
+                            }
+
+
+
+                            linacc.LastUpdate = DateTime.UtcNow;
+                            dbr.Update<Domain.Socioboard.Models.LinkedInAccount>(linacc);
+                            dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
                         }
                         catch (Exception)
                         {
 
-                            linacc.Connections = linacc.Connections;
                         }
-                        try
-                        {
-                            linacc.EmailId = profile.email.ToString();
-                        }
-                        catch (Exception ex)
-                        {
-                            linacc.EmailId = linacc.EmailId;
-                        }
-                        try
-                        {
-                            linacc.ProfileImageUrl = profile.picture_url.ToString();
-                            _grpProfile.profilePic= profile.picture_url.ToString(); 
-                        }
-                        catch (Exception ex)
-                        {
-                            linacc.ProfileImageUrl = linacc.ProfileImageUrl;
-                            _grpProfile.profilePic= linacc.ProfileImageUrl;
-                        }
-                        try
-                        {
-                            linacc.ProfileUrl = profile.profile_url.ToString();
-                        }
-                        catch (Exception ex)
-                        {
-                            linacc.ProfileUrl = linacc.ProfileUrl;
-                        }
-
-
-                       
-                        linacc.LastUpdate = DateTime.UtcNow;
-                        dbr.Update<Domain.Socioboard.Models.LinkedInAccount>(linacc);
-                        dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
-                    }
-                    catch (Exception)
-                    {
-                        
-                    }
+                    } 
                 }
             }
         }

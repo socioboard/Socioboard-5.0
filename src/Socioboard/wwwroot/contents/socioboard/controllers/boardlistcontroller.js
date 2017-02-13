@@ -9,6 +9,7 @@ SocioboardApp.controller('BoardlistController', function ($rootScope, $scope,$ht
             $http.get(apiDomain + '/api/BoardMe/getUserBoards?userId=' + $rootScope.user.Id)
                           .then(function (response) {
                               $scope.lstBoards = response.data;
+                              $scope.lastreach = true;
                           }, function (reason) {
                               $scope.error = reason.data;
                           });

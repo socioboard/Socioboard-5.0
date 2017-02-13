@@ -168,7 +168,6 @@ namespace Socioboard.Twitter.Authentication
         /// <returns>The web server response.</returns>
         public string oAuthWebRequest(Method method, string resourceUrl, SortedDictionary<string, string> requestParameters)
         {
-            
 
             string resultString = string.Empty;
 

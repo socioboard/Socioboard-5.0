@@ -35,7 +35,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             // console.log(profileId);
             swal({
                 title: "Are you sure?",
-                text: "You will not be able to send message via this account!",
+                text: "You will not be able to send any message via this account!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -44,7 +44,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             },
 	        function () {
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "success");
+	            swal("Deleted!", "Your profile has been deleted.", "Success");
 	        });
         }
 
@@ -53,7 +53,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             var message = $('#ScheduleMsg').val();
  
             if (message == "") {
-                swal("please enter the message");
+                swal("Please enter a message");
                 return false;
             }
            
@@ -144,7 +144,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                     $('#input_0').val('');
                                     $('#input_1').val('');
                                     $scope.dispbtn = true;
-                                    swal("message scheduled successfully");
+                                    swal("Message scheduled successfully");
                                 }
                                 else {
                                     swal(response.data);
@@ -170,7 +170,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                 $('#ScheduleMsg').val('');
                                 $('#ScheduleTime').val('');
                                 $scope.dispbtn = true;
-                                swal("message scheduled successfully");
+                                swal("Message scheduled successfully");
                             }, function (reason) {
                                 console.log(reason);
                             });
@@ -178,19 +178,19 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         }
                         else {
                             alertify.set({ delay: 3000 });
-                            alertify.error("File Extention is not valid. Please upload any image file");
+                            alertify.error("File extension is not valid. Please upload an image file");
                             $('#input-file-now').val('');
                         }
                     }
                     else {
-                        swal('please enter date time to schedule message');
+                        swal('Please enter the date and time to schedule a message');
                     }
                 }
                 else {
-                    swal('please select profile for schedule message');
+                    swal('Please select a profile to schedule the message');
                 }
             } else {
-                swal('please select messgae for schedule');
+                swal('Please enter some text to schedule the message');
             }
 
         }
@@ -266,7 +266,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         $('#ScheduleMsg').val('');
                         $('#ScheduleTime').val('');
                         $scope.dispbtn = true;
-                        swal("message saved in draft successfully");
+                        swal("Message has got saved in draft successfully");
                     }, function (reason) {
                         console.log(reason);
                     });
@@ -288,19 +288,19 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         $('#ScheduleMsg').val('');
                         $('#ScheduleTime').val('');
                         $scope.dispbtn = true;
-                        swal("message saved in draft successfully");
+                        swal("Message has got saved in draft successfully");
                     }, function (reason) {
                         console.log(reason);
                     });
                 }
                 else {
                     alertify.set({ delay: 3000 });
-                    alertify.error("File Extention is not valid. Please upload any image file");
+                    alertify.error("File extension is not valid. Please upload an image file");
                     $('#input-file-now').val('');
                 }
             }
             else {
-                swal('please type any message for save in draft');
+                swal('Please type a message to save in draft');
             }
         }
 

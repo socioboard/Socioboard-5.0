@@ -108,6 +108,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             List<Domain.Socioboard.Models.Mongo.RssFeed> lstRss = Repositories.RssFeedRepository.GetPostedRssDataByUser(userId, groupId, _appSettings, dbr);
+            lstRss = lstRss.Where(t => !string.IsNullOrEmpty(t.Message)).ToList();
             return Ok(lstRss);
         }
 

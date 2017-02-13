@@ -145,7 +145,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             }).then(function (response) {
                 userservice.updateLocalUser();
                 alertify.set({ delay: 5000 });
-                alertify.success("Profile Updated Successfully");
+                alertify.success("Profile updated successfully");
                 $rootScope.UpdatedfirstName = updateUser.firstName;
                 $rootScope.UpdatedlastName = updateUser.lastName;
                 $rootScope.UpdateduserName = updateUser.userName;
@@ -173,7 +173,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 else {
 
                     alertify.set({ delay: 3000 });
-                    alertify.error("File Extention is not valid. Please upload any image file");
+                    alertify.error("File extension is not valid. Please upload an image file");
                     $('#profileImage').val('');
                 }
             }
@@ -255,7 +255,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).then(function (response) {
                 alertify.set({ delay: 5000 });
-                alertify.success("Mail Settings Updated Successfully");
+                alertify.success("Email settings updated successfully");
                 console.log(response);
             }, function (reason) {
                 alertify.set({ delay: 5000 });

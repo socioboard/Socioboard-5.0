@@ -31,7 +31,27 @@ namespace SocioboardDataServices.Model
 
             return result;
         }
+        public int GetCount<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            int PiadUser = 0;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession())
+                {
 
+                    var futureCount = session.QueryOver<T>().Where(query)
+                       .Select(NHibernate.Criterion.Projections.RowCount())
+                      .FutureValue<int>()
+                          .Value;
+                    PiadUser = Convert.ToInt32(futureCount);
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            return PiadUser;
+        }
         public IList<T> FindAll<T>() where T : class ,new()
         {
             IList<T> result = null;

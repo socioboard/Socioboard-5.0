@@ -1,4 +1,14 @@
-    <div data-ng-controller="DesignFeedsINController" scroll id="linpage" ng-class="{min:boolChangeClass}" style="height:100%;">
+<style>
+    .fb_feed {
+        background: #ececec none repeat scroll 0 0;
+        color: #555555;
+        font-size: 13px;
+        font-weight: normal;
+        padding: 10px 20px;
+    }
+</style>
+
+<div data-ng-controller="DesignFeedsINController" scroll id="linpage" ng-class="{min:boolChangeClass}" style="height:100%;">
     <!-- Page name -->
     <div class="container">
         <div class="col m12">
@@ -39,7 +49,7 @@
                         </div>
                     </div>
                     <div class="card-action center">
-                        <a ng-click="scheduledraft(linpost)">Schedule</a>
+                        <a ng-click="schedulefbpost(linpost.message)">Schedule</a>
                         <a ng-click="openComposeMessage(linpost)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
                     </div>
                 </div>
@@ -241,6 +251,14 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col l12 s12 m12 fb_feed">
+                    <span style="color: buttontext; font-size: 17px;">
+                        To Get More Leads visit our partner &nbsp;&nbsp;
+                        <a href="http://socioleadspro.com/" target="_blank">
+                            <img src="http://socioleadspro.com/Contents/img/SocioleadsPro_100.png" style="height: 15px; width: 113px;">
+                        </a>
+                    </span>
                 </div>
             </div>
 

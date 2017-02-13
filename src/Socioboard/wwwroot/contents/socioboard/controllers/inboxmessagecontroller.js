@@ -4,11 +4,10 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
     
-
+        var lastreach = false;
         var count = 30; // where to start data
         $scope.messagesEnding = 0; // how much data need to add on each function call
         $scope.messagesReachLast = false; // to check the page ends last or not
-
         $scope.lstMessages = [];
         $scope.LoadMessages = function () {
             if (!$scope.messagesReachLast) {
@@ -17,6 +16,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
                               .then(function (response) {
                                   
                                   $scope.messagesReachLast = true;
+                                  $scope.lastreached = true;
                                   for (var i = 0; i < response.data.length; i++) {
                                       $scope.lstMessages.push(response.data[i]);
                                   }
@@ -119,10 +119,10 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             var memberId = $('.task-user-member:checked');
             var taskComment = $('#taskComment').val();
             if (!memberId.val()) {
-                swal('please select any member for assign task')
+                swal('Please select a member to assign the task')
             }
             else if (!taskComment) {
-                swal('please write any comment for assign task')
+                swal('Please write a comment to assign the task')
             }
             else {
                 var assignUserId = memberId.val();

@@ -19,15 +19,22 @@ namespace SocioboardDataServices.Facebook
                     FbFeeds fbfeeds = new FbFeeds();
                     foreach (var item in lstFbAcc)
                     {
-                        Console.WriteLine(item.FbUserName + "Updating Started");
-                        fbfeeds.updateFacebookFeeds(item);
-                        Console.WriteLine(item.FbUserName + "Updated");
+                        try
+                        {
+                            Console.WriteLine(item.FbUserName + "Updating Started");
+                            fbfeeds.updateFacebookFeeds(item);
+                            Console.WriteLine(item.FbUserName + "Updated");
+                        }
+                        catch
+                        {
+                            Thread.Sleep(600000);
+                        }
                     }
                     Thread.Sleep(600000);
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("issue in web api calling"+ex.StackTrace);
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
                     Thread.Sleep(600000);
                 }
             }
@@ -36,7 +43,7 @@ namespace SocioboardDataServices.Facebook
 
         public void UpdatefacebookPages()
         {
-            while(true)
+            while (true)
             {
                 try
                 {
@@ -44,9 +51,16 @@ namespace SocioboardDataServices.Facebook
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
                     foreach (var item in lstFbAcc)
                     {
-                        Console.WriteLine(item.FbUserName + "Updating Started");
-                        FacebookPageFeed.updateFacebookPageFeeds(item);
-                        Console.WriteLine(item.FbUserName + "Updated");
+                        try
+                        {
+                            Console.WriteLine(item.FbUserName + "Updating Started");
+                            FacebookPageFeed.updateFacebookPageFeeds(item);
+                            Console.WriteLine(item.FbUserName + "Updated");
+                        }
+                        catch
+                        {
+                            Thread.Sleep(600000);
+                        }
                     }
                     Thread.Sleep(600000);
                 }

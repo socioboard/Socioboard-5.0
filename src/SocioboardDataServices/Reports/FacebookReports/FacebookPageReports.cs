@@ -94,7 +94,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
 
             try
             {
-                string facebooknewfanUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_fan_adds?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebooknewfanUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_fan_adds?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputface = getFacebookResponse(facebooknewfanUrl);
                 likesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputface)["data"].ToString())[0]["values"].ToString());
             }
@@ -105,7 +105,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region unlikes
             try
             {
-                string facebookunlikjeUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_fan_removes?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookunlikjeUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_fan_removes?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceunlike = getFacebookResponse(facebookunlikjeUrl);
                 unlikesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunlike)["data"].ToString())[0]["values"].ToString());
             }
@@ -116,7 +116,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region impression
             try
             {
-                string facebookimpressionUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookimpressionUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_impressions?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceunimpression = getFacebookResponse(facebookimpressionUrl);
                 impressionobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunimpression)["data"].ToString())[0]["values"].ToString());
             }
@@ -127,7 +127,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region impression user
             try
             {
-                string facebookuniqueUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_unique?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookuniqueUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_impressions_unique?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceununoque = getFacebookResponse(facebookuniqueUrl);
                 uniqueobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceununoque)["data"].ToString())[0]["values"].ToString());
             }
@@ -138,7 +138,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region impression breakdown
             try
             {
-                string facebookstory_typeUrl90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_by_story_type?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookstory_typeUrl90 = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_impressions_by_story_type?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceunstory_type90 = getFacebookResponse(facebookstory_typeUrl90);
                 facebookstory_typeUrlobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunstory_type90)["data"].ToString())[0]["values"].ToString());
             }
@@ -149,7 +149,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region impression breakdown organic
             try
             {
-                string facebookorganic90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_organic?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookorganic90 = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_impressions_organic?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceorganic90 = getFacebookResponse(facebookorganic90);
                 facebookorganicobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceorganic90)["data"].ToString())[0]["values"].ToString());
             }
@@ -161,7 +161,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region imression breakdowm viral
             try
             {
-                string facebookviral90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_viral?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookviral90 = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_impressions_viral?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceviral90 = getFacebookResponse(facebookviral90);
                 facebookviralobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceviral90)["data"].ToString())[0]["values"].ToString());
             }
@@ -172,7 +172,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region impression breakdown paid
             try
             {
-                string facebookpaid90 = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_paid?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookpaid90 = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_impressions_paid?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfacepaid90 = getFacebookResponse(facebookpaid90);
                 facebookpaidobj90 = JArray.Parse(JArray.Parse(JObject.Parse(outputfacepaid90)["data"].ToString())[0]["values"].ToString());
             }
@@ -183,7 +183,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region page imression by age and gender
             try
             {
-                string facebookimpressionbyage = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_impressions_by_age_gender_unique?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookimpressionbyage = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_impressions_by_age_gender_unique?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceimpressionbyage = getFacebookResponse(facebookimpressionbyage);
                 facebookimpressionbyageobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceimpressionbyage)["data"].ToString())[0]["values"].ToString());
             }
@@ -195,7 +195,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region story sharing
             try
             {
-                string facebookstories = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_stories?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebookstories = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_stories?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfacestories = getFacebookResponse(facebookstories);
                 facebookstoriesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfacestories)["data"].ToString())[0]["values"].ToString());
             }
@@ -206,7 +206,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region sroty sharing by share type
             try
             {
-                string facebooksharing_typeUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_stories_by_story_type?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebooksharing_typeUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_stories_by_story_type?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceunsharing_type = getFacebookResponse(facebooksharing_typeUrl);
                 facebooksharing_typeUrlobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunsharing_type)["data"].ToString())[0]["values"].ToString());
             }
@@ -218,7 +218,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region story sharing by age and gender
             try
             {
-                string facebooksharingagegenderUrl = "https://graph.facebook.com/v2.3/" + ProfileId + "/insights/page_storytellers_by_age_gender?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
+                string facebooksharingagegenderUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_storytellers_by_age_gender?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceunagegender = getFacebookResponse(facebooksharingagegenderUrl);
                 facebookagegenderUrlobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunagegender)["data"].ToString())[0]["values"].ToString());
             }

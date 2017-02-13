@@ -21,11 +21,11 @@ namespace SocioboardDataServices.Gplus
                 {
 
                     Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
-                    oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(Helper.AppSettings.GoogleConsumerKey,Helper.AppSettings.GoogleConsumerSecret,Helper.AppSettings.GoogleRedirectUri);
+                    oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
                     oAuthToken objToken = new oAuthToken(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
                     JObject userinfo = new JObject();
                     List<Domain.Socioboard.Models.Googleplusaccounts> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.IsActive).ToList();
-                  
+                 // lstTwtAccounts = lstTwtAccounts.Where(t => t.GpUserName.Contains("Avinash Verma")).ToList();
                     foreach (var item in lstTwtAccounts)
                     {
                         Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(item.GpUserId));
@@ -194,8 +194,8 @@ namespace SocioboardDataServices.Gplus
                 try
                 {
                     Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
-                    oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus("246221405801-5sg3n6bfpj329ie7tiqfdnb404pc78ea.apps.googleusercontent.com", "S5B4EtNKIe-1yHq4xEtXHCHK", "https://www.socioboard.com/GoogleManager/Google");
-                    Analytics _Analytics = new Analytics("246221405801-5sg3n6bfpj329ie7tiqfdnb404pc78ea.apps.googleusercontent.com", "S5B4EtNKIe-1yHq4xEtXHCHK", "https://www.socioboard.com/GoogleManager/Google");
+                    oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
+                    Analytics _Analytics = new Analytics(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
                     List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.IsActive).ToList();
                   
                     foreach (var item in lstTwtAccounts)

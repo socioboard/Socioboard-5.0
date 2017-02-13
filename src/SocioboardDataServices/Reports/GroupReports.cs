@@ -21,6 +21,7 @@ namespace SocioboardDataServices.Reports
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Groups> lstTwtAcc = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
+                    //lstTwtAcc = lstTwtAcc.Where(t => t.id==48).ToList();
                     foreach (var item in lstTwtAcc)
                     {
                         CreateReports(item.id, DateTime.UtcNow);
@@ -141,7 +142,7 @@ namespace SocioboardDataServices.Reports
             {
                 _GroupdailyReports.plainText = getsentmessagePlainText(groupId, date);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _GroupdailyReports.plainText = 0;
             }
@@ -235,7 +236,9 @@ namespace SocioboardDataServices.Reports
                 return await ret;
             });
             long TwitterSentMessages = task.Result.Count;
-            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && !string.IsNullOrEmpty(t.url)).ToList();
+            //List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && !string.IsNullOrEmpty(t.url)).ToList();
+            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && (t.shareMessage.Contains("http://") || t.shareMessage.Contains("https://") || t.shareMessage.Contains("www."))).ToList();
+
             TwitterSentMessages = TwitterSentMessages + lstScheduledMessage.Count;
 
             return TwitterSentMessages;
@@ -254,7 +257,9 @@ namespace SocioboardDataServices.Reports
                 return await ret;
             });
             long TwitterSentMessages = task.Result.Count;
-            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && !string.IsNullOrEmpty(t.picUrl)).ToList();
+            //List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && !string.IsNullOrEmpty(t.picUrl)).ToList();
+            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && (t.url != null && (t.url.Contains("https://") ||t.url.Contains("http://")))).ToList();
+
             TwitterSentMessages = TwitterSentMessages + lstScheduledMessage.Count;
 
             return TwitterSentMessages;
@@ -274,7 +279,8 @@ namespace SocioboardDataServices.Reports
                 return await ret;
             });
             long TwitterSentMessages = task.Result.Count;
-            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && string.IsNullOrEmpty(t.picUrl) && string.IsNullOrEmpty(t.url)).ToList();
+            //  List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && string.IsNullOrEmpty(t.picUrl) && string.IsNullOrEmpty(t.url)).ToList();
+            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => lstStr.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated && t.scheduleTime <= dayEnd && t.scheduleTime >= dayStart && !t.url.Contains("http") && !t.url.Contains("https") && !t.url.Contains("www.") && !t.shareMessage.Contains("http://") && !t.shareMessage.Contains("https://") && !t.shareMessage.Contains("www.")).ToList();
             TwitterSentMessages = TwitterSentMessages + lstScheduledMessage.Count;
 
             return TwitterSentMessages;

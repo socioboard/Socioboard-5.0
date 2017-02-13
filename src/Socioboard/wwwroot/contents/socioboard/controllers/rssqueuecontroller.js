@@ -8,7 +8,7 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
         $scope.deleteRss = function (RssId) {
         	swal({   
 	        title: "Are you sure?",   
-	        text: "You will not be able to send Rss Feeds!",   
+	        text: "You will not be able to send RSS Feeds!",
 	        type: "warning",   
 	        showCancelButton: true,   
 	        confirmButtonColor: "#DD6B55",   
@@ -22,7 +22,7 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
 	                url: apiDomain + '/api/RssFeed/DeleteFeedUrl?RssId=' + RssId,
 	            }).then(function (response) {
 	                if (response.data == "Deleted") {
-	                    swal("Deleted!", "Your RssFeed has been deleted.", "success");
+	                    swal("Deleted!", "Your RSS Feed has been deleted.", "Success");
 	                    window.location.reload();
 	                    $scope.rssqueue();
 	                }
@@ -73,10 +73,10 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
             var rssQueue = $('#rssQueue').val().trim();
             if(rssQueue==$rootScope.oldurl)
             {
-                swal('Please modify Url for edit');
+                swal('Please modify the URL to edit');
             }
             else if(rssQueue==''){
-                swal('please enter new url to update');
+                swal('Please enter the new URL to update');
                 return;
             }
             else {
@@ -90,7 +90,7 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
                                       $scope.rssqueue();
                                   }
                                   else if (response.data == "This Url Does't  Conatin Rss Feed") {
-                                      swal("This Url Does't  Conatin Rss Feed try with another one");
+                                      swal("This URL does not contain RSS feed. Try with another one");
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;

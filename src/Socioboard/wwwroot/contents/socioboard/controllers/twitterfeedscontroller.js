@@ -136,7 +136,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                       type: "warning",
                       showCancelButton: true,
                       confirmButtonColor: "#DD6B55",
-                      confirmButtonText: "Yes, Favorite it!",
+                      confirmButtonText: "Yes, Favourite it!",
                       closeOnConfirm: false
                   },
                function () {
@@ -212,10 +212,10 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               var memberId = $('.task-user-member:checked');
               var taskComment = $('#tasktwtfeedComment').val();
               if (!memberId.val()) {
-                  swal('please select any member for assign task');
+                  swal('Please select a member to assign the task');
               }
               else if (!taskComment) {
-                  swal('please write any comment for assign task');
+                  swal('Please write a comment to assign the task');
               }
               else {
                   var assignUserId = memberId.val();
@@ -229,10 +229,10 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               var memberId = $('.task-user-member:checked');
               var taskComment = $('#tasktwttweetComment').val();
               if (!memberId.val()) {
-                  swal('please select any member for assign task')
+                  swal('Please select a member to assign the task')
               }
               else if (!taskComment) {
-                  swal('please write any comment for assign task')
+                  swal('Please write a comment to assign the task')
               }
               else {
                   var assignUserId = memberId.val();

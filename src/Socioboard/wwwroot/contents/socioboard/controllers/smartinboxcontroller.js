@@ -85,10 +85,10 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
 
             taskComment = updatedmessage;
             if (!memberId.val()) {
-                swal('please select any member for assign task')
+                swal('Please select a member to assign the task')
             }
             else if (!taskComment) {
-                swal('please write any comment for assign task')
+                swal('Please write a comment to assign the task')
             }
             else {
                 var assignUserId = memberId.val();
