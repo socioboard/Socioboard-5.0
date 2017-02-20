@@ -197,12 +197,22 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $scope.fetchProfiles = function () {
 
                 //codes to load  fb profiles start
+                debugger;
                 $http.get(apiDomain + '/api/Facebook/GetFacebookProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
-                                  $scope.lstFbProfiles = response.data;
-                                  setTimeout(function () {
-                                      $scope.loaderclass = 'hide';
-                                  }, 3000);
+                                  if (response.data != "") {
+                                      $scope.lstFbProfiles = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else
+                                  {
+                                      $scope.nopro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 1500);
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -218,10 +228,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 $http.get(apiDomain + '/api/Twitter/GetTwitterProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   console.log(response.data);
-                                  $scope.lstTwtProfiles = response.data;
-                                  setTimeout(function () {
-                                      $scope.loaderclass = 'hide';
-                                  }, 3000);
+                                  if (response.data != "") {
+                                      $scope.lstTwtProfiles = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else
+                                  {
+                                      $scope.notwtpro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 1500);
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -235,10 +254,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 //codes to load  Gplus profiles start
                 $http.get(apiDomain + '/api/Google/GetGplusProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
-                                  $scope.lstGplusProfiles = response.data;
-                                  setTimeout(function () {
-                                      $scope.loaderclass = 'hide';
-                                  }, 3000);
+                                  if (response.data != "") {
+                                      $scope.lstGplusProfiles = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else
+                                  {
+                                      $scope.nogpluspro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 1500);
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -251,10 +279,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 //codes to load  GA profiles start
                 $http.get(apiDomain + '/api/Google/GetGAProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
-                                  $scope.lstAProfiles = response.data;
-                                  setTimeout(function () {
-                                      $scope.loaderclass = 'hide';
-                                  }, 3000);
+                                  if (response.data != "") {
+                                      $scope.lstAProfiles = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else
+                                  {
+                                      $scope.noGApro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 1500);
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -267,10 +304,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 //codes to load  Instagram profiles start
                 $http.get(apiDomain + '/api/Instagram/GetInstagramProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
-                                  $scope.lstinsProfiles = response.data;
-                                  setTimeout(function () {
-                                      $scope.loaderclass = 'hide';
-                                  }, 3000);
+                                  if (response.data != "") {
+                                      $scope.lstinsProfiles = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else
+                                  {
+                                      $scope.noinstapro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 1500);
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -285,10 +331,19 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 //codes to load  LinkedIn Comapany page profiles start
                 $http.get(apiDomain + '/api/LinkedIn/GetLinkedInCompanyPagesProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
-                                  $scope.lstlincmpnyProfiles = response.data;
-                                  setTimeout(function () {
-                                      $scope.loaderclass = 'hide';
-                                  }, 3000);
+                                  if (response.data != "") {
+                                      $scope.lstlincmpnyProfiles = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else
+                                  {
+                                      $scope.noLinkedpro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -332,11 +387,13 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                             window.location.reload();
                         }
                         else {
-                            swal("Deleted!", response.data, "success");
+                            //  swal("Deleted!", response.data, "success");
+                            swal("Deleted!","success");
                         }
 
                     }, function (reason) {
-                        swal("Deleted!", reason, "success");
+                        // swal("Deleted!", reason, "success");
+                        swal("Deleted!","success");
                     });
 
                     //todo: code to delete profile
@@ -628,8 +685,6 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount");
                 }
             }
-            dashboard();
-
+            dashboard();   
         });
-    
 });

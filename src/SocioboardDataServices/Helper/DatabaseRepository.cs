@@ -31,6 +31,25 @@ namespace SocioboardDataServices.Helper
 
             return result;
         }
+
+        public IList<T> FindWithRange<T>(Expression<Func<T, bool>> query, int skip, int take) where T : class, new()
+        {
+            IList<T> result = null;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession())
+                {
+                    result = session.Query<T>().Where(query).Skip(skip).Take(take).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return result;
+
+        }
         public int GetCount<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             int PiadUser = 0;

@@ -1,7 +1,7 @@
     <div data-ng-controller="TwitterreportsController">
             <!-- Page name -->
             <div class="container">
-                <div class="col m12">
+                <div class="col m12" ng-if="fetchdatacomplete==true">
                     <h4 class="pull-left">
                         <div class="input-field">
                             <select class="icons" ng-model="selectedProfile" ng-change="getReports(selectedProfile, 90)">
@@ -26,7 +26,7 @@
                 <div class="col s12 m12 l12">
                     <div class="card" id="feeds">
                         <div class="collection">
-                            <div class="col l12">                                        
+                            <div class="col l12" ng-if="fetchdatacomplete==true">                                        
                                 <blockquote class="groupbox_padding grey lighten-1">
                                     <h5><i class="icon-social-twitter"></i> TWITTER STATS</h5>
                                 </blockquote>
@@ -86,13 +86,37 @@
                                 </div>
                             </div>
                             <div class="col l12">                                        
-                                <blockquote class="groupbox_padding grey lighten-1">
+                                <blockquote class="groupbox_padding grey lighten-1" ng-if="fetchdatacomplete==true">
                                     <h5>DAILY ENGAGEMENT</h5>
                                 </blockquote>
+
+                                <!-- Loader for before loading data -->
+                                <div ng-if="fetchdatacomplete!=true">
+                                    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                                    <div class="center">
+                                        <div class="preloader-wrapper small active" style="position:fixed;">
+                                            <div class="spinner-layer spinner-green-only">
+                                                <div class="circle-clipper left">
+                                                    <div class="circle"></div>
+                                                </div><div class="gap-patch">
+                                                    <div class="circle"></div>
+                                                </div><div class="circle-clipper right">
+                                                    <div class="circle"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <h6 style="color:gray; font-size:18px; font-family:Calibri; position:fixed; margin-left:28%">Please wait for the Report data to be generated</h6>
+                                    </div>
+                                </div>
+                                <!-- End Loader for before loading data -->
+
                                 <div id="DAILYENGAGEMENT" class="charts" style="height: 400px;"></div>
+
                             </div>
 
-                            <div class="col l6">                                        
+                            <div class="col l6" ng-if="fetchdatacomplete==true">                                        
                                 <blockquote class="groupbox_padding grey lighten-1">
                                     <h5>Twitter Recent Details</h5>
                                 </blockquote>
@@ -116,40 +140,36 @@
                                 </div>
 
                             </div>
+                            <div ng-if="fetchdatacomplete==true">
+                                <div class="col l6" ng-if="user.TrailStatus!=2">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5>Top Five fans</h5>
+                                    </blockquote>
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th data-field="id">#</th>
+                                                <th data-field="FanProfile">Fan Profile</th>
+                                                <th data-field="Mention">Mention</th>
+                                                <th data-field="Retweets">Retweets</th>
+                                            </tr>
+                                        </thead>
 
-                            <div class="col l6" ng-if="user.TrailStatus!=2">                                        
-                                <blockquote class="groupbox_padding grey lighten-1">
-                                    <h5>Top Five fans</h5>
-                                </blockquote>
-                                <table>
-                                    <thead>
-                                      <tr>
-                                          <th data-field="id">#</th>
-                                          <th data-field="FanProfile">Fan Profile</th>
-                                          <th data-field="Mention">Mention</th>
-                                          <th data-field="Retweets">Retweets</th>
-                                      </tr>
-                                    </thead>
+                                        <tbody>
+                                            <tr ng-repeat="fan in Fans">
+                                                <td>{{fan.screenName}}</td>
+                                                <td>{{fan.name}}</td>
+                                                <td>{{fan.mentionsCount}}</td>
+                                                <td>{{fan.retweetsCount}}</td>
+                                            </tr>
 
-                                    <tbody>
-                                      <tr ng-repeat="fan in Fans">
-                                        <td>{{fan.screenName}}</td>
-                                        <td>{{fan.name}}</td>
-                                        <td>{{fan.mentionsCount}}</td>
-                                        <td>{{fan.retweetsCount}}</td>
-                                      </tr>
-                                      
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
 
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
-
-
-
     </div>

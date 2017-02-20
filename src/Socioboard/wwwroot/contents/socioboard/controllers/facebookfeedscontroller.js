@@ -144,12 +144,18 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             var postcomment = $('#postcomment_' + feedId).val();
 
             if (postcomment != '' && postcomment != null) {
+                $scope.sendingcomment = true;
+                $scope.sendicon = true;
                 $http.post(apiDomain + '/api/Facebook/PostFacebookComment?postId=' + feedId + '&profileId=' + ProfileId + '&message=' + postcomment)
                                      .then(function (response) {
+                                         $scope.sendingcomment = false;
                                          swal(response.data);
                                          $('#postcomment_' + feedId).val('');
                                          // $scope.LoadTopComments(feedId);
                                          $scope.LoadTopFeeds();
+                                         setTimeout(function () {
+                                             $scope.sendicon = false;
+                                         }, 1000);
                                      }, function (reason) {
                                          $scope.error = reason.data;
                                      });

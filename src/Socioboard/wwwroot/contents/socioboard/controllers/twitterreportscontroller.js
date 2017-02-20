@@ -10,7 +10,8 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
         $scope.chartData = [];
         $scope.graphData = [];
         $scope.Fans = [];
-
+        var fetchdatacomplete = false;
+        
 
         $scope.loadTopFans = function (profileId, days) {
 
@@ -30,6 +31,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
             $http.get(apiDomain + '/api/TwitterReports/GetTwitterRecentDetails?profileId=' + profileId)
                           .then(function (response) {
                               $scope.RecentDetails = response.data;
+                              
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -57,6 +59,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
 
         $scope.generateGraph = function (days) {
             $scope.generateChartData(days);
+
             var chart = AmCharts.makeChart("DAILYENGAGEMENT", {
                 "type": "serial",
                 "theme": "light",
@@ -178,6 +181,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
                           .then(function (response) {
                               $scope.dailyReportsList = response.data;
                               $scope.getData(days);
+                              $scope.fetchdatacomplete = true;
                           }, function (reason) {
                               $scope.error = reason.data;
                           });

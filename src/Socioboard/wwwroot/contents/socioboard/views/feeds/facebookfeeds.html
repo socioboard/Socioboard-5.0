@@ -53,7 +53,7 @@
                                                                     </div>
                                                                 </form>
                                                                 <span class="col s12 center">
-                                                                    <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed._facebookFeed.feedId,fbfeed._facebookFeed.profileId)"><i class="icon-cursor"></i></a>
+                                                                    <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed._facebookFeed.feedId,fbfeed._facebookFeed.profileId)"><i ng-if="sendingcomment==true" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-if="sendicon!=true" class="icon-cursor"></i></a>
                                                                 </span>
                                                             </div>
                                                         </li>

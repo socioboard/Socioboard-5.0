@@ -159,23 +159,35 @@
         ga('send', 'pageview');
     </script>
 
-    @if (TempData["Error"] != null)
-    {
+    @*<!— Hotjar Tracking Code for www.socioboard.com —>*@
         <script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:418900,hjsv:5};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
+        </script>
+
+        @if (TempData["Error"] != null)
+        {
+            <script>
             $(document).ready(function () {
                 alertify.set({ delay: 5000 });
                 alertify.error("@Convert.ToString(TempData["Error"])");
             });
-        </script>
-    }
-    @if (TempData["Success"] != null)
-    {
-        <script>
+            </script>
+        }
+        @if (TempData["Success"] != null)
+        {
+            <script>
             $(document).ready(function () {
                 alertify.set({ delay: 5000 });
                 alertify.success("@Convert.ToString(TempData["Success"])");
             });
-        </script>
-    }
+            </script>
+        }
 </body>
 </html>

@@ -1,6 +1,6 @@
     <div data-ng-controller="GroupreportController">
             <!-- Page name -->
-            <div class="container">
+            <div class="container" ng-if="fetchdatacomplete==true">
                 <div class="col m12">
                     <h4 class="pull-left">
                         <strong>Socioboard</strong>
@@ -15,13 +15,13 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" ng-if="fetchdatacomplete==true">
 
                 <!-- GROUP STATS -->
                 <div class="col s12 m12 l12">
                     <div class="card" id="feeds">
                         <h5 class="feeds_title grey darken-4 white-text">
-                            <i class="icon-users"></i>GROUP STATS <small>General stats across your Socioboard group.</small></span>
+                            <i class="icon-users"></i>GROUP STATS <small>General stats across your Socioboard group.</small>
                         </h5>
                         <div class="collection">
                             <div class="col l6">
@@ -290,6 +290,21 @@
 
             </div>
 
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div class="center" ng-if="fetchdatacomplete!=true">
+            <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 style="color:gray; font-size:18px; font-family:Calibri">Please wait for the Report data to be generated</h6>
 
-
+        </div>
     </div>

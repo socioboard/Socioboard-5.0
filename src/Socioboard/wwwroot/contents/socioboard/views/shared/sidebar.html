@@ -26,7 +26,7 @@
                         </li>
                     </ul>
                     <img src="https://scontent.fbom1-2.fna.fbcdn.net/v/t1.0-1/c47.0.160.160/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?oh=1ee95684d33391c6a128f7fd68420032&oe=5856F349" ng-show="user.ProfilePicUrl == null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
-                    <img src="{{getHttpsURL(user.ProfilePicUrl)}}" ng-show="user.ProfilePicUrl != null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
+                    <img src="{{getHttpsURL(user.ProfilePicUrl)}}" ng-show="user.ProfilePicUrl != null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image" style="width:101.25px">
 
 
                     <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown"><span ng-show="user.FirstName != null">{{user.FirstName +' '}}</span><span ng-show="user.LastName != null && user.LastName != 'null'"> {{ user.LastName}}</span> <i class="mdi-navigation-arrow-drop-down right"></i></a>

@@ -44,7 +44,18 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
             //codes to load  rss queue
             $http.get(apiDomain + '/api/RssFeed/GetRssDataByUser?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId)
                           .then(function (response) {
-                              $scope.lstrssqueue = response.data;
+
+                              if (response.data != "") {
+
+                                  $scope.lstrssqueue = response.data;
+                                  $scope.fetchdatacomplete = true;
+                                  $scope.headlines = true;
+                              }
+                              else
+                              {
+                                  $scope.nofeeds = true;
+                                  $scope.fetchdatacomplete = true;
+                              }
                           }, function (reason) {
                               $scope.error = reason.data;
                           });

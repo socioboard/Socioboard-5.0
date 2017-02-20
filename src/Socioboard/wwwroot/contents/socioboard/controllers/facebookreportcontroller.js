@@ -5,6 +5,7 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
     $scope.$on('$viewContentLoaded', function () {
         $scope.lstProfiles = $rootScope.lstProfiles;
         facebookreport();
+        $scope.fetchdatacomplete = 'hide';
         $scope.chart1Data = [];
         $scope.chart2Data = [];
         $scope.graphData = [];
@@ -17,6 +18,7 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
                         .then(function (response) {
                             $scope.FacebookPagePost = response.data;
                             console.log('facebook page post data');
+                            $scope.fetchdatacomplete = 'show';
                             console.log($scope.FacebookPagePost);
                         }, function (reason) {
                             $scope.error = reason.data;
@@ -893,12 +895,13 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
 
         }
 
-        $scope.chartMaleGraphData = [];
+      
+
+         $scope.chartMaleGraphData = [];
         $scope.chartFemaleGraphData = [];
         $scope.chartMaleFemaleGraphData = [];
-
-
         $scope.generatesharebygendermalefemaleGraph = function (days) {
+         
             var sharing_m_13_17 = 0;
             var sharing_m_18_24 = 0;
             var sharing_m_25_34 = 0;
@@ -916,23 +919,23 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
             angular.forEach($scope.dailyReportsList, function (value, key) {
                 if (value.date > startDate) {
-                    sharing_m_13_17 = sharing_m_13_17 + value.sharing_m_13_17
-                    sharing_m_18_24 = sharing_m_18_24 + value.sharing_m_18_24;
-                    sharing_m_25_34 = sharing_m_25_34 + value.sharing_m_25_34;
-                    sharing_m_35_44 = sharing_m_35_44 + value.sharing_m_35_44;
-                    sharing_m_45_54 = sharing_m_45_54 + value.sharing_m_45_54;
-                    sharing_m_55_64 = sharing_m_55_64 + value.sharing_m_55_64;
-                    sharing_m_65 = sharing_m_65 + value.sharing_m_65
+                    sharing_m_13_17 = sharing_m_13_17 + value.sharing_M_13_17
+                    sharing_m_18_24 = sharing_m_18_24 + value.sharing_M_18_24;
+                    sharing_m_25_34 = sharing_m_25_34 + value.sharing_M_25_34;
+                    sharing_m_35_44 = sharing_m_35_44 + value.sharing_M_35_44;
+                    sharing_m_45_54 = sharing_m_45_54 + value.sharing_M_45_54;
+                    sharing_m_55_64 = sharing_m_55_64 + value.sharing_M_55_64;
+                    sharing_m_65 = sharing_m_65 + value.sharing_M_65
 
 
                     $scope.chartMaleGraphData.push({
-                        sharing_m_13_17: value.sharing_m_13_17,
-                        sharing_m_18_24: value.sharing_m_18_24,
-                        sharing_m_25_34: value.sharing_m_25_34,
-                        sharing_m_35_44: value.sharing_m_35_44,
-                        sharing_m_45_54: value.sharing_m_45_54,
-                        sharing_m_55_64: value.sharing_m_55_64,
-                        sharing_m_65: value.sharing_m_65,
+                        sharing_m_13_17: value.sharing_M_13_17,
+                        sharing_m_18_24: value.sharing_M_18_24,
+                        sharing_m_25_34: value.sharing_M_25_34,
+                        sharing_m_35_44: value.sharing_M_35_44,
+                        sharing_m_45_54: value.sharing_M_45_54,
+                        sharing_m_55_64: value.sharing_M_55_64,
+                        sharing_m_65: value.sharing_M_65,
                         date: new Date((value.date * 1000))
                     });
 
@@ -940,30 +943,30 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
 
 
 
-                    sharing_f_13_17 = sharing_f_13_17 + value.sharing_f_13_17;
-                    sharing_f_18_24 = sharing_f_18_24 + value.sharing_f_18_24;
-                    sharing_f_25_34 = sharing_f_25_34 + value.sharing_f_25_34
-                    sharing_f_35_44 = sharing_f_35_44 + value.sharing_f_35_44;
-                    sharing_f_45_54 = sharing_f_45_54 + value.sharing_f_45_54;
-                    sharing_f_55_64 = sharing_f_55_64 + value.sharing_f_55_64;
-                    sharing_f_65 = sharing_f_65 + value.sharing_f_65;
+                    sharing_f_13_17 = sharing_f_13_17 + value.sharing_F_13_17;
+                    sharing_f_18_24 = sharing_f_18_24 + value.sharing_F_18_24;
+                    sharing_f_25_34 = sharing_f_25_34 + value.sharing_F_25_34
+                    sharing_f_35_44 = sharing_f_35_44 + value.sharing_F_35_44;
+                    sharing_f_45_54 = sharing_f_45_54 + value.sharing_F_45_54;
+                    sharing_f_55_64 = sharing_f_55_64 + value.sharing_F_55_64;
+                    sharing_f_65 = sharing_f_65 + value.sharing_F_65;
 
 
                     $scope.chartFemaleGraphData.push({
-                        sharing_f_13_17: value.sharing_f_13_17,
-                        sharing_f_18_24: value.sharing_f_18_24,
-                        sharing_f_25_34: value.sharing_f_25_34,
-                        sharing_f_35_44: value.sharing_f_35_44,
-                        sharing_f_45_54: value.sharing_f_45_54,
-                        sharing_f_55_64: value.sharing_f_55_64,
-                        sharing_f_65: value.sharing_f_65,
+                        sharing_f_13_17: value.sharing_F_13_17,
+                        sharing_f_18_24: value.sharing_F_18_24,
+                        sharing_f_25_34: value.sharing_F_25_34,
+                        sharing_f_35_44: value.sharing_F_35_44,
+                        sharing_f_45_54: value.sharing_F_45_54,
+                        sharing_f_55_64: value.sharing_F_55_64,
+                        sharing_f_65: value.sharing_F_65,
                         date: new Date((value.date * 1000))
                     });
 
 
                     $scope.chartMaleFemaleGraphData.push({
-                        female: parseInt(value.sharing_f_13_17) + parseInt(value.sharing_f_18_24) + parseInt(value.sharing_f_25_34) + parseInt(value.sharing_f_35_44) + parseInt(value.sharing_f_45_54) + parseInt(value.sharing_f_55_64) + parseInt(value.sharing_f_65),
-                        male: parseInt(value.sharing_m_13_17) + parseInt(value.sharing_m_18_24) + parseInt(value.sharing_m_25_34) + parseInt(value.sharing_m_35_44) + parseInt(value.sharing_m_45_54) + parseInt(value.sharing_m_55_64) + parseInt(value.sharing_m_65),
+                        female: parseInt(value.sharing_F_13_17) + parseInt(value.sharing_F_18_24) + parseInt(value.sharing_F_25_34) + parseInt(value.sharing_F_35_44) + parseInt(value.sharing_F_45_54) + parseInt(value.sharing_F_55_64) + parseInt(value.sharing_F_65),
+                        male: parseInt(value.sharing_M_13_17) + parseInt(value.sharing_M_18_24) + parseInt(value.sharing_M_25_34) + parseInt(value.sharing_M_35_44) + parseInt(value.sharing_M_45_54) + parseInt(value.sharing_M_55_64) + parseInt(value.sharing_M_65),
                         date: new Date((value.date * 1000))
                     });
 
@@ -987,8 +990,7 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
             var maleShare = sharing_m_13_17 + sharing_m_18_24 + sharing_m_25_34 + sharing_m_35_44 + sharing_m_45_54 + sharing_m_55_64 + sharing_m_65;
 
             var femaleShare = sharing_f_13_17 + sharing_f_18_24 + sharing_f_25_34 + sharing_f_35_44 + sharing_f_45_54 + sharing_f_55_64 + sharing_f_65;
-            console.log("hellochartMaleFemaleGraphData");
-            console.log(chartMaleFemaleGraphData);
+          
             //$scope.sharingByAgeMaleFollower = (maleShare * 100) / (maleShare + femaleShare);
             //$scope.sharingByAgeFemaleFollower = (femaleShare * 100) / (maleShare + femaleShare);
 

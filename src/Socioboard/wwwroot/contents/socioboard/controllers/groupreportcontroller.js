@@ -7,13 +7,17 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         groupreport();
 
         $scope.chart1Data = [];
-
+        var fetchdatacomplete = false;
         $scope.getReports = function (groupId, days) {
             //codes to load  fb page profiles start
             $http.get(apiDomain + '/api/GroupReport/getgroupReportData?groupId=' + $rootScope.groupId + '&daysCount=' + days)
                           .then(function (response) {
                               $scope.dailyReportsList = response.data;
                               $scope.getData(days);
+                              $scope.fetchdatacomplete = true;
+
+                              console.log("123");
+                              console.log(response.data);
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -26,6 +30,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
            // $scope.getTwitterGroupReportData($rootScope.groupId, 90);
         }
 
+       
         
 
 
@@ -103,6 +108,8 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                           .then(function (response) {
                               $scope.generatefacebookGraphData = response.data;
                               $scope.generatefacebookGraph(days);
+                              console.log("facebookpagegrp");
+                              console.log($scope.generatefacebookGraphData);
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -110,6 +117,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         }
 
         $scope.generatefacebookGraph = function (days) {
+            //$scope.GetFacebookPagePostData(profileId, days);
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
             var endDate = Date.now() / 1000;
             var totalLikes = 0;
@@ -182,7 +190,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.generatesharebygenderGraph(days);
             $scope.generatePAGEIMPRESSIONSGraph(days);
             $scope.generatePageLikeUnlikeGraph(days);
-           // $scope.GetFacebookPagePostData(profileId, days);
+            //$scope.GetFacebookPagePostData(profileId, days);
 
         }
         //end facebook group report data
@@ -302,6 +310,8 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
         $scope.generateIMPRESSIONS1Graph = function (days) {
             $scope.generateChart1Data(days);
+
+            console.log("impression1");
             console.log($scope.chart1Data);
 
 
@@ -426,19 +436,25 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                         checkin: value.impressionCheckin,
                         question: value.impressionQuestion,
                         Event: value.impressionEvent,
-                        date: value.date
+                        //date: value.date
+                        date: new Date((value.date * 1000))
                     });
 
                 }
             });
 
-            
+            console.log('chart1Data');
+            console.log($scope.chart1Data);
 
 
         }
 
         $scope.generateIMPRESSIONS2Graph = function (days) {
             $scope.generateChart2Data(days);
+
+              console.log('chart2 data');
+            console.log($scope.chart2Data);
+
             var chart = AmCharts.makeChart("BREAKDOWN_2", {
                 "type": "serial",
                 "theme": "light",
@@ -605,7 +621,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             var f_55_64 = 0;
             var f_65 = 0;
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {//dailyReportsList
                 if (value.date > startDate) {
                     m_13_17 = m_13_17 + value.m_13_17
                     m_18_24 = m_18_24 + value.m_18_24;
@@ -695,7 +711,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.chartimpressionData = [];
 
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {//dailyReportList
                 $scope.chartimpressionData.push({
                     date: new Date((value.date * 1000)),
                     impression: value.perDayImpression
@@ -769,7 +785,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
             $scope.chartlikeunlikeData = [];
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {//dailyReportList
                 $scope.chartlikeunlikeData.push({
                     date: new Date((value.date * 1000)),
                     like: value.perDayLikes,
@@ -834,7 +850,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $scope.chartstoryData = [];
 
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {//DailyReportList
                 $scope.chartstoryData.push({
                     date: new Date((value.date * 1000)),
                     story: value.storyShare
@@ -953,7 +969,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             var story_Event = 0;
 
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {//dailyREportList
                 if (value.date > startDate) {
                     story_Fans = story_Fans + value.story_Fans
                     story_PagePost = story_PagePost + value.story_PagePost;
@@ -1071,25 +1087,25 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             var sharing_f_55_64 = 0;
             var sharing_f_65 = 0;
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+            angular.forEach($scope.generatefacebookGraphData, function (value, key) {//dailyReportList
                 if (value.date > startDate) {
-                    sharing_m_13_17 = sharing_m_13_17 + value.sharing_m_13_17
-                    sharing_m_18_24 = sharing_m_18_24 + value.sharing_m_18_24;
-                    sharing_m_25_34 = sharing_m_25_34 + value.sharing_m_25_34;
-                    sharing_m_35_44 = sharing_m_35_44 + value.sharing_m_35_44;
-                    sharing_m_45_54 = sharing_m_45_54 + value.sharing_m_45_54;
-                    sharing_m_55_64 = sharing_m_55_64 + value.sharing_m_55_64;
-                    sharing_m_65 = sharing_m_65 + value.sharing_m_65
+                    sharing_m_13_17 = sharing_m_13_17 + value.sharing_M_13_17
+                    sharing_m_18_24 = sharing_m_18_24 + value.sharing_M_18_24;
+                    sharing_m_25_34 = sharing_m_25_34 + value.sharing_M_25_34;
+                    sharing_m_35_44 = sharing_m_35_44 + value.sharing_M_35_44;
+                    sharing_m_45_54 = sharing_m_45_54 + value.sharing_M_45_54;
+                    sharing_m_55_64 = sharing_m_55_64 + value.sharing_M_55_64;
+                    sharing_m_65 = sharing_m_65 + value.sharing_M_65
 
 
                     $scope.chartMaleGraphData.push({
-                        sharing_m_13_17: value.sharing_m_13_17,
-                        sharing_m_18_24: value.sharing_m_18_24,
-                        sharing_m_25_34: value.sharing_m_25_34,
-                        sharing_m_35_44: value.sharing_m_35_44,
-                        sharing_m_45_54: value.sharing_m_45_54,
-                        sharing_m_55_64: value.sharing_m_55_64,
-                        sharing_m_65: value.sharing_m_65,
+                        sharing_m_13_17: value.sharing_M_13_17,
+                        sharing_m_18_24: value.sharing_M_18_24,
+                        sharing_m_25_34: value.sharing_M_25_34,
+                        sharing_m_35_44: value.sharing_M_35_44,
+                        sharing_m_45_54: value.sharing_M_45_54,
+                        sharing_m_55_64: value.sharing_M_55_64,
+                        sharing_m_65: value.sharing_M_65,
                         date: new Date((value.date * 1000))
                     });
 
@@ -1097,30 +1113,30 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
 
 
 
-                    sharing_f_13_17 = sharing_f_13_17 + value.sharing_f_13_17;
-                    sharing_f_18_24 = sharing_f_18_24 + value.sharing_f_18_24;
-                    sharing_f_25_34 = sharing_f_25_34 + value.sharing_f_25_34
-                    sharing_f_35_44 = sharing_f_35_44 + value.sharing_f_35_44;
-                    sharing_f_45_54 = sharing_f_45_54 + value.sharing_f_45_54;
-                    sharing_f_55_64 = sharing_f_55_64 + value.sharing_f_55_64;
+                    sharing_f_13_17 = sharing_f_13_17 + value.sharing_F_13_17;
+                    sharing_f_18_24 = sharing_f_18_24 + value.sharing_F_18_24;
+                    sharing_f_25_34 = sharing_f_25_34 + value.sharing_F_25_34
+                    sharing_f_35_44 = sharing_f_35_44 + value.sharing_F_35_44;
+                    sharing_f_45_54 = sharing_f_45_54 + value.sharing_F_45_54;
+                    sharing_f_55_64 = sharing_f_55_64 + value.sharing_F_55_64;
                     sharing_f_65 = sharing_f_65 + value.sharing_f_65;
 
 
                     $scope.chartFemaleGraphData.push({
-                        sharing_f_13_17: value.sharing_f_13_17,
-                        sharing_f_18_24: value.sharing_f_18_24,
-                        sharing_f_25_34: value.sharing_f_25_34,
-                        sharing_f_35_44: value.sharing_f_35_44,
-                        sharing_f_45_54: value.sharing_f_45_54,
-                        sharing_f_55_64: value.sharing_f_55_64,
-                        sharing_f_65: value.sharing_f_65,
+                        sharing_f_13_17: value.sharing_F_13_17,
+                        sharing_f_18_24: value.sharing_F_18_24,
+                        sharing_f_25_34: value.sharing_F_25_34,
+                        sharing_f_35_44: value.sharing_F_35_44,
+                        sharing_f_45_54: value.sharing_F_45_54,
+                        sharing_f_55_64: value.sharing_F_55_64,
+                        sharing_f_65: value.sharing_F_65,
                         date: new Date((value.date * 1000))
                     });
 
 
                     $scope.chartMaleFemaleGraphData.push({
-                        female: parseInt(value.sharing_f_13_17) + parseInt(value.sharing_f_18_24) + parseInt(value.sharing_f_25_34) + parseInt(value.sharing_f_35_44) + parseInt(value.sharing_f_45_54) + parseInt(value.sharing_f_55_64) + parseInt(value.sharing_f_65),
-                        male: parseInt(value.sharing_m_13_17) + parseInt(value.sharing_m_18_24) + parseInt(value.sharing_m_25_34) + parseInt(value.sharing_m_35_44) + parseInt(value.sharing_m_45_54) + parseInt(value.sharing_m_55_64) + parseInt(value.sharing_m_65),
+                        female: parseInt(value.sharing_F_13_17) + parseInt(value.sharing_F_18_24) + parseInt(value.sharing_F_25_34) + parseInt(value.sharing_F_35_44) + parseInt(value.sharing_F_45_54) + parseInt(value.sharing_F_55_64) + parseInt(value.sharing_F_65),
+                        male: parseInt(value.sharing_M_13_17) + parseInt(value.sharing_M_18_24) + parseInt(value.sharing_M_25_34) + parseInt(value.sharing_M_35_44) + parseInt(value.sharing_M_45_54) + parseInt(value.sharing_M_55_64) + parseInt(value.sharing_M_65),
                         date: new Date((value.date * 1000))
                     });
 
@@ -1148,7 +1164,8 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             //$scope.sharingByAgeMaleFollower = (maleShare * 100) / (maleShare + femaleShare);
             //$scope.sharingByAgeFemaleFollower = (femaleShare * 100) / (maleShare + femaleShare);
 
-
+            console.log('dsfdfgdx');
+            console.log($scope.chartMaleFemaleGraphData);
 
 
         }
@@ -1159,3 +1176,4 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
   });
 
 });
+

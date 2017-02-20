@@ -1,6 +1,6 @@
     <div data-ng-controller="InstagramreportController">
             <!-- Page name -->
-            <div class="container">
+            <div class="container" ng-class="fetchdatacomplete">
                 <div class="col m12">
                     <h4 class="pull-left">
                         <div class="input-field">
@@ -21,7 +21,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" ng-class="fetchdatacomplete">
 
                 <!-- FACEBOOK STATS -->
                 <div class="col s12 m12 l12">
@@ -117,17 +117,30 @@
                                     </blockquote>
                                     <div id="MEDIAGraph" class="charts" style="height: 200px;"></div>
                                 </div>
-
-
-                            </div>
-                            
+                            </div>  
                         </div>
                     </div>
                 </div>
-
-
             </div>
 
-     
+            <div ng-if="fetchdatacomplete!='show'">
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <div class="center">
+                    <div class="preloader-wrapper small active">
+                        <div class="spinner-layer spinner-green-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait for the Report data to be generated</h6>
+
+                </div>
+            </div>
 
     </div>

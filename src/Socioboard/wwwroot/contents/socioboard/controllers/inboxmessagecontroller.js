@@ -64,7 +64,12 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             $rootScope.senderProfileUrl = senderProfileUrl;
             $scope.Conversation(RecipientId, SenderId);
             console.log($rootScope.profileId);
+            debugger;
+            $scope.msgload = false;
             $('#ChatModal').openModal();
+            $scope.lstGetConversation = "";
+            $scope.sendingloader = 'hide';//hide loader
+            $scope.sendicon = 'show';// loader stop for send icon after click on send
           //  $('#ChatModal').scrollTop($('#ChatModal')[0].scrollHeight);
         }
 
@@ -73,9 +78,11 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             //codes to load  GetConversation
             $http.get(apiDomain + '/api/Twitter/GetConversation?RecipientId=' + RecipientId + '&SenderId=' + SenderId)
                           .then(function (response) {
-
+                              $('#dmmessagecomment').val('');
+                              $scope.sendingloader = 'hide';//hide loader
+                              $scope.sendicon = 'show';// loader stop for send icon after click on send
                               $scope.date(response.data);
-
+                              $scope.msgload = true;
                           }, function (reason) {
                               $scope.error = reason.data;
                               console.log(reason.data);
@@ -94,6 +101,8 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             var message = $('#dmmessagecomment').val();
             var updatedmessage = "";
             var postdata = message.split("\n");
+            $scope.sendingloader = 'show';       // for loader part
+            $scope.sendicon = 'hide';             // for loader part
             for (var i = 0; i < postdata.length; i++) {
                 updatedmessage = updatedmessage + "<br>" + postdata[i];
             }
@@ -105,7 +114,10 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             //codes to postdirrectmessage
             $http.post(apiDomain + '/api/Twitter/PostTwitterDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message + '&UserId=' + $rootScope.user.Id)
                           .then(function (response) {
-                              $('#dmmessagecomment').val('');
+                              //setTimeout(function () {
+                                 //$scope.sendingcomment = false;
+                              //}, 0);
+                              
                               $scope.Conversation($rootScope.RecipientId, $rootScope.SenderId);
                           }, function (reason) {
                               $scope.error = reason.data;

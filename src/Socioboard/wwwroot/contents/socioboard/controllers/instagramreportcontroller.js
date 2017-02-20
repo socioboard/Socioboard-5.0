@@ -5,7 +5,7 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
     $scope.$on('$viewContentLoaded', function() {   
     
         instagramreport();
-       
+        $scope.fetchdatacomplete = 'hide';
         $scope.getReports = function (profileId, days) {
             //codes to load  instgarm  profiles start
             $http.get(apiDomain + '/api/InstagramReports/GetInstagramReportData?profileId=' + profileId + '&daysCount=' + days)
@@ -334,6 +334,7 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
             $http.get(apiDomain + '/api/InstagramReports/GetInstagramData?profileId=' + profileId)
                           .then(function (response) {
                               $scope.instagramdata = response.data;
+                              $scope.fetchdatacomplete = 'show';
                           }, function (reason) {
                               $scope.error = reason.data;
                           });

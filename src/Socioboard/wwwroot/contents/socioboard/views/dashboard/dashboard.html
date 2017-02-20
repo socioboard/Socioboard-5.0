@@ -76,9 +76,9 @@
                         <div class="row">
                             <div class="col s12 m12 l12" style="">
                                 <div class="card" style="margin: 1px;"></div>
-                                <div class="center" style="display: block; z-index: 1000; position: absolute; margin: auto; top: auto; left: 0; right: 0; bottom:200px;" ng-class="loaderclass">
+                                <div class="center" style="display: block; z-index: 1000; position: fixed; margin: auto; top: auto; left: 0; right: 0; bottom:200px;" ng-class="loaderclass">
 
-                                    <div class="preloader-wrapper big active">
+                                    <div class="preloader-wrapper small active">
                                         <div class="spinner-layer spinner-blue">
                                             <div class="circle-clipper left">
                                                 <div class="circle"></div>
@@ -120,7 +120,12 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div ng-if="nopro==true && notwtpro==true && nogpluspro==true && noGApro==true && noinstapro==true && noLinkedpro==true">
+                                    <br /><br /><br /><br />
+                                    <div class="center">
+                                        <h5>OOPS! <br /> <h6>You have no profiles</h6></h5>
+                                    </div>
+                                </div>
 
                             </div>
                             <!--facebook profile binding start-->
@@ -901,7 +906,7 @@
                             <p>Select image</p>
                         </div>
                         <div class="col s12 m8 l9">
-                            <input type="file" id="composeImage" class="dropify" multiple data-default-file="" />
+                            <input type="file" id="composeImage" class="dropify" data-default-file="" />
                         </div>
                     </div>
                     <div class="row">

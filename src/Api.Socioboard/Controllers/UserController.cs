@@ -58,7 +58,8 @@ namespace Api.Socioboard.Controllers
             user.UserName = "Socioboard";
             user.UserType = "User";
             user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
-            if(user.AccountType== Domain.Socioboard.Enum.SBAccountType.Free)
+            user.LastLoginTime = DateTime.UtcNow;
+            if (user.AccountType== Domain.Socioboard.Enum.SBAccountType.Free)
             {
                 user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
             }
@@ -112,6 +113,64 @@ namespace Api.Socioboard.Controllers
                 return BadRequest("Can't create user");
             }
             return Ok("Email verification mail sent successfully.");
+        }
+
+
+        [HttpPost("SocioboardAccountCreation")]
+        public IActionResult SocioboardAccountCreation(User user)
+        {
+            user.CreateDate = DateTime.UtcNow.AddDays(-320);
+            user.ExpiryDate = DateTime.UtcNow.AddDays(1);
+            user.EmailValidateToken = SBHelper.RandomString(20);
+            user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
+            user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.MailSent;
+            user.Password = SBHelper.MD5Hash(user.Password);
+            user.UserName = "Socioboard";
+            user.UserType = "User";
+            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
+            user.LastLoginTime = DateTime.UtcNow;
+            if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
+            {
+                user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.EmailId));
+            if (lstUser != null && lstUser.Count() > 0)
+            {
+                return BadRequest("This Email is already registered please login to continue");
+            }
+            IList<User> lstUser1 = dbr.Find<User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
+            if (lstUser1 != null && lstUser1.Count() > 0)
+            {
+                return BadRequest("Phone Number Exist");
+            }
+            int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
+            User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
+            if (SavedStatus == 1 && nuser != null)
+            {
+                Groups group = new Groups();
+                group.adminId = nuser.Id;
+                // group.id = nuser.Id;
+                group.createdDate = DateTime.UtcNow;
+                group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
+                SavedStatus = dbr.Add<Groups>(group);
+                if (SavedStatus == 1)
+                {
+                    long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
+                    GroupMembersRepository.createGroupMember(GroupId, nuser, _redisCache, dbr);
+                }
+                return Ok("Register Successfully.");
+            }
+            else
+            {
+                return BadRequest("Can't create user");
+            }
+            return Ok("Register Successfully.");
         }
 
 
@@ -1020,6 +1079,7 @@ namespace Api.Socioboard.Controllers
                     user.UserName = "Socioboard";
                     user.UserType = "User";
                     user.EmailValidateToken = "Facebook";
+                    user.LastLoginTime = DateTime.UtcNow;
                     try
                     {
                         user.ProfilePicUrl = "https://graph.facebook.com/" + Convert.ToString(profile["id"]) + "/picture?type=small";
@@ -1268,14 +1328,14 @@ namespace Api.Socioboard.Controllers
                 {
                     return Ok("Your account deleted permanently please contact socioboard support team ");
                 }
-                else if (user.EmailValidateToken.Equals("Facebook"))
-                {
-                    return Ok("Password reset is not permitted as the email address you have entered is already registered in Socioboard with Facebook. Please login through Facebook.");
-                }
-                else if (user.EmailValidateToken.Equals("Google"))
-                {
-                    return Ok("Password reset is not permitted as the email address you have entered is already registered in Socioboard with Google. Please login through Google.");
-                }
+                //else if (user.EmailValidateToken.Equals("Facebook"))
+                //{
+                //    return Ok("Password reset is not permitted as the email address you have entered is already registered in Socioboard with Facebook. Please login through Facebook.");
+                //}
+                //else if (user.EmailValidateToken.Equals("Google"))
+                //{
+                //    return Ok("Password reset is not permitted as the email address you have entered is already registered in Socioboard with Google. Please login through Google.");
+                //}
                 else if (user.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.MailSent)
                 {
                     return Ok("Please verify your email address before resetting your password");

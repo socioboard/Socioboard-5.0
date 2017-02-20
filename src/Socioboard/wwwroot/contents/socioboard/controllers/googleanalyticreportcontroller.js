@@ -6,7 +6,7 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
        //alert('helo');
         
          googleanalyticreport();
-
+         var fetchdatacomplete = false;
         $scope.deleteProfile = function (profileId) {
             // console.log(profileId);
             swal({
@@ -23,13 +23,15 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
 	            swal("Deleted!", "Your profile has been deleted.", "Success");
 	        });
         }
-
+        debugger;
         $scope.getReports = function (profileId, days) {
            // alert('hellogetReports');
             //codes to load profiles start
+            debugger;
             $http.get(apiDomain + '/api/GoogleAnalyticsReport/GetGoogleAnalyticsReportData?profileId=' + profileId + '&daysCount=' + days)
                           .then(function (response) {
                               $scope.dailyReportsList = response.data;
+                              $scope.fetchdatacomplete = true;
                               $scope.getData(profileId,days);
                           }, function (reason) {
                               console.log;

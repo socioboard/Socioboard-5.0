@@ -1,6 +1,6 @@
 ﻿<div data-ng-controller="GoogleAnalyticreportController">
     <!-- Page name -->
-    <div class="container">
+    <div class="container" ng-if="fetchdatacomplete==true">
         <div class="col m12">
             <h4 class="pull-left">
                 <div class="input-field">
@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" ng-if="fetchdatacomplete==true">
 
         <!-- FACEBOOK STATS -->
         <div class="col s12 m12 l12">
@@ -68,7 +68,6 @@
                             </div>
                         </div>
 
-
                         <hr>
                         <div class="col l12 m12 s12">
                             <div class="row">
@@ -91,9 +90,6 @@
                                             </div>
                                             <a class="tooltipped secondary-content" data-position="left" data-tooltip="09">{{post.feeddate}}</a>
                                         </li>
-
-
-                                        
                                     </ul>
                                 </div>
                                 <div id="Web" class="col s12">
@@ -109,25 +105,37 @@
                                             </div>
                                             <!--<a class="tooltipped secondary-content" data-position="left" data-tooltip="{{webpost.created_Time}}">{{webpost.created_Time}}</a>-->
                                         </li>
-
-
-                                        
                                     </ul>
                                 </div>
                             </div>
                         </div>
-
-
-
-
                     </div>
-
                 </div>
             </div>
         </div>
-
-
     </div>
+
+    <!-- Loader for google analytics report -->
+    <div ng-if="fetchdatacomplete!=true">
+        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+        <div class="center">
+            <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait for the Report data to be generated</h6>
+        </div>
+    </div>
+    <!-- End Loader for google analytics report -->
+
 
 
 

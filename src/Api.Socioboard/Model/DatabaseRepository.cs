@@ -28,10 +28,6 @@ namespace Api.Socioboard.Model
                 using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
                 {
                     result = session.Query<T>().Where(query).ToList();
-                    var futureCount = session.Query<Domain.Socioboard.Models.User>().GroupBy(x => x.CreateDate)
-                       .Select(x => x.Count())
-                       .ToFutureValue();
-                    var count = futureCount.Value;
                 }
             }
             catch (Exception ex)
@@ -47,6 +43,33 @@ namespace Api.Socioboard.Model
             }
 
             return result;
+        }
+
+
+        public IList<T> FindWithRange<T>(Expression<Func<T, bool>> query, int skip, int take) where T : class, new()
+        {
+            IList<T> result = null;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
+                {
+                    result = session.Query<T>().Where(query).Skip(skip).Take(take).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                try
+                {
+                    _logger.LogError(ex.InnerException.Message);
+
+                }
+                catch { }
+            }
+
+            return result;
+
         }
 
         public int GetCount<T>(Expression<Func<T, bool>> query) where T : class, new()

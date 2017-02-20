@@ -13,13 +13,13 @@
         <div class="row">
             <div class="col s12 m12">
                 <table id="RssQueue" class="display responsive-table striped" cellspacing="0" width="100%">
-                    <thead>
+                    <thead ng-if="headlines==true">
                         <tr>
                             <th>#</th>
                             <th>Url</th>
                             <th class="center">Profile</th>
                             <th class="center">Delete</th>
-                            <th class="center" >Edit</th>
+                            <th class="center">Edit</th>
                         </tr>
                     </thead>
                     <!--<tfoot>
@@ -63,7 +63,36 @@
             </div>
         </div>
     </section>
+
     <!-- END CONTENT -->
+
+
+    <div ng-if="fetchdatacomplete!=true">
+        <br /><br /><br /><br /><br /><br />
+        <div class="center">
+            <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait while we are processing</h6>
+
+        </div>
+    </div>
+
+    <div class="center" ng-if="nofeeds==true">
+        <br /><br /><br /><br /><br /><br />
+        <h6 style="color:gray; font-size:20px; font-family:Calibri"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No RSS feeds to display<br /></h6>
+    </div>
+
+
     <!-- Modal Structure -->
     <!--<script id="editsrssfeedModalContent.html" type="text/ng-template">-->
         <div id="EditModal" class="modal">

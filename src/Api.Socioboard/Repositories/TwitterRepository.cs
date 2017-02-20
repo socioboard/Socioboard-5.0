@@ -80,9 +80,7 @@ namespace Api.Socioboard.Repositories
                     {
                         if (twitterAccount.userId == userId)
                         {
-                            IList<Domain.Socioboard.Models.Groups> grpname = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.id == twitterAccount.userId);
-                            string name= grpname.First().groupName;
-                            return ("Twitter account already added in "+name+" group.");
+                            return ("Twitter account already added by you.");
                         }
                         return "This Account is added by other user.";
                     }

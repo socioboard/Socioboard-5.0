@@ -28,7 +28,8 @@
                                               </a>
                                             </div>
                                           </div>                                         
-                                          <a class="tooltipped secondary-content" data-position="left"  data-tooltip="{{message.createdDate}}">{{message.createdDate}}</a>
+                                          <!--<a class="tooltipped secondary-content" data-position="left"  data-tooltip="{{message.createdDate}}">{{message.createdDate}}</a>-->
+                                            <label class="secondary-content">{{message.createdDate}}</label>
                                         </li>
                                         <div ng-if="lastreached!=true">
                                             <br /><br /><br /><br /><br /><br /><br />
@@ -267,12 +268,12 @@
                         <div class="modal-content">
                             <div>
                                 <img src="{{senderProfileUrl}}" alt="vikash_glb" class="circle"> <b>{{senderScreenName}}</b>
-                                <img src="http://www.freeiconspng.com/uploads/arrow-icon-images--crazy-gallery-30.jpg" style="width: 7%; margin: 0px 3%;">
+                                <img src="https://cdn2.iconfinder.com/data/icons/bisicons-office-pack/512/Message-512.png" style="width: 7%; margin: 0px 3%;">
                                 <img src="{{recipientProfileUrl}}" class="circle"> <b>{{recipientScreenName}}</b>
                             </div>
 
                             <p></p>
-                            <div id="ChatModals" class="row">
+                            <div class="row">
                                 <form class="col s12">
                                     <div class="row">
                                         <ul class="collection">
@@ -292,6 +293,23 @@
                                             </li>
 
                                         </ul>
+                                        <div class="center" ng-if="msgload!=true">
+                                            <br /><br /><br />
+                                            <div class="preloader-wrapper small active">
+                                                <div class="spinner-layer spinner-green-only">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div><div class="gap-patch">
+                                                        <div class="circle"></div>
+                                                    </div><div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <h6 style="color:gray; font-size:18px; font-family:Calibri">Connecting...</h6>
+                                        </div>
+
                                     </div>
                                 </form>
                             </div>
@@ -302,13 +320,14 @@
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <i class="icon-pencil prefix"></i>
-                                        <textarea id="dmmessagecomment" class="materialize-textarea modal-fixed-footer"></textarea>
+                                        <!--<textarea id="dmmessagecomment" class="materialize-textarea modal-fixed-footer"></textarea>-->
+                                        <input type="text" id="dmmessagecomment"/>
                                         <label for="icon_prefix2">Type your Message here...</label>
                                     </div>
                                 </div>
                             </form>
                             <span class="col s2 margin-top-30">
-                                <a class="waves-effect waves-light btn" ng-click="postdirrectmessage()"><i class="icon-cursor"></i></a>
+                                <a class="waves-effect waves-light btn" ng-click="postdirrectmessage()"><i ng-class="sendingloader" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-class="sendicon" class="icon-cursor"></i></a>
                             </span>
                         </div>
                     </div>
