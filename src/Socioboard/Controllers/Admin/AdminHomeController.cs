@@ -102,7 +102,7 @@ namespace Socioboard.Controllers
 
         }
 
-        public ActionResult Dashboard()
+        public async Task<IActionResult> Dashboard()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
@@ -113,11 +113,9 @@ namespace Socioboard.Controllers
             {
                 ViewBag.ApiDomain = _appSettings.ApiDomain;
                 ViewBag.Domain = _appSettings.Domain;
-                return View();
+                return View("Dashboard");
             }
-
         }
-
 
     }
 }

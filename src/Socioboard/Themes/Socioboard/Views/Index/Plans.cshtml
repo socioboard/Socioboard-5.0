@@ -57,7 +57,7 @@
                             Premium
                         </div><!-- end pricing-heading -->
                         <div class="pricing-price">
-                        $ @lstsb[2].amount Per User/Month
+                        $@lstsb[2].amount Per User/Month
                         </div><!-- end pricing-price -->
                         <div class="pricing-description">
                             Package you need to efficiently manage an expanding social media network.
@@ -83,7 +83,7 @@
                             Platinum
                         </div><!-- end pricing-heading -->
                         <div class="pricing-price">
-                            $ @lstsb[7].amount Per User/Month
+                            $@lstsb[7].amount Per User/Month
                         </div><!-- end pricing-price -->
                         <div class="pricing-description">
                             Includes sophisticated tools for complex objectives
@@ -103,13 +103,17 @@
                     </div><!-- end pricing-box -->
                 </div><!-- end col-md-4 -->
                 <div class="col l12 m12 s12 center">
-                    <a href="javascript:void(0);" class="btn grey darken-3" id="show_more_btn"><i class="icon-arrow-down animated fadeInDown infinite "></i> Show More <i class="icon-arrow-down animated fadeInDown infinite "></i> </a>
+                    <a id="show_more_btn" href="javascript:void(0);" class="btn grey darken-3" ><i class="icon-arrow-down animated fadeInDown infinite "></i><span style="vertical-align:top"> Show More </span><i class="icon-arrow-down animated fadeInDown infinite "></i> </a>
+                </div>
+
+                <div class="col l12 m12 s12 center" hidden id="showless_div">
+                    <a id="show_less_btn" hidden href="javascript:void(0);" class="btn grey darken-3"><i class="icon-arrow-up animated fadeInDown infinite "></i><span style="vertical-align:top"> &nbspShow Less&nbsp </span><i class="icon-arrow-up animated fadeInDown infinite "></i> </a>
                 </div>
 
             </div><!-- end row -->
 
 
-            <div id="price_more">
+            <div id="price_more" hidden>
                 <div class="row">
                     <div class="col m3 offset-m1 hoverable">
                         <div class="pricing-box">
@@ -117,7 +121,7 @@
                                 Standard
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                $ @lstsb[1].amount Per User/Month
+                                $@lstsb[1].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Comprises of great tools suitable for small teams.
@@ -142,7 +146,7 @@
                                 Deluxe
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                $ @lstsb[3].amount Per User/Month
+                                $@lstsb[3].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Includes sophisticated tools for complex objectives
@@ -167,7 +171,7 @@
                                 Topaz
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                $ @lstsb[4].amount Per User/Month
+                                $@lstsb[4].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Includes sophisticated tools for complex objectives
@@ -194,7 +198,7 @@
                                 Ruby
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                $ @lstsb[5].amount Per User/Month
+                                $@lstsb[5].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Includes sophisticated tools for complex objectives
@@ -219,7 +223,7 @@
                                 Gold
                             </div><!-- end pricing-heading -->
                             <div class="pricing-price">
-                                $ @lstsb[6].amount Per User/Month
+                                $@lstsb[6].amount Per User/Month
                             </div><!-- end pricing-price -->
                             <div class="pricing-description">
                                 Includes sophisticated tools for complex objectives
@@ -340,13 +344,18 @@
 </div>
 
 <script type="text/javascript">
-    $(window).load(function () {
-            $("#price_more").hide();
-
             $("#show_more_btn").click(function(){
-                $("#price_more").show();
+                $("#price_more").fadeIn(700);
+                $("#show_less_btn").show();
+                $("#show_more_btn").hide();
+                $("#showless_div").show();
             });
-        });
+
+            $("#show_less_btn").click(function () {
+                $("#price_more").slideUp(400);
+                $("#show_more_btn").show();
+                $("#show_less_btn").hide();
+            });
 </script>
 @*<script type="text/javascript">
         function toggle_visibility(price_more) {

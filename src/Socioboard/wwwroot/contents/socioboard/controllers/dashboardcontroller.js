@@ -383,18 +383,20 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
                     }).then(function (response) {
                         if (response.data == "Deleted") {
-                            swal("Deleted!", "Your profile has been deleted", "Success");
-                            window.location.reload();
+                           // swal("Deleted!", "Your profile has been deleted", "Success");
+                            swal("Deleted!", "Account is deleted", "success");
                         }
-                        else {
-                            //  swal("Deleted!", response.data, "success");
-                            swal("Deleted!","success");
-                        }
+                        window.location.reload();
+                        });
+                    //    else {
+                    //        //  swal("Deleted!", response.data, "success");
+                    //        swal("Deleted!","success");
+                    //    }
 
-                    }, function (reason) {
-                        // swal("Deleted!", reason, "success");
-                        swal("Deleted!","success");
-                    });
+                    //}, function (reason) {
+                    //    // swal("Deleted!", reason, "success");
+                    //    swal("Deleted!","success");
+                    //});
 
                     //todo: code to delete profile
                 });

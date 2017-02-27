@@ -125,6 +125,9 @@
     <property name="lastloginreminder">
       <column name="lastloginreminder" />
     </property>
+    <property name="Dailymailstatusreport">
+      <column name="Dailymailstatusreport" />
+    </property>
     <property name="mailstatusforweeklyreport">
       <column name="mailstatusforweeklyreport" />
     </property>

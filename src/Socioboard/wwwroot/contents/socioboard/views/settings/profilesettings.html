@@ -23,8 +23,8 @@
                     <div class="col s12">
                         <ul class="tabs">
                             <li class="tab col s3"><a class="active" href="#Profile_tab">Profile</a></li>
-                            <li class="tab col s3" ng-if="user.Password != null"><a href="#Password_tab" >Password</a></li>
                             <li class="tab col s3"><a href="#Notification_tab">Notification</a></li>
+                            <li class="tab col s3"><a href="#Password_tab" ng-if="user.Password != null" hidden>Password</a></li>
                             <!--<li class="tab col s3"><a href="#Referral_tab">Referral</a></li>-->
                         </ul>
                     </div>
@@ -101,9 +101,10 @@
                                                         <input type="file" id="profileImage" onchange="angular.element(this).scope().checkfile(this)" class="dropify" data-default-file="" />
                                                     </div>
                                                 </div>
+                                                <br />
                                                 <div class="row">
                                                     <div class="input-field col s12">
-                                                        <textarea placeholder="About Me" id="message5" ng-model="updateUser.aboutMe" class="materialize-textarea" length="120"></textarea>
+                                                        <textarea placeholder="Type here..." id="message5" ng-model="updateUser.aboutMe" class="materialize-textarea" length="120"></textarea>
                                                         <label for="message">About Me</label>
                                                     </div>
                                                     <div class="row">
@@ -122,13 +123,13 @@
                                 </div>
                             </div>
                         </div>
-                        </form>
+                    </form>
                     <a class="btn green waves-effect waves-light" name="action" href="#/upgradeplan">
                         Upgrade Plan
                         <i class="mdi-content-send right"></i>
                     </a>
                         <form name="myform" ng-submit="UpdatePassword(updatePassword)">
-                            <div id="Password_tab" class="col s12" ng-if="user.Password != null">
+                            <div id="Password_tab" class="col s12" ng-if="user.Password != null" hidden>
                                 <div class="row">
                                     <div class="col s12 m12 l12">
                                         <div class="card-panel">
@@ -170,7 +171,7 @@
                                 </div>
                             </div>
                         </form>
-</div>
+                </div>
                     <div id="Notification_tab" class="col s12">
                         <div class="row">
                             <div class="col s12 m12 l12">
@@ -264,7 +265,7 @@
                             </div>
                         </div>
                     </div>-->
-                </div>
+            </div>
             </div>
             <!--end container-->
         </section>

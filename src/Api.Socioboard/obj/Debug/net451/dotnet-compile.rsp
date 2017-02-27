@@ -198,6 +198,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\BoardMeController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\DiscoveryController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\DraftMessageController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\ElasticMailReportController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\FacaebookPageReportsController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\FacebookController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\GoogleAnalyticsReportsController.cs
@@ -222,7 +223,6 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\TwitterReportsController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\UserController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\ValuesController.cs
-E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\WebHookController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\Listening\FacebookGroupsController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\Listening\LinkedInGroupController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Helper\AppSettings.cs
@@ -246,6 +246,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\AffiliatesRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\DiscoveryRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\DraftMessageRepository.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\ElasticMailReportRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\EwalletWithdrawRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\FacaebookPageReportsRepositories.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\FacebookRepository.cs

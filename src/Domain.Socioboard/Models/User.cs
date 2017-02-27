@@ -52,6 +52,7 @@ namespace Domain.Socioboard.Models
         public DateTime MailstatusforAccountExpiry { get; set; }
         public DateTime MailstatusbeforeAccountExpire { get; set; }
         public DateTime lastloginreminder { get; set; }
+        public DateTime Dailymailstatusreport { get; set; }
         public DateTime mailstatusforweeklyreport { get; set; }
         public DateTime mailstatusfor15daysreport { get; set; }
         public DateTime mailstatusfor30daysreport { get; set; }

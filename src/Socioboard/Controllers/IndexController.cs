@@ -791,6 +791,11 @@ namespace Socioboard.Controllers
             return View();
         }
 
+        public IActionResult friendRemove()
+        {
+            return View();
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> board(string boardName)

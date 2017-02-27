@@ -83,6 +83,7 @@ SocioboardApp.directive('myRepeatTimeoutGroupsDirective', function ($timeout) {
 //codes to redirect all unauthorized calls to index page
 SocioboardApp.config(function ($httpProvider) {
     $httpProvider.interceptors.push('SB401Detector');
+
 });
 
 

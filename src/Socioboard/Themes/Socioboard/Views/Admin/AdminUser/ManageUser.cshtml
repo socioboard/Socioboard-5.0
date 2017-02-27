@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "ManageUser";
 }
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,7 +45,7 @@
     <meta itemprop="name" content="Socioboard" />
     <meta itemprop="description" content="Be it marketing(finding leads/customers) on Social media, or listening to customer complaints, replying to them, managing multiple social media accounts from one single dashboard, finding influencers in a particular category and reaching out to them and many more things, Socioboard products can do it." />
 
-    <!-- CORE CSS-->
+    <!-- CORE CSS-->   
     <link href="~/contents/socioboard/css/admin/materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
     <!-- <link rel="stylesheet" type="text/css" href="http://demo.geekslabs.com/materialize/v3.1/css/materialize.min.css"> -->
     <link href="~/contents/socioboard/css/admin/style.css" type="text/css" rel="stylesheet" media="screen,projection">
@@ -71,6 +72,7 @@
             height: 500px;
         }
     </style>
+    
 </head>
 
 <body>
@@ -139,6 +141,18 @@
                                         </li>
                                         <li>
                                             <a href="../AdminUser/DisabledUser">Disabled Users</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    <i class="icon-envelope-letter"></i> Mail Report
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="../AdminElasticmail/GetReport">Get Reports</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -334,7 +348,7 @@
                     <div class="input-field col s12 m4 l4">
                         <select id="AccountType" name="AccountType">
                             <option value="" disabled selected>Choose your option</option>
-                            <option value="0" onclick="chng_btn_val()">basic</option>
+                            <option value="0">basic</option>
                             <option value="1">standard</option>
                             <option value="2">premium</option>
                             <option value="3">deluxe</option>
@@ -364,8 +378,10 @@
                     </div>
                 </div>
             </div>
+            
             <div class="modal-footer">
                 <img id="load_gif" src="~/contents/socioboard/images/admin_loader.gif" hidden/>
+                
                 <button id="submitButton" onclick="chng_btn_val()" type="submit" class="btn btn-flat btn-primary ink-reaction"> Update</button>
                 @*<a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-orange btn-flat">Update</a>*@
             </div>
@@ -617,6 +633,6 @@
 }
 
     </script>
-</body>
 
+</body>
 </html>

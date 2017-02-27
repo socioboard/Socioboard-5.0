@@ -141,6 +141,20 @@
                                     </ul>
                                 </div>
                             </li>
+
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    <i class="icon-envelope-letter"></i> Mail Report
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li>
+                                            <a href="../AdminElasticmail/GetReport">Get Reports</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+
                             <li class="bold">
                                 <a class="collapsible-header waves-effect waves-orange">
                                     <i class="icon-folder"></i> Packages
@@ -232,6 +246,95 @@
             </aside>
             <!-- END LEFT SIDEBAR NAV-->
             <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+            <!--card stats start-->
+            <div id="card-stats">
+                <div class="row">
+                    <div class="col s12 m6 offset-m1 l2 offset-l1">
+                        <div class="card indigo white-text">
+                            <div class="card-content">
+                                <i class="fa fa-group fa-fw"></i>
+                                <p class="card-stats-title">Total Users</p>
+                            </div>
+                            <div class="card-action center">
+                                <h4 class="card-stats-number" id="total_users">
+                                    <div class="span">
+                                        <div class="typing_loader"></div>
+                                    </div>
+                                </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col s12 m6 l2">
+                        <div class="card teal white-text">
+                            <div class="card-content">
+                                <i class="fa fa-money fa-fw"></i>
+                                <p class="card-stats-title">Paid Users</p>
+                            </div>
+                            <div class="card-action center">
+                                <h4 class="card-stats-number" id="paidusers">
+                                    <div class="span">
+                                        <div class="typing_loader"></div>
+                                    </div>
+                                </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col s12 m6 l2">
+                        <div class="card brown white-text">
+                            <div class="card-content">
+                                <i class="fa fa-random fa-fw"></i>
+                                <p class="card-stats-title">Unpaid Users</p>
+                            </div>
+                            <div class="card-action center">
+                                <h4 class="card-stats-number" id="unpaidusers">
+                                    <div class="span">
+                                        <div class="typing_loader"></div>
+                                    </div>
+                                </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col s12 m6 l2">
+                        <div class="card green white-text">
+                            <div class="card-content">
+                                <i class="fa fa-check fa-fw"></i>
+                                <p class="card-stats-title">Active Users</p>
+                            </div>
+                            <div class="card-action center">
+                                <h4 class="card-stats-number" id="activeusers">
+                                    <div class="span">
+                                        <div class="typing_loader"></div>
+                                    </div>
+                                </h4>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col s12 m6 l2">
+                        <div class="card red white-text">
+                            <div class="card-content">
+                                <i class="fa fa-remove fa-fw"></i>
+                                <p class="card-stats-title">Inactive Users</p>
+                            </div>
+                            <div class="card-action center">
+                                <h4 class="card-stats-number" id="deletedusers">
+                                    <div class="span">
+                                        <div class="typing_loader"></div>
+                                    </div>
+                                </h4>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <!--card stats end-->
+
             <!-- START CONTENT -->
             <section id="content">
 
@@ -334,6 +437,128 @@
             }, 200);
           });
     </script>
+
+
+    <script>
+        var countPaidUsers = null;
+        var countUnPaidUsers = null;
+        var counttotalusers = null;
+        var countactiveusers=null;
+    window.onload = function () {
+        getpaidusers();
+        getunpaidusers();
+        getactiveusers();
+        getdeletedusers();
+    };
+    function getpaidusers() {
+        $.ajax({
+            type: "GET",
+            url: "@ViewBag.ApiDomain/api/user/AdminPaidUsers",
+            dataType: "html",
+            success: function (msg) {
+                var resp = JSON.parse(msg);
+                var resp_conv = resp > 999999 ? (resp / 1000000).toFixed(1) + ' M' : (resp > 999 ? (resp / 1000).toFixed(1) + ' K' : resp);
+                $('#paidusers').html(resp_conv);
+                countPaidUsers = resp;
+                if (countUnPaidUsers != null) {
+                    var totalusers = countPaidUsers + countUnPaidUsers;
+                    var totalusers_conv = totalusers > 999999 ? (totalusers / 1000000).toFixed(1) + ' M' : (totalusers > 999 ? (totalusers / 1000).toFixed(1) + ' K' : totalusers);
+                    $('#total_users').html(totalusers_conv);
+                    totalusers = countPaidUsers + countUnPaidUsers
+                }
+                if(totalusers!=null && activeusers!=null)
+                {
+                    var deleteusers = totalusers - activeusers;
+                    var deleteusers_conv = deleteusers > 999999 ? (deleteusers / 1000000).toFixed(1) + ' M' : (deleteusers > 999 ? (deleteusers / 1000).toFixed(1) + ' K' : deleteusers);
+                    $('#deletedusers').html(deleteusers_conv);
+                }
+                    
+        
+            },
+            error: function (msg) {
+
+                return false;
+            }
+
+        });
+
+    }
+
+        function getunpaidusers() {
+            $.ajax({
+                type: "GET",
+                url: "@ViewBag.ApiDomain/api/user/AdminUnpaidUsers",
+                dataType: "html",
+                success: function (msg) {
+                    var resp = JSON.parse(msg);
+                    var resp_conv = resp > 999999 ? (resp / 1000000).toFixed(1) + ' M' : (resp > 999 ? (resp / 1000).toFixed(1) + ' K' : resp);
+                    $('#unpaidusers').html(resp_conv);
+                    countUnPaidUsers = resp;
+                    if (countPaidUsers != null) {
+                        var totalusers = countPaidUsers + countUnPaidUsers;
+                        var totalusers_conv = totalusers > 999999 ? (totalusers / 1000000).toFixed(1) + ' M' : (totalusers > 999 ? (totalusers / 1000).toFixed(1) + ' K' : totalusers);
+                        $('#total_users').html(totalusers_conv);
+                        totalusers = countPaidUsers + countUnPaidUsers
+                    }
+                    if (totalusers != null && activeusers != null) {
+                        var deleteusers = totalusers - activeusers;
+                        var deleteusers_conv = deleteusers > 999999 ? (deleteusers / 1000000).toFixed(1) + ' M' : (deleteusers > 999 ? (deleteusers / 1000).toFixed(1) + ' K' : deleteusers);
+                        $('#deletedusers').html(deleteusers_conv);
+                    }
+                },
+                error: function (msg) {
+
+                    return false;
+                }
+
+            });
+
+        }
+
+        function getactiveusers() {
+            $.ajax({
+                type: "GET",
+                url: "@ViewBag.ApiDomain/api/user/AdminActiveUsers",
+                dataType: "html",
+                success: function (msg) {
+                    var resp = JSON.parse(msg);
+                    var resp_conv = resp > 999999 ? (resp / 1000000).toFixed(1) + ' M' : (resp > 999 ? (resp / 1000).toFixed(1) + ' K' : resp);
+                    $('#activeusers').html(resp_conv);
+                    activeusers = resp;
+                    if (totalusers != null && activeusers != null) {
+                        var deleteusers = totalusers - activeusers;
+                        var deleteusers_conv = deleteusers > 999999 ? (deleteusers / 1000000).toFixed(1) + ' M' : (deleteusers > 999 ? (deleteusers / 1000).toFixed(1) + ' K' : deleteusers);
+                        $('#deletedusers').html(deleteusers_conv);
+                    }
+                },
+                error: function (msg) {
+
+                    return false;
+                }
+
+            });
+
+        }
+
+        @*function getdeletedusers() {
+            $.ajax({
+                type: "GET",
+                url: "@ViewBag.ApiDomain/api/user/AdminDeletedUsers",
+                dataType: "html",
+                success: function (msg) {
+                    var resp = JSON.parse(msg);
+                    $('#deletedusers').html(resp);
+                },
+                error: function (msg) {
+
+                    return false;
+                }
+
+            });
+
+        }*@
+        </script>
+
 
     <!-- Chart code -->
     <script>
@@ -661,3 +886,43 @@ function zoomChart(){
 </body>
 
 </html>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html {
+        color: #fff;
+        font-family: 'Source Sans Pro', sans-serif;
+        background-color: #59488b;
+        height: 10px;
+    }
+
+    .typing_loader {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin: 13px auto;
+        animation: typing 1s linear infinite alternate;
+        position: relative;
+        left: -12px;
+    }
+
+    @@keyframes typing {
+        0% {
+            background-color: rgba(255,255,255,1);
+            box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,0.2);
+        }
+
+        25% {
+            background-color: rgba(255,255,255,0.4);
+            box-shadow: 12px 0px 0px 0px rgba(255,255,255,2), 24px 0px 0px 0px rgba(255,255,255,0.2);
+        }
+
+        75% {
+            background-color: rgba(255,255,255,0.4);
+            box-shadow: 12px 0px 0px 0px rgba(255,255,255,0.2), 24px 0px 0px 0px rgba(255,255,255,1);
+        }
+    }
+</style>

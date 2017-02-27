@@ -123,7 +123,7 @@
                                 <div ng-if="nopro==true && notwtpro==true && nogpluspro==true && noGApro==true && noinstapro==true && noLinkedpro==true">
                                     <br /><br /><br /><br />
                                     <div class="center">
-                                        <h5>OOPS! <br /> <h6>You have no profiles</h6></h5>
+                                        <h5>Oops! <br /> <h6>You have no profiles</h6></h5>
                                     </div>
                                 </div>
 
@@ -900,6 +900,13 @@
 
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <div class="emoji-picker-container">
+                                <textarea id="composeMessage" class="materialize-textarea" length="5000" data-emojiable="true" placeholder="Type your msg"></textarea>
+                            </div>
+                        </div>
+                    </div>
                     <!--Default version-->
                     <div class="row section">
                         <div class="col s12 m4 l3">
@@ -909,12 +916,12 @@
                             <input type="file" id="composeImage" class="dropify" data-default-file="" />
                         </div>
                     </div>
-                    <div class="row">
+                    <!--<div class="row">
                         <div class="input-field col s12">
                             <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
                             <label for="compose">Message</label>
                         </div>
-                    </div>
+                    </div>-->
                 </form>
             </div>
         </div>
@@ -1139,4 +1146,14 @@
     </div>
 </div>
 
-
+<script>
+$(function() {
+      // Initializes and creates emoji set from sprite sheet
+      window.emojiPicker = new EmojiPicker({
+        emojiable_selector: '[data-emojiable=true]',
+        assetsPath: '../contents/socioboard/global/plugins/emoji-picker/lib/img/',
+        popupButtonClasses: 'fa fa-smile-o'
+      });
+      window.emojiPicker.discover();
+});
+</script>
