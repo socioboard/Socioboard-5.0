@@ -162,7 +162,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
 
             $scope.checkfile = function () {
-                var filesinput = $('#composeImage');
+                var filesinput = $('#composeImage');//composeImage
                 var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
                 if (filesinput != undefined && filesinput[0].files[0] != null) {
                     if ($scope.hasExtension('#composeImage', fileExtension)) {
@@ -193,6 +193,101 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               });
                 // end codes to TotalIncommingMessages
             }
+
+
+           
+            
+            $scope.draftMsg = function () {
+
+            var message = $('#composeMessage').val();
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+            message = updatedmessage;
+            //updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+           // message = encodeURIComponent(message);
+
+            // var date_value = $('#input_0').val();
+            //var date_value = ($('.md-input')[0]).value;
+            //var date = date_value.split("/");
+            //date_value = date[1] + "/" + date[0] + "/" + date[2];
+            //var time_value = $('#input_1').val();
+            //var time_value = ($('.md-input')[1]).value;
+            //var scheduletime = date_value + ' ' + time_value;
+            //var newdate1 = new Date(scheduletime.replace("AM", "").replace("PM", "")).toUTCString();
+            //var d = new Date(newdate1);
+            //var d4 = d.setHours(d.getHours() + 5);
+            //var date = moment(d4);
+                //var newdate = new Date(date).toUTCString();
+            var todayDate = new Date();
+            console.log(todayDate);
+
+            if (message != "" && message != undefined) {
+                $scope.checkfile();//added on 19/10/2016
+                if ($scope.check == true)
+                {
+                    var formData = new FormData();
+                    formData.append('files', $("#composeImage").get(0).files[0]);
+                    //$scope.dispbtn = false;
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate + '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#ScheduleMsg').val('');
+                        $('#ScheduleTime').val('');
+                        $scope.dispbtn = true;
+                        swal("Message has got saved in draft successfully");
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+
+                else if ($scope.check == false) 
+                {
+                    var formData = new FormData();
+                    $scope.dispbtn = false;
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' +""+ '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#ScheduleMsg').val('');
+                        $('#ScheduleTime').val('');
+                        $scope.dispbtn = true;
+                        swal("Message has got saved in draft successfully");
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+                else {
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File extension is not valid. Please upload an image file");
+                    $('#input-file-now').val('');
+                }
+            }
+            else {
+                swal('Please type a message to save in draft');
+            }
+        }
+
+
+
+
 
             $scope.fetchProfiles = function () {
 
@@ -687,6 +782,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount");
                 }
             }
-            dashboard();   
+            dashboard();
+         $('#tags').tagsInput();
         });
 });

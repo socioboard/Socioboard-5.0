@@ -220,7 +220,7 @@
             </summary>
             <param name="message">message provided by the user for posting</param>
             <param name="profileId">id of profiles of the user</param>
-            <param name="userId">id of the user</param>
+            <param name="userId">id of the user</param>  
             <param name="imagePath">path for taking image</param>
             <param name="link"></param>
             <param name="files"></param>

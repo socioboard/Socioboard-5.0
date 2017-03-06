@@ -118,6 +118,62 @@ namespace Api.Socioboard.Controllers
 
 
 
+        [HttpPost("SocioboardAccountCreation")]
+        public IActionResult SocioboardAccountCreation(User user)
+        {
+            user.CreateDate = DateTime.UtcNow.AddDays(-320);
+            user.ExpiryDate = DateTime.UtcNow.AddDays(30);
+            user.EmailValidateToken = SBHelper.RandomString(20);
+            user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
+            user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
+            user.Password = SBHelper.MD5Hash(user.Password);
+            user.UserName = "Socioboard";
+            user.UserType = "User";
+            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
+            user.LastLoginTime = DateTime.UtcNow.AddDays(30);
+            if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
+            {
+                user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.EmailId));
+            if (lstUser != null && lstUser.Count() > 0)
+            {
+                return BadRequest("This Email is already registered please login to continue");
+            }
+            IList<User> lstUser1 = dbr.Find<User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
+            if (lstUser1 != null && lstUser1.Count() > 0)
+            {
+                return BadRequest("Phone Number Exist");
+            }
+            int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
+            User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
+            if (SavedStatus == 1 && nuser != null)
+            {
+                Groups group = new Groups();
+                group.adminId = nuser.Id;
+                // group.id = nuser.Id;
+                group.createdDate = DateTime.UtcNow;
+                group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
+                SavedStatus = dbr.Add<Groups>(group);
+                if (SavedStatus == 1)
+                {
+                    long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
+                    GroupMembersRepository.createGroupMember(GroupId, nuser, _redisCache, dbr);
+                }
+                return Ok("Register Successfully.");
+            }
+            else
+            {
+                return BadRequest("Can't create user");
+            }
+            return Ok("Register Successfully.");
+        }
 
 
         /// <summary>
@@ -478,20 +534,33 @@ namespace Api.Socioboard.Controllers
         }
         //get user
         [HttpGet("GetUserAdmin")]
-        public IActionResult GetUserAdmin()
+        public IActionResult GetUserAdmin(int value)
         {
+           
+            List<User> user = new List<Domain.Socioboard.Models.User>();
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<User> user = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active && t.UserType == "User").ToList();
+            int i = 500;
+        
+            //bool val = true;
+           
+            user = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active && t.UserType == "User").Skip(value).Take(i).ToList();
+            int count = dbr.GetCount<User>(t => t.Id != null);
             //User user = dbr.Single<User>(t => t.Id == Id);
+            //j = i + j;
+            UserDetails _UserDetails = new UserDetails();
+            _UserDetails._user = user;
+            _UserDetails.count = count;
+
             if (user != null)
             {
-                return Ok(user);
+                return Ok(_UserDetails);
             }
             else
             {
                 return NotFound();
             }
 
+           
         }
 
 
@@ -1506,7 +1575,7 @@ namespace Api.Socioboard.Controllers
             string html = System.IO.File.ReadAllText(path);
             html = html.Replace("[FirstName]", demoReq.firstName);
             html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
-            _emailSender.SendMailSendGrid("", "", "", "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+            _emailSender.SendMailSendGrid("", "", "sumit@socioboard.com", "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
             return Ok("Mail Sent Successfully.");
 
         }
@@ -1578,6 +1647,13 @@ namespace Api.Socioboard.Controllers
             return Ok(activeusers);
         }
 
+        [HttpGet("AdminInactiveUsers")]
+        public IActionResult AdminInactiveUsers()
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            double deletedusers = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.MailSent).Count();
+            return Ok(deletedusers);
+        }
 
 
     }

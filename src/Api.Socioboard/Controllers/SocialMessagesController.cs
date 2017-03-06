@@ -42,7 +42,7 @@ namespace Api.Socioboard.Controllers
         /// </summary>
         /// <param name="message">message provided by the user for posting</param>
         /// <param name="profileId">id of profiles of the user</param>
-        /// <param name="userId">id of the user</param>
+        /// <param name="userId">id of the user</param>  
         /// <param name="imagePath">path for taking image</param>
         /// <param name="link"></param>
         /// <param name="files"></param>
@@ -113,6 +113,7 @@ namespace Api.Socioboard.Controllers
 
             foreach (var item in lstProfileIds)
             {
+               
                 if (item.StartsWith("fb"))
                 {
                     try
@@ -497,6 +498,11 @@ namespace Api.Socioboard.Controllers
                     }
                 }
             }
+            if(scheduledatetime==null)
+            {
+                scheduledatetime = DateTime.UtcNow.ToString();
+            }
+
             message = postmessage;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             Helper.ScheduleMessageHelper.DraftScheduleMessage(message, userId, groupId, filename, scheduledatetime, _appSettings, _redisCache, dbr, _logger);

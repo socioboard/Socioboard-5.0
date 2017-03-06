@@ -878,13 +878,51 @@
                             </li>-->
                         </ul>
                     </div>
-
+                    <!--<ul class="right">
+                        <li>
+                            <div><i class="modal-action  mdi-content-save"></i></div>
+                        </li>-->
+                        <!--<li>
+            <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+        </li>-->
+                    <!--</ul>-->
                 </div>
             </nav>
         </div>
         <div class="model-email-content">
             <div class="row">
                 <form class="col s12">
+                    
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <div class="emoji-picker-container">
+                                <textarea id="composeMessage" class="materialize-textarea" length="5000" data-emojiable="true" placeholder="Type your message"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="row no-space">
+                        <div class="col s12 m12 l12">
+                            <p>Add your hashtag</p>
+                        </div>
+                        <div class="input-field col s12">
+                            <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
+                        </div>
+                    </div>-->
+
+                    <div class="row no-space">
+                        <div class="col s12 m12 l12">
+                            <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
+                        </div>
+                        <div class="col s12 m12 l12">
+                            <input type="file" id="composeImage" class="dropify" data-default-file="" />
+                        </div>
+                    </div>
+                    <!--<div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
+                            <label for="compose">Message</label>
+                        </div>
+                    </div>-->
                     <div class="row">
                         <div class="input-field col s12">
 
@@ -900,28 +938,10 @@
 
                         </div>
                     </div>
+
                     <div class="row">
-                        <div class="input-field col s12">
-                            <div class="emoji-picker-container">
-                                <textarea id="composeMessage" class="materialize-textarea" length="5000" data-emojiable="true" placeholder="Type your msg"></textarea>
-                            </div>
-                        </div>
+                        <a href="" class="btn btn_style" ng-click="draftMsg()" >Save as Draft</a>
                     </div>
-                    <!--Default version-->
-                    <div class="row section">
-                        <div class="col s12 m4 l3">
-                            <p>Select image</p>
-                        </div>
-                        <div class="col s12 m8 l9">
-                            <input type="file" id="composeImage" class="dropify" data-default-file="" />
-                        </div>
-                    </div>
-                    <!--<div class="row">
-                        <div class="input-field col s12">
-                            <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
-                            <label for="compose">Message</label>
-                        </div>
-                    </div>-->
                 </form>
             </div>
         </div>

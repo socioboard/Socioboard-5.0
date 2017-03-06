@@ -54,19 +54,20 @@ img.emoji {
 
 .emoji-picker-icon {
     position: absolute;
-    /*right: 10px;
-    top: 5px;*/
+    right: 0;
+    top: 0;
     font-size: 20px;
     opacity: 0.7;
     z-index: 100;
     transition: none;
     color: black;
+    background-color:lightgray;
+    border-radius:5px;
     -moz-user-select: none;
     -khtml-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
     user-select: none;
-    background-color: #ff5722;
     padding: 3px;
 }
 
@@ -91,7 +92,7 @@ img.emoji {
 
 .emoji-wysiwyg-editor {
     padding: 6px;
-    /*padding-right: 35px;*/
+    padding-right: 35px;
     margin-bottom: 0px;
     min-height: 65px; 
     height: 30px;

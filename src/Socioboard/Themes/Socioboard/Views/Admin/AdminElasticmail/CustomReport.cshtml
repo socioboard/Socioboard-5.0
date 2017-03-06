@@ -1,7 +1,7 @@
 ﻿
 @using Domain.Socioboard.Models;
 @{
-    ViewBag.Title = "GetReport";
+    ViewBag.Title = "CustomReport";
    
 }
 
@@ -154,10 +154,10 @@
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li class="active">
-                                            <a href="../AdminElasticmail/GetReport">Get Reports</a>
-                                        </li>
                                         <li>
+                                            <a href="../AdminElasticmail/GetReport">Get Report</a>
+                                        </li>
+                                        <li class="active">
                                             <a href="../AdminElasticmail/CustomReport">Custom Report</a>
                                         </li>
                                     </ul>
@@ -254,7 +254,39 @@
                 <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu"></i></a>
             </aside>
             <!-- END LEFT SIDEBAR NAV-->
-            <!-- START CONTENT OF Last 60 days report-->
+            <!-- START CONTENT OF Calender date Entry-->
+            <div class="container">
+                <div class="col l12 m12 s12">
+                    <div class="card-panel" id="feeds">
+                        <h5 style="text-align:center" class="feeds_title orange darken-2 white-text">
+                            Custom Date Report Of Elastic Mails
+                        </h5>
+                        <div class="row">
+                            <br />
+                            <div class="col s12 m6 l6">
+                                <label>Enter Start date Here...</label>
+                                <input id="dates" type="date" class="datepicker black-text">
+                            </div>
+                            <div class="col s12 m6 l6">
+                                <label>Enter End date Here...</label>
+                                <input id="dates1" type="date" class="datepicker black-text">
+                            </div>
+                        </div>
+                        <div class="center">
+                            <button type="submit" class="waves-effect waves-light btn cyan center" onclick="customreport()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END CONTENT of calender date entry -->
+
+
+
+            <!-- //////////////////////////////////////////////////////////////////////////// -->
+
+
+
+            <!-- START CONTENT Daily report -->
             <section id="content">
 
                 <!--start container-->
@@ -262,8 +294,8 @@
                     <div class="row">
                         <div class="col l12 m12 s12">
                             <div class="card-panel" id="feeds">
-                                <h5 style="text-align:center" class="feeds_title orange darken-2 white-text">
-                                    Last 60 Days Report Of Elastic Mails
+                                <h5 style="text-align:center"  class="feeds_title orange darken-2 white-text">
+                                    Given Date Report Of Elastic Mails
                                 </h5>
                                 <div class="card-panel">
                                     <div class="row">
@@ -377,146 +409,6 @@
 
                                             </div>
 
-
-
-
-                                        </div>
-                                        <!--card stats end-->
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--end container-->
-
-            </section>
-            <!-- END CONTENT -->
-            <!-- //////////////////////////////////////////////////////////////////////////// -->
-            <!-- START CONTENT Daily report -->
-            <section id="content">
-
-                <!--start container-->
-                <div class="container">
-                    <div class="row">
-                        <div class="col l12 m12 s12">
-                            <div class="card-panel" id="feeds">
-                                <h5 style="text-align:center"  class="feeds_title orange darken-2 white-text">
-                                    Yesterday Report Of Elastic Mails
-                                </h5>
-                                <div class="card-panel">
-                                    <div class="row">
-
-                                        <!--card stats start-->
-                                        <div id="card-stats">
-
-                                            <div class="row">
-                                                <div class="col s12 m6 l2">
-                                                    <div class="card indigo white-text">
-                                                        <div class="card-content">
-                                                            <i class="fa fa-mail-forward fa-fw"></i>
-                                                            <p class="card-stats-title">Sent</p>
-                                                        </div>
-                                                        <div class="card-action center">
-                                                            <h4 class="card-stats-number" id="GetDailySentMailReport">
-                                                                <!-- Binding data dynamically-->
-                                                                <div class="span">
-                                                                    <div class="typing_loader"></div>
-                                                                </div>
-                                                            </h4>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col s12 m6 l2">
-                                                    <div class="card teal white-text">
-                                                        <div class="card-content">
-                                                            <i class="fa fa-indent fa-fw"></i>
-                                                            <p class="card-stats-title">Opened</p>
-                                                        </div>
-                                                        <div class="card-action center">
-                                                            <h4 class="card-stats-number" id="GetDailyOpenedMailReport">
-                                                                <!-- Binding data dynamically-->
-                                                                <div class="span">
-                                                                    <div class="typing_loader"></div>
-                                                                </div>
-                                                            </h4>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col s12 m6 l2">
-                                                    <div class="card green white-text">
-                                                        <div class="card-content">
-                                                            <i class="fa fa-file-text-o fa-fw"></i>
-                                                            <p class="card-stats-title">Clicked</p>
-                                                        </div>
-                                                        <div class="card-action center">
-                                                            <h4 class="card-stats-number" id="GetDailyClickedMailReport">
-                                                                <!-- Binding data dynamically-->
-                                                                <div class="span">
-                                                                    <div class="typing_loader"></div>
-                                                                </div>
-                                                            </h4>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col s12 m6 l2">
-                                                    <div class="card amber white-text">
-                                                        <div class="card-content">
-                                                            <i class="fa fa-warning fa-fw"></i>
-                                                            <p class="card-stats-title">Bounced</p>
-                                                        </div>
-                                                        <div class="card-action center">
-                                                            <h4 class="card-stats-number" id="GetDailyBouncedMailReport">
-                                                                <!-- Binding data dynamically-->
-                                                                <div class="span">
-                                                                    <div class="typing_loader"></div>
-                                                                </div>
-                                                            </h4>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col s12 m6 l2">
-                                                    <div class="card brown white-text">
-                                                        <div class="card-content">
-                                                            <i class="fa fa-remove fa-fw"></i>
-                                                            <p class="card-stats-title">Unsubscribed</p>
-                                                        </div>
-                                                        <div class="card-action center">
-                                                            <h4 class="card-stats-number" id="GetDailyUnsubscribedMailReport">
-                                                                <!-- Binding data dynamically-->
-                                                                <div class="span">
-                                                                    <div class="typing_loader"></div>
-                                                                </div>
-                                                            </h4>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="col s12 m6 l2">
-                                                    <div class="card lime white-text">
-                                                        <div class="card-content">
-                                                            <i class="fa fa-link fa-fw"></i>
-                                                            <p class="card-stats-title">Abuse</p>
-                                                        </div>
-                                                        <div class="card-action center">
-                                                            <h4 class="card-stats-number" id="GetDailyAbuseReportedMailReport">
-                                                                <!-- Binding data dynamically-->
-                                                                <div class="span">
-                                                                    <div class="typing_loader"></div>
-                                                                </div>
-                                                            </h4>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-
-                                            </div>
-
                                         </div>
                                         <!--card stats end-->
                                     </div>
@@ -611,59 +503,60 @@
                           
 
                                 <script>
-                                    var arr = [1, 60];
-                                    $(document).ready(function () {
-                                        
-                                        $.each(arr, function (index, value) {
-                                            GetSentMailReport(value);
-                                            GetOpenedMailReport(value);
-                                            GetClickedMailReport(value);
-                                            GetBouncedMailReport(value);
-                                            GetUnsubscribedMailReport(value);
-                                            GetAbuseReportedMailReport(value);
-                                        });
-                                    });
 
-                                    function GetSentMailReport(value) {
+                                    function customreport() {
+                                        debugger;
+                                        var sdate = $('#dates').val();
+                                        var edate = $('#dates1').val();
+                                        if (sdate != "" && edate != "") {
+                                            //date should be converted here
+
+                                            GetSentMailReport(sdate, edate);
+                                            GetOpenedMailReport(sdate, edate);
+                                            GetClickedMailReport(sdate, edate);
+                                            GetBouncedMailReport(sdate, edate);
+                                            GetUnsubscribedMailReport(sdate, edate);
+                                            GetAbuseReportedMailReport(sdate, edate);
+                                        }
+                                        else
+                                        {
+                                            swal("Date should not be empty!");
+                                        }
+                                    };
+                                    
+
+                                    function GetSentMailReport(sdate, edate) {
                                         
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetSentMailReport?count=' + value,
+                                            url: '../AdminElasticmail/GetCustomSentMailReport?sdate=' + sdate +'&edate='+edate,
                                             dataType: "html",
                                             success: function (msg) {
-                                                if (arr[1] == value) {
+                                            
                                                     var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
                                                     $("#GetSentMailReport").html(msg_conv);
-                                                } else if (arr[0] == value) {
-                                                    var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
-                                                    $("#GetDailySentMailReport").html(msg_conv);
-
-                                                }
+                                                
 
                                             }
 
                                         });
 
                                     }
-                                    function GetOpenedMailReport(value) {
+                                    function GetOpenedMailReport(sdate, edate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetOpenedMailReport?count=' + value,
+                                            url: '../AdminElasticmail/GetCustomOpenedMailReport?sdate=' + sdate + '&edate=' + edate,
                                             dataType: "html",
                                             success: function (msg) {
-                                                if (arr[1] == value) {
+                                              
                                                     var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
                                                     $("#GetOpenedMailReport").html(msg_conv);
-                                                } else if (arr[0] == value) {
-                                                    var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
-                                                    $("#GetDailyOpenedMailReport").html(msg_conv);
-
-                                                }
+                                               
                                                
 
                                             }
@@ -671,23 +564,19 @@
                                         });
 
                                     }
-                                    function GetClickedMailReport(value) {
+                                    function GetClickedMailReport(sdate, edate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetClickedMailReport?count=' + value,
+                                            url: '../AdminElasticmail/GetCustomClickedMailReport?date=' + date + '&edate=' + edate,
                                             dataType: "html",
                                             success: function (msg) {
-                                                if (arr[1] == value) {
+                                                
                                                     var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
                                                     $("#GetClickedMailReport").html(msg_conv);
-                                                } else if (arr[0] == value) {
-                                                    var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
-                                                    $("#GetDailyClickedMailReport").html(msg_conv);
-
-                                                }
+                                                
                                            
 
                                             }
@@ -695,23 +584,19 @@
                                         });
 
                                     }
-                                    function GetBouncedMailReport(value) {
+                                    function GetBouncedMailReport(sdate, edate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetBouncedMailReport?count=' + value,
+                                            url: '../AdminElasticmail/GetCustomBouncedMailReport?sdate=' + sdate + '&edate=' + edate,
                                             dataType: "html",
                                             success: function (msg) {
-                                                if (arr[1] == value) {
+                                              
                                                     var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
                                                     $("#GetBouncedMailReport").html(msg_conv);
-                                                } else if (arr[0] == value) {
-                                                    var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
-                                                    $("#GetDailyBouncedMailReport").html(msg_conv);
-
-                                                }
+                                               
                                                
 
                                             }
@@ -720,23 +605,19 @@
 
                                     }
 
-                                    function GetUnsubscribedMailReport(value) {
+                                    function GetUnsubscribedMailReport(sdate, edate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetUnsubscribedMailReport?count=' + value,
+                                            url: '../AdminElasticmail/GetCustomUnsubscribedMailReport?sdate=' + sdate + '&edate=' + edate,
                                             dataType: "html",
                                             success: function (msg) {
-                                                if (arr[1] == value) {
+                                              
                                                     var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
                                                     $("#GetUnsubscribedMailReport").html(msg_conv);
-                                                } else if (arr[0] == value) {
-                                                    var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
-                                                    $("#GetDailyUnsubscribedMailReport").html(msg_conv);
-
-                                                }
+                                               
                                                
 
                                             }
@@ -744,23 +625,19 @@
                                         });
 
                                     }
-                                    function GetAbuseReportedMailReport(value) {
+                                    function GetAbuseReportedMailReport(sdate, edate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetAbuseReportedMailReport?count=' + value,
+                                            url: '../AdminElasticmail/GetCustomAbuseReportedMailReport?sdate=' + sdate + '&edate=' + edate,
                                             dataType: "html",
                                             success: function (msg) {
-                                                if (arr[1] == value) {
+                                                
                                                     var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
                                                     $("#GetAbuseReportedMailReport").html(msg_conv);
-                                                } else if (arr[0] == value) {
-                                                    var msg_conv = msg > 999999 ? (msg / 1000000).toFixed(1) + ' M' : (msg > 999 ? (msg / 1000).toFixed(1) + ' K' : msg);
-                                                    $("#GetDailyAbuseReportedMailReport").html(msg_conv);
-
-                                                }
+                                                
                                                
 
                                             }
@@ -799,6 +676,10 @@
                                     function chng_btn_val() {
                                         $('#load_gif').show();
                                     }
+                                    $('.datepicker').pickadate({
+                                        selectMonths: true, 
+                                        selectYears: 50 
+                                    });
 
                                 </script>
 

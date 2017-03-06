@@ -11,8 +11,8 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         $scope.dispbtn = false;
         $scope.disbtncom = true;
         //$scope.loadmore = "/contents/socioboard/images/loader.gif";
-        $rootScope.categories = '';
-        $scope.continue = true;
+        //$rootScope.categories = '';
+        //$scope.continue = true;
         designfeeds();
 
         $scope.deleteProfile = function (profileId) {

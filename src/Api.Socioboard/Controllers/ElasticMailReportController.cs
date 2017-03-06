@@ -55,5 +55,39 @@ namespace Api.Socioboard.Controllers
         {
             return Ok(Repositories.ElasticMailReportRepository.getElasticMailAbuseReportReportData(daysCount, _redisCache, _appSettings));
         }
+
+        #region Custom Reports Start
+
+        [HttpGet("getCustomElasticMailSentReportData")]
+        public IActionResult getCustomElasticMailSentReportData(DateTime sdate, DateTime edate)
+        {
+            return Ok(Repositories.ElasticMailReportRepository.getCustomElasticMailSentReportData(sdate, _redisCache, _appSettings));
+        }
+        [HttpGet("getCustomElasticMailOpenedReportData")]
+        public IActionResult getCustomElasticMailOpenedReportData(DateTime sdate, DateTime edate)
+        {
+            return Ok(Repositories.ElasticMailReportRepository.getCustomElasticMailOpenedReportData(sdate, _redisCache, _appSettings));
+        }
+        [HttpGet("getCustomElasticMailClickedReportData")]
+        public IActionResult getCustomElasticMailClickedReportData(DateTime sdate, DateTime edate)
+        {
+            return Ok(Repositories.ElasticMailReportRepository.getCustomElasticMailClickedReportData(sdate, _redisCache, _appSettings));
+        }
+        [HttpGet("getCustomElasticMailBouncedReportData")]
+        public IActionResult getCustomElasticMailBouncedReportData(DateTime sdate, DateTime edate)
+        {
+            return Ok(Repositories.ElasticMailReportRepository.getCustomElasticMailBouncedReportData(sdate, _redisCache, _appSettings));
+        }
+        [HttpGet("getCustomElasticMailUnsubscribedReportData")]
+        public IActionResult getCustomElasticMailUnsubscribedReportData(DateTime sdate, DateTime edate)
+        {
+            return Ok(Repositories.ElasticMailReportRepository.getCustomElasticMailUnsubscribedReportData(sdate, _redisCache, _appSettings));
+        }
+        [HttpGet("getCustomElasticMailAbuseReportReportData")]
+        public IActionResult getCustomElasticMailAbuseReportReportData(DateTime sdate, DateTime edate)
+        {
+            return Ok(Repositories.ElasticMailReportRepository.getCustomElasticMailAbuseReportReportData(sdate, _redisCache, _appSettings));
+        }
+        #endregion
     }
 }

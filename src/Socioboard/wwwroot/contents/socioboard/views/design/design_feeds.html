@@ -30,10 +30,13 @@
                             <div class="col l12 s12 m12 center">
                                 <span class="card-title">{{fbpost.profileName}}</span>
                                 <br>
-                                <span>
+                                <!--<span>
                                     <a href="#" target="_blank">
                                         <i class="fa fa-facebook fa-fw"></i>@{{fbpost.profileName}}
                                     </a>
+                                </span>-->
+                                <span>
+                                    <i class="fa fa-facebook-official" style="color:#3B5998; font-size:x-large"></i>
                                 </span>
                             </div>
                             <div class="col l12 m12 s12">
@@ -248,8 +251,8 @@
     <!-- Modal Structure -->
     <!-- Compose Email Trigger -->
     <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
-        <div class="btn-floating btn-large red modal-trigger" href="#ComposePost">
-            <i class="large mdi-editor-mode-edit"></i>
+        <div class="btn-floating btn-large red modal-trigger" href="#searchcatagory">
+            <i class="large mdi-action-search"></i>
         </div>
     </div>
     <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">

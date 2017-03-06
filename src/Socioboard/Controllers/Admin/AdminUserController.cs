@@ -8,6 +8,7 @@ using Socioboard.Helpers;
 using System.Net.Http;
 using Domain.Socioboard.Models;
 
+
 //using System.Web.Script.Serialization;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -17,6 +18,9 @@ namespace Socioboard.Controllers.Admin
     
     public class AdminUserController : Controller
     {
+        public static int j = 0;
+        // public static int k = 0;
+        public static int count = 0;
         private Helpers.AppSettings _appSettings;
         public AdminUserController(Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
         {
@@ -25,7 +29,7 @@ namespace Socioboard.Controllers.Admin
         // [ResponseCache(Duration = 100)]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         // GET: /<controller>/
-        public async Task<IActionResult> ManageUser()
+        public async Task<IActionResult> ManageUser(string param)
         {
             Domain.Socioboard.Models.User _user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (_user == null)
@@ -34,17 +38,77 @@ namespace Socioboard.Controllers.Admin
             }
             else
             {
-                List<Domain.Socioboard.Models.User> user = new List<Domain.Socioboard.Models.User>();
-                HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetUserAdmin", "", "", _appSettings.ApiDomain);
-                if (response.IsSuccessStatusCode)
+               Domain.Socioboard.Models.UserDetails user = new Domain.Socioboard.Models.UserDetails();
+               if(param==null)
                 {
-                    user = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.User>>();
-
+                   if (j==0)
+                    {
+                        try
+                        {
+                            HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetUserAdmin?value=" + 0, "", "", _appSettings.ApiDomain);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.UserDetails>();
+                            }
+                            //count = 100;
+                            //j = j + 500;
+                            // ViewBag.Count = user.Count();
+                            ViewBag.TotalCount = user.count;
+                            ViewBag.Count = user._user.Count();
+                            ViewBag.details = user._user;
+                            ViewBag.ApiDomain = _appSettings.ApiDomain;
+                            ViewBag.Domain = _appSettings.Domain;
+                            return View("ManageUser");
+                        }
+                        catch (Exception ex)
+                        {
+                            return View("ManageUser");
+                        }
+                    }
+                   else
+                    {
+                        HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetUserAdmin?value=" + j, "", "", _appSettings.ApiDomain);
+                         if (response.IsSuccessStatusCode)
+                        {
+                            user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.UserDetails>();
+                        }
+                        // j = j + 500;
+                        ViewBag.details = user._user;
+                        ViewBag.Count = user._user.Count() +j;
+                        ViewBag.TotalCount = user.count;
+                        ViewBag.ApiDomain = _appSettings.ApiDomain;
+                        ViewBag.Domain = _appSettings.Domain;
+                        return View("ManageUser");
+                    }
+                   
                 }
-                ViewBag.details = user;
-                ViewBag.ApiDomain = _appSettings.ApiDomain;
-                ViewBag.Domain = _appSettings.Domain;
-                return View("ManageUser");
+               else if (param =="Next")
+                {
+                    j = j + 500;
+                    return RedirectToAction("ManageUser");
+                }
+               else 
+                {
+                   
+                    j = j - 500;
+                    return RedirectToAction("ManageUser");
+                }
+               
+                
+                  
+               
+              
+
+                //HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetUserAdmin", "", "", _appSettings.ApiDomain);
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    user = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.User>>();
+
+                //}
+                //ViewBag.details = user;
+                //ViewBag.ApiDomain = _appSettings.ApiDomain;
+                //ViewBag.Domain = _appSettings.Domain;
+                //return View("ManageUser");
             }
            
            

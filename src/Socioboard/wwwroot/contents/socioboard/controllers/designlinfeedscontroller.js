@@ -12,11 +12,11 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         $scope.dispbtn = false;
         $scope.disbtncom = true;
         //  $scope.loadmore = "Loading More data..";
-        $scope.continue = true;
-        $scope.$watch('continue', function () {
-            console.log("watch" + $scope.continue);
-        });
-        $rootScope.categories = '';
+        //$scope.continue = true;
+        //$scope.$watch('continue', function () {
+        //    console.log("watch" + $scope.continue);
+        //});
+        //$rootScope.categories = '';
         designfeeds();
        
         $scope.deleteProfile = function(profileId){
@@ -300,12 +300,12 @@ SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
             $timeout(function () {
                 console.log("myRepeatFeedTimeoutDirective Called");
                 var $containerProducts = $("#products");
-                $containerProducts.imagesLoaded(function () {
+              //  $containerProducts.imagesLoaded(function () {
                     $containerProducts.masonry({
                         itemSelector: ".product",
                         columnWidth: ".product-sizer",
                     });
-                });
+
 
 
             });

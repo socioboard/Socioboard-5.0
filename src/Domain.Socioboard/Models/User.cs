@@ -1,6 +1,7 @@
 ﻿using Domain.Socioboard.Enum;
 using Domain.Socioboard.Interfaces.Models;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Domain.Socioboard.Models
@@ -69,5 +70,10 @@ namespace Domain.Socioboard.Models
     {
         public string month { get; set; }
         public int Unpaiduser { get; set; }
+    }
+   public class UserDetails
+    {
+        public List<User> _user { get; set; }
+        public int count { get; set; }
     }
 }

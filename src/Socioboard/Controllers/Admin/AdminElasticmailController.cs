@@ -135,5 +135,118 @@ namespace Socioboard.Controllers.Admin
 
         }
 
+        public ActionResult CustomReport()
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Index");
+            }
+            else
+            {
+                ViewBag.ApiDomain = _appSettings.ApiDomain;
+                ViewBag.Domain = _appSettings.Domain;
+                return View();
+            }
+
+        }
+
+        #region Custom reports data start
+        public async Task<IActionResult> GetCustomSentMailReport(DateTime sdate, DateTime edate)
+        {
+            List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailSentReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
+
+            }
+            ViewBag.SentMail = lstelasticmails.Count();
+
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
+            return PartialView("_GetSentMailReportPartial");
+
+        }
+        public async Task<IActionResult> GetCustomOpenedMailReport(DateTime sdate, DateTime edate)
+        {
+            List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailOpenedReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
+
+            }
+            ViewBag.OpenedMail = lstelasticmails.Count();
+
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
+            return PartialView("_GetOpenedMailReportPartial");
+
+        }
+        public async Task<IActionResult> GetCustomClickedMailReport(DateTime sdate, DateTime edate)
+        {
+            List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailClickedReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
+
+            }
+            ViewBag.ClickedMail = lstelasticmails.Count();
+
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
+            return PartialView("_GetClickedMailReportPartial");
+
+        }
+        public async Task<IActionResult> GetCustomBouncedMailReport(DateTime sdate, DateTime edate)
+        {
+            List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailBouncedReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
+
+            }
+            ViewBag.BouncedMail = lstelasticmails.Count();
+
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
+            return PartialView("_GetBouncedMailReportPartial");
+
+        }
+        public async Task<IActionResult> GetCustomUnsubscribedMailReport(DateTime sdate, DateTime edate)
+        {
+            List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailUnsubscribedReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
+
+            }
+            ViewBag.Unsubscribed = lstelasticmails.Count();
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
+            return PartialView("_GetUnsubscribedMailReportPartial");
+
+        }
+        public async Task<IActionResult> GetCustomAbuseReportedMailReport(DateTime sdate, DateTime edate)
+        {
+            List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailAbuseReportReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
+
+            }
+            ViewBag.AbuseReportedMail = lstelasticmails.Count();
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
+            return PartialView("_GetAbuseReportedMailReportPartial");
+
+        }
+        #endregion
+
     }
 }

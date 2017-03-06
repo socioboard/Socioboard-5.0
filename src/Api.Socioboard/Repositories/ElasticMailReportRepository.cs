@@ -143,5 +143,31 @@ namespace Api.Socioboard.Repositories
             return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
         }
 
+        #region repository for custom report
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailSentReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+        }
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailOpenedReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+        }
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailClickedReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+        }
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailBouncedReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+        }
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailUnsubscribedReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+        }
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailAbuseReportReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
+        }
+        #endregion
     }
 }

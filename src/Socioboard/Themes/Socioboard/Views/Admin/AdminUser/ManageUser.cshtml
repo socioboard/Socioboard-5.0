@@ -260,6 +260,34 @@
                                     Manage User
                                 </h5>
                                 <div class="card-panel">
+                                    @*<div class="row">
+                                        <div class="col m6">
+                                            <div class="input-field col s12">
+                                                <select>
+                                                    <option value="" disabled selected>Select plan</option>
+                                                    <option value="0">Free</option>
+                                                    <option value="1">Standard</option>
+                                                    <option value="2">Premium</option>
+                                                    <option value="3">Deluxe</option>
+                                                    <option value="3">Topaz</option>
+                                                    <option value="4">Ruby</option>
+                                                    <option value="6">Gold</option>
+                                                    <option value="7">Platinum</option>
+                                                </select>
+                                                <label>Select plan</label>
+                                            </div>
+                                        </div>
+                                        <div class="col m6">
+                                            <div class="input-field col s12">
+                                                <select>
+                                                    <option value="" disabled selected>Select Payment Status</option>
+                                                    <option value="0">Paid</option>
+                                                    <option value="1">UnPaid</option>
+                                                </select>
+                                                <label>Select Payment Status</label>
+                                            </div>
+                                        </div>
+                                    </div>*@
                                     <div class="row">
                                         <div class="col l12">
                                             <table id="manage_user_table" class="display" cellspacing="0" width="100%">
@@ -278,8 +306,9 @@
                                               
                                                 <tbody id="sampletbl">
                                                        @foreach (var item in ViewBag.details)
-                                                        {
-                                                         <tr id="row_@item.Id">
+                                                       {
+                                                           
+                                                        <tr id="row_@item.Id">
                                                           <td class="center">
                                                             <a onclick="updatemodel(@item.Id)" edit_id="@item.Id"class="waves-effect waves-light ">
                                                                 <i class="icon-note grey-text text-darken-4"></i>
@@ -301,6 +330,12 @@
                                                 }                                                 
                                                 </tbody>
                                             </table>
+                                            <hr />
+                                            <div class="margin-top-20">
+                                                <input id="Next" runat="server" type="submit" class="waves-effect waves-light btn btn_style cyan right" value="Next Entries" onclick="getuserdata('Next')" />
+                                                <input id="prev" runat="server" type="submit" class="waves-effect waves-light btn btn_style cyan right" value="Previous Entries" onclick="getuserdata('Prev')" />
+                                                <label id="Count" class="black-text right-text"><h6>Showing @ViewBag.Count of @ViewBag.TotalCount Entries</h6></label>
+                                            </div>
                                         </div>
 
                                     </div>
@@ -589,27 +624,46 @@
              document.getElementById('acc_type').innerHTML = $(cells[4]).html();
              document.getElementById('pymnt_status').innerHTML = $(cells[5]).html();
              document.getElementById('acc_status').innerHTML = $(cells[7]).html();
-        }
+         }
+
+        
 
     </script>
 
     <script>
-       
+
         $(document).ready(function () {
-            
+            debugger;
+
+            if(@ViewBag.Count==500)
+            {
+                document.getElementById("prev").disabled = true;
+                $("#prev").attr("class", "waves-effect waves-light btn grey right");
+            }
+            else  
+            {
+                document.getElementById("prev").disabled = false;
+                $("#prev").attr("class", "waves-effect waves-light btn cyan right");
+            }
+            if((@ViewBag.TotalCount) == (@ViewBag.Count))
+            {
+                document.getElementById("Next").disabled = true;
+                $("#Next").attr("class", "waves-effect waves-light btn grey right");
+
+            }
+            else
+            {
+                document.getElementById("Next").disabled = false;
+                $("#Next").attr("class", "waves-effect waves-light btn cyan right");
+
+            }
         });
 
 
     </script>
     <script>
         function Logout() {
-
-
-
-                debugger;
-                //todo: code to delete profile
-
-                $.ajax({
+              $.ajax({
 
                     type: "GET",
 
@@ -626,6 +680,16 @@
 
 
         }
+       
+        var x;
+       
+        function getuserdata(x) {
+         
+            debugger;
+            window.location.href = '../AdminUser/ManageUser?param=' + x;
+        }
+
+      
     </script>
     <script>
         function chng_btn_val() {

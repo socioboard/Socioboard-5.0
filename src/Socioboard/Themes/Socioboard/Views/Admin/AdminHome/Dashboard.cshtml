@@ -151,6 +151,9 @@
                                         <li>
                                             <a href="../AdminElasticmail/GetReport">Get Reports</a>
                                         </li>
+                                        <li>
+                                            <a href="../AdminElasticmail/CustomReport">Custom Report</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -443,46 +446,39 @@
         var countPaidUsers = null;
         var countUnPaidUsers = null;
         var counttotalusers = null;
-        var countactiveusers=null;
-    window.onload = function () {
-        getpaidusers();
-        getunpaidusers();
-        getactiveusers();
-        getdeletedusers();
-    };
-    function getpaidusers() {
-        $.ajax({
-            type: "GET",
-            url: "@ViewBag.ApiDomain/api/user/AdminPaidUsers",
-            dataType: "html",
-            success: function (msg) {
-                var resp = JSON.parse(msg);
-                var resp_conv = resp > 999999 ? (resp / 1000000).toFixed(1) + ' M' : (resp > 999 ? (resp / 1000).toFixed(1) + ' K' : resp);
-                $('#paidusers').html(resp_conv);
-                countPaidUsers = resp;
-                if (countUnPaidUsers != null) {
-                    var totalusers = countPaidUsers + countUnPaidUsers;
-                    var totalusers_conv = totalusers > 999999 ? (totalusers / 1000000).toFixed(1) + ' M' : (totalusers > 999 ? (totalusers / 1000).toFixed(1) + ' K' : totalusers);
-                    $('#total_users').html(totalusers_conv);
-                    totalusers = countPaidUsers + countUnPaidUsers
+        var countactiveusers = null;
+        window.onload = function () {
+            getpaidusers();
+            getunpaidusers();
+            getactiveusers();
+            getdeletedusers();
+        };
+        function getpaidusers() {
+            $.ajax({
+                type: "GET",
+                url: "@ViewBag.ApiDomain/api/user/AdminPaidUsers",
+                dataType: "html",
+                success: function (msg) {
+                    var resp = JSON.parse(msg);
+                    var resp_conv = resp > 999999 ? (resp / 1000000).toFixed(1) + ' M' : (resp > 999 ? (resp / 1000).toFixed(1) + ' K' : resp);
+                    $('#paidusers').html(resp_conv);
+                    countPaidUsers = resp;
+                    if (countUnPaidUsers != null) {
+                        var totalusers = countPaidUsers + countUnPaidUsers;
+                        var totalusers_conv = totalusers > 999999 ? (totalusers / 1000000).toFixed(1) + ' M' : (totalusers > 999 ? (totalusers / 1000).toFixed(1) + ' K' : totalusers);
+                        $('#total_users').html(totalusers_conv);
+                    }
+
+
+                },
+                error: function (msg) {
+
+                    return false;
                 }
-                if(totalusers!=null && activeusers!=null)
-                {
-                    var deleteusers = totalusers - activeusers;
-                    var deleteusers_conv = deleteusers > 999999 ? (deleteusers / 1000000).toFixed(1) + ' M' : (deleteusers > 999 ? (deleteusers / 1000).toFixed(1) + ' K' : deleteusers);
-                    $('#deletedusers').html(deleteusers_conv);
-                }
-                    
-        
-            },
-            error: function (msg) {
 
-                return false;
-            }
+            });
 
-        });
-
-    }
+        }
 
         function getunpaidusers() {
             $.ajax({
@@ -498,12 +494,6 @@
                         var totalusers = countPaidUsers + countUnPaidUsers;
                         var totalusers_conv = totalusers > 999999 ? (totalusers / 1000000).toFixed(1) + ' M' : (totalusers > 999 ? (totalusers / 1000).toFixed(1) + ' K' : totalusers);
                         $('#total_users').html(totalusers_conv);
-                        totalusers = countPaidUsers + countUnPaidUsers
-                    }
-                    if (totalusers != null && activeusers != null) {
-                        var deleteusers = totalusers - activeusers;
-                        var deleteusers_conv = deleteusers > 999999 ? (deleteusers / 1000000).toFixed(1) + ' M' : (deleteusers > 999 ? (deleteusers / 1000).toFixed(1) + ' K' : deleteusers);
-                        $('#deletedusers').html(deleteusers_conv);
                     }
                 },
                 error: function (msg) {
@@ -524,12 +514,7 @@
                     var resp = JSON.parse(msg);
                     var resp_conv = resp > 999999 ? (resp / 1000000).toFixed(1) + ' M' : (resp > 999 ? (resp / 1000).toFixed(1) + ' K' : resp);
                     $('#activeusers').html(resp_conv);
-                    activeusers = resp;
-                    if (totalusers != null && activeusers != null) {
-                        var deleteusers = totalusers - activeusers;
-                        var deleteusers_conv = deleteusers > 999999 ? (deleteusers / 1000000).toFixed(1) + ' M' : (deleteusers > 999 ? (deleteusers / 1000).toFixed(1) + ' K' : deleteusers);
-                        $('#deletedusers').html(deleteusers_conv);
-                    }
+
                 },
                 error: function (msg) {
 
@@ -540,14 +525,16 @@
 
         }
 
-        @*function getdeletedusers() {
-            $.ajax({
+        function getdeletedusers() {
+           $.ajax({
                 type: "GET",
-                url: "@ViewBag.ApiDomain/api/user/AdminDeletedUsers",
+                url: "@ViewBag.ApiDomain/api/user/AdminInactiveUsers",
                 dataType: "html",
                 success: function (msg) {
                     var resp = JSON.parse(msg);
-                    $('#deletedusers').html(resp);
+                    var resp_conv = resp > 999999 ? (resp / 1000000).toFixed(1) + ' M' : (resp > 999 ? (resp / 1000).toFixed(1) + ' K' : resp);
+                    $('#deletedusers').html(resp_conv);
+
                 },
                 error: function (msg) {
 
@@ -556,14 +543,14 @@
 
             });
 
-        }*@
+        }
         </script>
 
 
     <!-- Chart code -->
     <script>
         function myfunctionPaid(array) {
-            debugger;
+            
             for (var i = 1; i < array.length; i++) {
                 var val = array[0];
                 var val1 = array[1];
@@ -686,7 +673,7 @@ function zoomChart(){
 
     <script>
         function myfunctionUnPaid(array) {
-            debugger;
+            
             for (var i = 1; i < array.length; i++) {
                 var val = array[0];
                 var val1 = array[1];
@@ -808,7 +795,7 @@ function zoomChart(){
     </script>
     <script>
         function Logout() {
-                debugger;
+                
                 //todo: code to delete profile
 
                 $.ajax({
@@ -827,7 +814,7 @@ function zoomChart(){
                 });
         }
         function ManagePaidUser() {
-            debugger;
+            
             //todo: code to delete profile
 
             $.ajax({
@@ -852,7 +839,7 @@ function zoomChart(){
         }
 
         function ManageUnPaidUser() {
-            debugger;
+            
             //todo: code to delete profile
 
             $.ajax({
