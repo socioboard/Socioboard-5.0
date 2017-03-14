@@ -154,6 +154,9 @@
                                         <li>
                                             <a href="../AdminElasticmail/GetReport">Get Reports</a>
                                         </li>
+                                        <li>
+                                            <a href="../AdminElasticmail/CustomReport">Custom Report</a>
+                                        </li>
                                     </ul>
                                 </div>
                             </li>
@@ -260,34 +263,39 @@
                                     Manage User
                                 </h5>
                                 <div class="card-panel">
-                                    @*<div class="row">
-                                        <div class="col m6">
+                                    <div class="row">
+                                        <div class="col m5">
                                             <div class="input-field col s12">
-                                                <select>
+                                                <select id="filter_plan">
                                                     <option value="" disabled selected>Select plan</option>
-                                                    <option value="0">Free</option>
-                                                    <option value="1">Standard</option>
-                                                    <option value="2">Premium</option>
-                                                    <option value="3">Deluxe</option>
-                                                    <option value="3">Topaz</option>
-                                                    <option value="4">Ruby</option>
-                                                    <option value="6">Gold</option>
-                                                    <option value="7">Platinum</option>
+                                                    <option value=0>Free</option>
+                                                    <option value=1>Standard</option>
+                                                    <option value=2>Premium</option>
+                                                    <option value=3>Deluxe</option>
+                                                    <option value=4>Topaz</option>
+                                                    <option value=5>Ruby</option>
+                                                    <option value=6>Gold</option>
+                                                    <option value=7>Platinum</option>
                                                 </select>
                                                 <label>Select plan</label>
                                             </div>
                                         </div>
-                                        <div class="col m6">
+                                        <div class="col m5">
                                             <div class="input-field col s12">
-                                                <select>
+                                                <select id="filter_payment">
                                                     <option value="" disabled selected>Select Payment Status</option>
-                                                    <option value="0">Paid</option>
-                                                    <option value="1">UnPaid</option>
+                                                    <option value=0>Paid</option>
+                                                    <option value=1>UnPaid</option>
                                                 </select>
                                                 <label>Select Payment Status</label>
                                             </div>
                                         </div>
-                                    </div>*@
+                                        <div class="col m2 center">
+                                            <div class="btn-floating btn-large red center" onclick="getfilter()">
+                                                <i class="fa fa-filter"></i>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col l12">
                                             <table id="manage_user_table" class="display" cellspacing="0" width="100%">
@@ -634,7 +642,6 @@
 
         $(document).ready(function () {
             debugger;
-
             if(@ViewBag.Count==500)
             {
                 document.getElementById("prev").disabled = true;
@@ -687,6 +694,24 @@
          
             debugger;
             window.location.href = '../AdminUser/ManageUser?param=' + x;
+        }
+
+        function getfilter(){
+            debugger;
+            var plan = $('#filter_plan').val();
+            var paymentstatus = $('#filter_payment').val();
+            if(plan==null){
+                var nullplan=-1;
+            }
+            if(paymentstatus==null){
+                var nullpaymentstatus=-1;            
+            }
+            if(nullplan==-1 && nullpaymentstatus==-1){
+                swal("Please choose filter options!");
+            }
+            else{
+                window.location.href = '../AdminUser/ManageUserFilter?plan='+plan+'&paymentstatus='+paymentstatus+'&nullplan='+nullplan+'&nullpaymentstatus='+nullpaymentstatus;         
+            }
         }
 
       

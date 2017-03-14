@@ -250,7 +250,7 @@
     </div>
     <!-- Modal Structure -->
     <!-- Compose Email Trigger -->
-    <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
+    <!--<div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
         <div class="btn-floating btn-large red modal-trigger" href="#searchcatagory">
             <i class="large mdi-action-search"></i>
         </div>
@@ -259,7 +259,7 @@
         <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
             <i class="large mdi-editor-mode-edit"></i>
         </a>
-    </div>
+    </div>-->
 
 
     <div id="ComposePostModal" class="modal">
@@ -274,11 +274,12 @@
                             </li>
                         </ul>
                     </div>
+                    <div ng-init="disbtncom= {{disbtncom}}"></div>
                     <div class="col s12 m7 l7 hide-on-med-and-down">
                         <ul class="right">
                             <li>
-                                <div ng-show="cmpbtn" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
-                                <div ng-show="!cmpbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                                <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                                <div ng-show="!disbtncom"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
                             </li>
                             <!--<li>
                                 <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
@@ -321,7 +322,7 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <textarea id="composeMessage" class="materialize-textarea" length="5000">{{fbComposeMessage.shareMessage }}</textarea>
+                            <textarea id="composeMessage" class="materialize-textarea" length="5000" >{{fbComposeMessage.shareMessage }}</textarea>
                             <label for="compose">Message</label>
                         </div>
                     </div>

@@ -37,56 +37,56 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         };
 
 
-        $scope.ComposeMessage = function () {
-            $scope.disbtncom = false;
-            var profiles = $('#composeProfiles').val();
-            var message = $('#composeMessage').val();
-            var updatedmessage = "";
-            var postdata = message.split("\n");
-            for (var i = 0; i < postdata.length; i++) {
-                updatedmessage = updatedmessage + "<br>" + postdata[i];
-            }
-            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-            if (profiles.length > 0 && message != '') {
-                $scope.checkfile();
-                if ($scope.check == true) {
-                    var formData = new FormData();
-                    formData.append('files', $("#composeImage").get(0).files[0]);
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
-                        data: formData,
-                        headers: {
-                            'Content-Type': undefined
-                        },
-                        transformRequest: angular.identity,
-                    }).then(function (response) {
-                        if (response.data == "Posted") {
-                            $scope.disbtncom = true;
-                            $('#ComposePostModal').closeModal();
-                            swal('Message composed successfully');
-                        }
+        //$scope.ComposeMessage = function () {
+        //    $scope.disbtncom = false;
+        //    var profiles = $('#composeProfiles').val();
+        //    var message = $('#composeMessage').val();
+        //    var updatedmessage = "";
+        //    var postdata = message.split("\n");
+        //    for (var i = 0; i < postdata.length; i++) {
+        //        updatedmessage = updatedmessage + "<br>" + postdata[i];
+        //    }
+        //    updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+        //    if (profiles.length > 0 && message != '') {
+        //        $scope.checkfile();
+        //        if ($scope.check == true) {
+        //            var formData = new FormData();
+        //            formData.append('files', $("#composeImage").get(0).files[0]);
+        //            $http({
+        //                method: 'POST',
+        //                url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
+        //                data: formData,
+        //                headers: {
+        //                    'Content-Type': undefined
+        //                },
+        //                transformRequest: angular.identity,
+        //            }).then(function (response) {
+        //                if (response.data == "Posted") {
+        //                    $scope.disbtncom = true;
+        //                    $('#ComposePostModal').closeModal();
+        //                    swal('Message composed successfully');
+        //                }
 
-                    }, function (reason) {
-                        console.log(reason);
-                    });
-                }
-                else {
-                    alertify.set({ delay: 3000 });
-                    alertify.error("File extension is not valid. Please upload an image file");
-                    $('#input-file-now').val('');
-                }
-            }
-            else {
-                $scope.disbtncom = true;
-                if (profiles.length < 0) {
-                    swal('Please select a profile');
-                }
-                else {
-                    swal('Please enter some text to compose this message');
-                }
-            }
-        }
+        //            }, function (reason) {
+        //                console.log(reason);
+        //            });
+        //        }
+        //        else {
+        //            alertify.set({ delay: 3000 });
+        //            alertify.error("File extension is not valid. Please upload an image file");
+        //            $('#input-file-now').val('');
+        //        }
+        //    }
+        //    else {
+        //        $scope.disbtncom = true;
+        //        if (profiles.length < 0) {
+        //            swal('Please select a profile');
+        //        }
+        //        else {
+        //            swal('Please enter some text to compose this message');
+        //        }
+        //    }
+        //}
 
         $scope.checkfile = function () {
             var filesinput = $('#composeImage');
@@ -239,8 +239,8 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         $scope.cmpbtn = true;
 
         $scope.ComposeMessage = function () {
-            debugger;
-            $scope.dispbtn = false;
+            
+            $scope.disbtncom = false;
             var profiles = $('#composeProfiles').val();
             var message = $('#composeMessage').val();
             var image = $('#imageUrl').val();
@@ -270,7 +270,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                         transformRequest: angular.identity,
                     }).then(function (response) {
                         if (response.data == "Posted") {
-                            $scope.dispbtn = true;
+                            $scope.disbtncom = true;
                             $('#ComposePostModal').closeModal();
                             swal('Message composed successfully');
                         }
@@ -286,7 +286,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                 }
             }
             else {
-                $scope.dispbtn = true;
+                $scope.disbtncom = true;
                 if (profiles.length < 0) {
                     swal('Please select a profile');
                 }

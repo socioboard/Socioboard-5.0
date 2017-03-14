@@ -83,7 +83,6 @@ SocioboardApp.directive('myRepeatTimeoutGroupsDirective', function ($timeout) {
 //codes to redirect all unauthorized calls to index page
 SocioboardApp.config(function ($httpProvider) {
     $httpProvider.interceptors.push('SB401Detector');
-
 });
 
 
@@ -772,6 +771,31 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                 }]
             }
         })
+
+
+
+        // Rss Feeds
+
+        .state('rss_feeds', {
+            url: "/rss_feeds.html",
+            templateUrl: "../contents/socioboard/views/rss_feeds/rss_feeds.html",
+            data: { pageTitle: 'RssFeeds', pageSubTitle: 'updated' },
+            controller: "RssFeedsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/rssfeedscontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
 
         // Posted Rss Feeds
 

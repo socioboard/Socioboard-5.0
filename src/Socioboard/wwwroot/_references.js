@@ -33,6 +33,7 @@
 /// <reference path="contents/socioboard/controllers/postedrssfeedscontroller.js" />
 /// <reference path="contents/socioboard/controllers/profilescontroller.js" />
 /// <reference path="contents/socioboard/controllers/profilesettingcontroller.js" />
+/// <reference path="contents/socioboard/controllers/rssfeedscontroller.js" />
 /// <reference path="contents/socioboard/controllers/rssqueuecontroller.js" />
 /// <reference path="contents/socioboard/controllers/schedulemsgcontroller.js" />
 /// <reference path="contents/socioboard/controllers/sentmessagescontroller.js" />

@@ -229,6 +229,37 @@ namespace Socioboard.Controllers.Admin
         }
 
 
+        public async Task<IActionResult> ManageUserFilter(int plan,int paymentstatus,int nullplan, int nullpaymentstatus)
+        {
+            Domain.Socioboard.Models.User _user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (_user == null)
+            {
+                return RedirectToAction("Index", "Index");
+            }
+            else
+            {
+                Domain.Socioboard.Models.UserDetails user = new Domain.Socioboard.Models.UserDetails();
+                try
+                {
+                    HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetUserAdminFilter?plan=" + plan+ "&paymentstatus=" + paymentstatus + "&nullplan=" + nullplan + "&nullpaymentstatus=" + nullpaymentstatus, "", "", _appSettings.ApiDomain);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.UserDetails>();
+                    }
+                     
+                    ViewBag.details = user._user;
+                    ViewBag.ApiDomain = _appSettings.ApiDomain;
+                    ViewBag.Domain = _appSettings.Domain;
+                    return View("ManageUser");
+                }
+                catch (Exception ex)
+                {
+                    return View("ManageUser");
+                }
+            }
+        }
+
+
 
     }
 }

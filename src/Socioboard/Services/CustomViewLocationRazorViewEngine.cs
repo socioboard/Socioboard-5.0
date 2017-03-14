@@ -17,9 +17,15 @@ namespace Socioboard.Services
             //context.Values["theme"] = theme;
         }
         public virtual IEnumerable<string> ExpandViewLocations(ViewLocationExpanderContext context, IEnumerable<string> viewLocations)
-
         {
-            return viewLocations.Select(f => f.Replace("/Views/", "/Themes/Socioboard/Views/"));
+            if (!context.ControllerName.Contains("Admin"))
+            {
+                return viewLocations.Select(f => f.Replace("/Views/", "/Themes/Socioboard/Views/")); 
+            }
+            else
+            {
+                return viewLocations.Select(f => f.Replace("/Views/", "/Themes/Socioboard/Views/Admin/"));
+            }
         }
 
     }

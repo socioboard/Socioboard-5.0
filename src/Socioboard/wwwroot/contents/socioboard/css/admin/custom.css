@@ -32,7 +32,6 @@ ul.side-nav.leftside-navigation li.active > a{
   white-space: pre-wrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  overflow-wrap: break-word;
 }
 
 .more_profile_btn{
@@ -344,3 +343,10 @@ ul.side-nav.leftside-navigation li.active > a{
     height: 60px;
 }
 
+
+.btn_style{
+    font-size: 12px;
+    height: 30px !important;
+    line-height: 30px !important;
+    padding: 0 1rem !important;
+}

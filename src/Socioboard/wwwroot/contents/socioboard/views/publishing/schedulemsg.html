@@ -40,10 +40,10 @@
                                     </div>
                                       <!--Default version-->
                                     <div class="row section" ng-if="user.TrailStatus!=2">
-                                      <div class="col s12 m4 l3">
-                                         <p>Select image</p>
+                                      <div class="col s12 m12 l12">
+                                         <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
                                       </div>
-                                      <div class="col s12 m8 l9" >
+                                      <div class="col s12 m12 l12" >
                                           <input type="hidden" id="imageUrl" value="{{schedulemessage.picUrl}}" />
                                           <div ng-if="schedulemessage">
                                               <input type="file" id="input-file-now"  class="dropify" after-render  data-default-file="{{schedulemessage.picUrl}}" />
@@ -73,8 +73,28 @@
                                         </span>
                                     </div>
                                     
-
                                    <div class="row">
+                                       <div class="input-field col s12 m4 l4">
+                                           <!--<input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="repetition()"/>-->
+                                           <input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="repetition()" />
+                                           <label for="repeat_post">Repeat post</label>
+                                       </div>
+                                       <div class="input-field col s12 m4 l4">
+                                           
+                                           <input id="sche_day" type="number" min="0" class="validate">
+                                           <label for="sche_day">Schedule at [ Days ]</label>
+                                       </div>
+                                       <div class="input-field col s12 m4 l4">
+                                           <select id="timesRepeat">
+                                               <option value="" disabled selected>Choose your time intervale</option>
+                                               <option value=1>1</option>
+                                               <option value=2>2</option>
+                                               <option value=3>3</option>
+                                           </select>
+                                           <label>interval to repeat time</label>
+                                       </div>
+                                   </div>
+                                   <div class="row no-space">
                                        <div class="input-field col s12">
                                            <!-- <input id="datetimepicker" type="text" > -->
                                            <!-- <input type="date" class="datepicker"> -->

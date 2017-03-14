@@ -163,7 +163,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             $scope.checkfile = function () {
                 var filesinput = $('#composeImage');//composeImage
-                var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+                var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
                 if (filesinput != undefined && filesinput[0].files[0] != null) {
                     if ($scope.hasExtension('#composeImage', fileExtension)) {
                         $scope.check = true;
@@ -225,9 +225,8 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             //var d4 = d.setHours(d.getHours() + 5);
             //var date = moment(d4);
                 //var newdate = new Date(date).toUTCString();
-            var todayDate = new Date();
-            console.log(todayDate);
-
+            //var todayDate = new Date();
+            //console.log(todayDate);
             if (message != "" && message != undefined) {
                 $scope.checkfile();//added on 19/10/2016
                 if ($scope.check == true)
@@ -237,7 +236,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     //$scope.dispbtn = false;
                     $http({
                         method: 'POST',
-                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate + '&groupId=' + $rootScope.groupId,
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + "" + '&groupId=' + $rootScope.groupId,
                         data: formData,
                         headers: {
                             'Content-Type': undefined
@@ -292,7 +291,6 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $scope.fetchProfiles = function () {
 
                 //codes to load  fb profiles start
-                debugger;
                 $http.get(apiDomain + '/api/Facebook/GetFacebookProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {

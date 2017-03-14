@@ -347,20 +347,70 @@
                         <div class="col l12 m12 s12">
                             <div class="card-panel" id="feeds">
                                 <h5 class="feeds_title orange darken-2 white-text">
-                                    Last 12 Months Paid User Graph
+                                    <div class="row no-space">
+                                        <div class="col l8 m8 s12">
+                                            Last 12 Months Trial Paid Users  
+                                        </div>
+                                       
+                                        @*<div class="input-field col s12 m4 l4">
+                                            <select id="selectyear" onchange="ManagePaidUser()">
+                                                <option value="" disabled selected>Choose your option</option>
+                                               
+                                                
+                                            </select>
+                                            <label class="white-text"><h6>Select Year</h6></label>
+                                        </div>*@
+                                    </div>    
                                 </h5>
+                                
                                 <div class="card-panel">
+                                    <div class="row no-space">
+                                        <div class="col l4 m4 s4">
+                                            <label class=""><h6>Select Date For Trial Paid Users</h6></label>
+                                        </div>
+                                        <div class="col m4 s4 l4">
+                                            <input id="trialuserdate" type="date" class="datepicker black-text"/> 
+                                        </div>
+                                        <div class="col m4 s4 l4 center">
+                                            <button id="submit_datepaid" type="submit" class="btn  btn_style waves-effect waves-light btn cyan center" onclick="ClickManagePaidUser()">Search</button>
+                                        </div>
+                                    </div>
+                                    <hr />
                                     <div class="chartdiv" id="paid_chart"></div>
                                 </div>
                             </div>
                         </div>
-
+                     
                         <div class="col l12 m12 s12">
                             <div class="card-panel" id="feeds">
                                 <h5 class="feeds_title orange darken-2 white-text">
-                                    Last 12 Months Unpaid User Graph
+                                    <div class="row no-space">
+                                        <div class="col l8 m8 s12">
+                                            Last 12 Months Free Users
+                                        </div>
+                                         @*<div class="input-field col s12 m4 l4">
+                <select id="selectyear" onchange="ManagePaidUser()">
+                    <option value="" disabled selected>Choose your option</option>
+
+
+                </select>
+                <label class="white-text"><h6>Select Year</h6></label>
+            </div>*@
+                                    </div>  
                                 </h5>
                                 <div class="card-panel">
+                                    <div class="row no-space">
+                                        <div class="col l4 m4 s4">
+                                            <label class=""><h6>Select Date For Free Users</h6></label>
+                                        </div>
+                                        <div class="col m4 s4 l4">
+                                            <input id="freeuserdate" type="date" class="datepicker black-text"/>
+                                        </div>
+                                        <div class="col m4 s4 l4 center">
+                                            <button id="submit_dateunpaid" type="submit" class="btn  btn_style waves-effect waves-light btn cyan center" onclick="ClickManageUnPaidUser()">Search</button>
+                                        </div>
+                                    </div>
+                                    <hr />
                                     <div class="chartdiv" id="unpaid_chart"></div>
                                 </div>
                             </div>
@@ -632,7 +682,7 @@
                     "valueAxes": [{
                         "axisAlpha": 0,
                         "position": "left",
-                        "title": "Paid user"
+                        "title": "Trial Paid user"
                     }],
                    // "startDuration": 1,
                     "graphs": [{
@@ -755,7 +805,7 @@ function zoomChart(){
                     "valueAxes": [{
                         "axisAlpha": 0,
                         "position": "left",
-                        "title": "UnPaid user"
+                        "title": "Free user"
                     }],
                    // "startDuration": 1,
                     "graphs": [{
@@ -813,63 +863,113 @@ function zoomChart(){
 
                 });
         }
+
+
+        function ClickManagePaidUser() {
+            var selecteddate = $('#trialuserdate').val();
+            if (selecteddate == "") {
+                swal("Please select date!");
+            }
+            else {
+                $("#submit_datepaid").attr("class", "btn btn_style waves-effect waves-light btn cyan center disabled");
+                ManagePaidUser();
+            }
+        }
+        function ClickManageUnPaidUser() {
+            var selecteddate = $('#freeuserdate').val();
+            if (selecteddate == "") {
+                swal("Please select date!");
+            }
+            else{
+                $("#submit_dateunpaid").attr("class", "btn btn_style waves-effect waves-light btn cyan center disabled");
+                ManageUnPaidUser();
+            }
+        }
+
+
         function ManagePaidUser() {
-            
+            var selecteddate = $('#trialuserdate').val();
             //todo: code to delete profile
 
-            $.ajax({
+                $.ajax({
 
-                type: "GET",
+                    type: "GET",
 
-                url: '../AdminHome/ManagePaidUser',
-                dataType: "html",
+                    url: '../AdminHome/ManagePaidUser?selecteddate=' + selecteddate,
+                    dataType: "html",
 
-                success: function (msg) {
-                    
-                    var mystring = msg;
-                    msg = mystring.replace(/\\/g, "").replace(/"\[/g, "[").replace(/]"/g, "]");
-                    var array = JSON.parse(msg);
-                    console.log(array);
-                  //  paidAccount = msg //[{ "month": "Feb", "paiduser": 0 }, { "month": "Mar", "paiduser": 0 }, { "month": "Apr", "paiduser": 0 }, { "month": "May", "paiduser": 0 }, { "month": "Jun", "paiduser": 0 }, { "month": "Jul", "paiduser": 0 }, { "month": "Aug", "paiduser": 0 }, { "month": "Sep", "paiduser": 0 }, { "month": "Oct", "paiduser": 0 }, { "month": "Nov", "paiduser": 0 }, { "month": "Dec", "paiduser": 1 }, { "month": "Jan", "paiduser": 0 }];
-                    myfunctionPaid(array);
-                   
-                }
+                    success: function (msg) {
 
-            });
+                        var mystring = msg;
+                        msg = mystring.replace(/\\/g, "").replace(/"\[/g, "[").replace(/]"/g, "]");
+                        var array = JSON.parse(msg);
+                        console.log(array);
+                        //  paidAccount = msg //[{ "month": "Feb", "paiduser": 0 }, { "month": "Mar", "paiduser": 0 }, { "month": "Apr", "paiduser": 0 }, { "month": "May", "paiduser": 0 }, { "month": "Jun", "paiduser": 0 }, { "month": "Jul", "paiduser": 0 }, { "month": "Aug", "paiduser": 0 }, { "month": "Sep", "paiduser": 0 }, { "month": "Oct", "paiduser": 0 }, { "month": "Nov", "paiduser": 0 }, { "month": "Dec", "paiduser": 1 }, { "month": "Jan", "paiduser": 0 }];
+                        myfunctionPaid(array);
+
+                    }
+
+                });
+            
         }
 
         function ManageUnPaidUser() {
-            
+            var selecteddate = $('#freeuserdate').val();
             //todo: code to delete profile
 
-            $.ajax({
+                $.ajax({
 
-                type: "GET",
+                    type: "GET",
 
-                url: '../AdminHome/ManageUnPaidUser',
-                dataType: "html",
+                    url: '../AdminHome/ManageUnPaidUser?selecteddate=' + selecteddate,
+                    dataType: "html",
 
-                success: function (msg) {
+                    success: function (msg) {
 
-                    var mystring = msg;
-                    msg = mystring.replace(/\\/g, "").replace(/"\[/g, "[").replace(/]"/g, "]");
-                    var array = JSON.parse(msg);
-                    console.log(array);
-                    //  paidAccount = msg //[{ "month": "Feb", "paiduser": 0 }, { "month": "Mar", "paiduser": 0 }, { "month": "Apr", "paiduser": 0 }, { "month": "May", "paiduser": 0 }, { "month": "Jun", "paiduser": 0 }, { "month": "Jul", "paiduser": 0 }, { "month": "Aug", "paiduser": 0 }, { "month": "Sep", "paiduser": 0 }, { "month": "Oct", "paiduser": 0 }, { "month": "Nov", "paiduser": 0 }, { "month": "Dec", "paiduser": 1 }, { "month": "Jan", "paiduser": 0 }];
-                    myfunctionUnPaid(array);
+                        var mystring = msg;
+                        msg = mystring.replace(/\\/g, "").replace(/"\[/g, "[").replace(/]"/g, "]");
+                        var array = JSON.parse(msg);
+                        console.log(array);
+                        //  paidAccount = msg //[{ "month": "Feb", "paiduser": 0 }, { "month": "Mar", "paiduser": 0 }, { "month": "Apr", "paiduser": 0 }, { "month": "May", "paiduser": 0 }, { "month": "Jun", "paiduser": 0 }, { "month": "Jul", "paiduser": 0 }, { "month": "Aug", "paiduser": 0 }, { "month": "Sep", "paiduser": 0 }, { "month": "Oct", "paiduser": 0 }, { "month": "Nov", "paiduser": 0 }, { "month": "Dec", "paiduser": 1 }, { "month": "Jan", "paiduser": 0 }];
+                        myfunctionUnPaid(array);
 
-                }
+                    }
 
-            });
+                });
+            
         }
 
         $(document).ready(function () {
             ManagePaidUser();
             ManageUnPaidUser();
         });
+        $('.datepicker').pickadate({
+            selectMonths: true,
+            selectYears:true,
+            min: new Date(2014, 10, 1),
+            max: true
 
+        });
 
+        // for date dropdown
+        $('select').material_select();
     </script>
+        <script>
+        var date = new Date();
+        var year = date.getFullYear();
+        var txt = "";
+        var option = $("#selectyear");
+        var tempyear = 2014;
+        while (year >= tempyear) {
+          debugger;
+            console.log(tempyear);
+            txt += "<option value="+tempyear+">"+tempyear+"</option>";
+            tempyear++;
+        }
+        console.log(txt);
+            $(option).append(txt);
+        $(option).material_select();
+         </script>
 </body>
 
 </html>

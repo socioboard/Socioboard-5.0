@@ -161,16 +161,19 @@ namespace Api.Socioboard.Repositories
                             try
                             {
                                 objRssFeeds.Link = item.ChildNodes[1].InnerText;
+                                objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
 
                             }
                             catch (Exception ex)
                             {
                                 objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                             }
                         }
                         else
                         {
                             objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                            objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                         }
                         objRssFeeds.RssFeedUrl = TextUrl;
                         objRssFeeds.ProfileId = profileid;
@@ -199,6 +202,22 @@ namespace Api.Socioboard.Repositories
             catch (Exception ex)
             {
                 return "invalid url";
+            }
+        }
+
+
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
             }
         }
 

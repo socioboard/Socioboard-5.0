@@ -9,6 +9,7 @@ namespace Api.Socioboard.Repositories
 {
     public class ElasticMailReportRepository
     {
+
         public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getElasticMailSentReportData(int daysCount, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
          {
             MongoRepository mongorepo = new MongoRepository("ElasticmailDailyReport", _appSettings);
@@ -17,7 +18,7 @@ namespace Api.Socioboard.Repositories
             double dayEnd = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow.AddDays(-daysCount).Date);
             ////DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-daysCount).Year, DateTime.UtcNow.AddDays(-daysCount).Month, DateTime.UtcNow.AddDays(-daysCount).Day, 0, 0, 0, DateTimeKind.Utc);
             //DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ElasticmailReport>(t=>t.status== " Sent " && t.time>=dayEnd && t.time<=dayStart);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ElasticmailReport>(t=>t.status== " Sent " && t.time>=dayEnd && t.time <= dayStart);
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -144,28 +145,124 @@ namespace Api.Socioboard.Repositories
         }
 
         #region repository for custom report
-        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailSentReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailSentReportData(DateTime startdate,DateTime enddate, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
+            MongoRepository mongorepo = new MongoRepository("ElasticmailDailyReport", _appSettings);
+            double dayStart = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(startdate.Date);
+            double dayEnd = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(enddate.Date);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ElasticmailReport>(t => t.status == " Sent " &&  t.time >= dayStart && t.time <= dayEnd);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+
+
+            if (task.Result != null)
+            {
+                IList<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmailuser = task.Result.ToList();
+                return lstelasticmailuser.ToList();
+
+            }
             return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
         }
-        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailOpenedReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailOpenedReportData(DateTime startdate,DateTime enddate, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
+            MongoRepository mongorepo = new MongoRepository("ElasticmailDailyReport", _appSettings);
+            double dayStart = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(startdate.Date);
+            double dayEnd = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(enddate.Date);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ElasticmailReport>(t => t.status == " Opened " && t.time >= dayStart && t.time <= dayEnd);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+
+
+            if (task.Result != null)
+            {
+                IList<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmailuser = task.Result.ToList();
+                return lstelasticmailuser.ToList();
+
+            }
             return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
         }
-        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailClickedReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailClickedReportData(DateTime startdate, DateTime enddate, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
+            MongoRepository mongorepo = new MongoRepository("ElasticmailDailyReport", _appSettings);
+            double dayStart = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(startdate.Date);
+            double dayEnd = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(enddate.Date);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ElasticmailReport>(t => t.status == " Clicked " && t.time >= dayStart && t.time <= dayEnd);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+
+
+            if (task.Result != null)
+            {
+                IList<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmailuser = task.Result.ToList();
+                return lstelasticmailuser.ToList();
+
+            }
             return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
         }
-        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailBouncedReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailBouncedReportData(DateTime startdate, DateTime enddate, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
+            MongoRepository mongorepo = new MongoRepository("ElasticmailDailyReport", _appSettings);
+            double dayStart = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(startdate.Date);
+            double dayEnd = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(enddate.Date);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ElasticmailReport>(t => t.status == " Bounced " && t.time >= dayStart && t.time <= dayEnd);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+
+
+            if (task.Result != null)
+            {
+                IList<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmailuser = task.Result.ToList();
+                return lstelasticmailuser.ToList();
+
+            }
             return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
         }
-        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailUnsubscribedReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailUnsubscribedReportData(DateTime startdate, DateTime enddate, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
+            MongoRepository mongorepo = new MongoRepository("ElasticmailDailyReport", _appSettings);
+            double dayStart = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(startdate.Date);
+            double dayEnd = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(enddate.Date);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ElasticmailReport>(t => t.status == " Unsubscribed " && t.time >= dayStart && t.time <= dayEnd);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+
+
+            if (task.Result != null)
+            {
+                IList<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmailuser = task.Result.ToList();
+                return lstelasticmailuser.ToList();
+
+            }
             return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
         }
-        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailAbuseReportReportData(DateTime date, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.ElasticmailReport> getCustomElasticMailAbuseReportReportData(DateTime startdate, DateTime enddate, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
+            MongoRepository mongorepo = new MongoRepository("ElasticmailDailyReport", _appSettings);
+            double dayStart = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(startdate.Date);
+            double dayEnd = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(enddate.Date);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ElasticmailReport>(t => t.status == " AbuseReport " && t.time >= dayStart && t.time <= dayEnd);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+
+
+            if (task.Result != null)
+            {
+                IList<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmailuser = task.Result.ToList();
+                return lstelasticmailuser.ToList();
+
+            }
             return new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
         }
         #endregion

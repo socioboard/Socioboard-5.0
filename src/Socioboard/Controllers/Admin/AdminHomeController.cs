@@ -14,7 +14,8 @@ namespace Socioboard.Controllers
 {
     public class AdminHomeController : Controller
     {
-
+        //public static DateTime selecteddate=DateTime.UtcNow;
+            
         private Helpers.AppSettings _appSettings;
         public AdminHomeController(Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
         {
@@ -23,11 +24,12 @@ namespace Socioboard.Controllers
         // [ResponseCache(Duration = 100)]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         // GET: /<controller>/
-        public async Task<IActionResult> ManagePaidUser()
+        public async Task<IActionResult> ManagePaidUser( string selecteddate)
         {
+       
             List<Domain.Socioboard.Models.User> user = new List<Domain.Socioboard.Models.User>();
             List<Domain.Socioboard.Models.PiadUser> paidUser = new List<PiadUser>();
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetPaidUserAdmin", "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetPaidUserAdmin?selecteddate=" + selecteddate, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 paidUser = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.PiadUser>>();
@@ -62,11 +64,11 @@ namespace Socioboard.Controllers
 
         }
 
-        public async Task<IActionResult> ManageUnPaidUser()
+        public async Task<IActionResult> ManageUnPaidUser(string selecteddate)
         {
             List<Domain.Socioboard.Models.User> user = new List<Domain.Socioboard.Models.User>();
             List<Domain.Socioboard.Models.UnPiadUser> paidUser = new List<UnPiadUser>();
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetUnPaidUserAdmin", "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/User/GetUnPaidUserAdmin?selecteddate=" + selecteddate, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 paidUser = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.UnPiadUser>>();

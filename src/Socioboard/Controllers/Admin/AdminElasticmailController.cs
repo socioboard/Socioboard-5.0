@@ -152,10 +152,10 @@ namespace Socioboard.Controllers.Admin
         }
 
         #region Custom reports data start
-        public async Task<IActionResult> GetCustomSentMailReport(DateTime sdate, DateTime edate)
+        public async Task<IActionResult> GetCustomSentMailReport(DateTime startdate, DateTime enddate)
         {
             List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailSentReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailSentReportData?startdate=" + startdate + "&enddate=" + enddate, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
@@ -168,10 +168,10 @@ namespace Socioboard.Controllers.Admin
             return PartialView("_GetSentMailReportPartial");
 
         }
-        public async Task<IActionResult> GetCustomOpenedMailReport(DateTime sdate, DateTime edate)
+        public async Task<IActionResult> GetCustomOpenedMailReport(DateTime startdate, DateTime enddate)
         {
             List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailOpenedReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailOpenedReportData?startdate=" + startdate + "&enddate=" + enddate, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
@@ -184,10 +184,10 @@ namespace Socioboard.Controllers.Admin
             return PartialView("_GetOpenedMailReportPartial");
 
         }
-        public async Task<IActionResult> GetCustomClickedMailReport(DateTime sdate, DateTime edate)
+        public async Task<IActionResult> GetCustomClickedMailReport(DateTime startdate, DateTime enddate)
         {
             List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailClickedReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailClickedReportData?startdate=" + startdate + "&enddate=" + enddate, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
@@ -200,10 +200,10 @@ namespace Socioboard.Controllers.Admin
             return PartialView("_GetClickedMailReportPartial");
 
         }
-        public async Task<IActionResult> GetCustomBouncedMailReport(DateTime sdate, DateTime edate)
+        public async Task<IActionResult> GetCustomBouncedMailReport(DateTime startdate, DateTime enddate)
         {
             List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailBouncedReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailBouncedReportData?startdate=" + startdate + "&enddate=" + enddate, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
@@ -216,10 +216,10 @@ namespace Socioboard.Controllers.Admin
             return PartialView("_GetBouncedMailReportPartial");
 
         }
-        public async Task<IActionResult> GetCustomUnsubscribedMailReport(DateTime sdate, DateTime edate)
+        public async Task<IActionResult> GetCustomUnsubscribedMailReport(DateTime startdate, DateTime enddate)
         {
             List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailUnsubscribedReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailUnsubscribedReportData?startdate=" + startdate + "&enddate=" + enddate, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();
@@ -231,10 +231,10 @@ namespace Socioboard.Controllers.Admin
             return PartialView("_GetUnsubscribedMailReportPartial");
 
         }
-        public async Task<IActionResult> GetCustomAbuseReportedMailReport(DateTime sdate, DateTime edate)
+        public async Task<IActionResult> GetCustomAbuseReportedMailReport(DateTime startdate, DateTime enddate)
         {
             List<Domain.Socioboard.Models.Mongo.ElasticmailReport> lstelasticmails = new List<Domain.Socioboard.Models.Mongo.ElasticmailReport>();
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailAbuseReportReportData?sdate=" + sdate + "&edate=" + edate, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/ElasticMailReport/getCustomElasticMailAbuseReportReportData?startdate=" + startdate + "&enddate=" + enddate, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 lstelasticmails = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Mongo.ElasticmailReport>>();

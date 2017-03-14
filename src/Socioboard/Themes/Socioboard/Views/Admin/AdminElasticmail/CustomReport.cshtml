@@ -259,21 +259,21 @@
                 <div class="col l12 m12 s12">
                     <div class="card-panel" id="feeds">
                         <h5 style="text-align:center" class="feeds_title orange darken-2 white-text">
-                            Custom Date Report Of Elastic Mails
+                            Select Date to Filter Report
                         </h5>
                         <div class="row">
                             <br />
                             <div class="col s12 m6 l6">
-                                <label>Enter Start date Here...</label>
-                                <input id="dates" type="date" class="datepicker black-text">
+                                <label>Select Start date Here...</label>
+                                <input id="dates" type="date" class="datepicker black-text" onchange="enable_btn()">
                             </div>
                             <div class="col s12 m6 l6">
-                                <label>Enter End date Here...</label>
-                                <input id="dates1" type="date" class="datepicker black-text">
+                                <label>Select End date Here...</label>
+                                <input id="dates1" type="date" class="datepicker black-text" onchange="enable_btn()">
                             </div>
                         </div>
                         <div class="center">
-                            <button type="submit" class="waves-effect waves-light btn cyan center" onclick="customreport()">Submit</button>
+                            <button id="submit_date" type="submit" class="waves-effect waves-light btn cyan center" onclick="customreport()">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -295,7 +295,7 @@
                         <div class="col l12 m12 s12">
                             <div class="card-panel" id="feeds">
                                 <h5 style="text-align:center"  class="feeds_title orange darken-2 white-text">
-                                    Given Date Report Of Elastic Mails
+                                    Custom Report Of Elastic Mails
                                 </h5>
                                 <div class="card-panel">
                                     <div class="row">
@@ -503,20 +503,25 @@
                           
 
                                 <script>
-
+                                    
+                                    function enable_btn() {
+                                        $("#submit_date").attr("class", "waves-effect waves-light btn cyan center");
+                                        document.getElementById("submit_date").disabled = false;
+                                    };
                                     function customreport() {
                                         debugger;
-                                        var sdate = $('#dates').val();
-                                        var edate = $('#dates1').val();
-                                        if (sdate != "" && edate != "") {
+                                        var startdate = $('#dates').val();
+                                        var enddate = $('#dates1').val();
+                                        if (startdate != "" && enddate != "") {
                                             //date should be converted here
-
-                                            GetSentMailReport(sdate, edate);
-                                            GetOpenedMailReport(sdate, edate);
-                                            GetClickedMailReport(sdate, edate);
-                                            GetBouncedMailReport(sdate, edate);
-                                            GetUnsubscribedMailReport(sdate, edate);
-                                            GetAbuseReportedMailReport(sdate, edate);
+                                            $("#submit_date").attr("class", "waves-effect waves-light btn grey center");
+                                            document.getElementById("submit_date").disabled = true;
+                                            GetCustomSentMailReport(startdate, enddate);
+                                            GetCustomOpenedMailReport(startdate, enddate);
+                                            GetCustomClickedMailReport(startdate, enddate);
+                                            GetCustomBouncedMailReport(startdate, enddate);
+                                            GetCustomUnsubscribedMailReport(startdate, enddate);
+                                            GetCustomAbuseReportedMailReport(startdate, enddate);
                                         }
                                         else
                                         {
@@ -525,13 +530,13 @@
                                     };
                                     
 
-                                    function GetSentMailReport(sdate, edate) {
+                                    function GetCustomSentMailReport(startdate, enddate) {
                                         
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetCustomSentMailReport?sdate=' + sdate +'&edate='+edate,
+                                            url: '../AdminElasticmail/GetCustomSentMailReport?startdate=' + startdate +'&enddate='+enddate,
                                             dataType: "html",
                                             success: function (msg) {
                                             
@@ -544,13 +549,13 @@
                                         });
 
                                     }
-                                    function GetOpenedMailReport(sdate, edate) {
+                                    function GetCustomOpenedMailReport(startdate, enddate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetCustomOpenedMailReport?sdate=' + sdate + '&edate=' + edate,
+                                            url: '../AdminElasticmail/GetCustomOpenedMailReport?startdate=' + startdate + '&enddate=' + enddate,
                                             dataType: "html",
                                             success: function (msg) {
                                               
@@ -564,13 +569,13 @@
                                         });
 
                                     }
-                                    function GetClickedMailReport(sdate, edate) {
+                                    function GetCustomClickedMailReport(startdate, enddate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetCustomClickedMailReport?date=' + date + '&edate=' + edate,
+                                            url: '../AdminElasticmail/GetCustomClickedMailReport?startdate=' + startdate + '&enddate=' + enddate,
                                             dataType: "html",
                                             success: function (msg) {
                                                 
@@ -584,13 +589,13 @@
                                         });
 
                                     }
-                                    function GetBouncedMailReport(sdate, edate) {
+                                    function GetCustomBouncedMailReport(startdate, enddate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetCustomBouncedMailReport?sdate=' + sdate + '&edate=' + edate,
+                                            url: '../AdminElasticmail/GetCustomBouncedMailReport?startdate=' + startdate + '&enddate=' + enddate,
                                             dataType: "html",
                                             success: function (msg) {
                                               
@@ -605,13 +610,13 @@
 
                                     }
 
-                                    function GetUnsubscribedMailReport(sdate, edate) {
+                                    function GetCustomUnsubscribedMailReport(startdate, enddate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetCustomUnsubscribedMailReport?sdate=' + sdate + '&edate=' + edate,
+                                            url: '../AdminElasticmail/GetCustomUnsubscribedMailReport?startdate=' + startdate + '&enddate=' + enddate,
                                             dataType: "html",
                                             success: function (msg) {
                                               
@@ -625,13 +630,13 @@
                                         });
 
                                     }
-                                    function GetAbuseReportedMailReport(sdate, edate) {
+                                    function GetCustomAbuseReportedMailReport(startdate, enddate) {
 
                                         $.ajax({
 
                                             type: "GET",
 
-                                            url: '../AdminElasticmail/GetCustomAbuseReportedMailReport?sdate=' + sdate + '&edate=' + edate,
+                                            url: '../AdminElasticmail/GetCustomAbuseReportedMailReport?startdate=' + startdate + '&enddate=' + enddate,
                                             dataType: "html",
                                             success: function (msg) {
                                                 
@@ -677,8 +682,11 @@
                                         $('#load_gif').show();
                                     }
                                     $('.datepicker').pickadate({
-                                        selectMonths: true, 
-                                        selectYears: 50 
+                                        selectMonths: true,
+                                        selectYears:true,
+                                        min: new Date(2014, 1, 1),
+                                        max: true,
+                                        
                                     });
 
                                 </script>
