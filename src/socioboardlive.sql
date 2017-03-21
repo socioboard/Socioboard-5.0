@@ -1,17 +1,17 @@
 -- --------------------------------------------------------
--- Host:                         173.192.35.244
--- Server version:               10.0.25-MariaDB - mariadb.org binary distribution
+-- Host:                         54.68.2.251
+-- Server version:               5.5.5-10.1.21-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
--- HeidiSQL Version:             9.3.0.4984
+-- HeidiSQL Version:             7.0.0.4390
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping database structure for socioboardlive
-CREATE DATABASE IF NOT EXISTS `socioboardlive` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE IF NOT EXISTS `socioboardlive` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `socioboardlive`;
 
 
@@ -22,6 +22,19 @@ CREATE TABLE IF NOT EXISTS `affiliates` (
   `FriendUserId` bigint(20) NOT NULL,
   `AffiliateDate` datetime NOT NULL,
   `Amount` double DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table socioboardlive.coupons
+CREATE TABLE IF NOT EXISTS `coupons` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `CouponCode` varchar(350) NOT NULL,
+  `EntryCouponDate` datetime DEFAULT NULL,
+  `ExpCouponDate` datetime DEFAULT NULL,
+  `Discount` int(11) DEFAULT '0' COMMENT 'range is 0 - 99',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -322,6 +335,18 @@ CREATE TABLE IF NOT EXISTS `linkedincompanypage` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table socioboardlive.newsletter
+CREATE TABLE IF NOT EXISTS `newsletter` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `NewsLetterBody` varchar(1000) NOT NULL,
+  `Subject` varchar(250) NOT NULL,
+  `ExpiryDate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table socioboardlive.package
 CREATE TABLE IF NOT EXISTS `package` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -363,20 +388,20 @@ CREATE TABLE IF NOT EXISTS `rssfeedurl` (
 -- Dumping structure for table socioboardlive.scheduledmessage
 CREATE TABLE IF NOT EXISTS `scheduledmessage` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `shareMessage` varchar(10000) DEFAULT '0',
+  `shareMessage` mediumtext COLLATE utf8mb4_bin,
   `clientTime` datetime DEFAULT NULL,
   `scheduleTime` datetime DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `status` tinyint(4) NOT NULL,
   `userId` bigint(20) NOT NULL,
   `profileType` tinyint(4) NOT NULL,
-  `profileId` varchar(500) NOT NULL,
-  `picUrl` varchar(5000) DEFAULT NULL,
-  `socialprofileName` varchar(200) DEFAULT NULL,
-  `url` varchar(5000) DEFAULT NULL,
+  `profileId` varchar(500) COLLATE utf8mb4_bin NOT NULL,
+  `picUrl` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
+  `socialprofileName` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
+  `url` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `scheduleTime` (`scheduleTime`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 -- Data exporting was unselected.
 
@@ -387,13 +412,14 @@ CREATE TABLE IF NOT EXISTS `training` (
   `UserId` bigint(20) NOT NULL DEFAULT '0',
   `FirstName` varchar(100) CHARACTER SET utf8 NOT NULL,
   `LastName` varchar(100) CHARACTER SET utf8 NOT NULL,
-  `Emaild` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
+  `EmailId` varchar(100) CHARACTER SET utf8 DEFAULT NULL,
   `Company` varchar(100) DEFAULT NULL,
   `PhoneNo` varchar(100) NOT NULL,
   `Message` varchar(500) DEFAULT NULL,
   `PaymentAmount` varchar(50) NOT NULL,
   `PaymentStatus` varchar(50) DEFAULT NULL,
   `PaymentDate` datetime DEFAULT NULL,
+  `CreatedDate` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -472,6 +498,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `mailstatusfor30daysreport` datetime(6) DEFAULT NULL,
   `mailstatusfor60daysreport` datetime(6) DEFAULT NULL,
   `mailstatusfor90daysreport` datetime(6) DEFAULT NULL,
+  `Dailymailstatusreport` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `EmailId` (`EmailId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

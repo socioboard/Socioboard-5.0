@@ -84,7 +84,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             }
            
 
-           var date_value = ($('.md-input')[0]).value;
+           //var date_value = ($('.md-input')[0]).value;
             var date = date_value.split("/");
             date_value = date[1] + "/" + date[0] + "/" + date[2];
             var time_value = ($('.md-input')[1]).value;

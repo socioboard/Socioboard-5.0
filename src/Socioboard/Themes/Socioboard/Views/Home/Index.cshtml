@@ -35,6 +35,7 @@
     <meta property="og:url" content="https://www.facebook.com/SocioBoard">
     <meta name="google-site-verification" content="xCSHLNCGW3vt4KPtqZk8aYo41D1_FNVDaWspZPIc8ac" />
     <!-- CORE CSS-->
+    <link href="~/contents/socioboard/css/admin/custom.css" rel="stylesheet" />
     <link href="~/contents/socioboard/css/admin/materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
     <link href="~/contents/socioboard/css/admin/style.css" type="text/css" rel="stylesheet" media="screen,projection">
@@ -48,7 +49,8 @@
     <link href="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" />
     <link href="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css" rel="stylesheet" />
     <link href="~/contents/socioboard/js/admin/plugins/chartist-js/chartist.min.css" rel="stylesheet" />
-    
+
+ 
 
     <!-- Begin emoji-picker Stylesheets -->
     <link href="~/contents/socioboard/global/plugins/emoji-picker/lib/css/nanoscroller.css" rel="stylesheet">
@@ -79,6 +81,10 @@
     @if (TempData["Ganalytics"] != null)
     {
         <div ng-init="lstGanalytics=@TempData["Ganalytics"]"></div>
+    }
+    @if (TempData["Youtube"] != null)
+    {
+        <div ng-init="lstYoutube=@TempData["Youtube"]"></div>
     }
     <div data-ng-include="'../contents/socioboard/views/shared/header.html'" data-ng-controller="HeaderController"></div>
     <!-- END HEADER -->

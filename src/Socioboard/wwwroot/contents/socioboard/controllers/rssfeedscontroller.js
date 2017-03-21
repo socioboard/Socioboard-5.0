@@ -22,9 +22,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
 	            });
         }
 
-        
         $('#tags').tagsInput();
-
 
         $scope.loadpostedrssfeed = function () {
             console.log($rootScope.user.Id);
@@ -32,10 +30,10 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
             $http.get(apiDomain + '/api/RssFeed/GetPostedRssDataByUser?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId)
             .then(function (response) {
                 if (response.data != "") {
-                  
+
                     $scope.postedRssData = response.data;
                     console.log($scope.postedRssData);
-                    $scope.fetchdatacomplete = true;               
+                    $scope.fetchdatacomplete = true;
                 }
                 else {
                     $scope.nofeeds = true;
@@ -45,10 +43,11 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
             }, function () {
                 $scope.error = reason.data;
 
-        });
+            });
 
         }
 
+        
         $scope.loadpostedrssfeed();
 
 

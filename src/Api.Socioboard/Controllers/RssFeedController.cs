@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Api.Socioboard.Model;
 using Microsoft.AspNetCore.Cors;
 using System.Xml;
+using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -150,5 +151,44 @@ namespace Api.Socioboard.Controllers
             string deletedata = Repositories.RssFeedRepository.DeleteFeedUrl(RssId, dbr, _appSettings);
             return Ok(deletedata);
         }
+
+
+        [HttpGet("RssNewsFeedsUrl")]
+        public IActionResult RssNewsFeedsUrl(long userId, string keyword )
+        {
+
+            string res = Repositories.RssNewsContentsRepository.AddRssContentsUrl(keyword, userId, _appSettings);
+            return Ok(res);
+           
+        
+        }
+
+
+        [HttpGet("getRssNewsFeedsContents")]
+        public IActionResult getRssNewsFeedsContents(string userId, string keyword)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = Repositories.RssNewsContentsRepository.GetRssNewsFeeds(userId,keyword, _appSettings);
+          //  lstRss = lstRss.Where(t => !string.IsNullOrEmpty(t.Message)).ToList();
+            return Ok(lstRss);
+
+
+        }
+
+
+
+        [HttpGet("getRssNewsFeedsPost")]
+        public IActionResult getRssNewsFeedsPost(string userId)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = Repositories.RssNewsContentsRepository.GetRssNewsPostedFeeds(userId, _appSettings);
+            //  lstRss = lstRss.Where(t => !string.IsNullOrEmpty(t.Message)).ToList();
+            return Ok(lstRss);
+
+
+        }
+
     }
 }

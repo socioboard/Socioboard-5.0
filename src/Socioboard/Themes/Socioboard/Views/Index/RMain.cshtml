@@ -561,14 +561,14 @@
         $('#sb-schedule-post').click(function () {
             $('.btn-share-send').removeAttr('onclick', 'sharenow()');
             $('.btn-share-send').attr('onclick', 'schedulenow()');
-            $('.btn-share-send').text('Schedule Post');
+            $('.btn-share-send').text('Scheduling Post');
         });
 
         $('#sb-share-now').click(function () {
 
             $('.btn-share-send').removeAttr('onclick', 'schedulenow()');
             $('.btn-share-send').attr('onclick', 'sharenow()');
-            $('.btn-share-send').text('Share Now');
+            $('.btn-share-send').text('Sharing Post');
         });
 
 
@@ -743,7 +743,7 @@
                             parent.postMessage({ name: "Close" }, "*");
                         }
                     }, error: function (msg) {
-                        $('#success-sending-data').text('You have published post from socioboard..');
+                        $('#success-sending-data').text('You have error while post from socioboard..');
                         var param = getParameterByName("windowType");
                         if (param == "newwin") {
                             window.close();
@@ -811,7 +811,7 @@
                         $('.overlay-share').slideToggle();
                     },
                     success: function (data) {
-                        $('#img-load-send').attr('src', '../Themes/Socioboard/Contents/img/products n clients/logo.png');
+                        //$('#img-load-send').attr('src', '../Themes/Socioboard/Contents/img/products n clients/logo.png');
                         $('#success-sending-data').text('You have scheduled post from socioboard..');
                         var param = getParameterByName("windowType");
                         if (param == "newwin") {

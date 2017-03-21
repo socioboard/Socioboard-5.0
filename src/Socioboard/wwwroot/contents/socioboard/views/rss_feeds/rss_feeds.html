@@ -1,4 +1,18 @@
-    <div data-ng-controller="RssFeedsController">
+    
+<style>
+    .rssPostImage{
+        width: 674px;
+    max-height: 310px;
+    overflow: hidden;
+    border-radius: 5px;
+    float: left;
+    margin-top: 23px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    margin-left: 2px;
+}
+</style>
+<div data-ng-controller="RssFeedsController">
         <!-- Page name -->
         <div class="container">
             <div class="col m12">
@@ -17,7 +31,10 @@
                         <h6><strong>{{post.title}}</strong></h6>
                         <div>
                           <a href="{{post.link}}" class="truncate" target="_blank">{{post.link}}</a>
-                        </div>                      
+                        </div> 
+                        <div class="center">
+                            <img src="{{post.image}}" class="rssPostImage">
+                        </div>                     
                     </div>
                     <div class="card-action">
                       <a ng-click="schedulePost( post.title +' '+ post.link )"   class="waves-effect waves-grey btn btn_style">Schedule</a>
@@ -133,7 +150,30 @@
             </section>
             <!-- END CONTENT -->
 
+    <div ng-if="fetchdatacomplete!=true">
+        <br /><br /><br /><br /><br /><br />
+        <div class="center">
+            <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait while we are processing</h6>
 
+        </div>
+    </div>
+
+    <div class="center" ng-if="nofeeds==true">
+        <br /><br /><br /><br /><br /><br />
+        <h6 style="color:gray; font-size:20px; font-family:Calibri"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No RSS feeds posted to display<br /></h6>
+    </div>
 
 
                

@@ -160,8 +160,11 @@ namespace Api.Socioboard.Repositories
                         {
                             try
                             {
+                                objRssFeeds.Image = item.ChildNodes[1].InnerText;
+                                objRssFeeds.Image = getBetween(objRssFeeds.Image, "src=\"", "\"");
                                 objRssFeeds.Link = item.ChildNodes[1].InnerText;
                                 objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+
 
                             }
                             catch (Exception ex)
@@ -173,7 +176,7 @@ namespace Api.Socioboard.Repositories
                         else
                         {
                             objRssFeeds.Link = item.ChildNodes[2].InnerText;
-                            objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                           // objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                         }
                         objRssFeeds.RssFeedUrl = TextUrl;
                         objRssFeeds.ProfileId = profileid;

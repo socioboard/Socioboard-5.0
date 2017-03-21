@@ -74,6 +74,7 @@
 -resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\TwitterAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.TwitterAccount.hbm.xml
 -resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\TwitterNameTable.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.TwitterNameTable.hbm.xml
 -resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\User.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.User.hbm.xml
+-resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\YoutubeChannel.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.YoutubeChannel.hbm.xml
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Consatants\SocioboardConsts.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\ArticlesAndBlogsTypes.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\DemoPlantype.cs"
@@ -101,6 +102,7 @@
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\PluginProfile.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\SBHelper.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\ThumbnailDetails.cs"
+"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Helpers\UrlRSSfeedsNews.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Models\ISocialProfile.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Models\IUser.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Interfaces\Repositories\IDatabaseRepository.cs"
@@ -138,6 +140,7 @@
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterNameTable.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterRecentFollower.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\User.cs"
+"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\YoutubeChannel.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupHashtagDetails.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupPost.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupPostComments.cs"
@@ -181,6 +184,8 @@
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\PageShareathon.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Rss.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\RssFeed.cs"
+"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\RssNewsContents.cs"
+"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\RssNewsContentsFeeds.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\SharethonGroupPost.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\SharethonPagePost.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TaskComments.cs"
@@ -201,3 +206,4 @@
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\TasksViewModel.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\TwitterTopFansViewModel.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\UserLoginViewModel.cs"
+"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\ViewModels\YoutubeProfiles.cs"

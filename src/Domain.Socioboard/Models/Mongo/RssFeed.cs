@@ -27,6 +27,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string ProfileName { get;set; }
         public string ProfileImageUrl { get; set; }
         public string PublishingDate { get; set; }
+        public string Image { get; set; }
 
     }
 }

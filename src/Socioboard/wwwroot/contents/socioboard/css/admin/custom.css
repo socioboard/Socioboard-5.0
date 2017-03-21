@@ -350,3 +350,13 @@ ul.side-nav.leftside-navigation li.active > a{
     line-height: 30px !important;
     padding: 0 1rem !important;
 }
+
+.rssPostImage{
+        width: 635px;
+    max-height: 326px;
+    overflow: hidden;
+    border-radius: 5px;
+    float: left;
+    margin-top: 10px;
+    margin-right: 10px;
+}

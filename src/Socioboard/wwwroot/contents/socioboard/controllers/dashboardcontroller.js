@@ -59,6 +59,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             if ($rootScope.lstGanalytics != undefined) {
                 $('#GoogleAnalytics_Modal').openModal();
             }
+            if ($rootScope.lstYoutube != undefined) {
+                $('#Youtube_Modal').openModal();
+            }
             if ($rootScope.Downgrade == true) {
                 $('#ActiveProfileModal').openModal({ dismissible: false });
             }
@@ -418,6 +421,31 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             }
 
+            $scope.fetchYTChannels = function () {
+
+                //codes to load  YT Channels start
+                $http.get(apiDomain + '/api/Google/GetYTChannelsSB?groupId=' + $rootScope.groupId)
+                              .then(function (response) {
+                                  if (response.data != "") {
+                                      $scope.lstYChannel = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else {
+                                      $scope.noYTcha = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 1500);
+                                  }
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+                // end codes to load YT Channels
+
+
+            }
+
 
             $scope.fetchLinkedInCompanyPagesProfiles = function () {
 
@@ -456,6 +484,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $scope.TwitterFollowerCount();
             $scope.FacebookfanPageCount();
             $scope.TwitterRecentFollower();
+            $scope.fetchYTChannels();
 
             $scope.deleteProfile = function (profileId) {
                 // console.log(profileId);
@@ -676,6 +705,64 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
             //end codes to add Ga Sites
 
+        //code to add Youtube Channels
+            $scope.toggleYTProfileSelection = function (Accesstoken, Refreshtoken, YtChannelId, YtChannelName, YtChannelDescrip, PublishDate, viewscount, commentscount, videoscount, YtChannelImage, subscriberscount) {
+                var idx = $scope.selectedYTChannels.indexOf(Accesstoken, Refreshtoken, YtChannelId, YtChannelName, YtChannelDescrip, PublishDate, viewscount, commentscount, videoscount, YtChannelImage, subscriberscount);
+                var data = "";
+                // is currently selected
+                if (idx > -1) {
+                    $scope.selectedYTChannels.splice(idx, 1);
+                }
+
+                    // is newly selected
+                else {
+                    data = Accesstoken + '<:>' + Refreshtoken + '<:>' + YtChannelId + '<:>' + YtChannelName + '<:>' + YtChannelDescrip + '<:>' + PublishDate + '<:>' + viewscount + '<:>' + commentscount + '<:>' + videoscount + '<:>' + YtChannelImage + '<:>' + subscriberscount;
+                    $scope.selectedYTChannels.push(data);
+                }
+            }
+            $scope.selectedYTChannels = [];
+            $scope.selecteYTChannels = [];
+            $scope.AddYTChannels = function () {
+                angular.forEach($rootScope.lstProfiles, function (value, key) {
+                    if (value.profileType == 10) {
+                        if ($rootScope.lstYoutube.indexOf(value.profileId) == -1) {
+
+                            $scope.selecteYTChannels.push(value.profileId);
+                        }
+
+                    }
+                });
+
+
+                if ($scope.selectedYTChannels.length > 0) {
+                    var formData = new FormData();
+                    formData.append('profileaccesstoken', $scope.selectedYTChannels);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/Google/AddYoutubeChannels?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+
+                    }).then(function (response) {
+                        if (response.status == 200) {
+                            window.location.reload();
+                            swal(response.data);
+                        }
+                    }, function (reason) {
+                        swal("Error!");
+                    });
+                }
+                else if ($scope.selecteYTChannels.length > 0) {
+                    swal("This channel is already added");
+                }
+                else {
+                    swal("Select atleast one channel to add!");
+                }
+            }
+        //end codes to add Youtube Channels
 
         //code for addselected profiles
             $scope.toggleProfileSelection = function (profileid) {

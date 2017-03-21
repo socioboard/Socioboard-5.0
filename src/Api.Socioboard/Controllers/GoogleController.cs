@@ -380,5 +380,64 @@ namespace Api.Socioboard.Controllers
             }
             return Ok(lstGoogleAnalyticsAccount);
         }
+
+        [HttpPost("GetYoutubeAccount")]
+        public IActionResult GetYoutubeAccount(string code, long groupId, long userId)
+        {
+            try
+            {
+                List<Domain.Socioboard.ViewModels.YoutubeProfiles> lstYoutubeProfiles = new List<Domain.Socioboard.ViewModels.YoutubeProfiles>();
+                lstYoutubeProfiles = Helper.GoogleHelper.GetYoutubeAccount(code, _appSettings);
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+                lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
+                string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
+                if (lstStr.Length > 0)
+                {
+                    lstYoutubeProfiles.Where(t => lstStr.Contains(t.YtChannelId)).Select(s => { s.connected = 1; return s; }).ToList();
+                }
+                return Ok(lstYoutubeProfiles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("GetGetYoutubeAccount" + ex.StackTrace);
+                _logger.LogError("GetGetYoutubeAccount" + ex.Message);
+                return Ok(new List<Domain.Socioboard.ViewModels.YoutubeProfiles>());
+            }
+        }
+
+
+        [HttpPost("AddYoutubeChannels")]
+        public IActionResult AddYoutubeChannels(long groupId, long userId)
+        {
+            string data = Request.Form["profileaccesstoken"];
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string[] profiledata = null;
+
+            profiledata = data.Split(',');
+            foreach (var item in profiledata)
+            {
+                int j = Repositories.GplusRepository.AddYoutubeChannels(item, userId, groupId, _redisCache, _appSettings, dbr, _appEnv);
+            }
+
+            return Ok("Added Successfully");
+        }
+
+        [HttpGet("GetYTChannelsSB")]
+        public IActionResult GetYTChannelsSB(long groupId)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
+            List<Domain.Socioboard.Models.YoutubeChannel> lstYoutubeChannel = new List<YoutubeChannel>();
+            foreach (var item in lstGroupprofiles)
+            {
+                Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.GplusRepository.getYTChannel(item.profileId, _redisCache, dbr);
+                if (YTChnl != null)
+                {
+                    lstYoutubeChannel.Add(YTChnl);
+                }
+            }
+            return Ok(lstYoutubeChannel);
+        }
     }
 }

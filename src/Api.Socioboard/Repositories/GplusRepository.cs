@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Socioboard.GoogleLib.App.Core;
 using Socioboard.GoogleLib.Authentication;
 using Socioboard.GoogleLib.GAnalytics.Core.AnalyticsMethod;
+using Socioboard.GoogleLib.Youtube.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -759,5 +760,122 @@ namespace Api.Socioboard.Repositories
                 return lstMongoGplusFeed.ToList();
             }
         }
+
+
+        #region Repository codes for Youtube Channel.....
+
+
+        public static Domain.Socioboard.Models.YoutubeChannel getYTChannel(string YtChannelId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                Domain.Socioboard.Models.YoutubeChannel inMemYTChannel = _redisCache.Get<Domain.Socioboard.Models.YoutubeChannel>(Domain.Socioboard.Consatants.SocioboardConsts.CacheYTChannel + YtChannelId);
+                if (inMemYTChannel != null)
+                {
+                    return inMemYTChannel;
+                }
+            }
+            catch { }
+
+            List<Domain.Socioboard.Models.YoutubeChannel> lstYTChannel = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(YtChannelId)).ToList();
+            if (lstYTChannel != null && lstYTChannel.Count() > 0)
+            {
+                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheYTChannel + YtChannelId, lstYTChannel.First());
+                return lstYTChannel.First();
+            }
+            else
+            {
+                return null;
+            }
+
+
+
+        }
+
+
+        public static int AddYoutubeChannels(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, IHostingEnvironment _appEnv)
+        {
+            int isSaved = 0;
+            Channels _Channels = new Channels("575089347457-74q0u81gj88ve5bfdmbklcf2dnc0353q.apps.googleusercontent.com", "JRtS_TaeYpKOJWBCqt9h8-iG", "http://localhost:9821/GoogleManager/Google");
+            Domain.Socioboard.Models.YoutubeChannel _YoutubeChannel;
+            string[] YTdata = Regex.Split(profiledata, "<:>");
+            _YoutubeChannel = Repositories.GplusRepository.getYTChannel(YTdata[2], _redisCache, dbr);
+
+
+            if (_YoutubeChannel != null)
+            {
+                try
+                {
+
+                    _YoutubeChannel.UserId = userId;
+                    _YoutubeChannel.YtubeChannelId = YTdata[2];
+                    _YoutubeChannel.YtubeChannelName = YTdata[3];
+                    _YoutubeChannel.ChannelpicUrl = YTdata[9];
+                    _YoutubeChannel.WebsiteUrl = "https://www.youtube.com/channel/" + YTdata[2];
+                    _YoutubeChannel.EntryDate = DateTime.UtcNow;
+                    _YoutubeChannel.YtubeChannelDescription = YTdata[4];
+                    _YoutubeChannel.IsActive = true;
+                    _YoutubeChannel.AccessToken = YTdata[0];
+                    _YoutubeChannel.RefreshToken = YTdata[1];
+                    _YoutubeChannel.PublishingDate = Convert.ToDateTime(YTdata[5]);
+                    _YoutubeChannel.VideosCount = Convert.ToDouble(YTdata[8]);
+                    _YoutubeChannel.CommentsCount = Convert.ToDouble(YTdata[7]);
+                    _YoutubeChannel.SubscribersCount = Convert.ToDouble(YTdata[10]);
+                    _YoutubeChannel.ViewsCount = Convert.ToDouble(YTdata[6]);
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+                isSaved = dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(_YoutubeChannel);
+            }
+            else
+            {
+                _YoutubeChannel = new Domain.Socioboard.Models.YoutubeChannel();
+                try
+                {
+                    _YoutubeChannel.UserId = userId;
+                    _YoutubeChannel.YtubeChannelId = YTdata[2];
+                    _YoutubeChannel.YtubeChannelName = YTdata[3];
+                    _YoutubeChannel.ChannelpicUrl = YTdata[9];
+                    _YoutubeChannel.WebsiteUrl = "https://www.youtube.com/channel/" + YTdata[2];
+                    _YoutubeChannel.EntryDate = DateTime.UtcNow;
+                    _YoutubeChannel.YtubeChannelDescription = YTdata[4];
+                    _YoutubeChannel.IsActive = true;
+                    _YoutubeChannel.AccessToken = YTdata[0];
+                    _YoutubeChannel.RefreshToken = YTdata[1];
+                    _YoutubeChannel.PublishingDate = Convert.ToDateTime(YTdata[5]);
+                    _YoutubeChannel.VideosCount = Convert.ToDouble(YTdata[8]);
+                    _YoutubeChannel.CommentsCount = Convert.ToDouble(YTdata[7]);
+                    _YoutubeChannel.SubscribersCount = Convert.ToDouble(YTdata[10]);
+                    _YoutubeChannel.ViewsCount = Convert.ToDouble(YTdata[6]);
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+                isSaved = dbr.Add<Domain.Socioboard.Models.YoutubeChannel>(_YoutubeChannel);
+            }
+
+            if (isSaved == 1)
+            {
+                List<Domain.Socioboard.Models.YoutubeChannel> lstytChannel = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(_YoutubeChannel.YtubeChannelId)).ToList();
+                if (lstytChannel != null && lstytChannel.Count() > 0)
+                {
+                    isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lstytChannel.First().YtubeChannelId, lstytChannel.First().YtubeChannelName, userId, lstytChannel.First().ChannelpicUrl, Domain.Socioboard.Enum.SocialProfileType.YouTube, dbr);
+                    //codes to delete cache
+                    _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
+                    _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+
+                }
+
+            }
+            return isSaved;
+        }
+
+        #endregion
+
     }
 }

@@ -129,6 +129,7 @@ namespace Api.Socioboard.Controllers
             user.EmailValidateToken = SBHelper.RandomString(20);
             user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
             user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
+            user.dailyGrpReportsSummery = true;
             user.Password = SBHelper.MD5Hash(user.Password);
             user.UserName = "Socioboard";
             user.UserType = "User";

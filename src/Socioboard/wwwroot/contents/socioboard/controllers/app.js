@@ -68,7 +68,7 @@ SocioboardApp.directive('myRepeatTimeoutGroupsDirective', function ($timeout) {
         if (scope.$last === true) {
             $timeout(function () {
                 $('select').material_select();
-                
+
             });
         }
     };
@@ -211,7 +211,7 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
                           });
         }
 
-        
+
 
         $scope.getOnPageLoadGroups = function () {
             var canContinue = true;
@@ -244,7 +244,19 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
             //codes to logout from all session
             $http.get(domain + '/Home/Logout')
                           .then(function (response) {
-            localStorage.removeItem("user");
+                              debugger;
+                              var cookies = document.cookie.split(";");
+                              for (var i = 0; i < cookies.length; i++) {
+                                  var cookie = cookies[i];
+                                  var eqPos = cookie.indexOf("=");
+                                  var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                                  if (name.indexOf("socioboardplugin") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                              }
+
+
+                              localStorage.removeItem("user");
                               window.location.href = '../Index/Index';
                               window.location.reload();
                           }, function (reason) {
@@ -747,6 +759,30 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                   }]
               }
           })
+
+        // Rss News
+
+        .state('rss_news', {
+            url: "/rss_news.html",
+            templateUrl: "../contents/socioboard/views/rss_news/rss_news.html",
+            data: { pageTitle: 'Rss News', pageSubTitle: 'updated' },
+            controller: "RssNewsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/rssnewscontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
 
           // AutoMate Rss Feeds
 

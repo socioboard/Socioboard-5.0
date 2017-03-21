@@ -190,6 +190,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.2/velocity.ui.min.js"></script>
     <script type="text/javascript">
+
+        $(document).ready(function () {
+            var cookies = getCookie("socioboardplugin");
+            var locatrion = document.location.href + "&EmailId=" + cookies;
+            if (cookies != "") {
+                document.location = locatrion;
+            }
+        });
+
         function getParameterByName(name) {
             debugger;
             var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
@@ -247,9 +256,12 @@
                     disable();
                 },
                 success: function (data) {
+                    
                     enable();
 
                     if (data == "1") {
+                        var emailId = $("#email").val();
+                        setCookie("socioboardplugin", emailId, "30");
                         document.location = document.location.href;
                     } else if (data == "Account not activated.") {
                         $('#login-error').text('Please verify your email');
@@ -262,6 +274,28 @@
 
         });
 
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+        function getCookie(cname) {
+            debugger;
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
 
         $('#forgot-pass').submit(function (e) {
             e.preventDefault();

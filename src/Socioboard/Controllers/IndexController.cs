@@ -305,7 +305,7 @@ namespace Socioboard.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> SBApp(string profileType, string url, string content, string imageUrl, string name, string userImage, string screenName, string tweet, string tweetId, string type)
+        public async Task<IActionResult> SBApp(string profileType, string url, string content, string imageUrl, string name, string userImage, string screenName, string tweet, string tweetId, string type,string EmailId)
         {
 
             Domain.Socioboard.Helpers.PluginData _PluginData = new Domain.Socioboard.Helpers.PluginData();
@@ -320,6 +320,23 @@ namespace Socioboard.Controllers
             _PluginData.userImage = userImage;
             _PluginData.type = type;
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user == null)
+            {
+                if (!string.IsNullOrEmpty(EmailId))
+                {
+                    List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+                    HttpResponseMessage _response = await WebApiReq.GetReq("/api/User/GetUserData?emailId=" + EmailId, "", "", _appSettings.ApiDomain);
+                    if (_response.IsSuccessStatusCode)
+                    {
+                        try
+                        {
+                           user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                            HttpContext.Session.SetObjectAsJson("User", user);
+                        }
+                        catch { }
+                    }
+                }
+            }
             if (user != null)
             {
                 if (!string.IsNullOrEmpty(url) && profileType != "pinterest")

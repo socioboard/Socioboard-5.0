@@ -57,6 +57,10 @@
         public const string CacheGplusRecent100Feeds = "GplusRecent100Feeds_";
         //End GPlus Account
 
+        //Youtube Channels
+        public const string CacheYTChannel = "YTChannel_";
+        //End Youtube Channels
+
         //Twitter Account Start
         public const string CacheTwitterAccount = "TwitterAcc_";
         public const string CacheTwitterRecent100Feeds = "TwitterRec100Feeds_";
