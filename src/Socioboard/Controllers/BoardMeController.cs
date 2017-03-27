@@ -7,6 +7,8 @@ using System.Net.Http;
 using Socioboard.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Socioboard.Extensions;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,7 +16,37 @@ namespace Socioboard.Controllers
 {
     public class BoardMeController : Controller
     {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user != null)
+            {
+                SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+                strdic.Add("emailId", user.EmailId);
+                if (string.IsNullOrEmpty(user.Password))
+                {
+                    strdic.Add("Password", "sociallogin");
+                }
+                else
+                {
+                    strdic.Add("Password", user.Password);
+                }
 
+                string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+
+                if (!string.IsNullOrEmpty(response))
+                {
+
+                }
+                else
+                {
+                    HttpContext.Session.Remove("User");
+                    HttpContext.Session.Remove("selectedGroupId");
+                    HttpContext.Session.Clear();
+                }
+            }
+            base.OnActionExecuting(filterContext);
+        }
 
         private Helpers.AppSettings _appSettings;
         private readonly ILogger _logger;
@@ -25,7 +57,7 @@ namespace Socioboard.Controllers
             _appSettings = settings.Value;
             _logger = logger;
         }
-
+        
 
         [HttpGet]
         [Route("board/{boardName}")]

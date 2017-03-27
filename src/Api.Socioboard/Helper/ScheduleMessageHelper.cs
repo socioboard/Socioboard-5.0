@@ -10,7 +10,7 @@ namespace Api.Socioboard.Helper
 {
     public class ScheduleMessageHelper
     {
-        public static string ScheduleMessage(string profileId,string socialprofileName,string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId,string url,string picUrl,string scheduleTime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
+        public static string ScheduleMessage(string profileId,string socialprofileName,string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId,string link,string url,string picUrl,string scheduleTime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
         {
 
            
@@ -19,8 +19,8 @@ namespace Api.Socioboard.Helper
             try
             {
                 _logger.LogError("ScheduleMessageHelperscheduleTime>>>>" + scheduleTime);
-                var dt = DateTime.Parse(scheduleTime);
-                 scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
+                  var dt = DateTime.Parse(scheduleTime);
+                 scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt));
                 //scheduledMessage.scheduleTime = Convert.ToDateTime(scheduleTime) ;
                 // scheduledMessage.scheduleTime = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(),scheduleTime));
             }
@@ -41,6 +41,7 @@ namespace Api.Socioboard.Helper
             scheduledMessage.profileType = profiletype;
             scheduledMessage.profileId = profileId;
             scheduledMessage.url = url;
+            scheduledMessage.link = link;
             scheduledMessage.picUrl = picUrl;
             scheduledMessage.createTime = DateTime.UtcNow;
             scheduledMessage.clientTime = DateTime.Now;

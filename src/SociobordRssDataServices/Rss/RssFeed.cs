@@ -21,9 +21,10 @@ namespace SociobordRssDataServices.Rss
         public static int MaxapiHitsCount = 20;
         public static int twtapiHitsCount = 0;
         public static int twtMaxapiHitsCount = 50;
+
         public static void updateRssFeeds(Domain.Socioboard.Models.Mongo.Rss _rss)
         {
-            ParseFeedUrl(_rss.rssFeedUrl.rssurl, _rss.ProfileType, _rss.ProfileId, _rss.UserId, _rss.ProfileName, _rss.ProfileImageUrl);
+            ParseFeedUrl(_rss.RssFeedUrl, _rss.ProfileType, _rss.ProfileId, _rss.UserId, _rss.ProfileName, _rss.ProfileImageUrl);
 
         }
 
@@ -41,7 +42,8 @@ namespace SociobordRssDataServices.Rss
                 {
                     Model.DatabaseRepository dbr = new DatabaseRepository();
                     Domain.Socioboard.Models.Facebookaccounts _Facebookaccounts = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == profileid).First();
-                    
+                    //if (_Facebookaccounts.SchedulerUpdate.AddHours(1) <= DateTime.UtcNow)
+                    //{
                     if (_Facebookaccounts != null)
                     {
                         if (_Facebookaccounts.IsActive)
@@ -88,7 +90,10 @@ namespace SociobordRssDataServices.Rss
                                             objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                         }
                                     }
-
+                                    if(string.IsNullOrEmpty(objRssFeeds.Message))
+                                    {
+                                        objRssFeeds.Message = item.ChildNodes[7].InnerText;
+                                    }
 
                                     try
                                     {
@@ -99,23 +104,38 @@ namespace SociobordRssDataServices.Rss
                                         objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
                                     }
 
-                                    objRssFeeds.Title = item.ChildNodes[0].InnerText;
+                                    if (item.ChildNodes[0].Name== "guid")
+                                    {
+                                        objRssFeeds.Title = item.ChildNodes[1].InnerText; 
+                                    }
+                                    else
+                                    {
+                                        objRssFeeds.Title = item.ChildNodes[0].InnerText;
+                                    }
 
                                     if (item.ChildNodes[1].InnerText.Contains("www") || item.ChildNodes[1].InnerText.Contains("http"))
                                     {
                                         try
                                         {
+                                            objRssFeeds.Image = item.ChildNodes[1].InnerText;
+                                            objRssFeeds.Image = getBetween(objRssFeeds.Image, "src=\"", "\"");
                                             objRssFeeds.Link = item.ChildNodes[1].InnerText;
-
+                                            objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                                         }
                                         catch (Exception ex)
                                         {
                                             objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                            objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                                         }
                                     }
                                     else
                                     {
                                         objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                        objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                                        if(string.IsNullOrEmpty(objRssFeeds.Link))
+                                        {
+                                            objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                        }
                                     }
                                     objRssFeeds.RssFeedUrl = TextUrl;
                                     objRssFeeds.ProfileId = profileid;
@@ -157,13 +177,18 @@ namespace SociobordRssDataServices.Rss
 
                         }
                     }
-                   
+                    //}
+                    //else
+                    //{
+                    //    apiHitsCount = 0;
+                    //}
                 }
                 if (profiletype == Domain.Socioboard.Enum.SocialProfileType.Twitter)
                 {
                     Model.DatabaseRepository dbr = new DatabaseRepository();
                     Domain.Socioboard.Models.TwitterAccount _TwitterAccount = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId == profileid).First();
-                  
+                    //if (_TwitterAccount.SchedulerUpdate.AddMinutes(15) <= DateTime.UtcNow)
+                    //{
                     if (_TwitterAccount != null)
                     {
                         if (_TwitterAccount.isActive)
@@ -211,7 +236,10 @@ namespace SociobordRssDataServices.Rss
                                         }
                                     }
 
-
+                                    if (string.IsNullOrEmpty(objRssFeeds.Message))
+                                    {
+                                        objRssFeeds.Message = item.ChildNodes[7].InnerText;
+                                    }
                                     try
                                     {
                                         objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
@@ -227,17 +255,33 @@ namespace SociobordRssDataServices.Rss
                                     {
                                         try
                                         {
+                                            objRssFeeds.Image = item.ChildNodes[1].InnerText;
+                                            objRssFeeds.Image = getBetween(objRssFeeds.Image, "src=\"", "\"");
                                             objRssFeeds.Link = item.ChildNodes[1].InnerText;
-
+                                            objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                                            if (string.IsNullOrEmpty(objRssFeeds.Link))
+                                            {
+                                                objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                            }
                                         }
                                         catch (Exception ex)
                                         {
                                             objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                            objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                                            if (string.IsNullOrEmpty(objRssFeeds.Link))
+                                            {
+                                                objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                            }
                                         }
                                     }
                                     else
                                     {
                                         objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                        objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                                        if (string.IsNullOrEmpty(objRssFeeds.Link))
+                                        {
+                                            objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                        }
                                     }
                                     objRssFeeds.RssFeedUrl = TextUrl;
                                     objRssFeeds.ProfileId = profileid;
@@ -280,7 +324,11 @@ namespace SociobordRssDataServices.Rss
                             dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
                         }
                     }
-                   
+                    //}
+                    //else
+                    //{
+                    //    twtapiHitsCount = 0;
+                    //}
                 }
 
 
@@ -290,6 +338,21 @@ namespace SociobordRssDataServices.Rss
             {
 
                 return "invalid url";
+            }
+        }
+
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
             }
         }
 
@@ -315,23 +378,33 @@ namespace SociobordRssDataServices.Rss
             }
             catch (Exception ex)
             {
+                if(ex.Message.Contains("Error validating access token: Session has expired on"))
+                {
+                    Model.DatabaseRepository dbr = new DatabaseRepository();
+                    Domain.Socioboard.Models.Facebookaccounts _Facebookaccounts = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == FbUserId).First();
+                    _Facebookaccounts.IsActive = false;
+                    dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(_Facebookaccounts);
+                }
                 Console.WriteLine(ex.Message);
                 apiHitsCount = MaxapiHitsCount;
                 return ret = "";
             }
         }
 
-
         public static string TwitterComposeMessageRss(string message, string OAuthToken, string OAuthSecret, string profileid, string TwitterScreenName, string rssFeedId)
         {
             string ret = "";
-            oAuthTwitter OAuthTwt = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey, Helper.AppSettings.twitterConsumerScreatKey, Helper.AppSettings.twitterRedirectionUrl);
-           
+            oAuthTwitter OAuthTwt = new oAuthTwitter("h4FT0oJ46KBBMwbcifqZMw", "yfowGI2g21E2mQHjtHjUvGqkfbI7x26WDCvjiSZOjas", "https://www.socioboard.com/TwitterManager/Twitter");
+            // oAuthTwitter OAuthTwt = new oAuthTwitter("MbOQl85ZcvRGvp3kkOOJBlbFS", "GF0UIXnTAX28hFhN1ISNf3tURHARZdKWlZrsY4PlHm9A4llYjZ", "http://serv1.socioboard.com/TwitterManager/Twitter");
             OAuthTwt.AccessToken = OAuthToken;
             OAuthTwt.AccessTokenSecret = OAuthSecret;
             OAuthTwt.TwitterScreenName = TwitterScreenName;
             OAuthTwt.TwitterUserId = profileid;
             Tweet twt = new Tweet();
+            if (message.Length>139)
+            {
+                message = message.Substring(0, 139); 
+            }
             MongoRepository rssfeedRepo = new MongoRepository("RssFeed");
             try
             {
@@ -351,5 +424,134 @@ namespace SociobordRssDataServices.Rss
                 return ret = "";
             }
         }
+
+        public static void updateRssContentFeeds(Domain.Socioboard.Models.Mongo.RssNewsContents _rssNews, string keywords)
+        {
+            ParseContentFeedUrl(_rssNews.RssFeedUrl, _rssNews.ProfileId, keywords);
+        }
+
+        public static string ParseContentFeedUrl(string RssFeedUrl, string ProfileId, string keywords)
+        {
+            MongoRepository _RssFeedRepository = new MongoRepository("RssNewsContentsFeeds");
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
+                xmlDoc.Load(RssFeedUrl);
+                var abc = xmlDoc.DocumentElement.GetElementsByTagName("item");
+
+                foreach (XmlElement item in abc)
+                {
+                    Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds objRssFeeds = new Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds();
+                    try
+                    {
+                        objRssFeeds.Id = ObjectId.GenerateNewId();
+                        // objRssFeeds.strId = ObjectId.GenerateNewId().ToString();
+                        try
+                        {
+                            objRssFeeds.Message = item.ChildNodes[9].InnerText;
+                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                            objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            try
+                            {
+                                if (item.ChildNodes[2].InnerText.Contains("www") && item.ChildNodes[2].InnerText.Contains("http"))
+                                {
+                                    objRssFeeds.Message = item.ChildNodes[1].InnerText;
+                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
+                                }
+                                else
+                                {
+                                    objRssFeeds.Message = item.ChildNodes[2].InnerText;
+                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
+                                }
+                            }
+                            catch
+                            {
+                                objRssFeeds.Message = item.ChildNodes[1].InnerText;
+                                objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
+                            }
+                        }
+
+
+                        try
+                        {
+                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
+                        }
+                        catch (Exception ex)
+                        {
+                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
+                        }
+
+                        objRssFeeds.Title = item.ChildNodes[0].InnerText;
+
+                        if (item.ChildNodes[1].InnerText.Contains("www") || item.ChildNodes[1].InnerText.Contains("http"))
+                        {
+                            try
+                            {
+                                objRssFeeds.Image = item.ChildNodes[1].InnerText;
+                                objRssFeeds.Image = getBetween(objRssFeeds.Image, "src=\"", "\"");
+                                objRssFeeds.Link = item.ChildNodes[1].InnerText;
+                                objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+
+
+                            }
+                            catch (Exception ex)
+                            {
+                                objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                            }
+                        }
+                        else
+                        {
+                            objRssFeeds.Link = item.ChildNodes[2].InnerText;
+
+
+                            //  objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                        }
+                        if (item.BaseURI.Contains("http://feeds.bbci.co.uk") || item.BaseURI.Contains("http://www.hindustantimes.com"))
+                        {
+                            objRssFeeds.Image = item.ChildNodes[5].OuterXml;
+                            objRssFeeds.Image = getBetween(objRssFeeds.Image, "url=\"", "\"");//media:content url="
+                        }
+
+
+
+                        objRssFeeds.RssFeedUrl = RssFeedUrl;
+                        objRssFeeds.UserId = ProfileId;
+                        objRssFeeds.keywords = keywords;
+
+
+                        var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>(t => t.Link == objRssFeeds.Link && t.UserId == ProfileId);
+                        var task = Task.Run(async () =>
+                        {
+                            return await ret;
+                        });
+                        int count = task.Result.Count;
+                        if (count < 1)
+                        {
+                            _RssFeedRepository.Add(objRssFeeds);
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+
+                }
+                return "ok";
+            }
+            catch (Exception ex)
+            {
+                return "Invalid Url";
+            }
+        }
+
     }
 }

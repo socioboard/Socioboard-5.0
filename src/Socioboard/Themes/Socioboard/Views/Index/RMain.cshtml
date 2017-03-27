@@ -686,6 +686,7 @@
             var facebookText = "";
             var url = "";
             var imgUrl = "";
+            var updatedmessage = "";
             if ($('.twitter-text-show').css('display') == 'block') {
                 twitterText = $('#txt-twt-message').val();
                 if (twitterText.length + +'@tweetUrlLength' > 140) {
@@ -702,6 +703,15 @@
             }
             if ($('.facebook-text-show').css('display') == 'block') {
                 facebookText = $('#txt-fb-message').val();
+                var postdata = facebookText.split("\n");
+                for (var i = 0; i < postdata.length; i++) {
+                    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                }
+                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+                updatedmessage = updatedmessage.replace("+", 'ppp');
+                updatedmessage = updatedmessage.replace("-+", 'jjj');
+                facebookText = updatedmessage;
                 @if(objplugin._ThumbnailDetails!=null)
                 {
                     @:if ($('#thumb-creator').css('display') == 'block') { url = "@objplugin._ThumbnailDetails.url"; }
@@ -798,13 +808,65 @@
             }
             var now = curdate.getFullYear() + "/" + mm + "/" + dd + " " + hh + ":" + minm + ":" + sec;
 
+            //var sdtime = $('#sd-date-time').val();
+            //var newdate1 = new Date(sdtime.replace("AM", "").replace("PM", "")).toUTCString();
+            //var d = new Date(newdate1);
+            //var d4 = d.setHours(d.getHours() + 12);
+            //var date = moment(d4);
+            //var newdate = new Date(date).toUTCString();
             var sdtime = $('#sd-date-time').val();
+            var d4 = '';
+            var newscheuletime = sdtime.split(" ");
+            var scheduledtime3 = newscheuletime[1] + ':00';
+            var schdd = scheduledtime3.split(":");
+            var shdd = schdd[0];
+            var shmin = schdd[1];
+            var shsec = schdd[2];
+            var newdate1 = new Date(sdtime.replace("AM", "").replace("PM", "")).toUTCString();
+            var d = new Date(newdate1);
+            var newd = new Date(now);
 
+            if (d.getYear() < new Date().getYear()) {
+                alert("Year value must be current or future");
+                return false;
+            } else {
+                if (d.getMonth() < new Date().getMonth()) {
+                    alert("Month value must be current or future");
+                    return false;
+                } else {
+                    if (d.getDate() <= new Date().getDate()) {
+                        //alert("Date value must be current or future");
+                        //return false;
+                        if (d.getMinutes() < new Date().getMinutes()) {
+                            alert("Time value must be current or future");
+                            return false;
+                        }
+                    }
+                    
+
+                }
+                
+
+            }
+            
+            if (newscheuletime[2] == "PM") {
+                if (shdd != "12") {
+                    d4 = d.setHours(d.getHours() + 12);
+                }
+                else {
+                    d4 = d.setHours(d.getHours());
+                }
+            } else {
+                d4 = d.setHours(d.getHours());
+            }
+
+            var date = moment(d4);
+            var newdate = new Date(date).toUTCString();
             var post = postData();
-
+           
             if (post != null) {
                 $.ajax({
-                    url: '../Home/PluginScheduleMessage?scheduleTime=' + sdtime + '&clientTime=' + now,
+                    url: '../Home/PluginScheduleMessage?scheduleTime=' + newdate + '&clientTime=' + now,
                     type: 'POST',
                     data: post,
                     beforeSend: function () {

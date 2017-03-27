@@ -250,7 +250,10 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
                                   var cookie = cookies[i];
                                   var eqPos = cookie.indexOf("=");
                                   var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                                  if (name.indexOf("socioboardplugin") > -1) {
+                                  if (name.indexOf("socioboardpluginemailId") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                                  if (name.indexOf("socioboardpluginToken") > -1) {
                                       document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
                                   }
                               }

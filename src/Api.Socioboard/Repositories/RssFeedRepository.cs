@@ -28,8 +28,8 @@ namespace Api.Socioboard.Repositories
                 _RssFeedUrl = new Domain.Socioboard.Models.RssFeedUrl();
                 _RssFeedUrl.rssurl = Url;
                 _RssFeedUrl.LastUpdate = DateTime.UtcNow;
-                dbr.Add<Domain.Socioboard.Models.RssFeedUrl>(_RssFeedUrl);
-                _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url));
+                 dbr.Add<Domain.Socioboard.Models.RssFeedUrl>(_RssFeedUrl);
+                _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url)&& t.Keywords==null);
                 return _RssFeedUrl;
             }
         }

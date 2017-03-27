@@ -10,6 +10,7 @@ using System.Compat.Web;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Socioboard.Controllers
 {
@@ -23,6 +24,39 @@ namespace Socioboard.Controllers
             _appSettings = settings.Value;
             _logger = logger;
         }
+
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user != null)
+            {
+                SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+                strdic.Add("UserName", user.EmailId);
+                if (string.IsNullOrEmpty(user.Password))
+                {
+                    strdic.Add("Password", "sociallogin");
+                }
+                else
+                {
+                    strdic.Add("Password", user.Password);
+                }
+
+                string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+
+                if (!string.IsNullOrEmpty(response))
+                {
+
+                }
+                else
+                {
+                    HttpContext.Session.Remove("User");
+                    HttpContext.Session.Remove("selectedGroupId");
+                    HttpContext.Session.Clear();
+                }
+            }
+            base.OnActionExecuting(filterContext);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> AddTwitterAccount(bool follow)

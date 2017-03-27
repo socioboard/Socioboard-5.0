@@ -208,12 +208,12 @@ namespace Api.Socioboard.Controllers
         {
             List<Domain.Socioboard.Helpers.PluginProfile> lstPluginProfile = new List<Domain.Socioboard.Helpers.PluginProfile>();
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId.Equals(userId) && (t.profileType==Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)).ToList();
+            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId.Equals(userId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)).ToList();
+            lstGroupprofiles = lstGroupprofiles.GroupBy(t => t.profileId).Select(g => g.First()).ToList();
             foreach (var item in lstGroupprofiles)
             {
                 try
                 {
-
                     if (item.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || item.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)
                     {
                         Domain.Socioboard.Models.Facebookaccounts _Facebookaccounts = FacebookRepository.getFacebookAccount(item.profileId, _redisCache, dbr);

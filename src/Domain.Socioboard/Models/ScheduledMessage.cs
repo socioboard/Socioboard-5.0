@@ -22,6 +22,7 @@ namespace Domain.Socioboard.Models
         public virtual string picUrl { get; set; }
         public virtual DateTime createTime { get; set; }
         public virtual string url { get; set; }
+        public virtual string link { get; set; }
         public virtual string socialprofileName { get; set; }
     }
     public class ScheduledMessageAdmin

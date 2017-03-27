@@ -13,20 +13,49 @@ namespace Api.Socioboard.Repositories
 {
     public class RssNewsContentsRepository
     {
-        public static string AddRssContentsUrl(string keywords, long userId, Helper.AppSettings _appSettings)
+        public static string AddRssContentsUrl(string keywords, long userId, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
+            
             MongoRepository _rssNewsContents = new MongoRepository("RssNewsContents", _appSettings);
-
+            //Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(url));
             List<string> list = new List<string>();
             list = findUrl(keywords).ToList();
 
             Domain.Socioboard.Models.Mongo.RssNewsContents _rssnews = new Domain.Socioboard.Models.Mongo.RssNewsContents();
+
+            Domain.Socioboard.Models.RssFeedUrl _RssContentFeeds = new Domain.Socioboard.Models.RssFeedUrl();
+           
 
             foreach (var urlValue in list)
             {
                 if (urlValue != null)
                 {
                     string rt = ParseFeedUrl(urlValue.ToString(), keywords, userId.ToString(), _appSettings);
+                    
+                    _RssContentFeeds = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(urlValue) && t.Keywords!=null);
+
+                    if (_RssContentFeeds != null)
+                    {
+                        //return _RssFeedUrl.ToString();
+                    }
+                    else
+                    {
+                        _RssContentFeeds = new Domain.Socioboard.Models.RssFeedUrl();
+                        _RssContentFeeds.rssurl = urlValue;
+                        _RssContentFeeds.LastUpdate = DateTime.UtcNow;
+                        _RssContentFeeds.Keywords = keywords;
+                        try
+                        {
+                            dbr.Add<Domain.Socioboard.Models.RssFeedUrl>(_RssContentFeeds);
+                        }
+                        catch (Exception error)
+                        {
+
+                        }
+                        
+                        //_RssContentFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(urlValue) && t.Keywords == null);
+                        //return urlValue;
+                    }
                     var ret = _rssNewsContents.Find<Domain.Socioboard.Models.Mongo.RssNewsContents>(t => t.RssFeedUrl.Equals(urlValue) && t.ProfileId.Contains(userId.ToString()));
                     var task = Task.Run(async () =>
                     {
@@ -36,7 +65,6 @@ namespace Api.Socioboard.Repositories
                     if (count < 1)
                     {
                         _rssnews.Id = ObjectId.GenerateNewId();
-                        //_rssnews.strId = ObjectId.GenerateNewId();
                         _rssnews.ProfileId = userId.ToString();
                         _rssnews.RssFeedUrl = urlValue.ToString();
                         _rssnews.LastUpdate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
@@ -49,10 +77,10 @@ namespace Api.Socioboard.Repositories
                 }
 
             }
-            return "ok";
+            return "added successfully";
         }
 
-        public static string[] findUrl(string keywords)
+        public static List<string> findUrl(string keywords)
         {
             Domain.Socioboard.Helpers.UrlRSSfeedsNews obj_reqest = new Domain.Socioboard.Helpers.UrlRSSfeedsNews();
             //Globalrequest obj_reqest = new Globalrequest();
@@ -69,8 +97,9 @@ namespace Api.Socioboard.Repositories
             string responce_BBC = obj_reqest.getHtmlfromUrl(new Uri(BBC));
             string responce_HinduTime = obj_reqest.getHtmlfromUrl(new Uri(hinduTimes));
             string responce_Baskar = obj_reqest.getHtmlfromUrl(new Uri(Baskar));
-            string[] url = new string[4];
+           string[] url = new string[4];
 
+            //List<string> url = null;
             List<string> lstkeyword = null;
 
             //List<string> listUrl = null;
@@ -79,7 +108,7 @@ namespace Api.Socioboard.Repositories
             if (keywords != null)
             {
                 lstkeyword = keywords.Split(',').ToList();
-                keywords = lstkeyword[0];
+               // keywords = lstkeyword[0];
             }
             else
             {
@@ -88,7 +117,8 @@ namespace Api.Socioboard.Repositories
 
             foreach (var keywordslist in lstkeyword)
             {
-                if (responce_BBC.Contains(keywords))
+                
+                if (responce_BBC.Contains(keywordslist))
                 {
                     try
                     {
@@ -99,8 +129,9 @@ namespace Api.Socioboard.Repositories
                         {
                             try
                             {
-                                if (item.Contains(keywords))
+                                if (item.Contains(keywordslist))
                                 {
+                                    //url[0] = null;
                                     url[0] = obj_reqest.getBetween(item, "href=\"", "\"");
                                     break;
                                 }
@@ -116,7 +147,7 @@ namespace Api.Socioboard.Repositories
 
                     }
                 }
-                if (responce_TOI.Contains(keywords))
+                if (responce_TOI.Contains(keywordslist))
                 {
                     try
                     {
@@ -126,7 +157,7 @@ namespace Api.Socioboard.Repositories
                         {
                             try
                             {
-                                if ((item.Contains(keywords)) && (!item.Contains(">More</a>")))
+                                if ((item.Contains(keywordslist)) && (!item.Contains(">More</a>")))
                                 {
                                     url[1] = obj_reqest.getBetween(item, "url=", "\">");
                                     break;
@@ -143,7 +174,7 @@ namespace Api.Socioboard.Repositories
 
                     }
                 }
-                if (responce_HinduTime.Contains(keywords))
+                if (responce_HinduTime.Contains(keywordslist))
                 {
                     try
                     {
@@ -153,7 +184,7 @@ namespace Api.Socioboard.Repositories
                         {
                             try
                             {
-                                if (item.Contains(keywords))
+                                if (item.Contains(keywordslist))
                                 {
                                     url[2] = obj_reqest.getBetween(item, "href=\"", "\"");
                                     break;
@@ -170,7 +201,7 @@ namespace Api.Socioboard.Repositories
 
                     }
                 }
-                if (responce_Baskar.Contains(keywords))
+                if (responce_Baskar.Contains(keywordslist))
                 {
                     try
                     {
@@ -180,7 +211,7 @@ namespace Api.Socioboard.Repositories
                         {
                             try
                             {
-                                if (item.Contains(keywords))
+                                if (item.Contains(keywordslist))
                                 {
                                     string[] value = Regex.Split(item, "<td>");
                                     url[3] = obj_reqest.getBetween(value[2], "href=\"", "\"");
@@ -199,10 +230,22 @@ namespace Api.Socioboard.Repositories
                     }
                 }
 
-                list.Add(url.ToString());
+                foreach (var itemurl in url)
+                {
+                    if(list.Contains(itemurl))
+                    {
+                        
+                    }
+                    else
+                    {
+                        list.Add(itemurl);
+                    }
+                }
+
+                
             }
 
-            return url;
+            return list;
         }
 
 

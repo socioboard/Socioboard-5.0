@@ -113,7 +113,7 @@ namespace Api.Socioboard.Controllers
 
             foreach (var item in lstProfileIds)
             {
-               
+
                 if (item.StartsWith("fb"))
                 {
                     try
@@ -185,7 +185,6 @@ namespace Api.Socioboard.Controllers
             return Ok("Posted");
 
         }
-
         [HttpPost("ScheduleMessage")]
         public async Task<ActionResult> ScheduleMessage(string message, string profileId, long userId, string imagePath, string link, string scheduledatetime, IFormFile files)
         {
@@ -270,7 +269,7 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(3, item.Length - 3);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {
@@ -284,7 +283,7 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(5, item.Length - 5);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {
@@ -298,7 +297,7 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(3, item.Length - 3);
                         Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objTwitterAccount.twitterScreenName, message, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, filename, objTwitterAccount.profileImageUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objTwitterAccount.twitterScreenName, message, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId,"" ,filename, objTwitterAccount.profileImageUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {
@@ -313,7 +312,7 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(4, item.Length - 4);
                         Domain.Socioboard.Models.LinkedInAccount objLinkedInAccount = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedInAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, filename, objLinkedInAccount.ProfileImageUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, "",filename, objLinkedInAccount.ProfileImageUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {
@@ -328,7 +327,7 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(12, item.Length - 12);
                         Domain.Socioboard.Models.LinkedinCompanyPage objLinkedinCompanyPage = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId, filename, objLinkedinCompanyPage.LogoUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId,"" ,filename, objLinkedinCompanyPage.LogoUrl, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {
@@ -341,11 +340,11 @@ namespace Api.Socioboard.Controllers
             }
             return Ok("scheduled");
         }
-
         [HttpPost("PluginComposemessage")]
         public IActionResult PluginComposemessage(string profile, string twitterText, string tweetId, string tweetUrl, string facebookText, string url, string imgUrl, long userId)
         {
             string[] profiles = profile.Split(',');
+            string postmessage = "";
             foreach (var item in profiles)
             {
                 string[] ids = item.Split('~');
@@ -353,6 +352,32 @@ namespace Api.Socioboard.Controllers
                 {
                     DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
                     Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(ids[0], _redisCache, dbr);
+                    string[] updatedmessgae = Regex.Split(facebookText, "<br>");
+                    foreach (var items in updatedmessgae)
+                    {
+                        if (!string.IsNullOrEmpty(items))
+                        {
+                            if (items.Contains("https://") || items.Contains("http://"))
+                            {
+                                if (string.IsNullOrEmpty(url))
+                                {
+                                    url = items;
+                                }
+                            }
+                            if (items.Contains("hhh") || items.Contains("nnn"))
+                            {
+                                if (items.Contains("hhh"))
+                                {
+                                    postmessage = postmessage + "\n\r" + items.Replace("hhh", "#");
+                                }
+                            }
+                            else
+                            {
+                                postmessage = postmessage + "\n\r" + items;
+                            }
+                        }
+                    }
+                    facebookText = postmessage;
                     string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, facebookText, ids[0], userId, imgUrl, url, dbr, _logger);
                 }
                 else
@@ -371,39 +396,78 @@ namespace Api.Socioboard.Controllers
             }
             return Ok();
         }
-
         [HttpPost("PluginScheduleMessage")]
         public IActionResult PluginScheduleMessage(string profile, string twitterText, string tweetId, string tweetUrl, string facebookText, string url, string imgUrl, long userId, string scheduleTime)
         {
             string[] profiles = profile.Split(',');
+            string postmessage = "";
             foreach (var item in profiles)
             {
                 string[] ids = item.Split('~');
                 if (ids[1] == "facebook")
                 {
-                    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-                    Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(ids[0], _redisCache, dbr);
-                    Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objFacebookAccount.FbUserName, facebookText.ToString(), Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, imgUrl, "https://graph.facebook.com/" + ids[0] + "/picture?type=small", scheduleTime, _appSettings, _redisCache, dbr, _logger);
+                    try
+                    {
+                        string updatedtext = "";
+                        string[] updatedmessgae = Regex.Split(facebookText, "<br>");
+                        foreach (var items in updatedmessgae)
+                        {
+                            if (!string.IsNullOrEmpty(items))
+                            {
+                                if (items.Contains("https://") || items.Contains("http://"))
+                                {
+                                    if (string.IsNullOrEmpty(url))
+                                    {
+                                        url = items; 
+                                    }
+                                    
+                                }
+                                if (items.Contains("hhh") || items.Contains("nnn"))
+                                {
+                                    if (items.Contains("hhh"))
+                                    {
+                                        postmessage = postmessage + "\n\r" + items.Replace("hhh", "#");
+                                    }
+                                }
+                                else
+                                {
+                                    postmessage = postmessage + "\n\r" + items;
+                                }
+                            }
+                        }
+                        updatedtext = postmessage;
+                        DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(ids[0], _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objFacebookAccount.FbUserName, updatedtext.ToString(), Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, url,imgUrl ,"https://graph.facebook.com/" + ids[0] + "/picture?type=small", scheduleTime, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
                 }
                 else
                 {
-                    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-                    if (!string.IsNullOrEmpty(twitterText) || !string.IsNullOrEmpty(imgUrl))
+                    try
                     {
-                        twitterText = twitterText + " " + tweetUrl;
-                        Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(ids[0], _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objTwitterAccount.twitterScreenName, twitterText, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, imgUrl, objTwitterAccount.profileImageUrl, scheduleTime, _appSettings, _redisCache, dbr, _logger);
+                        DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                        if (!string.IsNullOrEmpty(twitterText) || !string.IsNullOrEmpty(imgUrl))
+                        {
+                            twitterText = twitterText + " " + tweetUrl;
+                            Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(ids[0], _redisCache, dbr);
+                            Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objTwitterAccount.twitterScreenName, twitterText, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId,"" ,imgUrl, objTwitterAccount.profileImageUrl, scheduleTime, _appSettings, _redisCache, dbr, _logger);
+                        }
+                        else
+                        {
+                            string data = TwitterRepository.TwitterRetweet_post(ids[0], tweetId, userId, 0, dbr, _logger, _redisCache, _appSettings);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        string data = TwitterRepository.TwitterRetweet_post(ids[0], tweetId, userId, 0, dbr, _logger, _redisCache, _appSettings);
+                        
                     }
                 }
             }
             return Ok();
         }
-
-
         [HttpPost("UploadImageplugin")]
         public IActionResult UploadImageplugin(IFormFile files)
         {
@@ -444,9 +508,6 @@ namespace Api.Socioboard.Controllers
             }
             return Ok(uploads);
         }
-
-
-
         [HttpPost("DraftScheduleMessage")]
         public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId, IFormFile files)
         {
@@ -498,7 +559,7 @@ namespace Api.Socioboard.Controllers
                     }
                 }
             }
-            if(scheduledatetime==null)
+            if (scheduledatetime == null)
             {
                 scheduledatetime = DateTime.UtcNow.ToString();
             }
@@ -508,7 +569,6 @@ namespace Api.Socioboard.Controllers
             Helper.ScheduleMessageHelper.DraftScheduleMessage(message, userId, groupId, filename, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
             return Ok();
         }
-
         [HttpGet("GetAllScheduleMessage")]
         public IActionResult GetAllScheduleMessage(long userId, long groupId)
         {
@@ -516,7 +576,6 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getUsreScheduleMessage(userId, groupId, _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage);
         }
-
         [HttpGet("DeleteSocialMessages")]
         public IActionResult DeleteSocialMessages(long socioqueueId, long userId, long GroupId)
         {
@@ -524,7 +583,6 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.DeleteSocialMessages(socioqueueId, userId, GroupId, _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage);
         }
-
         [HttpGet("EditScheduleMessage")]
         public IActionResult EditScheduleMessage(long socioqueueId, long userId, long GroupId, string message)
         {
@@ -566,8 +624,6 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduleMessage = Repositories.ScheduledMessageRepository.EditScheduleMessage(socioqueueId, userId, GroupId, message, _redisCache, _appSettings, dbr);
             return Ok(lstScheduleMessage);
         }
-
-
         [HttpGet("GetAllSentMessages")]
         public IActionResult GetAllSentMessages(long userId, long groupId)
         {
@@ -575,7 +631,6 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.GetAllSentMessages(userId, groupId, _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
-
         [HttpGet("GetAllSentMessagesCount")]
         public IActionResult GetAllSentMessagesCount(long userId, long groupId)
         {
@@ -583,7 +638,6 @@ namespace Api.Socioboard.Controllers
             int GetAllSentMessagesCount = Repositories.ScheduledMessageRepository.GetAllSentMessagesCount(userId, groupId, dbr, _redisCache);
             return Ok(GetAllSentMessagesCount);
         }
-
         [HttpGet("getAllSentMessageDetailsforADay")]
         public IActionResult getAllSentMessageDetailsforADay(long userId, long groupId, string day)
         {
@@ -591,7 +645,6 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsforADay(userId, groupId, int.Parse(day), _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
-
         [HttpGet("getAllSentMessageDetailsByDays")]
         public IActionResult getAllSentMessageDetailsByDays(long userId, long groupId, string days)
         {
@@ -599,7 +652,6 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsByDays(userId, groupId, int.Parse(days), _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
-
         [HttpGet("getAllSentMessageDetailsByMonth")]
         public IActionResult getAllSentMessageDetailsByMonth(long userId, long groupId, string month)
         {
@@ -607,8 +659,6 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsByMonth(userId, groupId, int.Parse(month), _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
-
-
         [HttpGet("GetAllScheduleMessageCalendar")]
         public IActionResult GetAllScheduleMessageCalendar(long userId, long groupId)
         {
@@ -636,8 +686,6 @@ namespace Api.Socioboard.Controllers
             var rows = eventList.ToArray();
             return Ok(rows);
         }
-
-
         public static string CompareDateWithclient(string clientdate, string scheduletime)
         {
             try
@@ -674,6 +722,8 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+
+        
 
     }
 }

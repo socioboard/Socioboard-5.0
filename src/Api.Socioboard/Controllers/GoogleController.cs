@@ -214,6 +214,213 @@ namespace Api.Socioboard.Controllers
 
         }
 
+        [HttpPost("GoogleLoginPhone")]
+        public IActionResult GoogleLoginPhone(string refreshToken,string accessToken, Domain.Socioboard.Enum.SBAccountType accType)
+        {
+            string ret = string.Empty;
+            string objRefresh = string.Empty;
+
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            oAuthToken objToken = new oAuthToken(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            JObject userinfo = new JObject();
+            try
+            {
+                string user = objToken.GetUserInfo("self", accessToken);
+                _logger.LogInformation(user);
+                userinfo = JObject.Parse(JArray.Parse(user)[0].ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                ret = "Access Token Not Found";
+                return Ok(ret);
+            }
+
+            string EmailId = string.Empty;
+            try
+            {
+                EmailId = (Convert.ToString(userinfo["email"]));
+            }
+            catch { }
+            if (string.IsNullOrEmpty(EmailId))
+            {
+                return Ok("Google Not retuning Email");
+            }
+
+
+            try
+            {
+                User inMemUser = _redisCache.Get<User>(EmailId);
+                if (inMemUser != null)
+                {
+                    return Ok(inMemUser);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+            }
+
+
+
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
+            if (lstUser != null && lstUser.Count() > 0)
+            {
+                DateTime d1 = DateTime.UtcNow;
+                //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
+                //userTable.LastLoginTime = d1;
+                lstUser.First().LastLoginTime = d1;
+                dbr.Update<User>(lstUser.First());
+                _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
+                return Ok(lstUser.First());
+            }
+            else
+            {
+                Domain.Socioboard.Models.Googleplusaccounts gplusAcc = Api.Socioboard.Repositories.GplusRepository.getGPlusAccount(Convert.ToString(userinfo["id"]), _redisCache, dbr);
+                if (gplusAcc != null && gplusAcc.IsActive == true)
+                {
+                    return Ok("GPlus account added by other user.");
+                }
+
+
+                Domain.Socioboard.Models.User user = new Domain.Socioboard.Models.User();
+                if (accType == Domain.Socioboard.Enum.SBAccountType.Free)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Deluxe;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Premium)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Premium;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Topaz)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Topaz;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Platinum)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Platinum;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Gold)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Gold;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Ruby)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Ruby;
+
+                }
+                else if (accType == Domain.Socioboard.Enum.SBAccountType.Standard)
+                {
+                    user.AccountType = Domain.Socioboard.Enum.SBAccountType.Standard;
+
+                }
+                user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
+                user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
+                user.CreateDate = DateTime.UtcNow;
+                user.EmailId = EmailId;
+                user.ExpiryDate = DateTime.UtcNow.AddDays(1);
+                user.UserName = "Socioboard";
+                user.EmailValidateToken = "Google";
+                user.UserType = "User";
+                user.LastLoginTime = DateTime.UtcNow;
+                user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
+                try
+                {
+                    user.FirstName = (Convert.ToString(userinfo["name"]));
+                }
+                catch { }
+                user.RegistrationType = Domain.Socioboard.Enum.SBRegistrationType.Google;
+
+                int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
+                User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
+                if (SavedStatus == 1 && nuser != null)
+                {
+                    Groups group = new Groups();
+                    group.adminId = nuser.Id;
+                    group.createdDate = DateTime.UtcNow;
+                    group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
+                    SavedStatus = dbr.Add<Groups>(group);
+                    if (SavedStatus == 1)
+                    {
+                        Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == nuser.Id && t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
+                        GroupMembersRepository.createGroupMember(ngrp.id, nuser, _redisCache, dbr);
+                        // Adding GPlus Profile
+                        Api.Socioboard.Repositories.GplusRepository.AddGplusAccount(userinfo, dbr, nuser.Id, ngrp.id, accessToken, refreshToken, _redisCache, _appSettings, _logger);
+                    }
+                }
+                return Ok(nuser);
+            }
+
+
+
+
+        }
+
+        [HttpPost("AddGoogleAccountPhone")]
+        public IActionResult AddGoogleAccountPhone(string refreshToken, string accessToken, long groupId, long userId)
+        {
+
+            string ret = string.Empty;
+            string objRefresh = string.Empty;
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            oAuthToken objToken = new oAuthToken(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            JObject userinfo = new JObject();
+            try
+            {
+                string user = objToken.GetUserInfo("self",accessToken);
+                //_logger.LogInformation(user);
+                userinfo = JObject.Parse(JArray.Parse(user)[0].ToString());
+                string people = objToken.GetPeopleInfo("self", accessToken, Convert.ToString(userinfo["id"]));
+                userinfo = JObject.Parse(JArray.Parse(people)[0].ToString());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                ret = "Access Token Not Found";
+                return Ok(ret);
+            }
+            Domain.Socioboard.Models.Googleplusaccounts gplusAcc = Api.Socioboard.Repositories.GplusRepository.getGPlusAccount(Convert.ToString(userinfo["id"]), _redisCache, dbr);
+
+            if (gplusAcc != null && gplusAcc.IsActive == true)
+            {
+                if (gplusAcc.UserId == userId)
+                {
+                    return Ok("GPlus account already added by you.");
+                }
+                return Ok("GPlus account added by other user.");
+            }
+            Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
+            if (ngrp == null)
+            {
+                return Ok("group not exist");
+            }
+            // Adding GPlus Profile
+            int x = Api.Socioboard.Repositories.GplusRepository.AddGplusAccount(userinfo, dbr, userId, ngrp.id, accessToken, refreshToken, _redisCache, _appSettings, _logger);
+            if (x == 1)
+            {
+                return Ok("Gplus Account Added Successfully");
+            }
+            else
+            {
+                return Ok("Issues while adding account");
+            }
+        }
 
 
         [HttpPost("AddGoogleAccount")]

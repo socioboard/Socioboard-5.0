@@ -156,11 +156,9 @@ namespace Api.Socioboard.Controllers
         [HttpGet("RssNewsFeedsUrl")]
         public IActionResult RssNewsFeedsUrl(long userId, string keyword )
         {
-
-            string res = Repositories.RssNewsContentsRepository.AddRssContentsUrl(keyword, userId, _appSettings);
-            return Ok(res);
-           
-        
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string res = Repositories.RssNewsContentsRepository.AddRssContentsUrl(keyword, userId, _appSettings, dbr);
+            return Ok(res);    
         }
 
 

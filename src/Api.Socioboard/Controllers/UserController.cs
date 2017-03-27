@@ -60,7 +60,7 @@ namespace Api.Socioboard.Controllers
             user.UserType = "User";
             user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
             user.LastLoginTime = DateTime.UtcNow;
-            if (user.AccountType== Domain.Socioboard.Enum.SBAccountType.Free)
+            if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
             {
                 user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
             }
@@ -234,7 +234,7 @@ namespace Api.Socioboard.Controllers
                     {
                         return Ok(lstUser.First());
                     }
-                    else if(lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.MailSent)
+                    else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.MailSent)
                     {
                         return Ok("Activate your account through email");
                     }
@@ -252,6 +252,53 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("EmailId Not Exist");
             }
+        }
+
+
+        [HttpPost("CheckUserLogin")]
+        public IActionResult CheckUserLogin(UserLoginViewModel user)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.UserName));
+            if (lstUser != null && lstUser.Count() > 0)
+            {
+                if (user.Password == "sociallogin")
+                {
+                    UserLoginViewModel obj = new UserLoginViewModel();
+                    user.Password = obj.Password;
+                }
+                //lstUser.First().Password != null &&
+                //if (lstUser.First().Password.Equals(user.Password)  && )
+                //{
+                //    return Ok("success");
+                //}
+                if (lstUser.First().Password == "")
+                {
+                    lstUser.First().Password = null;
+                }
+                if (string.IsNullOrEmpty(lstUser.First().Password) && string.IsNullOrEmpty(user.Password))
+                {
+                    return Ok(lstUser.First());
+                }
+                else if (lstUser.First().Password.Equals(user.Password))
+                {
+                    return Ok(lstUser.First());
+                }
+                else if (lstUser.First().Password.Equals(SBHelper.MD5Hash(user.Password)))
+                {
+                    return Ok(lstUser.First());
+                }
+                else
+                {
+                    return BadRequest();
+                }
+            }
+            else
+            {
+                return BadRequest();
+            }
+
         }
 
 
@@ -380,11 +427,11 @@ namespace Api.Socioboard.Controllers
                 while (DateTime.Now.AddMonths(1).Month != date.Month);
             }
             //DateTime date= selecteddate.AddDays(-(DateTime.UtcNow.Day - 1)).AddMonths(-11);
-           
+
 
             return Json(paidUser);
-           
-          //  return strPaidUserCount.TrimEnd(',') + "_#_" + strUnPaidUserCount.TrimEnd(',') + "_#_" + month;
+
+            //  return strPaidUserCount.TrimEnd(',') + "_#_" + strUnPaidUserCount.TrimEnd(',') + "_#_" + month;
 
 
 
@@ -462,13 +509,13 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("AdminAddNewsLetter")]
-        public IActionResult AdminAddNewsLetter(string Advertisement, string img_url,DateTime startdate, DateTime date, IFormFile files)
+        public IActionResult AdminAddNewsLetter(string Advertisement, string img_url, DateTime startdate, DateTime date, IFormFile files)
         {
 
             var filename = "";
             var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\" + Advertisement;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            NewsLetter newsletter =new NewsLetter();
+            NewsLetter newsletter = new NewsLetter();
             DateTime currentdate = DateTime.Now.AddDays(-1);
             //if (img_url != null)
             //{
@@ -479,7 +526,7 @@ namespace Api.Socioboard.Controllers
             //if (files != null)
             //{
 
-            if (files!=null)
+            if (files != null)
             {
                 if (currentdate < date)
                 {
@@ -523,16 +570,16 @@ namespace Api.Socioboard.Controllers
 
 
             int res = dbr.Add<NewsLetter>(newsletter);
-                if (res == 1)
-                {
+            if (res == 1)
+            {
                 //Console.WriteLine("News letter saved");
-                    return Ok("News letter saved");
-                }
-                else
-                {
-                    return Ok("issue while saving.");
-                }
-            
+                return Ok("News letter saved");
+            }
+            else
+            {
+                return Ok("issue while saving.");
+            }
+
         }
 
         [HttpPost("AddCoupons")]
@@ -591,13 +638,13 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetUserAdmin")]
         public IActionResult GetUserAdmin(int value)
         {
-           
+
             List<User> user = new List<Domain.Socioboard.Models.User>();
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             int i = 500;
-        
+
             //bool val = true;
-           
+
             user = dbr.Find<User>(t => t.ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active && t.UserType == "User").Skip(value).Take(i).ToList();
             int count = dbr.GetCount<User>(t => t.Id != null);
             //User user = dbr.Single<User>(t => t.Id == Id);
@@ -615,11 +662,11 @@ namespace Api.Socioboard.Controllers
                 return NotFound();
             }
 
-           
+
         }
 
         [HttpGet("GetUserAdminFilter")]
-        public IActionResult GetUserAdminFilter(Domain.Socioboard.Enum.SBAccountType plan,Domain.Socioboard.Enum.SBPaymentStatus paymentstatus,int nullplan, int nullpaymentstatus)
+        public IActionResult GetUserAdminFilter(Domain.Socioboard.Enum.SBAccountType plan, Domain.Socioboard.Enum.SBPaymentStatus paymentstatus, int nullplan, int nullpaymentstatus)
         {
 
             List<User> user = new List<Domain.Socioboard.Models.User>();
@@ -628,7 +675,7 @@ namespace Api.Socioboard.Controllers
             {
                 user = dbr.Find<User>(t => t.AccountType == plan && t.PaymentStatus == paymentstatus).ToList();
             }
-            else if(nullplan!=-1 && nullpaymentstatus==-1)
+            else if (nullplan != -1 && nullpaymentstatus == -1)
             {
                 user = dbr.Find<User>(t => t.AccountType == plan).ToList();
             }
@@ -675,7 +722,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<NewsLetter> newsletter = dbr.Find<NewsLetter>(t => t.Subject != null).ToList();
-            
+
             if (newsletter != null)
             {
                 return Ok(newsletter);
@@ -696,7 +743,7 @@ namespace Api.Socioboard.Controllers
             Package package = dbr.Single<Package>(t => t.id == id);
             if (package != null)
             {
-                
+
                 package.amount = amount;
 
                 int res = dbr.Update<Package>(package);
@@ -717,7 +764,7 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("UpdateNewsLetterAdmin")]
-        public IActionResult UpdateNewsLetterAdmin(string NewsLetterBody, string Subject,DateTime startDate, DateTime ExpiryDate, long Id, IFormFile files)
+        public IActionResult UpdateNewsLetterAdmin(string NewsLetterBody, string Subject, DateTime startDate, DateTime ExpiryDate, long Id, IFormFile files)
         {
             var filename = "";
             //var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\" + Advertisement;
@@ -726,45 +773,45 @@ namespace Api.Socioboard.Controllers
 
             if (newsletter != null)
             {
-                    //newsletter.NewsLetterBody = NewsLetterBody;
+                //newsletter.NewsLetterBody = NewsLetterBody;
 
-                    var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
-                    filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
-                            .Parse(files.ContentDisposition)
-                            .FileName
-                            .Trim('"');
-                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
-                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
-                    var uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
-                    try
+                var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+                filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                        .Parse(files.ContentDisposition)
+                        .FileName
+                        .Trim('"');
+                var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+                var uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+                try
+                {
+                    using (FileStream fs = System.IO.File.Create(filename))
                     {
-                        using (FileStream fs = System.IO.File.Create(filename))
-                        {
-                            files.CopyTo(fs);
-                            fs.Flush();
-                        }
+                        files.CopyTo(fs);
+                        fs.Flush();
                     }
-                    catch (Exception ex)
-                    {
+                }
+                catch (Exception ex)
+                {
 
-                    }
-                    filename = uploads;
+                }
+                filename = uploads;
 
-                    newsletter.NewsLetterBody = uploads;
-                    newsletter.Subject = Subject;
-                    newsletter.startdate = startDate;
-                    newsletter.ExpiryDate = ExpiryDate;
+                newsletter.NewsLetterBody = uploads;
+                newsletter.Subject = Subject;
+                newsletter.startdate = startDate;
+                newsletter.ExpiryDate = ExpiryDate;
 
-                    int res = dbr.Update<NewsLetter>(newsletter);
-                    if (res == 1)
-                    {
-                        //_redisCache.Delete(package.EmailId);
-                        return Ok("News Letter detail updated");
-                    }
-                    else
-                    {
-                        return Ok("issue while updating");
-                    }
+                int res = dbr.Update<NewsLetter>(newsletter);
+                if (res == 1)
+                {
+                    //_redisCache.Delete(package.EmailId);
+                    return Ok("News Letter detail updated");
+                }
+                else
+                {
+                    return Ok("issue while updating");
+                }
             }
             else
             {
@@ -825,7 +872,7 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("UpdateCouponrAdmin")]
-        public IActionResult UpdateCouponrAdmin(string coupon, int discount,DateTime entrydate,DateTime expirydate,long userid)
+        public IActionResult UpdateCouponrAdmin(string coupon, int discount, DateTime entrydate, DateTime expirydate, long userid)
         {
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
@@ -836,7 +883,7 @@ namespace Api.Socioboard.Controllers
                 coupons.Discount = discount;
                 coupons.EntryCouponDate = entrydate;
                 coupons.ExpCouponDate = expirydate;
-               
+
                 int res = dbr.Update<Coupons>(coupons);
                 if (res == 1)
                 {
@@ -880,7 +927,7 @@ namespace Api.Socioboard.Controllers
                     _ScheduledMessageAdmin.messageremainingCount = remaining;
                     lstScheduledMessageAdmin.Add(_ScheduledMessageAdmin);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
 
                 }
@@ -1046,7 +1093,7 @@ namespace Api.Socioboard.Controllers
                     string html = System.IO.File.ReadAllText(path);
                     html = html.Replace("[FirstName]", user.FirstName);
                     html = html.Replace("[AccountType]", user.AccountType.ToString());
-                    html = html.Replace("[ActivationLink]", _appSettings.Domain+"/Home/Active?Token=" + user.EmailValidateToken + "&id=" + user.Id);
+                    html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + user.EmailValidateToken + "&id=" + user.Id);
 
 
                     _emailSender.SendMailSendGrid(_appSettings.frommail, "", user.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
@@ -1676,7 +1723,7 @@ namespace Api.Socioboard.Controllers
             if (_user != null)
             {
                 _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Paid;
-                if(_user.AccountType==Domain.Socioboard.Enum.SBAccountType.Free)
+                if (_user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
                 {
                     _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
                 }
@@ -1706,7 +1753,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetPlans()
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Package> lstplan = dbr.Find<Package>(t => t.id<8).ToList();
+            List<Package> lstplan = dbr.Find<Package>(t => t.id < 8).ToList();
             return Ok(lstplan);
         }
 

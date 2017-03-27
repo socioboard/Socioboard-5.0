@@ -307,7 +307,7 @@ namespace Socioboard.Controllers
         [HttpGet]
         public async Task<IActionResult> SBApp(string profileType, string url, string content, string imageUrl, string name, string userImage, string screenName, string tweet, string tweetId, string type,string EmailId)
         {
-
+            string password = "";
             Domain.Socioboard.Helpers.PluginData _PluginData = new Domain.Socioboard.Helpers.PluginData();
             _PluginData.profileType = profileType;
             _PluginData.content = content;
@@ -322,18 +322,35 @@ namespace Socioboard.Controllers
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
             {
-                if (!string.IsNullOrEmpty(EmailId))
+                if (Request.Cookies["socioboardpluginemailId"] != null)
                 {
-                    List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
-                    HttpResponseMessage _response = await WebApiReq.GetReq("/api/User/GetUserData?emailId=" + EmailId, "", "", _appSettings.ApiDomain);
+                    EmailId = Request.Cookies["socioboardpluginemailId"].ToString();
+                    EmailId = PluginHelper.Base64Decode(EmailId);
+                }
+                if (Request.Cookies["socioboardpluginToken"] != null)
+                {
+                    password = Request.Cookies["socioboardpluginToken"].ToString();
+                    password = PluginHelper.Base64Decode(password);
+                }
+                if (!string.IsNullOrEmpty(EmailId) && !string.IsNullOrEmpty(password))
+                {
+                    List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+                    Parameters.Add(new KeyValuePair<string, string>("UserName", EmailId));
+                    Parameters.Add(new KeyValuePair<string, string>("Password", password));
+                    HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/CheckUserLogin", Parameters, "", "", _appSettings.ApiDomain);
                     if (_response.IsSuccessStatusCode)
                     {
                         try
                         {
-                           user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                            HttpContext.Session.SetObjectAsJson("User", user);
+                             user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                             HttpContext.Session.SetObjectAsJson("User", user);
                         }
                         catch { }
+                    }
+                    else
+                    {
+                        ViewBag.User = "false";
+                        return View("Rlogin");
                     }
                 }
             }
@@ -370,6 +387,21 @@ namespace Socioboard.Controllers
             if (user != null)
             {
                 return Content("user");
+            }
+            else
+            {
+                return Content("");
+            }
+        }
+
+
+        [HttpPost]
+        public ActionResult IsUserSessionPlugin()
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user != null)
+            {
+                return Content(user.EmailId);
             }
             else
             {
