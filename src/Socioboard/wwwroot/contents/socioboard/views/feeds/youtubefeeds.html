@@ -1,0 +1,282 @@
+<div data-ng-controller="YoutubeFeedsController">
+  <!-- START CONTENT -->
+  <section id="content">
+      <!--start container-->
+      <!--card widgets end-->
+        <div class="row">
+            <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                <div class="card" id="feeds">
+                    <h5 class="feeds_title white-text" style="background-color:#c4302b"><i class="fa fa-youtube-play"></i>Youtube Live feeds</h5>
+                    <ul>
+                        <div class="youtubefeeds">
+                            <div class="row">
+                                <div class="col s12 m6 l6" style="height:550px" ng-repeat="videos in lstYtFeeds">
+                                    <div class="card  hoverable">
+                                        <a class="modal-trigger" ng-click="videomodal(videos.vdoTitle,videos.ytVideoId)">
+                                            <div class="modal-content">
+                                                <img src="{{videos.vdoImage}}" />
+                                            </div>
+                                            <div class="card-content no-space">
+                                                <h6 class="y_feeds_title">{{videos.vdoTitle}}</h6>
+                                                <h6 class="y_feeds_desc">{{videos.vdoDescription}}</h6>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cssload-container" ng-if="preloadmorevideos!=true">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <br />
+                        <br />
+                    </ul>
+                </div>
+            </div>                                  
+        </div>
+      <!--end container-->
+
+      <!-- Compose Email Trigger -->
+      <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+          <a class="btn-floating btn-large red modal-trigger " href="#ComposePostModal">
+              <i class="icon-cloud-upload animated bounceInUp infinite"></i>
+          </a>
+      </div>
+
+      <!-- Compose Email Structure -->
+      <div id="ComposePostModal" class="modal">
+          <div class="modal-content">
+
+          </div>
+          <div class="model-email-content">
+              <div class="row">
+                  <form class="col s12">
+                      <div class="row">
+                          <div class="input-field col s12">
+                              <select multiple>
+                                  <option value="" disabled selected>Choose your playlist</option>
+                                  <option value="1">playlist 1</option>
+                                  <option value="2">playlist 2</option>
+                                  <option value="3">playlist 3</option>
+                              </select>
+                              <label>Select Playlist</label>
+                          </div>
+                      </div>
+                      <!--Default version-->
+                      <div class="row section">
+                          <div class="col s12 m12 l12">
+                              <p>Select your file</p>
+                          </div>
+                          <div class="col s12 m12 l12">
+                              <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="input-field col s12">
+                              <input id="youyube_title" type="text" class="validate">
+                              <label for="youyube_title">Title</label>
+                          </div>
+                          <div class="input-field col s12">
+                              <textarea id="youyube_desc" class="materialize-textarea" length="500"></textarea>
+                              <label for="youyube_desc">Description</label>
+                          </div>
+                          <div class="chip">
+                              Tag
+                              <i class="material-icons icon-close"></i>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="col s12 m12 l12">
+                              <p>Add your hashtag</p>
+                          </div>
+                          <div class="input-field col s12">
+                              <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
+      <!-- Modal Structure -->
+      
+      
+
+
+  </section>
+  <!-- END CONTENT -->   
+    <div id="youtubefeeds_modal1" class="modal">
+        <div class="modal-content">
+            <a href="javascript:void(0);" class="modal-action modal-close right"><i class="icon-close"></i></a>
+            <h4 class="truncate">{{videotitle}}</h4>
+            <div class="row">
+                <div class="col m12 l12 s12">
+                    <div class="video-container">
+                        <iframe width="100%" height="360" src="{{urlsss | youtubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <h6 style="color:#404040; font-size:20px; font-family:Calibri; font-weight:500">&nbsp&nbsp&nbspComments</h6>
+                <div class="center" ng-if="preloadmorecomments!=true">
+                    <div class="preloader-wrapper small active">
+                        <div class="spinner-layer spinner-red-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <h6 style="color:gray; font-size:16px; font-family:Calibri;">Loading Comments</h6>
+
+                </div>
+                <div class="col m12 l12 s12" ng-if="preloadmorecomments==true">
+                    <div>
+                        <ul class="collection">
+                            <li class="collection-item avatar" ng-repeat="comments in lstYtComments">
+                                <img src="{{comments.authorProfileImageUrl}}" alt="{{comments.authorDisplayName}}" class="circle">
+                                <span class="email-title">{{comments.authorDisplayName}}</span>
+                                <label class="right" style="color:#737373">{{comments.publishTime}}</label>
+                                <div class="feeds_post z-depth-1 hoverable">
+                                    <p class="break_word ultra-small" title="{{comments.commentOriginal}}">{{comments.commentDisplay}}</p>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="row">
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field col s11">
+                                        <div class="emoji-picker-container">
+                                            <textarea id="compose" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s1 ">
+                                        <a href="javascript:void(0);" class=" margin-top-30"><i class="icon-cursor red-text font_50"></i></a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+<!-- //////////////////////////////////////// Style CSS for Pre Loader //////////////////////////////////////// -->
+<style>
+    .cssload-container {
+        background: rgb(255,255,255);
+    }
+
+        .cssload-container div {
+            width: 25px;
+            height: 25px;
+            position: absolute;
+            background-color: rgb(255,255,255);
+            top: 65%;
+            border-radius: 50%;
+        }
+
+            .cssload-container div:nth-child(1) {
+                background-color: rgb(211,47,47);
+                animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -o-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -ms-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -webkit-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -moz-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+            }
+
+            .cssload-container div:nth-child(2) {
+                background-color: rgb(211,47,47);
+                animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -o-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -ms-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -webkit-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -moz-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+            }
+
+            .cssload-container div:nth-child(3) {
+                background-color: rgb(211,47,47);
+                animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -o-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -ms-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -webkit-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -moz-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+            }
+
+            .cssload-container div:nth-child(4) {
+                background-color: rgb(211,47,47);
+                animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -o-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -ms-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -webkit-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -moz-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+            }
+
+
+
+    @keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @-o-keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @-ms-keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @-webkit-keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @-moz-keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+</style>
+<!-- //////////////////////////////////////// End Style CSS for Pre Loader //////////////////////////////////////// -->

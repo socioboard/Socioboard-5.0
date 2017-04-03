@@ -6,6 +6,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
     $scope.$on('$viewContentLoaded', function () {
         $scope.dispbtn = true;
         $scope.check = false;
+        $scope.draftbtn = true;
 
         $scope.selectedvalue = true;
         $scope.selectclick = function () {
@@ -66,52 +67,63 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 $('#ActiveProfileModal').openModal({ dismissible: false });
             }
 
-            $scope.TwitterRecentFollower = function () {
-                //codes to load  TwitterRecentFollower
+
+        //codes to load  TwitterRecentFollower
+            $scope.TwitterRecentFollower = function () { 
                 $http.get(apiDomain + '/api/Twitter/TwitterRecentFollower?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   $scope.TwitterRecentFollower = response.data;
                               }, function (reason) {
                                   $scope.error = reason.data;
-                              });
-                // end codes to TwitterRecentFollower
+                              });  
             }
+        // end codes to TwitterRecentFollower
 
+        //codes to load  TwitterFollowerCount
             $scope.TwitterFollowerCount = function () {
-                //codes to load  TwitterFollowerCount
+               
                 $http.get(apiDomain + '/api/Twitter/TwitterFollowerCount?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                               .then(function (response) {
                                   $scope.TwitterFollowerCount = response.data;
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to TwitterFollowerCount
+              
             }
+        // end codes to TwitterFollowerCount
+
+        //codes to load  FacebookfanPageCount
             $scope.FacebookfanPageCount = function () {
-                //codes to load  FacebookfanPageCount
+                
                 $http.get(apiDomain + '/api/Facebook/FacebookfanPageCount?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                               .then(function (response) {
                                   $scope.FacebookfanPageCount = response.data;
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to FacebookfanPageCount
+                
             }
+        // end codes to FacebookfanPageCount
 
+         //codes to load  TotalSetMessages
             $scope.TotalSetMessages = function () {
-                //codes to load  TotalSetMessages
+               
                 $http.get(apiDomain + '/api/SocialMessages/GetAllSentMessagesCount?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                               .then(function (response) {
                                   $scope.TotalSetMessages = response.data;
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to TotalSetMessages
+               
             }
+            //end codes to TotalSetMessages
 
             $scope.ComposePostModal = function () {
                 $('#ComposePostModal').openModal();
             }
+
+      
+            //code for compose message start
             $scope.ComposeMessage = function () {
                 $scope.dispbtn = false;
                 var profiles = $('#composeProfiles').val();
@@ -163,7 +175,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     }
                 }
             }
+            //code for compose message end
 
+            //code for checking the file format start
             $scope.checkfile = function () {
                 var filesinput = $('#composeImage');//composeImage
                 var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
@@ -171,8 +185,8 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     if ($scope.hasExtension('#composeImage', fileExtension)) {
                         $scope.check = true;
                     }
-                    else {
-
+                    else
+                    {
                         $scope.check = false;
                     }
                 }
@@ -185,23 +199,27 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 var fileName = $('#composeImage').val();
                 return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
             }
+            //code for checking the file format end
+            
 
+
+            //codes to load  TotalIncommingMessages
             $scope.GetIncommingMessage = function () {
-                //codes to load  TotalIncommingMessages
+
                 $http.get(apiDomain + '/api/Twitter/GetIncommingMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                               .then(function (response) {
                                   $scope.TotaltIncommingMessage = response.data;
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to TotalIncommingMessages
+               
             }
-
-
+            // end codes to TotalIncommingMessages
            
-            
-            $scope.draftMsg = function () {
 
+           // codes to draft message start
+            $scope.draftMsg = function () {
+            $scope.draftbtn = false;
             var message = $('#composeMessage').val();
             var updatedmessage = "";
             var postdata = message.split("\n");
@@ -213,25 +231,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             updatedmessage = updatedmessage.replace("+", 'ppp');
             updatedmessage = updatedmessage.replace("-+", 'jjj');
             message = updatedmessage;
-            //updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-           // message = encodeURIComponent(message);
-
-            // var date_value = $('#input_0').val();
-            //var date_value = ($('.md-input')[0]).value;
-            //var date = date_value.split("/");
-            //date_value = date[1] + "/" + date[0] + "/" + date[2];
-            //var time_value = $('#input_1').val();
-            //var time_value = ($('.md-input')[1]).value;
-            //var scheduletime = date_value + ' ' + time_value;
-            //var newdate1 = new Date(scheduletime.replace("AM", "").replace("PM", "")).toUTCString();
-            //var d = new Date(newdate1);
-            //var d4 = d.setHours(d.getHours() + 5);
-            //var date = moment(d4);
-                //var newdate = new Date(date).toUTCString();
-            //var todayDate = new Date();
-            //console.log(todayDate);
+          
             if (message != "" && message != undefined) {
-                $scope.checkfile();//added on 19/10/2016
+                $scope.checkfile();
                 if ($scope.check == true)
                 {
                     var formData = new FormData();
@@ -246,9 +248,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         },
                         transformRequest: angular.identity,
                     }).then(function (response) {
-                        $('#ScheduleMsg').val('');
-                        $('#ScheduleTime').val('');
-                        $scope.dispbtn = true;
+                        $('#composeMessage').val('');
+                        //$('#ScheduleTime').val('');
+                        $scope.draftbtn = true;
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
                         console.log(reason);
@@ -258,7 +260,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 else if ($scope.check == false) 
                 {
                     var formData = new FormData();
-                    $scope.dispbtn = false;
+                    $scope.draftbtn = false;
                     $http({
                         method: 'POST',
                         url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' +""+ '&groupId=' + $rootScope.groupId,
@@ -270,7 +272,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     }).then(function (response) {
                         $('#ScheduleMsg').val('');
                         $('#ScheduleTime').val('');
-                        $scope.dispbtn = true;
+                        $scope.draftbtn = true;
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
                         console.log(reason);
@@ -285,15 +287,11 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             else {
                 swal('Please type a message to save in draft');
             }
-        }
+            }
+           //codes for draft message end
 
-
-
-
-
+           //codes to load  fb profiles start
             $scope.fetchProfiles = function () {
-
-                //codes to load  fb profiles start
                 $http.get(apiDomain + '/api/Facebook/GetFacebookProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
@@ -312,15 +310,11 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to load fb profiles
-
-
             }
+        // end codes to load fb profiles
 
-
+        //codes to load  twitter profiles start
             $scope.fetchTwtProfiles = function () {
-
-                //codes to load  twitter profiles start
                 $http.get(apiDomain + '/api/Twitter/GetTwitterProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   console.log(response.data);
@@ -340,14 +334,11 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to load twitter profiles
-
-
             }
+        // end codes to load twitter profiles
 
+        //codes to load  Gplus profiles start
             $scope.fetchGplusProfiles = function () {
-
-                //codes to load  Gplus profiles start
                 $http.get(apiDomain + '/api/Google/GetGplusProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
@@ -366,13 +357,11 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to load Gplus profiles
-
-
             }
-            $scope.fetchGAProfiles = function () {
+        // end codes to load Gplus profiles
 
-                //codes to load  GA profiles start
+        //codes to load  GA profiles start
+            $scope.fetchGAProfiles = function () {  
                 $http.get(apiDomain + '/api/Google/GetGAProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
@@ -391,13 +380,11 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to load GA profiles
-
-
             }
-            $scope.fetchInstagramProfiles = function () {
+            // end codes to load GA profiles
 
-                //codes to load  Instagram profiles start
+            //codes to load  Instagram profiles start
+            $scope.fetchInstagramProfiles = function () { 
                 $http.get(apiDomain + '/api/Instagram/GetInstagramProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
@@ -416,14 +403,11 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to load Instagram profiles
-
-
             }
+            // end codes to load Instagram profiles
 
+            //codes to load  YT Channels start
             $scope.fetchYTChannels = function () {
-
-                //codes to load  YT Channels start
                 $http.get(apiDomain + '/api/Google/GetYTChannelsSB?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
@@ -441,15 +425,11 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to load YT Channels
-
-
             }
+        // end codes to load YT Channels
 
-
-            $scope.fetchLinkedInCompanyPagesProfiles = function () {
-
-                //codes to load  LinkedIn Comapany page profiles start
+        //codes to load  LinkedIn Comapany page profiles start
+            $scope.fetchLinkedInCompanyPagesProfiles = function () {  
                 $http.get(apiDomain + '/api/LinkedIn/GetLinkedInCompanyPagesProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
@@ -468,10 +448,8 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to load LinkedIn Comapany page profiles
-
-
             }
+            // end codes to load LinkedIn Comapany page profiles
 
             $scope.fetchProfiles();
             $scope.fetchTwtProfiles();
@@ -706,8 +684,16 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             //end codes to add Ga Sites
 
         //code to add Youtube Channels
+
+            var access;
+            var chaid;
+
             $scope.toggleYTProfileSelection = function (Accesstoken, Refreshtoken, YtChannelId, YtChannelName, YtChannelDescrip, PublishDate, viewscount, commentscount, videoscount, YtChannelImage, subscriberscount) {
                 var idx = $scope.selectedYTChannels.indexOf(Accesstoken, Refreshtoken, YtChannelId, YtChannelName, YtChannelDescrip, PublishDate, viewscount, commentscount, videoscount, YtChannelImage, subscriberscount);
+
+                access = Accesstoken;
+                chaid = YtChannelId;
+
                 var data = "";
                 // is currently selected
                 if (idx > -1) {
@@ -750,6 +736,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         if (response.status == 200) {
                             window.location.reload();
                             swal(response.data);
+                            $scope.addinitialfeeds(access, chaid);
                         }
                     }, function (reason) {
                         swal("Error!");
@@ -868,6 +855,20 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
             }
             dashboard();
-         $('#tags').tagsInput();
+            $('#tags').tagsInput();
+
+            //add initial youtube feeds to mongo
+            $scope.addinitialfeeds = function (accesstoken,channelid) {
+
+                            $http({
+                                method: 'POST',
+                                url: apiDomain + '/api/Google/AddYoutubeFeed?accesstoken=' + accesstoken + '&channelid=' + channelid,
+                            }).then(function (response) {
+
+                                console.log(response);
+
+                            });
+                        }
+
         });
 });

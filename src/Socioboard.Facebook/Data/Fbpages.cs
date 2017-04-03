@@ -115,7 +115,40 @@ namespace Socioboard.Facebook.Data
             return output;
         }
 
+        public static string getFacebookPageRecentPost(string fbAccesstoken, string pageId,string curser_next)
+        {
+            string output = string.Empty;
+            string facebookSearchUrl = string.Empty;
+            if (string.IsNullOrEmpty(curser_next))
+            {
+                facebookSearchUrl = "https://graph.facebook.com/v1.0/" + pageId + "/posts?limit=30&access_token=" + fbAccesstoken;
+            }
+            else
+            {
+                facebookSearchUrl = curser_next;
+            }
+            var facebooklistpagerequest = (HttpWebRequest)WebRequest.Create(facebookSearchUrl);
+            facebooklistpagerequest.Method = "GET";
+            facebooklistpagerequest.Credentials = CredentialCache.DefaultCredentials;
+            facebooklistpagerequest.AllowWriteStreamBuffering = true;
+            facebooklistpagerequest.ServicePoint.Expect100Continue = false;
+            facebooklistpagerequest.PreAuthenticate = false;
+            try
+            {
+                using (var response = facebooklistpagerequest.GetResponse())
+                {
+                    using (var stream = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(1252)))
+                    {
+                        output = stream.ReadToEnd();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
 
+            }
+            return output;
+        }
         public static string subscribed_apps(string fbAccesstoken, string pageId)
         {
             string output = string.Empty;
@@ -141,6 +174,24 @@ namespace Socioboard.Facebook.Data
 
             }
             return output;
+        }
+
+        public static string  schedulePage_Post(string accessToken,string link,string scheduled_publish_time)
+        {
+            FacebookClient fb = new FacebookClient();
+            var args = new Dictionary<string, object>();
+            args["link"] = link;
+            args["scheduled_publish_time"] = scheduled_publish_time;
+            args["published"] = "false";
+            fb.AccessToken = accessToken;
+            try
+            {
+                return fb.Post("v2.8/me/feed",args).ToString();//v2.6
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
         }
     }
 }

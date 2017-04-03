@@ -360,3 +360,19 @@ ul.side-nav.leftside-navigation li.active > a{
     margin-top: 10px;
     margin-right: 10px;
 }
+
+/* youtube feeds css*/
+ 
+.y_feeds_title{
+    line-height: 22px !important;
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    color: #464646;
+    padding: 1px 5px;
+}
+ 
+.y_feeds_desc{
+    line-height: 22px !important;
+    color: #464646;
+    padding: 1px 5px;
+}

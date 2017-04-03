@@ -12,6 +12,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Socioboard.Facebook;
+using Newtonsoft.Json.Linq;
 
 namespace Api.Socioboard.Helper
 {
@@ -145,6 +147,42 @@ namespace Api.Socioboard.Helper
             }
         }
 
+        public static List<Domain.Socioboard.Models.Mongo.PageDetails> GetFbPagePostDetails(string url, string accestoken)
+        {
+            try
+            {
+                FacebookClient fb = new FacebookClient();
+                fb.AccessToken = accestoken;
+                dynamic pageinfo = null;
+                string[] pageurl = url.Split(',');
+                List<Domain.Socioboard.Models.Mongo.PageDetails> lstPageDetail = new List<Domain.Socioboard.Models.Mongo.PageDetails>();
+                try
+                {
+                    foreach (var item in pageurl)
+                    {
+                        Domain.Socioboard.Models.Mongo.PageDetails _pagedetail = new Domain.Socioboard.Models.Mongo.PageDetails();
+                        pageinfo = fb.Get(item);
+                        //ProfilePageId = pageinfo["id"] + "," + ProfilePageId;
+                        _pagedetail.PageId = pageinfo["id"];
+                        _pagedetail.PageUrl = item;
+                        lstPageDetail.Add(_pagedetail);
+                    }
+
+                }
+                catch (Exception ex1)
+                {
+
+
+                }
+
+                return lstPageDetail;
+            }
+            catch (Exception ex)
+            {
+                return new List<Domain.Socioboard.Models.Mongo.PageDetails>();
+            }
+        }
+
 
         public static List<Domain.Socioboard.Models.FacebookGroup> GetAllFacebookGroups(string accessToken, string client_id, string redirect_uri, string client_secret)
         {
@@ -273,5 +311,55 @@ namespace Api.Socioboard.Helper
             }
             return output;
         }
+
+        public static void schedulePage_Post(string accessToken, string id,int TimeInterVal)
+        {
+            try
+            {
+                int i = 1;
+                string curser_next = string.Empty;
+                do
+                {
+                    string feeds = Fbpages.getFacebookPageRecentPost(accessToken, id, curser_next);
+                    string feedId = string.Empty;
+                   
+                    if (!string.IsNullOrEmpty(feeds) && !feeds.Equals("[]"))
+                    {
+                        JObject fbpageNotes = JObject.Parse(feeds);
+                        try
+                        {
+                            curser_next = fbpageNotes["paging"]["next"].ToString();
+                        }
+                        catch (Exception ex)
+                        {
+                            curser_next = "0";
+                        }
+                        foreach (JObject obj in JArray.Parse(fbpageNotes["data"].ToString()))
+                        {
+                            try
+                            {
+                                string feedid = obj["id"].ToString();
+                                feedid = feedid.Split('_')[1];
+                                double timestamp = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow.AddMinutes(TimeInterVal * i));
+                                string link = "https://www.facebook.com/" + id + "/posts/" + feedid;
+                                string ret = Fbpages.schedulePage_Post(accessToken, link, timestamp.ToString());
+                                if (!string.IsNullOrEmpty(ret))
+                                {
+                                    i++;
+                                }
+                            }
+                            catch { }
+
+                        }
+                    }
+                } while (curser_next != "0");
+
+            }
+            catch (Exception ex)
+            {
+            }
+        }
+
+        
     }
 }

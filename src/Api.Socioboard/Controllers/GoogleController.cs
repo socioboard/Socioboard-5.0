@@ -594,8 +594,8 @@ namespace Api.Socioboard.Controllers
             try
             {
                 List<Domain.Socioboard.ViewModels.YoutubeProfiles> lstYoutubeProfiles = new List<Domain.Socioboard.ViewModels.YoutubeProfiles>();
-                lstYoutubeProfiles = Helper.GoogleHelper.GetYoutubeAccount(code, _appSettings);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                lstYoutubeProfiles = Helper.GoogleHelper.GetYoutubeAccount(code, _appSettings,dbr);
                 List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
                 lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
                 string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
@@ -645,6 +645,33 @@ namespace Api.Socioboard.Controllers
                 }
             }
             return Ok(lstYoutubeChannel);
+        }
+
+
+        [HttpPost("AddYoutubeFeed")]
+        public IActionResult AddYoutubeFeed(string accesstoken, string channelid)
+        {
+            //connected to gplusrepository for add data in mongodb
+            Repositories.GplusRepository.InitialYtFeedsAdd(channelid, accesstoken, _appSettings, _logger);
+            Repositories.GplusRepository.InitialYtCommentsAdd(channelid, accesstoken, _appSettings, _logger);
+            return Ok("");
+        }
+
+
+        //Fetch youtube videos data from MongoDB
+
+        [HttpGet("GetYTVideos")]
+        public IActionResult GetYTVideos(string ChannelId)
+        {
+            return Ok(Repositories.GplusRepository.GetYoutubeFeeds(ChannelId, _redisCache, _appSettings));
+
+        }
+
+        [HttpGet("GetYtVdoComments")]
+        public IActionResult GetYtVdoComments(string VideoId)
+        {
+            return Ok(Repositories.GplusRepository.GetYoutubeComments(VideoId, _redisCache, _appSettings));
+
         }
     }
 }

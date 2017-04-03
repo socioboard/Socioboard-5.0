@@ -88,17 +88,17 @@ namespace Api.Socioboard.Helper
             return lstGoogleAnalyticsProfiles;
         }
 
-        public static List<Domain.Socioboard.ViewModels.YoutubeProfiles> GetYoutubeAccount(string code, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.ViewModels.YoutubeProfiles> GetYoutubeAccount(string code, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
             Domain.Socioboard.ViewModels.YoutubeProfiles _YoutubeChannels;
             List<Domain.Socioboard.ViewModels.YoutubeProfiles> lstYoutubeProfiles = new List<Domain.Socioboard.ViewModels.YoutubeProfiles>();
             string access_token = string.Empty;
             string refresh_token = string.Empty;
-            Channels _Channels = new Channels("575089347457-74q0u81gj88ve5bfdmbklcf2dnc0353q.apps.googleusercontent.com", "JRtS_TaeYpKOJWBCqt9h8-iG", "http://localhost:9821/GoogleManager/Google");
+            Channels _Channels = new Channels(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
 
             try
             {
-                oAuthTokenYoutube objToken = new oAuthTokenYoutube("575089347457-74q0u81gj88ve5bfdmbklcf2dnc0353q.apps.googleusercontent.com", "JRtS_TaeYpKOJWBCqt9h8-iG", "http://localhost:9821/GoogleManager/Google");
+                oAuthTokenYoutube objToken = new oAuthTokenYoutube(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
 
 
                 string accessToken = objToken.GetRefreshToken(code);
@@ -135,6 +135,24 @@ namespace Api.Socioboard.Helper
                         string subscriberscount = item["statistics"]["subscriberCount"].ToString();
                         string videoscount = item["statistics"]["videoCount"].ToString();
                         string channeldescrip = item["snippet"]["description"].ToString();
+
+                        #region Update Access and refresh token after authentication for every time
+                        try
+                        {
+                            List<Domain.Socioboard.Models.YoutubeChannel> lstYTChannel = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(channelid)).ToList();
+                            if (lstYTChannel != null && lstYTChannel.Count() > 0)
+                            {
+                                lstYTChannel.First().AccessToken = access_token;
+                                lstYTChannel.First().RefreshToken = refresh_token;
+                                dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(lstYTChannel.First());
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+
+                        }
+                        #endregion
+
 
                         try
                         {

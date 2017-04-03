@@ -742,6 +742,30 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         })
 
 
+        // youtube feeds controller
+
+        .state('youtubefeeds', {
+            url: "/youtubefeeds/{profileId}",
+            templateUrl: "../contents/socioboard/views/feeds/youtubefeeds.html",
+            data: { pageTitle: 'Youtube Live feeds', pageSubTitle: 'updated' },
+            controller: "YoutubeFeedsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/youtubefeedscontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+
           .state('googleplusfeeds', {
               url: "/googleplusfeeds/{profileId}",
               templateUrl: "../contents/socioboard/views/feeds/googleplusfeeds.html",
@@ -1204,7 +1228,49 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
             }
         })
 
+        // Create link shareathon controller
 
+        .state('createlinkshareathon', {
+            url: "/create_link_shareathon.html",
+            templateUrl: "../contents/socioboard/views/shareathon/create_link_shareathon.html",
+            data: { pageTitle: 'Create link shareathon', pageSubTitle: 'updated' },
+            controller: "CreateLinkShareathonController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/createlinkshareathoncontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // link shareathon
+
+        .state('linkshareathon', {
+            url: "/link_shareathon.html",
+            templateUrl: "../contents/socioboard/views/shareathon/link_shareathon.html",
+            data: { pageTitle: 'BoardList', pageSubTitle: 'updated' },
+            controller: "LinkShareathonController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/linkshareathoncontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
 
 
         .state('groups', {

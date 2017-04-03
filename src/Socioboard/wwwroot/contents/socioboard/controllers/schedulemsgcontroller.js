@@ -4,7 +4,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
        
         $scope.check = false;
         $scope.dispbtn = true;
-
+        $scope.repeat = false;
 
 
         $scope.currentDate = new Date();
@@ -47,16 +47,26 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 	            swal("Deleted!", "Your profile has been deleted.", "Success");
 	        });
         }
+        var timeRepeat = $('#timesRepeat').val();
+        var y = parseInt(timeRepeat);
         //datess
+        debugger;
         $scope.schedulemsg = function (datess) {
+            $scope.repeat = false;
             var profiles = $('#scheduleprofiles').val();
             var message = $('#ScheduleMsg').val();
+
+            var timeRepeat = $('#timesRepeat').val();
+            var y = parseInt(timeRepeat);
+
             console.log(profiles);
  
             if (message == "") {
                 swal("Please enter a message");
                 return false;
             }
+
+        
            
             var updatedmessage = "";
             var postdata = message.split("\n");
@@ -152,14 +162,20 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             }).then(function (response) {
 
                                 if (response.data == "scheduled") {
-                                    $('#ScheduleMsg').val('');
-                                    $('#ScheduleTime').val('');
-                                    $('#input_0').val('');
-                                    $('#input_1').val('');
-                                    $scope.dispbtn = true;
-                                    console.log(newdate1);
-                                    $scope.rep = true;
-                                    swal("Message scheduled successfully");
+
+                                    if (num < y) {
+                                        $scope.chekRepat();
+                                    }
+                                    else {
+                                        $('#ScheduleMsg').val('');
+                                        $('#ScheduleTime').val('');
+                                        $('#input_0').val('');
+                                        $('#input_1').val('');
+                                        $scope.dispbtn = true;
+                                        console.log(newdate1);
+                                        $scope.rep = true;
+                                        swal("Message scheduled successfully");
+                                    }    
                                 }
                                 else {
                                     swal(response.data);
@@ -168,6 +184,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             }, function (reason) {
                                 console.log(reason);
                             });
+
+                        
                         }
 
                         else if ($scope.check == false) {
@@ -182,20 +200,28 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                 },
                                 transformRequest: angular.identity,
                             }).then(function (response) {
-                                $('#ScheduleMsg').val('');
-                                $('#ScheduleTime').val('');
-                                $scope.dispbtn = true;
-                                swal("Message scheduled successfully");
+
+                                if (num < y) {
+                                    $scope.chekRepat();
+                                }
+                                else {
+                                    $('#ScheduleMsg').val('');
+                                    $('#ScheduleTime').val('');
+                                    $scope.dispbtn = true;
+                                    swal("Message scheduled successfully");
+
+                                }                               
                             }, function (reason) {
                                 console.log(reason);
                             });
-
                         }
                         else {
                             alertify.set({ delay: 3000 });
                             alertify.error("File extension is not valid. Please upload an image file");
                             $('#input-file-now').val('');
                         }
+
+                        
                     }
                     else {
                         swal('Please enter the date and time to schedule a message');
@@ -207,9 +233,54 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             } else {
                 swal('Please enter some text to schedule the message');
             }
-
         }
 
+
+
+
+        $scope.justChek = function (isCheked) {
+            $scope.st = isCheked;
+        }
+        var num = 0;
+        $scope.chekRepat = function () {
+            debugger;
+            if ($scope.st) {
+                var intervalDay = $('#sche_day').val();
+                var timeRepeat = $('#timesRepeat').val();
+                var x = parseInt(intervalDay); //The parseInt() function parses a string and returns an integer
+                var y = parseInt(timeRepeat);
+                var arrdate = [];
+                var dat = [];
+                var curdate = ($('.md-input')[0]).value;
+                var date = curdate.split("/");
+                dat[0] = parseInt(date[0]);
+                
+                var datt = dat[0];
+                var secDate = datt + x;
+                arrdate[0] = secDate + "/" + date[1] + "/" + date[2];
+                for (var i = 1; i < y; i++) {
+                    var secDate = secDate + x;
+                    arrdate[i] = secDate + "/" + date[1] + "/" + date[2];
+                }
+                for (var i = 0 ; i < y; i++) {
+                    num++;
+                    $scope.schedulemsg(arrdate[i]);
+                    $scope.running = true;
+                }
+            }
+        }
+
+        //$scope.forlop = function () {
+        //    debugger;
+        //    for (var i = 0 ; i < y; i++) {
+        //        num++;
+        //        $scope.schedulemsg(arrdate[i]);
+        //        $scope.running = true;
+                
+        //    }
+        //}
+       
+       
 
         $scope.checkfile = function () {
             var filesinput = $('#input-file-now');
@@ -238,7 +309,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
                 var intervalDay = $('#sche_day').val();
                 var timeRepeat = $('#timesRepeat').val();
-                var x = parseInt(intervalDay);
+                var x = parseInt(intervalDay); //The parseInt() function parses a string and returns an integer
                 var y = parseInt(timeRepeat);
                 var arrdate = [];
                 var dat = [];
@@ -254,10 +325,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                     arrdate[i] = datt + "/" + date[1] + "/" + date[2];
                 }
 
-                for (var i = 0 ; i < y; i++) {
-
-                    $scope.schedulemsg(arrdate[i]);
-
+                for (var i = 0 ; i < y; i++) {   
+                        $scope.schedulemsg(arrdate[i]);
             }
          
         };

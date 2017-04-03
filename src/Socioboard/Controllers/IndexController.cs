@@ -363,7 +363,8 @@ namespace Socioboard.Controllers
                 }
 
                 ViewBag.plugin = _PluginData;
-
+                ViewBag.emailId  = user.EmailId;
+                ViewBag.password = user.Password;
                 List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
                 parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
                 HttpResponseMessage _response = await WebApiReq.GetReq("/api/GroupProfiles/GetPluginProfile?userId=" + user.Id.ToString(), "", "", _appSettings.ApiDomain);

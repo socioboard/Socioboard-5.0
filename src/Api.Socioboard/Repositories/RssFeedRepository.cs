@@ -18,7 +18,7 @@ namespace Api.Socioboard.Repositories
 
         public static Domain.Socioboard.Models.RssFeedUrl AddRssUrl(string Url, Model.DatabaseRepository dbr)
         {
-            Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url));
+            Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url) && t.Keywords==null   );
             if (_RssFeedUrl != null)
             {
                 return _RssFeedUrl;

@@ -8,6 +8,8 @@
     string content = "";
     string domainName = @appSettings.Value.Domain;
     int tweetUrlLength = 0;
+    string emailId = @ViewBag.emailId;
+    string password = @ViewBag.password;
 }
 
 <html>
@@ -53,6 +55,7 @@
     </style>
 
 </head>
+
 <body style="background-color:transparent">
     <div id="myModal" data-easein="flipBounceYIn" aria-labelledby="gridSystemModalLabel" role="dialog" tabindex="-1" class="in" style="display: block; padding-left: 17px;">
 
@@ -177,7 +180,23 @@
                                                         </div>
 
                                                         <div>
-                                                            <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-twt-message' onkeyup="countChar()">@content</textarea>
+                                                            @if (objplugin._ThumbnailDetails != null)
+                                                            {
+                                                               @if(!content.Replace("nnnamp;", "&amp;").Contains(objplugin._ThumbnailDetails.title))
+                                                               {
+                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-twt-message' onkeyup="countChar()">@objplugin._ThumbnailDetails.title @content</textarea>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-twt-message' onkeyup="countChar()">@content</textarea>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-twt-message' onkeyup="countChar()">@content</textarea>
+
+                                                            }
+
                                                         </div>
                                                     </div>
                                                     <hr>
@@ -200,7 +219,23 @@
                                                                 }
                                                                 content = content.Trim();
                                                             }
-                                                            <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@content</textarea>
+                                                            @if (objplugin._ThumbnailDetails != null)
+                                                            {
+                                                                @if (!content.Replace("nnnamp;", "&amp;").Contains(objplugin._ThumbnailDetails.title))
+                                                                {
+                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@objplugin._ThumbnailDetails.title @content</textarea>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@content</textarea>
+
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+
+                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'> @content</textarea>
+                                                            }
                                                         </div>
                                                     </div>
                                                     <hr>
@@ -282,7 +317,25 @@
                                                                                                         content = content.Trim();
                                                                                                     }
                                                                                                     <div>
-                                                                                                        <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@content</textarea>
+
+                                                                                                        @if (objplugin._ThumbnailDetails != null)
+                                                                                                        {
+                                                                                                            @if (!content.Replace("nnnamp;", "&amp;").Contains(objplugin._ThumbnailDetails.title))
+                                                                                                            {
+                                                                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@objplugin._ThumbnailDetails.title @content</textarea>
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+
+                                                                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@content</textarea>
+                                                                                                            }
+
+                                                                                                        }
+                                                                                                        else
+                                                                                                        {
+                                                                                                            <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@content</textarea>
+
+                                                                                                        }
                                                                                                     </div>
                                                                                                 </div>
                                                                                                 <hr>
@@ -311,14 +364,93 @@
                                                                             objplugin._ThumbnailDetails.image = "http://" + _host + "/" + objplugin._ThumbnailDetails.image;
                                                                         }
 
-                                                                        <img src="@objplugin._ThumbnailDetails.image" class='media-object img-100' alt='image'>
+                                                                        @*<img src="@objplugin._ThumbnailDetails.image" class='media-object img-100' alt='image'>*@
+                                                                        <div id="myCarousel" class="carousel slide">
+
+                                                                            <div class="carousel-inner">
+                                                                                <div class="item active">
+                                                                                    <div class="fill"><img src="@objplugin._ThumbnailDetails.image.Replace("&amp;","&")" class='media-object img-100' alt='image'></div>
+                                                                                    <div class="carousel-caption">
+                                                                                    </div>
+                                                                                </div>
+                                                                                @if (objplugin._ThumbnailDetails.imageurls.Count > 0)
+                                                                                {
+                                                                                @foreach (var item in objplugin._ThumbnailDetails.imageurls)
+                                                                                    {
+                                                                                <div class="item">
+
+                                                                                    <div class="fill"><img src="@item.Replace("&amp;","&")" class="media-object img-100"></div>
+                                                                                    <div class="carousel-caption">
+
+                                                                                    </div>
+                                                                                </div>
+                                                                                    }
+
+                                                                                }
+
+
+
+                                                                            </div>
+
+                                                                            <a class="left carousel-control" href="#myCarousel" data-slide="prev" style="background: transparent !important;">
+                                                                                <span class="icon-prev" style="color: #333;"></span>
+                                                                            </a>
+                                                                            <a class="right carousel-control" href="#myCarousel" data-slide="next" style="background: transparent !important;">
+                                                                                <span class="icon-next" style="color: #333;"></span>
+                                                                            </a>
+
+                                                                        </div>
                                                                     </div>
+                                                                }
+
+                                                                else if (objplugin._ThumbnailDetails.imageurls.Count > 0)
+                                                                {
+                                                                    <div class='info-holder'>
+
+                                                                        @*<img src="@objplugin._ThumbnailDetails.image" class='media-object img-100' alt='image'>*@
+                                                                        <div id="myCarousel" class="carousel slide">
+
+                                                                            <div class="carousel-inner">
+                                                                                <div class="item active">
+                                                                                    <div class="fill"><img src="@objplugin._ThumbnailDetails.imageurls.First().Replace("&amp;","&")" class='media-object img-100' alt='image'></div>
+                                                                                    <div class="carousel-caption">
+                                                                                    </div>
+                                                                                </div>
+                                                                                @if (objplugin._ThumbnailDetails.imageurls.Count > 0)
+                                                                                {
+                                                                                    @foreach (var item in objplugin._ThumbnailDetails.imageurls)
+                                                                                    {
+                                                                                        <div class="item">
+
+                                                                                            <div class="fill"><img src="@item.Replace("&amp;","&")" class="media-object img-100"></div>
+                                                                                            <div class="carousel-caption">
+
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    }
+
+                                                                                }
+
+
+
+                                                                            </div>
+
+                                                                            <a class="left carousel-control" href="#myCarousel" data-slide="prev" style="background: transparent !important;">
+                                                                                <span class="icon-prev" style="color: #333;"></span>
+                                                                            </a>
+                                                                            <a class="right carousel-control" href="#myCarousel" data-slide="next" style="background: transparent !important;">
+                                                                                <span class="icon-next" style="color: #333;"></span>
+                                                                            </a>
+
+                                                                        </div>
+                                                                    </div>
+
                                                                 }
                                                                 else
                                                                 {
                                                                     <div class='info-holder'>
 
-                                                                        <img src="../Themes/Socioboard/Contents/pluginassets/images/video-thumbnail.png" class='media-object img-100' alt='image'>
+                                                                        <img src="../Contents/socioboard/pluginassets/images/video-thumbnail.png" class='media-object img-100' alt='image'>
 
                                                                     </div>
                                                                 }
@@ -329,7 +461,7 @@
 
                                                                 @if (!string.IsNullOrEmpty(objplugin._ThumbnailDetails.title))
                                                                 {
-                                                                    <h4 class='mar-top'>
+                                                                    <h4 class='mar-top' id="UrlTitle">
                                                                         @objplugin._ThumbnailDetails.title
                                                                     </h4>
                                                                 }
@@ -409,41 +541,95 @@
                                                 @*<img width="40" src="https://www.socioboard.com/Themes/Socioboard/Contents/img/icon_loading-Recovered.gif" id="img-load-send">*@
                                                 <span id="success-sending-data">Sending from Socioboard..</span>
                                             </div>
+                                            <div class="overlay-added">
+                                                <span id="success-sending-data">it seems you already posted this message to few profiles</span>
+                                            </div>
                                             <!--replace link options -->
-                                            <div class='mob-style'>
-                                                <div class='col-sm-4 m-t-l'>
+                                            @if (Model.Count > 0)
+                                            {
+                                                <div class='mob-style'>
+                                                    <div class='col-sm-4 m-t-l'>
 
-                                                    <a href="javascript:;" class='r-l-p cg' id='upload-link'>
-                                                        <small><i class="fa fa-file-image-o cb"> </i> Replace link with photo</small>
-                                                    </a>
-                                                    <input id="upload" type="file" onchange="AddImageScheduleMessage()" />
-                                                </div>
-                                                <div class='col-sm-4'>
-                                                    <div class='input-group date' id='datetimepicker1'>
-
-                                                        <span class="input-group-addon" style='display: none;'>
-                                                        </span>
-                                                        <input type='text' class="form-control dt-tb" id="sd-date-time" />
+                                                        <a href="javascript:;" class='r-l-p cg' id='upload-link'>
+                                                            <small><i class="fa fa-file-image-o cb"> </i> Replace link with photo</small>
+                                                        </a>
+                                                        <input id="upload" type="file" onchange="AddImageScheduleMessage()" />
                                                     </div>
-                                                </div>
-                                                <!--/test-->
+                                                    <div class='col-sm-4'>
+                                                        <div class='input-group date' id='datetimepicker1'>
 
-                                                <div class='col-sm-4 m-cal-btn'>
-                                                    <div class="btn-group pull-right">
-                                                        <button type="button" class="btn btn-primary bleft btn-share-send" onclick="sharenow()">Share Now</button>
-                                                        <div class="btn-group">
-                                                            <button type="button" class="btn btn-primary dropdown-toggle bright" data-toggle="dropdown">
-                                                                &nbsp; <span class="caret"></span>
-                                                            </button>
-                                                            <ul class="dropdown-menu ul-dup ul-ddn" role="menu">
-                                                                <li><a href="#" id="sb-share-now">Share Now</a></li>
-                                                                <li><a href="#" class='t-dt' id="sb-schedule-post">Schedule Post</a></li>
-                                                            </ul>
+                                                            <span class="input-group-addon" style='display: none;'>
+                                                            </span>
+                                                            <input type='text' class="form-control dt-tb" id="sd-date-time" />
                                                         </div>
                                                     </div>
+                                                    <!--/test-->
+
+                                                    <div class='col-sm-4 m-cal-btn'>
+                                                        <div class="btn-group pull-right">
+                                                            <button type="button" class="btn btn-primary bleft btn-share-send" onclick="sharenow()">Share Now</button>
+                                                            <div class="btn-group">
+                                                                <button type="button" class="btn btn-primary dropdown-toggle bright" data-toggle="dropdown">
+                                                                    &nbsp; <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu ul-dup ul-ddn" role="menu">
+                                                                    <li><a href="#" id="sb-share-now">Share Now</a></li>
+                                                                    <li><a href="#" class='t-dt' id="sb-schedule-post">Schedule Post</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
 
-                                            </div>
+                                            }
+                                            else
+                                            {
+                                                <div class='mob-style'>
+                                                    <div class='col-sm-4 m-t-l'>
+
+                                                        <a href="javascript:;" class='r-l-p cg' id='upload-link'>
+                                                            <small><i class="fa fa-file-image-o cb"> </i> Replace link with photo</small>
+                                                        </a>
+                                                        <input id="upload" type="file" disabled />
+                                                    </div>
+                                                    <div class='col-sm-4'>
+                                                        <div class='input-group date' id='datetimepicker1'>
+
+                                                            <span class="input-group-addon" style='display: none;'>
+                                                            </span>
+                                                            <input type='text' class="form-control dt-tb" id="sd-date-time" />
+                                                        </div>
+                                                    </div>
+                                                    <!--/test-->
+
+                                                    <div class='col-sm-4 m-cal-btn'>
+                                                        <div class="btn-group pull-right">
+                                                            <button type="button" disabled class="btn btn-primary bleft btn-share-send" onclick="sharenow()">Share Now</button>
+                                                            <div class="btn-group">
+                                                                <button type="button" disabled class="btn btn-primary dropdown-toggle bright" data-toggle="dropdown">
+                                                                    &nbsp; <span class="caret"></span>
+                                                                </button>
+                                                                <ul class="dropdown-menu ul-dup ul-ddn" role="menu">
+                                                                    <li><a href="#" id="sb-share-now">Share Now</a></li>
+                                                                    <li><a href="#" class='t-dt' id="sb-schedule-post">Schedule Post</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+
+                                                <div class="mob-style">
+                                                    <div class="col-md-12" style="padding: 31px 0 4px 0;text-align: center;">
+                                                        <span class='r-l-p cg' id='upload-link' style="font-size: 16px;">
+                                                            You Have No SocialProfile link with this account
+                                                        </span>
+                                                    </div>
+                                                </div>
+
+                                            }
+
 
                                         </div><!--/replace link options -->
 
@@ -515,6 +701,31 @@
           'www.flickr.com',
           'localhost:9821'
         ];
+
+
+
+        $(document).ready(function () {
+            debugger;
+            if ('@emailId' != "") {
+                setCookie("socioboardpluginemailId", '@emailId', "90");
+                if ('@password' != "") {
+                    setCookie("socioboardpluginToken", '@password', "90");
+                } else {
+                    setCookie("socioboardpluginToken", 'sociallogin', "90");
+                }
+            }
+
+        });
+
+        function setCookie(cname, cvalue, exdays) {
+            var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+            cpwd = cvalue;
+            cvalue = Base64.encode(cpwd);
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
 
         $(".modal").each(function (index) {
             $(this).on('show.bs.modal', function (e) {
@@ -620,12 +831,12 @@
                         $.ajax({
                             url: '@appSettings.Value.ApiDomain/api/SocialMessages/UploadImageplugin',
                             type: "Post",
-                           // dataType: 'json',
+                            // dataType: 'json',
                             processData: false,
                             contentType: false,
                             data: fd,
                             success: function (data) {
-                              //  alert('hello' + data);
+                                //  alert('hello' + data);
                                 $("#img-upload-thumb").attr("src", data);
                                 $(".fileinput-new").css('display', 'block');
                                 $("#thumb-creator").css('display', 'none');
@@ -698,8 +909,8 @@
                 @if(objplugin.profileType=="twitter")
                 {
                     @:tweetId = "@objplugin.tweetId";
-                                    @:tweetUrl = "https://twitter.com/@objplugin.screenName/status/@objplugin.tweetId";
-                                }
+                                                                                                                            @:tweetUrl = "https://twitter.com/@objplugin.screenName/status/@objplugin.tweetId";
+                                                                                                                        }
             }
             if ($('.facebook-text-show').css('display') == 'block') {
                 facebookText = $('#txt-fb-message').val();
@@ -715,11 +926,12 @@
                 @if(objplugin._ThumbnailDetails!=null)
                 {
                     @:if ($('#thumb-creator').css('display') == 'block') { url = "@objplugin._ThumbnailDetails.url"; }
-                                }
+                                                                                                                        }
             }
             if ($('.fileinput-new').css('display') == 'block') {
                 imgUrl = $('#img-upload-thumb').attr('src');
             }
+
             if (twitterText != "" || tweetId != "" || facebookText != "" || url != "" || imgUrl != "") {
                 var data = { profile: arrId.join(), twitterText: twitterText, tweetId: tweetId, tweetUrl: tweetUrl, facebookText: facebookText, url: url, imgUrl: imgUrl }
                 return data;
@@ -744,13 +956,12 @@
                         $('.overlay-share').slideToggle();
                     },
                     success: function (data) {
-                       // $('#img-load-send').attr('src', '../contents/socioboard/img/products n clients/logo.png');
-                        $('#success-sending-data').text('You have published post from socioboard..');
+                        $('#success-sending-data').text(data);
                         var param = getParameterByName("windowType");
                         if (param == "newwin") {
                             window.close();
                         } else {
-                            parent.postMessage({ name: "Close" }, "*");
+                            setTimeout(function () { parent.postMessage({ name: "Close" }, "*"); }, 5000);
                         }
                     }, error: function (msg) {
                         $('#success-sending-data').text('You have error while post from socioboard..');
@@ -758,7 +969,7 @@
                         if (param == "newwin") {
                             window.close();
                         } else {
-                            parent.postMessage({ name: "Close" }, "*");
+                            setTimeout(function () { parent.postMessage({ name: "Close" }, "*"); }, 5000);
                         }
                     }
                 });
@@ -766,6 +977,17 @@
             }
 
 
+
+        }
+
+
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds) {
+                    break;
+                }
+            }
 
         }
         function schedulenow() {
@@ -834,21 +1056,28 @@
                     alert("Month value must be current or future");
                     return false;
                 } else {
-                    if (d.getDate() <= new Date().getDate()) {
-                        //alert("Date value must be current or future");
-                        //return false;
-                        if (d.getMinutes() < new Date().getMinutes()) {
-                            alert("Time value must be current or future");
-                            return false;
+                    if (d.getDate() < new Date().getDate()) {
+                        alert("Date Time value must be current or future");
+                        return false;
+
+                    } else {
+                        if (d.getDate() == new Date().getDate()) {
+                            if (d.getMinutes() < new Date().getMinutes()) {
+                                alert("Time value must be current or future");
+                                return false;
+                            }
+
                         }
+
+
                     }
-                    
+
 
                 }
-                
+
 
             }
-            
+
             if (newscheuletime[2] == "PM") {
                 if (shdd != "12") {
                     d4 = d.setHours(d.getHours() + 12);
@@ -863,7 +1092,7 @@
             var date = moment(d4);
             var newdate = new Date(date).toUTCString();
             var post = postData();
-           
+
             if (post != null) {
                 $.ajax({
                     url: '../Home/PluginScheduleMessage?scheduleTime=' + newdate + '&clientTime=' + now,

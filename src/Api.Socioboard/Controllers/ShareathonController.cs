@@ -75,11 +75,24 @@ namespace Api.Socioboard.Controllers
             string pagedata = Repositories.ShareathonRepository.DeleteGroupShareathon(GroupShareathodId, _appSettings);
             return Ok(pagedata);
         }
+        [HttpPost("DeleteLinkShareathon")]
+        public IActionResult DeleteLinkShareathon(string LinkShareathodId)
+        {
+            string pagedata = Repositories.ShareathonRepository.DeleteLinkShareathon(LinkShareathodId, _appSettings);
+            return Ok(pagedata);
+        }
 
         [HttpGet("UsergroupShareathon")]
         public IActionResult UsergroupShareathon(long userId)
         {
             List<Domain.Socioboard.Models.Mongo.GroupShareathon> lstPageShareathon = Repositories.ShareathonRepository.GroupShareathonByUserId(userId, _appSettings, _redisCache);
+            return Ok(lstPageShareathon);
+        }
+
+        [HttpGet("UserLinkShareathon")]
+        public IActionResult UserLinkShareathon(long userId)
+        {
+            List<Domain.Socioboard.Models.Mongo.LinkShareathon> lstPageShareathon = Repositories.ShareathonRepository.LinkShareathonByUserId(userId, _appSettings, _redisCache);
             return Ok(lstPageShareathon);
         }
 

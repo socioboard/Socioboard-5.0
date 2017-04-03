@@ -230,6 +230,7 @@ namespace Socioboard.Controllers
             string facebookText = Request.Form["facebookText"];
             string url = Request.Form["url"];
             string imgUrl = Request.Form["imgUrl"];
+            string output = "";
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
             {
@@ -247,8 +248,9 @@ namespace Socioboard.Controllers
             HttpResponseMessage respon = await WebApiReq.PostReq("/api/SocialMessages/PluginComposemessage", Param, "", "", _appSettings.ApiDomain);
             if (respon.IsSuccessStatusCode)
             {
+                output= await respon.Content.ReadAsStringAsync();
             }
-            return Content("");
+            return Content(output);
         }
 
 

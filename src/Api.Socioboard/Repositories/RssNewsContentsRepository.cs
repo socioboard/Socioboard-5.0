@@ -72,7 +72,7 @@ namespace Api.Socioboard.Repositories
                     }
                     else
                     {
-                        return "please fill correct url";
+                        return "Data already added";
                     }
                 }
 
@@ -88,7 +88,7 @@ namespace Api.Socioboard.Repositories
             string BBC = "http://www.bbc.com/news/10628494";
             string hinduTimes = "http://www.hindustantimes.com/rss";
             // string TheHindu = "http://www.thehindubusinessline.com/navigation/?type=rss";
-            string Baskar = "http://www.bhaskar.com/rss/";
+            //string Baskar = "http://www.bhaskar.com/rss/";
 
 
             // string keyword = Console.ReadLine();
@@ -96,7 +96,7 @@ namespace Api.Socioboard.Repositories
             string responce_TOI = obj_reqest.getHtmlfromUrl(new Uri(TOI));
             string responce_BBC = obj_reqest.getHtmlfromUrl(new Uri(BBC));
             string responce_HinduTime = obj_reqest.getHtmlfromUrl(new Uri(hinduTimes));
-            string responce_Baskar = obj_reqest.getHtmlfromUrl(new Uri(Baskar));
+            //string responce_Baskar = obj_reqest.getHtmlfromUrl(new Uri(Baskar));
            string[] url = new string[4];
 
             //List<string> url = null;
@@ -201,34 +201,34 @@ namespace Api.Socioboard.Repositories
 
                     }
                 }
-                if (responce_Baskar.Contains(keywordslist))
-                {
-                    try
-                    {
-                        string data = obj_reqest.getBetween(responce_Baskar, "<th>RSS Path</th>", "<div class=\"rss-right\">");
-                        string[] report = Regex.Split(data, "<tr>");
-                        foreach (string item in report)
-                        {
-                            try
-                            {
-                                if (item.Contains(keywordslist))
-                                {
-                                    string[] value = Regex.Split(item, "<td>");
-                                    url[3] = obj_reqest.getBetween(value[2], "href=\"", "\"");
-                                    break;
-                                }
-                            }
-                            catch (Exception ex)
-                            {
+                //if (responce_Baskar.Contains(keywordslist))
+                //{
+                //    try
+                //    {
+                //        string data = obj_reqest.getBetween(responce_Baskar, "<th>RSS Path</th>", "<div class=\"rss-right\">");
+                //        string[] report = Regex.Split(data, "<tr>");
+                //        foreach (string item in report)
+                //        {
+                //            try
+                //            {
+                //                if (item.Contains(keywordslist))
+                //                {
+                //                    string[] value = Regex.Split(item, "<td>");
+                //                    url[3] = obj_reqest.getBetween(value[2], "href=\"", "\"");
+                //                    break;
+                //                }
+                //            }
+                //            catch (Exception ex)
+                //            {
 
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
+                //            }
+                //        }
+                //    }
+                //    catch (Exception ex)
+                //    {
 
-                    }
-                }
+                //    }
+                //}
 
                 foreach (var itemurl in url)
                 {
@@ -393,14 +393,14 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> GetRssNewsFeeds(string userId, string keywords, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> GetRssNewsFeeds(long userId, string keywords, Helper.AppSettings _appSettings)
         {
             string[] profileids = null;
             MongoRepository _RssRepository = new MongoRepository("RssNewsContentsFeeds", _appSettings);
             List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = new List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>();
             //List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId == userId).ToList();
             //profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-            var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>(t=>t.keywords==keywords);//UserId
+            var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>(t=>t.keywords==keywords && t.UserId == userId.ToString());//UserId
             var task = Task.Run(async () =>
             {
                 return await ret;

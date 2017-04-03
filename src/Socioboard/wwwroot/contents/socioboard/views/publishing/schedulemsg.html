@@ -102,19 +102,19 @@
                                     </div>
                                     
                                    <div class="row">
+                                       <!--<div ng-init="disbtncom= {{disbtncom}}"></div>-->
                                        <div class="input-field col s12 m4 l4">
                                            <!--<input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="repetition()"/>-->
-                                           <input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="repetition()" />
+                                           <input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="justChek(hasChecked)" />
                                            <label for="repeat_post">Repeat post</label>
                                        </div>
-                                       <div class="input-field col s12 m4 l4">
-                                           
-                                           <input id="sche_day" type="number" min="0" class="validate">
+                                       <div class="input-field col s12 m4 l4">                                           
+                                           <input id="sche_day" type="number" min="0" ng-disabled="!hasChecked" class="validate">
                                            <label for="sche_day">Schedule at [ Days ]</label>
                                        </div>
-                                       <div class="input-field col s12 m4 l4">
+                                       <div class="input-field col s12 m4 l4" ng-disabled="!hasChecked" >
                                            <select id="timesRepeat">
-                                               <option value="" disabled selected>Choose your time intervale</option>
+                                               <option value="" >Choose your time interval</option>
                                                <option value=1>1</option>
                                                <option value=2>2</option>
                                                <option value=3>3</option>
@@ -164,7 +164,7 @@
                                     <button ng-disabled="!((scheduleform.ScheduleMsgtxt.$dirty))" class="waves-effect waves-light btn grey darken-2" ng-click="draftmsg()">Save To Draft</button>
                                 </div>
                                    <div class="card-action" ng-if="schedulemessage" ng-show="dispbtn">
-                                       <button  class="waves-effect waves-light btn grey darken-3" ng-click="schedulemsg()">Schedule</button>
+                                       <button  class="waves-effect waves-light btn grey darken-3" ng-model="schduledone" ng-click="schedulemsg()">Schedule</button>
                                        <button  class="waves-effect waves-light btn grey darken-2" ng-click="draftmsg()">Save To Draft</button>
                                    </div>
                                    <div class="card-action" ng-show="!dispbtn">

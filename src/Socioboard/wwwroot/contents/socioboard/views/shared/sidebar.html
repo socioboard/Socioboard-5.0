@@ -115,8 +115,8 @@
                                         </a>
                                         <div class="collapsible-body">
                                             <ul>
-                                                <li ng-repeat="profile in lstProfiles | filter:{profileType:0}">
-                                                    <a href="" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                <li ng-repeat="profile in lstProfiles | filter:{profileType:7}">
+                                                    <a href="#/youtubefeeds/{{profile.profileId}}" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -241,6 +241,10 @@
                             <li class="truncate">
                                 <a href="#/page_shareathon.html">Page Shareathon</a>
                             </li>
+                            <li class="truncate">
+                                <a href="#/link_shareathon.html">Link Shareathon</a>
+                            </li>
+
                         </ul>
                     </div>
                 </li>

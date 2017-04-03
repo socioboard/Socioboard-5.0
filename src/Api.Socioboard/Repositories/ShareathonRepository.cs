@@ -26,7 +26,7 @@ namespace Api.Socioboard.Repositories
             foreach (var item in profileids)
             {
                 Domain.Socioboard.Models.Facebookaccounts objfacebookpage = Repositories.FacebookRepository.getFacebookAccount(item, _redisCache, dbr);
-                facebookpagename = objfacebookpage.FbUserName + ','+facebookpagename;
+                facebookpagename = objfacebookpage.FbUserName + ',' + facebookpagename;
             }
             _Shareathon.Facebookpagename = facebookpagename.TrimEnd(',');
             _Shareathon.FacebookStatus = 0;
@@ -34,7 +34,7 @@ namespace Api.Socioboard.Repositories
             _Shareathon.Userid = userId;
             _Shareathon.Lastsharetimestamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
             MongoRepository _ShareathonRepository = new MongoRepository("Shareathon", _appSettings);
-            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.Facebookpageid==FacebookPageId && t.Facebookaccountid == Facebookaccountid && t.Userid == userId);
+            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.Facebookpageid == FacebookPageId && t.Facebookaccountid == Facebookaccountid && t.Userid == userId);
             var task = Task.Run(async () =>
                   {
                       return await ret;
@@ -135,7 +135,7 @@ namespace Api.Socioboard.Repositories
             groupids = FacebookGroupId.Split(',');
             foreach (var item in groupids)
             {
-                string [] grpId = Regex.Split(item, "<:>");
+                string[] grpId = Regex.Split(item, "<:>");
                 groupId = grpId[1] + ',' + groupId;
                 groupName = grpId[0] + ',' + groupName;
             }
@@ -149,7 +149,7 @@ namespace Api.Socioboard.Repositories
             profileids = pageid.TrimEnd(',').Split(',');
             groupids = FacebookGroupId.TrimEnd(',').Split(',');
             string[] arrgroupids = groupId.Split(',');
-            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.GroupShareathon>(t => profileids.Contains(t.Facebookpageid)&& t.Facebookaccountid == Facebookaccountid && t.Userid == userId && arrgroupids.Contains(t.Facebookgroupid));
+            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.GroupShareathon>(t => profileids.Contains(t.Facebookpageid) && t.Facebookaccountid == Facebookaccountid && t.Userid == userId && arrgroupids.Contains(t.Facebookgroupid));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -183,6 +183,22 @@ namespace Api.Socioboard.Repositories
             }
         }
 
+        public static string DeleteLinkShareathon(string GroupShareathodId, Helper.AppSettings _appSettings)
+        {
+            try
+            {
+                MongoRepository _ShareathonRepository = new MongoRepository("LinkShareathon", _appSettings);
+                var builders = Builders<Domain.Socioboard.Models.Mongo.LinkShareathon>.Filter;
+                FilterDefinition<Domain.Socioboard.Models.Mongo.LinkShareathon> filter = builders.Eq("strId", GroupShareathodId);
+                _ShareathonRepository.Delete<Domain.Socioboard.Models.Mongo.LinkShareathon>(filter);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                return "Error";
+            }
+        }
+
         public static List<Domain.Socioboard.Models.Mongo.GroupShareathon> GroupShareathonByUserId(long userId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
         {
             List<Domain.Socioboard.Models.Mongo.GroupShareathon> iMmemGroupShareathon = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.GroupShareathon>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupShareathonByUserId + userId);
@@ -202,11 +218,22 @@ namespace Api.Socioboard.Repositories
                 return task.Result.ToList();
             }
         }
+        public static List<Domain.Socioboard.Models.Mongo.LinkShareathon> LinkShareathonByUserId(long userId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
+        {
 
+            MongoRepository _ShareathonRepository = new MongoRepository("LinkShareathon", _appSettings);
+            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.LinkShareathon>(t => t.Userid == userId);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+            return task.Result.ToList();
+
+        }
 
         public static string EditgroupShareathon(string GroupShareathodId, long userId, string FacebookUrl, string FacebookGroupId, string Facebookaccountid, int Timeintervalminutes, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
-            
+
             string[] groupids = null;
             string groupId = "";
             string groupName = "";
@@ -224,7 +251,7 @@ namespace Api.Socioboard.Repositories
                 MongoRepository _ShareathonRepository = new MongoRepository("GroupShareathon", _appSettings);
                 var builders = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", GroupShareathodId);
-                var update = Builders<BsonDocument>.Update.Set("Facebookaccountid", _Facebookaccounts.FbUserId).Set("Facebookusername",_Facebookaccounts.FbUserName).Set("FacebookPageId", pageid.TrimEnd(','))
+                var update = Builders<BsonDocument>.Update.Set("Facebookaccountid", _Facebookaccounts.FbUserId).Set("Facebookusername", _Facebookaccounts.FbUserName).Set("FacebookPageId", pageid.TrimEnd(','))
                     .Set("Facebookgroupid", groupId.TrimEnd(',')).Set("FacebookPageUrl", FacebookUrl).Set("Facebookgroupname", groupName.TrimEnd(',')).Set("Facebooknameid", FacebookGroupId)
                     .Set("Timeintervalminutes", Timeintervalminutes);
                 _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.GroupShareathon>(update, filter);

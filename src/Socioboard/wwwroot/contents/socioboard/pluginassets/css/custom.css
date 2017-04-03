@@ -158,6 +158,18 @@ body {
     display: none;
     box-shadow: 0 0 3px rgb(243, 103, 51);
 }
+.overlay-added {
+    background-color: rgba(243, 103, 51, 0.9);
+    border-radius: 1px;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 3;
+    display: none;
+    box-shadow: 0 0 3px rgb(243, 103, 51);
+}
 .overlay-share img {
     margin-top: 1%;
     margin-left: 4%;
@@ -401,6 +413,7 @@ body {
 .img-100 {
     height: 100px;
     width: 100px;
+    margin: 0 auto;
 }
 
 .img-50 {

@@ -26,7 +26,7 @@
             <!-- Compose Email Structure -->
             <div class="row">
                 <div class="col s12 m10 offset-m1 l8 offset-l2">
-                  <div class="card" ng-repeat="post in postedRssData | orderBy:'publishedtime':true" >
+                  <div class="card" ng-repeat="post in customRssData | orderBy:'publishingDate':true" >
                     <div class="card-content">
                         <h6><strong>{{post.title}}</strong></h6>
                         <div>
@@ -83,7 +83,7 @@
                         
                       </ul>
                     </div>
-                      <div ng-init="disbtncom= {{disbtncom}}"></div>
+                    <div ng-init="disbtncom= {{disbtncom}}"></div>
                     <div class="col s12 m7 l7 hide-on-med-and-down">
                       <ul class="right">
                           <li>
@@ -121,9 +121,18 @@
                       <div class="col s12 m12 l12">
                          <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
                       </div>
+                      <input type="hidden" id="imageUrl" value="{{fbComposeMessage.image}}" />
                       <div class="col s12 m12 l12">
                           <input type="file" id="composeImage" class="dropify" data-default-file="" />
                       </div>
+                        
+                        <div class="col s12 m8 l9" ng-if="fbComposeMessage">
+                            <input type="file" id="composeImage" class="dropify" after-render data-default-file="{{fbComposeMessage.image}}" />
+                        </div>
+
+                        <div class="col s12 m8 l9" ng-if="!fbComposeMessage">
+                            <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
+                        </div>
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
@@ -138,8 +147,10 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div ng-init="draftbtn= {{draftbtn}}"></div>
                         <div>
-                            <a href="javascript:void(0);" class="btn btn_style">Draft</a>
+                            <div ng-show="draftbtn"  ng-click="draftMsg()" class="btn btn_style">Draft</div>
+                            <div ng-show="!draftbtn"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
                         </div>
                     </div>
                     

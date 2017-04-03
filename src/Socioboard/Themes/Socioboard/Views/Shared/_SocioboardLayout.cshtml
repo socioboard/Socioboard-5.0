@@ -57,13 +57,22 @@
     <link href="~/contents/socioboard/global/plugins/materialize/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="~/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
     <link href="~/contents/socioboard/css/frontend/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="~/contents/socioboard/css/frontend/hello_bar.css" rel="stylesheet" />
+    <link href="~/contents/socioboard/css/frontend/custom.css" rel="stylesheet" />
     <link href="~/contents/socioboard/global/plugins/animate.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="~/contents/socioboard/global/plugins/simple-line-icons/simple-line-icons.css" rel="stylesheet" />
     @RenderSection("CSS", false)
 </head>
 
 <body>
-    <div class="navbar-fixed">
+
+    <!-- hello bar for chrome plugins -->
+    <div id='bizzbar'>
+        <p class='bizztext'>SocioBoard chrome plugins !! <a class='bizzbutton' href="https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?hl=en-GB" target="_blank">Download Now</a></p>
+        <close class="animated headShake infinite"></close>
+    </div>
+    <open class="animated pulse infinite"></open>
+    <div class="navbar-fixed" style="padding-top: 30px;">
         <!-- Dropdown Structure -->
         <ul id="Versions" class="dropdown-content">
             <li><a href="http://socioboard.org/">Community</a></li>
@@ -86,6 +95,7 @@
             <li><a href="http://blog.socioboard.com/category/cases">Cases</a></li>
             <li><a href="http://blog.socioboard.com/">Blogs</a></li>
             <li><a href="~/Index/Download">Download</a></li>
+            @*<li><a href="https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?utm_source=chrome-app-launcher-info-dialog">Download Chrome Plugin</a></li>*@
         </ul>
 
 
@@ -344,7 +354,12 @@
     <script src="~/contents/socioboard/js/frontend/alertify.min.js"></script>
     <link href="~/contents/socioboard/css/frontend/alertify.core.css" rel="stylesheet" type="text/css" />
     <link href="~/contents/socioboard/css/frontend/alertify.default.css" rel="stylesheet" type="text/css" id="toggleCSS" />
+    <script src="~/contents/socioboard/js/frontend/jquery.cookie.js"></script>
+
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+
     <script type="text/javascript">
+        $("#bizzbar").effect("bounce", 100);
         $('.image-wrapper').hover(function () {
             $(this).removeClass('hoverOut').addClass('hoverIn');
         }, function () {
@@ -429,7 +444,7 @@ analytics" href="http://statcounter.com/shopify/"
         ]
         }
     </script>
-    <script src="~/contents/socioboard/js/frontend/jquery.cookie.js"></script>
+    
     <script type="text/javascript">
         $(function () {
 
@@ -916,6 +931,26 @@ analytics" href="http://statcounter.com/shopify/"
             $('#submitButton').show();
             return false;
         }
+
+        /*
+Bizz Bar
+*/
+        $(document).ready(function () {
+            $("open").click(function () {
+                $("#bizzbar").effect("bounce", "100");
+                $('.navbar-fixed').css('padding-top', '30px');
+                $("open").slideUp()
+            })
+        });
+       
+        $(document).ready(function () {
+            
+            $("close").click(function () {
+                $('.navbar-fixed').css('padding-top', '0px');
+                $("#bizzbar").slideUp();
+                $("open").slideDown()
+            })
+        });
     </script>
     @*Forgot password js end*@
 

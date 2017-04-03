@@ -158,18 +158,32 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string res = Repositories.RssNewsContentsRepository.AddRssContentsUrl(keyword, userId, _appSettings, dbr);
-            return Ok(res);    
+            if(res == "added successfully")
+            {
+                DatabaseRepository bdr = new DatabaseRepository(_logger,_env);
+
+                List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstcontent = Repositories.RssNewsContentsRepository.GetRssNewsFeeds(userId,keyword,_appSettings);
+                    //getRssNewsFeedsContents(userId,keyword);
+                return Ok(lstcontent);
+            }
+            else
+            {
+                
+                return Ok("Data already added");
+            }
+           
+           
         }
 
 
         [HttpGet("getRssNewsFeedsContents")]
-        public IActionResult getRssNewsFeedsContents(string userId, string keyword)
+        public IActionResult getRssNewsFeedsContents(long userId, string keyword)
         {
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = Repositories.RssNewsContentsRepository.GetRssNewsFeeds(userId,keyword, _appSettings);
           //  lstRss = lstRss.Where(t => !string.IsNullOrEmpty(t.Message)).ToList();
-            return Ok(lstRss);
+            return Ok(lstRss.ToList());
 
 
         }

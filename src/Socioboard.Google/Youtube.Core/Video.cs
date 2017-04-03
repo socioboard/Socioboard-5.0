@@ -111,5 +111,54 @@ namespace Socioboard.GoogleLib.Youtube.Core
 
 
 
+        public string Get_Videosby_Channel(string channelId, string accesstoken, string part)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/activities?part=snippet%2CcontentDetails&channelId=" + channelId + "&maxResults=50&key=" + accesstoken;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "Authorization", "X-JavaScript-User-Agent" };
+            string[] val = { "Bearer " + accesstoken, "Google APIs Explorer" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val, Socioboard.GoogleLib.Authentication.oAuthToken.Method.GET.ToString());
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+            return response;
+        }
+
+
+
+        public string Get_CommentsBy_VideoId(string videoId, string accesstoken, string part, string key)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&videoId=" + videoId + "&key=" + key;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+            return response;
+
+
+        }
+
     }
 }

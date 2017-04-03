@@ -11,5 +11,6 @@ namespace Domain.Socioboard.Helpers
         public string image { get; set; }
         public string url { get; set; }
         public string description { get; set; }
+        public List<string> imageurls { get; set; }
     }
 }

@@ -146,9 +146,15 @@ namespace Api.Socioboard.Controllers
                 _oauth.ConsumerKey = _appSettings.LinkedinApiKey;
                 _oauth.ConsumerSecret = _appSettings.LinkedinSecretKey;
                 _oauth.Token = lindata[1];
-                dynamic profile = Helper.LinkedInHelper.GetCompanyPageData(_oauth, lindata[0]);
-               
-                  i = Repositories.LinkedInAccountRepository.AddLinkedInCompantPage(_oauth, profile, dbr, userId, groupId, lindata[1], _redisCache, _appSettings, _logger);
+                try
+                {
+                    dynamic profile = Helper.LinkedInHelper.GetCompanyPageData(_oauth, lindata[0]);
+                    i = Repositories.LinkedInAccountRepository.AddLinkedInCompantPage(_oauth, profile, dbr, userId, groupId, lindata[1], _redisCache, _appSettings, _logger);
+                }
+                catch (Exception ex)
+                {
+                    return Ok("something went wrong while adding pages");
+                }
                   
             }
             if (i == 1)

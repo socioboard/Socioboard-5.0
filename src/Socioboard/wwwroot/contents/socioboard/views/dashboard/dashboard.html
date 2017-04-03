@@ -26,6 +26,10 @@
     })
   });
 })(jQuery);
+
+
+
+
 </script>
 <div data-ng-controller="DashboardController">
     <!-- Page name -->
@@ -916,7 +920,7 @@
         </div>
             </div>
         <!-- Compose Email Trigger -->
-        <div ng-show="user.TrailStatus!=2"  class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
+        <div ng-show="user.TrailStatus!=2"  class="fixed-action-btn" onclick="$('select').material_select('destroy'); $('#composeProfiles').val('');$('select').material_select();" style="bottom: 45px; right: 24px;">
             <div  class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
                 <i class="large mdi-editor-mode-edit"></i>
             </div>
@@ -1001,7 +1005,7 @@
                             <label for="compose">Message</label>
                         </div>
                     </div>-->
-                    <div class="row">
+                    <div id="selection" class="row">
                         <div class="input-field col s12">
 
                             <select multiple id="composeProfiles" ng-change="selectclick()" ng-model="selectvalue">

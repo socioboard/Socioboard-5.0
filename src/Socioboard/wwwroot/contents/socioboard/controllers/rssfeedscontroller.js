@@ -5,6 +5,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
     $scope.$on('$viewContentLoaded', function() {   
     
         $scope.disbtncom = true;
+        $scope.draftbtn = true;
         rssfeeds();
         $scope.deleteMsg = function(profileId){
         	// console.log(profileId);
@@ -31,8 +32,8 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
             .then(function (response) {
                 if (response.data != "") {
 
-                    $scope.postedRssData = response.data;
-                    console.log($scope.postedRssData);
+                    $scope.customRssData = response.data;
+                    //console.log($scope.postedRssData);
                     $scope.fetchdatacomplete = true;
                 }
                 else {
@@ -64,7 +65,8 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
             if (schedulemessage != null) {
                 var message = {
                     "title": schedulemessage.title,
-                    "link": schedulemessage.link
+                    "link": schedulemessage.link,
+                    "image":schedulemessage.image
                 };
               //  console.log(schedulemessage.message);
                 console.log("google");
@@ -160,6 +162,78 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
         }
 
 
+
+        $scope.draftMsg = function () {
+            $scope.draftbtn = false;
+            var message = $('#composeMessage').val();
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+            message = updatedmessage;
+
+            if (message != "" && message != undefined) {
+                $scope.checkfile();
+                if ($scope.check == true) {
+                    var formData = new FormData();
+                    formData.append('files', $("#composeImage").get(0).files[0]);
+                    //$scope.dispbtn = false;
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + "" + '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#ScheduleMsg').val('');
+                        $('#ScheduleTime').val('');
+                        $scope.draftbtn = true;
+                        $('#ComposePostModal').closeModal();
+                        swal("Message has got saved in draft successfully");
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+
+                else if ($scope.check == false) {
+                    var formData = new FormData();
+                    $scope.draftbtn = false;
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + "" + '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#ScheduleMsg').val('');
+                        $('#ScheduleTime').val('');
+                        $scope.draftbtn = true;
+                        $('#ComposePostModal').closeModal();//ComposePostModal
+                        swal("Message has got saved in draft successfully");
+                       
+                    }, function (reason) {
+                        console.log(reason);
+                    });
+                }
+                else {
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File extension is not valid. Please upload an image file");
+                    $('#input-file-now').val('');
+                }
+            }
+            else {
+                swal('Please type a message to save in draft');
+            }
+        }
 
         });
     });

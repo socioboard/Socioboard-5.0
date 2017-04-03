@@ -13,7 +13,7 @@ using System.Compat.Web;
 
 namespace Socioboard.Helper
 {
-    public  class PluginHelper
+    public class PluginHelper
     {
 
         //public static Domain.Socioboard.Domain.PluginInfo CreateThumbnail(string Url)
@@ -180,7 +180,7 @@ namespace Socioboard.Helper
             string description = string.Empty;
             string image = string.Empty;
             string _url = string.Empty;
-
+            List<string> imageurls = new List<string>();
             HtmlAttribute haDescription;
             HtmlAttribute haTitle;
             HtmlAttribute haImage;
@@ -263,8 +263,9 @@ namespace Socioboard.Helper
                     haDescription = nodeDescrption.Attributes["content"];
                     description = haDescription.Value;
                 }
-                else { 
-                
+                else
+                {
+
                 }
 
                 HtmlNode nodeTitle = hdoc.DocumentNode.SelectSingleNode("//meta[@name='title']");
@@ -295,11 +296,31 @@ namespace Socioboard.Helper
                         }
                     }
                 }
+                HtmlNodeCollection nodeimgs = new HtmlNodeCollection(hdoc.DocumentNode.ParentNode);
+                nodeimgs = hdoc.DocumentNode.SelectNodes("//img");
+                if (nodeimgs != null)
+                {
+                    foreach (HtmlNode img in nodeimgs)
+                    {
+                        try
+                        {
+                            HtmlAttribute src = img.Attributes["src"];
+                            if (src.Value.Contains("https") || src.Value.Contains("https"))
+                            {
+                                imageurls.Add(src.Value); 
+                            }
+                        }
+                        catch (Exception ex)
+                        {
 
+                        }
+                    } 
+                }
                 HtmlNode nodeImage = hdoc.DocumentNode.SelectSingleNode("//meta[@name='image']");
                 if (nodeImage == null)
                 {
                     nodeImage = hdoc.DocumentNode.SelectSingleNode("//meta[@property='og:image']");
+                   
                     if (nodeImage == null)
                     {
                         try
@@ -312,7 +333,8 @@ namespace Socioboard.Helper
                                 nodeImage = null;
                             }
                         }
-                        catch {
+                        catch
+                        {
                             nodeImage = null;
                         }
                     }
@@ -337,6 +359,7 @@ namespace Socioboard.Helper
                 _ThumbnailDetails.image = image;
                 _ThumbnailDetails.title = title;
                 _ThumbnailDetails.url = _url;
+                _ThumbnailDetails.imageurls = imageurls;
             }
             else
             {
@@ -344,6 +367,7 @@ namespace Socioboard.Helper
                 _ThumbnailDetails.image = "";
                 _ThumbnailDetails.title = "";
                 _ThumbnailDetails.url = _url;
+                _ThumbnailDetails.imageurls = new List<string>();
             }
 
             return _ThumbnailDetails;

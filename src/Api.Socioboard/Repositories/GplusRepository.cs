@@ -796,7 +796,7 @@ namespace Api.Socioboard.Repositories
         public static int AddYoutubeChannels(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, IHostingEnvironment _appEnv)
         {
             int isSaved = 0;
-            Channels _Channels = new Channels("575089347457-74q0u81gj88ve5bfdmbklcf2dnc0353q.apps.googleusercontent.com", "JRtS_TaeYpKOJWBCqt9h8-iG", "http://localhost:9821/GoogleManager/Google");
+            Channels _Channels = new Channels(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
             Domain.Socioboard.Models.YoutubeChannel _YoutubeChannel;
             string[] YTdata = Regex.Split(profiledata, "<:>");
             _YoutubeChannel = Repositories.GplusRepository.getYTChannel(YTdata[2], _redisCache, dbr);
@@ -874,6 +874,218 @@ namespace Api.Socioboard.Repositories
             }
             return isSaved;
         }
+
+
+
+        public static void InitialYtFeedsAdd(string channelid, string AccessToken, Helper.AppSettings settings, ILogger _logger)
+        {
+
+            MongoRepository youtubefeedsrepo = new MongoRepository("YoutubeVideos", settings);
+            Video _Videos = new Video(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
+
+
+
+            try
+            {
+                
+                string videos = _Videos.Get_Videosby_Channel(channelid, AccessToken, "snippet,contentDetails,statistics");
+                JObject JVideodata = JObject.Parse(videos);
+                string videoimage = null;
+
+                foreach (var item in JVideodata["items"])
+                {
+                    MongoYoutubeFeeds _YoutubeFeeds = new MongoYoutubeFeeds();
+
+                    string publishdate = item["snippet"]["publishedAt"].ToString();
+                    string title = item["snippet"]["title"].ToString();
+                    string description = item["snippet"]["description"].ToString();
+                    if (description == "")
+                    {
+                        description = "No Description";
+                    }
+                    try
+                    {
+                        videoimage = item["snippet"]["thumbnails"]["high"]["url"].ToString();
+                    }
+                    catch
+                    {
+                        videoimage = item["snippet"]["thumbnails"]["medium"]["url"].ToString();
+                    }
+                    string videoid = item["contentDetails"]["upload"]["videoId"].ToString();
+
+                    //Add in Mongo via mongo_model
+
+                    _YoutubeFeeds.Id = ObjectId.GenerateNewId();
+                    _YoutubeFeeds.YtChannelId = channelid;
+                    _YoutubeFeeds.YtVideoId = videoid;
+                    _YoutubeFeeds.VdoTitle = title;
+                    _YoutubeFeeds.VdoDescription = description;
+                    _YoutubeFeeds.VdoPublishDate = publishdate;
+                    _YoutubeFeeds.VdoImage = videoimage;
+                    _YoutubeFeeds.VdoUrl = "https://www.youtube.com/watch?v=" + videoid;
+                    _YoutubeFeeds.VdoEmbed = "https://www.youtube.com/embed/" + videoid;
+
+                    youtubefeedsrepo.Add(_YoutubeFeeds);
+
+                }
+
+            }
+            catch(Exception ex)
+            {
+
+            }
+
+
+        }
+
+
+        public static List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> GetYoutubeFeeds(string ChannelId, Helper.Cache _redisCache, Helper.AppSettings settings)
+        {
+
+            List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> lstyoutubefeed = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>();
+            MongoRepository mongorepo = new MongoRepository("YoutubeVideos", settings);
+            var builder = Builders<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>.Sort;
+            var sort = builder.Descending(t => t.VdoPublishDate);
+            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>(t => t.YtChannelId.Equals(ChannelId));
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> lstYtFeeds = task.Result;
+            try
+            {
+                var lstYtFeeds_sorted = lstYtFeeds.OrderByDescending(t => Convert.ToDateTime(t.VdoPublishDate));
+                return lstYtFeeds_sorted.ToList();
+            }
+            catch
+            {
+                return lstYtFeeds.ToList();
+            }
+
+        }
+
+
+
+        public static void InitialYtCommentsAdd(string channelid, string AccessToken, Helper.AppSettings settings, ILogger _logger)
+        {
+
+            //Find Youtube feeds by channel Id
+
+            List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> lstyoutubefeed = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>();
+            MongoRepository mongorepo = new MongoRepository("YoutubeVideos", settings);
+            var builder = Builders<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>.Sort;
+            var sort = builder.Descending(t => t.VdoPublishDate);
+            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>(t => t.YtChannelId.Equals(channelid));
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> lstYtFeeds = task.Result;
+
+            List<string> VideoIds = new List<string>();
+            VideoIds = lstYtFeeds.Select(t => t.YtVideoId).ToList();
+
+            MongoRepository youtubecommentsrepo = new MongoRepository("YoutubeVideosComments", settings);
+            Video _Videos = new Video(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
+
+
+            foreach (string items in VideoIds)
+            {
+                try
+                {
+
+                    string Comments = _Videos.Get_CommentsBy_VideoId(items, AccessToken, "statistics,contentDetails,snippet", settings.GoogleApiKey);
+                    JObject JCommentdata = JObject.Parse(Comments);
+
+                    foreach (var item in JCommentdata["items"])
+                    {
+                        MongoYoutubeComments _YoutubeComments = new MongoYoutubeComments();
+                        try
+                        {
+                            string videoId = item["snippet"]["videoId"].ToString();
+                            string commentId = item["id"].ToString();
+                            string authorDisplayName = item["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"].ToString();
+                            string authorProfileImageUrl = item["snippet"]["topLevelComment"]["snippet"]["authorProfileImageUrl"].ToString();
+                            string authorChannelUrl = item["snippet"]["topLevelComment"]["snippet"]["authorChannelUrl"].ToString();
+                            string authorChannelId = item["snippet"]["topLevelComment"]["snippet"]["authorChannelId"]["value"].ToString();
+                            string textDisplay = item["snippet"]["topLevelComment"]["snippet"]["textDisplay"].ToString();
+                            string textOriginal = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"].ToString();
+                            string viewerRating = item["snippet"]["topLevelComment"]["snippet"]["viewerRating"].ToString();
+                            string likeCount = item["snippet"]["topLevelComment"]["snippet"]["likeCount"].ToString();
+                            string publishedAt = item["snippet"]["topLevelComment"]["snippet"]["publishedAt"].ToString();
+                            string updatedAt = item["snippet"]["topLevelComment"]["snippet"]["updatedAt"].ToString();
+                            string totalReplyCount = item["snippet"]["totalReplyCount"].ToString();
+
+
+                            //Add in Mongo via mongo_model
+
+
+                            _YoutubeComments.Id = ObjectId.GenerateNewId();
+                            _YoutubeComments.videoId = videoId;
+                            _YoutubeComments.commentId = commentId;
+                            _YoutubeComments.authorDisplayName = authorDisplayName;
+                            _YoutubeComments.authorProfileImageUrl = authorProfileImageUrl;
+                            _YoutubeComments.authorChannelUrl = authorChannelUrl;
+                            _YoutubeComments.authorChannelId = authorChannelId;
+                            _YoutubeComments.commentDisplay = textDisplay;
+                            _YoutubeComments.commentOriginal = textOriginal;
+                            _YoutubeComments.viewerRating = viewerRating;
+                            _YoutubeComments.likesCount = likeCount;
+                            _YoutubeComments.publishTime = publishedAt;
+                            _YoutubeComments.updatedTime = updatedAt;
+                            _YoutubeComments.totalReplyCount = totalReplyCount;
+                            _YoutubeComments.ChannelId = channelid;
+
+
+                            youtubecommentsrepo.Add(_YoutubeComments);
+
+
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                    }
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+
+
+        }
+
+
+
+        public static List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> GetYoutubeComments(string VideoId, Helper.Cache _redisCache, Helper.AppSettings settings)
+        {
+
+            List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> lstyoutubefeed = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>();
+            MongoRepository mongorepo = new MongoRepository("YoutubeVideosComments", settings);
+            var builder = Builders<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>.Sort;
+            var sort = builder.Descending(t => t.publishTime);
+            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(t => t.videoId.Equals(VideoId));
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> lstYtComments = task.Result;
+            try
+            {
+                var lstYtComments_sorted = lstYtComments.OrderByDescending(t => Convert.ToDateTime(t.publishTime));
+                return lstYtComments_sorted.ToList();
+            }
+            catch
+            {
+                return lstYtComments.ToList();
+            }
+
+        }
+
 
         #endregion
 

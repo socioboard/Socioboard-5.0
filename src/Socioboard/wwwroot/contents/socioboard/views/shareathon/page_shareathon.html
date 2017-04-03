@@ -31,7 +31,7 @@
                               </thead>
                               <tbody>
                                 <tr ng-repeat="pageshareathon in lstpageshareathon">
-                                    <td>1</td>
+                                    <td>{{current + $index}}</td>
                                     <td>{{pageshareathon.facebookusername}}</td>
                                     <td>{{pageshareathon.facebookpagename}}</td>
                                     <td>{{pageshareathon.timeintervalminutes}}</td>
