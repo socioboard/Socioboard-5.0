@@ -10,17 +10,18 @@ namespace Api.Socioboard.Helper
 {
     public class ScheduleMessageHelper
     {
-        public static string ScheduleMessage(string profileId,string socialprofileName,string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId,string link,string url,string picUrl,string scheduleTime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
+        public static string ScheduleMessage(string profileId, string socialprofileName, string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId, string link, string url, string picUrl, string scheduleTime, string localscheduletime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
         {
 
-           
+
             ScheduledMessage scheduledMessage = new ScheduledMessage();
             scheduledMessage.shareMessage = shareMessage;
+            DateTime userlocalscheduletime = DateTime.Parse(localscheduletime);
             try
             {
                 _logger.LogError("ScheduleMessageHelperscheduleTime>>>>" + scheduleTime);
-                  var dt = DateTime.Parse(scheduleTime);
-                 scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt));
+                var dt = DateTime.Parse(scheduleTime);
+                scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt));
                 //scheduledMessage.scheduleTime = Convert.ToDateTime(scheduleTime) ;
                 // scheduledMessage.scheduleTime = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(),scheduleTime));
             }
@@ -30,11 +31,17 @@ namespace Api.Socioboard.Helper
             }
             DateTime fromTime = scheduledMessage.scheduleTime.AddMinutes(-scheduledMessage.scheduleTime.Minute);
             DateTime toTime = scheduledMessage.scheduleTime.AddMinutes(-scheduledMessage.scheduleTime.Minute).AddHours(1);
-            int count = dbr.Find<ScheduledMessage>(t => t.scheduleTime > fromTime && t.scheduleTime <= toTime && t.profileId == profileId).Count();
-            if (count > _AppSettings.FacebookScheduleMessageMaxLimit)
+            try
             {
-                _logger.LogError("Facebook Max limit Reached.");
-                return "Max limit Reached.";
+                int count = dbr.Find<ScheduledMessage>(t => t.scheduleTime > fromTime && t.scheduleTime <= toTime && t.profileId == profileId).Count();
+                if (count > _AppSettings.FacebookScheduleMessageMaxLimit)
+                {
+                    _logger.LogError("Facebook Max limit Reached.");
+                    return "Max limit Reached.";
+                }
+            }
+            catch (Exception)
+            {
             }
             scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Pending;
             scheduledMessage.userId = userId;
@@ -45,8 +52,9 @@ namespace Api.Socioboard.Helper
             scheduledMessage.picUrl = picUrl;
             scheduledMessage.createTime = DateTime.UtcNow;
             scheduledMessage.clientTime = DateTime.Now;
+            scheduledMessage.localscheduletime = userlocalscheduletime;
             scheduledMessage.socialprofileName = socialprofileName;
-          int ret =  dbr.Add<ScheduledMessage>(scheduledMessage);
+            int ret = dbr.Add<ScheduledMessage>(scheduledMessage);
             if (ret == 1)
             {
                 return "Scheduled.";
@@ -58,7 +66,7 @@ namespace Api.Socioboard.Helper
 
         }
 
-        public static void DraftScheduleMessage(string shareMessage, long userId,long groupId, string picUrl, string scheduleTime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
+        public static void DraftScheduleMessage(string shareMessage, long userId, long groupId, string picUrl, string scheduleTime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
         {
             Draft _Draft = new Draft();
             _Draft.shareMessage = shareMessage;
@@ -67,7 +75,7 @@ namespace Api.Socioboard.Helper
             {
                 _Draft.scheduleTime = Convert.ToDateTime(scheduleTime);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }

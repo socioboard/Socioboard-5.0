@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Cors;
 using MongoDB.Driver;
 using System.Threading.Tasks;
 using Api.Socioboard.Repositories;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Threading;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -653,6 +656,7 @@ namespace Api.Socioboard.Controllers
         {
             //connected to gplusrepository for add data in mongodb
             Repositories.GplusRepository.InitialYtFeedsAdd(channelid, accesstoken, _appSettings, _logger);
+            Thread.Sleep(26000);
             Repositories.GplusRepository.InitialYtCommentsAdd(channelid, accesstoken, _appSettings, _logger);
             return Ok("");
         }
@@ -673,5 +677,59 @@ namespace Api.Socioboard.Controllers
             return Ok(Repositories.GplusRepository.GetYoutubeComments(VideoId, _redisCache, _appSettings));
 
         }
+
+        [HttpPost("PostCommentsYoutube")]
+        public IActionResult PostCommentsYoutube(string channelId, string videoId, string commentText)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Repositories.GplusRepository.PostCommentsYt(channelId, videoId, commentText, _appSettings, _logger, dbr);
+            return Ok("");
+        }
+
+        [HttpPost("uploadyoutube")]
+        public IActionResult uploadyoutube(string channelid, string title, string descrip, string category, string status, IFormFile files)
+        {
+
+            IFormFile updatevideo = files;
+
+            string[] arrdata = new string[4];
+            arrdata[0] = title;
+            arrdata[1] = descrip;
+            arrdata[2] = category;
+            arrdata[3] = status;
+            
+            string filename = "";
+            var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+            filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                    .Parse(files.ContentDisposition)
+                    .FileName
+                    .Trim('"');
+            var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+            filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            try
+            {
+                using (FileStream fs = System.IO.File.Create(filename))
+                {
+                    files.CopyTo(fs);
+                    fs.Flush();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            List<Domain.Socioboard.Models.YoutubeChannel> lstchannels = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId == channelid).ToList();
+            int _resp = Repositories.UploadVideo.videosss(channelid, lstchannels.First().RefreshToken, files, filename, lstchannels.First().Channel_EmailId, arrdata, _appSettings);
+            if (_resp == 0)
+            {
+                return Ok("Posted");
+            }
+            else
+            {
+                return Ok("error");
+            }
+        }
+
     }
 }

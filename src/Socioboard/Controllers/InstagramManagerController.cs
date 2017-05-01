@@ -42,7 +42,8 @@ namespace Socioboard.Controllers
 
                 if (!string.IsNullOrEmpty(response))
                 {
-
+                    Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                    HttpContext.Session.SetObjectAsJson("User", _user);
                 }
                 else
                 {

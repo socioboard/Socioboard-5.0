@@ -23,6 +23,7 @@ namespace Api.Socioboard.Helper
         public string frommail { get; set; }
 
         public string ccmail { get; set; }
+        public string sitemapPath { get; set; }
 
         //Start facebook App Creds
         public string FacebookClientId { get; set; }
@@ -70,6 +71,13 @@ namespace Api.Socioboard.Helper
         public string LinkedinCallBackURL { get; set; }
         //End LinkedIn App Creds 
 
+
+
+        //dropobox App Creds Start
+        public string dropboxApiKey { get; set; }
+        public string dropboxSecretKey { get; set; }
+        public string dropboxCallBackURL { get; set; }
+        //End dropobox App Creds 
 
         //BoardMe
         public string InstagramBoardMeAccessToken { get; set; }

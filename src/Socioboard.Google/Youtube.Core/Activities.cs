@@ -27,6 +27,34 @@ namespace Socioboard.GoogleLib.Youtube.Core
 
         //Get All Activities
         //
+
+        public string GetYtVideos(string ChannelId, string ApiKey)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/activities?part=snippet%2CcontentDetails&channelId=" + ChannelId + "&maxResults=50&key=" + ApiKey;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+            return response;
+
+
+        }
+
+
+
         public string Get_All_Activities(string accesstoken, oAuthTokenYoutube.Parts part, bool mine, int maxResults)
         {
             oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);

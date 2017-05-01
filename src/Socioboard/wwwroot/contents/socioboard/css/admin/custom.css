@@ -294,6 +294,9 @@ ul.side-nav.leftside-navigation li.active > a{
     margin-top: 50px !important;
 }
 
+.margin-top-70{
+    margin-top: 70px !important;
+}
 
 /*linkedin feeds*/
 .company_desc_logo{
@@ -301,6 +304,9 @@ ul.side-nav.leftside-navigation li.active > a{
 }
 
 /* font size */
+.font_30{
+    font-size: 30px;
+}
 .font_50{
     font-size: 50px;
 }

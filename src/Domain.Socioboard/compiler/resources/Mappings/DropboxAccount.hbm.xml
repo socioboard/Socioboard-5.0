@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="DropboxAccount" table="DropboxAccount" lazy="false">
+    <id name="id" column="id" />
+    <property name="DropboxUserId">
+      <column name="DropboxUserId" />
+    </property>
+    <property name="AccessToken">
+      <column name="AccessToken"  />
+    </property>
+    <property name="DropboxUserName">
+      <column name="DropboxUserName"  />
+    </property>
+    <property name="DropboxEmail">
+      <column name="DropboxEmail"  />
+    </property>
+    <property name="IsActive">
+      <column name="IsActive"  />
+    </property>
+    <property name="OauthToken">
+      <column name="OauthToken"  />
+    </property>
+    <property name="OauthTokenSecret">
+      <column name="OauthTokenSecret"  />
+    </property>
+    <property name="UserId">
+      <column name="UserId"  />
+    </property>
+    <property name="lastUpdate">
+      <column name="lastUpdate"/>
+    </property>
+  </class>
+</hibernate-mapping>

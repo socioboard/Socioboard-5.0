@@ -21,35 +21,36 @@ namespace SocioboardDataScheduler.Twitter
             try
             {
                 DatabaseRepository dbr = new DatabaseRepository();
-                if (_TwitterAccount.SchedulerUpdate.AddMinutes(15) <= DateTime.UtcNow)
-                {
+                //if (_TwitterAccount.SchedulerUpdate.AddMinutes(15) <= DateTime.UtcNow)
+                //{
                     if (_TwitterAccount != null)
                     {
                         if (_TwitterAccount.isActive)
                         {
-                            if (apiHitsCount < MaxapiHitsCount)
-                            {
+                            //if (apiHitsCount < MaxapiHitsCount)
+                            //{
                                 if (schmessage.scheduleTime <= DateTime.UtcNow)
                                 {
                                     string twitterdata = ComposeTwitterMessage(schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.url, false, dbr, _TwitterAccount, schmessage);
-                                    if (!string.IsNullOrEmpty(twitterdata))
+                                    if (!string.IsNullOrEmpty(twitterdata) && twitterdata!= "Message not posted")
                                     {
                                         apiHitsCount++;
                                     }
                                 }
-                            }
-                           
+                            //}
+                            //_TwitterAccount.lastUpdate = DateTime.UtcNow;
+                            //dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
                         }
                         else
                         {
-                            apiHitsCount = MaxapiHitsCount;
+                           // apiHitsCount = MaxapiHitsCount;
                         }
                     }
-                }
-                else
-                {
-                    apiHitsCount = 0;
-                }
+                //}
+                //else
+                //{
+                //    apiHitsCount = 0;
+                //}
             }
             catch (Exception ex)
             {
@@ -63,9 +64,13 @@ namespace SocioboardDataScheduler.Twitter
             bool rt = false;
             string ret = "";
             string str = "Message posted";
+            if(message.Length>140)
+            {
+                message = message.Substring(0, 135);
+            }
             Domain.Socioboard.Models.TwitterAccount objTwitterAccount = TwitterAccount;
-            oAuthTwitter OAuthTwt = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey, Helper.AppSettings.twitterConsumerScreatKey, Helper.AppSettings.twitterRedirectionUrl);
-            
+           // oAuthTwitter OAuthTwt = new oAuthTwitter("MbOQl85ZcvRGvp3kkOOJBlbFS", "GF0UIXnTAX28hFhN1ISNf3tURHARZdKWlZrsY4PlHm9A4llYjZ", "http://serv1.socioboard.com/TwitterManager/Twitter");
+            oAuthTwitter OAuthTwt = new oAuthTwitter("h4FT0oJ46KBBMwbcifqZMw", "yfowGI2g21E2mQHjtHjUvGqkfbI7x26WDCvjiSZOjas", "https://www.socioboard.com/TwitterManager/Twitter");
             OAuthTwt.AccessToken = objTwitterAccount.oAuthToken;
             OAuthTwt.AccessTokenSecret = objTwitterAccount.oAuthSecret;
             OAuthTwt.TwitterScreenName = objTwitterAccount.twitterScreenName;

@@ -1,6 +1,5 @@
 ﻿using Google.Apis.Analytics.v3;
 using Google.Apis.Analytics.v3.Data;
-using log4net;
 using System;
 using System.Collections.Generic;
 

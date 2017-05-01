@@ -19,49 +19,18 @@ namespace SocioboardDataScheduler.LinkedIn
             try
             {
                 DatabaseRepository dbr = new DatabaseRepository();
-               
-                if (_LinkedInAccount.SchedulerUpdate.AddHours(1) <= DateTime.UtcNow)
+                if (_LinkedInAccount != null && _LinkedInAccount.IsActive)
                 {
-                    if (_LinkedInAccount != null)
-                    {
-                        if (_LinkedInAccount.IsActive)
-                        {
-                            if (apiHitsCount < MaxapiHitsCount)
-                            {
-                                if (schmessage.scheduleTime <= DateTime.UtcNow)
-                                {
-                                    string linkedindata = ComposeLinkedInMessage(schmessage.url, schmessage.userId, schmessage.shareMessage, _LinkedInAccount.LinkedinUserId, schmessage.picUrl, _LinkedInAccount, dbr, schmessage);
-                                    if (!string.IsNullOrEmpty(linkedindata))
-                                    {
-                                        apiHitsCount++;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                apiHitsCount = 0;
-                            }
-                           
-                        }
-                        else
-                        {
-                            apiHitsCount = 0;
-                        }
-                    }
-                }
-                else
-                {
-                    apiHitsCount = 0;
+                    string linkedindata = ComposeLinkedInMessage(schmessage.url, schmessage.userId, schmessage.shareMessage, _LinkedInAccount.LinkedinUserId, schmessage.picUrl, _LinkedInAccount, dbr, schmessage);
                 }
             }
             catch (Exception ex)
             {
-
-                apiHitsCount = MaxapiHitsCount;
+                Console.WriteLine(ex.StackTrace);
             }
         }
 
-        public static string ComposeLinkedInMessage(string ImageUrl, long userid, string comment, string ProfileId, string imagepath,Domain.Socioboard.Models.LinkedInAccount _objLinkedInAccount, Model.DatabaseRepository dbr, Domain.Socioboard.Models.ScheduledMessage schmessage)
+        public static string ComposeLinkedInMessage(string ImageUrl, long userid, string comment, string ProfileId, string imagepath, Domain.Socioboard.Models.LinkedInAccount _objLinkedInAccount, Model.DatabaseRepository dbr, Domain.Socioboard.Models.ScheduledMessage schmessage)
         {
             string json = "";
             Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = _objLinkedInAccount;
@@ -78,7 +47,7 @@ namespace SocioboardDataScheduler.LinkedIn
             }
             else
             {
-                json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, imagepath);
+                json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, ImageUrl);
             }
 
             if (!string.IsNullOrEmpty(json))
@@ -86,9 +55,9 @@ namespace SocioboardDataScheduler.LinkedIn
                 apiHitsCount++;
                 schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                 schmessage.url = json;
-                dbr.Add<ScheduledMessage>(schmessage);
+                dbr.Update<ScheduledMessage>(schmessage);
                 return "posted";
-               
+
             }
             else
             {

@@ -21,14 +21,14 @@ namespace SocioboardDataScheduler.LinkedIn
             {
                 DatabaseRepository dbr = new DatabaseRepository();
                
-                if (_LinkedinCompanyPage.SchedulerUpdate.AddHours(1) <= DateTime.UtcNow)
-                {
+                //if (_LinkedinCompanyPage.SchedulerUpdate.AddHours(1) <= DateTime.UtcNow)
+                //{
                     if (_LinkedinCompanyPage != null)
                     {
                         if (_LinkedinCompanyPage.IsActive)
                         {
-                            if (apiHitsCount < MaxapiHitsCount)
-                            {
+                            //if (apiHitsCount < MaxapiHitsCount)
+                            //{
                                 if (schmessage.scheduleTime <= DateTime.UtcNow)
                                 {
                                     string linkedindata = ComposeLinkedInCompanyPagePost(schmessage.url, schmessage.userId, schmessage.shareMessage, _LinkedinCompanyPage.LinkedinPageId, dbr, _LinkedinCompanyPage, schmessage);
@@ -37,11 +37,11 @@ namespace SocioboardDataScheduler.LinkedIn
                                         apiHitsCount++;
                                     }
                                 }
-                            }
-                            else
-                            {
-                                apiHitsCount = 0;
-                            }
+                            //}
+                            //else
+                            //{
+                            //    apiHitsCount = 0;
+                            //}
                            
                         }
                         else
@@ -49,11 +49,11 @@ namespace SocioboardDataScheduler.LinkedIn
                             apiHitsCount = 0;
                         }
                     }
-                }
-                else
-                {
-                    apiHitsCount = 0;
-                }
+                //}
+                //else
+                //{
+                //    apiHitsCount = 0;
+                //}
             }
             catch (Exception exs)
             {
@@ -89,7 +89,7 @@ namespace SocioboardDataScheduler.LinkedIn
                 apiHitsCount++;
                 schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                 schmessage.url = json;
-                dbr.Add<ScheduledMessage>(schmessage);
+                dbr.Update<ScheduledMessage>(schmessage);
 
                 return "posted";
             }

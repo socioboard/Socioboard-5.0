@@ -281,7 +281,7 @@ namespace Api.Socioboard.Repositories
 
                         UpdateGroupShareathonPage(fbAcc, userId, settings);
                         UpdatePageshareathonPage(fbAcc, userId, settings);
-
+                        UpdateDeleteLinkShareathon(fbAcc.FbUserName, userId, settings);
 
                     }
                 }
@@ -1506,6 +1506,8 @@ namespace Api.Socioboard.Repositories
 
                 UpadteDeletesGroupShareathon(profileId, _appSettings, userId);
 
+                DeleteLinkShareathon(fbAcc.FbUserName, userId,_appSettings);
+
                 return "Deleted";
             }
             else
@@ -1729,6 +1731,58 @@ namespace Api.Socioboard.Repositories
                 _ShareathongroupRepository.Update<Domain.Socioboard.Models.Mongo.GroupShareathon>(update, t => t.Facebookaccountid == profileId || t.Facebookpageid.Contains(profileId));
             }
         }
+
+        public static string DeleteLinkShareathon(string Facebookpageid,long userId ,Helper.AppSettings _appSettings)
+        {
+            try
+            {
+                MongoRepository _ShareathonRepository = new MongoRepository("LinkShareathon", _appSettings);
+                var ret = _ShareathonRepository.Find<LinkShareathon>(t => t.Facebookusername.Contains(Facebookpageid) && t.Userid == userId);
+                var task = Task.Run(async () =>
+                  {
+                      return await ret;
+
+                  });
+                LinkShareathon _linkshareathon = task.Result.ToList().First();
+                //var builders = Builders<Domain.Socioboard.Models.Mongo.LinkShareathon>.Filter;
+                //FilterDefinition<Domain.Socioboard.Models.Mongo.LinkShareathon> filter = builders.Eq("strId", _linkshareathon.strId);
+                //_ShareathonRepository.Delete<Domain.Socioboard.Models.Mongo.LinkShareathon>(filter);
+                var update = Builders<Domain.Socioboard.Models.Mongo.LinkShareathon>.Update.Set(t => t.IsActive, false);
+                _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.LinkShareathon>(update, t => t.strId == _linkshareathon.strId);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                return "Error";
+            }
+        }
+
+        public static void UpdateDeleteLinkShareathon(string Facebookpageid, long userId, Helper.AppSettings _appSettings)
+        {
+            try
+            {
+                MongoRepository _ShareathonRepository = new MongoRepository("LinkShareathon", _appSettings);
+                var ret = _ShareathonRepository.Find<LinkShareathon>(t => t.Facebookusername.Contains(Facebookpageid) && t.Userid == userId);
+                var task = Task.Run(async () =>
+                {
+                    return await ret;
+
+                });
+                LinkShareathon _linkshareathon = task.Result.ToList().First();
+                //var builders = Builders<Domain.Socioboard.Models.Mongo.LinkShareathon>.Filter;
+                //FilterDefinition<Domain.Socioboard.Models.Mongo.LinkShareathon> filter = builders.Eq("strId", _linkshareathon.strId);
+                //_ShareathonRepository.Delete<Domain.Socioboard.Models.Mongo.LinkShareathon>(filter);
+                var update = Builders<Domain.Socioboard.Models.Mongo.LinkShareathon>.Update.Set(t => t.IsActive, true);
+                _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.LinkShareathon>(update, t => t.strId == _linkshareathon.strId);
+               
+            }
+            catch (Exception ex)
+            {
+               
+            }
+        }
+
+
 
     }
 }

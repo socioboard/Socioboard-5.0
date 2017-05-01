@@ -169,29 +169,35 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         $scope.saveCommentReply = function () {
               debugger;
               var message = $('#comment_text').val();
-              swal({
-                  title: "Are you sure?",
-                  text: "Reply this message to " + $rootScope.screenName,
-                  type: "warning",
-                  showCancelButton: true,
-                  confirmButtonColor: "#DD6B55",
-                  confirmButtonText: "Yes, Reply it!",
-                  closeOnConfirm: false
-              },
-                    function () {
-                        // $scope.modalinstance.dismiss('cancel');
-                        //code for favorite Post
-                        $http.post(apiDomain + '/api/Twitter/TwitterReplyUpdate?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + $rootScope.profileId + '&messageId=' + $rootScope.messageId + '&message=' + message + '&screenName='+$rootScope.screenName)
-                                    .then(function (response) {
-                                        $('#comment_text').val('');
-                                        response.data;
-                                        swal(response.data);
-                                    }, function (reason) {
-                                        $scope.error = reason.data;
-                                    });
-                        // end codes favorite Post
+              if (/\S/.test(message)) {
+                  swal({
+                      title: "Are you sure?",
+                      text: "Reply this message to " + $rootScope.screenName,
+                      type: "warning",
+                      showCancelButton: true,
+                      confirmButtonColor: "#DD6B55",
+                      confirmButtonText: "Yes, Reply it!",
+                      closeOnConfirm: false
+                  },
+                        function () {
+                            // $scope.modalinstance.dismiss('cancel');
+                            //code for favorite Post
+                            $http.post(apiDomain + '/api/Twitter/TwitterReplyUpdate?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + $rootScope.profileId + '&messageId=' + $rootScope.messageId + '&message=' + message + '&screenName=' + $rootScope.screenName)
+                                        .then(function (response) {
+                                            $('#comment_text').val('');
+                                            response.data;
+                                            swal(response.data);
+                                        }, function (reason) {
+                                            $scope.error = reason.data;
+                                        });
+                            // end codes favorite Post
 
-                    });
+                        });
+              }
+              else
+              {
+                  swal("Enter some text for reply");
+              }
           }
 
           $rootScope.taskNotification = {};

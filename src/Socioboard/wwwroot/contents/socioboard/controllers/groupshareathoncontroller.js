@@ -5,7 +5,7 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
     $scope.$on('$viewContentLoaded', function() {   
     
         groupshareathon();
-        $scope.deleteMsg = function(profileId){
+        $scope.deletegrouphareathon = function (profileId) {
         	swal({   
 	        title: "Are you sure?",   
 	        text: "You will not be able to send any message via this account!",
@@ -14,10 +14,18 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
 	        confirmButtonColor: "#DD6B55",   
 	        confirmButtonText: "Yes, delete it!",   
 	        closeOnConfirm: false }, 
-	        function(){   
-	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "Success");
-	            });
+	          function () {
+	              //todo: code to delete profile
+	              $http.post(apiDomain + '/api/Shareathon/DeleteGroupShareathon?GroupShareathodId=' + profileId)
+                                 .then(function (response) {
+                                     if (response.data == "success") {
+                                         swal("Deleted!", "Your profile has been deleted.", "success");
+                                         $scope.loadgroupshareathon();
+                                     }
+                                 }, function (reason) {
+                                     $scope.error = reason.data;
+                                 });
+	          });
         }
 
 
@@ -35,17 +43,17 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
 
         $scope.loadgroupshareathon();
 
-        $scope.deletegrouphareathon = function (GroupShareathodId) {
-            //codes to delete  page shreathon
-            $http.post(apiDomain + '/api/Shareathon/DeleteGroupShareathon?GroupShareathodId=' + GroupShareathodId)
-                              .then(function (response) {
-                                  swal(response.data);
-                                  $scope.loadgroupshareathon();
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            // end codes to delete page shreathon
-        }
+        //$scope.deletegrouphareathon = function (GroupShareathodId) {
+        //    //codes to delete  page shreathon
+        //    $http.post(apiDomain + '/api/Shareathon/DeleteGroupShareathon?GroupShareathodId=' + GroupShareathodId)
+        //                      .then(function (response) {
+        //                          swal(response.data);
+        //                          $scope.loadgroupshareathon();
+        //                      }, function (reason) {
+        //                          $scope.error = reason.data;
+        //                      });
+        //    // end codes to delete page shreathon
+        //}
 
 
         $scope.editgrouphareathon = function (grouphareathon) {
@@ -57,9 +65,11 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
                      }, function (reason) {
                          $scope.error = reason.data;
                      });
-            window.location.href = "#/edit_group_shareathon.html";
+            $scope.editgrouphareathon = function (pageshareathon) {
+                $rootScope.pageshareathondata = pageshareathon;
+                window.location.href = "#/edit_group_shareathon.html";
+            }
         }
-
   });
 
 });

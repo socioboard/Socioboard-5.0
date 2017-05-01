@@ -19,7 +19,7 @@ SocioboardApp.controller('CreateBoardController', function ($rootScope, $scope,$
             }
             if (board.name.length > 20) {
                 alertify.set({ delay: 5000 });
-                alertify.error("Length of the board name should be less than 20");
+                alertify.error("Length of the board name must not be greater than 20");
                 return;
             }
 

@@ -18,6 +18,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string strId { get; set; }
         public virtual long Userid { get; set; }
         public virtual int TimeInterVal { get; set; }
+        public virtual bool IsActive { get; set; }
         public virtual string FacebookPageUrl { get; set; }
         public virtual string Facebookusername { get; set; }
         public virtual string Facebookpageid { get; set; }

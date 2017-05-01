@@ -53,5 +53,8 @@
     <property name="ViewsCount">
       <column name="ViewsCount"  />
     </property>
+    <property name="Channel_EmailId">
+      <column name="Channel_EmailId"  />
+    </property>
   </class>
 </hibernate-mapping>

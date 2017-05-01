@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETFramework,Version=v4.5.1/",
-    "signature": "e34ce30ac3d6c8a77bb88efb03135a4a5e605827"
+    "signature": "1f4afcbfc39941de8dbe12acfcd33f472d9842e9"
   },
   "compilationOptions": {
     "defines": [
@@ -49,6 +49,8 @@
           "NHibernate.Linq": "1.0.0",
           "StackExchange.Redis": "1.1.603",
           "Google.Apis.Analytics.v3": "1.14.0.456",
+          "Google.GData.YouTube": "2.2.0",
+          "Google.Apis.YouTube.v3": "1.24.1.760",
           "Microsoft.AspNetCore.Cors": "1.0.0",
           "MongoDB.Bson": "2.2.4",
           "Microsoft.AspNetCore.Diagnostics": "1.0.0",
@@ -58,11 +60,6 @@
         },
         "compile": {
           "Api.Socioboard.exe": {}
-        }
-      },
-      "BouncyCastle/1.7.0": {
-        "compile": {
-          "lib/Net40-Client/BouncyCastle.Crypto.dll": {}
         }
       },
       "EntityFramework/6.0.0": {
@@ -79,11 +76,10 @@
           "lib/net45/Facebook.dll": {}
         }
       },
-      "Google.Apis/1.14.0": {
+      "Google.Apis/1.24.1": {
         "dependencies": {
-          "Google.Apis.Core": "1.14.0",
-          "Zlib.Portable.Signed": "1.11.0",
-          "log4net": "2.0.3"
+          "Google.Apis.Core": "1.24.1",
+          "Zlib.Portable.Signed": "1.11.0"
         },
         "compile": {
           "lib/net45/Google.Apis.PlatformServices.dll": {},
@@ -92,29 +88,65 @@
       },
       "Google.Apis.Analytics.v3/1.14.0.456": {
         "dependencies": {
-          "Google.Apis": "1.14.0",
-          "Google.Apis.Auth": "1.14.0"
+          "Google.Apis": "1.24.1",
+          "Google.Apis.Auth": "1.24.1"
         },
         "compile": {
           "lib/portable-net45+netcore45+wpa81+wp8/Google.Apis.Analytics.v3.dll": {}
         }
       },
-      "Google.Apis.Auth/1.14.0": {
+      "Google.Apis.Auth/1.24.1": {
         "dependencies": {
-          "BouncyCastle": "1.7.0",
-          "Google.Apis.Core": "1.14.0"
+          "Google.Apis": "1.24.1",
+          "Google.Apis.Core": "1.24.1"
         },
         "compile": {
           "lib/net45/Google.Apis.Auth.PlatformServices.dll": {},
           "lib/net45/Google.Apis.Auth.dll": {}
         }
       },
-      "Google.Apis.Core/1.14.0": {
+      "Google.Apis.Core/1.24.1": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
         "compile": {
           "lib/net45/Google.Apis.Core.dll": {}
+        }
+      },
+      "Google.Apis.YouTube.v3/1.24.1.760": {
+        "dependencies": {
+          "Google.Apis": "1.24.1",
+          "Google.Apis.Auth": "1.24.1"
+        },
+        "compile": {
+          "lib/net45/Google.Apis.YouTube.v3.dll": {}
+        }
+      },
+      "Google.GData.Client/2.2.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/Google.GData.Client.dll": {}
+        }
+      },
+      "Google.GData.Extensions/2.2.0": {
+        "dependencies": {
+          "Google.GData.Client": "2.2.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/Google.GData.Extensions.dll": {}
+        }
+      },
+      "Google.GData.YouTube/2.2.0": {
+        "dependencies": {
+          "Google.GData.Client": "2.2.0",
+          "Google.GData.Extensions": "2.2.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/Google.GData.YouTube.dll": {}
         }
       },
       "Hammock/1.2.3": {
@@ -130,11 +162,6 @@
       "Libuv/1.9.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.0.1"
-        }
-      },
-      "log4net/2.0.3": {
-        "compile": {
-          "lib/net40-full/log4net.dll": {}
         }
       },
       "Microsoft.ApplicationInsights/2.1.0": {
@@ -1578,6 +1605,8 @@
           "NHibernate.Linq": "1.0.0",
           "StackExchange.Redis": "1.1.603",
           "Google.Apis.Analytics.v3": "1.14.0.456",
+          "Google.GData.YouTube": "2.2.0",
+          "Google.Apis.YouTube.v3": "1.24.1.760",
           "Microsoft.AspNetCore.Cors": "1.0.0",
           "MongoDB.Bson": "2.2.4",
           "Microsoft.AspNetCore.Diagnostics": "1.0.0",
@@ -1587,11 +1616,6 @@
         },
         "runtime": {
           "Api.Socioboard.exe": {}
-        }
-      },
-      "BouncyCastle/1.7.0": {
-        "runtime": {
-          "lib/Net40-Client/BouncyCastle.Crypto.dll": {}
         }
       },
       "EntityFramework/6.0.0": {
@@ -1608,11 +1632,10 @@
           "lib/net45/Facebook.dll": {}
         }
       },
-      "Google.Apis/1.14.0": {
+      "Google.Apis/1.24.1": {
         "dependencies": {
-          "Google.Apis.Core": "1.14.0",
-          "Zlib.Portable.Signed": "1.11.0",
-          "log4net": "2.0.3"
+          "Google.Apis.Core": "1.24.1",
+          "Zlib.Portable.Signed": "1.11.0"
         },
         "runtime": {
           "lib/net45/Google.Apis.PlatformServices.dll": {},
@@ -1621,29 +1644,65 @@
       },
       "Google.Apis.Analytics.v3/1.14.0.456": {
         "dependencies": {
-          "Google.Apis": "1.14.0",
-          "Google.Apis.Auth": "1.14.0"
+          "Google.Apis": "1.24.1",
+          "Google.Apis.Auth": "1.24.1"
         },
         "runtime": {
           "lib/portable-net45+netcore45+wpa81+wp8/Google.Apis.Analytics.v3.dll": {}
         }
       },
-      "Google.Apis.Auth/1.14.0": {
+      "Google.Apis.Auth/1.24.1": {
         "dependencies": {
-          "BouncyCastle": "1.7.0",
-          "Google.Apis.Core": "1.14.0"
+          "Google.Apis": "1.24.1",
+          "Google.Apis.Core": "1.24.1"
         },
         "runtime": {
           "lib/net45/Google.Apis.Auth.PlatformServices.dll": {},
           "lib/net45/Google.Apis.Auth.dll": {}
         }
       },
-      "Google.Apis.Core/1.14.0": {
+      "Google.Apis.Core/1.24.1": {
         "dependencies": {
           "Newtonsoft.Json": "9.0.1"
         },
         "runtime": {
           "lib/net45/Google.Apis.Core.dll": {}
+        }
+      },
+      "Google.Apis.YouTube.v3/1.24.1.760": {
+        "dependencies": {
+          "Google.Apis": "1.24.1",
+          "Google.Apis.Auth": "1.24.1"
+        },
+        "runtime": {
+          "lib/net45/Google.Apis.YouTube.v3.dll": {}
+        }
+      },
+      "Google.GData.Client/2.2.0": {
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "runtime": {
+          "lib/Google.GData.Client.dll": {}
+        }
+      },
+      "Google.GData.Extensions/2.2.0": {
+        "dependencies": {
+          "Google.GData.Client": "2.2.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "runtime": {
+          "lib/Google.GData.Extensions.dll": {}
+        }
+      },
+      "Google.GData.YouTube/2.2.0": {
+        "dependencies": {
+          "Google.GData.Client": "2.2.0",
+          "Google.GData.Extensions": "2.2.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "runtime": {
+          "lib/Google.GData.YouTube.dll": {}
         }
       },
       "Hammock/1.2.3": {
@@ -1659,11 +1718,6 @@
       "Libuv/1.9.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.0.1"
-        }
-      },
-      "log4net/2.0.3": {
-        "runtime": {
-          "lib/net40-full/log4net.dll": {}
         }
       },
       "Microsoft.ApplicationInsights/2.1.0": {
@@ -2896,11 +2950,6 @@
       "serviceable": false,
       "sha512": ""
     },
-    "BouncyCastle/1.7.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-yvrW1NCFBC+l53Kchlk1iRYlnafpZ+o6oy0tFpFM2G28gz3H0PubyJFLc8KoYys3N0UPYo6TN2NRegpouDxRTw=="
-    },
     "EntityFramework/6.0.0": {
       "type": "package",
       "serviceable": true,
@@ -2911,25 +2960,45 @@
       "serviceable": true,
       "sha512": "sha512-ftsRUZcfIfIppN2EQwIBfqoB16Ze7hvSSNdSkkdQUdODY25BjCUGZs63MQEdzPxLp7Mn058k8dwOS3NQ/W7GxA=="
     },
-    "Google.Apis/1.14.0": {
+    "Google.Apis/1.24.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-xaOjRZ84LLfr31b5hEnslynuH4kZO4tg8aKE7cIwx+eOOmk7lqmIK/IkzETgFvt6fIYkXDalu2PxrLWwDRgoHg=="
+      "sha512": "sha512-IotbJlX3qTthN3Z3HdtnzV81CkWUi5iFAKlZUqM0tEz5XYfm0rsieCIn5xGgemcrJ2NAQSrDVmcu4u2AHXS1uQ=="
     },
     "Google.Apis.Analytics.v3/1.14.0.456": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-fKOx2HjpMW7zWu1m0rluPKFBsPehN9AqWgMRsiLPLXXSdf6nAxsw07xl13S7D1nLkUppyIQrjZ+jdvzvhBjJoA=="
     },
-    "Google.Apis.Auth/1.14.0": {
+    "Google.Apis.Auth/1.24.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-M5N+E8CFat9ZnXkESPOjung62Eb6hZM0/gZXbwWxN/Ds/ls5/LKCR04D7ceh2vVCWQk6ImymvAMEmzQQ0/U/uQ=="
+      "sha512": "sha512-Jlki9jQxZT2J1frKqbA7Hp2QwT14nrtrTBSb6NmT5JRfmFLDLtipJXLBSFnXpY8glchc2sQIIixMo5ul4buuhA=="
     },
-    "Google.Apis.Core/1.14.0": {
+    "Google.Apis.Core/1.24.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-5nYOq10bTyoawN6U04BB67kkjR/tnv6pFrkV2jzcuK6nBv5rIF7vUdF7NDgDKOFFgLHOOOFWBLOjjVp3Vv3XaA=="
+      "sha512": "sha512-ucJl79pUqRlD0GdsaJI0VPCcREmoYH+93Z1eHWRjOAkMQVGo2Jb9yOF6bJBQnPO+BTvGlf32a0Xc+nxCOLdvEw=="
+    },
+    "Google.Apis.YouTube.v3/1.24.1.760": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-52hdVKEiSsut5cQc46pdgn91s6gNYH6T5ipbvjsnVHvyqps7c4OIylXvHNdCotd2S71u1+1/gLRW439BE4Whlg=="
+    },
+    "Google.GData.Client/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fEzWX+zWCJLj2pHcaY22hz4bbhCYzk01OodW2lqovh8jA2KsMaZ+SvZJqjl2sZo83us8DAFYlnopIR6qfkBbrQ=="
+    },
+    "Google.GData.Extensions/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Pvei3H1fhthoPbgey6QXqlYD3BCYo+E2h/J1+1PVK1rKMQ/9Ifo3nx5KDT1luyu2H/ZGFxouDaxnqKq2u/J5Qg=="
+    },
+    "Google.GData.YouTube/2.2.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-z/Ce0/mZDFs3sSqU5GdHhfilNVjnUHu8PZtfskzI3rMbxCLi9J1e1MQ097Jcl6DuSjkJl+M90JyC98wy5X7goA=="
     },
     "Hammock/1.2.3": {
       "type": "package",
@@ -2945,11 +3014,6 @@
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-9Q7AaqtQhS8JDSIvRBt6ODSLWDBI4c8YxNxyCQemWebBFUtBbc6M5Vi5Gz1ZyIUlTW3rZK9bIr5gnVyv0z7a2Q=="
-    },
-    "log4net/2.0.3": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-rxMHzK5efGPo5XtRnuUGO4tfW5l74Aji6kVmtMAt2SgcB5PHBNtNY7yj2LCI2VtKrLPO7kCKR6kH6lIZggq3Gg=="
     },
     "Microsoft.ApplicationInsights/2.1.0": {
       "type": "package",

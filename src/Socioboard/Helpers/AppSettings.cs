@@ -41,6 +41,13 @@ namespace Socioboard.Helpers
         public string LinkedinCallBackURL { get; set; }
         //End LinkedIn App Creds 
 
+        //dropobox App Creds Start
+        public string dropboxApiKey { get; set; }
+        public string dropboxSecretKey { get; set; }
+        public string dropboxCallBackURL { get; set; }
+        public string dropboxauthorizeUrl { get; set; }
+        //End dropobox App Creds 
+
 
         //pay pal
         public string PaypalURL { get; set; }

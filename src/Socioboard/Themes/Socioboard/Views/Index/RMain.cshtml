@@ -57,7 +57,7 @@
 </head>
 
 <body style="background-color:transparent">
-    <div id="myModal" data-easein="flipBounceYIn" aria-labelledby="gridSystemModalLabel" role="dialog" tabindex="-1" class="in" style="display: block; padding-left: 17px;">
+    <div id="myModal" data-easein="flipBounceYIn" aria-labelledby="gridSystemModalLabel" role="dialog" tabindex="-1" class="in" style="display: block;  padding-left: 17px;">
 
 
         <div class='col-md-2 cancel-btn pull-right z-i btn-t-r m-t-b'>
@@ -82,7 +82,7 @@
                         <div class="tab-content">
 
                             <div class="tab-pane active" id="tab1">
-                                <div class='row'>
+                                <div class='row' id="123">
                                     <div class="col-md-12" style="overflow-y:auto;max-height:500px">
                                         <div class='row cus001  padding-20'>
                                             <!-- Profiles -->
@@ -136,7 +136,7 @@
 
 
                                         <div class='row  padding-10'>
-                                            @if (objplugin.profileType == "facebook" || objplugin.profileType == "pinterest" || objplugin.profileType == "image" || objplugin.profileType == "website")
+                                            @if (objplugin.profileType == "facebook" || objplugin.profileType == "pinterest" || objplugin.profileType == "image" || objplugin.profileType == "website" || objplugin.type == "website")
                                             {
                                                 if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "twitter"))
                                                 {
@@ -182,9 +182,9 @@
                                                         <div>
                                                             @if (objplugin._ThumbnailDetails != null)
                                                             {
-                                                               @if(!content.Replace("nnnamp;", "&amp;").Contains(objplugin._ThumbnailDetails.title))
-                                                               {
-                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-twt-message' onkeyup="countChar()">@objplugin._ThumbnailDetails.title @content</textarea>
+                                                                @if (!content.Replace("nnnamp;", "&amp;").Contains(objplugin._ThumbnailDetails.title))
+                                                                {
+                                                                    <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-twt-message' onkeyup="countChar()">@objplugin._ThumbnailDetails.title @content</textarea>
                                                                 }
                                                                 else
                                                                 {
@@ -223,7 +223,7 @@
                                                             {
                                                                 @if (!content.Replace("nnnamp;", "&amp;").Contains(objplugin._ThumbnailDetails.title))
                                                                 {
-                                                                <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@objplugin._ThumbnailDetails.title @content</textarea>
+                                                                    <textarea placeholder='What would you like to share?' class='txt-area form-control' id='txt-fb-message'>@objplugin._ThumbnailDetails.title @content</textarea>
                                                                 }
                                                                 else
                                                                 {
@@ -285,7 +285,9 @@
 
                                                                                     <div class="retweet-ctrl">
                                                                                         <i class="fa fa-retweet retweet-fa"></i>
-                                                                                        <span class='retweet-link'><a href="javascript:void(0)">Retweeted by You</a></span>
+                                                                                        <span class='retweet-link'>
+                                                                                            <a href="javascript:void(0)" style="cursor: default;">Retweeted by You</a>
+                                                                                        </span>
                                                                                     </div>
                                                                                 </div>
 
@@ -295,7 +297,7 @@
                                                                         <hr>
 
                                                                                             }
-                                                                                            if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "facebook" || t.type == "fscebook_page"))
+                                                                                            if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "facebook" || t.type == "facebook_page"))
                                                                                             {
                                                                                                 <div class='form-group facebook-text-show'>
                                                                                                     <div class='message-to-pages'>
@@ -344,7 +346,7 @@
                                         </div><!-- /Messages -->
                                         @if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "facebook"))
                                         {
-                                            if (!string.IsNullOrEmpty(objplugin.url) && objplugin.profileType != "pinterest")
+                                            if (!string.IsNullOrEmpty(objplugin.url) && objplugin.profileType != "pinterest" && objplugin.profileType != "image")
                                             {
                                                 if (objplugin._ThumbnailDetails != null)
                                                 {
@@ -368,22 +370,22 @@
                                                                         <div id="myCarousel" class="carousel slide">
 
                                                                             <div class="carousel-inner">
-                                                                                <div class="item active">
+                                                                                <div class="item image active">
                                                                                     <div class="fill"><img src="@objplugin._ThumbnailDetails.image.Replace("&amp;","&")" class='media-object img-100' alt='image'></div>
                                                                                     <div class="carousel-caption">
                                                                                     </div>
                                                                                 </div>
                                                                                 @if (objplugin._ThumbnailDetails.imageurls.Count > 0)
                                                                                 {
-                                                                                @foreach (var item in objplugin._ThumbnailDetails.imageurls)
+                                                                                    @foreach (var item in objplugin._ThumbnailDetails.imageurls)
                                                                                     {
-                                                                                <div class="item">
+                                                                                        <div class="item image">
 
-                                                                                    <div class="fill"><img src="@item.Replace("&amp;","&")" class="media-object img-100"></div>
-                                                                                    <div class="carousel-caption">
+                                                                                            <div class="fill"><img src="@item.Replace("&amp;","&")" class="media-object img-100"></div>
+                                                                                            <div class="carousel-caption">
 
-                                                                                    </div>
-                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
                                                                                     }
 
                                                                                 }
@@ -510,7 +512,14 @@
                                                     <span class='fa fa-times img-close-btn t-i-m' id='img-close'></span>
                                                     <div class='col-sm-3 img-uploader p-r'>
                                                         <div class='info-holder-thumb'>
-                                                            <img src="@objplugin.imageUrl" id="img-upload-thumb">
+                                                            @if (objplugin.imageUrl.Contains("http"))
+                                                            {
+                                                                <img src="@objplugin.imageUrl" id="img-upload-thumb">
+                                                            }
+                                                            else
+                                                            {
+                                                                <img src="@objplugin._ThumbnailDetails.image" id="img-upload-thumb">
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>
@@ -560,7 +569,7 @@
 
                                                             <span class="input-group-addon" style='display: none;'>
                                                             </span>
-                                                            <input type='text' class="form-control dt-tb" id="sd-date-time" />
+                                                            <input type='text' class="form-control dt-tb t-dt" id="sd-date-time" />
                                                         </div>
                                                     </div>
                                                     <!--/test-->
@@ -572,7 +581,7 @@
                                                                 <button type="button" class="btn btn-primary dropdown-toggle bright" data-toggle="dropdown">
                                                                     &nbsp; <span class="caret"></span>
                                                                 </button>
-                                                                <ul class="dropdown-menu ul-dup ul-ddn" role="menu">
+                                                                <ul class="dropdown-menu ul-dup ul-ddn" style="margin-top:-105px" role="menu">
                                                                     <li><a href="#" id="sb-share-now">Share Now</a></li>
                                                                     <li><a href="#" class='t-dt' id="sb-schedule-post">Schedule Post</a></li>
                                                                 </ul>
@@ -598,7 +607,7 @@
 
                                                             <span class="input-group-addon" style='display: none;'>
                                                             </span>
-                                                            <input type='text' class="form-control dt-tb" id="sd-date-time" />
+                                                            <input type='text' class="form-control dt-tb t-dt" id="sd-date-time" />
                                                         </div>
                                                     </div>
                                                     <!--/test-->
@@ -629,9 +638,16 @@
                                                 </div>
 
                                             }
+                                            <div class="mob-style zeroprofile" style="display:none">
+                                                <div class="col-md-12" style="padding: 31px 0 4px 0;text-align: center;">
+                                                    <span class='r-l-p cg' id='upload-link' style="font-size: 16px;">
+                                                        You Have Not Selected any socialprofile
+                                                    </span>
+                                                </div>
+                                            </div>
 
-
-                                        </div><!--/replace link options -->
+                                        </div>
+                                        <!--/replace link options -->
 
                                     </div>
                                 </div>
@@ -706,6 +722,7 @@
 
         $(document).ready(function () {
             debugger;
+
             if ('@emailId' != "") {
                 setCookie("socioboardpluginemailId", '@emailId', "90");
                 if ('@password' != "") {
@@ -716,6 +733,8 @@
             }
 
         });
+
+
 
         function setCookie(cname, cvalue, exdays) {
             var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
@@ -770,6 +789,7 @@
         });
 
         $('#sb-schedule-post').click(function () {
+
             $('.btn-share-send').removeAttr('onclick', 'sharenow()');
             $('.btn-share-send').attr('onclick', 'schedulenow()');
             $('.btn-share-send').text('Scheduling Post');
@@ -780,6 +800,7 @@
             $('.btn-share-send').removeAttr('onclick', 'schedulenow()');
             $('.btn-share-send').attr('onclick', 'sharenow()');
             $('.btn-share-send').text('Sharing Post');
+            sharenow();
         });
 
 
@@ -804,6 +825,13 @@
             }
             else {
                 $('.twitter-text-show').css('display', 'none');
+            } if (t_count > 0 || f_count > 0) {
+                $('.mob-style').css('display', 'block');
+                $('.mob-style.zeroprofile').css('display', 'none');
+
+            } else {
+                $('.mob-style').css('display', 'none');
+                $('.mob-style.zeroprofile').css('display', 'block');
             }
 
 
@@ -909,29 +937,55 @@
                 @if(objplugin.profileType=="twitter")
                 {
                     @:tweetId = "@objplugin.tweetId";
-                                                                                                                            @:tweetUrl = "https://twitter.com/@objplugin.screenName/status/@objplugin.tweetId";
-                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                            @:tweetUrl = "https://twitter.com/@objplugin.screenName/status/@objplugin.tweetId";
+                                                                                                                                                                                                                                                                                                                        }
             }
             if ($('.facebook-text-show').css('display') == 'block') {
                 facebookText = $('#txt-fb-message').val();
-                var postdata = facebookText.split("\n");
-                for (var i = 0; i < postdata.length; i++) {
-                    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                try {
+                    if (facebookText !== undefined) {
+                        var postdata = facebookText.split("\n");
+                        for (var i = 0; i < postdata.length; i++) {
+                            updatedmessage = updatedmessage + "<br>" + postdata[i];
+                        }
+                        updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                        updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+                        updatedmessage = updatedmessage.replace("+", 'ppp');
+                        updatedmessage = updatedmessage.replace("-+", 'jjj');
+                        facebookText = updatedmessage;
+                    } else {
+                        facebookText = "";
+
+                    }
+                } catch (e) {
+
                 }
-                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-                updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
-                updatedmessage = updatedmessage.replace("+", 'ppp');
-                updatedmessage = updatedmessage.replace("-+", 'jjj');
-                facebookText = updatedmessage;
                 @if(objplugin._ThumbnailDetails!=null)
                 {
                     @:if ($('#thumb-creator').css('display') == 'block') { url = "@objplugin._ThumbnailDetails.url"; }
-                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                        }
             }
             if ($('.fileinput-new').css('display') == 'block') {
                 imgUrl = $('#img-upload-thumb').attr('src');
+            } else if ($('.fileinput-new').css('display') == 'none') {
+                // imgUrl = "";
+
+                if ($('#thumb-creator').css('display') == 'none') {
+                    imgUrl = "";
+
+                } else {
+                    imgUrl = $('#myCarousel').children('.carousel-inner').children('.item.image.active').children('.fill').children().attr("src");
+                }
+
+
             }
 
+
+
+            if (facebookText == "<br>") {
+                facebookText = "";
+
+            }
             if (twitterText != "" || tweetId != "" || facebookText != "" || url != "" || imgUrl != "") {
                 var data = { profile: arrId.join(), twitterText: twitterText, tweetId: tweetId, tweetUrl: tweetUrl, facebookText: facebookText, url: url, imgUrl: imgUrl }
                 return data;
@@ -973,6 +1027,9 @@
                         }
                     }
                 });
+
+            } else {
+                alert('please enter necessary data');
 
             }
 
@@ -1062,10 +1119,32 @@
 
                     } else {
                         if (d.getDate() == new Date().getDate()) {
-                            if (d.getMinutes() < new Date().getMinutes()) {
-                                alert("Time value must be current or future");
-                                return false;
+                            if (new Date().getHours() > 12) {
+                                if (d.getHours() < new Date().getHours() - 12) {
+                                    alert("Time value must be current or future");
+                                    return false;
+                                }
+                                if (d.getHours() == new Date().getHours() - 12) {
+                                    if (d.getMinutes() < new Date().getMinutes()) {
+                                        alert("Time value must be current or future");
+                                        return false;
+                                    }
+                                }
+
+                            } else {
+                                if (d.getHours() < new Date().getHours()) {
+                                    alert("Time value must be current or future");
+                                    return false;
+                                }
+                                if (d.getHours() == new Date().getHours()) {
+                                    if (d.getMinutes() < new Date().getMinutes()) {
+                                        alert("Time value must be current or future");
+                                        return false;
+                                    }
+                                }
+
                             }
+                            
 
                         }
 
@@ -1095,7 +1174,7 @@
 
             if (post != null) {
                 $.ajax({
-                    url: '../Home/PluginScheduleMessage?scheduleTime=' + newdate + '&clientTime=' + now,
+                    url: '../Home/PluginScheduleMessage?scheduleTime=' + newdate + '&clientTime=' + sdtime,
                     type: 'POST',
                     data: post,
                     beforeSend: function () {
@@ -1112,6 +1191,10 @@
                         }
                     }
                 });
+            }
+            else {
+                alert('please enter necessary data');
+
             }
         }
         function getParameterByName(name) {

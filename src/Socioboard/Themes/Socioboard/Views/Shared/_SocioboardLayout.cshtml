@@ -68,7 +68,7 @@
 
     <!-- hello bar for chrome plugins -->
     <div id='bizzbar'>
-        <p class='bizztext'>SocioBoard chrome plugins !! <a class='bizzbutton' href="https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?hl=en-GB" target="_blank">Download Now</a></p>
+        <p class='bizztext'>Download Socioboard Chrome Plugin here -> !! <a class='bizzbutton' href="https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?hl=en-GB" target="_blank">Download Now</a></p>
         <close class="animated headShake infinite"></close>
     </div>
     <open class="animated pulse infinite"></open>
@@ -318,14 +318,15 @@
 
 
     <div id="ForgotPasswdModal" class="modal">
-        <form onsubmit="forgotPassword(); return false;" class="col m6 s12">
+        <form onsubmit="forgotPassword(); chng_btn_val(); return false;" class="col m6 s12">
             <div class="modal-content">
                 <h4 class="Comfortaa_font">Forgot password</h4>
                 <div class="row">
                     <div class="input-field col s12 box1">
-                        <input id="forgotPwdEmail" name="forgotPwdEmail" type="email" class="validate box_input">
+                        <input id="forgotPwdEmail" name="forgotPwdEmail" type="email" required class="validate box_input" >
                         <label for="forgotPwdEmail">Email</label>
                     </div>
+                    
                 </div>
             </div>
 
@@ -341,7 +342,7 @@
             </script>
 
             <div class="modal-footer">
-                <input type="button" onclick="forgotPassword(); chng_btn_val();" id="sub_btn" class="waves-effect waves-light btn cyan" value="Submit" />
+                <input type="submit" onclick="" id="sub_btn" class="waves-effect waves-light btn cyan" value="Submit"/>@*Submit</input>*@
             </div>
         </form>
     </div>
@@ -355,7 +356,6 @@
     <link href="~/contents/socioboard/css/frontend/alertify.core.css" rel="stylesheet" type="text/css" />
     <link href="~/contents/socioboard/css/frontend/alertify.default.css" rel="stylesheet" type="text/css" id="toggleCSS" />
     <script src="~/contents/socioboard/js/frontend/jquery.cookie.js"></script>
-
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
     <script type="text/javascript">

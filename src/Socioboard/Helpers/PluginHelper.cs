@@ -189,10 +189,22 @@ namespace Socioboard.Helper
             Domain.Socioboard.Helpers.ThumbnailDetails _ThumbnailDetails = new Domain.Socioboard.Helpers.ThumbnailDetails();
             string html = string.Empty;
             string _html = string.Empty;
+            _url = location;
             while (!string.IsNullOrWhiteSpace(location))
             {
-                _url = location;
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url);
+                if(!_url.Contains("twitter.com/i/notifications"))
+                {
+                    _url = location;
+                    if(_url.Contains("dashboard.unhookme.com"))
+                    {
+                        _url = _url.Replace("statCounter", "Login");
+                    }
+                    if(_url.Contains("https://contest.edumongoose.com"))
+                    {
+                        _url = "https://contest.edumongoose.com/home.htm";
+                    }
+                }
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url.Replace("i/notifications",""));
                 request.AllowAutoRedirect = false;
                 request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36";
 
@@ -283,12 +295,15 @@ namespace Socioboard.Helper
                     {
                         haTitle = nodeTitle.Attributes["content"];
                         title = haTitle.Value;
+                        title = title.Replace(" &amp; ", "&").Replace("nnn#8211", "").Replace("&#39;s", "").Replace("&#8211;","");
+                        //title = Regex.Replace(title, @"(\s+|@|&|'|\(|\)|<|>|#)", "");
                     }
                     catch (Exception ex)
                     {
                         try
                         {
-                            title = nodeTitle.InnerText;
+                            title = nodeTitle.InnerText.Replace(" &amp; ","&").Replace("nnn#8211","").Replace("&#39;s","").Replace("&#8211;", "");
+                            //title= Regex.Replace(title, @"(\s+|@|&|'|\(|\)|<|>|#)", "");
                         }
                         catch (Exception exx)
                         {

@@ -129,6 +129,7 @@ namespace Api.Socioboard.Helper
                         string channelid = item["id"].ToString();
                         string channelname = item["snippet"]["title"].ToString();
                         string channelimage = item["snippet"]["thumbnails"]["default"]["url"].ToString();
+                        channelimage = channelimage.Replace(".jpg","");
                         string publishdate = item["snippet"]["publishedAt"].ToString();
                         string viewscount = item["statistics"]["viewCount"].ToString();
                         string commentscount = item["statistics"]["commentCount"].ToString();

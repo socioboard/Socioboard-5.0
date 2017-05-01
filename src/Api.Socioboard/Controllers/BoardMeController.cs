@@ -13,7 +13,9 @@ using MongoDB.Bson;
 using Google.Apis.Analytics.v3;
 using Api.Socioboard.Helper;
 using Api.Socioboard.Repositories.BoardMeRepository;
-
+using System.Xml;
+using System.IO;
+using System.Xml.Linq;
 
 namespace Api.Socioboard.Controllers
 {
@@ -47,7 +49,9 @@ namespace Api.Socioboard.Controllers
         public async Task<IActionResult> createBoard(string boardName, string fbHashTag, string twitterHashTag, string instagramHashTag, string gplusHashTag, long userId)
         {
             Repositories.BoardMeRepository.BoardMeRepository brRepository = new Repositories.BoardMeRepository.BoardMeRepository();
-            return Ok(await brRepository.CreateBoard(boardName, twitterHashTag, instagramHashTag, gplusHashTag, userId, _redisCache, _appSettings, _logger));
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            AddTOSiteMap(boardName);
+            return Ok(await brRepository.CreateBoard(boardName, twitterHashTag, instagramHashTag, gplusHashTag, userId, _redisCache, _appSettings, _logger, dbr));
         }
 
         /// <summary>
@@ -57,32 +61,23 @@ namespace Api.Socioboard.Controllers
         /// <param name="userId">id of the user to which board belongs to.</param>
         /// <returns></returns>
         [HttpPost("DeleteBoard")]
-        public IActionResult DeleteBoard(string BoardId, long userId)
+        public IActionResult DeleteBoard(long BoardId, long userId)
         {
-            MongoRepository boardrepo = new MongoRepository("MongoBoards", _appSettings);
-            IList<MongoBoards> boards = new List<MongoBoards>();
+            DatabaseRepository boardrepo = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.MongoBoards> boards = new List<Domain.Socioboard.Models.MongoBoards>();
             try
             {
-                var result = boardrepo.Find<MongoBoards>(t => t.objId.Equals(BoardId));
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-                boards = task.Result;
+                boards = boardrepo.Find<Domain.Socioboard.Models.MongoBoards>(t => t.id.Equals(BoardId)).ToList();
+
             }
             catch (Exception e)
             {
             }
             if (boards.Count() > 0)
             {
-                MongoBoards board = boards.First();
-                board.isActive = false;
-
-                FilterDefinition<BsonDocument> filter = new BsonDocument("objId", board.objId);
-                // var filter = Builders<MongoBoardTwtProfile>.Filter.Eq(s => s.strId, twitteracc.strId);
-                var update = Builders<BsonDocument>.Update
-.Set("isActive", false);
-                boardrepo.Update<MongoBoards>(update, filter);
+                Domain.Socioboard.Models.MongoBoards board = boards.First();
+                board.isActive = Domain.Socioboard.Enum.boardStatus.inactive;
+                boardrepo.Update<Domain.Socioboard.Models.MongoBoards>(board);
                 return Ok("Deleted");
             }
 
@@ -99,29 +94,20 @@ namespace Api.Socioboard.Controllers
         [HttpPost("UndoDeleteBoard")]
         public IActionResult UndoDeleteBoard(string BoardId, long userId)
         {
-            MongoRepository boardrepo = new MongoRepository("MongoBoards", _appSettings);
-            IList<MongoBoards> boards = new List<MongoBoards>();
+            DatabaseRepository boardrepo = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.MongoBoards> boards = new List<Domain.Socioboard.Models.MongoBoards>();
             try
             {
-                var result = boardrepo.Find<MongoBoards>(t => t.objId.Equals(BoardId));
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-                boards = task.Result;
+                boards = boardrepo.Find<Domain.Socioboard.Models.MongoBoards>(t => t.id.Equals(BoardId)).ToList();
             }
             catch (Exception e)
             {
             }
             if (boards.Count() > 0)
             {
-                MongoBoards board = boards.First();
-                board.isActive = true;
-
-                FilterDefinition<BsonDocument> filter = new BsonDocument("objId", board.objId);
-                var update = Builders<BsonDocument>.Update
-.Set("isActive", true);
-                boardrepo.Update<MongoBoards>(update, filter);
+                Domain.Socioboard.Models.MongoBoards board = boards.First();
+                board.isActive = Domain.Socioboard.Enum.boardStatus.active;
+                boardrepo.Update<Domain.Socioboard.Models.MongoBoards>(board);
                 return Ok("success");
             }
 
@@ -137,34 +123,27 @@ namespace Api.Socioboard.Controllers
         [HttpGet("getUserBoards")]
         public IActionResult getUserBoards(long userId)
         {
-            MongoRepository boardrepo = new MongoRepository("MongoBoards", _appSettings);
+            DatabaseRepository boardrepo = new DatabaseRepository(_logger, _env);
             try
             {
-                var result = boardrepo.Find<MongoBoards>(t => t.userId.Equals(userId) && t.isActive == true);
-
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-
-
-                IList<MongoBoards> boardslist = task.Result.OrderByDescending(t => t.createDate).ToList();
+                List<Domain.Socioboard.Models.MongoBoards> boardslist = boardrepo.Find<Domain.Socioboard.Models.MongoBoards>(t => t.userId == userId && t.isActive == Domain.Socioboard.Enum.boardStatus.active).ToList();
                 return Ok(boardslist);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.StackTrace);
-                return BadRequest("Something Went Wrong");
+                return Ok(new List<Domain.Socioboard.Models.MongoBoards>());
             }
         }
 
         [HttpGet("getBoard")]
-        public IActionResult getBoard(string boardId)
+        public IActionResult getBoard(long boardId)
         {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             try
             {
-               
-                return Ok(BoardMeRepository.getBoard(boardId,_redisCache,_appSettings,_logger));
+
+                return Ok(BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr));
             }
             catch (Exception ex)
             {
@@ -176,10 +155,11 @@ namespace Api.Socioboard.Controllers
         [HttpGet("getBoardByName")]
         public IActionResult getBoardByName(string boardName)
         {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             try
             {
 
-                return Ok(BoardMeRepository.getBoardByName(boardName, _redisCache, _appSettings, _logger));
+                return Ok(BoardMeRepository.getBoardByName(boardName, _redisCache, _appSettings, _logger, dbr));
             }
             catch (Exception ex)
             {
@@ -268,11 +248,12 @@ namespace Api.Socioboard.Controllers
 
         }
 
-       
+
         [HttpGet("getTwitterFeeds")]
-        public IActionResult getTwitterFeeds(string boardId, int skip, int count)
+        public IActionResult getTwitterFeeds(long boardId, int skip, int count)
         {
-            MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger);
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
             MongoRepository boardrepo = new MongoRepository("MongoBoardTwtFeeds", _appSettings);
             try
             {
@@ -293,11 +274,12 @@ namespace Api.Socioboard.Controllers
             }
         }
 
-       
+
         [HttpGet("getInstagramFeeds")]
-        public IActionResult getInstagramFeeds(string boardId, int skip, int count)
+        public IActionResult getInstagramFeeds(long boardId, int skip, int count)
         {
-            MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger);
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
 
             MongoRepository boardrepo = new MongoRepository("MongoBoardInstagramFeeds", _appSettings);
             try
@@ -322,11 +304,12 @@ namespace Api.Socioboard.Controllers
 
         }
 
-        
+
         [HttpGet("getGplusfeeds")]
-        public IActionResult getGplusfeeds(string boardId, string skip, string count)
+        public IActionResult getGplusfeeds(long boardId, string skip, string count)
         {
-            MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger);
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
             MongoRepository boardrepo = new MongoRepository("MongoBoardGplusFeeds", _appSettings);
             try
             {
@@ -347,5 +330,106 @@ namespace Api.Socioboard.Controllers
             }
 
         }
+
+
+        [HttpGet("getfacebookFeeds")]
+        public IActionResult getfacebookFeeds(long boardId, int skip, int count)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
+            MongoRepository boardrepo = new MongoRepository("MongoBoardFbTrendingFeeds", _appSettings);
+            try
+            {
+                var result = boardrepo.Find<MongoBoardFbTrendingFeeds>(t => t.facebookprofileid.Equals(board.facebookHashTag));
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<MongoBoardFbTrendingFeeds> objTwitterPagelist = task.Result;
+                List<MongoBoardFbTrendingFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
+                return Ok(objBoardGplusPagefeeds);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return Ok("Something Went Wrong");
+            }
+        }
+
+
+        [HttpGet("getTopTrending")]
+        public IActionResult getTopTrending()
+        {
+            try
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                return Ok(BoardMeRepository.getTopTrending(_redisCache, _appSettings, _logger, dbr));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return BadRequest("Something Went Wrong");
+            }
+        }
+
+        [HttpGet("AddTOSiteMap")]
+        public IActionResult AddTOSiteMap(string boardName)
+        {
+            bool result = false;
+            try
+            {
+                string appendNode = "<url><loc>https://boards.socioboard.com/" + boardName + "</loc><lastmod>" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "</lastmod><changefreq>Hourly</changefreq><priority>0.6</priority></url>";
+                //XmlTextWriter writer = new XmlTextWriter("site.xml", System.Text.Encoding.UTF8);
+                //writer.WriteStartDocument();
+                //writer.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
+
+                //writer.WriteStartElement("url");
+
+                //writer.WriteElementString("loc", boardName);
+                //writer.WriteElementString("priority", "0.5");
+                //writer.WriteEndElement();
+
+                ////Now we loop for creating the XML node for all products
+
+                //int i = 0;
+                ////Creating the  element
+                //writer.WriteStartElement("url");
+                //writer.WriteElementString("loc", "teste");
+                //writer.WriteElementString("priority", "0.5");
+                //writer.WriteEndElement();
+                //writer.WriteEndDocument();
+                //writer.Close();
+                XmlDocument doc = new XmlDocument();
+                doc.Load(_appSettings.sitemapPath);
+                XmlDocument doc1 = new XmlDocument();
+                doc1.LoadXml(appendNode);
+                XmlNode newNode = doc1.DocumentElement;
+                var attributename = newNode.Attributes;
+                doc.DocumentElement.AppendChild(doc.ImportNode(newNode, true));
+                doc.Save(_appSettings.sitemapPath);
+                XDocument doss = XDocument.Load(_appSettings.sitemapPath);
+                foreach (var node in doss.Root.Descendants())
+                {
+                    // If we have an empty namespace...
+                    if (node.Name.NamespaceName == "")
+                    {
+                        node.Attributes("xmlns").Remove();
+                        // Inherit the parent namespace instead
+                        node.Name = node.Parent.Name.Namespace + node.Name.LocalName;
+                    }
+                }
+                doss.Save(_appSettings.sitemapPath);
+               
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("issue while creating sitemap" + ex.Message);
+                result = false;
+            }
+            return Ok(result);
+        }
+
     }
 }

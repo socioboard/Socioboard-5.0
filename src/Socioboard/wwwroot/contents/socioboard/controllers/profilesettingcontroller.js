@@ -4,7 +4,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
 
-         $scope.currentDate = new Date();
+        $scope.currentDate = new Date();
         $scope.showDatePicker = function (ev) {
             $mdpDatePicker($scope.currentDate, {
                 targetEvent: ev
@@ -31,7 +31,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
         $scope.mailSettings = {};
 
         //$('.datepicker').pickadate({
-            
+
         //    selectMonths: true, // Creates a dropdown to control month
         //    selectYears: 100 // Creates a dropdown of 15 years to control year
         //});
@@ -107,7 +107,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             var picker = $input.pickadate('picker');
 
             picker.set('select', $rootScope.user.dateOfBirth, { format: 'yyyy-mm-dd HH:MM:ss' });
-           
+
         }
         //   $scope.updateUser.dob = $rootScope.user.dateOfBirth;
 
@@ -126,37 +126,40 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
         //end codes to intilize mail settings
 
         $scope.UpdateUser = function (updateUser) {
-
-
-           
-            //var date_value = ($('.md-input')[0]).value;
-             var $input = $('.datepicker').pickadate();
-             var picker = $input.pickadate('picker');
-             var formData = new FormData();
-            formData.append('files', $("#profileImage").get(0).files[0]);
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/User/UpdateUser?firstName=' + updateUser.firstName + '&lastName=' + updateUser.lastName + '&userName=' + updateUser.userName + '&phoneNumber=' + updateUser.phoneNumber + '&dob=' + picker.get() + '&aboutMe=' + updateUser.aboutMe + '&userId=' + $rootScope.user.Id,
-                data: formData,
-                headers: {
-                    'Content-Type': undefined
-                },
-                transformRequest: angular.identity,
-            }).then(function (response) {
-                userservice.updateLocalUser();
-                alertify.set({ delay: 5000 });
-                alertify.success("Profile updated successfully");
-                $rootScope.UpdatedfirstName = updateUser.firstName;
-                $rootScope.UpdatedlastName = updateUser.lastName;
-                $rootScope.UpdateduserName = updateUser.userName;
-                $rootScope.UpdatedphoneNumber = updateUser.phoneNumber;
-                $rootScope.dateOfBirth = updateUser.dateOfBirth;
-                $rootScope.UpdatedaboutMe = updateUser.aboutMe;
-            }, function (reason) {
-                alertify.set({ delay: 5000 });
-                alertify.error(reason.data);
-                console.log(reason.data);
-            });
+            var $input = $('.datepicker').pickadate();
+            var picker = $input.pickadate('picker');
+            var dt = new Date(picker.get());
+            if (dt > new Date()) {
+                swal("Date Of Birth should not be future date");
+                return false;
+            }
+            else {
+                var formData = new FormData();
+                formData.append('files', $("#profileImage").get(0).files[0]);
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/User/UpdateUser?firstName=' + updateUser.firstName + '&lastName=' + updateUser.lastName + '&userName=' + updateUser.userName + '&phoneNumber=' + updateUser.phoneNumber + '&dob=' + picker.get() + '&aboutMe=' + updateUser.aboutMe + '&userId=' + $rootScope.user.Id,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+                }).then(function (response) {
+                    userservice.updateLocalUser();
+                    alertify.set({ delay: 5000 });
+                    alertify.success("Profile updated successfully");
+                    $rootScope.UpdatedfirstName = updateUser.firstName;
+                    $rootScope.UpdatedlastName = updateUser.lastName;
+                    $rootScope.UpdateduserName = updateUser.userName;
+                    $rootScope.UpdatedphoneNumber = updateUser.phoneNumber;
+                    $rootScope.dateOfBirth = updateUser.dateOfBirth;
+                    $rootScope.UpdatedaboutMe = updateUser.aboutMe;
+                }, function (reason) {
+                    alertify.set({ delay: 5000 });
+                    alertify.error(reason.data);
+                    console.log(reason.data);
+                });
+            }
         }
 
 
@@ -225,13 +228,12 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 url: domain + '/Index/UpgradeAccount?packagename=' + packagename,
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).then(function (response) {
-                if(response.data!="")
-                {
+                if (response.data != "") {
                     window.top.location = response.data;
                 } else {
                     window.top.location = "../Home/Index";
                 }
-                
+
             }, function (reason) {
 
             });

@@ -117,6 +117,74 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        [HttpPost("PhoneSignUp")]
+        public IActionResult PhoneSignUp(User user)
+        {
+            user.CreateDate = DateTime.UtcNow;
+            user.ExpiryDate = DateTime.UtcNow.AddDays(30);
+            user.EmailValidateToken = SBHelper.RandomString(20);
+            user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
+            user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.MailSent;
+            user.Password = SBHelper.MD5Hash(user.Password);
+            user.UserName = "Socioboard";
+            user.UserType = "User";
+            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
+            user.LastLoginTime = DateTime.UtcNow;
+            user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+            user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.EmailId));
+            if (lstUser != null && lstUser.Count() > 0)
+            {
+                return Ok("This Email is already registered please login to continue");
+            }
+            IList<User> lstUser1 = dbr.Find<User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
+            if (lstUser1 != null && lstUser1.Count() > 0)
+            {
+                return Ok("Phone Number Exist");
+            }
+            int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
+            User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
+            if (SavedStatus == 1 && nuser != null)
+            {
+                Groups group = new Groups();
+                group.adminId = nuser.Id;
+                // group.id = nuser.Id;
+                group.createdDate = DateTime.UtcNow;
+                group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
+                SavedStatus = dbr.Add<Groups>(group);
+                if (SavedStatus == 1)
+                {
+                    long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
+                    GroupMembersRepository.createGroupMember(GroupId, nuser, _redisCache, dbr);
+                }
+                try
+                {
+                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
+                    string html = System.IO.File.ReadAllText(path);
+                    html = html.Replace("[FirstName]", nuser.FirstName);
+                    html = html.Replace("[AccountType]", nuser.AccountType.ToString());
+                    html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + nuser.EmailValidateToken + "&id=" + nuser.Id);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", nuser.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                }
+                catch
+                {
+                    return Ok();
+                }
+            }
+            else
+            {
+                return Ok("Can't create user");
+            }
+            return Ok("Email verification mail sent successfully.");
+        }
+
+
 
 
 
@@ -1289,6 +1357,18 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
 
+            try
+            {
+                IList<Domain.Socioboard.Models.Groupmembers> lstMembers = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId);
+                foreach (var x in lstMembers)
+                {
+                    x.firstName = firstName;
+                    x.lastName = lastName;
+                    dbr.Update<Domain.Socioboard.Models.Groupmembers>(x);
+                }
+            }
+            catch { }
+
             if (!userName.Equals("Socioboard"))
             {
                 if (!user.UserName.Equals(userName))
@@ -1709,7 +1789,7 @@ namespace Api.Socioboard.Controllers
             string html = System.IO.File.ReadAllText(path);
             html = html.Replace("[FirstName]", demoReq.firstName);
             html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
-            _emailSender.SendMailSendGrid("", "", "sumit@socioboard.com", "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+            _emailSender.SendMailSendGrid("", "", "", "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
             return Ok("Mail Sent Successfully.");
 
         }

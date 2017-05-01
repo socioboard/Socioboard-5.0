@@ -222,7 +222,7 @@ namespace Api.Socioboard.Repositories
         {
 
             MongoRepository _ShareathonRepository = new MongoRepository("LinkShareathon", _appSettings);
-            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.LinkShareathon>(t => t.Userid == userId);
+            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.LinkShareathon>(t => t.Userid == userId && t.IsActive);
             var task = Task.Run(async () =>
             {
                 return await ret;

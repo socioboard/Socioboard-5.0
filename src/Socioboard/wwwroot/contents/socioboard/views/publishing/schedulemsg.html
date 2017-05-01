@@ -6,9 +6,12 @@
           {
               $(this).html('<img src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
           }
-           if(index==2)
-          {
-               $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+          //if (index == 2 || index == 3)
+          //{
+          //     $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+          //}
+          if (index == 2) {
+              $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
           }
            if (index == 3)
           {
@@ -59,6 +62,7 @@
                                             <option value="" disabled selected>Select Your Account</option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:0}  | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                            <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:11}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>-->
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>

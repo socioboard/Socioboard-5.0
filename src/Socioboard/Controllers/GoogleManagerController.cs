@@ -42,7 +42,8 @@ namespace Socioboard.Controllers
 
                 if (!string.IsNullOrEmpty(response))
                 {
-
+                    Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                    HttpContext.Session.SetObjectAsJson("User", _user);
                 }
                 else
                 {
@@ -62,6 +63,12 @@ namespace Socioboard.Controllers
             string googleLogin = HttpContext.Session.GetObjectFromJson<string>("googlepluslogin");
             string googleSocial = HttpContext.Session.GetObjectFromJson<string>("Google");
             string plan = HttpContext.Session.GetObjectFromJson<string>("RegisterPlan");
+
+            if(googleSocial== "Youtube_Account")
+            {
+                googleLogin = null;
+            }
+
             if (googleLogin!= null && googleLogin.Equals("Google_Login"))
             {
                 Domain.Socioboard.Models.User user = null;
@@ -209,7 +216,7 @@ namespace Socioboard.Controllers
                 else
                 {
                     HttpContext.Session.SetObjectAsJson("Google", "Youtube_Account");
-                    string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me&response_type=code&access_type=offline&approval_prompt=force";
+                    string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/youtube.force-ssl&response_type=code&access_type=offline&approval_prompt=force";
                     return Redirect(googleurl);
                 }
             }

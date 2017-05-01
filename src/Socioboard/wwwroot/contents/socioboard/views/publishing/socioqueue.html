@@ -40,17 +40,9 @@
                         <tr ng-repeat="socioqueue in lstsocioqueuemessage">
                             <td>{{$index +1}}</td>
                             <td class="center">
-                                <div class="col s12" ng-if="socioqueue.profileType==0 ||socioqueue.profileType==1 ">
-                                    <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
-                                    <img src="/contents/socioboard/images/fb_icon.png" class="responsive-img msgiconPoss">
-                                </div>
-                                <div class="col s12" ng-if="socioqueue.profileType==2 ">
-                                    <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
-                                    <img src="/contents/socioboard/images/twticon.png" class="responsive-img msgiconPoss">
-                                </div>
-                                <div class="col s12" ng-if="socioqueue.profileType==3 ||socioqueue.profileType==4 ">
-                                    <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
-                                    <img src="/contents/socioboard/images/linkedin.png" class="responsive-img msgiconPoss">
+                                <div class="col s12" ng-if="socioqueue.profileType==0 || socioqueue.profileType==1 || socioqueue.profileType==2 || socioqueue.profileType==3 || socioqueue.profileType==4">
+                                    <img src="{{sociopic}}" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/sb.png" class="responsive-img msgiconPoss">
                                 </div>
                                 <div class="col s12">
                                     <span>

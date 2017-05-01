@@ -61,7 +61,9 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
             console.log(profiles);
  
-            if (message == "") {
+            if (/\S/.test(message))
+            {}
+            else  {
                 swal("Please enter a message");
                 return false;
             }
@@ -153,7 +155,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1 + '&imagePath=' +encodeURIComponent($('#imageUrl').val()),
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -193,7 +195,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1 + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined

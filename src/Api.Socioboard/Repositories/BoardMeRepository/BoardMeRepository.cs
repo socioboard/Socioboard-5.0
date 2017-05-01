@@ -1,5 +1,5 @@
 ﻿using Api.Socioboard.Model;
-using Domain.Socioboard.Models.Mongo;
+using Domain.Socioboard.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using System;
@@ -11,49 +11,44 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
 {
     public class BoardMeRepository
     {
-        public async Task<string> CreateBoard(string boardName, string twitterHashTag, string instagramHashTag, string gplusHashTag, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        public async Task<string> CreateBoard(string boardName, string twitterHashTag, string instagramHashTag, string gplusHashTag, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger, DatabaseRepository dbr)
         {
-            MongoRepository boardrepo = new MongoRepository("MongoBoards", settings);
-            IList<MongoBoards> boards = new List<MongoBoards>();
+
+            IList<Domain.Socioboard.Models.MongoBoards> boards = new List<Domain.Socioboard.Models.MongoBoards>();
             try
             {
-                var result = boardrepo.Find<MongoBoards>(t => t.boardName.Equals(boardName.ToLower()));
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-                boards = task.Result;
+                boards = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.boardName.Equals(boardName.ToLower()));
             }
             catch (Exception e)
             {
             }
             if (boards == null || boards.Count() == 0)
             {
-                MongoBoards board = new MongoBoards();
+                Domain.Socioboard.Models.MongoBoards board = new Domain.Socioboard.Models.MongoBoards();
                 //companyprofiles.UserId = UserId;
-                board.id = ObjectId.GenerateNewId();
-                board.isActive = true;
-                board.objId = board.id.ToString();
+                board.isActive =  Domain.Socioboard.Enum.boardStatus.active;
                 board.boardName = boardName.ToLower();
-                board.createDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                board.userId = userId.ToString();
-                if (!string.IsNullOrEmpty(twitterHashTag) && twitterHashTag!= "undefined")
+                board.createDate = DateTime.UtcNow;
+                board.userId = userId;
+                board.trendingtype = Domain.Socioboard.Enum.TrendingType.user;
+                board.boardId = Guid.NewGuid().ToString();
+                if (!string.IsNullOrEmpty(twitterHashTag) && twitterHashTag != "undefined")
                 {
                     TwitterRepository tr = new TwitterRepository();
-                    board.twitterHashTag = await tr.AddTwitterHashTag(twitterHashTag, board.objId, _redisCache, settings, _logger);
+                    board.twitterHashTag = await tr.AddTwitterHashTag(twitterHashTag, board.boardId, _redisCache, settings, _logger);
                 }
                 if (!string.IsNullOrEmpty(instagramHashTag) && instagramHashTag != "undefined")
                 {
                     InstagramRepository instRepo = new InstagramRepository();
-                    board.instagramHashTag = await instRepo.AddInstagramHashTag(instagramHashTag, board.objId, _redisCache, settings, _logger);
+                    board.instagramHashTag = await instRepo.AddInstagramHashTag(instagramHashTag, board.boardId, _redisCache, settings, _logger);
                 }
                 if (!string.IsNullOrEmpty(gplusHashTag) && gplusHashTag != "undefined")
                 {
                     GplusRepository gplusRepo = new GplusRepository();
-                    board.gplusHashTag = await gplusRepo.AddGplusHashTag(gplusHashTag, board.objId, _redisCache, settings, _logger);
+                    board.gplusHashTag = await gplusRepo.AddGplusHashTag(gplusHashTag, board.boardId, _redisCache, settings, _logger);
                 }
 
-             await  boardrepo.Add<Domain.Socioboard.Models.Mongo.MongoBoards>(board);
+                dbr.Add<Domain.Socioboard.Models.MongoBoards>(board);
                 return "successfulyy added.";
             }
             else
@@ -62,54 +57,19 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
             }
         }
 
-        public static MongoBoards getBoard(string boardId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger)
+        public static Domain.Socioboard.Models.MongoBoards getBoard(long boardId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger, DatabaseRepository dbr)
         {
             MongoRepository boardrepo = new MongoRepository("MongoBoards", _appSettings);
             try
             {
-                MongoBoards inMemboard = _redisCache.Get<MongoBoards>(Domain.Socioboard.Consatants.SocioboardConsts.CacheBoard + boardId);
-                if (inMemboard != null)
-                {
-                    return inMemboard;
-                }
-                else {
-                    var result = boardrepo.Find<MongoBoards>(t => t.objId.Equals(boardId) && t.isActive == true);
-                    var task = Task.Run(async () =>
-                    {
-                        return await result;
-                    });
-                    MongoBoards board = task.Result.First();
-                    return board;
-                }
-               
-            }
-            catch (Exception ex)
-            {
-               _logger.LogError(ex.StackTrace);
-                return null;
-            }
-        }
-
-
-
-        public static MongoBoards getBoardByName(string boardName, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger)
-        {
-            MongoRepository boardrepo = new MongoRepository("MongoBoards", _appSettings);
-            try
-            {
-                MongoBoards inMemboard = _redisCache.Get<MongoBoards>(Domain.Socioboard.Consatants.SocioboardConsts.CacheBoard + boardName);
+                Domain.Socioboard.Models.MongoBoards inMemboard = _redisCache.Get<Domain.Socioboard.Models.MongoBoards>(Domain.Socioboard.Consatants.SocioboardConsts.CacheBoard + boardId);
                 if (inMemboard != null)
                 {
                     return inMemboard;
                 }
                 else
                 {
-                    var result = boardrepo.Find<MongoBoards>(t => t.boardName.Equals(boardName) && t.isActive == true);
-                    var task = Task.Run(async () =>
-                    {
-                        return await result;
-                    });
-                    MongoBoards board = task.Result.First();
+                    Domain.Socioboard.Models.MongoBoards board = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.id.Equals(boardId) && t.isActive == Domain.Socioboard.Enum.boardStatus.active).First();
                     return board;
                 }
 
@@ -120,5 +80,51 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 return null;
             }
         }
+
+
+
+        public static Domain.Socioboard.Models.MongoBoards getBoardByName(string boardName, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger,DatabaseRepository dbr)
+        {
+            MongoRepository boardrepo = new MongoRepository("MongoBoards", _appSettings);
+            try
+            {
+                Domain.Socioboard.Models.MongoBoards inMemboard = _redisCache.Get<Domain.Socioboard.Models.MongoBoards>(Domain.Socioboard.Consatants.SocioboardConsts.CacheBoard + boardName);
+                if (inMemboard != null)
+                {
+                    return inMemboard;
+                }
+                else
+                {
+                    Domain.Socioboard.Models.MongoBoards board =  dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.boardName.Equals(boardName) && t.isActive == Domain.Socioboard.Enum.boardStatus.active).First();
+                    return board;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                return null;
+            }
+        }
+
+        public static List<Domain.Socioboard.Models.MongoBoards> getTopTrending(Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger,DatabaseRepository dbr)
+        {
+            try
+            {
+                DateTime fromTime = DateTime.UtcNow.AddMinutes(-DateTime.UtcNow.Minute);
+                DateTime toTime = DateTime.UtcNow.AddMinutes(-DateTime.UtcNow.Minute).AddHours(-24);
+                List<MongoBoards> lstmongo = dbr.Find<MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date).ToList();
+                lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
+                return lstmongo;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                return null;
+            }
+        }
+
+
     }
 }

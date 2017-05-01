@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Net;
 using Facebook;
 using Socioboard.Helper;
+using System.Linq;
 
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -305,7 +306,7 @@ namespace Socioboard.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> SBApp(string profileType, string url, string content, string imageUrl, string name, string userImage, string screenName, string tweet, string tweetId, string type,string EmailId)
+        public async Task<IActionResult> SBApp(string profileType, string url, string content, string imageUrl, string name, string userImage, string screenName, string tweet, string tweetId, string type, string EmailId)
         {
             string password = "";
             Domain.Socioboard.Helpers.PluginData _PluginData = new Domain.Socioboard.Helpers.PluginData();
@@ -342,8 +343,8 @@ namespace Socioboard.Controllers
                     {
                         try
                         {
-                             user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                             HttpContext.Session.SetObjectAsJson("User", user);
+                            user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                            HttpContext.Session.SetObjectAsJson("User", user);
                         }
                         catch { }
                     }
@@ -363,21 +364,35 @@ namespace Socioboard.Controllers
                 }
 
                 ViewBag.plugin = _PluginData;
-                ViewBag.emailId  = user.EmailId;
+                ViewBag.emailId = user.EmailId;
                 ViewBag.password = user.Password;
-                List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
-                parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
-                HttpResponseMessage _response = await WebApiReq.GetReq("/api/GroupProfiles/GetPluginProfile?userId=" + user.Id.ToString(), "", "", _appSettings.ApiDomain);
-                if (_response.IsSuccessStatusCode)
+                HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
+                if (response.IsSuccessStatusCode)
                 {
                     try
                     {
-                        List<Domain.Socioboard.Helpers.PluginProfile> lstsb = new List<Domain.Socioboard.Helpers.PluginProfile>();
-                        lstsb = await _response.Content.ReadAsAsync<List<Domain.Socioboard.Helpers.PluginProfile>>();
-                        return View("RMain", lstsb);
+                        List<Domain.Socioboard.Models.Groups> groups = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
+                        long selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
+                        List<KeyValuePair<string, string>> parameters = new List<KeyValuePair<string, string>>();
+                        parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+                        HttpResponseMessage _response = await WebApiReq.GetReq("/api/GroupProfiles/GetPluginProfile?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
+                        if (_response.IsSuccessStatusCode)
+                        {
+                            try
+                            {
+                                List<Domain.Socioboard.Helpers.PluginProfile> lstsb = new List<Domain.Socioboard.Helpers.PluginProfile>();
+                                lstsb = await _response.Content.ReadAsAsync<List<Domain.Socioboard.Helpers.PluginProfile>>();
+                                return View("RMain", lstsb);
+                            }
+                            catch { }
+                        }
                     }
-                    catch { }
+                    catch
+                    {
+
+                    }
                 }
+               
             }
             return View("Rlogin");
         }
@@ -729,19 +744,19 @@ namespace Socioboard.Controllers
         public async Task<IActionResult> TrainingPlan(string firstName, string lastName, string company, string emailId, string phoneNumber, string message, string planType, string amount)
         {
             Domain.Socioboard.Models.Training _Training = new Domain.Socioboard.Models.Training();
-            _Training.FirstName = firstName; 
+            _Training.FirstName = firstName;
             _Training.LastName = lastName;
             _Training.EmailId = emailId;
             _Training.Message = message;
             _Training.PhoneNo = phoneNumber;
             _Training.Company = company;
-           // HttpResponseMessage response = await WebApiReq.PostReq("/api/Training/updateTrainingDetails", Parameters, "", "", _appSettings.ApiDomain);
+            // HttpResponseMessage response = await WebApiReq.PostReq("/api/Training/updateTrainingDetails", Parameters, "", "", _appSettings.ApiDomain);
             _Training.PaymentStatus = planType;
             _Training.PaymentAmount = double.Parse(amount);
             HttpContext.Session.SetObjectAsJson("Training", _Training);
             HttpContext.Session.SetObjectAsJson("paymentsession", true);
-            return Content(Helpers.Payment.AgencyPayment(amount, planType, firstName + " " + lastName, phoneNumber, emailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl,_appSettings.TrainingcallBackUrl,  _appSettings.cancelurl, "", "", _appSettings.PaypalURL));
-              
+            return Content(Helpers.Payment.AgencyPayment(amount, planType, firstName + " " + lastName, phoneNumber, emailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.TrainingcallBackUrl, _appSettings.cancelurl, "", "", _appSettings.PaypalURL));
+
         }
 
 
@@ -855,7 +870,7 @@ namespace Socioboard.Controllers
             {
                 try
                 {
-                    ViewBag.board = await response.Content.ReadAsAsync<Domain.Socioboard.Models.Mongo.MongoBoards>();
+                    ViewBag.board = await response.Content.ReadAsAsync<Domain.Socioboard.Models.MongoBoards>();
                     return View();
                 }
                 catch (Exception e)
@@ -880,7 +895,7 @@ namespace Socioboard.Controllers
         }
 
 
-        
+
 
     }
 }

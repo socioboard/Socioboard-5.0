@@ -24,6 +24,7 @@ namespace Domain.Socioboard.Models
         public virtual double CommentsCount { get; set; }
         public virtual double SubscribersCount { get; set; }
         public virtual double ViewsCount { get; set; }
+        public virtual string Channel_EmailId { get; set; }
 
     }
 }

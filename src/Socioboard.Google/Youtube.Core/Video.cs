@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Socioboard.GoogleLib.Authentication;
+using Newtonsoft.Json.Linq;
 
 namespace Socioboard.GoogleLib.Youtube.Core
 {
@@ -140,6 +141,123 @@ namespace Socioboard.GoogleLib.Youtube.Core
             oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
 
             string RequestUrl = "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&maxResults=100&videoId=" + videoId + "&key=" + key;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+            return response;
+
+
+        }
+
+
+        public string Get_Channel_info(string accesstoken)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/oauth2/v1/userinfo?access_token=" + accesstoken;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+            return response;
+
+
+        }
+
+
+        public string Post_Comments_toVideo(string refreshtoken, string VideoId, string commentText)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+
+            oAuthToken objoauth = new oAuthToken(_clientId, _clientSecret, _redirectUrl);
+
+            string accesstoken_jdata = objoauth.GetAccessToken(refreshtoken);
+            JObject JData = JObject.Parse(accesstoken_jdata);
+            string accesstoken = JData["access_token"].ToString();
+
+
+            string RequestUrl = "https://content.googleapis.com/youtube/v3/commentThreads?part=snippet&key=" + accesstoken + "&alt=json";
+
+            string postdata = "{\"snippet\": {\"videoId\": \""+ VideoId + "\",\"topLevelComment\": {\"snippet\": {\"textOriginal\": \""+ commentText +"\"}}}}";
+           
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "Authorization", "X-JavaScript-User-Agent", "Origin", "X-Origin" };
+            string[] val = { "Bearer " + accesstoken, "Google APIs Explorer", "https://content.googleapis.com", "https://developers.google.com" };
+            string response = string.Empty;
+
+
+            try
+            {
+                response = objoAuthTokenYoutube.Post_WebRequest(Socioboard.GoogleLib.Authentication.oAuthToken.Method.POST, RequestUrl, postdata, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+
+            return response;
+
+
+        }
+
+
+        //codes for data services and without authenticate
+        public string GetChannelInfo(string accesstoken, string ChannelId)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&id=" + ChannelId + "&key=" + accesstoken;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+            return response;
+
+
+        }
+
+        public string GetChannelCmntCount(string accesstoken, string ChannelId)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&channelId=" + ChannelId + "&maxResults=100&key=" + accesstoken;
 
             Uri path = new Uri(RequestUrl);
             string[] header = { "token_type", "expires_in" };

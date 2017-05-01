@@ -195,6 +195,51 @@ namespace Socioboard.GoogleLib.Authentication
 
         }
 
+        //public string Post_WebRequest(Socioboard.GoogleLib.Authentication.oAuthToken.Method method, string url, string postData, string[] HeaderName, string[] Value)
+        //{
+        //    HttpWebRequest webRequest = null;
+        //    StreamWriter requestWriter = null;
+        //    string responseData = "";
+
+        //    webRequest = System.Net.WebRequest.Create(url) as HttpWebRequest;
+        //    webRequest.Method = method.ToString();
+        //    webRequest.ServicePoint.Expect100Continue = false;
+        //    //webRequest.UserAgent  = "Identify your application please.";
+        //    //webRequest.Timeout = 20000;
+        //    for (int i = 0; i < HeaderName.Length; i++)
+        //    {
+        //        webRequest.Headers.Add(HeaderName[i], Value[i]);
+        //    }
+
+        //    if (method == Socioboard.GoogleLib.Authentication.oAuthToken.Method.POST)
+        //    {
+        //        webRequest.ContentType = "application/json";
+
+        //        //POST the data.
+        //        requestWriter = new StreamWriter(webRequest.GetRequestStream());
+        //        try
+        //        {
+        //            requestWriter.Write(postData);
+        //        }
+        //        catch
+        //        {
+        //            throw;
+        //        }
+        //        finally
+        //        {
+        //            requestWriter.Close();
+        //            requestWriter = null;
+        //        }
+        //    }
+
+        //    responseData = WebResponseGet(webRequest);
+
+        //    webRequest = null;
+
+        //    return responseData;
+
+        //}
+
         public string Post_WebRequest(Socioboard.GoogleLib.Authentication.oAuthToken.Method method, string url, string postData, string[] HeaderName, string[] Value)
         {
             HttpWebRequest webRequest = null;
@@ -206,6 +251,45 @@ namespace Socioboard.GoogleLib.Authentication
             webRequest.ServicePoint.Expect100Continue = false;
             //webRequest.UserAgent  = "Identify your application please.";
             //webRequest.Timeout = 20000;
+            //using (var stream = new StreamWriter(webRequest.GetRequestStream()))
+            //{
+
+            //    var snippet =
+            //          new
+            //          {
+            //              videoId = "mWMetDeanWE",
+            //              topLevelComment =
+            //                  new
+            //                  {
+
+            //                  },
+            //              snippet =
+            //              new
+            //              {
+            //                  textOriginal = "hello text"
+            //              }
+
+            //          };
+
+            //    string json = new System.Web.Script.Serialization.JavaScriptSerializer().Serialize(snippet);
+            //    stream.Write(json);
+            //    stream.Flush();
+            //    stream.Close();
+            //}
+            //try
+            //{
+            //    WebResponse webResponse = webRequest.GetResponse();
+            //    Stream dataStream = webResponse.GetResponseStream();
+            //    var reader = new StreamReader(dataStream);
+            //    string response = reader.ReadToEnd();
+            //    return response;
+
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    return "";
+            //}
             for (int i = 0; i < HeaderName.Length; i++)
             {
                 webRequest.Headers.Add(HeaderName[i], Value[i]);
@@ -239,7 +323,6 @@ namespace Socioboard.GoogleLib.Authentication
             return responseData;
 
         }
-
 
 
 

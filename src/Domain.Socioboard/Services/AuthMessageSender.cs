@@ -79,11 +79,6 @@ namespace Domain.Socioboard.Services
                     Console.WriteLine(ex.Message);
                     return "Mail Not Send";
                 }
-
-                //string posturl = "https://api.sendgrid.com/api/mail.send.json";
-                //string postdata = "api_user=" + UserName + "&api_key=" + Password + "&to=" + to + "&toname=" + to + "&subject=" + subject + "&text=" + body + "&from=" + from;
-                //string ret = ApiSendGridHttp(posturl, postdata);
-                //return ret;
                 return "success";
             }
             catch (Exception ex)

@@ -1,14 +1,15 @@
 <div data-ng-controller="YoutubeFeedsController">
+        <script type="text/javascript" src="https://www.youtube.com/player_api"></script>
   <!-- START CONTENT -->
   <section id="content">
       <!--start container-->
       <!--card widgets end-->
-        <div class="row">
-            <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+        <div class="row">            
+            <div class="col offset-s1 s10 offset-m2 m8 offset-l2 l8">
                 <div class="card" id="feeds">
                     <h5 class="feeds_title white-text" style="background-color:#c4302b"><i class="fa fa-youtube-play"></i>Youtube Live feeds</h5>
                     <ul>
-                        <div class="youtubefeeds">
+                        <!--<div class="youtubefeeds">
                             <div class="row">
                                 <div class="col s12 m6 l6" style="height:550px" ng-repeat="videos in lstYtFeeds">
                                     <div class="card  hoverable">
@@ -24,7 +25,92 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>-->
+
+                      <div class="youtubefeeds">
+                        <div class="row">
+                            <div class="col s12 m12 l12" ng-repeat="videos in lstYtFeeds">
+                                <div class="card  hoverable">
+                                    <!--<a class="modal-trigger" ng-click="videomodal(videos.vdoTitle,videos.ytVideoId)">-->
+                                        <div class="modal-content">
+                                            <!--<img src="{{videos._youtubefeed.vdoImage}}" class="responsive-img"/>-->
+                                            <div class="video-container">
+                                                <iframe class="yt_players" id="ytttt_{{videos._youtubefeed.ytVideoId}}" width="100%" height="360" src="{{videos._youtubefeed.ytVideoId | youtubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
+                                            </div>
+                                        </div>
+                                        <div class="card-content no-space">
+                                            <!--<a>&nbsp;</a><i style="color:#e21212" class="fa fa-youtube-play fa-2x"></i> <a href="{{videos._youtubefeed.vdoUrl}}" style="font-weight:500" class="watchYt" target="_blank">&nbspWatch on Youtube</a>-->
+                                            <a>&nbsp;</a><img src="/contents/socioboard/images/YoutubeLogo.png" /> <a href="{{videos._youtubefeed.vdoUrl}}" style="font-weight:500" class="watchYt" target="_blank" >&nbspWatch on Youtube</a>
+
+                                            <h6 class="y_feeds_title">{{videos._youtubefeed.vdoTitle}}</h6>
+                                            <h6 class="y_feeds_desc">{{videos._youtubefeed.vdoDescription}}</h6>
+                                            <ul class="collapsible" data-collapsible="accordion">
+                                                <li>
+                                                    <!--<div id="headers" class="collapsible-header red-text" ng-mouseover="boxload()" ng-click="videomodal(videos._youtubefeed.ytVideoId)"><i class="material-icons"></i>Show Comments</div>-->                                                    
+                                                    <div id="headers" class="collapsible-header red-text" ng-mouseover="boxload()"><i class="material-icons"></i>Show Comments</div>
+
+                                                    <div class="collapsible-body">
+                                                        <!--<br />
+                                                        <div class="center" ng-if="preloadmorecomments!=true">
+                                                            <div class="preloader-wrapper small active">
+                                                                <div class="spinner-layer spinner-red-only">
+                                                                    <div class="circle-clipper left">
+                                                                        <div class="circle"></div>
+                                                                    </div><div class="gap-patch">
+                                                                        <div class="circle"></div>
+                                                                    </div><div class="circle-clipper right">
+                                                                        <div class="circle"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <br />
+                                                            <h6 style="color:gray; font-size:16px; font-family:Calibri;">Loading Comments</h6>
+
+                                                        </div>-->
+                                                        <div>
+                                                            <div class="row">
+                                                                <form class="col s12">
+                                                                    <div class="row">
+                                                                        <div class="input-field col s11">
+                                                                            <div class="emoji-picker-container">
+                                                                                <!--<input id="compose_{{videos._youtubefeed.ytVideoId}}" length="500" placeholder="Type your msg"/>-->
+                                                                                <textarea id="compose_{{videos._youtubefeed.ytVideoId}}" class="materialize-textarea" length="500" placeholder="Type your msg"></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="input-field col s1 margin-top-50">
+                                                                            <a href="javascript:void(0);" class="btn btn-floating red waves-effect waves-light" ng-click="postComments(videos._youtubefeed.ytVideoId)">
+                                                                                <i class="icon-cursor white-text" ng-class="sendicon" style="font-size: 1rem;"></i>
+                                                                                <i class="fa fa-spinner fa-pulse fa-fw white-text" ng-class="commentsending"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <ul class="collection">
+                                                                <li class="collection-item avatar" ng-repeat="comments in videos._youtubecomment">
+                                                                    <!--<img src="https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQO5jXUpIgJXBbYapR5DVv4Ryhrv75Mqk9K2kazyUl9uIqgngAFT23xQxU" alt="Rajsekhar" class="circle">-->
+                                                                    <img src="{{comments.authorProfileImageUrl}}" alt="{{comments.authorDisplayName}}" class="circle">
+                                                                    <span class="email-title">{{comments.authorDisplayName}}</span>
+                                                                    <label class="right" style="color:#737373">{{comments.publishTime}}</label>
+                                                                    <div class="feeds_post z-depth-1 hoverable">
+                                                                        <p class="break_word ultra-small" title="{{comments.commentOriginal}}">{{comments.commentDisplay}}</p>
+                                                                    </div>
+                                                                </li>                                                               
+                                                            </ul>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    <!--</a>-->
+                                </div>
+                            </div>
                         </div>
+                    </div>
+
+
+
                         <div class="cssload-container" ng-if="preloadmorevideos!=true">
                             <div></div>
                             <div></div>
@@ -42,27 +128,60 @@
       <!-- Compose Email Trigger -->
       <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
           <a class="btn-floating btn-large red modal-trigger " href="#ComposePostModal">
-              <i class="icon-cloud-upload animated bounceInUp infinite"></i>
+              <!--<i class="icon-cloud-upload animated bounceInUp infinite"></i>-->
+              <i class="fa fa-upload"></i>
           </a>
       </div>
 
       <!-- Compose Email Structure -->
       <div id="ComposePostModal" class="modal">
           <div class="modal-content">
-
-          </div>
-          <div class="model-email-content">
               <div class="row">
                   <form class="col s12">
+                      <h4>Upload your video</h4>
                       <div class="row">
                           <div class="input-field col s12">
-                              <select multiple>
-                                  <option value="" disabled selected>Choose your playlist</option>
-                                  <option value="1">playlist 1</option>
-                                  <option value="2">playlist 2</option>
-                                  <option value="3">playlist 3</option>
+                              <input id="youyube_title" type="text" class="validate">
+                              <label for="youyube_title">Title</label>
+                          </div>
+                          <div class="input-field col s12">
+                              <textarea id="youyube_desc" class="materialize-textarea" length="500"></textarea>
+                              <label for="youyube_desc">Description</label>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="input-field col s12 m6 l6">
+                              <select id="categry_vdo">
+                                  <option value="" disabled selected>Choose your Category</option>
+                                  <option value="2">Autos &amp; Vehicles</option>
+                                  <option value="23">Comedy</option>
+                                  <option value="27">Education</option>
+                                  <option value="24">Entertainment</option>
+                                  <option value="1">Film &amp; Animation</option>
+                                  <option value="20">Gaming</option>
+                                  <option value="26">How-to &amp; Style</option>
+                                  <option value="10">Music</option>
+                                  <option value="25">News &amp; Politics</option>
+                                  <option value="29">Non-profits &amp; Activism</option>
+                                  <option value="22">People &amp; Blogs</option>
+                                  <option value="15">Pets &amp; Animals</option>
+                                  <option value="28">Science &amp; Technology</option>
+                                  <option value="17">Sport</option>
+                                  <option value="19">Travel &amp; Events</option>
+
+
                               </select>
-                              <label>Select Playlist</label>
+                              <label>Select Category</label>
+                          </div>
+
+                          <div class="input-field col s12 m6 l6">
+                              <select id="stats_vdo">
+                                  <option value="" disabled selected>Choose your Status</option>
+                                  <option value="public">Public</option>
+                                  <option value="unlisted">Unlisted</option>
+                                  <option value="private">Private</option>
+                              </select>
+                              <label>Select Status</label>
                           </div>
                       </div>
                       <!--Default version-->
@@ -74,30 +193,36 @@
                               <input type="file" id="input-file-now" class="dropify" data-default-file="" />
                           </div>
                       </div>
-                      <div class="row">
-                          <div class="input-field col s12">
-                              <input id="youyube_title" type="text" class="validate">
-                              <label for="youyube_title">Title</label>
-                          </div>
-                          <div class="input-field col s12">
-                              <textarea id="youyube_desc" class="materialize-textarea" length="500"></textarea>
-                              <label for="youyube_desc">Description</label>
-                          </div>
-                          <div class="chip">
-                              Tag
-                              <i class="material-icons icon-close"></i>
-                          </div>
-                      </div>
-                      <div class="row">
-                          <div class="col s12 m12 l12">
-                              <p>Add your hashtag</p>
-                          </div>
-                          <div class="input-field col s12">
-                              <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
-                          </div>
-                      </div>
+
+                      <!--<div class="row">
+                        <div class="col s12 m12 l12">
+                            <p>Add your hashtag</p>
+                        </div>
+                        <div class="input-field col s12">
+                            <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
+                        </div>
+                    </div>-->
                   </form>
               </div>
+          </div>
+          <div class="center" ng-if="preloadmore!=true">
+              <div class="sk-circle">
+                  <div class="sk-circle1 sk-child"></div>
+                  <div class="sk-circle2 sk-child"></div>
+                  <div class="sk-circle3 sk-child"></div>
+                  <div class="sk-circle4 sk-child"></div>
+                  <div class="sk-circle5 sk-child"></div>
+                  <div class="sk-circle6 sk-child"></div>
+                  <div class="sk-circle7 sk-child"></div>
+                  <div class="sk-circle8 sk-child"></div>
+                  <div class="sk-circle9 sk-child"></div>
+                  <div class="sk-circle10 sk-child"></div>
+                  <div class="sk-circle11 sk-child"></div>
+                  <div class="sk-circle12 sk-child"></div>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <a class="modal-action waves-effect waves-orange btn-flat red white-text" ng-click="uploadvideo()">Upload</a>
           </div>
       </div>
       <!-- Modal Structure -->
@@ -107,7 +232,7 @@
 
   </section>
   <!-- END CONTENT -->   
-    <div id="youtubefeeds_modal1" class="modal">
+    <!--<div id="youtubefeeds_modal1" class="modal">
         <div class="modal-content">
             <a href="javascript:void(0);" class="modal-action modal-close right"><i class="icon-close"></i></a>
             <h4 class="truncate">{{videotitle}}</h4>
@@ -136,6 +261,20 @@
                 </div>
                 <div class="col m12 l12 s12" ng-if="preloadmorecomments==true">
                     <div>
+                        <div class="row">
+                            <form class="col s12">
+                                <div class="row">
+                                    <div class="input-field col s11">
+                                        <div class="emoji-picker-container">
+                                            <textarea id="compose" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="input-field col s1 margin-top-50">
+                                        <a href="javascript:void(0);" class="" ng-click="postComments()"><i class="icon-cursor red-text font_30" ng-class="sendicon"></i><i class="fa fa-spinner fa-pulse fa-2x fa-fw red-text" ng-class="commentsending"></i></a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                         <ul class="collection">
                             <li class="collection-item avatar" ng-repeat="comments in lstYtComments">
                                 <img src="{{comments.authorProfileImageUrl}}" alt="{{comments.authorDisplayName}}" class="circle">
@@ -146,20 +285,7 @@
                                 </div>
                             </li>
                         </ul>
-                        <div class="row">
-                            <form class="col s12">
-                                <div class="row">
-                                    <div class="input-field col s11">
-                                        <div class="emoji-picker-container">
-                                            <textarea id="compose" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="input-field col s1 ">
-                                        <a href="javascript:void(0);" class=" margin-top-30"><i class="icon-cursor red-text font_50"></i></a>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -167,17 +293,174 @@
         <div class="modal-footer">
 
         </div>
-    </div>
-
+    </div>-->
 
 </div>
 
+<!-- //////////////////////////////////////// Script Start //////////////////////////////////////// -->
+<script>
+    //window.onload = function () {
+    //    setTimeout(function () {
+    //        onYouTubeIframeAPIReady();
+    //    }, 20000);
+    //};
 
+    var players = new Array();
 
+    function onYouTubeIframeAPIReady() {
+        //console.log('Rajsekhar');
+        var temp = $("iframe.yt_players");
+        for (var i = 0; i < temp.length; i++) {
+            var t = new YT.Player($(temp[i]).attr('id'), {
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+            players.push(t);
+        }
 
+    }
+
+    function onPlayerStateChange(event) {
+        //alert('Rajsekhar');
+        if (event.data == YT.PlayerState.PLAYING) {
+            var temp = event.target.a.src;
+            var tempPlayers = $("iframe.yt_players");
+            for (var i = 0; i < players.length; i++) {
+                //Rajsekhar_GgsAyvZo6_I.stopVideo();
+                if (players[i].a.src != temp) players[i].stopVideo();
+
+            }
+        }
+    }
+
+</script>
+<!-- //////////////////////////////////////// Script End //////////////////////////////////////// -->
 
 <!-- //////////////////////////////////////// Style CSS for Pre Loader //////////////////////////////////////// -->
 <style>
+
+     .sk-circle {
+  margin: 0px auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+}
+.sk-circle .sk-child {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.sk-circle .sk-child:before {
+  content: '';
+  display: block;
+  margin: 0 auto;
+  width: 15%;
+  height: 15%;
+  background-color: #c4302b;
+  border-radius: 100%;
+  -webkit-animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
+          animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
+}
+.sk-circle .sk-circle2 {
+  -webkit-transform: rotate(30deg);
+      -ms-transform: rotate(30deg);
+          transform: rotate(30deg); }
+.sk-circle .sk-circle3 {
+  -webkit-transform: rotate(60deg);
+      -ms-transform: rotate(60deg);
+          transform: rotate(60deg); }
+.sk-circle .sk-circle4 {
+  -webkit-transform: rotate(90deg);
+      -ms-transform: rotate(90deg);
+          transform: rotate(90deg); }
+.sk-circle .sk-circle5 {
+  -webkit-transform: rotate(120deg);
+      -ms-transform: rotate(120deg);
+          transform: rotate(120deg); }
+.sk-circle .sk-circle6 {
+  -webkit-transform: rotate(150deg);
+      -ms-transform: rotate(150deg);
+          transform: rotate(150deg); }
+.sk-circle .sk-circle7 {
+  -webkit-transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+          transform: rotate(180deg); }
+.sk-circle .sk-circle8 {
+  -webkit-transform: rotate(210deg);
+      -ms-transform: rotate(210deg);
+          transform: rotate(210deg); }
+.sk-circle .sk-circle9 {
+  -webkit-transform: rotate(240deg);
+      -ms-transform: rotate(240deg);
+          transform: rotate(240deg); }
+.sk-circle .sk-circle10 {
+  -webkit-transform: rotate(270deg);
+      -ms-transform: rotate(270deg);
+          transform: rotate(270deg); }
+.sk-circle .sk-circle11 {
+  -webkit-transform: rotate(300deg);
+      -ms-transform: rotate(300deg);
+          transform: rotate(300deg); }
+.sk-circle .sk-circle12 {
+  -webkit-transform: rotate(330deg);
+      -ms-transform: rotate(330deg);
+          transform: rotate(330deg); }
+.sk-circle .sk-circle2:before {
+  -webkit-animation-delay: -1.1s;
+          animation-delay: -1.1s; }
+.sk-circle .sk-circle3:before {
+  -webkit-animation-delay: -1s;
+          animation-delay: -1s; }
+.sk-circle .sk-circle4:before {
+  -webkit-animation-delay: -0.9s;
+          animation-delay: -0.9s; }
+.sk-circle .sk-circle5:before {
+  -webkit-animation-delay: -0.8s;
+          animation-delay: -0.8s; }
+.sk-circle .sk-circle6:before {
+  -webkit-animation-delay: -0.7s;
+          animation-delay: -0.7s; }
+.sk-circle .sk-circle7:before {
+  -webkit-animation-delay: -0.6s;
+          animation-delay: -0.6s; }
+.sk-circle .sk-circle8:before {
+  -webkit-animation-delay: -0.5s;
+          animation-delay: -0.5s; }
+.sk-circle .sk-circle9:before {
+  -webkit-animation-delay: -0.4s;
+          animation-delay: -0.4s; }
+.sk-circle .sk-circle10:before {
+  -webkit-animation-delay: -0.3s;
+          animation-delay: -0.3s; }
+.sk-circle .sk-circle11:before {
+  -webkit-animation-delay: -0.2s;
+          animation-delay: -0.2s; }
+.sk-circle .sk-circle12:before {
+  -webkit-animation-delay: -0.1s;
+          animation-delay: -0.1s; }
+
+@-webkit-keyframes sk-circleBounceDelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes sk-circleBounceDelay {
+  0%, 80%, 100% {
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  } 40% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
     .cssload-container {
         background: rgb(255,255,255);
     }
@@ -278,5 +561,8 @@
             left: 100%;
         }
     }
+
+    a.watchYt:hover, a.watchYt:active {color: #e21212 !important;}
+    a.watchYt {color: #808080 !important;}
 </style>
 <!-- //////////////////////////////////////// End Style CSS for Pre Loader //////////////////////////////////////// -->

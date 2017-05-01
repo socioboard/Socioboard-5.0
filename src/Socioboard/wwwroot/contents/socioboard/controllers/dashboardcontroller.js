@@ -10,8 +10,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         $scope.selectedvalue = true;
         $scope.selectclick = function () {
-
-            //  var selectedvals = $scope.composeProfiles;
+              var selectedvals = $scope.composeProfiles;
             var selectedvals = $('#composeProfiles').val();
             if (selectedvals.indexOf("selectall") != -1) {
                 var alloptions = $('#composeProfiles option');
@@ -22,23 +21,17 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     if (selectvalindex == -1) {
                         if (tempval != "selectall" && tempval != "select") {
                             selectedvals.push(tempval);
-                            // $('.dropdown-content > li:not(:first-child)').find('input').prop('checked', true)
                         }
                     } else {
                         selectedvals.splice(selectvalindex);
-                        //$('.dropdown-content > li:not(:first-child)').find('input').prop('checked', false)
                     }
                 });
-                // console.log(selectedvals);
-                // $('#composeProfiles').material_select();
                 if ($scope.selectedvalue == true) {
-                    // $('.dropdown-content > li:not(:first-child)').find('input').prop('checked', true);
                     $('.dropdown-content > li:not(:first-child)').addClass("active").find('input').prop('checked', true);
                     $scope.selectedvalue = false;
 
                 }
                 else {
-                    // $('.dropdown-content > li:not(:first-child)').find('input').prop('checked', false);
                     $('.dropdown-content > li:not(:first-child)').removeClass("active").find('input').prop('checked', false);
                     $scope.selectedvalue = true;
 
@@ -46,6 +39,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
 
         }
+
+
+
        
         //Auth.login().success(function () { });
         $scope.getHttpsURL = function (obj) {
@@ -129,13 +125,16 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 var profiles = $('#composeProfiles').val();
                 var message = $('#composeMessage').val();
                 var updatedmessage = "";
+                var testmsg=message;
                 message = encodeURIComponent(message);
                 //var postdata = message.split("\n");
                 //for (var i = 0; i < postdata.length; i++) {
                 //    updatedmessage = updatedmessage + "<br>" + postdata[i];
                 //}
                 // updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-                if (profiles.length > 0 && message!='') {
+
+              
+                    if (profiles != null && /\S/.test(testmsg)) {
                     $scope.checkfile();
                     if ($scope.check == true) {
                         var formData = new FormData();
@@ -167,7 +166,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
                 else {
                     $scope.dispbtn = true;
-                    if (profiles.length < 0) {
+                    if (profiles == null) {
                         swal('Please select a profile');
                     }
                     else {
@@ -502,6 +501,43 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 });
             }
 
+            $scope.deleteChannel = function (profileId) {
+                // console.log(profileId);
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to send any video via this account!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function () {
+                    console.log(profileId)
+
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                    }).then(function (response) {
+                        if (response.data == "Deleted") {
+                            // swal("Deleted!", "Your profile has been deleted", "Success");
+                            swal("Deleted!", "Account is deleted", "success");
+                        }
+                        window.location.reload();
+                    });
+                    //    else {
+                    //        //  swal("Deleted!", response.data, "success");
+                    //        swal("Deleted!","success");
+                    //    }
+
+                    //}, function (reason) {
+                    //    // swal("Deleted!", reason, "success");
+                    //    swal("Deleted!","success");
+                    //});
+
+                    //todo: code to delete profile
+                });
+            }
 
 
             //codes to add linkedin pages

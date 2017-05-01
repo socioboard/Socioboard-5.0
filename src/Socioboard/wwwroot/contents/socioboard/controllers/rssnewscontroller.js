@@ -2,33 +2,34 @@
 
 SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $http, $timeout, $state, apiDomain) {
     //alert('helo');
-    $scope.$on('$viewContentLoaded', function() {   
-    
+    $scope.$on('$viewContentLoaded', function () {
+
         $scope.disbtncom = true;
         $scope.draftbtn = true;
         $rootScope.contentMessage = {};
         $rootScope.schedulemessage = {};
         $scope.buildbtn = true;
         rssnews();
-        
-        $scope.deleteMsg = function(profileId){
-        	// console.log(profileId);
-        	swal({   
-	        title: "Are you sure?",   
-	        text: "You will not be able to send message via this account!",   
-	        type: "warning",   
-	        showCancelButton: true,   
-	        confirmButtonColor: "#DD6B55",   
-	        confirmButtonText: "Yes, delete it!",   
-	        closeOnConfirm: false }, 
-	        function(){   
+
+        $scope.deleteMsg = function (profileId) {
+            // console.log(profileId);
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to send message via this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+	        function () {
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "success"); 
-	            });
+	            swal("Deleted!", "Your profile has been deleted.", "success");
+	        });
         }
 
         $('#tags').tagsInput();
-    
+
 
         $scope.loadRssNewsFeed = function () {
             debugger;
@@ -53,7 +54,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         }
 
         $scope.loadRssNewsFeed();
-      
+
         $scope.rssContentsData = function () {
 
             $scope.buildbtn = false;
@@ -69,7 +70,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
                         $scope.postedRssData = response.data;
                         if ($scope.postedRssData != "Data already added") {
-                       
+
                             console.log("NEWS");
                             console.log($scope.postedRssData);
                             $scope.buildbtn = true;
@@ -85,7 +86,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                             swal("Data already added");
                             $('#tags').val('');
                         }
-                       
+
                     }
                     else {
                         $scope.nofeeds = true;
@@ -138,7 +139,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 var message = {
                     "title": contentFeed.title,
                     "link": contentFeed.link,
-                    "image": contentFeed.image
+                    "image": contentFeed.image,
                 };
                 //  console.log(schedulemessage.message);
                 console.log("google");
@@ -203,7 +204,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             }
             else {
                 $scope.disbtncom = true;
-                if (profiles.length < 0) {
+                if (profiles.length == 0) {
                     swal('Please select a profile');
                 }
                 else {
@@ -306,8 +307,8 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 swal('Please type a message to save in draft');
             }
         }
-       
-  });
+
+    });
 
 });
 

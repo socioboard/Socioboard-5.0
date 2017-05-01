@@ -143,7 +143,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         $scope.PostFacebookComment = function (feedId, ProfileId) {
             var postcomment = $('#postcomment_' + feedId).val();
 
-            if (postcomment != '' && postcomment != null) {
+            if (/\S/.test(postcomment)) {
                 $scope.sendingcomment = true;
                 $scope.sendicon = true;
                 $http.post(apiDomain + '/api/Facebook/PostFacebookComment?postId=' + feedId + '&profileId=' + ProfileId + '&message=' + postcomment)

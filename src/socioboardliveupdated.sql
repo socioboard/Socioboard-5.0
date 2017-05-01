@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
--- Host:                         54.68.2.251
--- Server version:               5.5.5-10.1.21-MariaDB - mariadb.org binary distribution
+-- Host:                         37.58.99.114
+-- Server version:               5.5.5-10.1.22-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win64
 -- HeidiSQL Version:             7.0.0.4390
 -- --------------------------------------------------------
@@ -11,7 +11,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
 -- Dumping database structure for socioboardlive
-CREATE DATABASE IF NOT EXISTS `socioboardlive` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE IF NOT EXISTS `socioboardlive` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `socioboardlive`;
 
 
@@ -335,6 +335,25 @@ CREATE TABLE IF NOT EXISTS `linkedincompanypage` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table socioboardlive.mongoboards
+CREATE TABLE IF NOT EXISTS `mongoboards` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `boardName` varchar(50) NOT NULL,
+  `boardId` varchar(50) NOT NULL,
+  `userId` varchar(50) NOT NULL,
+  `trendingtype` tinyint(4) NOT NULL,
+  `createDate` datetime NOT NULL,
+  `isActive` tinyint(4) NOT NULL,
+  `facebookHashTag` varchar(50) DEFAULT NULL,
+  `twitterHashTag` varchar(50) NOT NULL,
+  `instagramHashTag` varchar(50) NOT NULL,
+  `gplusHashTag` varchar(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table socioboardlive.newsletter
 CREATE TABLE IF NOT EXISTS `newsletter` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -379,6 +398,7 @@ CREATE TABLE IF NOT EXISTS `rssfeedurl` (
   `rssFeedUrlId` bigint(20) NOT NULL AUTO_INCREMENT,
   `rssurl` text,
   `LastUpdate` datetime DEFAULT NULL,
+  `Keywords` text,
   PRIMARY KEY (`rssFeedUrlId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -399,6 +419,8 @@ CREATE TABLE IF NOT EXISTS `scheduledmessage` (
   `picUrl` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
   `socialprofileName` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
   `url` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
+  `link` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
+  `localscheduletime` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `scheduleTime` (`scheduleTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -502,6 +524,32 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`Id`),
   UNIQUE KEY `EmailId` (`EmailId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table socioboardlive.youtubechannel
+CREATE TABLE IF NOT EXISTS `youtubechannel` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) NOT NULL,
+  `YtubeChannelId` varchar(100) DEFAULT NULL,
+  `YtubeChannelName` varchar(100) DEFAULT NULL,
+  `LastUpdate` datetime DEFAULT NULL,
+  `ChannelpicUrl` varchar(450) DEFAULT NULL,
+  `WebsiteUrl` varchar(250) DEFAULT NULL,
+  `EntryDate` datetime DEFAULT NULL,
+  `YtubeChannelDescription` varchar(500) DEFAULT NULL,
+  `IsActive` tinyint(1) DEFAULT NULL,
+  `AccessToken` varchar(400) DEFAULT NULL,
+  `RefreshToken` varchar(400) DEFAULT NULL,
+  `PublishingDate` datetime DEFAULT NULL,
+  `VideosCount` double DEFAULT NULL,
+  `CommentsCount` double DEFAULT NULL,
+  `SubscribersCount` double DEFAULT NULL,
+  `ViewsCount` double DEFAULT NULL,
+  `Channel_EmailId` varchar(450) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Data exporting was unselected.
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

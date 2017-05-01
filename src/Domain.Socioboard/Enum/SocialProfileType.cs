@@ -13,6 +13,7 @@
         Instagram =8,
         Tumblr =9,
         GoogleAnalytics=10,
-        FacebookPublicPage=11
+        FacebookPublicPage=11,
+        DropBox=12
     }
 }

@@ -6,9 +6,12 @@
           {
               $(this).html('<img src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
           }
-           if(index==3)
-          {
-               $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+          //if (index == 3 || index == 4)
+          //{
+          //     $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+          //}
+          if (index == 3) {
+              $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
           }
            if (index == 4)
           {
@@ -192,7 +195,7 @@
 
                             <!--facebook pages binding start-->
                             <div class="col s12 m6 l4" ng-repeat="fbProfile in  lstFbProfiles ">
-                                <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType == 1" >
+                                <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType != 0" >
                                     <div class="card-image waves-effect waves-block waves-light">
                                         <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}">
                                         <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}">
@@ -339,20 +342,20 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="{{yTChannel.channelpicUrl}}" alt="{{yTChannel.ytubeChannelName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/YoutubeLogo.png" class="card_profile_socio_icon">
+                                        <img src="/contents/socioboard/images/yt.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="{{yTChannel.ytubeChannelName}}">{{yTChannel.ytubeChannelName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Videos"></i> <span class="cyan-text text-darken-2">Videos:</span>{{yTChannel.videosCount}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{yTChannel.viewsCount}}</p>
+                                        <p><i class="icon-camcorder cyan-text text-darken-2" title="Videos"></i> <span class="cyan-text text-darken-2"> Videos:</span>{{yTChannel.videosCount}}</p>
+                                        <p class="truncate"><i class="icon-eye cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2"> Views:</span> {{yTChannel.viewsCount}}</p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate" title="Channel Name">{{yTChannel.ytubeChannelName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Total No of Videos"></i><span class="cyan-text text-darken-2">Videos:</span> {{yTChannel.videosCount}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Total No of Comments"></i><span class="cyan-text text-darken-2">Comments:</span> {{yTChannel.commentsCount}}</p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2" title="Total No of Subscribers"></i><span class="cyan-text text-darken-2">Subscribers:</span> {{yTChannel.subscribersCount}}</p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2" title="Total No of Views"></i><span class="cyan-text text-darken-2">Views:</span> {{yTChannel.viewsCount}}</p>
+                                        <p><i class="icon-camcorder cyan-text text-darken-2" title="Total No of Videos"></i><span class="cyan-text text-darken-2"> Videos:</span> {{yTChannel.videosCount}}</p>
+                                        <p><i class="icon-speech cyan-text text-darken-2" title="Total No of Comments"></i><span class="cyan-text text-darken-2"> Comments:</span> {{yTChannel.commentsCount}}</p>
+                                        <p><i class="icon-feed cyan-text text-darken-2" title="Total No of Subscribers"></i><span class="cyan-text text-darken-2"> Subscribers:</span> {{yTChannel.subscribersCount}}</p>
+                                        <p><i class="icon-eye cyan-text text-darken-2" title="Total No of Views"></i><span class="cyan-text text-darken-2"> Views:</span> {{yTChannel.viewsCount}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -688,7 +691,7 @@
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
                                                 
-                                                    <div class="row card" ng-if="profile.profileType==1 || profile.profileType==11">
+                                                    <div class="row card" ng-if="profile.profileType==1">
                                                         <a href="https://www.facebook.com/{{profile.profileName}}" target="_blank">
                                                             <div class="col l3 m3 s3">
                                                                 <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
@@ -839,7 +842,7 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <!--<li>
+                                <li>
                                     <div class="collapsible-header red-text text-darken-3"><i class="fa fa-youtube-play fa-fw"></i>Youtube</div>
                                     <div class="collapsible-body">
                                         <ul>
@@ -854,13 +857,13 @@
                                                         </div>
                                                     </a>
                                                     <div class="col l2 m2 s2 margin-top-10">
-                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                        <span ng-click="deleteChannel(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
                                                 </div>
                                             </li>
                                         </ul>
                                     </div>
-                                </li>-->
+                                </li>
                                 <!--<li>
                                     <div class="card center">
                                         <a class="waves-effect waves-light modal-trigger" href="#addprofile">
@@ -1013,6 +1016,7 @@
                                 <option value="selectall">Select all</option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}}</option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:11}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>-->
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" class="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" class="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" class="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
@@ -1042,7 +1046,7 @@
                         <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
                         <!--<li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>-->
-                        <!--<li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>-->
+                        <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
                     </ul>
                 </div>
@@ -1062,7 +1066,7 @@
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
                         <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
                         <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
-                        <a  class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i> Get Facebook Fanpage Analytics</a>
+                        <a  class="waves-effect waves-light btn margin-top-10" ng-click="Addfacebookpagebyurl()"><i class="fa fa-facebook fa-fw"></i> Get Facebook Fanpage Analytics</a>
                         <div class="form-group input-group margin-top-10">
                             <input type="text" placeholder="Ex: https://www.facebook.com/socioboard" id="_txtinputurl" class="form-control">
                             <span class="input-group-btn">
@@ -1098,12 +1102,12 @@
                         <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add a tumblr Profile</a>
                     </div>
                 </div>-->
-                <!--<div id="youtube" class="col s12">
+                <div id="youtube" class="col s12">
                     <div class="center-align">
                         <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
                         <a href="../GoogleManager/AddGoogleAccount?Op=youtubelogin" class="waves-effect waves-light btn"><i class="fa fa-youtube fa-fw"></i>Add Youtube Channel</a>
                     </div>
-                </div>-->
+                </div>
                 <div id="ganalytics" class="col s12">
                     <div class="center-align">
                         <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
@@ -1186,7 +1190,7 @@
 
         <div class="modal" id="Youtube_Modal">
             <div class="modal-content">
-                <h4>CHOOSE Youtube Channels to CONNECT</h4>
+                <h4>Choose Youtube channels to connect</h4>
                 <ul class="collection">
                     <li class="collection-item avatar" ng-repeat="youtube in lstYoutube" ng-if="youtube.connected==0">
                         <div class="left">

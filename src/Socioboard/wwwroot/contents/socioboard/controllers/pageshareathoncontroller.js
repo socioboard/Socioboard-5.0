@@ -5,7 +5,7 @@ SocioboardApp.controller('PageShareathonController', function ($rootScope, $scop
     $scope.$on('$viewContentLoaded', function() {   
     
         pageshareathon();
-        $scope.deleteMsg = function(profileId){
+        $scope.deletepageshareathon = function(profileId){
         	swal({   
 	        title: "Are you sure?",   
 	        text: "You will not be able to send any message via this account!",
@@ -16,7 +16,15 @@ SocioboardApp.controller('PageShareathonController', function ($rootScope, $scop
 	        closeOnConfirm: false }, 
 	        function(){   
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "Success");
+	            $http.post(apiDomain + '/api/Shareathon/DeletePageShareathon?PageShareathodId=' + profileId)
+                            .then(function (response) {
+                                if (response.data == "success") {
+                                    swal("Deleted!", "Your profile has been deleted.", "success");
+                                    $scope.loadpageshareathon();
+                                }
+                            }, function (reason) {
+                                $scope.error = reason.data;
+                             });
 	            });
         }
 
@@ -34,18 +42,18 @@ SocioboardApp.controller('PageShareathonController', function ($rootScope, $scop
 
         $scope.loadpageshareathon();
 
-        $scope.deletepageshareathon = function (PageShareathodId)
-        {
-            //codes to delete  page shreathon
-            $http.post(apiDomain + '/api/Shareathon/DeletePageShareathon?PageShareathodId=' + PageShareathodId)
-                              .then(function (response) {
-                                  swal(response.data);
-                                  $scope.loadpageshareathon();
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            // end codes to delete page shreathon
-        }
+        //$scope.deletepageshareathon = function (PageShareathodId)
+        //{
+        //    //codes to delete  page shreathon
+        //    $http.post(apiDomain + '/api/Shareathon/DeletePageShareathon?PageShareathodId=' + PageShareathodId)
+        //                      .then(function (response) {
+        //                          swal(response.data);
+        //                          $scope.loadpageshareathon();
+        //                      }, function (reason) {
+        //                          $scope.error = reason.data;
+        //                      });
+        //    // end codes to delete page shreathon
+        //}
 
 
         $scope.editpageshareathon = function (pageshareathon) {

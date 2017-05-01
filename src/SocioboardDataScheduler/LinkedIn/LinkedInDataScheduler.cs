@@ -16,7 +16,7 @@ namespace SocioboardDataScheduler.LinkedIn
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn && t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending).ToList();
+                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => (t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn && t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending) && t.scheduleTime <= DateTime.UtcNow).ToList();
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
 
                     foreach (var items in newlstScheduledMessage)
@@ -28,9 +28,16 @@ namespace SocioboardDataScheduler.LinkedIn
                             {
                                 foreach (var item in items)
                                 {
-                                    Console.WriteLine(item.socialprofileName + "Scheduling Started");
-                                    LinkedInScheduler.PostLinkedInMessage(item, _LinkedInAccount);
-                                    Console.WriteLine(item.socialprofileName + "Scheduling");
+                                    try
+                                    {
+                                        Console.WriteLine(item.socialprofileName + "Scheduling Started");
+                                        LinkedInScheduler.PostLinkedInMessage(item, _LinkedInAccount);
+                                        Console.WriteLine(item.socialprofileName + "Scheduling");
+                                    }
+                                    catch (Exception)
+                                    {
+                                        
+                                    }
                                 }
                                 _LinkedInAccount.SchedulerUpdate = DateTime.UtcNow;
                                 dbr.Update<Domain.Socioboard.Models.LinkedInAccount>(_LinkedInAccount);
@@ -71,9 +78,16 @@ namespace SocioboardDataScheduler.LinkedIn
                             {
                                 foreach (var item in lstScheduledMessage)
                                 {
-                                    Console.WriteLine(item.socialprofileName + "Scheduling Started");
-                                    LinkedInCompanyPageScheduler.PostLinkedInCompanyPageMessage(item, _LinkedinCompanyPage);
-                                    Console.WriteLine(item.socialprofileName + "Scheduling");
+                                    try
+                                    {
+                                        Console.WriteLine(item.socialprofileName + "Scheduling Started");
+                                        LinkedInCompanyPageScheduler.PostLinkedInCompanyPageMessage(item, _LinkedinCompanyPage);
+                                        Console.WriteLine(item.socialprofileName + "Scheduling");
+                                    }
+                                    catch (Exception)
+                                    {
+                                        
+                                    }
                                 }
                                 _LinkedinCompanyPage.SchedulerUpdate = DateTime.UtcNow;
                                 dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(_LinkedinCompanyPage);

@@ -25,7 +25,7 @@
             <param name="userId">id of the user to which board belongs to </param>
             <returns>success : if board created successfully, board Exist: if board name already exists  </returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.BoardMeController.DeleteBoard(System.String,System.Int64)">
+        <member name="M:Api.Socioboard.Controllers.BoardMeController.DeleteBoard(System.Int64,System.Int64)">
             <summary>
             Deletes the board with specified board Id
             </summary>

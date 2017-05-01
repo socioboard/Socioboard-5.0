@@ -36,7 +36,8 @@ namespace Socioboard.Controllers
 
                 if (!string.IsNullOrEmpty(response))
                 {
-
+                    Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                    HttpContext.Session.SetObjectAsJson("User", _user);
                 }
                 else
                 {
@@ -68,7 +69,7 @@ namespace Socioboard.Controllers
             {
                 try
                 {
-                    ViewBag.board = await response.Content.ReadAsAsync<Domain.Socioboard.Models.Mongo.MongoBoards>();
+                    ViewBag.board = await response.Content.ReadAsAsync<Domain.Socioboard.Models.MongoBoards>();
                     return View();
                 }
                 catch (Exception e)
@@ -90,7 +91,7 @@ namespace Socioboard.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> getTwitterFeeds(string boardId, int skip, int count)
+        public async Task<IActionResult> getTwitterFeeds(long boardId, int skip, int count)
         {
             HttpResponseMessage response = await WebApiReq.GetReq("/api/BoardMe/getTwitterFeeds?boardId=" + boardId+ "&skip="+skip+ "&count="+count, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
@@ -112,7 +113,7 @@ namespace Socioboard.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> getInstagramFeeds(string boardId, int skip, int count)
+        public async Task<IActionResult> getInstagramFeeds(long boardId, int skip, int count)
         {
             HttpResponseMessage response = await WebApiReq.GetReq("/api/BoardMe/getInstagramFeeds?boardId=" + boardId + "&skip=" + skip + "&count=" + count, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
@@ -133,7 +134,7 @@ namespace Socioboard.Controllers
         }
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> getGplusFeeds(string boardId, int skip, int count)
+        public async Task<IActionResult> getGplusFeeds(long boardId, int skip, int count)
         {
             HttpResponseMessage response = await WebApiReq.GetReq("/api/BoardMe/getGplusfeeds?boardId=" + boardId + "&skip=" + skip + "&count=" + count, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)

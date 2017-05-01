@@ -10,6 +10,7 @@ using Domain.Socioboard.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Filters;
 
+
 namespace Socioboard.Controllers
 {
     public class HomeController : Controller
@@ -44,7 +45,8 @@ namespace Socioboard.Controllers
 
                 if (!string.IsNullOrEmpty(response))
                 {
-
+                    Domain.Socioboard.Models.User _user= Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                    HttpContext.Session.SetObjectAsJson("User", _user);
                 }
                 else
                 {
@@ -280,6 +282,7 @@ namespace Socioboard.Controllers
             Param.Add(new KeyValuePair<string, string>("twitterText", twitterText));
             Param.Add(new KeyValuePair<string, string>("profile", profiles));
             Param.Add(new KeyValuePair<string, string>("scheduleTime", sdTime));
+            Param.Add(new KeyValuePair<string, string>("localscheduleTime", clientTime));
             HttpResponseMessage respon = await WebApiReq.PostReq("/api/SocialMessages/PluginScheduleMessage", Param, "", "", _appSettings.ApiDomain);
             if (respon.IsSuccessStatusCode)
             {

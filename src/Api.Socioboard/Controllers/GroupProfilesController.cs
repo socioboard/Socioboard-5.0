@@ -204,11 +204,11 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpGet("GetPluginProfile")]
-        public IActionResult GetPluginProfile(long userId)
+        public IActionResult GetPluginProfile(long groupId)
         {
             List<Domain.Socioboard.Helpers.PluginProfile> lstPluginProfile = new List<Domain.Socioboard.Helpers.PluginProfile>();
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId.Equals(userId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)).ToList();
+            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId.Equals(groupId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)).ToList();
             lstGroupprofiles = lstGroupprofiles.GroupBy(t => t.profileId).Select(g => g.First()).ToList();
             foreach (var item in lstGroupprofiles)
             {

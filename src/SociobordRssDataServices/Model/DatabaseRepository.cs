@@ -9,7 +9,7 @@ using SociobordRssDataServices.Helper;
 
 namespace SociobordRssDataServices.Model
 {
-    public class DatabaseRepository : IDatabaseRepository
+    public class DatabaseRepository 
     {
       
         public IList<T> Find<T>(Expression<Func<T, bool>> query) where T : class, new()
@@ -33,46 +33,6 @@ namespace SociobordRssDataServices.Model
             return result;
         }
 
-
-        public IList<T> FindWithRange<T>(Expression<Func<T, bool>> query, int skip, int take) where T : class, new()
-        {
-            IList<T> result = null;
-            try
-            {
-                using (NHibernate.ISession session = SessionFactory.GetNewSession())
-                {
-                    result = session.Query<T>().Where(query).Skip(skip).Take(take).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-            return result;
-
-        }
-        public int GetCount<T>(Expression<Func<T, bool>> query) where T : class, new()
-        {
-            int PiadUser = 0;
-            try
-            {
-                using (NHibernate.ISession session = SessionFactory.GetNewSession())
-                {
-
-                    var futureCount = session.QueryOver<T>().Where(query)
-                       .Select(NHibernate.Criterion.Projections.RowCount())
-                      .FutureValue<int>()
-                          .Value;
-                    PiadUser = Convert.ToInt32(futureCount);
-                }
-            }
-            catch (Exception ex)
-            {
-                
-            }
-            return PiadUser;
-        }
         public IList<T> FindAll<T>() where T : class, new()
         {
             IList<T> result = null;

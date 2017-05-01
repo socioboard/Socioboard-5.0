@@ -123,7 +123,7 @@ namespace Api.Socioboard.Repositories
                     Instagramaccounts = Api.Socioboard.Repositories.InstagramRepository.getInstagramAccount(objInstagramAccount.InstagramId, _redisCache, dbr);
                     if (Instagramaccounts != null && Instagramaccounts.IsActive == true)
                     {
-                        return "This Account is added by some body else.";
+                        return "This Account is added by somebody else.";
                     }
                 }
                 else

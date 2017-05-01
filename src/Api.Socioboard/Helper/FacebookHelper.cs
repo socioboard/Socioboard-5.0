@@ -4,7 +4,6 @@ using Facebook;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using Socioboard.Facebook.Data;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,15 +11,18 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using Socioboard.Facebook;
 using Newtonsoft.Json.Linq;
+using Socioboard.Facebook.Data;
+using Api.Socioboard.Controllers;
 
 namespace Api.Socioboard.Helper
 {
     public static class FacebookHelper
     {
+        
         public static string ComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, DatabaseRepository dbr, ILogger _logger)
         {
+          
             string ret = "";
 
             FacebookClient fb = new FacebookClient();
@@ -38,29 +40,41 @@ namespace Api.Socioboard.Helper
             }
             try
             {
-                if (!string.IsNullOrEmpty(imagePath))
+                if (string.IsNullOrEmpty(link))
                 {
-                    Uri u = new Uri(imagePath);
-                    string filename = string.Empty;
-                    string extension = string.Empty;
-                    extension = System.IO.Path.GetExtension(u.AbsolutePath).Replace(".", "");
-                    var media = new FacebookMediaObject
+                    if (!string.IsNullOrEmpty(imagePath))
                     {
-                        FileName = "filename",
-                        ContentType = "image/" + extension
-                    };
-                    //byte[] img = System.IO.File.ReadAllBytes(imagepath);
-                    var webClient = new WebClient();
-                    byte[] img = webClient.DownloadData(imagePath);
-                    media.SetValue(img);
-                    args["source"] = media;
-                    ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();//v2.1
+                        Uri u = new Uri(imagePath);
+                        string filename = string.Empty;
+                        string extension = string.Empty;
+                        extension = System.IO.Path.GetExtension(u.AbsolutePath).Replace(".", "");
+                        var media = new FacebookMediaObject
+                        {
+                            FileName = "filename",
+                            ContentType = "image/" + extension
+                        };
+                        //byte[] img = System.IO.File.ReadAllBytes(imagepath);
+                        var webClient = new WebClient();
+                        byte[] img = webClient.DownloadData(imagePath);
+                        media.SetValue(img);
+                        args["source"] = media;
+                        ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();//v2.1
+                    }
+                    else
+                    {
+                        args["message"] = message;
+                        ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();
+                    }
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(link))
                     {
                         args["link"] = link;
+                    }
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        args["picture"] = imagePath.Replace("&", "&amp;");
                     }
                     ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
 
@@ -232,28 +246,28 @@ namespace Api.Socioboard.Helper
             {
                 pageinfo = fb.Get(url);
             }
-            catch
+            catch(Exception ex)
             {
                 try
                 {
                     fb.AccessToken = _appSettings.AccessToken2;
                     pageinfo = fb.Get(url);
                 }
-                catch
+                catch (Exception e)
                 {
                     try
                     {
                         fb.AccessToken = _appSettings.AccessToken3;
                         pageinfo = fb.Get(url);
                     }
-                    catch
+                    catch (Exception exe)
                     {
                         try
                         {
                             fb.AccessToken = _appSettings.AccessToken4;
                             pageinfo = fb.Get(url);
                         }
-                        catch
+                        catch (Exception exx)
                         {
 
                         }
@@ -360,6 +374,6 @@ namespace Api.Socioboard.Helper
             }
         }
 
-        
+       
     }
 }

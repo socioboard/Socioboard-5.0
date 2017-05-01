@@ -92,7 +92,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		        type: "warning",   
 		        showCancelButton: true,   
 		        confirmButtonColor: "#DD6B55",   
-		        confirmButtonText: "Yes, delete it!",   
+		        confirmButtonText: "OK",   
 		        closeOnConfirm: false }, 
 		        function(){   
 		            if ($scope.selectedTask == null) {
@@ -110,7 +110,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        $scope.dispbtndelete = true;
 		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
 		                        $scope.selectedTask = null;
-		                        swal("Deleted!", "Your profile has been deleted.", "Success");
+		                        swal("Deleted!", "Your profile has been deleted", "success");
 		                        $scope.$apply();
 		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
 		                            $scope.showTask($scope.selectedTask + 1);
@@ -152,7 +152,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        $scope.dispbtnmark = true;
 		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
 		                        $scope.selectedTask = null;
-		                        swal("Completed!", "Task has been Completed.", "Success");
+		                        swal("Completed!", "Task has been completed", "success");
 		                        $scope.$apply();
 		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
 		                            $scope.showTask($scope.selectedTask + 1);

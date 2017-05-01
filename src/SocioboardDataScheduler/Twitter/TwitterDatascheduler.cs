@@ -16,7 +16,8 @@ namespace SocioboardDataScheduler.Twitter
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
+                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => (t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)&& t.scheduleTime <= DateTime.UtcNow).ToList();
+                   //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Contains("847698757219106817")).ToList();
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
 
                     foreach (var items in newlstScheduledMessage)
@@ -29,9 +30,17 @@ namespace SocioboardDataScheduler.Twitter
                             {
                                 foreach (var item in items)
                                 {
-                                    Console.WriteLine(item.socialprofileName + "Scheduling Started");
-                                    TwitterScheduler.PostTwitterMessage(item, _TwitterAccount);
-                                    Console.WriteLine(item.socialprofileName + "Scheduling");
+                                    try
+                                    {
+                                        Console.WriteLine(item.socialprofileName + "Scheduling Started");
+                                        TwitterScheduler.PostTwitterMessage(item, _TwitterAccount);
+                                        Console.WriteLine(item.socialprofileName + "Scheduling");
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                        Thread.Sleep(60000);
+                                    }
                                 }
                                 _TwitterAccount.SchedulerUpdate = DateTime.UtcNow;
                                 dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
