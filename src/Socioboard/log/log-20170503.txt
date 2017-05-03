@@ -1,0 +1,455 @@
+﻿2017-05-03 13:27:39.090 +05:30 [Information] User profile is available. Using '"C:\Users\GLB-213\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+2017-05-03 13:27:39.303 +05:30 [Debug] Hosting starting
+2017-05-03 13:27:39.561 +05:30 [Debug] Hosting started
+2017-05-03 13:27:39.631 +05:30 [Debug] Connection id ""0HL4HV8908KKM"" started.
+2017-05-03 13:27:39.715 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" started.
+2017-05-03 13:27:39.806 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:9821/  0
+2017-05-03 13:27:39.806 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2017-05-03 13:27:39.879 +05:30 [Information] Request finished in 92.6229ms 200 
+2017-05-03 13:27:39.979 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" completed keep alive response.
+2017-05-03 13:27:40.045 +05:30 [Debug] Reading data from file '"C:\Users\GLB-213\AppData\Local\ASP.NET\DataProtection-Keys\key-54be2a88-8acd-42d0-b5f0-1a9c4e84b787.xml"'.
+2017-05-03 13:27:40.095 +05:30 [Debug] Found key {54be2a88-8acd-42d0-b5f0-1a9c4e84b787}.
+2017-05-03 13:27:40.119 +05:30 [Debug] Considering key {54be2a88-8acd-42d0-b5f0-1a9c4e84b787} with expiration date 2017-05-08 07:56:40Z as default key.
+2017-05-03 13:27:40.139 +05:30 [Debug] Decrypting secret element using Windows DPAPI.
+2017-05-03 13:27:40.159 +05:30 [Debug] Opening CNG algorithm '"AES"' from provider 'null' with chaining mode CBC.
+2017-05-03 13:27:40.177 +05:30 [Debug] Opening CNG algorithm '"SHA256"' from provider 'null' with HMAC.
+2017-05-03 13:27:40.200 +05:30 [Debug] Using key {54be2a88-8acd-42d0-b5f0-1a9c4e84b787} as the default key.
+2017-05-03 13:27:40.234 +05:30 [Warning] Error unprotecting the session cookie.
+System.Security.Cryptography.CryptographicException: The payload was invalid.
+   at Microsoft.AspNetCore.DataProtection.Cng.CbcAuthenticatedEncryptor.DecryptImpl(Byte* pbCiphertext, UInt32 cbCiphertext, Byte* pbAdditionalAuthenticatedData, UInt32 cbAdditionalAuthenticatedData)
+   at Microsoft.AspNetCore.DataProtection.Cng.Internal.CngAuthenticatedEncryptorBase.Decrypt(ArraySegment`1 ciphertext, ArraySegment`1 additionalAuthenticatedData)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.UnprotectCore(Byte[] protectedData, Boolean allowOperationsOnRevokedKeys, UnprotectStatus& status)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.DangerousUnprotect(Byte[] protectedData, Boolean ignoreRevocationErrors, Boolean& requiresMigration, Boolean& wasRevoked)
+   at Microsoft.AspNetCore.DataProtection.KeyManagement.KeyRingBasedDataProtector.Unprotect(Byte[] protectedData)
+   at Microsoft.AspNetCore.Session.CookieProtection.Unprotect(IDataProtector protector, String protectedText, ILogger logger)
+2017-05-03 13:27:40.261 +05:30 [Debug] The request path "/" does not match a supported file type
+2017-05-03 13:27:40.781 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:27:41.068 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2017-05-03 13:27:41.228 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2017-05-03 13:27:41.291 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2017-05-03 13:27:41.660 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Index"'.
+2017-05-03 13:27:41.700 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2017-05-03 13:27:42.589 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 883.7722ms.
+2017-05-03 13:27:42.713 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2017-05-03 13:27:49.263 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 6548.6883ms.
+2017-05-03 13:27:49.272 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2017-05-03 13:27:49.279 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 6.4164ms.
+2017-05-03 13:27:49.280 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2017-05-03 13:27:49.333 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 52.6454ms.
+2017-05-03 13:27:49.358 +05:30 [Debug] The view '"Index"' was found.
+2017-05-03 13:27:49.361 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2017-05-03 13:27:49.658 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2017-05-03 13:27:50.007 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 342.4412ms.
+2017-05-03 13:27:50.008 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2017-05-03 13:27:50.461 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 452.2783ms.
+2017-05-03 13:27:50.911 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 9838.0335ms
+2017-05-03 13:27:50.921 +05:30 [Information] Session started; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"c74f26bf-7d74-0ce2-20e5-473b2705134d"
+2017-05-03 13:27:50.933 +05:30 [Debug] Session stored; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"c74f26bf-7d74-0ce2-20e5-473b2705134d", Count:0
+2017-05-03 13:27:51.270 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2017-05-03 13:27:51.270 +05:30 [Information] Request finished in 11495.8853ms 200 text/html; charset=utf-8
+2017-05-03 13:27:51.278 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2017-05-03 13:27:51.279 +05:30 [Debug] Connection id ""0HL4HV8908KKM"" completed keep alive response.
+2017-05-03 13:27:51.282 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:27:51.344 +05:30 [Information] Request finished in 63.2273ms 404 
+2017-05-03 13:27:51.346 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" completed keep alive response.
+2017-05-03 13:27:51.835 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home/IsSessionExist  
+2017-05-03 13:27:51.837 +05:30 [Debug] The request path "/Home/IsSessionExist" does not match a supported file type
+2017-05-03 13:27:51.840 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:27:51.857 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)"
+2017-05-03 13:27:51.881 +05:30 [Debug] Session loaded; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"c74f26bf-7d74-0ce2-20e5-473b2705134d", Count:0
+2017-05-03 13:27:51.971 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" with arguments (null) - ModelState is Valid
+2017-05-03 13:27:51.973 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-05-03 13:27:51.996 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-05-03 13:27:52.012 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-05-03 13:27:52.023 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-05-03 13:27:52.745 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" in 850.6992ms
+2017-05-03 13:27:52.754 +05:30 [Information] Request finished in 925.3004ms 200 application/json; charset=utf-8
+2017-05-03 13:27:52.755 +05:30 [Debug] Connection id ""0HL4HV8908KKM"" completed keep alive response.
+2017-05-03 13:27:52.766 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home/IsSessionExist  
+2017-05-03 13:27:52.767 +05:30 [Debug] The request path "/Home/IsSessionExist" does not match a supported file type
+2017-05-03 13:27:52.768 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:27:52.770 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)"
+2017-05-03 13:27:52.782 +05:30 [Debug] Session loaded; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"c74f26bf-7d74-0ce2-20e5-473b2705134d", Count:0
+2017-05-03 13:27:52.797 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" with arguments (null) - ModelState is Valid
+2017-05-03 13:27:52.802 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-05-03 13:27:52.803 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-05-03 13:27:52.804 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-05-03 13:27:52.808 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-05-03 13:27:52.837 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" in 30.4698ms
+2017-05-03 13:27:52.841 +05:30 [Information] Request finished in 75.2885ms 200 application/json; charset=utf-8
+2017-05-03 13:27:52.843 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" completed keep alive response.
+2017-05-03 13:28:43.921 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:9821/Index/Login application/x-www-form-urlencoded; charset=UTF-8 49
+2017-05-03 13:28:43.936 +05:30 [Debug] "POST" requests are not supported
+2017-05-03 13:28:43.938 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:28:43.943 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Login (Socioboard)"
+2017-05-03 13:28:44.502 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Login (Socioboard)" with arguments (["Domain.Socioboard.ViewModels.UserLoginViewModel"]) - ModelState is Valid
+2017-05-03 13:29:01.619 +05:30 [Debug] Session loaded; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"c74f26bf-7d74-0ce2-20e5-473b2705134d", Count:0
+2017-05-03 13:29:01.631 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Login (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ContentResult".
+2017-05-03 13:29:01.636 +05:30 [Information] Executing ContentResult with HTTP Response ContentType of "text/plain; charset=utf-8"
+2017-05-03 13:29:01.639 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Login (Socioboard)" in 17681.7105ms
+2017-05-03 13:29:01.641 +05:30 [Debug] Session stored; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"c74f26bf-7d74-0ce2-20e5-473b2705134d", Count:1
+2017-05-03 13:29:01.647 +05:30 [Information] Request finished in 17796.0398ms 200 text/plain; charset=utf-8
+2017-05-03 13:29:01.648 +05:30 [Debug] Connection id ""0HL4HV8908KKM"" completed keep alive response.
+2017-05-03 13:29:01.687 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" received FIN.
+2017-05-03 13:29:01.690 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" disconnecting.
+2017-05-03 13:29:01.697 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" sending FIN.
+2017-05-03 13:29:01.699 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/index  
+2017-05-03 13:29:01.702 +05:30 [Debug] The request path "/home/index" does not match a supported file type
+2017-05-03 13:29:01.703 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:01.709 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2017-05-03 13:29:01.713 +05:30 [Debug] Session loaded; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"c74f26bf-7d74-0ce2-20e5-473b2705134d", Count:1
+2017-05-03 13:29:01.713 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" sent FIN with status "0".
+2017-05-03 13:29:01.719 +05:30 [Debug] Connection id ""0HL4HV8908KKN"" stopped.
+2017-05-03 13:29:05.434 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2017-05-03 13:29:13.724 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2017-05-03 13:29:13.732 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Home"'.
+2017-05-03 13:29:13.738 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2017-05-03 13:29:13.944 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 169.4369ms.
+2017-05-03 13:29:13.966 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2017-05-03 13:29:14.964 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 993.4868ms.
+2017-05-03 13:29:14.973 +05:30 [Debug] The view '"Index"' was found.
+2017-05-03 13:29:14.994 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Home/Index.cshtml".
+2017-05-03 13:29:15.269 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.Index (Socioboard)" in 13543.5796ms
+2017-05-03 13:29:15.270 +05:30 [Debug] Session stored; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"c74f26bf-7d74-0ce2-20e5-473b2705134d", Count:2
+2017-05-03 13:29:15.629 +05:30 [Information] Request finished in 13933.1398ms 200 text/html; charset=utf-8
+2017-05-03 13:29:15.636 +05:30 [Debug] Connection id ""0HL4HV8908KKM"" completed keep alive response.
+2017-05-03 13:29:18.875 +05:30 [Debug] Connection id ""0HL4HV8908KKO"" started.
+2017-05-03 13:29:18.882 +05:30 [Debug] Connection id ""0HL4HV8908KKP"" started.
+2017-05-03 13:29:18.973 +05:30 [Debug] Connection id ""0HL4HV8908KKQ"" started.
+2017-05-03 13:29:18.977 +05:30 [Debug] Connection id ""0HL4HV8908KKR"" started.
+2017-05-03 13:29:18.992 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BfbProfile.coverPic%7D%7D  
+2017-05-03 13:29:19.330 +05:30 [Debug] Connection id ""0HL4HV8908KKS"" started.
+2017-05-03 13:29:19.403 +05:30 [Debug] The request path "/home/{{fbProfile.coverPic}}" does not match a supported file type
+2017-05-03 13:29:19.334 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BtwtProfile.profileBackgroundImageUrl%7D%7D  
+2017-05-03 13:29:19.467 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.533 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.536 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.565 +05:30 [Debug] The request path "/home/{{twtProfile.profileBackgroundImageUrl}}" does not match a supported file type
+2017-05-03 13:29:19.567 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.567 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.567 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.568 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BgplusProfile.coverPic%7D%7D  
+2017-05-03 13:29:19.598 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BgetHttpsURL(twtProfile.profileImageUrl)%7D%7D  
+2017-05-03 13:29:19.598 +05:30 [Debug] The request path "/home/{{gplusProfile.coverPic}}" does not match a supported file type
+2017-05-03 13:29:19.616 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.617 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.617 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.634 +05:30 [Debug] The request path "/home/{{getHttpsURL(twtProfile.profileImageUrl)}}" does not match a supported file type
+2017-05-03 13:29:19.635 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.635 +05:30 [Information] Request finished in 714.6037ms 404 
+2017-05-03 13:29:19.643 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.668 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.667 +05:30 [Information] Request finished in 721.7022ms 404 
+2017-05-03 13:29:19.702 +05:30 [Debug] Connection id ""0HL4HV8908KKO"" completed keep alive response.
+2017-05-03 13:29:19.647 +05:30 [Debug] Connection id ""0HL4HV8908KKM"" completed keep alive response.
+2017-05-03 13:29:19.730 +05:30 [Information] Request finished in 454.3104ms 404 
+2017-05-03 13:29:19.756 +05:30 [Debug] Connection id ""0HL4HV8908KKQ"" completed keep alive response.
+2017-05-03 13:29:19.751 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7ByTChannel.channelpicUrl%7D%7D  
+2017-05-03 13:29:19.774 +05:30 [Information] Request finished in 757.2446ms 404 
+2017-05-03 13:29:19.781 +05:30 [Debug] Connection id ""0HL4HV8908KKP"" completed keep alive response.
+2017-05-03 13:29:19.794 +05:30 [Debug] The request path "/home/{{yTChannel.channelpicUrl}}" does not match a supported file type
+2017-05-03 13:29:19.799 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BgplusProfile.gpProfileImage%7D%7D  
+2017-05-03 13:29:19.817 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.815 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BinsProfile.profileUrl%7D%7D  
+2017-05-03 13:29:19.834 +05:30 [Debug] The request path "/home/{{gplusProfile.gpProfileImage}}" does not match a supported file type
+2017-05-03 13:29:19.845 +05:30 [Debug] The request path "/home/{{insProfile.profileUrl}}" does not match a supported file type
+2017-05-03 13:29:19.847 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.852 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.860 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.834 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BlinProfile.logoUrl%7D%7D  
+2017-05-03 13:29:19.850 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.826 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.867 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.867 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.877 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.871 +05:30 [Information] Request finished in 135.1959ms 404 
+2017-05-03 13:29:19.882 +05:30 [Debug] Connection id ""0HL4HV8908KKR"" completed keep alive response.
+2017-05-03 13:29:19.899 +05:30 [Debug] The request path "/home/{{linProfile.logoUrl}}" does not match a supported file type
+2017-05-03 13:29:19.911 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.912 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.913 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.918 +05:30 [Information] Request finished in 170.061ms 404 
+2017-05-03 13:29:19.920 +05:30 [Debug] Connection id ""0HL4HV8908KKM"" completed keep alive response.
+2017-05-03 13:29:19.951 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BgetHttpsURL(profile.profilePic)%7D%7D  
+2017-05-03 13:29:19.952 +05:30 [Debug] The request path "/home/{{getHttpsURL(profile.profilePic)}}" does not match a supported file type
+2017-05-03 13:29:19.979 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:19.980 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:19.980 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:19.986 +05:30 [Information] Request finished in 103.6776ms 404 
+2017-05-03 13:29:19.995 +05:30 [Debug] Connection id ""0HL4HV8908KKO"" completed keep alive response.
+2017-05-03 13:29:20.021 +05:30 [Information] Request finished in 99.077ms 404 
+2017-05-03 13:29:20.022 +05:30 [Debug] Connection id ""0HL4HV8908KKS"" completed keep alive response.
+2017-05-03 13:29:20.050 +05:30 [Information] Request finished in 85.8648ms 404 
+2017-05-03 13:29:20.051 +05:30 [Debug] Connection id ""0HL4HV8908KKQ"" completed keep alive response.
+2017-05-03 13:29:20.102 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7Bprofile.profilePic%7D%7D  
+2017-05-03 13:29:20.114 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7Btwtfollower.profile_image_url%7D%7D  
+2017-05-03 13:29:20.114 +05:30 [Debug] The request path "/home/{{profile.profilePic}}" does not match a supported file type
+2017-05-03 13:29:20.115 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:20.116 +05:30 [Debug] The request path "/home/{{twtfollower.profile_image_url}}" does not match a supported file type
+2017-05-03 13:29:20.118 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:20.119 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:20.120 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:20.116 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/images/google-analytics.jpg  
+2017-05-03 13:29:20.134 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7Byoutube.YtChannelImage%7D%7D  
+2017-05-03 13:29:20.120 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:20.136 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:20.148 +05:30 [Debug] The request path "/home/{{youtube.YtChannelImage}}" does not match a supported file type
+2017-05-03 13:29:20.168 +05:30 [Information] Request finished in 162.2144ms 404 
+2017-05-03 13:29:20.148 +05:30 [Debug] The request path "/images/google-analytics.jpg" does not match an existing file
+2017-05-03 13:29:20.180 +05:30 [Information] Request finished in 114.9256ms 404 
+2017-05-03 13:29:20.185 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:20.185 +05:30 [Debug] Connection id ""0HL4HV8908KKR"" completed keep alive response.
+2017-05-03 13:29:20.188 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:20.169 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:29:20.181 +05:30 [Debug] Connection id ""0HL4HV8908KKP"" completed keep alive response.
+2017-05-03 13:29:20.191 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:20.194 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:29:20.199 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:29:20.200 +05:30 [Information] Request finished in 113.702ms 404 
+2017-05-03 13:29:20.201 +05:30 [Debug] Connection id ""0HL4HV8908KKO"" completed keep alive response.
+2017-05-03 13:29:20.205 +05:30 [Information] Request finished in 146.629ms 404 
+2017-05-03 13:29:20.209 +05:30 [Debug] Connection id ""0HL4HV8908KKM"" completed keep alive response.
+2017-05-03 13:29:33.648 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/moment.js  
+2017-05-03 13:29:33.651 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/views/publishing/schedulemsg.html  
+2017-05-03 13:29:33.652 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/controllers/schedulemsgcontroller.js  
+2017-05-03 13:29:33.687 +05:30 [Information] Sending file. Request path: '"/contents/socioboard/global/plugins/moment.js"'. Physical path: '"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\wwwroot\contents\socioboard\global\plugins\moment.js"'
+2017-05-03 13:29:33.715 +05:30 [Information] Sending file. Request path: '"/contents/socioboard/views/publishing/schedulemsg.html"'. Physical path: '"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\wwwroot\contents\socioboard\views\publishing\schedulemsg.html"'
+2017-05-03 13:29:33.723 +05:30 [Information] Sending file. Request path: '"/contents/socioboard/controllers/schedulemsgcontroller.js"'. Physical path: '"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\wwwroot\contents\socioboard\controllers\schedulemsgcontroller.js"'
+2017-05-03 13:29:33.782 +05:30 [Information] Request finished in 124.6027ms 200 application/javascript
+2017-05-03 13:29:33.783 +05:30 [Debug] Connection id ""0HL4HV8908KKP"" completed keep alive response.
+2017-05-03 13:29:33.866 +05:30 [Information] Request finished in 209.7067ms 200 application/javascript
+2017-05-03 13:29:33.867 +05:30 [Debug] Connection id ""0HL4HV8908KKQ"" completed keep alive response.
+2017-05-03 13:29:33.866 +05:30 [Information] Request finished in 210.6288ms 200 text/html
+2017-05-03 13:29:33.883 +05:30 [Debug] Connection id ""0HL4HV8908KKS"" completed keep alive response.
+2017-05-03 13:29:34.384 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/global/plugins/dropify/dist/fonts/dropify.woff  
+2017-05-03 13:29:34.484 +05:30 [Information] Sending file. Request path: '"/contents/socioboard/global/plugins/dropify/dist/fonts/dropify.woff"'. Physical path: '"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\wwwroot\contents\socioboard\global\plugins\dropify\dist\fonts\dropify.woff"'
+2017-05-03 13:29:34.583 +05:30 [Information] Request finished in 188.8524ms 200 application/font-woff
+2017-05-03 13:29:34.586 +05:30 [Debug] Connection id ""0HL4HV8908KKR"" completed keep alive response.
+2017-05-03 13:31:45.619 +05:30 [Information] User profile is available. Using '"C:\Users\GLB-213\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+2017-05-03 13:31:45.733 +05:30 [Debug] Hosting starting
+2017-05-03 13:31:45.868 +05:30 [Debug] Hosting started
+2017-05-03 13:31:46.113 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" started.
+2017-05-03 13:31:46.192 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" started.
+2017-05-03 13:31:46.228 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2017-05-03 13:31:46.228 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:9821/  0
+2017-05-03 13:31:46.316 +05:30 [Information] Request finished in 103.0038ms 200 
+2017-05-03 13:31:46.383 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" completed keep alive response.
+2017-05-03 13:31:46.412 +05:30 [Debug] Reading data from file '"C:\Users\GLB-213\AppData\Local\ASP.NET\DataProtection-Keys\key-54be2a88-8acd-42d0-b5f0-1a9c4e84b787.xml"'.
+2017-05-03 13:31:46.418 +05:30 [Debug] Found key {54be2a88-8acd-42d0-b5f0-1a9c4e84b787}.
+2017-05-03 13:31:46.450 +05:30 [Debug] Considering key {54be2a88-8acd-42d0-b5f0-1a9c4e84b787} with expiration date 2017-05-08 07:56:40Z as default key.
+2017-05-03 13:31:46.467 +05:30 [Debug] Decrypting secret element using Windows DPAPI.
+2017-05-03 13:31:46.484 +05:30 [Debug] Opening CNG algorithm '"AES"' from provider 'null' with chaining mode CBC.
+2017-05-03 13:31:46.497 +05:30 [Debug] Opening CNG algorithm '"SHA256"' from provider 'null' with HMAC.
+2017-05-03 13:31:46.514 +05:30 [Debug] Using key {54be2a88-8acd-42d0-b5f0-1a9c4e84b787} as the default key.
+2017-05-03 13:31:46.539 +05:30 [Debug] The request path "/" does not match a supported file type
+2017-05-03 13:31:47.098 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:31:47.397 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2017-05-03 13:31:47.584 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2017-05-03 13:31:47.603 +05:30 [Warning] Accessing expired session, Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b"
+2017-05-03 13:31:47.643 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2017-05-03 13:31:47.925 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Index"'.
+2017-05-03 13:31:47.962 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2017-05-03 13:31:48.743 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 775.5534ms.
+2017-05-03 13:31:48.772 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2017-05-03 13:31:55.084 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 6309.7936ms.
+2017-05-03 13:31:55.091 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2017-05-03 13:31:55.097 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 5.3239ms.
+2017-05-03 13:31:55.098 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2017-05-03 13:31:55.162 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 63.7524ms.
+2017-05-03 13:31:55.180 +05:30 [Debug] The view '"Index"' was found.
+2017-05-03 13:31:55.183 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2017-05-03 13:31:55.410 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2017-05-03 13:31:55.584 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 173.1247ms.
+2017-05-03 13:31:55.585 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2017-05-03 13:31:55.938 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 351.9389ms.
+2017-05-03 13:31:56.483 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 9082.5117ms
+2017-05-03 13:31:56.491 +05:30 [Information] Session started; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"bd8dd1bc-e9f9-8b8e-3e13-c578b3bf0291"
+2017-05-03 13:31:56.501 +05:30 [Debug] Session stored; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"bd8dd1bc-e9f9-8b8e-3e13-c578b3bf0291", Count:0
+2017-05-03 13:31:56.728 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2017-05-03 13:31:56.732 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2017-05-03 13:31:56.736 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:31:56.809 +05:30 [Information] Request finished in 82.7302ms 404 
+2017-05-03 13:31:56.810 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" completed keep alive response.
+2017-05-03 13:31:56.820 +05:30 [Information] Request finished in 10612.4904ms 200 text/html; charset=utf-8
+2017-05-03 13:31:56.825 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" completed keep alive response.
+2017-05-03 13:31:57.052 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home/IsSessionExist  
+2017-05-03 13:31:57.054 +05:30 [Debug] The request path "/Home/IsSessionExist" does not match a supported file type
+2017-05-03 13:31:57.054 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:31:57.068 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)"
+2017-05-03 13:31:57.097 +05:30 [Debug] Session loaded; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"bd8dd1bc-e9f9-8b8e-3e13-c578b3bf0291", Count:0
+2017-05-03 13:31:57.108 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" with arguments (null) - ModelState is Valid
+2017-05-03 13:31:57.110 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-05-03 13:31:57.130 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-05-03 13:31:57.137 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-05-03 13:31:57.140 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-05-03 13:31:57.334 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" in 241.5359ms
+2017-05-03 13:31:57.337 +05:30 [Information] Request finished in 285.8673ms 200 application/json; charset=utf-8
+2017-05-03 13:31:57.337 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" completed keep alive response.
+2017-05-03 13:31:57.341 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home/IsSessionExist  
+2017-05-03 13:31:57.342 +05:30 [Debug] The request path "/Home/IsSessionExist" does not match a supported file type
+2017-05-03 13:31:57.343 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:31:57.345 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)"
+2017-05-03 13:31:57.346 +05:30 [Debug] Session loaded; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"bd8dd1bc-e9f9-8b8e-3e13-c578b3bf0291", Count:0
+2017-05-03 13:31:57.347 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" with arguments (null) - ModelState is Valid
+2017-05-03 13:31:57.348 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-05-03 13:31:57.349 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-05-03 13:31:57.350 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-05-03 13:31:57.354 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-05-03 13:31:57.360 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" in 13.432ms
+2017-05-03 13:31:57.365 +05:30 [Information] Request finished in 23.7547ms 200 application/json; charset=utf-8
+2017-05-03 13:31:57.366 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" completed keep alive response.
+2017-05-03 13:32:01.682 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:9821/Index/Login application/x-www-form-urlencoded; charset=UTF-8 49
+2017-05-03 13:32:01.684 +05:30 [Debug] "POST" requests are not supported
+2017-05-03 13:32:01.685 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:01.690 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Login (Socioboard)"
+2017-05-03 13:32:01.997 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Login (Socioboard)" with arguments (["Domain.Socioboard.ViewModels.UserLoginViewModel"]) - ModelState is Valid
+2017-05-03 13:32:14.375 +05:30 [Debug] Session loaded; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"bd8dd1bc-e9f9-8b8e-3e13-c578b3bf0291", Count:0
+2017-05-03 13:32:14.382 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Login (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ContentResult".
+2017-05-03 13:32:14.388 +05:30 [Information] Executing ContentResult with HTTP Response ContentType of "text/plain; charset=utf-8"
+2017-05-03 13:32:14.395 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Login (Socioboard)" in 12699.661ms
+2017-05-03 13:32:14.401 +05:30 [Debug] Session stored; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"bd8dd1bc-e9f9-8b8e-3e13-c578b3bf0291", Count:1
+2017-05-03 13:32:14.405 +05:30 [Information] Request finished in 12723.2668ms 200 text/plain; charset=utf-8
+2017-05-03 13:32:14.406 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" completed keep alive response.
+2017-05-03 13:32:14.416 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/index  
+2017-05-03 13:32:14.419 +05:30 [Debug] The request path "/home/index" does not match a supported file type
+2017-05-03 13:32:14.421 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:14.430 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.Index (Socioboard)"
+2017-05-03 13:32:14.438 +05:30 [Debug] Session loaded; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"bd8dd1bc-e9f9-8b8e-3e13-c578b3bf0291", Count:1
+2017-05-03 13:32:18.407 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2017-05-03 13:32:26.453 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2017-05-03 13:32:26.454 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Home"'.
+2017-05-03 13:32:26.466 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2017-05-03 13:32:26.626 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 159.4433ms.
+2017-05-03 13:32:26.636 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' started.
+2017-05-03 13:32:27.027 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Home/Index.cshtml"' completed in 390.8496ms.
+2017-05-03 13:32:27.034 +05:30 [Debug] The view '"Index"' was found.
+2017-05-03 13:32:27.037 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Home/Index.cshtml".
+2017-05-03 13:32:27.180 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.Index (Socioboard)" in 12743.749ms
+2017-05-03 13:32:27.181 +05:30 [Debug] Session stored; Key:"b944ecd5-b54e-41e4-ba80-65ffb8eb5c2b", Id:"bd8dd1bc-e9f9-8b8e-3e13-c578b3bf0291", Count:2
+2017-05-03 13:32:27.207 +05:30 [Information] Request finished in 12777.5348ms 200 text/html; charset=utf-8
+2017-05-03 13:32:27.209 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" completed keep alive response.
+2017-05-03 13:32:29.385 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" started.
+2017-05-03 13:32:29.385 +05:30 [Debug] Connection id ""0HL4HVAIETJTE"" started.
+2017-05-03 13:32:29.403 +05:30 [Debug] Connection id ""0HL4HVAIETJTF"" started.
+2017-05-03 13:32:29.404 +05:30 [Debug] Connection id ""0HL4HVAIETJTG"" started.
+2017-05-03 13:32:29.469 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BfbProfile.coverPic%7D%7D  
+2017-05-03 13:32:29.492 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BgetHttpsURL(twtProfile.profileImageUrl)%7D%7D  
+2017-05-03 13:32:29.498 +05:30 [Debug] The request path "/home/{{fbProfile.coverPic}}" does not match a supported file type
+2017-05-03 13:32:29.499 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.500 +05:30 [Debug] The request path "/home/{{getHttpsURL(twtProfile.profileImageUrl)}}" does not match a supported file type
+2017-05-03 13:32:29.502 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.503 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.503 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.501 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.500 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BtwtProfile.profileBackgroundImageUrl%7D%7D  
+2017-05-03 13:32:29.504 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.513 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BgplusProfile.coverPic%7D%7D  
+2017-05-03 13:32:29.514 +05:30 [Debug] The request path "/home/{{twtProfile.profileBackgroundImageUrl}}" does not match a supported file type
+2017-05-03 13:32:29.520 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.520 +05:30 [Information] Request finished in 114.5237ms 404 
+2017-05-03 13:32:29.522 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" completed keep alive response.
+2017-05-03 13:32:29.521 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.519 +05:30 [Debug] The request path "/home/{{gplusProfile.coverPic}}" does not match a supported file type
+2017-05-03 13:32:29.532 +05:30 [Information] Request finished in 120.2323ms 404 
+2017-05-03 13:32:29.563 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.568 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" completed keep alive response.
+2017-05-03 13:32:29.538 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.581 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BgplusProfile.gpProfileImage%7D%7D  
+2017-05-03 13:32:29.543 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BinsProfile.profileUrl%7D%7D  
+2017-05-03 13:32:29.618 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BlinProfile.logoUrl%7D%7D  
+2017-05-03 13:32:29.620 +05:30 [Debug] The request path "/home/{{gplusProfile.gpProfileImage}}" does not match a supported file type
+2017-05-03 13:32:29.622 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.584 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.625 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.630 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.626 +05:30 [Information] Request finished in 192.5316ms 404 
+2017-05-03 13:32:29.633 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" completed keep alive response.
+2017-05-03 13:32:29.628 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.626 +05:30 [Debug] The request path "/home/{{linProfile.logoUrl}}" does not match a supported file type
+2017-05-03 13:32:29.651 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.657 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.659 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.663 +05:30 [Information] Request finished in 113.016ms 404 
+2017-05-03 13:32:29.664 +05:30 [Debug] Connection id ""0HL4HVAIETJTG"" completed keep alive response.
+2017-05-03 13:32:29.618 +05:30 [Debug] The request path "/home/{{insProfile.profileUrl}}" does not match a supported file type
+2017-05-03 13:32:29.684 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7ByTChannel.channelpicUrl%7D%7D  
+2017-05-03 13:32:29.694 +05:30 [Information] Request finished in 236.5468ms 404 
+2017-05-03 13:32:29.696 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.711 +05:30 [Information] Request finished in 96.4431ms 404 
+2017-05-03 13:32:29.713 +05:30 [Debug] The request path "/home/{{yTChannel.channelpicUrl}}" does not match a supported file type
+2017-05-03 13:32:29.715 +05:30 [Debug] Connection id ""0HL4HVAIETJTE"" completed keep alive response.
+2017-05-03 13:32:29.723 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.721 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" completed keep alive response.
+2017-05-03 13:32:29.731 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.732 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.736 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7BgetHttpsURL(profile.profilePic)%7D%7D  
+2017-05-03 13:32:29.721 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.748 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.746 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7Bprofile.profilePic%7D%7D  
+2017-05-03 13:32:29.745 +05:30 [Debug] The request path "/home/{{getHttpsURL(profile.profilePic)}}" does not match a supported file type
+2017-05-03 13:32:29.751 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.747 +05:30 [Information] Request finished in 79.2494ms 404 
+2017-05-03 13:32:29.750 +05:30 [Debug] The request path "/home/{{profile.profilePic}}" does not match a supported file type
+2017-05-03 13:32:29.752 +05:30 [Information] Request finished in 322.5188ms 404 
+2017-05-03 13:32:29.754 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" completed keep alive response.
+2017-05-03 13:32:29.753 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.764 +05:30 [Debug] Connection id ""0HL4HVAIETJTF"" completed keep alive response.
+2017-05-03 13:32:29.763 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.772 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.772 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.770 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/images/google-analytics.jpg  
+2017-05-03 13:32:29.770 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.781 +05:30 [Debug] The request path "/images/google-analytics.jpg" does not match an existing file
+2017-05-03 13:32:29.782 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.778 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7Btwtfollower.profile_image_url%7D%7D  
+2017-05-03 13:32:29.780 +05:30 [Information] Request finished in 42.223ms 404 
+2017-05-03 13:32:29.806 +05:30 [Debug] Connection id ""0HL4HVAIETJTG"" completed keep alive response.
+2017-05-03 13:32:29.784 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.811 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.805 +05:30 [Information] Request finished in 55.4194ms 404 
+2017-05-03 13:32:29.813 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" completed keep alive response.
+2017-05-03 13:32:29.821 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/home/%7B%7Byoutube.YtChannelImage%7D%7D  
+2017-05-03 13:32:29.829 +05:30 [Information] Request finished in 52.0117ms 404 
+2017-05-03 13:32:29.829 +05:30 [Debug] The request path "/home/{{youtube.YtChannelImage}}" does not match a supported file type
+2017-05-03 13:32:29.806 +05:30 [Debug] The request path "/home/{{twtfollower.profile_image_url}}" does not match a supported file type
+2017-05-03 13:32:29.847 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" completed keep alive response.
+2017-05-03 13:32:29.852 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.853 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-05-03 13:32:29.861 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.862 +05:30 [Debug] No actions matched the current request
+2017-05-03 13:32:29.866 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.866 +05:30 [Debug] Request did not match any routes.
+2017-05-03 13:32:29.874 +05:30 [Information] Request finished in 57.6965ms 404 
+2017-05-03 13:32:29.883 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" completed keep alive response.
+2017-05-03 13:32:29.900 +05:30 [Information] Request finished in 126.123ms 404 
+2017-05-03 13:32:29.903 +05:30 [Debug] Connection id ""0HL4HVAIETJTE"" completed keep alive response.
+2017-05-03 13:33:46.972 +05:30 [Debug] Connection id ""0HL4HVAIETJTG"" received FIN.
+2017-05-03 13:33:46.972 +05:30 [Debug] Connection id ""0HL4HVAIETJTF"" received FIN.
+2017-05-03 13:33:46.972 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" received FIN.
+2017-05-03 13:33:46.972 +05:30 [Debug] Connection id ""0HL4HVAIETJTG"" disconnecting.
+2017-05-03 13:33:46.972 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" received FIN.
+2017-05-03 13:33:46.982 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" received FIN.
+2017-05-03 13:33:46.972 +05:30 [Debug] Connection id ""0HL4HVAIETJTF"" disconnecting.
+2017-05-03 13:33:46.982 +05:30 [Debug] Connection id ""0HL4HVAIETJTE"" received FIN.
+2017-05-03 13:33:46.992 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" disconnecting.
+2017-05-03 13:33:46.982 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" disconnecting.
+2017-05-03 13:33:46.992 +05:30 [Debug] Connection id ""0HL4HVAIETJTE"" disconnecting.
+2017-05-03 13:33:46.982 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" disconnecting.
+2017-05-03 13:33:46.982 +05:30 [Debug] Connection id ""0HL4HVAIETJTG"" sending FIN.
+2017-05-03 13:33:46.992 +05:30 [Debug] Connection id ""0HL4HVAIETJTF"" sending FIN.
+2017-05-03 13:33:46.992 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" sending FIN.
+2017-05-03 13:33:47.002 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" sending FIN.
+2017-05-03 13:33:46.992 +05:30 [Debug] Connection id ""0HL4HVAIETJTE"" sending FIN.
+2017-05-03 13:33:47.002 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" sending FIN.
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" sent FIN with status "0".
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" sent FIN with status "0".
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTD"" stopped.
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" sent FIN with status "0".
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTB"" stopped.
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTC"" stopped.
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTG"" sent FIN with status "0".
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTG"" stopped.
+2017-05-03 13:33:47.012 +05:30 [Debug] Connection id ""0HL4HVAIETJTE"" sent FIN with status "0".
+2017-05-03 13:33:48.043 +05:30 [Debug] Connection id ""0HL4HVAIETJTE"" stopped.
+2017-05-03 13:33:48.043 +05:30 [Debug] Connection id ""0HL4HVAIETJTF"" sent FIN with status "0".
+2017-05-03 13:33:48.043 +05:30 [Debug] Connection id ""0HL4HVAIETJTF"" stopped.

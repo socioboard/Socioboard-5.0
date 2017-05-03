@@ -69,8 +69,7 @@ namespace SocioboardDataScheduler.Twitter
                 message = message.Substring(0, 135);
             }
             Domain.Socioboard.Models.TwitterAccount objTwitterAccount = TwitterAccount;
-           // oAuthTwitter OAuthTwt = new oAuthTwitter("MbOQl85ZcvRGvp3kkOOJBlbFS", "GF0UIXnTAX28hFhN1ISNf3tURHARZdKWlZrsY4PlHm9A4llYjZ", "http://serv1.socioboard.com/TwitterManager/Twitter");
-            oAuthTwitter OAuthTwt = new oAuthTwitter("h4FT0oJ46KBBMwbcifqZMw", "yfowGI2g21E2mQHjtHjUvGqkfbI7x26WDCvjiSZOjas", "https://www.socioboard.com/TwitterManager/Twitter");
+            oAuthTwitter OAuthTwt = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey, Helper.AppSettings.twitterConsumerScreatKey, Helper.AppSettings.twitterRedirectionUrl);
             OAuthTwt.AccessToken = objTwitterAccount.oAuthToken;
             OAuthTwt.AccessTokenSecret = objTwitterAccount.oAuthSecret;
             OAuthTwt.TwitterScreenName = objTwitterAccount.twitterScreenName;

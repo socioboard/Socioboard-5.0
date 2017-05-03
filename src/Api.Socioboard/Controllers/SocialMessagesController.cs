@@ -255,7 +255,10 @@ namespace Api.Socioboard.Controllers
                     }
                 }
             }
-            message = postmessage.Replace(link, ""); ;
+            if (!string.IsNullOrEmpty(link))
+            {
+                message = postmessage.Replace(link, ""); ; 
+            }
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string[] lstProfileIds = null;

@@ -35,10 +35,8 @@ namespace SocioboardDataScheduler.LinkedIn
             string json = "";
             Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = _objLinkedInAccount;
             oAuthLinkedIn _oauth = new oAuthLinkedIn();
-            //_oauth.ConsumerKey = "81k55eukagnqfa";
-            //_oauth.ConsumerSecret = "d9rqHEf7ewdSbsF1";
-            _oauth.ConsumerKey = "754ysxdp72ulk5";
-            _oauth.ConsumerSecret = "vbU52SjK7xS6cT8H";
+            _oauth.ConsumerKey = Helper.AppSettings.LinkedinApiKey;
+            _oauth.ConsumerSecret = Helper.AppSettings.LinkedinSecretKey;
             _oauth.Token = _LinkedInAccount.OAuthToken;
             string PostUrl = "https://api.linkedin.com/v1/people/~/shares?format=json";
             if (string.IsNullOrEmpty(ImageUrl))
