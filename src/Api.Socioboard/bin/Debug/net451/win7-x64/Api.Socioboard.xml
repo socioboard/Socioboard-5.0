@@ -13,41 +13,6 @@
             <param name="amount"></param>
             <returns></returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.BoardMeController.createBoard(System.String,System.String,System.String,System.String,System.String,System.Int64)">
-            <summary>
-            Creates a board with porvided hash Tags
-            </summary>
-            <param name="boardName">Name of the board should be unique</param>
-            <param name="fbHashTag"> hash tag on facebook</param>
-            <param name="twitterHashTag">hash tag on twitter</param>
-            <param name="instagramHashTag"> hash tag on instagram</param>
-            <param name="gplusHashTag">hash tag on gplus</param>
-            <param name="userId">id of the user to which board belongs to </param>
-            <returns>success : if board created successfully, board Exist: if board name already exists  </returns>
-        </member>
-        <member name="M:Api.Socioboard.Controllers.BoardMeController.DeleteBoard(System.Int64,System.Int64)">
-            <summary>
-            Deletes the board with specified board Id
-            </summary>
-            <param name="BoardId"> id of the board to delte</param>
-            <param name="userId">id of the user to which board belongs to.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Api.Socioboard.Controllers.BoardMeController.UndoDeleteBoard(System.String,System.Int64)">
-            <summary>
-            Revert back deletion opertion of board
-            </summary>
-            <param name="BoardId">id of the board which needs to revert delete</param>
-            <param name="userId"> id of the user which board belongs to.</param>
-            <returns></returns>
-        </member>
-        <member name="M:Api.Socioboard.Controllers.BoardMeController.getUserBoards(System.Int64)">
-            <summary>
-            To get all boards associated with user
-            </summary>
-            <param name="userId">coorsponding userId</param>
-            <returns></returns>
-        </member>
         <member name="M:Api.Socioboard.Controllers.DiscoveryController.DiscoverySearchTwitter(System.Int64,System.Int64,System.String)">
             <summary>
             Use for searching the customer which is linked with keyword 

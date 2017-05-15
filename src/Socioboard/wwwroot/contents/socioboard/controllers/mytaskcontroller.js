@@ -29,6 +29,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
             $scope.selectedTask = $scope.userTasks[index];
             $scope.selectedTaskIndex = index;
             console.log($scope.selectedTask);
+            $scope.replydisp = true;
         }
 
 
@@ -85,16 +86,17 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
         $scope.getTasks();
         mytask();
         $scope.deleteTask = function () {
-            
-	        	swal({   
-		        title: "Are you sure?",   
-		        text: "You will not be able to send any message via this account!",
-		        type: "warning",   
-		        showCancelButton: true,   
-		        confirmButtonColor: "#DD6B55",   
-		        confirmButtonText: "OK",   
-		        closeOnConfirm: false }, 
-		        function(){   
+
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not be able to send any message via this account!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: false
+                },
+		        function () {
 		            if ($scope.selectedTask == null) {
 		                $scope.dispbtndelete = true;
 		                return;
@@ -104,26 +106,27 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                $http({
 		                    method: 'POST',
 		                    url: apiDomain + '/api/Task/DeleteTask?taskId=' + $scope.selectedTask.tasks.strId,
-		                }).then(function (response) { 
+		                }).then(function (response) {
 		                    if (response.data == "deleted");
 		                    {
 		                        $scope.dispbtndelete = true;
 		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
 		                        $scope.selectedTask = null;
 		                        swal("Deleted!", "Your profile has been deleted", "success");
+		                        $scope.replydisp = false;
 		                        $scope.$apply();
 		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
 		                            $scope.showTask($scope.selectedTask + 1);
 		                        }
-		                        
+
 		                    }
 		                    console.log(response);
 		                }, function (reason) {
 		                    console.log(reason);
 		                });
 		            }
-		           
-		            });
+
+		        });
            }
 
            $scope.markTaskCompleted = function () {
@@ -153,6 +156,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
 		                        $scope.selectedTask = null;
 		                        swal("Completed!", "Task has been completed", "success");
+		                        $scope.replydisp = false;
 		                        $scope.$apply();
 		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
 		                            $scope.showTask($scope.selectedTask + 1);

@@ -15,16 +15,8 @@ namespace Api.Socioboard.Helper
 
 
             ScheduledMessage scheduledMessage = new ScheduledMessage();
-            DateTime userlocalscheduletime = new DateTime();
             scheduledMessage.shareMessage = shareMessage;
-            try
-            {
-                userlocalscheduletime = DateTime.Parse(localscheduletime);
-            }
-            catch (Exception)
-            {
-                 userlocalscheduletime = DateTime.Now;
-            }
+            DateTime userlocalscheduletime = DateTime.Parse(localscheduletime);
             try
             {
                 _logger.LogError("ScheduleMessageHelperscheduleTime>>>>" + scheduleTime);

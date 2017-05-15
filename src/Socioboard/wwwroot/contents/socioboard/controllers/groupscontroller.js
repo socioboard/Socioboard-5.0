@@ -75,7 +75,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
             }
             $http({
                 method: 'POST',
-                url: apiDomain + '/api/Groups/CreateGroup?GroupName=' + groupName + '&AdminId=' + $rootScope.user.Id ,
+                url: apiDomain + '/api/Groups/CreateGroup?GroupName=' + encodeURIComponent(groupName) + '&AdminId=' + $rootScope.user.Id,
             }).then(function (response) {
                 if (response.data == 'Group Added') {
                     $('#CreateGroupModal').closeModal();

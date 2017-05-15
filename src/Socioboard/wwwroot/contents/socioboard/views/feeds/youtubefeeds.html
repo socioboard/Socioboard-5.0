@@ -43,7 +43,7 @@
                                             <a>&nbsp;</a><img src="/contents/socioboard/images/YoutubeLogo.png" /> <a href="{{videos._youtubefeed.vdoUrl}}" style="font-weight:500" class="watchYt" target="_blank" >&nbspWatch on Youtube</a>
 
                                             <h6 class="y_feeds_title">{{videos._youtubefeed.vdoTitle}}</h6>
-                                            <h6 class="y_feeds_desc">{{videos._youtubefeed.vdoDescription}}</h6>
+                                            <h6 class="y_feeds_desc" style="word-wrap: break-word">{{videos._youtubefeed.vdoDescription}}</h6>
                                             <ul class="collapsible" data-collapsible="accordion">
                                                 <li>
                                                     <!--<div id="headers" class="collapsible-header red-text" ng-mouseover="boxload()" ng-click="videomodal(videos._youtubefeed.ytVideoId)"><i class="material-icons"></i>Show Comments</div>-->                                                    
@@ -140,10 +140,17 @@
                   <form class="col s12">
                       <h4>Upload your video</h4>
                       <div class="row">
-                          <div class="input-field col s12">
-                              <input id="youyube_title" type="text" class="validate">
+                          <div class="input-field col s10">
+                              <input id="youyube_title" type="text" class="validate" data-length="70" onkeyup="textCounter(this,'counter',70);" id="message">
                               <label for="youyube_title">Title</label>
                           </div>
+                          <div class="input-field col s2">
+                              <input disabled value="70" id="counter" type="text" class="validate red-text">
+                              <label for="counter" class="red-text">Word Count</label>
+                          </div>
+                      </div>
+
+                      <div class="row">
                           <div class="input-field col s12">
                               <textarea id="youyube_desc" class="materialize-textarea" length="500"></textarea>
                               <label for="youyube_desc">Description</label>
@@ -186,7 +193,7 @@
                       </div>
                       <!--Default version-->
                       <div class="row section">
-                          <div class="col s12 m12 l12">
+                          <div class="col s12 m12 l12">    
                               <p>Select your file</p>
                           </div>
                           <div class="col s12 m12 l12">
@@ -299,6 +306,25 @@
 
 <!-- //////////////////////////////////////// Script Start //////////////////////////////////////// -->
 <script>
+    $(document).ready(function () {
+        $('input#youyube_title').characterCounter();
+        Materialize.updateTextFields();
+    });
+
+
+     
+    function textCounter(field, field2, maxlimit) {
+        var countfield = document.getElementById(field2);
+        if (field.value.length > maxlimit) {
+            field.value = field.value.substring(0, maxlimit);
+            return false;
+        } else {
+            countfield.value = maxlimit - field.value.length;
+        }
+    }
+
+
+
     //window.onload = function () {
     //    setTimeout(function () {
     //        onYouTubeIframeAPIReady();

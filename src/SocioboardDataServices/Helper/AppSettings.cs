@@ -51,5 +51,13 @@ namespace SocioboardDataServices.Helper
         //End Gplus App Creds
 
 
+        //Youtube App Creds Start
+        public const string YTConsumerKey = "";
+        public const string YTConsumerSecret = "";
+        public const string YTRedirectUri = "http://localhost:9821/GoogleManager/Google";
+        public const string YTApiKey = "";
+        //End Gplus App Creds
+
+
     }
 }

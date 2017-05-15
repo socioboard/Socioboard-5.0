@@ -20,7 +20,7 @@ namespace SocioboardDataServices.LinkedIn
         public static int UpdateLinkedInComanyPageFeed(Domain.Socioboard.Models.LinkedinCompanyPage linacc, oAuthLinkedIn _oauth)
         {
             DatabaseRepository dbr = new DatabaseRepository();
-            Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(linacc.LinkedinPageId));
+            List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(linacc.LinkedinPageId)).ToList();
             apiHitsCount = 0;
             if (linacc.lastUpdate.AddHours(1) <= DateTime.UtcNow)
             {
@@ -33,47 +33,57 @@ namespace SocioboardDataServices.LinkedIn
                         string NuberOfFollower = profile.num_followers.ToString();
                         linacc.NumFollowers = Convert.ToInt16(NuberOfFollower);
                     }
-                    catch {
+                    catch
+                    {
                         linacc.NumFollowers = linacc.NumFollowers;
                     }
                     try
                     {
                         linacc.CompanyType = profile.company_type.ToString();
                     }
-                    catch {
+                    catch
+                    {
                         linacc.CompanyType = linacc.CompanyType;
                     }
                     try
                     {
                         linacc.LogoUrl = profile.logo_url.ToString();
-                        _grpProfile.profilePic= profile.logo_url.ToString();
+                        _grpProfile.Select(s => { s.profilePic = linacc.LogoUrl; return s; }).ToList();
                     }
-                    catch {
+                    catch
+                    {
                         linacc.LogoUrl = linacc.LogoUrl;
-                        _grpProfile.profilePic = linacc.LogoUrl;
+                        _grpProfile.Select(s => { s.profilePic = linacc.LogoUrl; return s; }).ToList();
                     }
                     try
                     {
                         linacc.SquareLogoUrl = profile.square_logo_url.ToString();
                     }
-                    catch {
+                    catch
+                    {
                         linacc.SquareLogoUrl = linacc.SquareLogoUrl;
                     }
                     try
                     {
                         linacc.BlogRssUrl = profile.blog_rss_url.ToString();
                     }
-                    catch {
+                    catch
+                    {
                         linacc.BlogRssUrl = linacc.BlogRssUrl;
                     }
                     try
                     {
                         linacc.UniversalName = profile.universal_name.ToString();
                     }
-                    catch {
+                    catch
+                    {
                         linacc.UniversalName = linacc.UniversalName;
                     }
                     dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(linacc);
+                    foreach (var item_grpProfile in _grpProfile)
+                    {
+                        dbr.Update<Domain.Socioboard.Models.Groupprofiles>(item_grpProfile);
+                    }
                     try
                     {
                         List<LinkedinPageUpdate.CompanyPagePosts> objcompanypagepost = objLinkedinPageUpdate.GetPagePosts(_oauth, linacc.LinkedinPageId);
@@ -122,7 +132,7 @@ namespace SocioboardDataServices.LinkedIn
                     {
                     }
                     linacc.lastUpdate = DateTime.UtcNow;
-                   
+
                     dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(linacc);
                 }
             }
@@ -139,8 +149,8 @@ namespace SocioboardDataServices.LinkedIn
             if (linacc.LastUpdate.AddHours(1) <= DateTime.UtcNow)
             {
                 DatabaseRepository dbr = new DatabaseRepository();
-                Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(linacc.LinkedinUserId));
-                if (_grpProfile!=null)
+                List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(linacc.LinkedinUserId)).ToList();
+                if (_grpProfile != null)
                 {
                     if (linacc.IsActive)
                     {
@@ -167,12 +177,12 @@ namespace SocioboardDataServices.LinkedIn
                             try
                             {
                                 linacc.ProfileImageUrl = profile.picture_url.ToString();
-                                _grpProfile.profilePic = profile.picture_url.ToString();
+                                _grpProfile.Select(s => { s.profilePic = linacc.ProfileImageUrl; return s; }).ToList();
                             }
                             catch (Exception ex)
                             {
                                 linacc.ProfileImageUrl = linacc.ProfileImageUrl;
-                                _grpProfile.profilePic = linacc.ProfileImageUrl;
+                                _grpProfile.Select(s => { s.profilePic = linacc.ProfileImageUrl; return s; }).ToList();
                             }
                             try
                             {
@@ -187,13 +197,16 @@ namespace SocioboardDataServices.LinkedIn
 
                             linacc.LastUpdate = DateTime.UtcNow;
                             dbr.Update<Domain.Socioboard.Models.LinkedInAccount>(linacc);
-                            dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
+                            foreach (var item_grpProfile in _grpProfile)
+                            {
+                                dbr.Update<Domain.Socioboard.Models.Groupprofiles>(item_grpProfile);
+                            }
                         }
                         catch (Exception)
                         {
 
                         }
-                    } 
+                    }
                 }
             }
         }

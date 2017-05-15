@@ -41,7 +41,7 @@
                             <td>{{$index +1}}</td>
                             <td class="center">
                                 <div class="col s12" ng-if="socioqueue.profileType==0 || socioqueue.profileType==1 || socioqueue.profileType==2 || socioqueue.profileType==3 || socioqueue.profileType==4">
-                                    <img src="{{sociopic}}" class="responsive-img profilePic">
+                                    <img src="{{getProperURL(user.ProfilePicUrl)}}" class="responsive-img profilePic">
                                     <img src="/contents/socioboard/images/sb.png" class="responsive-img msgiconPoss">
                                 </div>
                                 <div class="col s12">

@@ -28,7 +28,7 @@ namespace SocioboardDataServices.Instagram
         {
             apiHitsCount = 0;
             DatabaseRepository dbr = new DatabaseRepository();
-            Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(insAcc.InstagramId));
+            List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(insAcc.InstagramId)).ToList();
             if (insAcc.lastUpdate.AddHours(1)<=DateTime.UtcNow)
             {
                 if(insAcc.IsActive)
@@ -42,20 +42,21 @@ namespace SocioboardDataServices.Instagram
                     _api = oAuthInstagram.GetInstance(configi);
                     InstagramResponse<User> objuser = objusercontroller.GetUserDetails(insAcc.InstagramId,insAcc.AccessToken);
 
-                  //  objInstagramAccount = new Domain.Socioboard.Models.Instagramaccounts();
+                    //  objInstagramAccount = new Domain.Socioboard.Models.Instagramaccounts();
 
 
-                    if (objuser!=null)
+                    if (objuser != null)
                     {
                         try
                         {
                             insAcc.ProfileUrl = objuser.data.profile_picture;
-                            _grpProfile.profilePic= objuser.data.profile_picture;
+                            _grpProfile.Select(s => { s.profilePic = objuser.data.profile_picture; return s; }).ToList();
                         }
                         catch (Exception ex)
                         {
                             insAcc.ProfileUrl = insAcc.ProfileUrl;
-                            _grpProfile.profilePic = insAcc.ProfileUrl;
+                            _grpProfile.Select(s => { s.profilePic = insAcc.ProfileUrl; return s; }).ToList();
+
                         }
                         try
                         {
@@ -89,8 +90,11 @@ namespace SocioboardDataServices.Instagram
                         {
                             insAcc.bio = insAcc.bio;
                         }
-                        dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
-                        dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(insAcc); 
+                        foreach (var item_grpProfile in _grpProfile)
+                        {
+                            dbr.Update<Domain.Socioboard.Models.Groupprofiles>(item_grpProfile);
+                        }
+                        dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(insAcc);
                     }
                     if (apiHitsCount<MaxapiHitsCount)
                     {

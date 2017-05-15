@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Socioboard.GoogleLib.Authentication;
 using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace Socioboard.GoogleLib.Youtube.Core
 {
@@ -20,6 +21,30 @@ namespace Socioboard.GoogleLib.Youtube.Core
         private string _clientId;
         private string _clientSecret;
         private string _redirectUrl;
+
+
+        public string GetYTVideoDetailList(string apiKey, string VideoId)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet%2Cstatistics%2CcontentDetails%2Cstatus&id=" + VideoId + "&key=" + apiKey;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+            
+            return response;
+            
+        }
 
         public string Get_Video_List(string query, string accesstoken, string part, int maxResults)
         {
@@ -203,7 +228,7 @@ namespace Socioboard.GoogleLib.Youtube.Core
             string RequestUrl = "https://content.googleapis.com/youtube/v3/commentThreads?part=snippet&key=" + accesstoken + "&alt=json";
 
             string postdata = "{\"snippet\": {\"videoId\": \""+ VideoId + "\",\"topLevelComment\": {\"snippet\": {\"textOriginal\": \""+ commentText +"\"}}}}";
-           
+
             Uri path = new Uri(RequestUrl);
             string[] header = { "Authorization", "X-JavaScript-User-Agent", "Origin", "X-Origin" };
             string[] val = { "Bearer " + accesstoken, "Google APIs Explorer", "https://content.googleapis.com", "https://developers.google.com" };

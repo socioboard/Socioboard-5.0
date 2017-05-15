@@ -70,7 +70,7 @@
                                                 <div class="row">
                                                    <div class="input-field col s6">
                                                         <input type="date" ng-model="updateUser.dob" class="datepicker">
-                                                        <label for="dob">DOB</label>
+                                                        <label class="active" for="dob">DOB</label>
                                                     </div>
                                                 </div>
 
@@ -129,6 +129,7 @@
                         <i class="mdi-content-send right"></i>
                     </a>
                         <form name="myform" ng-submit="UpdatePassword(updatePassword)">
+                            <input id="sociofake" style="display:none" type="text" name="socioboardfake">
                             <div id="Password_tab" class="col s12" ng-if="user.Password != null" hidden>
                                 <div class="row">
                                     <div class="col s12 m12 l12">
@@ -145,14 +146,14 @@
                                                     <div class="row">
                                                         <div class="input-field col s12">
                                                             <i class="mdi-action-lock-outline prefix"></i>
-                                                            <input ng-model="updatePassword.newPassword" type="password" required class="validate" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
+                                                            <input ng-model="updatePassword.newPassword" type="password" required class="validate" title="Password must contain at least 8 characters, including at least 1 number and includes both lower and uppercase letters and special characters" data-rule-minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
                                                             <label for="password">New Password</label>
                                                         </div>
                                                     </div>
                                                     <div class="row">
                                                         <div class="input-field col s12">
                                                             <i class="mdi-action-lock-outline prefix"></i>
-                                                            <input ng-model="updatePassword.conformPassword" name="CnfPassword" type="password" required class="validate" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
+                                                            <input ng-model="updatePassword.conformPassword" type="password" required class="validate" title="Password must contain at least 8 characters, including at least 1 number and includes both lower and uppercase letters and special characters" data-rule-minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
                                                             <label for="Confirmpassword">Confirm Password</label>
                                                         </div>
                                                     </div>

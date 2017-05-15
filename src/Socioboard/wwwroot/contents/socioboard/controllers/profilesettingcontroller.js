@@ -168,7 +168,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             var filesinput = $('#profileImage').get(0).files[0];
             console.log('sadfkjasdf');
             console.log(filesinput);
-            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'JPEG', 'JPG', 'PNG', 'GIF', 'BMP'];
             if (filesinput != undefined && filesinput != null) {
                 if ($scope.hasExtension('#profileImage', fileExtension)) {
 

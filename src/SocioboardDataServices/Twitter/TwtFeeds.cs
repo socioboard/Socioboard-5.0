@@ -27,7 +27,7 @@ namespace SocioboardDataServices.Twitter
         {
             apiHitsCount = 0;
             Model.DatabaseRepository dbr = new DatabaseRepository();
-            Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(twtaccount.twitterUserId));
+            List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(twtaccount.twitterUserId)).ToList();
             if (twtaccount.lastUpdate.AddMinutes(15) <= DateTime.UtcNow)
             {
                 if (twtaccount.isActive)
@@ -57,15 +57,16 @@ namespace SocioboardDataServices.Twitter
                         {
                             twtaccount.followersCount = twtaccount.followersCount;
                         }
-                        
+
                         try
                         {
                             twtaccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
-                            _grpProfile.profilePic= item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+                            _grpProfile.Select(s => { s.profilePic = twtaccount.profileImageUrl; return s; }).ToList();
                         }
                         catch (Exception ex)
                         {
-
+                            twtaccount.profileImageUrl = twtaccount.profileImageUrl;
+                            _grpProfile.Select(s => { s.profilePic = twtaccount.profileImageUrl; return s; }).ToList();
                         }
                         try
                         {
@@ -91,6 +92,7 @@ namespace SocioboardDataServices.Twitter
                         try
                         {
                             twtaccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                            _grpProfile.Select(s => { s.profileName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"'); return s; }).ToList();
                         }
                         catch (Exception ex)
                         {
@@ -104,9 +106,12 @@ namespace SocioboardDataServices.Twitter
                         {
                             twtaccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
                         }
-                       
+
                         dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount);
-                        dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
+                        foreach (var item_grpProfile in _grpProfile)
+                        {
+                            dbr.Update<Domain.Socioboard.Models.Groupprofiles>(item_grpProfile);
+                        }
                         if (apiHitsCount < MaxapiHitsCount)
                         {
                             try

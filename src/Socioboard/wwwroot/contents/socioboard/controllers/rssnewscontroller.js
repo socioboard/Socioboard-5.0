@@ -11,6 +11,29 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         $scope.buildbtn = true;
         rssnews();
 
+        var getAllSelected = function () {
+            var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
+                return profile.Selected;
+            });
+
+            return selectedItems.length === $rootScope.lstProfiles.length;
+        }
+
+        var setAllSelected = function (value) {
+            angular.forEach($rootScope.lstProfiles, function (profile) {
+                profile.Selected = value;
+            });
+        }
+
+        $scope.allSelected = function (value) {
+            if (value !== undefined) {
+                return setAllSelected(value);
+            } else {
+                return getAllSelected();
+            }
+        }
+
+
         $scope.deleteMsg = function (profileId) {
             // console.log(profileId);
             swal({
@@ -159,8 +182,21 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         $scope.ComposeMessage = function () {
             debugger;
             $scope.disbtncom = false;
+            var profiles = new Array();
+            $("#checkboxdatarss .subcheckboxrss").each(function () {
+                debugger;
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profiles.indexOf(attrId);
+                    if (index > -1) {
+                        profiles.splice(index, 1);
+                    }
+                } else {
+                    profiles.push(attrId);
+                }
+            });
 
-            var profiles = $('#composeProfiles').val();
+           // var profiles = $('#composeProfiles').val();
             var message = $('#composeMessage').val();
             //if (image == "N/A") {
             //    image = image.replace("N/A", "");

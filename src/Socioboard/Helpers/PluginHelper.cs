@@ -192,19 +192,19 @@ namespace Socioboard.Helper
             _url = location;
             while (!string.IsNullOrWhiteSpace(location))
             {
-                if(!_url.Contains("twitter.com/i/notifications"))
+                if (!_url.Contains("twitter.com/i/notifications"))
                 {
                     _url = location;
-                    if(_url.Contains("dashboard.unhookme.com"))
+                    if (_url.Contains("dashboard.unhookme.com"))
                     {
                         _url = _url.Replace("statCounter", "Login");
                     }
-                    if(_url.Contains("https://contest.edumongoose.com"))
+                    if (_url.Contains("https://contest.edumongoose.com"))
                     {
                         _url = "https://contest.edumongoose.com/home.htm";
                     }
                 }
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url.Replace("i/notifications",""));
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_url.Replace("i/notifications", ""));
                 request.AllowAutoRedirect = false;
                 request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.153 Safari/537.36";
 
@@ -295,14 +295,14 @@ namespace Socioboard.Helper
                     {
                         haTitle = nodeTitle.Attributes["content"];
                         title = haTitle.Value;
-                        title = title.Replace(" &amp; ", "&").Replace("nnn#8211", "").Replace("&#39;s", "").Replace("&#8211;","");
+                        title = title.Replace(" &amp; ", "&").Replace("nnn#8211", "").Replace("&#39;s", "").Replace("&#8211;", "");
                         //title = Regex.Replace(title, @"(\s+|@|&|'|\(|\)|<|>|#)", "");
                     }
                     catch (Exception ex)
                     {
                         try
                         {
-                            title = nodeTitle.InnerText.Replace(" &amp; ","&").Replace("nnn#8211","").Replace("&#39;s","").Replace("&#8211;", "");
+                            title = nodeTitle.InnerText.Replace(" &amp; ", "&").Replace("nnn#8211", "").Replace("&#39;s", "").Replace("&#8211;", "");
                             //title= Regex.Replace(title, @"(\s+|@|&|'|\(|\)|<|>|#)", "");
                         }
                         catch (Exception exx)
@@ -322,20 +322,24 @@ namespace Socioboard.Helper
                             HtmlAttribute src = img.Attributes["src"];
                             if (src.Value.Contains("https") || src.Value.Contains("https"))
                             {
-                                imageurls.Add(src.Value); 
+                                bool imStatus = getHtmlfromUrl(src.Value.Replace("&amp;", "&"));
+                                if (imStatus)
+                                {
+                                    imageurls.Add(src.Value);
+                                }
                             }
                         }
                         catch (Exception ex)
                         {
 
                         }
-                    } 
+                    }
                 }
                 HtmlNode nodeImage = hdoc.DocumentNode.SelectSingleNode("//meta[@name='image']");
                 if (nodeImage == null)
                 {
                     nodeImage = hdoc.DocumentNode.SelectSingleNode("//meta[@property='og:image']");
-                   
+
                     if (nodeImage == null)
                     {
                         try
@@ -344,7 +348,14 @@ namespace Socioboard.Helper
                             if (nodeImage != null)
                             {
                                 haImage = nodeImage.Attributes["src"];
-                                image = haImage.Value;
+                                if (haImage.Value.Contains("https") || haImage.Value.Contains("https"))
+                                {
+                                    bool imStatus = getHtmlfromUrl(haImage.Value.Replace("&amp;", "&"));
+                                    if (imStatus)
+                                    {
+                                        image = haImage.Value;
+                                    }
+                                }
                                 nodeImage = null;
                             }
                         }
@@ -357,7 +368,12 @@ namespace Socioboard.Helper
                 if (nodeImage != null)
                 {
                     haImage = nodeImage.Attributes["content"];
-                    image = haImage.Value;
+                    bool imStatus = getHtmlfromUrl(haImage.Value.Replace("&amp;", "&"));
+                    if (imStatus)
+                    {
+                        image = haImage.Value;
+                    }
+
                 }
 
                 HtmlNode nodeUrl = hdoc.DocumentNode.SelectSingleNode("//meta[@name='url']");
@@ -421,6 +437,45 @@ namespace Socioboard.Helper
             var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
+        public static bool getHtmlfromUrl(string imagePath)
+        {
+            try
+            {
+                Uri u = new Uri(imagePath);
+                string filename = string.Empty;
+                string extension = string.Empty;
+                extension = System.IO.Path.GetExtension(u.AbsolutePath).Replace(".", "");
+                var webClient = new WebClient();
+                byte[] img = webClient.DownloadData(imagePath);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+            //string output = string.Empty;
+            //string facebookSearchUrl = url;
+            //var facebooklistpagerequest = (HttpWebRequest)WebRequest.Create(facebookSearchUrl);
+            //facebooklistpagerequest.Method = "GET";
+            //facebooklistpagerequest.Credentials = CredentialCache.DefaultCredentials;
+            //facebooklistpagerequest.AllowWriteStreamBuffering = true;
+            //facebooklistpagerequest.ServicePoint.Expect100Continue = false;
+            //facebooklistpagerequest.PreAuthenticate = false;
+            //try
+            //{
+            //    using (var response = facebooklistpagerequest.GetResponse())
+            //    {
+            //        using (var stream = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(1252)))
+            //        {
+            //            output = stream.ReadToEnd();
+            //        }
+            //    }
+            //}
+            //catch (Exception e)
+            //{
 
+            //}
+            //return output;
+        }
     }
 }

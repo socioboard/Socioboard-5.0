@@ -25,6 +25,9 @@ namespace Domain.Socioboard.Models
         public virtual double SubscribersCount { get; set; }
         public virtual double ViewsCount { get; set; }
         public virtual string Channel_EmailId { get; set; }
+        public virtual bool Days90Update { get; set; }
+        public virtual DateTime LastReport_Update { get; set; }
+        public virtual DateTime LastVideoListDetails_Update { get; set; }
 
     }
 }

@@ -20,7 +20,7 @@
                                     </div>
                                     <div ng-init="dispbtnmark= {{dispbtnmark}}"></div>
                                     <div ng-init="dispbtndelete= {{dispbtndelete}}"></div>
-                                    <div class="col s12 m7 l7 hide-on-med-and-down">
+                                    <div class="col s12 m7 l7 hide-on-med-and-down" ng-if="replydisp==true">
                                         <ul class="right">
                                             <li>
                                                 <a ng-show="dispbtnmark" ng-click="markTaskCompleted()"><i class="icon-check"></i></a>
@@ -47,7 +47,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div id="email-details" class="col s12 m8 l8 card-panel">
+                            <div id="email-details" class="col s12 m8 l8 card-panel" ng-if="replydisp==true">
                                 <div id="recent_task_list">
                                     <p class="email-subject truncate">
                                         {{selectedTask.tasks.taskMessage}}

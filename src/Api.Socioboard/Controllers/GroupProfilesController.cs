@@ -144,6 +144,21 @@ namespace Api.Socioboard.Controllers
                         grpProfile.profileOwnerId = userId;
                         grpProfile.profilePic = gplusAccount.GpProfileImage;
                     }
+                    else if (profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics)
+                    {
+                        Domain.Socioboard.Models.GoogleAnalyticsAccount gplusAccount = Repositories.GplusRepository.getGAAccount(profileId, _redisCache, dbr);
+                        if (gplusAccount == null)
+                        {
+                            return BadRequest("Invalid ProfileId");
+                        }
+                        if (gplusAccount.UserId != userId)
+                        {
+                            return BadRequest("profile is added by other user");
+                        }
+                        grpProfile.profileName = gplusAccount.GaProfileName;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = gplusAccount.ProfilePicUrl;
+                    }
                     else if (profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram)
                     {
                         Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = Repositories.InstagramRepository.getInstagramAccount(profileId, _redisCache, dbr);
@@ -188,6 +203,21 @@ namespace Api.Socioboard.Controllers
                         grpProfile.profileName = _LinkedInAccount.LinkedinPageName;
                         grpProfile.profileOwnerId = userId;
                         grpProfile.profilePic = _LinkedInAccount.LogoUrl;
+                    }
+                    else if (profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube)
+                    {
+                        Domain.Socioboard.Models.YoutubeChannel _YoutubeChannel = Repositories.GplusRepository.getYTChannel(profileId, _redisCache, dbr);
+                        if (_YoutubeChannel == null)
+                        {
+                            return BadRequest("Invalid ProfileId");
+                        }
+                        if (_YoutubeChannel.UserId != userId)
+                        {
+                            return BadRequest("profile is added by other user");
+                        }
+                        grpProfile.profileName = _YoutubeChannel.YtubeChannelName;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = _YoutubeChannel.ChannelpicUrl;
                     }
                     grpProfile.entryDate = DateTime.UtcNow;
                     grpProfile.groupId = grp.id;

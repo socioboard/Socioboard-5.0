@@ -4,22 +4,39 @@ SocioboardApp.controller('CreateLinkShareathonController', function ($rootScope,
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         $scope.dispbtn = true;
+       
+        $scope.url = {
+            text: 'https://facebook.com',
+        };
         createlinkshareathon();
+
+        $scope.check = function (input) {
+            if (input.indexOf('facebook') > 0) {
+                $scope.urlchange = false;
+            } else {
+                $scope.urlchange = true;
+            }
+           
+        }
 
         $(document).ready(function () {
             var max_fields = 20;
             var wrapper = $(".container_link");
             var add_button = $(".add_form_field");
-
             var x = 1;
             $(add_button).click(function (e) {
+                var url = $('#post_url').val();
                 e.preventDefault();
-                if (x < max_fields) {
-                    x++;
-                    $(wrapper).append('<div class="row"><div class="col l10 m10 s10"><input type="text" name="mytext[]"/></div><div class="col l2 m2 s2"><a href="#" class="delete btn btn_style">Delete</a></div></div>'); //add input box
-                }
-                else {
-                    alert('You Reached the limits')
+                if (url != "") {
+                    if (x < max_fields) {
+                        x++;
+                        $(wrapper).append('<div class="row"><div class="col l10 m10 s10"><input type="text" name="mytext[]"/></div><div class="col l2 m2 s2"><a href="#" class="delete btn btn_style">Delete</a></div></div>'); //add input box
+                    }
+                    else {
+                        swal('You Reached the limits')
+                    }
+                } else {
+                    swal('please enter value first')
                 }
             });
 
@@ -32,7 +49,12 @@ SocioboardApp.controller('CreateLinkShareathonController', function ($rootScope,
             debugger;
             $scope.pageurl = "";
             var url = $('#post_url').val();
-            if (url != "" && url.indexOf('facebook') > 0) {
+            if (url == "")
+            {
+                swal('please enter value first');
+                return false;
+            }
+            if (url.indexOf('facebook') > 0) {
                 var pageIds = $('#shraeathonfacebookpage').val();
                 var timeInterval = $('#shraeathontimeinterval').val();
                 var texts = document.getElementsByName("mytext[]");
@@ -41,6 +63,9 @@ SocioboardApp.controller('CreateLinkShareathonController', function ($rootScope,
                     var n = texts[i].value || 0;
                     if (n != "" && n.indexOf('facebook') > 0) {
                         sum = n + "," + sum;
+                    } else {
+                        swal('please enter valid facebook page url');
+                        return false;
                     }
 
                 }
@@ -77,6 +102,7 @@ SocioboardApp.controller('CreateLinkShareathonController', function ($rootScope,
 
            
         }
+        
 
     });
 

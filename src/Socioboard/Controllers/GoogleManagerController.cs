@@ -269,7 +269,7 @@ namespace Socioboard.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "No Ganalytics linked with this account";
+                    TempData["Error"] = "Access token not found";
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -302,7 +302,7 @@ namespace Socioboard.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "No Youtube Channels linked with this account";
+                    TempData["Error"] = "Access Token Not Found";
                     return RedirectToAction("Index", "Home");
                 }
             }

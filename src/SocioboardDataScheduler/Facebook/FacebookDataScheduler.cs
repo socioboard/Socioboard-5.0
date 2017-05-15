@@ -10,6 +10,8 @@ namespace SocioboardDataScheduler.Facebook
 {
     public class FacebookDataScheduler
     {
+        public static int noOfthreadRunning = 0;
+        public static Semaphore objSemaphore = new Semaphore(5, 10);
 
         public void ScheduleFacebookMessage()
         {
@@ -18,20 +20,21 @@ namespace SocioboardDataScheduler.Facebook
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)&& t.scheduleTime <= DateTime.UtcNow).ToList();
-                   // lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("187231345114052")).ToList();
+                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage) && t.scheduleTime <= DateTime.UtcNow).ToList();
+                    // lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("187231345114052")).ToList();
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
-                   
+
                     foreach (var items in newlstScheduledMessage)
                     {
-                        new Thread(delegate ()
-                        {
-                            schedulemessages(dbr, items);
-                        }).Start();
-                        
+                        objSemaphore.WaitOne();
+                        noOfthreadRunning++;
+                        Thread thread_pageshreathon = new Thread(() => schedulemessages(new object[] { dbr, items }));
+                        thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
+                        thread_pageshreathon.Start();
+                        Thread.Sleep(10 * 1000);
                     }
                     Thread.Sleep(TimeSpan.FromMinutes(1));
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -41,10 +44,14 @@ namespace SocioboardDataScheduler.Facebook
             }
         }
 
-        private static void schedulemessages(DatabaseRepository dbr, IGrouping<string, Domain.Socioboard.Models.ScheduledMessage> items)
+        private static void schedulemessages(object o)
         {
             try
             {
+                Console.WriteLine(Thread.CurrentThread.Name + " Is Entered in Method");
+                object[] arr = o as object[];
+                Model.DatabaseRepository dbr = (Model.DatabaseRepository)arr[0];
+                IGrouping<string, Domain.Socioboard.Models.ScheduledMessage> items = (IGrouping<string, Domain.Socioboard.Models.ScheduledMessage>)arr[1];
                 Domain.Socioboard.Models.Facebookaccounts _facebook = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == items.Key && t.IsActive);
                 if (_facebook != null)
                 {
@@ -68,6 +75,12 @@ namespace SocioboardDataScheduler.Facebook
             catch (Exception ex)
             {
                 //  Thread.Sleep(60000);
+            }
+            finally
+            {
+                noOfthreadRunning--;
+                objSemaphore.Release();
+                Console.WriteLine(Thread.CurrentThread.Name + " Is Released");
             }
         }
     }

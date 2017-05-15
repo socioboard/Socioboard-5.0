@@ -18,6 +18,29 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         //});
         //$rootScope.categories = '';
         designfeeds();
+
+        var getAllSelected = function () {
+            var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
+                return profile.Selected;
+            });
+
+            return selectedItems.length === $rootScope.lstProfiles.length;
+        }
+
+        var setAllSelected = function (value) {
+            angular.forEach($rootScope.lstProfiles, function (profile) {
+                profile.Selected = value;
+            });
+        }
+
+        $scope.allSelected = function (value) {
+            if (value !== undefined) {
+                return setAllSelected(value);
+            } else {
+                return getAllSelected();
+            }
+        }
+
        
         $scope.deleteProfile = function(profileId){
         	// console.log(profileId);
@@ -61,7 +84,20 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
 
         $scope.ComposeMessage = function () {
             $scope.disbtncom = false;
-            var profiles = $('#composeProfiles').val();
+            var profiles = new Array();
+            $("#checkboxdata .subcheckbox").each(function () {
+                debugger;
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profiles.indexOf(attrId);
+                    if (index > -1) {
+                        profiles.splice(index, 1);
+                    }
+                } else {
+                    profiles.push(attrId);
+                }
+            });
+           // var profiles = $('#composeProfiles').val();
             var message = $('#composeMessage').val();
             var updatedmessage = "";
             var postdata = message.split("\n");
@@ -101,11 +137,11 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
             }
             else {
                 $scope.disbtncom = true;
-                if (profiles.length < 0) {
+                if (profiles.length == 0) {
                     swal('Please select a profile');
                 }
                 else {
-                    swal('Please enter some text to compose this message');
+                    swal('Please select atleast one profile');
                 }
             }
         }
@@ -300,7 +336,7 @@ SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
             $timeout(function () {
                 console.log("myRepeatFeedTimeoutDirective Called");
                 var $containerProducts = $("#products");
-              //  $containerProducts.imagesLoaded(function () {
+                //$containerProducts.imagesLoaded(function () {
                     $containerProducts.masonry({
                         itemSelector: ".product",
                         columnWidth: ".product-sizer",

@@ -33,7 +33,7 @@ namespace Api.Socioboard.Repositories
             }
             catch { }
 
-            int groupProfilesCount = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId == userId).GroupBy(t=>t.profileId).Select(x=>x.First()).Count();
+            int groupProfilesCount = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId == userId).GroupBy(t => t.profileId).Select(x => x.First()).Count();
             _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId, groupProfilesCount.ToString());
             return groupProfilesCount;
         }
@@ -89,7 +89,7 @@ namespace Api.Socioboard.Repositories
                             }
                         case Domain.Socioboard.Enum.SocialProfileType.LinkedIn:
                             {
-                                res = LinkedInAccountRepository.DeleteProfile(dbr, profileId, userId, _redisCache,_appSettings);
+                                res = LinkedInAccountRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
                                 break;
                             }
                         case Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage:
@@ -112,13 +112,18 @@ namespace Api.Socioboard.Repositories
                                 res = GplusRepository.DeleteGplusProfile(dbr, profileId, userId, _redisCache, _appSettings);
                                 break;
                             }
+                        case Domain.Socioboard.Enum.SocialProfileType.YouTube:
+                            {
+                                res = GplusRepository.DeleteYoutubeChannelProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                break;
+                            }
                     }
                 }
                 else
                 {
                     Groups defaultGroup = GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr).Find(t => t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName));
                     List<Groupprofiles> defalutGroupProfiles = getGroupProfiles(defaultGroup.id, _redisCache, dbr);
-                    if (defalutGroupProfiles!=null && defalutGroupProfiles.Count(t => t.profileId.Equals(profileId)) <= 0)
+                    if (defalutGroupProfiles != null && defalutGroupProfiles.Count(t => t.profileId.Equals(profileId)) <= 0)
                     {
                         switch (grpProfile.profileType)
                         {
@@ -167,6 +172,12 @@ namespace Api.Socioboard.Repositories
                                     res = GplusRepository.DeleteGplusProfile(dbr, profileId, userId, _redisCache, _appSettings);
                                     break;
                                 }
+                            case Domain.Socioboard.Enum.SocialProfileType.YouTube:
+                                {
+                                    res = GplusRepository.DeleteYoutubeChannelProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                    break;
+                                }
+                            
                         }
                     }
                     else
@@ -184,7 +195,7 @@ namespace Api.Socioboard.Repositories
                 }
                 else
                 {
-                    if(grpProfile!=null)
+                    if (grpProfile != null)
                     {
                         dbr.Delete<Domain.Socioboard.Models.Groupprofiles>(grpProfile);
                         _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);

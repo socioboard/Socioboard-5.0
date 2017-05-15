@@ -15,13 +15,13 @@
                         <h5 class="feeds_title blue darken-4 white-text"><i class="icon-pencil"></i>Create An Shareathon through which you can automate your page posts links</h5>
                         <div class="">
                         	<div class="row">
-			                    <form class="col s12 m12 l12 " >
+			                    <form name="myForm" class="col s12 m12 l12 " >
 			                        <div class="input-field col s12 m12 l12">
 									    <select multiple id="shraeathonfacebookpage">
 									      <option value="" disabled selected>Choose your page</option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1}| filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
 									    </select>
-									    <label>Selects fan pages for automated post link</label>
+									    <label>Select fan pages for automated post link</label>
 									</div>								
 							        <div class="input-field col s12 m12 l12">
 									    <select id="shraeathontimeinterval">
@@ -40,10 +40,14 @@
 							        <div class="row">
 							        	<div class="container_link">										
 											<div class="input-field col l10 m10 s10">
-												<input id="post_url" type="url" class="validate">
+												<input id="post_url" type="url" name="input" class="validate" ng-change="check(input)" ng-model="input" required>
 							          			<!--<label for="post_url">Enter link</label>-->
-                                                <label for="post_url" data-error="wrong" data-success="right">Enter valid Page Url Here</label>
-											</div>
+                                                <label for="post_url" >Enter valid Page Url Here</label>
+                                                <div ng-init="urlchange= {{urlchange}}"></div>
+                                                <span class="error" ng-show="urlchange || myForm.input.$error.url">
+                                                   Please enter an valid facebook page url!
+                                                </span>
+                                            </div>
 											<div class="col l2 m2 s2">
 												<button class="add_form_field btn btn_style">Add New Field &nbsp;</button>
 											</div>											

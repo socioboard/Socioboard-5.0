@@ -163,7 +163,7 @@ namespace Api.Socioboard.Controllers
             }
             else
             {
-                return Ok("Error while Adding Account");
+                return Ok("Issue In Fetching Access Token");
             }
            
         }

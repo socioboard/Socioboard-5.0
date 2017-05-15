@@ -47,7 +47,8 @@
                                                     <img src="/contents/socioboard/images/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/instagram.png" style="width: 24px; height: 24px; margin-top: -21%;"  ng-if="profile.profileType==8" class="profile_socio_icon">
-
+                                                    <img src="/contents/socioboard/images/yt.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==7" class="profile_socio_icon">
+                                                    <img src="/contents/socioboard/images/G-Ana-icon.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==10" class="profile_socio_icon">
                                                 </div>
                                             </div>
                                         </div>
@@ -72,6 +73,8 @@
                                                     <img src="/contents/socioboard/images/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
                                                     <img src="/contents/socioboard/images/instagram.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==8" class="profile_socio_icon">
+                                                    <img src="/contents/socioboard/images/yt.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==7" class="profile_socio_icon">
+                                                    <img src="/contents/socioboard/images/G-Ana-icon.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==10" class="profile_socio_icon">
                                                 </div>
                                             </div>
                                         </div>
@@ -229,7 +232,7 @@
         <div class="modal-content">
             <h4>Invite your Friend to <b class="orange-text text-darken-4">{{inviGrpName}}</b></h4>
             <p>Socioboard offers to make group by virtue of which users can reach out to each other using a highly efficient collaboration mechanism.Groups serve as a platform to share information with other team members and increase workability and efficiency.</p>
-            <form class="col s12">
+          
                 <table class="highlight centered">
                     <thead>
                         <tr>
@@ -249,25 +252,27 @@
                     </tbody>
                 </table>
                 <hr>
-                <div class="row">
-                    <div class="input-field col s3">
-                        <input placeholder="First Name" ng-model="inviteMember.firstName" id="first_name" type="text" class="validate">
-                        <label for="first_name">First Name</label>
-                    </div>
-                    <div class="input-field col s3">
-                        <input placeholder="Last Name" id="last_name" ng-model="inviteMember.lastName" type="text" class="validate">
-                        <label for="last_name">Last Name</label>
-                    </div>
-                    <div class="input-field col s5">
-                        <input placeholder="Email Id" id="email" ng-model="inviteMember.email" type="text" class="validate">
-                        <label for="email">Email</label>
-                    </div>
-                    <div class="col s1" ng-click="addToInviteList(inviteMember)">
-                        <span class="btn"><i class="fa fa-plus"></i></span>
-                    </div>
-                </div>
-            </form>
-        </div>
+               
+                    <div class="row">
+                        <form name="myform">
+                            <div class="input-field col s3">
+                                <input placeholder="First Name" ng-model="inviteMember.firstName" name="first_name" id="first_name" type="text" pattern="^[a-zA-Z0-9]+$" required class="validate">
+                                <label for="first_name" data-error="wrong" data-success="right">First Name</label>
+                               </div>
+                            <div class="input-field col s3">
+                                <input placeholder="Last Name" id="last_name" ng-model="inviteMember.lastName" type="text" pattern="^[a-zA-Z0-9]+$" required class="validate">
+                                <label for="last_name" data-error="wrong" data-success="right">Last Name</label>
+                            </div>
+                            <div class="input-field col s5">
+                                <input placeholder="Email Id" id="email" name="email" ng-model="inviteMember.email" type="email" required class="validate">
+                                <label for="email" data-error="wrong" data-success="right">Email</label>
+                            </div>
+                            <div class="col s1">
+                                <button ng-click="myform.$valid &&addToInviteList(inviteMember)" class="btn btn-flat btn_style pink ink-reaction"><i class="fa fa-plus fa-2x white-text"></i></button>
+                            </div>
+                        </form>
+                      </div>
+               </div>
         <div class="modal-footer">
             <a href="" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="SendInvitations(inviGrpId)">Submit</a>

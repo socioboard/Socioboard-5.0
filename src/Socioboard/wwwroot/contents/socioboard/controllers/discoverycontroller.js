@@ -8,11 +8,44 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
         $scope.dispbtn = true;
         $scope.dispbtnsmart = true;
 
+        var getAllSelected = function () {
+            var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
+                return profile.Selected;
+            });
 
+            return selectedItems.length === $rootScope.lstProfiles.length;
+        }
+
+        var setAllSelected = function (value) {
+            angular.forEach($rootScope.lstProfiles, function (profile) {
+                profile.Selected = value;
+            });
+        }
+
+        $scope.allSelected = function (value) {
+            if (value !== undefined) {
+                return setAllSelected(value);
+            } else {
+                return getAllSelected();
+            }
+        }
 
         $scope.ComposeMessage = function () {
             $scope.dispbtn = false;
-            var profiles = $('#composeProfiles').val();
+            var profiles = new Array();
+            $("#checkboxdata .subcheckbox").each(function () {
+                debugger;
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profiles.indexOf(attrId);
+                    if (index > -1) {
+                        profiles.splice(index, 1);
+                    }
+                } else {
+                    profiles.push(attrId);
+                }
+            });
+           // var profiles = $('#composeProfiles').val();
             var message = $('#composeMessage').val();
             var updatedmessage = "";
             var postdata = message.split("\n");
@@ -52,7 +85,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             }
             else {
                 $scope.dispbtn = true;
-                if (profiles.length < 0) {
+                if (profiles.length == 0) {
                     swal('Please select a profile');
                 }
                 else {

@@ -346,6 +346,15 @@
                                         </div><!-- /Messages -->
                                         @if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "facebook"))
                                         {
+                                            if (!string.IsNullOrEmpty(objplugin.url))
+                                            {
+                                                if (objplugin.url.Contains("videos"))
+                                                {
+                                                    objplugin.profileType = "website";
+                                                    objplugin.imageUrl = string.Empty;
+
+                                                }
+                                            }
                                             if (!string.IsNullOrEmpty(objplugin.url) && objplugin.profileType != "pinterest" && objplugin.profileType != "image")
                                             {
                                                 if (objplugin._ThumbnailDetails != null)
@@ -476,7 +485,7 @@
 
 
                                                                 <div class="url">
-                                                                    <a href='@objplugin._ThumbnailDetails.url' target="_blank">
+                                                                    <a  href='@objplugin._ThumbnailDetails.url' target="_blank">
 
                                                                         @if (!string.IsNullOrEmpty(objplugin._ThumbnailDetails.url))
                                                                         {
@@ -514,11 +523,11 @@
                                                         <div class='info-holder-thumb'>
                                                             @if (objplugin.imageUrl.Contains("http"))
                                                             {
-                                                                <img src="@objplugin.imageUrl" id="img-upload-thumb">
+                                                                <img src="@objplugin.imageUrl.Replace("&amp;","&")" id="img-upload-thumb">
                                                             }
                                                             else
                                                             {
-                                                                <img src="@objplugin._ThumbnailDetails.image" id="img-upload-thumb">
+                                                                <img src="@objplugin._ThumbnailDetails.image.Replace("&amp;","&")" id="img-upload-thumb">
                                                             }
                                                         </div>
                                                     </div>
@@ -937,8 +946,8 @@
                 @if(objplugin.profileType=="twitter")
                 {
                     @:tweetId = "@objplugin.tweetId";
-                                                                                                                                                                                                                                                                                                                            @:tweetUrl = "https://twitter.com/@objplugin.screenName/status/@objplugin.tweetId";
-                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                            @:tweetUrl = "https://twitter.com/@objplugin.screenName/status/@objplugin.tweetId";
+                                                                                                                                                                                                                                                                                                                                        }
             }
             if ($('.facebook-text-show').css('display') == 'block') {
                 facebookText = $('#txt-fb-message').val();
@@ -963,7 +972,7 @@
                 @if(objplugin._ThumbnailDetails!=null)
                 {
                     @:if ($('#thumb-creator').css('display') == 'block') { url = "@objplugin._ThumbnailDetails.url"; }
-                                                                                                                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                                                                                                                                        }
             }
             if ($('.fileinput-new').css('display') == 'block') {
                 imgUrl = $('#img-upload-thumb').attr('src');
@@ -1144,7 +1153,7 @@
                                 }
 
                             }
-                            
+
 
                         }
 

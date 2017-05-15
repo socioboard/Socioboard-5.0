@@ -10,6 +10,31 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         var lastreach = false;
         var endingtwitter = starttwitter + 30; // how much data need to add on each function call
         var twitterReachLast = false; // to check the page ends last or not
+
+          var getAllSelected = function () {
+            var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
+                return profile.Selected;
+            });
+
+            return selectedItems.length === $rootScope.lstProfiles.length;
+        }
+
+        var setAllSelected = function (value) {
+            angular.forEach($rootScope.lstProfiles, function (profile) {
+                profile.Selected = value;
+            });
+        }
+
+        $scope.allSelected = function (value) {
+            if (value !== undefined) {
+                return setAllSelected(value);
+            } else {
+                return getAllSelected();
+            }
+        }
+
+
+
         $scope.LoadTopTwitterFeeds = function () {
             if (!twitterReachLast) {
                 //codes to load  recent Feeds
@@ -196,7 +221,22 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
 
         $scope.ComposeMessage = function () {
             $scope.dispbtn = false;
-            var profiles = $('#composeProfiles').val();
+             var profiles = new Array();
+             $("#checkboxdataboard .subcheckboxboard").each(function () {
+                    debugger;
+                    var attrId = $(this).attr("id");
+                    if (document.getElementById(attrId).checked == false) {
+                        var index = profiles.indexOf(attrId);
+                        if (index > -1) {
+                            profiles.splice(index, 1);
+                        }
+                    } else {
+                        profiles.push(attrId);
+                    }
+                });
+
+           
+           // var profiles = $('#composeProfiles').val();
             var message = $('#composeMessage').val();
             var updatedmessage = "";
             message = encodeURIComponent(message);
@@ -237,11 +277,11 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             }
             else {
                 $scope.dispbtn = true;
-                if (profiles.length < 0) {
+                if (profiles.length == 0) {
                     swal('please select profile');
                 }
                 else {
-                    swal('Please enter some text to compose this message');
+                    swal('Please select atleast one profile');
                 }
             }
         }
@@ -279,18 +319,17 @@ SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
             $timeout(function () {
                 console.log("myRepeatFeedTimeoutDirective Called");
                 var $containerProducts = $("#products");
-                $containerProducts.imagesLoaded(function () {
-                    $containerProducts.masonry({
-                        itemSelector: ".product",
-                        columnWidth: ".product-sizer",
-                    });
+                //$containerProducts.imagesLoaded(function () {
+                $containerProducts.masonry({
+                    itemSelector: ".product",
+                    columnWidth: ".product-sizer",
                 });
-
-
             });
-        }
-    };
-})
+
+
+        };
+    }
+});
 
 
 SocioboardApp.directive('afterRender', function ($timeout) {
@@ -299,4 +338,4 @@ SocioboardApp.directive('afterRender', function ($timeout) {
             $('.dropify').dropify();
         });
     };
-})
+});

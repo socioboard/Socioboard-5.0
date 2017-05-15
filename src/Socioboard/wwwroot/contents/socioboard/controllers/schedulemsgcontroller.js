@@ -52,6 +52,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         //datess
         debugger;
         $scope.schedulemsg = function (datess) {
+            debugger;
             $scope.repeat = false;
             var profiles = $('#scheduleprofiles').val();
             var message = $('#ScheduleMsg').val();
@@ -337,6 +338,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         $scope.draftmsg = function () {
             var message = $('#ScheduleMsg').val();
+            var testmessage = message;
             var updatedmessage = "";
             var postdata = message.split("\n");
             for (var i = 0; i < postdata.length; i++) {
@@ -364,8 +366,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             var newdate = new Date(date).toUTCString();
 
             
-
-            if (message != "" && message != undefined) {
+            debugger;
+            if (/\S/.test(testmessage)) {
                 $scope.checkfile();//added on 19/10/2016
                 if ($scope.check == true)
                 {

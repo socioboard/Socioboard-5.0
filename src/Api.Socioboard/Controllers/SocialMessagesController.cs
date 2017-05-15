@@ -55,7 +55,7 @@ namespace Api.Socioboard.Controllers
             var filename = "";
             var apiimgPath = "";
             var uploads = string.Empty;
-            string postmessage = "";
+            
 
             if (files != null)
             {
@@ -118,13 +118,95 @@ namespace Api.Socioboard.Controllers
 
                 if (item.StartsWith("fb"))
                 {
+                    string updatedtext = "";
+                    string postmessage = "";
+                    string url = "";
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        string[] updatedmessgae = Regex.Split(message, "<br>");
+                        foreach (var items in updatedmessgae)
+                        {
+                            if (!string.IsNullOrEmpty(items))
+                            {
+                                if (items.Contains("https://") || items.Contains("http://"))
+                                {
+                                    if (string.IsNullOrEmpty(url))
+                                    {
+                                        url = items;
+                                        if (items.Contains("https://"))
+                                        {
+                                            string links = getBetween(url + "###", "https", "###");
+                                            links = "https" + links;
+                                            try
+                                            {
+                                                url = links.Split(' ')[0].ToString();
+                                            }
+                                            catch (Exception)
+                                            {
+                                                url = links;
+                                            }
+                                        }
+                                        if (items.Contains("http://"))
+                                        {
+                                            string links = getBetween(url + "###", "http", "###");
+                                            links = "http" + links;
+                                            try
+                                            {
+                                                url = links.Split(' ')[0].ToString();
+                                            }
+                                            catch (Exception)
+                                            {
+                                                url = links;
+                                            }
+                                        }
+
+                                    }
+
+                                }
+                                if (items.Contains("hhh") || items.Contains("nnn"))
+                                {
+                                    if (items.Contains("hhh"))
+                                    {
+                                        postmessage = postmessage + "\n\r" + items.Replace("hhh", "#");
+                                    }
+                                    else
+                                    {
+                                        postmessage = postmessage + "\n\r" + items;
+                                    }
+                                }
+                                else
+                                {
+                                    postmessage = postmessage + "\n\r" + items;
+                                }
+                            }
+
+                        }
+                    }
+                    try
+                    {
+                        if (!string.IsNullOrEmpty(url))
+                        {
+                            updatedtext = postmessage.Replace(url, "");
+                            link = url;
+                        }
+                        else
+                        {
+                            updatedtext = postmessage;
+                        }
+
+
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
                     try
                     {
                         new Thread(delegate ()
                         {
                             string prId = item.Substring(3, item.Length - 3);
                             Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, message, prId, userId, uploads, link, dbr, _logger);
+                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, dbr, _logger);
 
                         }).Start();
                     }
@@ -235,11 +317,29 @@ namespace Api.Socioboard.Controllers
                         try
                         {
                             link = "http" + getBetween(item, "http", " ");
+                            try
+                            {
+                                link = link.Split(' ')[0].ToString();
+                            }
+                            catch (Exception)
+                            {
+
+                                link = "http" + getBetween(item, "http", " ");
+                            }
                         }
                         catch
                         {
                             string temp_item = item + "###";
                             link = "http" + getBetween(temp_item, "http", "###");
+                            try
+                            {
+                                link = link.Split(' ')[0].ToString();
+                            }
+                            catch (Exception)
+                            {
+
+                                link = "http" + getBetween(temp_item, "http", "###");
+                            }
                         }
                     }
                     if (item.Contains("hhh") || item.Contains("nnn"))
@@ -255,9 +355,13 @@ namespace Api.Socioboard.Controllers
                     }
                 }
             }
-            if (!string.IsNullOrEmpty(link))
+            try
             {
-                message = postmessage.Replace(link, ""); ; 
+                message = postmessage.Replace(link, ""); ;
+            }
+            catch (Exception ex)
+            {
+                message = postmessage;
             }
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
@@ -384,13 +488,27 @@ namespace Api.Socioboard.Controllers
                                         {
                                             string link = getBetween(url + "###", "https", "###");
                                             link = "https" + link;
-                                            url = link;
+                                            try
+                                            {
+                                                url = link.Split(' ')[0].ToString();
+                                            }
+                                            catch (Exception)
+                                            {
+                                                link = "https" + link;
+                                            }
                                         }
                                         if (items.Contains("http://"))
                                         {
                                             string link = getBetween(url + "###", "http", "###");
                                             link = "http" + link;
-                                            url = link;
+                                            try
+                                            {
+                                                url = link.Split(' ')[0].ToString();
+                                            }
+                                            catch (Exception)
+                                            {
+                                                link = "http" + link;
+                                            }
                                         }
 
                                     }
@@ -415,7 +533,14 @@ namespace Api.Socioboard.Controllers
 
                         }
                     }
-                    updatedtext = postmessage.Replace(url,"");
+                    if (!string.IsNullOrEmpty(url))
+                    {
+                        updatedtext = postmessage.Replace(url, "").Replace("ppp", "+");
+                    }
+                    else
+                    {
+                        updatedtext = postmessage.Replace("ppp", "+"); 
+                    }
                     int count = dbr.GetCount<ScheduledMessage>(t => t.shareMessage == updatedtext && t.profileId == objFacebookAccount.FbUserId && t.url == imgUrl && t.scheduleTime.Date == DateTime.UtcNow.Date);
                     if (count > 0)
                     {
@@ -423,7 +548,7 @@ namespace Api.Socioboard.Controllers
                     }
                     else
                     {
-                        
+
                         string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, ids[0], userId, imgUrl, url, dbr, _logger);
                     }
 
@@ -486,13 +611,27 @@ namespace Api.Socioboard.Controllers
                                             {
                                                 string link = getBetween(url + "###", "https", "###");
                                                 link = "https" + link;
-                                                url = link;
+                                                try
+                                                {
+                                                    url = link.Split(' ')[0].ToString();
+                                                }
+                                                catch (Exception)
+                                                {
+                                                    url= link;
+                                                }
                                             }
                                             if (items.Contains("http://"))
                                             {
                                                 string link = getBetween(url + "###", "http", "###");
                                                 link = "http" + link;
-                                                url = link;
+                                                try
+                                                {
+                                                    url = link.Split(' ')[0].ToString();
+                                                }
+                                                catch (Exception)
+                                                {
+                                                    url = link;
+                                                }
                                             }
                                         }
 
@@ -515,7 +654,7 @@ namespace Api.Socioboard.Controllers
                                 }
                             }
                         }
-                        updatedtext = postmessage;
+                        updatedtext = postmessage.Replace("ppp", "+");
                         DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(ids[0], _redisCache, dbr);
                         Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objFacebookAccount.FbUserName, updatedtext.ToString(), Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, url, imgUrl, "https://graph.facebook.com/" + ids[0] + "/picture?type=small", scheduleTime, localscheduleTime, _appSettings, _redisCache, dbr, _logger);
@@ -586,7 +725,7 @@ namespace Api.Socioboard.Controllers
                     }
                 }
             }
-          return Ok(uploads);
+            return Ok(uploads);
         }
 
         [HttpPost("SchedulePagePost")]
@@ -599,8 +738,6 @@ namespace Api.Socioboard.Controllers
             {
                 try
                 {
-
-
                     foreach (var items in profileId.Split(','))
                     {
                         string pageUrls = Request.Form["pageUrls"];

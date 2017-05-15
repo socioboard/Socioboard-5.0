@@ -8,39 +8,59 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         $scope.check = false;
         $scope.draftbtn = true;
 
-        $scope.selectedvalue = true;
-        $scope.selectclick = function () {
-              var selectedvals = $scope.composeProfiles;
-            var selectedvals = $('#composeProfiles').val();
-            if (selectedvals.indexOf("selectall") != -1) {
-                var alloptions = $('#composeProfiles option');
-                angular.forEach(alloptions, function (value, key) {
-                    //alert(value);
-                    var tempval = value.value;//$(a).val();
-                    var selectvalindex = selectedvals.indexOf(tempval);
-                    if (selectvalindex == -1) {
-                        if (tempval != "selectall" && tempval != "select") {
-                            selectedvals.push(tempval);
-                        }
-                    } else {
-                        selectedvals.splice(selectvalindex);
-                    }
-                });
-                if ($scope.selectedvalue == true) {
-                    $('.dropdown-content > li:not(:first-child)').addClass("active").find('input').prop('checked', true);
-                    $scope.selectedvalue = false;
+        //$scope.selectedvalue = true;
+        //$scope.selectclick = function () {
+        //      var selectedvals = $scope.composeProfiles;
+        //    var selectedvals = $('#composeProfiles').val();
+        //    if (selectedvals.indexOf("selectall") != -1) {
+        //        var alloptions = $('#composeProfiles option');
+        //        angular.forEach(alloptions, function (value, key) {
+        //            //alert(value);
+        //            var tempval = value.value;//$(a).val();
+        //            var selectvalindex = selectedvals.indexOf(tempval);
+        //            if (selectvalindex == -1) {
+        //                if (tempval != "selectall" && tempval != "select") {
+        //                    selectedvals.push(tempval);
+        //                }
+        //            } else {
+        //                selectedvals.splice(selectvalindex);
+        //            }
+        //        });
+        //        if ($scope.selectedvalue == true) {
+        //            $('.dropdown-content > li:not(:first-child)').addClass("active").find('input').prop('checked', true);
+        //            $scope.selectedvalue = false;
 
-                }
-                else {
-                    $('.dropdown-content > li:not(:first-child)').removeClass("active").find('input').prop('checked', false);
-                    $scope.selectedvalue = true;
+        //        }
+        //        else {
+        //            $('.dropdown-content > li:not(:first-child)').removeClass("active").find('input').prop('checked', false);
+        //            $scope.selectedvalue = true;
 
-                }
-            }
+        //        }
+        //    }
 
+        //}
+
+        var getAllSelected = function () {
+            var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
+                return profile.Selected;
+            });
+
+            return selectedItems.length === $rootScope.lstProfiles.length;
         }
 
+        var setAllSelected = function (value) {
+            angular.forEach($rootScope.lstProfiles, function (profile) {
+                profile.Selected = value;
+            });
+        }
 
+        $scope.allSelected = function (value) {
+            if (value !== undefined) {
+                return setAllSelected(value);
+            } else {
+                return getAllSelected();
+            }
+        }
 
        
         //Auth.login().success(function () { });
@@ -121,8 +141,22 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
       
             //code for compose message start
             $scope.ComposeMessage = function () {
+                var profiles = new Array();
+                $("#checkboxdata .subcheckbox").each(function () {
+                    debugger;
+                    var attrId = $(this).attr("id");
+                    if (document.getElementById(attrId).checked == false) {
+                        var index = profiles.indexOf(attrId);
+                        if (index > -1) {
+                            profiles.splice(index, 1);
+                        }
+                    } else {
+                        profiles.push(attrId);
+                    }
+                });
+
                 $scope.dispbtn = false;
-                var profiles = $('#composeProfiles').val();
+               // var profiles = $('#composeProfiles').val();
                 var message = $('#composeMessage').val();
                 var updatedmessage = "";
                 var testmsg=message;
@@ -134,7 +168,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 // updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
 
               
-                    if (profiles != null && /\S/.test(testmsg)) {
+                    if (profiles.length != 0 && /\S/.test(testmsg)) {
                     $scope.checkfile();
                     if ($scope.check == true) {
                         var formData = new FormData();
@@ -166,7 +200,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 }
                 else {
                     $scope.dispbtn = true;
-                    if (profiles == null) {
+                    if (profiles.length == 0) {
                         swal('Please select a profile');
                     }
                     else {
@@ -908,3 +942,4 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         });
 });
+

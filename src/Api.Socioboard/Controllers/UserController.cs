@@ -1789,7 +1789,7 @@ namespace Api.Socioboard.Controllers
             string html = System.IO.File.ReadAllText(path);
             html = html.Replace("[FirstName]", demoReq.firstName);
             html = html.Replace("[AccountType]", demoReq.demoPlanType.ToString());
-            _emailSender.SendMailSendGrid("", "", "", "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+            _emailSender.SendMailSendGrid("", "", "sumit@socioboard.com", "", _appSettings.ccmail, "Customer requested for demo enterprise plan ", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
             return Ok("Mail Sent Successfully.");
 
         }

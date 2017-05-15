@@ -1,39 +1,57 @@
 <script>
-(function($) {
-  $(document).ready(function() {
-      $('#composeProfiles option').each(function (index) {
-          if (index == 2)
-          {
-              $(this).html('<img src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
-          }
-          //if (index == 3 || index == 4)
-          //{
-          //     $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
-          //}
-          if (index == 3) {
-              $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
-          }
-           if (index == 4)
-          {
-               $(this).html('<img src="/contents/socioboard/images/twticon.png">' + $(this).html());
-          }
-           if (index == 5)
-          {
-               $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
-          }
-           if (index == 6)
-          {
-               $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
-          }
-      //$(this).html('<img src="http://jsfiddle.net/img/logo.png">' + $(this).html());
-    })
-  });
-})(jQuery);
+    (function ($) {
+        $(document).ready(function () {
+            $('#composeProfiles option').each(function (index) {
+                if (index == 2) {
+                    $(this).html('<img src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
+                }
+                //if (index == 3 || index == 4)
+                //{
+                //     $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+                //}
+                if (index == 3) {
+                    $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+                }
+                if (index == 4) {
+                    $(this).html('<img src="/contents/socioboard/images/twticon.png">' + $(this).html());
+                }
+                if (index == 5) {
+                    $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+                }
+                if (index == 6) {
+                    $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+                }
+                //$(this).html('<img src="http://jsfiddle.net/img/logo.png">' + $(this).html());
+            })
+        });
+    })(jQuery);
 
 
 
 
 </script>
+<style>
+    ul.shinh li label {
+        font-size: 15px;
+        color: #333;
+        padding: 0 10px;
+        color: #ff4081;
+    }
+
+    ul.shinh li:hover {
+        background: #e5e5e5;
+        color: #ff4081;
+        cursor: pointer;
+        padding: 0 10px;
+    }
+
+    ul.shinh li label input {
+        margin-right: 10px;
+        height: 20px;
+        width: 20px;
+        background: transparent !important;
+    }
+</style>
 <div data-ng-controller="DashboardController">
     <!-- Page name -->
     <div class="container">
@@ -55,7 +73,7 @@
                         <a href="#/inboxmessage" class="white-text">View Details</a>
                     </div>
                 </div>
-               
+
             </div>
             <div class="col s12 m6 l3">
                 <div class="card green white-text">
@@ -80,7 +98,7 @@
                         <a href="#/twitterreports" class="white-text">View Details</a>
                     </div>
                 </div>
-               
+
             </div>
             <div class="col s12 m6 l3">
                 <div class="card light-blue darken-4 white-text">
@@ -92,13 +110,12 @@
                         <a href="#/facebookreport.html" class="white-text">View Details</a>
                     </div>
                 </div>
-                
+
             </div>
 
         </div>
     </div>
     <!--card stats end-->
-    
     <!-- START CONTENT -->
     <section id="content">
         <div class="row">
@@ -192,10 +209,9 @@
                                 </div>
                             </div>
                             <!--facebook profiles binding end-->
-
                             <!--facebook pages binding start-->
                             <div class="col s12 m6 l4" ng-repeat="fbProfile in  lstFbProfiles ">
-                                <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType != 0" >
+                                <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType != 0">
                                     <div class="card-image waves-effect waves-block waves-light">
                                         <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}">
                                         <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}">
@@ -221,7 +237,9 @@
                                     </div>-->
                                 </div>
                             </div>
-                            
+
+
+
                             <!--facebook pages binging end-->
                             <!--twitter profiles bind start-->
                             <div class="col s12 m6 l4" ng-repeat="twtProfile in lstTwtProfiles">
@@ -295,7 +313,7 @@
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{gAProfile.views}}</p>
                                     </div>
                                     <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{gAProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <span class="card-title grey-text text-darken-4 truncate" title="{{gAProfile.gaProfileName}}">{{gAProfile.gaProfileName}}<i class="mdi-navigation-close right"></i></span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i><span class="cyan-text text-darken-2">Visits:</span> {{gAProfile.visits}}</p>
                                         <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{gAProfile.views}}</p>
                                         <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Website URL"></i><span class="cyan-text text-darken-2">Website URL:</span> <span title="{{gAProfile.websiteUrl}}">{{gAProfile.websiteUrl}}</span></p>
@@ -328,12 +346,11 @@
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="User Name"></i><span class="cyan-text text-darken-2">User Name:</span> <span title="{{insProfile.insUserName}}">{{insProfile.insUserName}}</span></p>
                                         <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> <span class="cyan-text text-darken-2">Followers:</span>{{insProfile.followers}}</p>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i><span class="cyan-text text-darken-2">Following:</span> {{insProfile.followedBy}}</p>
-                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i><span class="cyan-text text-darken-2">Total Images:</span> {{insProfile.totalImages}}</p>
+                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Posts"></i><span class="cyan-text text-darken-2">Total Posts:</span> {{insProfile.totalImages}}</p>
                                     </div>
                                 </div>
                             </div>
                             <!--instagram profiles bind end-->
-
                             <!--Youtube Channels binding start-->
                             <div class="col s12 m6 l4" ng-repeat="yTChannel in lstYChannel">
                                 <div id="profile-card" class="card">
@@ -360,7 +377,6 @@
                                 </div>
                             </div>
                             <!--Youtube Channels binding end-->
-
                             <!--LinkedIn Comapany page profiles bind start-->
                             <div class="col s12 m6 l4" ng-repeat="linProfile in lstlincmpnyProfiles">
                                 <div id="profile-card" class="card">
@@ -393,263 +409,263 @@
                     </div>
                     <!--card widgets end-->
                     <!--<div class="row">
-                <div class="col s12 m6 l6">
-                    <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook recents 5 feeds</h5>
-                        <ul class="collection" id="facebookfeeds">
-                            <li class="collection-item avatar">
-                                <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
-                                <span class="email-title">Chanchal Santra</span>
-                                <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
-                                <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/13116515_1357421374283652_6442434339184477799_o.jpg" class="responsive-img">
-                                <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
-                            </li>
-                            <li class="collection-item avatar">
-                                <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
-                                <span class="email-title">Chanchal</span>
-                                <p class="truncate grey-text ultra-small">You have #Google+ request from #Abhi.</p>
-                                <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/s2048x2048/13055267_1351271541565302_7957063152613596705_o.jpg" class="responsive-img">
-                                <a href="#!" class="secondary-content">09:09am</a>
-                            </li>
-                            <li class="collection-item avatar">
-                                <span class="circle red lighten-1">A</span>
-                                <span class="email-title">Updates</span>
-                                <p class="truncate grey-text ultra-small">Google play application updates for your mobile.</p>
-                                <a href="#!" class="secondary-content"><span class="new badge yellow darken-3">2</span></a>
-                            </li>
-                            <li class="collection-item avatar">
-                                <span class="circle red lighten-1">A</span>
-                                <span class="email-title">Amazone.com</span>
-                                <p class="truncate grey-text ultra-small">Summer sale is now going on.</p>
-                                <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
-                            </li>
-                            <li class="collection-item avatar">
-                                <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c8.23.160.160/p200x200/13178649_1357425650949891_8586748233671236725_n.jpg?oh=716a8ae726c63379fa46c5236d9cb29c&oe=57E12897" alt="" class="circle">
-                                <span class="email-title">Andy Brown</span>
-                                <p class="truncate grey-text text-darken-2 ultra-small">Hay Joe, we have next project for this summer.</p>
-                                <a href="#!" class="secondary-content email-time"><span class="grey-text ultra-small">12:10am</span></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col s12 m6 l6">
-                    <div class="card" id="feeds">
-                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Twitter recents 5 feeds</h5>
-                        <ul class="collection" id="twtfeeds">
-                            <li class="collection-item avatar">
-                                <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
-                                <span class="email-title">Chanchal Santra</span>
-                                <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
-                                <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/13116515_1357421374283652_6442434339184477799_o.jpg" class="responsive-img">
-                                <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
-                            </li>
-                            <li class="collection-item avatar">
-                                <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
-                                <span class="email-title">Promotions</span>
-                                <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
-                                <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/s2048x2048/13055267_1351271541565302_7957063152613596705_o.jpg" class="responsive-img">
-                                <a href="#!" class="secondary-content"><span class="new badge green">6</span></a>
-                            </li>
-                            <li class="collection-item avatar">
-                                <span class="circle red lighten-1">A</span>
-                                <span class="email-title">Updates</span>
-                                <p class="truncate grey-text ultra-small">Google play application updates for your mobile.</p>
-                                <a href="#!" class="secondary-content"><span class="new badge yellow darken-3">2</span></a>
-                            </li>
-                            <li class="collection-item avatar">
-                                <span class="circle red lighten-1">A</span>
-                                <span class="email-title">Amazone.com</span>
-                                <p class="truncate grey-text ultra-small">Summer sale is now going on.</p>
-                                <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
-                            </li>
-                            <li class="collection-item avatar">
-                                <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c8.23.160.160/p200x200/13178649_1357425650949891_8586748233671236725_n.jpg?oh=716a8ae726c63379fa46c5236d9cb29c&oe=57E12897" alt="" class="circle">
-                                <span class="email-title">Andy Brown</span>
-                                <p class="truncate grey-text text-darken-2 ultra-small">Hay Joe, we have next project for this summer.</p>
-                                <a href="#!" class="secondary-content email-time"><span class="grey-text ultra-small">12:10am</span></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>-->
+                        <div class="col s12 m6 l6">
+                            <div class="card" id="feeds">
+                                <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook recents 5 feeds</h5>
+                                <ul class="collection" id="facebookfeeds">
+                                    <li class="collection-item avatar">
+                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                                        <span class="email-title">Chanchal Santra</span>
+                                        <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
+                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/13116515_1357421374283652_6442434339184477799_o.jpg" class="responsive-img">
+                                        <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
+                                    </li>
+                                    <li class="collection-item avatar">
+                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                                        <span class="email-title">Chanchal</span>
+                                        <p class="truncate grey-text ultra-small">You have #Google+ request from #Abhi.</p>
+                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/s2048x2048/13055267_1351271541565302_7957063152613596705_o.jpg" class="responsive-img">
+                                        <a href="#!" class="secondary-content">09:09am</a>
+                                    </li>
+                                    <li class="collection-item avatar">
+                                        <span class="circle red lighten-1">A</span>
+                                        <span class="email-title">Updates</span>
+                                        <p class="truncate grey-text ultra-small">Google play application updates for your mobile.</p>
+                                        <a href="#!" class="secondary-content"><span class="new badge yellow darken-3">2</span></a>
+                                    </li>
+                                    <li class="collection-item avatar">
+                                        <span class="circle red lighten-1">A</span>
+                                        <span class="email-title">Amazone.com</span>
+                                        <p class="truncate grey-text ultra-small">Summer sale is now going on.</p>
+                                        <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
+                                    </li>
+                                    <li class="collection-item avatar">
+                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c8.23.160.160/p200x200/13178649_1357425650949891_8586748233671236725_n.jpg?oh=716a8ae726c63379fa46c5236d9cb29c&oe=57E12897" alt="" class="circle">
+                                        <span class="email-title">Andy Brown</span>
+                                        <p class="truncate grey-text text-darken-2 ultra-small">Hay Joe, we have next project for this summer.</p>
+                                        <a href="#!" class="secondary-content email-time"><span class="grey-text ultra-small">12:10am</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col s12 m6 l6">
+                            <div class="card" id="feeds">
+                                <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Twitter recents 5 feeds</h5>
+                                <ul class="collection" id="twtfeeds">
+                                    <li class="collection-item avatar">
+                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                                        <span class="email-title">Chanchal Santra</span>
+                                        <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
+                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/13116515_1357421374283652_6442434339184477799_o.jpg" class="responsive-img">
+                                        <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
+                                    </li>
+                                    <li class="collection-item avatar">
+                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                                        <span class="email-title">Promotions</span>
+                                        <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
+                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/s2048x2048/13055267_1351271541565302_7957063152613596705_o.jpg" class="responsive-img">
+                                        <a href="#!" class="secondary-content"><span class="new badge green">6</span></a>
+                                    </li>
+                                    <li class="collection-item avatar">
+                                        <span class="circle red lighten-1">A</span>
+                                        <span class="email-title">Updates</span>
+                                        <p class="truncate grey-text ultra-small">Google play application updates for your mobile.</p>
+                                        <a href="#!" class="secondary-content"><span class="new badge yellow darken-3">2</span></a>
+                                    </li>
+                                    <li class="collection-item avatar">
+                                        <span class="circle red lighten-1">A</span>
+                                        <span class="email-title">Amazone.com</span>
+                                        <p class="truncate grey-text ultra-small">Summer sale is now going on.</p>
+                                        <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
+                                    </li>
+                                    <li class="collection-item avatar">
+                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c8.23.160.160/p200x200/13178649_1357425650949891_8586748233671236725_n.jpg?oh=716a8ae726c63379fa46c5236d9cb29c&oe=57E12897" alt="" class="circle">
+                                        <span class="email-title">Andy Brown</span>
+                                        <p class="truncate grey-text text-darken-2 ultra-small">Hay Joe, we have next project for this summer.</p>
+                                        <a href="#!" class="secondary-content email-time"><span class="grey-text ultra-small">12:10am</span></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>-->
                     <!--<div id="task">
-                <div class="row">
-                    <div class="col s12 m12 l4">
-                        <ul id="task-card" class="collection with-header">
-                            <li class="collection-header cyan">
-                                <h4 class="task-card-title">My Task</h4>
-                                <p class="task-card-date">March 26, 2015</p>
-                            </li>
-                            <li class="collection-item dismissable">
-                                <input type="checkbox" id="task1" />
-                                <label for="task1">
-                                    Create Mobile App UI. <a href="#" class="secondary-content"><span class="ultra-small">Today</span></a>
-                                </label>
-                                <span class="task-cat teal">Mobile App</span>
-                            </li>
-                            <li class="collection-item dismissable">
-                                <input type="checkbox" id="task2" />
-                                <label for="task2">
-                                    Check the new API standerds. <a href="#" class="secondary-content"><span class="ultra-small">Monday</span></a>
-                                </label>
-                                <span class="task-cat purple">Web API</span>
-                            </li>
-                            <li class="collection-item dismissable">
-                                <input type="checkbox" id="task3" checked="checked" />
-                                <label for="task3">
-                                    Check the new Mockup of ABC. <a href="#" class="secondary-content"><span class="ultra-small">Wednesday</span></a>
-                                </label>
-                                <span class="task-cat pink">Mockup</span>
-                            </li>
-                            <li class="collection-item dismissable">
-                                <input type="checkbox" id="task4" checked="checked" disabled="disabled" />
-                                <label for="task4">I did it !</label>
-                                <span class="task-cat cyan">Mobile App</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>-->
+                        <div class="row">
+                            <div class="col s12 m12 l4">
+                                <ul id="task-card" class="collection with-header">
+                                    <li class="collection-header cyan">
+                                        <h4 class="task-card-title">My Task</h4>
+                                        <p class="task-card-date">March 26, 2015</p>
+                                    </li>
+                                    <li class="collection-item dismissable">
+                                        <input type="checkbox" id="task1" />
+                                        <label for="task1">
+                                            Create Mobile App UI. <a href="#" class="secondary-content"><span class="ultra-small">Today</span></a>
+                                        </label>
+                                        <span class="task-cat teal">Mobile App</span>
+                                    </li>
+                                    <li class="collection-item dismissable">
+                                        <input type="checkbox" id="task2" />
+                                        <label for="task2">
+                                            Check the new API standerds. <a href="#" class="secondary-content"><span class="ultra-small">Monday</span></a>
+                                        </label>
+                                        <span class="task-cat purple">Web API</span>
+                                    </li>
+                                    <li class="collection-item dismissable">
+                                        <input type="checkbox" id="task3" checked="checked" />
+                                        <label for="task3">
+                                            Check the new Mockup of ABC. <a href="#" class="secondary-content"><span class="ultra-small">Wednesday</span></a>
+                                        </label>
+                                        <span class="task-cat pink">Mockup</span>
+                                    </li>
+                                    <li class="collection-item dismissable">
+                                        <input type="checkbox" id="task4" checked="checked" disabled="disabled" />
+                                        <label for="task4">I did it !</label>
+                                        <span class="task-cat cyan">Mobile App</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>-->
                     <!--work collections start-->
                     <!--<div id="work-collections">
-                <div class="row">
-                    <div class="col s12 m12 l6">
-                        <ul id="projects-collection" class="collection">
-                            <li class="collection-item avatar">
-                                <i class="mdi-file-folder circle light-blue darken-2"></i>
-                                <span class="collection-header">Board Me</span>
-                                <p>Your Favorites</p>
-                                <a href="#" class="secondary-content">view all</a>
-                            </li>
-                            <li class="collection-item">
-                                <div class="row">
-                                    <div class="col s9">
-                                        <p class="collections-title">ChanchalSantra</p>
-                                        <p class="collections-content"><a href="https://www.socioboard.com/board/chanchalsantra" target="_blank">https://www.socioboard.com/board/chanchalsantra</a></p>
-                                    </div>
-                                    <div class="col s3">
-                                        <div id="project-line-1"></div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="collection-item">
-                                <div class="row">
-                                    <div class="col s9">
-                                        <p class="collections-title">ChanchalSantra</p>
-                                        <p class="collections-content"><a href="https://www.socioboard.com/board/chanchalsantra" target="_blank">https://www.socioboard.com/board/chanchalsantra</a></p>
-                                    </div>
-                                    <div class="col s3">
-                                        <div id="project-line-2"></div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="collection-item">
-                                <div class="row">
-                                    <div class="col s9">
-                                        <p class="collections-title">ChanchalSantra</p>
-                                        <p class="collections-content"><a href="https://www.socioboard.com/board/chanchalsantra" target="_blank">https://www.socioboard.com/board/chanchalsantra</a></p>
-                                    </div>
-                                    <div class="col s3">
-                                        <div id="project-line-3"></div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="collection-item">
-                                <div class="row">
-                                    <div class="col s9">
-                                        <p class="collections-title">ChanchalSantra</p>
-                                        <p class="collections-content"><a href="https://www.socioboard.com/board/chanchalsantra" target="_blank">https://www.socioboard.com/board/chanchalsantra</a></p>
-                                    </div>
-                                    <div class="col s3">
-                                        <div id="project-line-4"></div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="col s12 m12 l6">
-                        <ul id="issues-collection" class="collection">
-                            <li class="collection-item avatar">
-                                <i class="mdi-action-bug-report circle red darken-2"></i>
-                                <span class="collection-header">Issues</span>
-                                <p>Assigned to you</p>
-                                <a href="#" class="secondary-content"><i class="mdi-action-grade"></i></a>
-                            </li>
-                            <li class="collection-item">
-                                <div class="row">
-                                    <div class="col s7">
-                                        <p class="collections-title"><strong>#102</strong> Home Page</p>
-                                        <p class="collections-content">Web Project</p>
-                                    </div>
-                                    <div class="col s2">
-                                        <span class="task-cat pink accent-2">P1</span>
-                                    </div>
-                                    <div class="col s3">
-                                        <div class="progress">
-                                            <div class="determinate" style="width: 70%"></div>
+                        <div class="row">
+                            <div class="col s12 m12 l6">
+                                <ul id="projects-collection" class="collection">
+                                    <li class="collection-item avatar">
+                                        <i class="mdi-file-folder circle light-blue darken-2"></i>
+                                        <span class="collection-header">Board Me</span>
+                                        <p>Your Favorites</p>
+                                        <a href="#" class="secondary-content">view all</a>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row">
+                                            <div class="col s9">
+                                                <p class="collections-title">ChanchalSantra</p>
+                                                <p class="collections-content"><a href="https://www.socioboard.com/board/chanchalsantra" target="_blank">https://www.socioboard.com/board/chanchalsantra</a></p>
+                                            </div>
+                                            <div class="col s3">
+                                                <div id="project-line-1"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="collection-item">
-                                <div class="row">
-                                    <div class="col s7">
-                                        <p class="collections-title"><strong>#108</strong> API Fix</p>
-                                        <p class="collections-content">API Project </p>
-                                    </div>
-                                    <div class="col s2">
-                                        <span class="task-cat yellow darken-4">P2</span>
-                                    </div>
-                                    <div class="col s3">
-                                        <div class="progress">
-                                            <div class="determinate" style="width: 40%"></div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row">
+                                            <div class="col s9">
+                                                <p class="collections-title">ChanchalSantra</p>
+                                                <p class="collections-content"><a href="https://www.socioboard.com/board/chanchalsantra" target="_blank">https://www.socioboard.com/board/chanchalsantra</a></p>
+                                            </div>
+                                            <div class="col s3">
+                                                <div id="project-line-2"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="collection-item">
-                                <div class="row">
-                                    <div class="col s7">
-                                        <p class="collections-title"><strong>#205</strong> Profile page css</p>
-                                        <p class="collections-content">New Project </p>
-                                    </div>
-                                    <div class="col s2">
-                                        <span class="task-cat light-green darken-3">P3</span>
-                                    </div>
-                                    <div class="col s3">
-                                        <div class="progress">
-                                            <div class="determinate" style="width: 95%"></div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row">
+                                            <div class="col s9">
+                                                <p class="collections-title">ChanchalSantra</p>
+                                                <p class="collections-content"><a href="https://www.socioboard.com/board/chanchalsantra" target="_blank">https://www.socioboard.com/board/chanchalsantra</a></p>
+                                            </div>
+                                            <div class="col s3">
+                                                <div id="project-line-3"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </li>
-                            <li class="collection-item">
-                                <div class="row">
-                                    <div class="col s7">
-                                        <p class="collections-title"><strong>#188</strong> SAP Changes</p>
-                                        <p class="collections-content">SAP Project</p>
-                                    </div>
-                                    <div class="col s2">
-                                        <span class="task-cat pink accent-2">P1</span>
-                                    </div>
-                                    <div class="col s3">
-                                        <div class="progress">
-                                            <div class="determinate" style="width: 10%"></div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row">
+                                            <div class="col s9">
+                                                <p class="collections-title">ChanchalSantra</p>
+                                                <p class="collections-content"><a href="https://www.socioboard.com/board/chanchalsantra" target="_blank">https://www.socioboard.com/board/chanchalsantra</a></p>
+                                            </div>
+                                            <div class="col s3">
+                                                <div id="project-line-4"></div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>-->
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col s12 m12 l6">
+                                <ul id="issues-collection" class="collection">
+                                    <li class="collection-item avatar">
+                                        <i class="mdi-action-bug-report circle red darken-2"></i>
+                                        <span class="collection-header">Issues</span>
+                                        <p>Assigned to you</p>
+                                        <a href="#" class="secondary-content"><i class="mdi-action-grade"></i></a>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row">
+                                            <div class="col s7">
+                                                <p class="collections-title"><strong>#102</strong> Home Page</p>
+                                                <p class="collections-content">Web Project</p>
+                                            </div>
+                                            <div class="col s2">
+                                                <span class="task-cat pink accent-2">P1</span>
+                                            </div>
+                                            <div class="col s3">
+                                                <div class="progress">
+                                                    <div class="determinate" style="width: 70%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row">
+                                            <div class="col s7">
+                                                <p class="collections-title"><strong>#108</strong> API Fix</p>
+                                                <p class="collections-content">API Project </p>
+                                            </div>
+                                            <div class="col s2">
+                                                <span class="task-cat yellow darken-4">P2</span>
+                                            </div>
+                                            <div class="col s3">
+                                                <div class="progress">
+                                                    <div class="determinate" style="width: 40%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row">
+                                            <div class="col s7">
+                                                <p class="collections-title"><strong>#205</strong> Profile page css</p>
+                                                <p class="collections-content">New Project </p>
+                                            </div>
+                                            <div class="col s2">
+                                                <span class="task-cat light-green darken-3">P3</span>
+                                            </div>
+                                            <div class="col s3">
+                                                <div class="progress">
+                                                    <div class="determinate" style="width: 95%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="collection-item">
+                                        <div class="row">
+                                            <div class="col s7">
+                                                <p class="collections-title"><strong>#188</strong> SAP Changes</p>
+                                                <p class="collections-content">SAP Project</p>
+                                            </div>
+                                            <div class="col s2">
+                                                <span class="task-cat pink accent-2">P1</span>
+                                            </div>
+                                            <div class="col s3">
+                                                <div class="progress">
+                                                    <div class="determinate" style="width: 10%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>-->
                     <!--work collections end-->
                 </div>
                 <!--end container-->
             </div>
             <div class="col s12 m4 l4">
                 <!--start container-->
-                
+
                 <div class="container">
                     <div class="card-panel grey lighten-5 z-depth-1">
                         <h6 class="r_side_title"><i class="icon-users"></i>Social Profiles</h6>
@@ -668,19 +684,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                    <div class="row card" ng-if="profile.profileType==0">
-                                                        <a href="https://www.facebook.com/{{profile.profileId}}" target="_blank">
-                                                            <div class="col l3 m3 s3">
-                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                            </div>
-                                                            <div class="col l7 m7 s7">
-                                                                <span class="truncate">{{profile.profileName}}</span>
-                                                            </div>
-                                                        </a>
-                                                            <div class="col l2 m2 s2 margin-top-10">
-                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                            </div>
+                                                <div class="row card" ng-if="profile.profileType==0">
+                                                    <a href="https://www.facebook.com/{{profile.profileId}}" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -690,20 +706,20 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                
-                                                    <div class="row card" ng-if="profile.profileType==1">
-                                                        <a href="https://www.facebook.com/{{profile.profileName}}" target="_blank">
-                                                            <div class="col l3 m3 s3">
-                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                            </div>
-                                                            <div class="col l7 m7 s7">
-                                                                <span class="truncate">{{profile.profileName}}</span>
-                                                            </div>
-                                                        </a>
-                                                        <div class="col l2 m2 s2 margin-top-10">
-                                                            <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+
+                                                <div class="row card" ng-if="profile.profileType==1">
+                                                    <a href="https://www.facebook.com/{{profile.profileName}}" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
                                                         </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -714,19 +730,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                    <div class="row card" ng-if="profile.profileType==2">
-                                                        <a href="https://twitter.com/{{profile.profileName}}" target="_blank">
-                                                            <div class="col l3 m3 s3">
-                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                            </div>
-                                                            <div class="col l7 m7 s7">
-                                                                <span class="truncate">{{profile.profileName}}</span>
-                                                            </div>
-                                                        </a>
-                                                            <div class="col l2 m2 s2 margin-top-10">
-                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                            </div>
+                                                <div class="row card" ng-if="profile.profileType==2">
+                                                    <a href="https://twitter.com/{{profile.profileName}}" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -736,42 +752,42 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                    <div class="row card" ng-if="profile.profileType==5">
-                                                        <a href="https://plus.google.com/{{profile.profileId}}/posts" target="_blank">
-                                                            <div class="col l3 m3 s3">
-                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                            </div>
-                                                            <div class="col l7 m7 s7">
-                                                                <span class="truncate">{{profile.profileName}}</span>
-                                                            </div>
-                                                        </a>
-                                                            <div class="col l2 m2 s2 margin-top-10">
-                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                            </div>
+                                                <div class="row card" ng-if="profile.profileType==5">
+                                                    <a href="https://plus.google.com/{{profile.profileId}}/posts" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
                                 </li>
-                              
+
                                 <li>
                                     <div class="collapsible-header indigo-text text-darken-4"><i class="fa fa-linkedin fa-fw"></i>Linkedin C Page</div>
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                    <div class="row card" ng-if="profile.profileType==4">
-                                                        <a href="https://www.linkedin.com/company/{{profile.profileId}}" target="_blank">
-                                                            <div class="col l3 m3 s3">
-                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                            </div>
-                                                            <div class="col l7 m7 s7">
-                                                                <span class="truncate">{{profile.profileName}}</span>
-                                                            </div>
-                                                        </a>
-                                                            <div class="col l2 m2 s2 margin-top-10">
-                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                            </div>
-                                                    </div> 
+                                                <div class="row card" ng-if="profile.profileType==4">
+                                                    <a href="https://www.linkedin.com/company/{{profile.profileId}}" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                    </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -781,19 +797,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                    <div class="row card" ng-if="profile.profileType==3">
-                                                        <a href="http://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
-                                                            <div class="col l3 m3 s3">
-                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                            </div>
-                                                            <div class="col l7 m7 s7">
-                                                                <span class="truncate">{{profile.profileName}}</span>
-                                                            </div>
-                                                        </a>
-                                                            <div class="col l2 m2 s2 margin-top-10">
-                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                            </div>
+                                                <div class="row card" ng-if="profile.profileType==3">
+                                                    <a href="http://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -803,19 +819,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                    <div class="row card" ng-if="profile.profileType==8">
-                                                        <a href="http://instagram.com/{{profile.profileName}}" target="_blank">
-                                                            <div class="col l3 m3 s3">
-                                                                <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
-                                                            </div>
-                                                            <div class="col l7 m7 s7">
-                                                                <span class="truncate">{{profile.profileName}}</span>
-                                                            </div>
-                                                        </a>
-                                                            <div class="col l2 m2 s2 margin-top-10">
-                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                            </div>
+                                                <div class="row card" ng-if="profile.profileType==8">
+                                                    <a href="http://instagram.com/{{profile.profileName}}" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -825,19 +841,19 @@
                                     <div class="collapsible-body">
                                         <ul>
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
-                                                    <div class="row card" ng-if="profile.profileType==10">
-                                                        <a href="https://analytics.google.com/analytics/web/" target="_blank">
-                                                            <div class="col l3 m3 s3">
-                                                                <img src="/contents/socioboard/images/G-Ana-icon.png" class="responsive-img">
-                                                            </div>
-                                                            <div class="col l7 m7 s7">
-                                                                <span class="truncate">{{profile.profileName}}</span>
-                                                            </div>
-                                                        </a>
-                                                            <div class="col l2 m2 s2 margin-top-10">
-                                                                <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
-                                                            </div>
+                                                <div class="row card" ng-if="profile.profileType==10">
+                                                    <a href="https://analytics.google.com/analytics/web/" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="/contents/socioboard/images/G-Ana-icon.png" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
@@ -873,66 +889,66 @@
                                 </li>-->
                             </ul>
                         </div>
-                </div>
-                <!--end container-->
-                <!--start container-->
-                <!--<div class="container">
-                    <div class="card-panel grey lighten-5 z-depth-1">
-                        <h6 class="r_side_title"><i class="icon-user-follow"></i>Team Members</h6>
-                        <div class="row">
-                            <div class="col s12 m6 l6">
-                                <div class="card-panel">
-                                    <div class="card-image center-align" data-activates="group_dropdown">
-                                        <i class="icon-user-follow fa-3x" ></i>
+                    </div>
+                    <!--end container-->
+                    <!--start container-->
+                    <!--<div class="container">
+                        <div class="card-panel grey lighten-5 z-depth-1">
+                            <h6 class="r_side_title"><i class="icon-user-follow"></i>Team Members</h6>
+                            <div class="row">
+                                <div class="col s12 m6 l6">
+                                    <div class="card-panel">
+                                        <div class="card-image center-align" data-activates="group_dropdown">
+                                            <i class="icon-user-follow fa-3x" ></i>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>-->
+                    </div>-->
 
-                <ul id='group_dropdown' class='dropdown-content'>
-                    <li ng-repeat="grp in groups">
-                    <a  class="dropdown_text" ng-click="changeGroup(grp.id)">{{grp.groupName}}</a>
-                    </li>
-                    <li class="divider"></li>
-                    <li><a href="#/groups" class="dropdown_text">Create New</a></li>
-                </ul>
-                <!--end container-->
-                <!--start container-->
-                <div class="container">
-                    <div class="card-panel grey lighten-5 z-depth-1">
-                        <h6 class="r_side_title"><i class="icon-user-following"></i>Recent Followers</h6>
-                        <div class="row" id="#recent_followers_list">
-                            <div class="col s12 m6 l6" ng-repeat="twtfollower in TwitterRecentFollower">
-                                <div class="card-panel center">
-                                    <a href="https://twitter.com/{{twtfollower.screen_name}}" target="_blank">
-                                        <div class="card-image">
-                                            <img src="{{twtfollower.profile_image_url}}" title="{{twtfollower.screen_name}}" class="responsive-img">
-                                        </div>
-                                    </a>
+                    <ul id='group_dropdown' class='dropdown-content'>
+                        <li ng-repeat="grp in groups">
+                            <a class="dropdown_text" ng-click="changeGroup(grp.id)">{{grp.groupName}}</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="#/groups" class="dropdown_text">Create New</a></li>
+                    </ul>
+                    <!--end container-->
+                    <!--start container-->
+                    <div class="container">
+                        <div class="card-panel grey lighten-5 z-depth-1">
+                            <h6 class="r_side_title"><i class="icon-user-following"></i>Recent Followers</h6>
+                            <div class="row" id="#recent_followers_list">
+                                <div class="col s12 m6 l6" ng-repeat="twtfollower in TwitterRecentFollower">
+                                    <div class="card-panel center">
+                                        <a href="https://twitter.com/{{twtfollower.screen_name}}" target="_blank">
+                                            <div class="card-image">
+                                                <img src="{{twtfollower.profile_image_url}}" title="{{twtfollower.screen_name}}" class="responsive-img">
+                                            </div>
+                                        </a>
+                                    </div>
                                 </div>
+
                             </div>
-                            
                         </div>
                     </div>
+                    <!--end container-->
                 </div>
-                <!--end container-->
             </div>
         </div>
-            </div>
         <!-- Compose Email Trigger -->
-        <div ng-show="user.TrailStatus!=2"  class="fixed-action-btn" onclick="$('select').material_select('destroy'); $('#composeProfiles').val('');$('select').material_select();" style="bottom: 45px; right: 24px;">
-            <div  class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+        <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select('destroy'); $('#composeProfiles').val('');$('select').material_select();" style="bottom: 45px; right: 24px;">
+            <div class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
                 <i class="large mdi-editor-mode-edit"></i>
             </div>
         </div>
-       <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-                <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan" >
-                    <i class="large mdi-editor-mode-edit"></i>
-                </a>
-       </div>
+        <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+            <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
+                <i class="large mdi-editor-mode-edit"></i>
+            </a>
+        </div>
     </section>
 
 
@@ -955,8 +971,8 @@
                     <div class="col s12 m7 l7 hide-on-med-and-down">
                         <ul class="right">
                             <li>
-                                <div ng-show="dispbtn"  ng-click="ComposeMessage()" ><i class="modal-action  mdi-content-send"></i></div>
-                                <div ng-show="!dispbtn" ><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                                <div ng-show="dispbtn" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                                <div ng-show="!dispbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
                             </li>
                             <!--<li>
                                 <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
@@ -967,9 +983,9 @@
                         <li>
                             <div><i class="modal-action  mdi-content-save"></i></div>
                         </li>-->
-                        <!--<li>
-            <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
-        </li>-->
+                    <!--<li>
+                        <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                    </li>-->
                     <!--</ul>-->
                 </div>
             </nav>
@@ -977,7 +993,7 @@
         <div class="model-email-content">
             <div class="row">
                 <form class="col s12">
-                    
+
                     <div class="row">
                         <div class="input-field col s12">
                             <div class="emoji-picker-container">
@@ -1009,24 +1025,70 @@
                         </div>
                     </div>-->
                     <div id="selection" class="row">
-                        <div class="input-field col s12">
+                        <!--<div class="input-field col s12">
 
                             <select multiple id="composeProfiles" ng-change="selectclick()" ng-model="selectvalue">
                                 <option value="select" disabled my-repeat-dropdown-directive selected>Select Your Account</option>
                                 <option value="selectall">Select all</option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}}</option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:11}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>-->
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:11}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" class="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" class="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" class="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                             </select>
 
+                        </div>-->
+                        <div style="max-height:250px; overflow-y:scroll;">
+                           
+                            <ul class="shinh" id="checkboxdata">
+                                <li style="padding:5px 0;">
+                                    <label>
+                                        <input  type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />
+                                        <span style="float:left;">Check All</span>
+                                    </label>
+                                </li>
+                                <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                    <label >
+                                        <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}"  type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <span style="float:left;">{{profile.profileName}}</span>
+                                        <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                    </label>
+                                </li>
+                                <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                    <label>
+                                        <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <span style="float:left;">{{profile.profileName}}</span>
+                                        <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                    </label>
+                                </li>
+                                <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
+                                    <label>
+                                        <input name="selector[]"  class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <span style="float:left;">{{profile.profileName}}</span>
+                                        <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                    </label>
+                                </li>
+                                <li ng-repeat="profile in lstProfiles | filter:{profileType:3}" style="padding:5px 0;">
+                                    <label>
+                                        <input name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <span style="float:left;">{{profile.profileName}}</span>
+                                        <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                    </label>
+                                </li>
+                                <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
+                                    <label>
+                                        <input name="selector[]" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <span style="float:left;">{{profile.profileName}}</span>
+                                        <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                    </label>
+                                </li>
+                            </ul>
                         </div>
                     </div>
 
                     <div class="row">
-                        <a href="" class="btn btn_style" ng-click="draftMsg()" >Save as Draft</a>
+                        <a href="" class="btn btn_style" ng-click="draftMsg()">Save as Draft</a>
                     </div>
                 </form>
             </div>
@@ -1034,7 +1096,7 @@
     </div>
     <!-- END CONTENT -->
     <!-- add profile -->
-         <div id="addprofile" class="modal">
+    <div id="addprofile" class="modal">
         <div class="modal-content">
             <h4>Adding Profiles</h4>
             <div class="row">
@@ -1056,7 +1118,7 @@
                         <a href="../TwitterManager/AddTwitterAccount?follow=true" id="TwitterAddButton" class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
                         <p>
                             <!-- ng-change="followChange()" -->
-                            <input type="checkbox" ng-click="followChange()"  checked="checked" id="TwitterFollow" />
+                            <input type="checkbox" ng-click="followChange()" checked="checked" id="TwitterFollow" />
                             <label for="TwitterFollow">Follow Socioboard on twitter for update &amp; announcements</label>
                         </p>
                     </div>
@@ -1066,15 +1128,7 @@
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
                         <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
                         <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
-                        <a  class="waves-effect waves-light btn margin-top-10" ng-click="Addfacebookpagebyurl()"><i class="fa fa-facebook fa-fw"></i> Get Facebook Fanpage Analytics</a>
-                        <div class="form-group input-group margin-top-10">
-                            <input type="text" placeholder="Ex: https://www.facebook.com/socioboard" id="_txtinputurl" class="form-control">
-                            <span class="input-group-btn">
-                                <button type="button" ng-click="Addfacebookpagebyurl()"  class="btn btn-info">
-                                    Submit
-                                </button>
-                            </span>
-                        </div>
+                       
                     </div>
                 </div>
                 <div id="google" class="col s12">
@@ -1117,146 +1171,146 @@
             </div>
         </div>
     </div>
-   
-        <div class="modal" id="FbFanpage_Modal" >
-            <div class="modal-content">
-                <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
-               
-                <ul class="collection">
-                    <li class="collection-item avatar" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==0">
-                        <div class="left">
-                            <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
-                            <span class="title">{{fbpages.Name}}</span>
-                            <p>{{fbpages.LikeCount}}</p>
-                        </div>
-                        <p class="right">
-                            <input type="checkbox" value="{{fbpages.AccessToken}}" id="page_{{fbpages.AccessToken}}" ng-click="toggleFbPageProfileSelection(fbpages.AccessToken)">
-                            <label for="page_{{fbpages.AccessToken}}"></label>
-                        </p>
-                    </li>
 
-                    <li class="collection-item avatar disabled" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==1">
-                        <div class="left">
-                            <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
-                            <span class="title">{{fbpages.Name}}</span>
-                            <p>{{fbpages.LikeCount}}</p>
-                        </div>
-                        <p class="right">
-                            <input type="checkbox" checked disabled value="" id="" />
-                            <label for=""></label>
-                        </p>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
-                <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddFacebookPages()">Connect</a>
-            </div>
+    <div class="modal" id="FbFanpage_Modal">
+        <div class="modal-content">
+            <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
+
+            <ul class="collection">
+                <li class="collection-item avatar" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==0">
+                    <div class="left">
+                        <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
+                        <span class="title">{{fbpages.Name}}</span>
+                        <p>{{fbpages.LikeCount}}</p>
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" value="{{fbpages.AccessToken}}" id="page_{{fbpages.AccessToken}}" ng-click="toggleFbPageProfileSelection(fbpages.AccessToken)">
+                        <label for="page_{{fbpages.AccessToken}}"></label>
+                    </p>
+                </li>
+
+                <li class="collection-item avatar disabled" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==1">
+                    <div class="left">
+                        <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
+                        <span class="title">{{fbpages.Name}}</span>
+                        <p>{{fbpages.LikeCount}}</p>
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" checked disabled value="" id="" />
+                        <label for=""></label>
+                    </p>
+                </li>
+            </ul>
         </div>
-       
-        <div class="modal"  id="LinCompanypage_Modal">
-            <div class="modal-content">
-                <h4>CHOOSE LINKED PAGES TO CONNECT</h4>
-                <ul class="collection">
-                   
-                    <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0">
-                        <div class="left">
-                            <img class="circle" alt="" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
-                            <span class="title">{{linpages.PageName}}</span>
-                        </div>
-                        <p class="right">
-                            <input type="checkbox" value="{{linpages.PageId}}" id="page_{{linpages.PageId}}" ng-click="toggleLinkedinProfileSelection(linpages.PageId,linpages._token,linpages.PageName)">
-                            <label for="page_{{linpages.PageId}}"></label>
-                        </p>
-                    </li>
-
-                    <li class="collection-item avatar disabled" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==1">
-                        <div class="left">
-                            <img class="circle" alt="" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
-                            <span class="title">{{linpages.PageName}}</span>
-                        </div>
-                        <p class="right">
-                            <input type="checkbox" checked disabled value="" id="" />
-                            <label for=""></label>
-                        </p>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="linpagecloseModal()">Close</a>
-                <a class="modal-action waves-effect waves-green btn-flat" ng-click="addcompanypages()">Connect</a>
-            </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+            <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddFacebookPages()">Connect</a>
         </div>
+    </div>
 
-        <div class="modal" id="Youtube_Modal">
-            <div class="modal-content">
-                <h4>Choose Youtube channels to connect</h4>
-                <ul class="collection">
-                    <li class="collection-item avatar" ng-repeat="youtube in lstYoutube" ng-if="youtube.connected==0">
-                        <div class="left">
-                            <img class="circle" alt="Socioboard" src="{{youtube.YtChannelImage}}">
-                            <span class="title">{{youtube.YtChannelName}}</span>
+    <div class="modal" id="LinCompanypage_Modal">
+        <div class="modal-content">
+            <h4>CHOOSE LINKED PAGES TO CONNECT</h4>
+            <ul class="collection">
 
-                        </div>
-                        <div class="right">
-                            <input type="checkbox" value="{{youtube.Accesstoken}}" id="YT_{{youtube.YtChannelId}}" ng-click="toggleYTProfileSelection(youtube.Accesstoken, youtube.Refreshtoken, youtube.YtChannelId, youtube.YtChannelName, youtube.YtChannelDescrip, youtube.PublishDate, youtube.viewscount, youtube.commentscount, youtube.videoscount, youtube.YtChannelImage, youtube.subscriberscount)">
-                            <label for="YT_{{youtube.YtChannelId}}"></label>
-                        </div>
-                    </li>
+                <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0">
+                    <div class="left">
+                        <img class="circle" alt="" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
+                        <span class="title">{{linpages.PageName}}</span>
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" value="{{linpages.PageId}}" id="page_{{linpages.PageId}}" ng-click="toggleLinkedinProfileSelection(linpages.PageId,linpages._token,linpages.PageName)">
+                        <label for="page_{{linpages.PageId}}"></label>
+                    </p>
+                </li>
 
-                    <li class="collection-item avatar disabled" ng-repeat="youtube in lstYoutube" ng-if="youtube.connected==1">
-                        <div class="left">
-                            <img class="circle" alt="Socioboard" src="{{youtube.YtChannelImage}}">
-                            <span class="title">{{youtube.YtChannelName}}</span>
-
-                        </div>
-                        <p class="right">
-                            <input type="checkbox" checked disabled value="" id="" />
-                            <label for=""></label>
-                        </p>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
-                <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddYTChannels()">Connect</a>
-            </div>
+                <li class="collection-item avatar disabled" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==1">
+                    <div class="left">
+                        <img class="circle" alt="" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
+                        <span class="title">{{linpages.PageName}}</span>
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" checked disabled value="" id="" />
+                        <label for=""></label>
+                    </p>
+                </li>
+            </ul>
         </div>
-        
-        <div class="modal" id="GoogleAnalytics_Modal">
-            <div class="modal-content">
-                <h4>CHOOSE Google Analytics Sites TO CONNECT</h4>
-                <ul class="collection">
-                    <li class="collection-item avatar" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==0">
-                        <div class="left">
-                            <img class="circle" alt="Socioboard" src="../../images/google-analytics.jpg">
-                            <span class="title">{{ganalytics.ProfileName}}</span>
-
-                        </div>
-                        <p class="right">
-                            <input type="checkbox" value="{{ganalytics.AccessToken}}" id="GA_{{ganalytics.ProfileId}}" ng-click="toggleGAeProfileSelection(ganalytics.AccessToken,ganalytics.RefreshToken,ganalytics.AccountId,ganalytics.AccountName,ganalytics.EmailId,ganalytics.ProfileId,ganalytics.ProfileName,ganalytics.WebPropertyId,ganalytics.WebsiteUrl,ganalytics.internalWebPropertyId)">
-                            <label for="GA_{{ganalytics.ProfileId}}"></label>
-                        </p>
-                    </li>
-
-                    <li class="collection-item avatar disabled" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==1">
-                        <div class="left">
-                            <img class="circle" alt="Socioboard" src="/contents/socioboard/images/G-Ana-icon.png">
-                            <span class="title">{{ganalytics.ProfileName}}</span>
-
-                        </div>
-                        <p class="right">
-                            <input type="checkbox" checked disabled value="" id="" />
-                            <label for=""></label>
-                        </p>
-                    </li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
-                <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddGaSites()">Connect</a>
-            </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="linpagecloseModal()">Close</a>
+            <a class="modal-action waves-effect waves-green btn-flat" ng-click="addcompanypages()">Connect</a>
         </div>
+    </div>
+
+    <div class="modal" id="Youtube_Modal">
+        <div class="modal-content">
+            <h4>Choose Youtube channels to connect</h4>
+            <ul class="collection">
+                <li class="collection-item avatar" ng-repeat="youtube in lstYoutube" ng-if="youtube.connected==0">
+                    <div class="left">
+                        <img class="circle" alt="Socioboard" src="{{youtube.YtChannelImage}}">
+                        <span class="title">{{youtube.YtChannelName}}</span>
+
+                    </div>
+                    <div class="right">
+                        <input type="checkbox" value="{{youtube.Accesstoken}}" id="YT_{{youtube.YtChannelId}}" ng-click="toggleYTProfileSelection(youtube.Accesstoken, youtube.Refreshtoken, youtube.YtChannelId, youtube.YtChannelName, youtube.YtChannelDescrip, youtube.PublishDate, youtube.viewscount, youtube.commentscount, youtube.videoscount, youtube.YtChannelImage, youtube.subscriberscount)">
+                        <label for="YT_{{youtube.YtChannelId}}"></label>
+                    </div>
+                </li>
+
+                <li class="collection-item avatar disabled" ng-repeat="youtube in lstYoutube" ng-if="youtube.connected==1">
+                    <div class="left">
+                        <img class="circle" alt="Socioboard" src="{{youtube.YtChannelImage}}">
+                        <span class="title">{{youtube.YtChannelName}}</span>
+
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" checked disabled value="" id="" />
+                        <label for=""></label>
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+            <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddYTChannels()">Connect</a>
+        </div>
+    </div>
+
+    <div class="modal" id="GoogleAnalytics_Modal">
+        <div class="modal-content">
+            <h4>CHOOSE Google Analytics Sites TO CONNECT</h4>
+            <ul class="collection">
+                <li class="collection-item avatar" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==0">
+                    <div class="left">
+                        <img class="circle" alt="Socioboard" src="https://www.socioboard.com/contents/socioboard/images/G-Ana-icon.png">
+                        <span class="title">{{ganalytics.ProfileName}}</span>
+
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" value="{{ganalytics.AccessToken}}" id="GA_{{ganalytics.ProfileId}}" ng-click="toggleGAeProfileSelection(ganalytics.AccessToken,ganalytics.RefreshToken,ganalytics.AccountId,ganalytics.AccountName,ganalytics.EmailId,ganalytics.ProfileId,ganalytics.ProfileName,ganalytics.WebPropertyId,ganalytics.WebsiteUrl,ganalytics.internalWebPropertyId)">
+                        <label for="GA_{{ganalytics.ProfileId}}"></label>
+                    </p>
+                </li>
+
+                <li class="collection-item avatar disabled" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==1">
+                    <div class="left">
+                        <img class="circle" alt="Socioboard" src="https://www.socioboard.com/contents/socioboard/images/G-Ana-icon.png">
+                        <span class="title">{{ganalytics.ProfileName}}</span>
+
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" checked disabled value="" id="" />
+                        <label for=""></label>
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+            <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddGaSites()">Connect</a>
+        </div>
+    </div>
 
     <!-- Active Account Modal  -->
     <div id="ActiveProfileModal" class="modal" style="max-height:initial">
@@ -1288,13 +1342,13 @@
 </div>
 
 <script>
-$(function() {
-      // Initializes and creates emoji set from sprite sheet
-      window.emojiPicker = new EmojiPicker({
-        emojiable_selector: '[data-emojiable=true]',
-        assetsPath: '../contents/socioboard/global/plugins/emoji-picker/lib/img/',
-        popupButtonClasses: 'fa fa-smile-o'
-      });
-      window.emojiPicker.discover();
-});
+    $(function () {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: '../contents/socioboard/global/plugins/emoji-picker/lib/img/',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        window.emojiPicker.discover();
+    });
 </script>

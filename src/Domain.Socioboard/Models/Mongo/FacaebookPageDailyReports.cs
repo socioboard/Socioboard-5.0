@@ -90,5 +90,6 @@ namespace Domain.Socioboard.Models.Mongo
         public int story_Checkin { get; set; }
         public int story_Question { get; set; }
         public int story_Event { get; set; }
+        public string name { get; set; }
     }
 }

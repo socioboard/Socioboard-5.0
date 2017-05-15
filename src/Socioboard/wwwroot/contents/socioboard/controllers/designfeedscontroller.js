@@ -216,7 +216,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         }
 
         $scope.openComposeMessage = function (schedulemessage) {
-            
+          
             if (schedulemessage != null)
             {
                 var message = {
@@ -241,7 +241,20 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         $scope.ComposeMessage = function () {
             
             $scope.disbtncom = false;
-            var profiles = $('#composeProfiles').val();
+            var profiles = new Array();
+            $("#checkboxdata .subcheckbox").each(function () {
+                debugger;
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profiles.indexOf(attrId);
+                    if (index > -1) {
+                        profiles.splice(index, 1);
+                    }
+                } else {
+                    profiles.push(attrId);
+                }
+            });
+           // var profiles = $('#composeProfiles').val();
             var message = $('#composeMessage').val();
             var image = $('#imageUrl').val();
             if (image == "N/A")
@@ -287,11 +300,11 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
             }
             else {
                 $scope.disbtncom = true;
-                if (profiles.length < 0) {
+                if (profiles.length == 0) {
                     swal('Please select a profile');
                 }
                 else {
-                    swal('Please enter some text to compose this message');
+                    swal('Please select atleast one profile');
                 }
             }
         }

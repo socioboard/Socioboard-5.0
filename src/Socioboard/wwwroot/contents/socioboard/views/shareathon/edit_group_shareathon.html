@@ -38,7 +38,7 @@
                                         <span>No Group Found In This Account</span>
                                     </div>		
                                    					
-							        <div class="input-field col s12">
+							        <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup!=''">
 									    <select id="grouptimerinterval" ng-model="abcd">
 									      <option value="{{grouphareathondata.timeintervalminutes}}"  selected>{{grouphareathondata.timeintervalminutes}}</option>
 									      <option value="20">20 min</option>
@@ -47,10 +47,23 @@
 									    </select>
 									    <label>Set Your Time Interval</label>
 									</div>
-							        <div class="input-field col s12">
+                                    <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup==''">
+                                        <select id="grouptimerinterval" disabled>
+                                            <option value="" disabled selected>Choose your option</option>
+                                            <option value="20">20 min</option>
+                                            <option value="30">30 min</option>
+                                            <option value="60">1 hr</option>
+                                        </select>
+                                        <label>Set Your Time Interval</label>
+                                    </div>
+							        <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup!=''">
 							          <input id="postpage_url" type="url" value="{{grouphareathondata.facebookPageUrl}}" class="validate">
 							          <label for="postpage_url">Selects Pages Whose Post's You Want To Automate</label>
 							        </div>
+                                    <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup==''">
+                                        <input id="postpage_url" type="url" disabled class="validate">
+                                        <label for="postpage_url">Enter Page Url Whose Post's You Want To Automate</label>
+                                    </div>
                                     <div ng-init="dispbtn= {{dispbtn}}"></div>
 				                    <div class="col l12 center margin-top-50">
                                         <a ng-show="dispbtn" ng-click="EditGroupShareathon(grouphareathondata.strId)" class="btn grey darken-4 waves-effect waves-light">Save</a>

@@ -25,10 +25,9 @@ namespace SocioboardDataServices.Gplus
                     oAuthToken objToken = new oAuthToken(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
                     JObject userinfo = new JObject();
                     List<Domain.Socioboard.Models.Googleplusaccounts> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.IsActive).ToList();
-                 // lstTwtAccounts = lstTwtAccounts.Where(t => t.GpUserName.Contains("Avinash Verma")).ToList();
                     foreach (var item in lstTwtAccounts)
                     {
-                        Domain.Socioboard.Models.Groupprofiles _grpProfile = dbr.Single<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(item.GpUserId));
+                        List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(item.GpUserId)).ToList();
                         try
                         {
                             if (item.LastUpdate.AddHours(1) <= DateTime.UtcNow)
@@ -60,14 +59,15 @@ namespace SocioboardDataServices.Gplus
                                         try
                                         {
                                             item.GpProfileImage = Convert.ToString(userinfo["image"]["url"]);
-                                            _grpProfile.profilePic = Convert.ToString(userinfo["image"]["url"]);
+                                            _grpProfile.Select(s => { s.profilePic = Convert.ToString(userinfo["image"]["url"]); return s; }).ToList();
                                         }
                                         catch
                                         {
                                             try
                                             {
                                                 item.GpProfileImage = Convert.ToString(userinfo["picture"]);
-                                                _grpProfile.profilePic = Convert.ToString(userinfo["picture"]);
+                                                _grpProfile.Select(s => { s.profilePic = Convert.ToString(userinfo["picture"]); return s; }).ToList();
+
                                             }
                                             catch { }
 
@@ -156,7 +156,10 @@ namespace SocioboardDataServices.Gplus
                                         #endregion
 
                                         dbr.Update<Domain.Socioboard.Models.Googleplusaccounts>(item);
-                                        dbr.Update<Domain.Socioboard.Models.Groupprofiles>(_grpProfile);
+                                        foreach (var item_grpProfile in _grpProfile)
+                                        {
+                                            dbr.Update<Domain.Socioboard.Models.Groupprofiles>(item_grpProfile);
+                                        }
                                         GooglePlusFeed.GetUserActivities(item.GpUserId, access_token);
 
                                         item.LastUpdate = DateTime.UtcNow;

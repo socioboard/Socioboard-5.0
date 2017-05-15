@@ -760,7 +760,37 @@ namespace Api.Socioboard.Repositories
                 return lstMongoGplusFeed.ToList();
             }
         }
+        public static string DeleteYoutubeChannelProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            Domain.Socioboard.Models.YoutubeChannel fbAcc = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
+            if (fbAcc != null)
+            {
+                fbAcc.IsActive = false;
+                dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(fbAcc);
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheYTChannel + profileId);
+                return "Deleted";
+            }
+            else
+            {
+                return "Account Not Exist";
+            }
+        }
 
+        public static string DeleteGAProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
+            if (fbAcc != null)
+            {
+                fbAcc.IsActive = false;
+                dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(fbAcc);
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGAAccount + profileId);
+                return "Deleted";
+            }
+            else
+            {
+                return "Account Not Exist";
+            }
+        }
 
         #region Repository codes for Youtube Channel.....
 
@@ -835,6 +865,7 @@ namespace Api.Socioboard.Repositories
                     _YoutubeChannel.SubscribersCount = Convert.ToDouble(YTdata[10]);
                     _YoutubeChannel.ViewsCount = Convert.ToDouble(YTdata[6]);
                     _YoutubeChannel.Channel_EmailId = channel_email;
+                    _YoutubeChannel.Days90Update = false;
                 }
                 catch (Exception ex)
                 {
@@ -863,6 +894,7 @@ namespace Api.Socioboard.Repositories
                     _YoutubeChannel.SubscribersCount = Convert.ToDouble(YTdata[10]);
                     _YoutubeChannel.ViewsCount = Convert.ToDouble(YTdata[6]);
                     _YoutubeChannel.Channel_EmailId = channel_email;
+                    _YoutubeChannel.Days90Update = false;
 
                 }
                 catch (Exception ex)

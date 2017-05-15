@@ -320,6 +320,28 @@ namespace Socioboard.Controllers
             _PluginData.url = url;
             _PluginData.userImage = userImage;
             _PluginData.type = type;
+            if (!string.IsNullOrEmpty(imageUrl))
+            {
+                if (imageUrl.Equals(url))
+                {
+                    if (type == "timeline-image")
+                    {
+                        _PluginData.url = string.Empty;
+                    }
+                    if(profileType== "image")
+                    {
+                        _PluginData.url = string.Empty;
+                    }
+                }
+            }
+            if (profileType== "website")
+            {
+                if (url.Contains(".jpg") || url.Contains(".png"))
+                {
+                    _PluginData.imageUrl = url;
+                    _PluginData.url = string.Empty;
+                } 
+            }
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
             {
@@ -392,7 +414,7 @@ namespace Socioboard.Controllers
 
                     }
                 }
-               
+
             }
             return View("Rlogin");
         }

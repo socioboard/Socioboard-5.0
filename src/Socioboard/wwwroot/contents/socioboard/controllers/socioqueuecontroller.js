@@ -33,7 +33,6 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
             $http.get(apiDomain + '/api/SocialMessages/GetAllScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
                               if (response.data != "") {
-                                  $scope.sociopic = $rootScope.user.ProfilePicUrl;
                                   $scope.date(response.data);
                                   $scope.lastreach = true;
                               } else {

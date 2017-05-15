@@ -13,7 +13,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         $scope.loadmore = "Load More Feeds";
         $scope.lstFbComments = [];
         $scope.getHttpsURL = function (obj) {
-            console.log(obj);
+          
             return obj.replace("http:", "https:")
         };
         $scope.lstFbFeeds = [];
@@ -28,9 +28,11 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                                   // $scope.lstProfiles = response.data;
                                   $scope.lstFbFeeds = response.data;
                                   $scope.preloadmore = true;
+                                  setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
+                                 // $('.collapsible').collapsible();
                                   // $scope.feeddate(response.data);
                                   //$scope.loaderclass = 'hide';
-                                  console.log(response.data);
+                                  //console.log(response.data);
                                   if (response.data == null) {
                                       reachLast = true;
                                   }
@@ -80,7 +82,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             }
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
                          .then(function (response) {
-                             console.log(response.data);
+                             //console.log(response.data);
                              // $scope.lstProfiles = response.data;
                              if (response.data == null || response.data == "") {
                                  reachLast = true;
@@ -146,7 +148,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             if (/\S/.test(postcomment)) {
                 $scope.sendingcomment = true;
                 $scope.sendicon = true;
-                $http.post(apiDomain + '/api/Facebook/PostFacebookComment?postId=' + feedId + '&profileId=' + ProfileId + '&message=' + postcomment)
+                $http.post(apiDomain + '/api/Facebook/PostFacebookComment?postId=' + feedId + '&profileId=' + ProfileId + '&message=' + encodeURIComponent(postcomment))
                                      .then(function (response) {
                                          $scope.sendingcomment = false;
                                          swal(response.data);
@@ -193,7 +195,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 });
 
 SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
-    debugger;
+   
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {

@@ -131,7 +131,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
             }
             else {
                 $scope.disbtncom = true;
-                if (profiles.length < 0) {
+                if (profiles.length == 0) {
                     swal('Please select a profile');
                 }
                 else {

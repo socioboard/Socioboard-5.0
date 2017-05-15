@@ -1,4 +1,25 @@
+<style>
+    ul.shinh li label {
+        font-size: 15px;
+        color: #333;
+        padding: 0 10px;
+        color: #ff4081;
+    }
 
+    ul.shinh li:hover {
+        background: #e5e5e5;
+        color: #ff4081;
+        cursor: pointer;
+        padding: 0 10px;
+    }
+
+    ul.shinh li label input {
+        margin-right: 10px;
+        height: 20px;
+        width: 20px;
+        background: transparent !important;
+    }
+</style>
 
 <style>
     .rssPostImage {
@@ -120,7 +141,7 @@
 
                         </div>
                         <div class="row">
-                            <div class="input-field col s12">
+                            <!--<div class="input-field col s12">
                                 <select multiple id="composeProfiles">
                                     <option value="" disabled selected>Choose your option</option>
                                     <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
@@ -129,6 +150,52 @@
                                     <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                     <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 </select>
+                            </div>-->
+                            <div style="max-height:250px; overflow-y:scroll;">
+
+                                <ul class="shinh" id="checkboxdatarss">
+                                    <li style="padding:5px 0;">
+                                        <label>
+                                            <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />
+                                            <span style="float:left;">Check All</span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" class="subcheckboxrssrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:3}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" class="subcheckboxrss" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                        </label>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                         <div class="row">

@@ -74,7 +74,7 @@ namespace Api.Socioboard.Helper
                     }
                     if (!string.IsNullOrEmpty(imagePath))
                     {
-                        args["picture"] = imagePath.Replace("&", "&amp;");
+                        args["picture"] = imagePath.Replace("&amp;", "&");
                     }
                     ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
 
