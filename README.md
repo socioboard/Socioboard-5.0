@@ -222,15 +222,23 @@ Discovery:
 
 Report:
 
+Facebook report:
+
 ![](http://i.imgur.com/zPyw7qM.png)
 
 ![](http://i.imgur.com/GMy9yH1.png)
 
-![](http://i.imgur.com/GMyrqFO.png)
+![](http://i.imgur.com/0JbSDoy.png)
+
+twitter report
 
 ![](http://i.imgur.com/6vqkBRK.png)
 
 ![](http://i.imgur.com/onT0cUf.png)
+
+Youtube report
+
+![](http://i.imgur.com/5hmkceq.png)
 
 Home page
 
