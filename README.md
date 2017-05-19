@@ -216,7 +216,7 @@ My Feeds:
 
 ![](http://i.imgur.com/6dMMS9k.png)
 
-![](http://i.imgur.com/6iL2NOo.jpg)
+![](http://i.imgur.com/VQ71NrN.jpg)
 
 Schedule message:
 
