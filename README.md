@@ -222,9 +222,15 @@ Discovery:
 
 Report:
 
-![](http://i.imgur.com/6vqkBRK.png)
+![](http://i.imgur.com/zPyw7qM.png)
 
 ![](http://i.imgur.com/GMy9yH1.png)
+
+![](http://i.imgur.com/GMyrqFO.png)
+
+![](http://i.imgur.com/6vqkBRK.png)
+
+![](http://i.imgur.com/onT0cUf.png)
 
 Home page
 
