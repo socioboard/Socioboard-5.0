@@ -202,7 +202,7 @@ after login you can see some modules feature as shown below ......
 
 Dashboard:
 
-![](http://i.imgur.com/VhP3x36.png)
+![](http://i.imgur.com/gAOCzvL.png)
 
 Compose message:
 
