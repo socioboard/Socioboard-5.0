@@ -242,8 +242,6 @@ Youtube report
 
 Home page
 
-![](http://i.imgur.com/onT0cUf.png)
-
 ![](http://i.imgur.com/wUoQJxV.png)
 
 ![](http://i.imgur.com/ySwWex8.png)
