@@ -212,6 +212,12 @@ Inbox message:
 
 ![](http://i.imgur.com/6011Jr0.png)
 
+My Feeds:
+
+![](http://i.imgur.com/6dMMS9k.png)
+
+![](http://i.imgur.com/6iL2NOo.jpg)
+
 Schedule message:
 
 ![](http://i.imgur.com/ZqttWT5.png)
