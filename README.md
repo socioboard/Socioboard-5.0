@@ -198,8 +198,6 @@ Now Everything is ready you can start project.
 
 ![](http://i.imgur.com/CRtFmke.png)
 
-y
-
 after login you can see some modules feature as shown below ......
 
 Dashboard:
