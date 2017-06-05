@@ -19,7 +19,6 @@ namespace SocioboardDataScheduler.Twitter
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => (t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter) && t.scheduleTime <= DateTime.UtcNow).ToList();
-                    //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Contains("847698757219106817")).ToList();
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
 
                     foreach (var items in newlstScheduledMessage)

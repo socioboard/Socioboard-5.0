@@ -391,7 +391,6 @@ namespace Api.Socioboard.Controllers
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
-                        //return Ok("Issue With Facebook schedulers");
                     }
                 }
                 if (item.StartsWith("page"))
@@ -405,7 +404,6 @@ namespace Api.Socioboard.Controllers
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
-                        // return Ok("Issue With Facebook Page schedulers");
                     }
                 }
                 if (item.StartsWith("tw"))
@@ -419,8 +417,6 @@ namespace Api.Socioboard.Controllers
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
-
-                        // return Ok("Issue With Twitter schedulers");
                     }
                 }
                 if (item.StartsWith("lin"))
@@ -434,8 +430,6 @@ namespace Api.Socioboard.Controllers
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
-
-                        // return Ok("Issue With Linkedin schedulers");
                     }
                 }
                 if (item.StartsWith("Cmpylinpage"))
@@ -449,8 +443,6 @@ namespace Api.Socioboard.Controllers
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
-
-                        // return Ok("Issue With Linkedin Page schedulers");
                     }
                 }
 
