@@ -148,7 +148,21 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                 "groupid": $scope.inviGrpId,
                 "isAdmin": false,
                "memberCode":""
-            };
+           };
+
+           if ($scope.lstInviteTeamMembers.length > 0) {
+               // console.log($scope.lstInviteTeamMembers[0].email);
+               if (mem.email == $scope.lstInviteTeamMembers[0].email) {
+                   //alert(khusbant)
+                   swal("please fill the required field")
+                   return false;
+               }
+           }
+
+           document.getElementById('first_name').value = "";
+           document.getElementById('last_name').value = "";
+           document.getElementById('email').value = "";
+
            $scope.lstInviteTeamMembers.push(mem);
            $scope.inviteMember = null;
           

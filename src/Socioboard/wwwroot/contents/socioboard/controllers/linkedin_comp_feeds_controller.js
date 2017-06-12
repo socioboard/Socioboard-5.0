@@ -12,6 +12,7 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
                           .then(function (response) {
                               $scope.companypagedata = response.data._LinkedinCompanyPage;
                               $scope.postdate(response.data._LinkedinCompanyPagePosts);
+                              setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
                               if (response.data == null) {
                                   reachLast = true;
                               }
@@ -100,3 +101,16 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
             
     });
 });
+SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
+
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+                console.log('collapse reached.');
+                $('.collapsible').collapsible({
+                    accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+                });
+            });
+        }
+    };
+})

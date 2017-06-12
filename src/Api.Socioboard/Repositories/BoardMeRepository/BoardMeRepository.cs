@@ -69,7 +69,7 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 }
                 else
                 {
-                    Domain.Socioboard.Models.MongoBoards board = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.id.Equals(boardId) && t.isActive == Domain.Socioboard.Enum.boardStatus.active).First();
+                    Domain.Socioboard.Models.MongoBoards board = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.id.Equals(boardId)).First();
                     return board;
                 }
 
@@ -95,7 +95,7 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 }
                 else
                 {
-                    Domain.Socioboard.Models.MongoBoards board =  dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.boardName.Equals(boardName) && t.isActive == Domain.Socioboard.Enum.boardStatus.active).First();
+                    Domain.Socioboard.Models.MongoBoards board =  dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.boardName.Equals(boardName)).First();
                     return board;
                 }
 

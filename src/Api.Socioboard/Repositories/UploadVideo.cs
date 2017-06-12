@@ -23,8 +23,6 @@ namespace Api.Socioboard.Repositories
 
         private async Task Run()
         {
-            //UserCredential credential;
-            //string user="rajsekharpatnaik@globussoft.in";
             var Y_oAuthToken = new TokenResponse { RefreshToken = AccRef_Token };
             var Y_oAuthCredentials = new UserCredential(new GoogleAuthorizationCodeFlow(
                 new GoogleAuthorizationCodeFlow.Initializer
@@ -46,9 +44,7 @@ namespace Api.Socioboard.Repositories
             var video = new Video();
             video.Snippet = new VideoSnippet();
             video.Snippet.Title = upload_data[0];
-            //video.Snippet.Title = rajsekharpatnaik@globussoft.in
             video.Snippet.Description = upload_data[1];
-            //video.Snippet.Tags = new string[] { "world", "earth" };
             video.Snippet.CategoryId = upload_data[2]; // See https://developers.google.com/youtube/v3/docs/videoCategories/list
             video.Status = new VideoStatus();
             video.Status.PrivacyStatus = upload_data[3];

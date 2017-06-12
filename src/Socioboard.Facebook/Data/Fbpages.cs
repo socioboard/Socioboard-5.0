@@ -68,8 +68,22 @@ namespace Socioboard.Facebook.Data
                 return "Invalid Access Token";
             }
         }
+        public static string getFbPageData(string accessToken,string PageId)
+        {
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            try
+            {
+               dynamic profile= fb.Get("v2.7/"+ PageId + "?fields=id,name");
+               return profile["name"].ToString();
+            }
+            catch (Exception ex)
+            {
+                return "";
+            }
+        }
 
-       public static List<FacebookFanAddsViewModel> GetFacebookFanAdds(string profileId, double Since, double Until)
+        public static List<FacebookFanAddsViewModel> GetFacebookFanAdds(string profileId, double Since, double Until)
         {
             List<FacebookFanAddsViewModel> FbFansList = new List<FacebookFanAddsViewModel>();
 

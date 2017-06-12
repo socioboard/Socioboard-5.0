@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Api.Socioboard.Model;
 using System.Collections.Generic;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -36,6 +37,48 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetTwitterReports(string profileId, int daysCount)
         {
             return Ok(Repositories.TwitterReportsRepository.GetTwitterMessageReports(profileId, daysCount, _redisCache, _appSettings));
+        }
+
+        [HttpGet("GetTwitterProfilesData")]
+        public IActionResult GetTwitterProfilesData(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
+            string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
+            List<Domain.Socioboard.Models.TwitterAccount> lstInsAcc = new List<Domain.Socioboard.Models.TwitterAccount>();
+            List<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports> lstInstreport = new List<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports>();
+            lstInstreport = Repositories.TwitterReportsRepository.gettwitterReport(lstStr, 90, _redisCache, _appSettings);
+            return Ok(lstInstreport);
+        }
+
+        [HttpGet("GettwtfollowfollowingGraph")]
+        public IActionResult GettwtfollowfollowingGraph(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
+            string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
+           // string[] lstname= lstGrpProfiles.Select(t => t.profileName).ToArray();
+            //List<Domain.Socioboard.Models.TwitterAccount> lstInsAcc = new List<Domain.Socioboard.Models.TwitterAccount>();
+            List<Domain.Socioboard.Models.Mongo.twtfollowfollowing> lstTwtreport = new List<Domain.Socioboard.Models.Mongo.twtfollowfollowing>();
+            lstTwtreport = Repositories.TwitterReportsRepository.gettwtfollofollowingReport(lstStr, 90, _redisCache, _appSettings,dbr);
+           
+            return Ok(lstTwtreport);
+        }
+
+
+        [HttpGet("GetTwitterFeedsdata")]
+        public IActionResult GetTwitterFeedsdata(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
+            string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
+            List<Domain.Socioboard.Models.TwitterAccount> lstInsAcc = new List<Domain.Socioboard.Models.TwitterAccount>();
+            List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> lstInstreport = new List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>();
+            lstInstreport = Repositories.TwitterReportsRepository.gettwitterfeedsreport(lstStr, 90, _redisCache, _appSettings);
+            return Ok(lstInstreport);
         }
 
         [HttpGet("CreateTodayReports")]

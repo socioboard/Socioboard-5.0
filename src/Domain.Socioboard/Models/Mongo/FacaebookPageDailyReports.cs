@@ -92,4 +92,17 @@ namespace Domain.Socioboard.Models.Mongo
         public int story_Event { get; set; }
         public string name { get; set; }
     }
+
+
+
+    public class totalFacebookpagefans
+    {
+        public string totalfans { get; set; }
+        public DateTime startdate { get; set; }
+        public DateTime endtdate { get; set; }
+        public string facebookPagename { get; set; }
+        public string profileId { get; set; }
+        public string colors { get; set; }
+        public string profilepic { get; set; }
+    }
 }

@@ -28,13 +28,37 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
 	        });
         }
 
+
+        $scope.deleteafterschdu = function (draftId) {
+            debugger;
+	            //todo: code to delete profile
+	            //codes to delete  draft messages start
+	            $http.get(apiDomain + '/api/DraftMessage/DeleteDraftMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&draftId=' + draftId)
+                              .then(function (response) {
+                                  closeOnConfirm: false
+                                 // swal("deleted");
+                                  // $scope.lstdraftmessage = response.data;
+                                  $scope.date(response.data);
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+	          	        
+        }
+        
+
+
         $scope.fetchdraftmessage = function () {
+            if ($rootScope.draftDelete != null) {
+                                         $scope.deleteafterschdu($rootScope.draft_id);
+                                     }
             //codes to load  draft messages start
             $http.get(apiDomain + '/api/DraftMessage/GetAllUserDraftMessages?groupId=' + $rootScope.groupId+'&userId='+$rootScope.user.Id)
                           .then(function (response) {
                               // $rootScope.lstdraftmessage = response.data;
                                  if (response.data != "") {
-                                  $scope.date(response.data);
+                                     $scope.date(response.data);                                     
+
+                                    
                               } else {
                                      swal("No draft is saved to the display");
                               }
@@ -77,12 +101,18 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
 
         $scope.scheduledraft = function (schedulemessage)
         {
+            var x;
+            console.log("DRAFT ");
             console.log(schedulemessage);
             $rootScope.schedulemessage = schedulemessage;
             $rootScope.grppost = false;
+            $rootScope.draft_id = schedulemessage.id;
             // window.location.href = "#/schedulemsg";
             $state.go('schedulemessage');
+            
         }
+
+
         $scope.date = function (parm) {
 
             for (var i = 0; i < parm.length; i++) {

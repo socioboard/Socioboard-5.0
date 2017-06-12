@@ -59,9 +59,13 @@
                                 <img ng-if="socioqueue.url!='' && socioqueue.url != null" src="{{getProperURL(socioqueue.url)}}" class="responsive-img" style="width:200px">
                             </td>
                             <td class="center">
-                                <div class="col s12" ng-if="socioqueue.profileType==0 || socioqueue.profileType==1 ">
+                                <div class="col s12" ng-if="socioqueue.profileType==0">
                                     <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
                                     <img src="/contents/socioboard/images/fb_icon.png" class="responsive-img msgiconPoss">
+                                </div>
+                                <div class="col s12" ng-if="socioqueue.profileType==1">
+                                    <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/Fb_page-icon.png" class="responsive-img msgiconPoss">
                                 </div>
                                 <div class="col s12" ng-if="socioqueue.profileType==2 ">
                                     <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">

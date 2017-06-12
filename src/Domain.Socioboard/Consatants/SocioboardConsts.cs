@@ -86,6 +86,10 @@
         public const string CacheInstagramDailyReport = "InstagramDailyReport_";
         //End Instagram Account
 
+        //Pinterest Account Start
+        public const string CachePinterestAccount = "PinterestAcc_";
+        //End Pinterest Account
+
         //LinkedIN Account Start
         public const string CacheLinkedInAccount = "LinkedInAcc_";
         public const string CacheLinkedInCompanyPage = "LinkedCompanyPage_";

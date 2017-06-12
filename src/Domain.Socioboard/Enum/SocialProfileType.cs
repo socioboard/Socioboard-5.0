@@ -14,6 +14,7 @@
         Tumblr =9,
         GoogleAnalytics=10,
         FacebookPublicPage=11,
-        DropBox=12
+        DropBox=12,
+        Pinterest=13
     }
 }

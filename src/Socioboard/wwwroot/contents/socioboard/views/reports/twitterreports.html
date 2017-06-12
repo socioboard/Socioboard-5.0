@@ -1,175 +1,167 @@
-    <div data-ng-controller="TwitterreportsController">
+<div data-ng-controller="TwitterreportsController">
             <!-- Page name -->
-            <div class="container">
-                <div class="col m12" ng-if="fetchdatacomplete==true">
+
+            <div class="container" ng-class="fetchdatacomplete">
+                <div class="col m12">
                     <h4 class="pull-left">
-                        <div class="input-field">
+                        <!--<div class="input-field">
                             <select class="icons" ng-model="selectedProfile" ng-change="getReports(selectedProfile, 90)">
-                              <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" my-repeat-tab-directive value="{{profile.profileId}}" data-icon="" >
-                                <img src="{{profile.profilePic}}"  class="circle">{{profile.profileName}}</option>
+                                <option ng-repeat="profile in lstProfiles | filter:{profileType:8}" my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
+                                    <img src="{{profile.profilePic}}" class="circle">{{profile.profileName}}
+                                </option>
                             </select>
-                        </div>
-                        <span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>
+                        </div>-->
+                        <!--<span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>-->
                     </h4> 
-                    <h6 class="pull-right margin-top-20" ng-if="user.TrailStatus!=2">
-                        <a ng-click="getData(15)" class="btn">15</a>
-                        <a ng-click="getData(30)" class="btn">30</a>
-                        <a ng-click="getData(60)" class="btn">60</a>
-                        <a ng-click="getData(90)" class="btn">90</a>
-                    </h6>
+                    <!--<h6 class="pull-right margin-top-20" ng-if="user.TrailStatus!=2">
+                        <a ng-click="getData(selectedProfile,15)" class="btn">15</a>
+                        <a ng-click="getData(selectedProfile,30)" class="btn">30</a>
+                        <a ng-click="getData(selectedProfile,60)" class="btn">60</a>
+                        <a ng-click="getData(selectedProfile,90)" class="btn">90</a>
+                    </h6>-->
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" ng-class="fetchdatacomplete">
 
-                <!-- TWITTER STATS -->
+                <!-- FACEBOOK STATS -->
                 <div class="col s12 m12 l12">
                     <div class="card" id="feeds">
+                        <h5 class="feeds_title darken-4 white-text" style="background-color:#42c2f4">
+                            <i class="fa fa-twitter fa-fw" aria-hidden="true"></i>Twitter Report Stats</span>
+                        </h5>
                         <div class="collection">
-                            <div class="col l12" ng-if="fetchdatacomplete==true">                                        
-                                <blockquote class="groupbox_padding grey lighten-1">
-                                    <h5><i class="icon-social-twitter"></i> TWITTER STATS</h5>
-                                </blockquote>
-                                <div class="row">
-                                    <div class="col l6">
-                                        <table>
-                                            <tbody>
-                                              <tr>
-                                                <td>New Follower</td>
-                                                <td>{{totalNewFollowers}}</td>
-                                                <td><div class="project-line-1"></div></td>
-                                              </tr>
-                                              <tr>
-                                                <td>You Followed</td>
-                                                <td>{{totalNewFollowing}}</td>
-                                                <td><div class="project-line-1"></div></td>
-                                              </tr>
-                                              <tr>
-                                                <td>Mentions</td>
-                                                <td>{{totalMentions}}</td>
-                                                <td><div class="project-line-1"></div></td>
-                                              </tr>
-                                              <tr>
-                                                <td>Retweets</td>
-                                                <td>{{totalRetweets}}</td>
-                                                <td><div class="project-line-1"></div></td>
-                                              </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col l6">
-                                        <table>
-                                            <tbody>
-                                              <tr>
-                                                <td>Direct Message (Received)</td>
-                                                <td>{{toatlDirectMessagesReceived}}</td>
-                                                <td><div class="project-line-1"></div></td>
-                                              </tr>
-                                              <tr>
-                                                <td>Direct Message (Send)</td>
-                                                <td>{{totalDirectMessagesSent}}</td>
-                                                <td><div class="project-line-1"></div></td>
-                                              </tr>
-                                              <tr>
-                                                <td>Message Received</td>
-                                                <td>{{totalMessagesReceived}}</td>
-                                                <td><div class="project-line-1"></div></td>
-                                              </tr>
-                                              <tr>
-                                                <td>Message Sent</td>
-                                                <td>{{totalMessagesSent}}</td>
-                                                <td><div class="project-line-1"></div></td>
-                                              </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <div class="col l12">                                        
-                                <blockquote class="groupbox_padding grey lighten-1" ng-if="fetchdatacomplete==true">
-                                    <h5>DAILY ENGAGEMENT</h5>
-                                </blockquote>
-
-                                <!-- Loader for before loading data -->
-                                <div ng-if="fetchdatacomplete!=true">
-                                    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-                                    <div class="center">
-                                        <div class="preloader-wrapper small active" style="position:fixed;">
-                                            <div class="spinner-layer spinner-green-only">
-                                                <div class="circle-clipper left">
-                                                    <div class="circle"></div>
-                                                </div><div class="gap-patch">
-                                                    <div class="circle"></div>
-                                                </div><div class="circle-clipper right">
-                                                    <div class="circle"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <br />
-                                        <br />
-                                        <h6 style="color:gray; font-size:18px; font-family:Calibri; position:fixed; margin-left:28%">Please wait for the Report data to be generated</h6>
-                                    </div>
-                                </div>
-                                <!-- End Loader for before loading data -->
-
-                                <div id="DAILYENGAGEMENT" class="charts" style="height: 400px;"></div>
-
-                            </div>
-
-                            <div class="col l6" ng-if="fetchdatacomplete==true">                                        
-                                <blockquote class="groupbox_padding grey lighten-1">
-                                    <h5>Twitter Recent Details</h5>
-                                </blockquote>
-
-
-                                <div class="row center">
-                                     <div class="col m6">
-                                        <h5 class="GroupStats_twt">
-                                            <i class="fa fa-retweet fa-2x fa-fw"></i>
-                                            <h5><strong>{{RecentDetails.retweetcount}}</strong></h5>
-                                            <span>Retweet</span>
-                                        </h5>
-                                    </div>
-                                    <div class="col m6">
-                                        <h5 class="GroupStats_twt">
-                                            <i class="fa fa-star fa-2x fa-fw"></i>
-                                            <h5><strong>{{RecentDetails.favoritecount}}</strong></h5>
-                                            <span>Favourite</span>
-                                        </h5>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div ng-if="fetchdatacomplete==true">
-                                <div class="col l6" ng-if="user.TrailStatus!=2">
-                                    <blockquote class="groupbox_padding grey lighten-1">
-                                        <h5>Top Five fans</h5>
+                            <div class="row">
+                                <div class="col l12">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#42c2f4">
+                                        <h5 class="left">Total No. Of Followers</h5>
+                                        <h5 class="right">{{totalNewFollowers}}</h5>
                                     </blockquote>
-                                    <table>
+                                    <div id="followerchart" class="chart" style="height: 300px;"></div>
+                                    <!--<div id="followerchart1" class="chart" style="height: 300px;"></div>-->
+                                </div>
+                                <div class="col l12">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#42c2f4">
+                                        <h5 class="left">Total No. Of Followings</h5>
+                                        <h5 class="right">{{totalNewFollowing}}</h5>
+                                    </blockquote>
+                                    <div id="followingchart1" class="chart" style="height: 300px;"></div>
+                                </div>
+
+
+
+                                <!--<div class="col l12 m12 s12">
+            <blockquote class="row  groupbox_padding lighten-1" style="background-color:#c65c19">
+                <h5 class="left">FOLLOWING</h5>
+                <h5 class="right">{{totalFollowing}}</h5>
+            </blockquote>
+            <div id="FOLLOWINGGraph" class="charts" style="height: 200px;"></div>
+        </div>-->
+
+                                <div class="col l12 m12 s12">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#42c2f4">
+                                        <h5 class="left">Twitter Retweets</h5>
+                                        <h5 class="right">{{totalRetweets}}</h5>
+                                    </blockquote>
+                                    <div id="RetweetGraph" class="charts" style="height: 300px;"></div>
+                                </div>
+
+                                <div class="col l12 m12 s12">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#42c2f4">
+                                        <h5 class="left">Twitter Mentions</h5>
+                                        <h5 class="right">{{totalMentions}}</h5>
+                                    </blockquote>
+                                    <div id="MentionsGraph" class="charts" style="height: 300px;"></div>
+                                </div>
+
+                               
+                                <div class="col l12 m12 s12">
+                                    <div class="col l12">
+                                        <blockquote class="groupbox_padding lighten-1" style="background-color:#42c2f4">
+                                            <h5><i class="fa fa-twitter fa-fw"></i>Twitter Profiles Detail</h5>
+                                        </blockquote>
+                                        <table class="display responsive-table striped" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Followers</th>
+                                                    <th>Following</th>
+                                                   
+                                                </tr>
+                                            </thead>
+                                            <tbody ng-repeat="twtfollowfollowing in getfollowerfollowingcount">
+                                                <tr>
+                                                    <td>{{twtfollowfollowing.twitterScreenName}}</td>
+                                                    <td>{{twtfollowfollowing.followersCount}}</td>
+                                                    <td>{{twtfollowfollowing.followingCount}}</td>
+                                                    
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding lighten-1" style="background-color:#42c2f4">
+                                        <h5><i class="fa fa-twitter fa-fw"></i>Twitter Posts Detail</h5>
+                                    </blockquote>
+                                    <table id="all_video_table" class="display responsive-table striped" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
-                                                <th data-field="id">#</th>
-                                                <th data-field="FanProfile">Fan Profile</th>
-                                                <th data-field="Mention">Mention</th>
-                                                <th data-field="Retweets">Retweets</th>
+                                                <th>Posts</th>
+                                                <!--<th>Hits</th>
+                                                <th>Likes</th>
+                                                <th>Comments</th>
+                                                <th>Feed URL</th>
+                                                <th>Type</th>-->
                                             </tr>
                                         </thead>
-
                                         <tbody>
-                                            <tr ng-repeat="fan in Fans">
-                                                <td>{{fan.screenName}}</td>
-                                                <td>{{fan.name}}</td>
-                                                <td>{{fan.mentionsCount}}</td>
-                                                <td>{{fan.retweetsCount}}</td>
+                                            <tr ng-repeat="instapostdetails in getfeedsdata" my-repeat-video-tab-directive>
+                                                <td>{{instapostdetails.screenName}} {{instapostdetails.feedDate}} <br> {{instapostdetails.feed}}</td>
+                                                <!--<td>{{instapostdetails.commentCount + instapostdetails.likeCount}}</td>
+                                                <td>{{instapostdetails.likeCount}}</td>
+                                                <td>{{instapostdetails.commentCount}}</td>
+                                                <td><a>{{instapostdetails.feedUrl}}</a></td>
+                                                <td>{{instapostdetails.type}}</td>-->
+                                               
                                             </tr>
 
                                         </tbody>
                                     </table>
 
+                                  
                                 </div>
                             </div>
+                            </div>  
                         </div>
                     </div>
                 </div>
             </div>
+
+            <div ng-if="fetchdatacomplete==false">
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <div class="center">
+                    <div class="preloader-wrapper small active">
+                        <div class="spinner-layer spinner-green-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <br />
+                    <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait for the Report data to be generated</h6>
+
+                </div>
+            </div>
+
     </div>
+<script>
+   
+</script>
+

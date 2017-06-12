@@ -157,8 +157,9 @@ namespace Api.Socioboard.Repositories
             }
 
             profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).ToList();
-            return lstScheduledMessage.Count;
+           // List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).ToList();
+            int lstScheduledMessage = dbr.Counts<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated);
+            return lstScheduledMessage;
         }
 
         public static List<Domain.Socioboard.Models.ScheduledMessage> getAllSentMessageDetailsforADay(long userId, long groupId, int days, Helper.Cache _redisCache, Helper.AppSettings _appSeetings, Model.DatabaseRepository dbr)

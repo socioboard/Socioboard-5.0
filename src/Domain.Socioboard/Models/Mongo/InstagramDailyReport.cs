@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Drawing;
 
 namespace Domain.Socioboard.Models.Mongo
 {
@@ -28,6 +29,16 @@ namespace Domain.Socioboard.Models.Mongo
         public long videopost { get; set; }
         public long imagepost { get; set; }
        
-
+    }
+    public class InstaFollowerFollowing
+    {
+        public long InstaFollowerCounts { get; set; }
+        public long InstaFollowingCounts { get; set; }
+        public DateTime startdate { get; set; }
+        public DateTime endtdate { get; set; }
+        public string instaName { get; set; }
+        public string profileId { get; set; }
+        public string colors { get; set; }
+        public string profilepic { get; set; }
     }
 }

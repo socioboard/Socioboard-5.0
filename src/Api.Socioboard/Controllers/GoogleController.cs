@@ -16,6 +16,7 @@ using Api.Socioboard.Repositories;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading;
+using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -533,6 +534,23 @@ namespace Api.Socioboard.Controllers
             return Ok(lstGplusAcc);
         }
 
+        [HttpGet("GetAllGplusProfiles")]
+        public IActionResult GetAllGplusProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Googleplusaccounts> lstGplusAcc = new List<Domain.Socioboard.Models.Googleplusaccounts>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus))
+            {
+                Domain.Socioboard.Models.Googleplusaccounts gPlusAcc = Repositories.GplusRepository.getGPlusAccount(item.profileId, _redisCache, dbr);
+                if (gPlusAcc != null)
+                {
+                    lstGplusAcc.Add(gPlusAcc);
+                }
+            }
+            return Ok(lstGplusAcc);
+        }
+
         [HttpPost("GetGanalyticsAccount")]
         public IActionResult GetGanalyticsAccount(string code, long groupId, long userId)
         {
@@ -577,10 +595,41 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetGAProfiles")]
         public IActionResult GetGAProfiles(long groupId)
         {
-            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics).ToList();
-            List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstGoogleAnalyticsAccount = new List<GoogleAnalyticsAccount>();
-            foreach (var item in lstGroupprofiles)
+            //DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            //List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics).ToList();
+            //List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstGoogleAnalyticsAccount = new List<GoogleAnalyticsAccount>();
+            //foreach (var item in lstGroupprofiles)
+            //{
+            //    Domain.Socioboard.Models.GoogleAnalyticsAccount gAAcc = Repositories.GplusRepository.getGAAccount(item.profileId, _redisCache, dbr);
+            //    if (gAAcc != null)
+            //    {
+            //        lstGoogleAnalyticsAccount.Add(gAAcc);
+            //    }
+            //}
+            //return Ok(lstGoogleAnalyticsAccount);
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstGoogleAnalyticsAccount = new List<Domain.Socioboard.Models.GoogleAnalyticsAccount>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics))
+            {
+                Domain.Socioboard.Models.GoogleAnalyticsAccount gAAcc = Repositories.GplusRepository.getGAAccount(item.profileId, _redisCache, dbr);
+                if (gAAcc != null)
+                {
+                    lstGoogleAnalyticsAccount.Add(gAAcc);
+                }
+            }
+            return Ok(lstGoogleAnalyticsAccount);
+        }
+
+
+        [HttpGet("GetAllGAProfiles")]
+        public IActionResult GetAllGAProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstGoogleAnalyticsAccount = new List<Domain.Socioboard.Models.GoogleAnalyticsAccount>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics))
             {
                 Domain.Socioboard.Models.GoogleAnalyticsAccount gAAcc = Repositories.GplusRepository.getGAAccount(item.profileId, _redisCache, dbr);
                 if (gAAcc != null)
@@ -636,10 +685,23 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetYTChannelsSB")]
         public IActionResult GetYTChannelsSB(long groupId)
         {
+            //DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            //List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
+            //List<Domain.Socioboard.Models.YoutubeChannel> lstYoutubeChannel = new List<YoutubeChannel>();
+            //foreach (var item in lstGroupprofiles)
+            //{
+            //    Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.GplusRepository.getYTChannel(item.profileId, _redisCache, dbr);
+            //    if (YTChnl != null)
+            //    {
+            //        lstYoutubeChannel.Add(YTChnl);
+            //    }
+            //}
+            //return Ok(lstYoutubeChannel); DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
             DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
-            List<Domain.Socioboard.Models.YoutubeChannel> lstYoutubeChannel = new List<YoutubeChannel>();
-            foreach (var item in lstGroupprofiles)
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.YoutubeChannel> lstYoutubeChannel = new List<Domain.Socioboard.Models.YoutubeChannel>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube))
             {
                 Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.GplusRepository.getYTChannel(item.profileId, _redisCache, dbr);
                 if (YTChnl != null)
@@ -650,6 +712,22 @@ namespace Api.Socioboard.Controllers
             return Ok(lstYoutubeChannel);
         }
 
+        [HttpGet("GetAllYTChannelsSB")]
+        public IActionResult GetAllYTChannelsSB(long groupId)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.YoutubeChannel> lstYoutubeChannel = new List<Domain.Socioboard.Models.YoutubeChannel>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube))
+            {
+                Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.GplusRepository.getYTChannel(item.profileId, _redisCache, dbr);
+                if (YTChnl != null)
+                {
+                    lstYoutubeChannel.Add(YTChnl);
+                }
+            }
+            return Ok(lstYoutubeChannel);
+        }
 
         [HttpPost("AddYoutubeFeed")]
         public IActionResult AddYoutubeFeed(string accesstoken, string channelid)
@@ -691,6 +769,75 @@ namespace Api.Socioboard.Controllers
         {
 
             IFormFile updatevideo = files;
+            string postmessage = "";
+            string titlemsg = "";
+            string[] updatedmessgae = Regex.Split(descrip, "<br>");
+            string[] updatedTitle = Regex.Split(title, "<br>");
+
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("hhh") || item.Contains("nnn") || item.Contains("ppp") || item.Contains("jjj"))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + item.Replace("hhh", "#");
+                        }
+                        if (item.Contains("nnn"))
+                        {
+                            postmessage = postmessage.Replace("nnn", "&");
+                        }
+                        if (item.Contains("ppp"))
+                        {
+                            postmessage = postmessage.Replace("ppp", "+");
+                        }
+                        if (item.Contains("jjj"))
+                        {
+                            postmessage = postmessage.Replace("jjj", "-+");
+                        }
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            descrip = postmessage;
+
+
+            foreach (var itemTitle in updatedTitle)
+            {
+                if (!string.IsNullOrEmpty(itemTitle))
+                {
+                    if (itemTitle.Contains("hhh") || itemTitle.Contains("nnn") || itemTitle.Contains("ppp") || itemTitle.Contains("jjj"))
+                    {
+                        if (itemTitle.Contains("hhh"))
+                        {
+                            titlemsg = titlemsg + itemTitle.Replace("hhh", "#");
+                        }
+                        if (itemTitle.Contains("nnn"))
+                        {
+                            titlemsg = titlemsg.Replace("nnn", "&");
+                        }
+                        if (itemTitle.Contains("ppp"))
+                        {
+                            titlemsg = titlemsg.Replace("ppp", "+");
+                        }
+                        if (itemTitle.Contains("jjj"))
+                        {
+                            titlemsg = titlemsg.Replace("jjj", "-+");
+                        }
+                    }
+                    else
+                    {
+                        titlemsg = titlemsg + "\n\r" + itemTitle;
+                    }
+                }
+            }
+
+            title = titlemsg;
+
 
             string[] arrdata = new string[4];
             arrdata[0] = title;

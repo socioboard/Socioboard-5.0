@@ -1,0 +1,90 @@
+
+       <!-- START MAIN -->
+    <div  data-ng-controller="MailSettingController">
+        <!-- START WRAPPER -->
+        <div class="wrapper">
+
+            <!-- START CONTENT -->
+            <section id="content">
+
+                <!--start container-->
+                <div class="container">
+
+                    <div class="col m12">
+                        <h4>Mail Settings</h4>
+                    </div>
+
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card-panel">
+                                <div class="row center" id="change_email_btn">
+                                  <a class="btn btn_style btn-blue modal-trigger" href="#ChangeEmailModal">Change Email</a>
+                                </div>
+                                <div class="row" id="mail_div" style="display: none;">
+                                    <form class="col s12" ng-submit="UpdateEmailID(updateEmailID)">
+                                      <div class="row">
+                                        <div class="input-field col s12">
+                                          <i class="icon-envelope prefix"></i>
+                                          <input ng-model="updateEmailID.newEmailID" type="text" class="validate">
+                                          <label for="email">New Email</label>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="input-field col s12">
+                                          <i class="icon-envelope prefix"></i>
+                                          <input ng-model="updateEmailID.confirmEmailID" type="text" class="validate">
+                                          <label for="Confirmemail">Confirm Email</label>
+                                        </div>
+                                      </div>
+                                      <div class="row">
+                                        <div class="input-field col s12">
+                                         <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Submit
+                                          <i class="mdi-content-send right"></i>
+                                         </button>
+                                        </div>
+                                      </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end container-->
+            </section>
+            <!-- END CONTENT -->
+
+        </div>
+        <!-- END WRAPPER -->
+
+    </div>
+    <!-- END MAIN -->
+
+    <div id="ChangeEmailModal" class="modal">
+       <div class="modal-content no-space">
+        <div class="row no-space">
+            <form class="col s12" ng-submit="VerifyPassword(verifyPassword)">
+              <div class="row no-space">
+                <div class="input-field col s12">
+                  <i class="mdi-action-lock-outline prefix"></i>
+                  <input ng-model="verifyPassword.currentPassword" type="password" class="validate">
+                  <label for="Currentpassword">Current Password</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="input-field col s12">
+                 <button class="modal-close btn cyan waves-effect waves-light right" type="submit" id="mail_btn">Submit
+                  <i class="mdi-content-send right"></i>
+                 </button>
+                </div>
+              </div>
+            </form>
+        </div>
+       </div>
+    </div>
+
+    <!--<script type="text/javascript">
+      document.querySelector("#mail_btn").addEventListener("click", function(){
+          document.querySelector("#mail_div").style.display = "block";
+          document.querySelector("#change_email_btn").style.display="none";
+      });
+    </script>-->

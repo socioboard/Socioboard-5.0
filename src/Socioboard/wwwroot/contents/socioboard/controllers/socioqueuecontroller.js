@@ -87,28 +87,35 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
         $scope.savesocioqueueedit = function () {
             var message = $('#editScheduleMsg').val();
 
-            //For taking special character start
-            var updatedmessage = "";
-            var postdata = message.split("\n");
-            for (var i = 0; i < postdata.length; i++) {
-                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            if (/\S/.test(message)) {
+                //For taking special character start
+                var updatedmessage = "";
+                var postdata = message.split("\n");
+                for (var i = 0; i < postdata.length; i++) {
+                    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                }
+                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+                updatedmessage = updatedmessage.replace("+", 'ppp');
+                updatedmessage = updatedmessage.replace("-+", 'jjj');
+                message = updatedmessage;
+                //End
+
+                $http.get(apiDomain + '/api/SocialMessages/EditScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + $rootScope.socioqueueId + '&message=' + message)
+                                      .then(function (response) {
+                                          //$scope.modalinstance.dismiss('cancel');
+                                          //$rootScope.lstdraftmessage = response.data;
+                                          $scope.date(response.data);
+                                      }, function (reason) {
+                                          $scope.error = reason.data;
+                                      });
+
+
             }
-            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
-            updatedmessage = updatedmessage.replace("+", 'ppp');
-            updatedmessage = updatedmessage.replace("-+", 'jjj');
-            message = updatedmessage;
-            //End
-
-            $http.get(apiDomain + '/api/SocialMessages/EditScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + $rootScope.socioqueueId + '&message=' + message)
-                                  .then(function (response) {
-                                      //$scope.modalinstance.dismiss('cancel');
-                                      //$rootScope.lstdraftmessage = response.data;
-                                      $scope.date(response.data);
-                                  }, function (reason) {
-                                      $scope.error = reason.data;
-                                  });
-
+            else
+            {
+                swal("Please enter a text");
+            }
 
         }
 

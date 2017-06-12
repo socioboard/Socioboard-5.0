@@ -124,7 +124,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                 }
                 return i;
             }
-            var t1 = new Date().getHours() + ":" + ("0" + new Date().getMinutes()).substr(-2) + " " + ampm;
+            var t1 = ("0"+new Date().getHours()).substr(-2) + ":" + ("0" + new Date().getMinutes()).substr(-2) + " " + ampm;
             //var t1 = new Date().getHours() + ":" + new Date().getMinutes() + " " + ampm;
 
             var dt = new Date();
@@ -177,6 +177,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                         $scope.dispbtn = true;
                                         console.log(newdate1);
                                         $scope.rep = true;
+                                        $rootScope.draftDelete = "true";
                                         swal("Message scheduled successfully");
                                     }    
                                 }
@@ -211,6 +212,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                     $('#ScheduleMsg').val('');
                                     $('#ScheduleTime').val('');
                                     $scope.dispbtn = true;
+                                     $rootScope.draftDelete = "true";
                                     swal("Message scheduled successfully");
 
                                 }                               

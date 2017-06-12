@@ -31,6 +31,13 @@ namespace Api.Socioboard.Helper
         public string FacebookClientSecretKey { get; set; }
         public string FacebookRedirectUrl { get; set; }
 
+        //Pinterest App Creds Start
+        public string pinterestConsumerKey { get; set; }
+        public string pinterestConsumerScreatKey { get; set; }
+        public string pinterestRedirectionUrl { get; set; }
+        public string PinterestAuthUrl { get; set; }
+        //End Pinterest App Creds 
+
         public string AccessToken1 { get; set; }
         public string AccessToken2 { get; set; }
         public string AccessToken3 { get; set; }

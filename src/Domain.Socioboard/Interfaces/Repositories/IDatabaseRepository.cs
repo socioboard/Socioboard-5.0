@@ -19,5 +19,7 @@ namespace Domain.Socioboard.Interfaces.Repositories
         IList<T> Find<T>(Expression<Func<T, bool>> query) where T : class, new();
          IList<T> FindWithRange<T>(Expression<Func<T, bool>> query, int skip, int take) where T : class, new();
         int GetCount<T>(Expression<Func<T, bool>> query) where T : class, new();
+        int Counts<T>(Expression<Func<T, bool>> query) where T : class, new();
+        
     }
 }

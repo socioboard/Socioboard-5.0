@@ -248,7 +248,7 @@
                                         <img class="activator" src="{{twtProfile.profileBackgroundImageUrl}}">
                                     </div>
                                     <div class="card-content">
-                                        <img src="{{getHttpsURL(twtProfile.profileImageUrl)}}" alt="{{twtProfile.twitterScreenName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="{{twtProfile.profileImageUrl}}" alt="{{twtProfile.twitterScreenName}}" class="circle responsive-img activator card-profile-image">
                                         <img src="/contents/socioboard/images/twticon.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
@@ -331,7 +331,7 @@
                                     </div>
                                     <div class="card-content">
                                         <img src="{{insProfile.profileUrl}}" alt="{{insProfile.insUserName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/instagram_icon.png" class="card_profile_socio_icon">
+                                        <img src="/contents/socioboard/images/instagram_licon.png" class="card_profile_socio_icon">
                                         <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                             <i class="icon-info"></i>
                                         </a>
@@ -391,7 +391,7 @@
                                         </a>
                                         <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinPageName}}</span>
                                         <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{linProfile.numFollowers}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> {{insProfile.locations}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{linProfile.locations}}">{{linProfile.locations}}</span></p>
                                     </div>
                                     <div class="card-reveal">
                                         <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinPageName}}<i class="mdi-navigation-close right"></i></span>
@@ -405,6 +405,38 @@
                             </div>
                             <!--LinkedIn Comapany page profiles bind end-->
 
+                            <!--LinkedIn Account profiles bind start-->
+                            <div class="col s12 m6 l4" ng-repeat="linProfile in lstlinAccountProfiles">
+                                <div id="profile-card" class="card">
+                                    <div class="card-image waves-effect waves-block waves-light">
+                                        <img class="activator" src="{{linProfile.logoUrl}}" alt="{{insProfile.linkedinUserName}}">
+                                    </div>
+                                    <div class="card-content">
+                                        <img src="{{linProfile.profileImageUrl}}" alt="{{linProfile.linkedinUserName}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                            <i class="icon-info"></i>
+                                        </a>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinUserName}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Connections:</span> {{linProfile.connections}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">EmailId:</span> <span title="{{linProfile.emailId}}">{{linProfile.emailId}}</span></p>
+                                    </div>
+                                    <div class="card-reveal">
+                                        <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <!--<p>{{linProfile.specialties}}</p>-->
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2">Account Id:</span> {{linProfile.linkedinUserId}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Name"></i><span class="cyan-text text-darken-2">Name:</span> <span title="{{linProfile.linkedinUserName}}">{{linProfile.linkedinUserName}}</span></p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="EmailId"></i><span class="cyan-text text-darken-2">EmailId:</span><span title="{{linProfile.emailId}}">{{linProfile.emailId}}</span></p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Connections"></i><span class="cyan-text text-darken-2">Connections:</span>{{linProfile.connections}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--LinkedIn Account profiles bind end-->
+                        </div>
+                        <div class="row">
+                            <div class="col l12 m12 s12">
+                                <a href="#profiles" class="btn btn_style red right">See More >></a>
+                            </div>
                         </div>
                     </div>
                     <!--card widgets end-->
@@ -660,6 +692,54 @@
                         </div>
                     </div>-->
                     <!--work collections end-->
+
+                    <!--rss cons-->
+                    <div>
+                        <ul id="issues-collection" class="collection">
+                            <li class="collection-item avatar">
+                                <i class="fa fa-hashtag circle blue darken-2"></i>
+                                <span class="collection-header">Automate Rss Feeds</span>
+                                <p>Build Your Contents</p>
+                            </li>
+                            <li class="collection-item">
+                                <div class="row">
+                                    <div class="col l12 s12">
+                                        <a ng-click="contentFeeds('Analytics')" class="chip red darken-1 white-text">Analytics</a>
+                                        <a ng-click="contentFeeds('Beauty')" class="chip red darken-1 white-text">Beauty</a>
+                                        <a ng-click="contentFeeds('Business & Finance')" class="chip red darken-1 white-text">Business &amp; Finance</a>
+                                        <a ng-click="contentFeeds('Content Marketing')" class="chip red darken-1 white-text">Content Marketing</a>
+                                        <a ng-click="contentFeeds('Digital Marketing')" class="chip red darken-1 white-text">Digital Marketing</a>
+                                        <a ng-click="contentFeeds('eCommerce')" class="chip red darken-1 white-text">eCommerce</a>
+                                        <a ng-click="contentFeeds('Entertainment')" class="chip red darken-1 white-text">Entertainment</a>
+                                        <a ng-click="contentFeeds('Entrepreneurship')" class="chip red darken-1 white-text">Entrepreneurship</a>
+                                        <a ng-click="contentFeeds('Fashion')" class="chip red darken-1 white-text">Fashion</a>
+                                        <a ng-click="contentFeeds('Food & Nutrition')" class="chip red darken-1 white-text">Food &amp; Nutrition</a>
+                                        <a ng-click="contentFeeds('Health & Fitness')" class="chip red darken-1 white-text">Health &amp; Fitness</a>
+                                        <a ng-click="contentFeeds('Home & Improvement')" class="chip red darken-1 white-text">Home Improvement</a>
+                                        <a ng-click="contentFeeds('Humor')" class="chip red darken-1 white-text">Humor</a>
+                                        <a ng-click="contentFeeds('Marketing')" class="chip red darken-1 white-text">Marketing</a>
+                                        <a ng-click="contentFeeds('Mental Health')" class="chip red darken-1 white-text">Mental Health</a>
+                                        <a ng-click="contentFeeds('Mobile')" class="chip red darken-1 white-text">Mobile</a>
+                                        <a ng-click="contentFeeds('Music')" class="chip red darken-1 white-text">Music</a>
+                                        <a ng-click="contentFeeds('Parenting')" class="chip red darken-1 white-text">Parenting</a>
+                                        <a ng-click="contentFeeds('Personal finance')" class="chip red darken-1 white-text">Personal finance</a>
+                                        <a ng-click="contentFeeds('Pets')" class="chip red darken-1 white-text">Pets</a>
+                                        <a ng-click="contentFeeds('Photography')" class="chip red darken-1 white-text">Photography</a>
+                                        <a ng-click="contentFeeds('Programming')" class="chip red darken-1 white-text">Programming</a>
+                                        <a ng-click="contentFeeds('Real Estate')" class="chip red darken-1 white-text">Real Estate</a>
+                                        <a ng-click="contentFeeds('Self Improvement')" class="chip red darken-1 white-text">Self Improvement</a>
+                                        <a ng-click="contentFeeds('Small business')" class="chip red darken-1 white-text">Small business</a>
+                                        <a ng-click="contentFeeds('Social Media Marketing')" class="chip red darken-1 white-text">Social Media Marketing</a>
+                                        <a ng-click="contentFeeds('Sports')" class="chip red darken-1 white-text">Sports</a>
+                                        <a ng-click="contentFeeds('Technology')" class="chip red darken-1 white-text">Technology</a>
+                                        <a ng-click="contentFeeds('Travel')" class="chip red darken-1 white-text">Travel</a>
+                                        <a ng-click="contentFeeds('Web Design')" class="chip red darken-1 white-text">Web Design</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--endrss conts-->
                 </div>
                 <!--end container-->
             </div>
@@ -687,7 +767,7 @@
                                                 <div class="row card" ng-if="profile.profileType==0">
                                                     <a href="https://www.facebook.com/{{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            <img src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -710,7 +790,7 @@
                                                 <div class="row card" ng-if="profile.profileType==1">
                                                     <a href="https://www.facebook.com/{{profile.profileName}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            <img src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -733,7 +813,7 @@
                                                 <div class="row card" ng-if="profile.profileType==2">
                                                     <a href="https://twitter.com/{{profile.profileName}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            <img src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -755,14 +835,14 @@
                                                 <div class="row card" ng-if="profile.profileType==5">
                                                     <a href="https://plus.google.com/{{profile.profileId}}/posts" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            <img src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
                                                         </div>
                                                     </a>
                                                     <div class="col l2 m2 s2 margin-top-10">
-                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                        <span ng-click="deleteGpProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
                                                 </div>
                                             </li>
@@ -778,7 +858,7 @@
                                                 <div class="row card" ng-if="profile.profileType==4">
                                                     <a href="https://www.linkedin.com/company/{{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            <img src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -800,7 +880,7 @@
                                                 <div class="row card" ng-if="profile.profileType==3">
                                                     <a href="http://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            <img src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -822,7 +902,7 @@
                                                 <div class="row card" ng-if="profile.profileType==8">
                                                     <a href="http://instagram.com/{{profile.profileName}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{getHttpsURL(profile.profilePic)}}" class="responsive-img">
+                                                            <img src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -851,7 +931,7 @@
                                                         </div>
                                                     </a>
                                                     <div class="col l2 m2 s2 margin-top-10">
-                                                        <span ng-click="deleteProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                        <span ng-click="deleteGaProfile(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
                                                 </div>
                                             </li>
@@ -939,7 +1019,7 @@
             </div>
         </div>
         <!-- Compose Email Trigger -->
-        <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select('destroy'); $('#composeProfiles').val('');$('select').material_select();" style="bottom: 45px; right: 24px;">
+        <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select('destroy'); $('#composeProfiles').val(''); $('select').material_select(); closeModel()" style="bottom: 45px; right: 24px;">
             <div class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
                 <i class="large mdi-editor-mode-edit"></i>
             </div>
@@ -1128,7 +1208,7 @@
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
                         <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
                         <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
-                       
+                      
                     </div>
                 </div>
                 <div id="google" class="col s12">
@@ -1165,7 +1245,7 @@
                 <div id="ganalytics" class="col s12">
                     <div class="center-align">
                         <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
-                        <a href="../GoogleManager/AddGoogleAccount?Op=page" class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal GoogleAnalytics</a>
+                        <a href="../GoogleManager/AddGoogleAccount?Op=page" class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal Google Analytics</a>
                     </div>
                 </div>
             </div>
@@ -1203,14 +1283,15 @@
             </ul>
         </div>
         <div class="modal-footer">
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddFacebookPages()">Connect</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+         
         </div>
     </div>
 
     <div class="modal" id="LinCompanypage_Modal">
         <div class="modal-content">
-            <h4>CHOOSE LINKED PAGES TO CONNECT</h4>
+            <h4>CHOOSE LINKEDIN PAGES TO CONNECT</h4>
             <ul class="collection">
 
                 <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0">
@@ -1237,8 +1318,9 @@
             </ul>
         </div>
         <div class="modal-footer">
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="linpagecloseModal()">Close</a>
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="addcompanypages()">Connect</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="linpagecloseModal()">Close</a>
+       
         </div>
     </div>
 
@@ -1272,8 +1354,8 @@
             </ul>
         </div>
         <div class="modal-footer">
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddYTChannels()">Connect</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
         </div>
     </div>
 
@@ -1307,8 +1389,8 @@
             </ul>
         </div>
         <div class="modal-footer">
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddGaSites()">Connect</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
         </div>
     </div>
 
@@ -1342,6 +1424,11 @@
 </div>
 
 <script>
+               
+    function closeModel() {
+        jQuery('input:checkbox').removeAttr('checked');
+    }
+
     $(function () {
         // Initializes and creates emoji set from sprite sheet
         window.emojiPicker = new EmojiPicker({

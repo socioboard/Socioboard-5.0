@@ -34,4 +34,19 @@ namespace Domain.Socioboard.Models.Mongo
         public long CreatedTime { get; set; }
         public double Engagement { get; set; }
     }
+
+    public class totalfbPagePostDetails
+    {
+        public string profileId { get; set; }
+        public string name { get; set; }
+        public string likes { get; set; }      
+        public string commnets { get; set; }
+        public string post { get; set; }
+        public string talking { get; set; }
+        public string shares { get; set; }
+        public string message { get; set; }
+        public string color { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime endDate { get; set; }
+    }
 }

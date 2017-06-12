@@ -17,7 +17,7 @@ namespace Domain.Socioboard.Models
         public virtual Int64 profileOwnerId { get; set; }
         [Required]
         public virtual Domain.Socioboard.Enum.SocialProfileType profileType { get; set; }
-  
+
         public virtual string profileName { get; set; }
         public virtual string profileId { get; set; }
         public virtual string profilePic { get; set; }

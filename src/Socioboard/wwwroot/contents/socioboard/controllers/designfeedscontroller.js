@@ -15,6 +15,29 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         //$scope.continue = true;
         designfeeds();
 
+        var getAllSelected = function () {
+            var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
+                return profile.Selected;
+            });
+
+            return selectedItems.length === $rootScope.lstProfiles.length;
+        }
+
+        var setAllSelected = function (value) {
+            angular.forEach($rootScope.lstProfiles, function (profile) {
+                profile.Selected = value;
+            });
+        }
+
+        $scope.allSelected = function (value) {
+            if (value !== undefined) {
+                return setAllSelected(value);
+            } else {
+                return getAllSelected();
+            }
+        }
+
+
         $scope.deleteProfile = function (profileId) {
             // console.log(profileId);
             swal({
@@ -216,7 +239,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         }
 
         $scope.openComposeMessage = function (schedulemessage) {
-          
+            jQuery('input:checkbox').removeAttr('checked');
             if (schedulemessage != null)
             {
                 var message = {

@@ -106,6 +106,57 @@ namespace Api.Socioboard.Controllers
             return Ok(lstInsAcc);
         }
 
+        [HttpGet("GetLinkedAccountProfiles")]
+        public IActionResult GetLinkedAccountProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.LinkedInAccount> lstInsAcc = new List<Domain.Socioboard.Models.LinkedInAccount>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn))
+            {
+                Domain.Socioboard.Models.LinkedInAccount insAcc = Repositories.LinkedInAccountRepository.getLinkedInAccount(item.profileId, _redisCache, dbr);
+                if (insAcc != null)
+                {
+                    lstInsAcc.Add(insAcc);
+                }
+            }
+            return Ok(lstInsAcc);
+        }
+
+        [HttpGet("GetAllLinkedAccountProfiles")]
+        public IActionResult GetAllLinkedAccountProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.LinkedInAccount> lstInsAcc = new List<Domain.Socioboard.Models.LinkedInAccount>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn))
+            {
+                Domain.Socioboard.Models.LinkedInAccount insAcc = Repositories.LinkedInAccountRepository.getLinkedInAccount(item.profileId, _redisCache, dbr);
+                if (insAcc != null)
+                {
+                    lstInsAcc.Add(insAcc);
+                }
+            }
+            return Ok(lstInsAcc);
+        }
+
+        [HttpGet("GetAllLinkedInCompanyPagesProfiles")]
+        public IActionResult GetAllLinkedInCompanyPagesProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.LinkedinCompanyPage> lstInsAcc = new List<Domain.Socioboard.Models.LinkedinCompanyPage>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage))
+            {
+                Domain.Socioboard.Models.LinkedinCompanyPage insAcc = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(item.profileId, _redisCache, dbr);
+                if (insAcc != null)
+                {
+                    lstInsAcc.Add(insAcc);
+                }
+            }
+            return Ok(lstInsAcc);
+        }
+
         [HttpPost("GetLinkedInCompanyPages")]
         public IActionResult GetLinkedInCompanyPages(string Code, long groupId, long userId)
         {

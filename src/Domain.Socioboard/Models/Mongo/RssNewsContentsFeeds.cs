@@ -16,6 +16,7 @@ namespace Domain.Socioboard.Models.Mongo
         public ObjectId Id { get; set; }
         //  public string strId { get; set; }
         public string RssFeedUrl { get; set; }
+        public string FeedId { get; set; }
         public string UserId { get; set; }
         public string Message { get; set; }
         public string Title { get; set; }

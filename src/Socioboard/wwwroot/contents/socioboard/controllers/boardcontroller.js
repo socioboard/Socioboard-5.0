@@ -2,10 +2,22 @@
 
 SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http, $timeout, $stateParams, $state, apiDomain) {
     $scope.$on('$viewContentLoaded', function () {
+        debugger;
         $rootScope.boardComposeMessage = {};
         $scope.lstBoardFeeds = [];
       //  $scope.lstBoardFeeds.length = 1;
         $scope.boardName = $stateParams.boardName;
+        var bname = $scope.boardName;
+        debugger;
+        if (bname.includes('SB'))
+        {
+            $scope.bname = bname.replace('SB', '/');
+            //bname = $scope.boardName
+        }
+        else
+        {
+            $scope.bname = $scope.boardName;
+        }
         var starttwitter = 0; // where to start data
         var lastreach = false;
         var endingtwitter = starttwitter + 30; // how much data need to add on each function call
@@ -178,7 +190,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         $scope.cmpbtn = true;
 
         $scope.openComposeMessage = function (schedulemessage) {
-
+            jQuery('input:checkbox').removeAttr('checked');
             if (schedulemessage.gplusboardaccprofileid != null) {
                 var message = {
                     "shareMessage": schedulemessage.title,
@@ -263,6 +275,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                             $scope.dispbtn = true;
                             $('#ComposePostModal').closeModal();
                             swal('Message composed successfully');
+                            window.location.reload();
                         }
 
                     }, function (reason) {

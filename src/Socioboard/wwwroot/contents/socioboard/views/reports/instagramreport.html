@@ -3,21 +3,21 @@
             <div class="container" ng-class="fetchdatacomplete">
                 <div class="col m12">
                     <h4 class="pull-left">
-                        <div class="input-field">
+                        <!--<div class="input-field">
                             <select class="icons" ng-model="selectedProfile" ng-change="getReports(selectedProfile, 90)">
                                 <option ng-repeat="profile in lstProfiles | filter:{profileType:8}" my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">
                                     <img src="{{profile.profilePic}}" class="circle">{{profile.profileName}}
                                 </option>
                             </select>
-                        </div>
-                        <span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>
+                        </div>-->
+                        <!--<span class="grey-text text-darken-1">from {{fromDate}} to {{toDate}}</span>-->
                     </h4> 
-                    <h6 class="pull-right margin-top-20" ng-if="user.TrailStatus!=2">
+                    <!--<h6 class="pull-right margin-top-20" ng-if="user.TrailStatus!=2">
                         <a ng-click="getData(selectedProfile,15)" class="btn">15</a>
                         <a ng-click="getData(selectedProfile,30)" class="btn">30</a>
                         <a ng-click="getData(selectedProfile,60)" class="btn">60</a>
                         <a ng-click="getData(selectedProfile,90)" class="btn">90</a>
-                    </h6>
+                    </h6>-->
                 </div>
             </div>
 
@@ -26,97 +26,143 @@
                 <!-- FACEBOOK STATS -->
                 <div class="col s12 m12 l12">
                     <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-4 white-text">
-                            <i class="fa fa-instagram fa-fw" aria-hidden="true"></i>INSTAGRAM STATS</span>
+                        <h5 class="feeds_title darken-4 white-text" style="background-color:#ed409f">
+                            <i class="fa fa-instagram fa-fw" aria-hidden="true"></i>Instagram Report Stats</span>
                         </h5>
                         <div class="collection">
                             <div class="row">
-                                <div class="col l6 m6 s12">
-                                    <blockquote class="groupbox_padding grey lighten-1">
-                                        <h5><i class="fa fa-instagram fa-fw" aria-hidden="true"></i>PROFILE DESCRIPTION</h5>
-                                    </blockquote>
-                                    <div class="row">
-                                        <div class="col m2">
-                                            <img src="{{instagramdata.profileUrl}}" class="responsive-img">
-                                        </div>
-                                        <div class="col m8">
-                                            <div class="dl-horizontal">
-                                                <div class="inst_name_big_dt">Full Name : {{instagramdata.insUserName}}</div>
-                                                
-                                                <br />
-                                                <div class="inst_name_big_dt">Instagram Name : {{instagramdata.insUserName}}</div>
-                                                
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col l6 m6 s12">
-                                    <blockquote class="groupbox_padding grey lighten-1">
-                                        <h5><i class="fa fa-instagram fa-fw" aria-hidden="true"></i>INSTAGRAM DASHBOARD</h5>
-                                    </blockquote>
-                                    <div class="row center">
-                                        <div class="col m4">
-                                             <h5 class="GroupStats_twt">
-                                            <i class="icon-anchor fa-2x fa-fw blue-text text-darken-3"></i>
-                                            </h5><h5><strong>{{totalMedia}}</strong></h5>
-                                            <span>Total Media</span>                                            
-                                        </div>
-                                        <div class="col m4">
-                                            <h5 class="GroupStats_twt">
-                                            <i class="fa fa-at fa-2x fa-fw blue-text text-darken-3"></i>
-                                            </h5><h5><strong>{{totalFollower}}</strong></h5>
-                                            <span>Total Follower</span>                                            
-                                        </div>
-                                        <div class="col m4">
-                                            <h5 class="GroupStats_twt">
-                                            <i class="fa fa-retweet fa-2x fa-fw blue-text text-darken-3"></i>
-                                            </h5><h5><strong>{{totalFollowing}}</strong></h5>
-                                            <span>Total Following</span>                                            
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="col l12 m12 s12">
-                                    <blockquote class="row  groupbox_padding grey lighten-1">
-                                        <h5 class="left">FOLLOWER</h5>
+                                <div class="col l12">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#ce8744">
+                                        <h5 class="left">Total No. Of Followers</h5>
                                         <h5 class="right">{{totalFollower}}</h5>
                                     </blockquote>
-                                    <div id="FollowersGraph" class="charts" style="height: 200px;"></div>
+                                    <div id="followerchart" class="chart" style="height: 300px;"></div>
+                                    <!--<div id="followerchart1" class="chart" style="height: 300px;"></div>-->
                                 </div>
-
-                                <div class="col l12 m12 s12">
-                                    <blockquote class="row  groupbox_padding grey lighten-1">
-                                        <h5 class="left">FOLLOWING</h5>
+                                <div class="col l12">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#ce8744">
+                                        <h5 class="left">Total No. Of Followings</h5>
                                         <h5 class="right">{{totalFollowing}}</h5>
                                     </blockquote>
-                                    <div id="FOLLOWINGGraph" class="charts" style="height: 200px;"></div>
+                                    <div id="followingchart1" class="chart" style="height: 300px;"></div>
                                 </div>
 
+
+
+                                <!--<div class="col l12 m12 s12">
+            <blockquote class="row  groupbox_padding lighten-1" style="background-color:#c65c19">
+                <h5 class="left">FOLLOWING</h5>
+                <h5 class="right">{{totalFollowing}}</h5>
+            </blockquote>
+            <div id="FOLLOWINGGraph" class="charts" style="height: 200px;"></div>
+        </div>-->
+
                                 <div class="col l12 m12 s12">
-                                    <blockquote class="row  groupbox_padding grey lighten-1">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#ce8744">
                                         <h5 class="left">POST-COMMENTS</h5>
                                         <h5 class="right">{{totalPOSTCOMMENTS}}</h5>
                                     </blockquote>
-                                    <div id="POSTCOMMENTSGraph" class="charts" style="height: 200px;"></div>
+                                    <div id="POSTCOMMENTSGraph" class="charts" style="height: 300px;"></div>
                                 </div>
 
                                 <div class="col l12 m12 s12">
-                                    <blockquote class="row  groupbox_padding grey lighten-1">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#ce8744">
                                         <h5 class="left">POST-LIKES</h5>
                                         <h5 class="right">{{totalPOSTLIKES}}</h5>
                                     </blockquote>
-                                    <div id="POSTLIKESGraph" class="charts" style="height: 200px;"></div>
+                                    <div id="POSTLIKESGraph" class="charts" style="height: 300px;"></div>
                                 </div>
 
                                 <div class="col l12 m12 s12">
-                                    <blockquote class="row  groupbox_padding grey lighten-1">
+                                    <blockquote class="row  groupbox_padding lighten-1" style="background-color:#ce8744">
                                         <h5 class="left">MEDIA</h5>
                                         <h5 class="right">{{totalMedia}}</h5>
                                     </blockquote>
-                                    <div id="MEDIAGraph" class="charts" style="height: 200px;"></div>
+                                    <div id="MEDIAGraph" class="charts" style="height: 300px;"></div>
                                 </div>
+                                <div class="col l12 m12 s12">
+                                    <div class="col l12">
+                                        <blockquote class="groupbox_padding lighten-1" style="background-color:#ce8744">
+                                            <h5><i class="fa fa-instagram fa-fw"></i>Instagram Profiles Detail</h5>
+                                        </blockquote>
+                                        <table id="MyTable" class="display responsive-table striped" cellspacing="0" width="100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Followers</th>
+                                                    <th>Following</th>
+                                                    <th>Post</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody ng-repeat="instfollowfollowing in getfollowerfollowingCount">
+                                                <tr>
+                                                    <td>{{instfollowfollowing.insUserName}}</td>
+                                                    <td>{{instfollowfollowing.followers}}</td>
+                                                    <td>{{instfollowfollowing.followedBy}}</td>
+                                                    <td>{{instfollowfollowing.totalImages}}</td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                        <div id="pageNavPosition"></div>
+                                    </div>
+                                </div>
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding lighten-1" style="background-color:#ce8744">
+                                        <h5><i class="fa fa-instagram fa-fw"></i>Instagram Posts Detail</h5>
+                                    </blockquote>
+                                    <table id="InstagramAccountInfo" class="display responsive-table striped" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Posts</th>
+                                                <th>Hits</th>
+                                                <th>Likes</th>
+                                                <th>Comments</th>
+                                                <th>Feed URL</th>
+                                                <th>Type</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody ng-repeat="instapostdetails in getfeedsdata">
+                                            <tr>
+                                                <td>{{instapostdetails.adminUser}} {{instapostdetails.feedDate * 1000 | date:'MM/dd/yyyy  h:mma'}} <br> {{instapostdetails.feedUrl}}</td>
+                                                <td>{{instapostdetails.commentCount + instapostdetails.likeCount}}</td>
+                                                <td>{{instapostdetails.likeCount}}</td>
+                                                <td>{{instapostdetails.commentCount}}</td>
+                                                <td><a>{{instapostdetails.feedUrl}}</a></td>
+                                                <td>{{instapostdetails.type}}</td>
+                                               
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+
+                                    <!--<table id="manage_user_table" class="display" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Posts</th>
+                                                <th>Hits</th>
+                                                <th>Likes</th>
+                                                <th>Comments</th>
+                                                <th>Feed URL</th>
+                                                <th>Type</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody ng-repeat="instapostdetails in getfeedsdata">
+                                            <tr>
+                                                <td>{{instapostdetails.adminUser}} {{instapostdetails.feedDate * 1000 | date:'MM/dd/yyyy  h:mma'}} <br> {{instapostdetails.feedUrl}}</td>
+                                                <td>{{instapostdetails.commentCount + instapostdetails.likeCount}}</td>
+                                                <td>{{instapostdetails.likeCount}}</td>
+                                                <td>{{instapostdetails.commentCount}}</td>
+                                                <td><a>{{instapostdetails.feedUrl}}</a></td>
+                                                <td>{{instapostdetails.type}}</td>
+
+                                            </tr>
+
+                                        </tbody>
+                                    </table>-->
+                                </div>
+                            </div>
                             </div>  
                         </div>
                     </div>
@@ -144,3 +190,7 @@
             </div>
 
     </div>
+<script>
+   
+</script>
+

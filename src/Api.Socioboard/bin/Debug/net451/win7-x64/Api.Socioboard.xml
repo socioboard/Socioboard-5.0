@@ -13,6 +13,41 @@
             <param name="amount"></param>
             <returns></returns>
         </member>
+        <member name="M:Api.Socioboard.Controllers.BoardMeController.createBoard(System.String,System.String,System.String,System.String,System.String,System.Int64)">
+            <summary>
+            Creates a board with porvided hash Tags
+            </summary>
+            <param name="boardName">Name of the board should be unique</param>
+            <param name="fbHashTag"> hash tag on facebook</param>
+            <param name="twitterHashTag">hash tag on twitter</param>
+            <param name="instagramHashTag"> hash tag on instagram</param>
+            <param name="gplusHashTag">hash tag on gplus</param>
+            <param name="userId">id of the user to which board belongs to </param>
+            <returns>success : if board created successfully, board Exist: if board name already exists  </returns>
+        </member>
+        <member name="M:Api.Socioboard.Controllers.BoardMeController.DeleteBoard(System.Int64,System.Int64)">
+            <summary>
+            Deletes the board with specified board Id
+            </summary>
+            <param name="BoardId"> id of the board to delte</param>
+            <param name="userId">id of the user to which board belongs to.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.Socioboard.Controllers.BoardMeController.UndoDeleteBoard(System.String,System.Int64)">
+            <summary>
+            Revert back deletion opertion of board
+            </summary>
+            <param name="BoardId">id of the board which needs to revert delete</param>
+            <param name="userId"> id of the user which board belongs to.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Api.Socioboard.Controllers.BoardMeController.getUserBoards(System.Int64)">
+            <summary>
+            To get all boards associated with user
+            </summary>
+            <param name="userId">coorsponding userId</param>
+            <returns></returns>
+        </member>
         <member name="M:Api.Socioboard.Controllers.DiscoveryController.DiscoverySearchTwitter(System.Int64,System.Int64,System.String)">
             <summary>
             Use for searching the customer which is linked with keyword 
@@ -324,6 +359,12 @@
             EmailId does not exist:when user emailid does not exist
             </returns>
         </member>
+        <member name="M:Api.Socioboard.Controllers.UserController.VerificationPassword(System.Int64,System.String)">
+            <summary>
+            for email id change we will verify password
+            then change email ID
+            </summary>
+        </member>
         <member name="M:Api.Socioboard.Controllers.UserController.DemoRequest(Domain.Socioboard.Models.DemoRequest)">
             <summary>
             when user request for demo enterprise. 
@@ -334,6 +375,7 @@
             Demo requested added:if successfully added the user for demo enterprise
             </returns>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:Api.Socioboard.Controllers.YoutubeReportController.GetYtReports(System.String,System.Int64)" -->
         <member name="T:Api.Socioboard.Helper.GoogleAnaltyicsReportingHelper.OptionalValues">
             <summary>
             There are several query Parameters that are optional this will allow you to send the ones you want.

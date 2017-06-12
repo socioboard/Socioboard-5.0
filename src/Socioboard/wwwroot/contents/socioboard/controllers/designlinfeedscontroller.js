@@ -61,7 +61,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
 
 
         $scope.openComposeMessage = function (schedulemessage) {
-
+            jQuery('input:checkbox').removeAttr('checked');
             if (schedulemessage != null) {
                 var message = {
                     "shareMessage": schedulemessage.message,

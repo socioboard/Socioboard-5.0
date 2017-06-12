@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETFramework,Version=v4.5.1/",
-    "signature": "1f4afcbfc39941de8dbe12acfcd33f472d9842e9"
+    "signature": "60056501a2133308a24b7f09c210cbf57202a533"
   },
   "compilationOptions": {
     "defines": [
@@ -56,7 +56,8 @@
           "Microsoft.AspNetCore.Diagnostics": "1.0.0",
           "System.Drawing.Primitives": "4.0.0",
           "Swashbuckle.SwaggerGen": "6.0.0-beta901",
-          "Swashbuckle.SwaggerUi": "6.0.0-beta901"
+          "Swashbuckle.SwaggerUi": "6.0.0-beta901",
+          "Imgur.API": "4.0.1"
         },
         "compile": {
           "Api.Socioboard.exe": {}
@@ -157,6 +158,15 @@
       "Iesi.Collections/4.0.0.4000": {
         "compile": {
           "lib/net40/Iesi.Collections.dll": {}
+        }
+      },
+      "Imgur.API/4.0.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Net.Http": "4.0.0.0"
+        },
+        "compile": {
+          "lib/net45/Imgur.API.dll": {}
         }
       },
       "Libuv/1.9.0": {
@@ -1612,7 +1622,8 @@
           "Microsoft.AspNetCore.Diagnostics": "1.0.0",
           "System.Drawing.Primitives": "4.0.0",
           "Swashbuckle.SwaggerGen": "6.0.0-beta901",
-          "Swashbuckle.SwaggerUi": "6.0.0-beta901"
+          "Swashbuckle.SwaggerUi": "6.0.0-beta901",
+          "Imgur.API": "4.0.1"
         },
         "runtime": {
           "Api.Socioboard.exe": {}
@@ -1713,6 +1724,15 @@
       "Iesi.Collections/4.0.0.4000": {
         "runtime": {
           "lib/net40/Iesi.Collections.dll": {}
+        }
+      },
+      "Imgur.API/4.0.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1",
+          "System.Net.Http": "4.0.0.0"
+        },
+        "runtime": {
+          "lib/net45/Imgur.API.dll": {}
         }
       },
       "Libuv/1.9.0": {
@@ -3009,6 +3029,11 @@
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-fLQKwZovMOhjte47Op+2YWLpmncQ/siA7hOdmG2eBLTFjp81s+gGkkGnDetOhBqYnmWK8g2kyx1DP9uNaJ68Ew=="
+    },
+    "Imgur.API/4.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-P5sDCdRgjJoiUksCvkEu5KdF3rLKLioC6cAya7h/GyYhFEHePCwMq33QYDl/M4Ms9ALZEvoU/+vXxfMLpDhSlg=="
     },
     "Libuv/1.9.0": {
       "type": "package",

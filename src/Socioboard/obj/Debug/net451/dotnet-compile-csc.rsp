@@ -182,6 +182,7 @@
 -resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\obj\Debug\net451\Socioboarddotnet-compile.deps.json",Socioboard.deps.json
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Program.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Startup.cs"
+"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Controllers\BoardMeController.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Controllers\FacebookManagerController.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Controllers\GoogleManagerController.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Controllers\HomeController.cs"

@@ -20,18 +20,13 @@
                                     <div class="col m4 center">
                                         <img src="{{getHttpsURL(fbfeed._facebookFeed.picture)}} " ng-if="fbfeed._facebookFeed.picture!= ''" class="responsive-img">
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed._facebookFeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
-                                        <i class="icon-pin"></i>
-                                    </a>
                                     <div class="col m12">
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li>
-                                                <div class="collapsible-header" ><i class="icon-speech"></i>Comments</div>
+                                                <div class="collapsible-header"><i class="icon-speech"></i>Comments</div>
                                                 <div class="collapsible-body">
                                                     <ul class="collection facebookfeeds">
-                                                        <li  class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive >
+                                                        <li class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive>
                                                             <img src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
                                                             <span class="email-title">{{fbcomments.fromName}}</span>
                                                             <div class="row dashboard_feeds z-depth-1 hoverable">
@@ -39,8 +34,8 @@
                                                                     <p class="break_word ultra-small">{{fbcomments.comment}}</p>
                                                                 </div>
                                                                 <a class="tooltipped secondary-content" data-position="left" data-delay="50" data-tooltip="">{{fbcomments.commentdate}}</a>
-                                                       
-                                                                </div> 
+
+                                                            </div>
                                                         </li>
 
                                                         <li class="collection-item" ng-if="user.TrailStatus!=2">
@@ -65,7 +60,13 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{fbfeed._facebookFeed.feedDate}}">{{fbfeed._facebookFeed.feedDate}}</a>
+                                <div class="row">
+                                    <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed._facebookFeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
+                                        <i class="icon-pin"></i>
+                                    </a>
+                                   
+                                </div>
+                                <a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.feedDate}}</a>
                             </li>
                         </ul>
                         <br />

@@ -17,6 +17,8 @@ namespace Domain.Socioboard.Models.Mongo
         public ObjectId Id { get; set; }
         public virtual string strId { get; set; }
         public virtual long Userid { get; set; }
+        public virtual string FacebookPageUrl { get; set; }
+        public virtual string FacebookPageUrlId { get; set; }
         public virtual string Facebookaccountid { get; set; }
         public virtual string Facebookusername { get; set; }
         public virtual string Facebookpageid { get; set; }

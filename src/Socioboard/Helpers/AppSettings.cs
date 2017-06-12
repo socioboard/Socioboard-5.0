@@ -41,6 +41,14 @@ namespace Socioboard.Helpers
         public string LinkedinCallBackURL { get; set; }
         //End LinkedIn App Creds 
 
+
+        //Pinterest App Creds Start
+        public string pinterestConsumerKey { get; set; }
+        public string pinterestConsumerScreatKey { get; set; }
+        public string pinterestRedirectionUrl { get; set; }
+        public string PinterestAuthUrl { get; set; }
+        //End Pinterest App Creds 
+
         //dropobox App Creds Start
         public string dropboxApiKey { get; set; }
         public string dropboxSecretKey { get; set; }

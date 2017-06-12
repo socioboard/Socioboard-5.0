@@ -31,7 +31,19 @@ namespace SociobordRssDataServices.Model
            // _logger = logger;
 
         }
+        public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName).Count<T>(query);
+            try
+            {
+                var output = collection;
+                return Convert.ToInt32(output);
+            }
+            catch (Exception ex) { return 0; }
 
+
+        }
         public void Delete<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
      where T : class, new()
         {

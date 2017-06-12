@@ -1,0 +1,808 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+   
+     <script>
+        $(document).ready(function () {
+           // debugger;
+
+            $('.modal-trigger').leanModal();
+        });
+    </script>*@
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>
+        Socioboard - Generate More leads on Social Media| Social CRM | Social Media CMS
+    </title>
+    <link rel="apple-touch-icon" sizes="57x57" href="~/contents/socioboard/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="~/contents/socioboard/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="~/contents/socioboard/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="~/contents/socioboard/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="~/contents/socioboard/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="~/contents/socioboard/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="~/contents/socioboard/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="~/contents/socioboard/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="~/contents/socioboard/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/frontend//imgs/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/contents/socioboard/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/contents/socioboard/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/contents/socioboard/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="~/contents/socioboard/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="~/contents/socioboard/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <meta property="og:site_name" content="socioboard.com">
+    <meta property="og:title" content="Socioboard - Open Source Social Technology Enabler | Find More Customers on Social Media">
+    <meta property="og:description" content="Be it marketing(finding leads/customers) on Social media, or listening to customer complaints, replying to them, managing multiple social media accounts from one single dashboard, finding influencers in a particular category and reaching out to them and many more things, Socioboard products can do it.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://i.imgur.com/1B8wv5m.png">
+    <meta property="og:url" content="https://www.facebook.com/SocioBoard">
+
+
+
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="~/contents/socioboard/global/plugins/materialize/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="~/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="~/contents/socioboard/css/frontend/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="~/contents/socioboard/global/plugins/animate.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    @RenderSection("CSS", false)
+</head>
+
+<body>
+    <div class="navbar-fixed">
+        <!-- Dropdown Structure -->
+        <ul id="Versions" class="dropdown-content">
+            <li><a href="http://socioboard.org/">Community</a></li>
+            <li><a href="~/Index/Agency">Agency</a></li>
+            <li><a href="~/Index/Enterprise">Enterprise</a></li>
+        </ul>
+        <ul id="Versions_mob" class="dropdown-content">
+            <li><a href="http://socioboard.org/">Community</a></li>
+            <li><a href="~/Index/Agency">Agency</a></li>
+            <li><a href="~/Index/Enterprise">Enterprise</a></li>
+        </ul>
+        <ul id="Insights" class="dropdown-content">
+            <li><a href="http://wiki.socioboard.com/index.php/Main_Page">Wiki</a></li>
+            <li><a href="http://blog.socioboard.com/category/cases">Cases</a></li>
+            <li><a href="http://blog.socioboard.com/">Blogs</a></li>
+            <li><a href="~/Index/Download">Download</a></li>
+        </ul>
+        <ul id="Insights_mob" class="dropdown-content">
+            <li><a href="http://wiki.socioboard.com/index.php/Main_Page">Wiki</a></li>
+            <li><a href="http://blog.socioboard.com/category/cases">Cases</a></li>
+            <li><a href="http://blog.socioboard.com/">Blogs</a></li>
+            <li><a href="~/Index/Download">Download</a></li>
+        </ul>
+
+
+        <nav class="white" role="navigation">
+            <div class="nav-wrapper">
+                <a id="logo-container" href="~/" class="brand-logo"><img src="~/contents/socioboard/images/Socioboard.png" alt="Socioboard"></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="~/Index/Company">Company</a></li>
+                    <li><a href="~/Index/Products">Products</a></li>
+                    <li><a class="dropdown-button" href="#!" data-activates="Versions">Versions<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a href="~/Index/Plans">Pricing</a></li>
+                    <li><a class="dropdown-button" href="#!" data-activates="Insights">Insights<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a href="~/Index/Careers">Careers</a></li>
+                    <li><a href="~/Index/Training">Training</a></li>
+                    <li><a href="~/Index/FAQ">FAQs</a></li>
+                    <li><a class="modal-trigger" href="#SignUpModal" onclick="SetUser()">Signup</a></li>
+                    <li><a class="waves-effect waves-light btn modal-trigger" href="#SignInModal">SignIn</a></li>
+                </ul>
+
+                <ul id="nav-mobile" class="side-nav">
+                    <li><a href="~/Index/Company">Company</a></li>
+                    <li><a href="products.html">Products</a></li>
+                    <li><a class="dropdown-button" href="#!" data-activates="Versions_mob">Versions<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a href="~/Index/Plans">Pricing</a></li>
+                    <li><a class="dropdown-button" href="#!" data-activates="Insights_mob">Insights<i class="material-icons right">arrow_drop_down</i></a></li>
+                    <li><a href="~/Index/Careers">Careers</a></li>
+                    <li><a href="~/Index/training">Training</a></li>
+                    <li><a href="~/Index/FAQ">FAQs</a></li>
+                    <li><a class="modal-trigger" href="#SignUpModal">Signup</a></li>
+                    <li><a class="waves-effect waves-light btn modal-trigger" href="#SignInModal">SignIn</a></li>
+                </ul>
+                <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+            </div>
+        </nav>
+
+    </div>
+
+    @RenderBody()
+
+
+
+    <footer class="page-footer">
+        <div class="container">
+            <div class="row center-align">
+                <div class="col l6 s12">
+                    <h5 class="white-text">GET IN TOUCH WITH US</h5>
+                    <p class="grey-text text-lighten-4">TV Complex, 2, 60 Feet Rd, 6th Block, Koramangala, Bengaluru, Karnataka 560034</p>
+                    <img src="/contents/socioboard/images/contactus.png">
+
+                </div>
+                <div class="col l6 s12">
+                    <div id="fb-root"></div>
+                    <script>
+                        (function (d, s, id) {
+                            var js, fjs = d.getElementsByTagName(s)[0];
+                            if (d.getElementById(id)) return;
+                            js = d.createElement(s); js.id = id;
+                            js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.5&appId=1551064375135193";
+                            fjs.parentNode.insertBefore(js, fjs);
+                        }(document, 'script', 'facebook-jssdk'));</script>
+
+                    <div class="fb-page" data-href="https://www.facebook.com/socioboard" data-tabs="timeline" data-width="500" data-height="200" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><div class="fb-xfbml-parse-ignore"><blockquote cite="https://www.facebook.com/socioboard"><a href="https://www.facebook.com/socioboard">Socioboard</a></blockquote></div></div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container center">
+                <!-- Made by with ♥ <a class="brown-text text-lighten-3" href="https://www.behance.net/chanchalsantra">Chanchal Santra</a> -->
+                Copyright © 2014 - 2016 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- SignUp Modal -->
+    <div id="SignUpModal" class="modal modal-fixed-footer" style="width: 600px;">
+        <form onsubmit="myFunction(); return false;"  id="RegistrationForm">
+            <div class="modal-content">
+                <h4 class="center">Create a free account</h4>
+                <div class="row">
+                    <div class="row">
+                        <div class="input-field col s12 m12">
+                            <div class="center">
+                                <a id="fb_account"  onclick="googleLogin();">
+                                    <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                                </a><br>
+                                <a id="fb_account" href="#" onclick="facebookLogin();">
+                                    <img src="~/contents/socioboard/images/fb_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="input-field col s12 m12">
+                            <select id="AccountType" name="AccountType">
+                                <optgroup label="Basic Plans">
+                                    <option value="0">Basic(Free)</option>
+                                    <option value="1">Standard</option>
+                                    <option value="2">Premium</option>
+                                    <option value="3">Deluxe</option>
+                                </optgroup>
+                                <optgroup label="Extra Plans">
+                                    <option value="4">Topaz</option>
+                                    <option value="5">Ruby</option>
+                                    <option value="6">Gold</option>
+                                    <option value="7">Platinum</option>
+                                </optgroup>
+                            </select>
+                            <label>Choose your option</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="FirstName" name="FirstName" type="text" required class="validate" pattern="^[a-zA-Z0-9]+$">
+                            <label for="FirstName">First Name</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="LastName" name="LastName" type="text" required class="validate" pattern="^[a-zA-Z0-9]+$">
+                            <label for="LastName">Last Name</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="EmailId" name="EmailId" type="email" required class="validate" pattern="^([a-zA-Z0-9_\-\.]+)@@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" >
+                            <label for="EmailId" data-error="wrong" data-success="right">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="PhoneNumber" name="PhoneNumber" type="tel"  class="validate" maxlength="10" pattern="[0-9]{10}">
+                            <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="Password" name="Password" type="password" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" required class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
+                            <label for="Password">Password</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="CnfPassword" name="CnfPassword" type="password" data-rule-minlength="8" required class="validate">
+                            <label for="CnfPassword">Confirm Password</label>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <div id="ImgLoading" class="btn btn-flat btn-primary ink-reaction hide"> <img class='img-portfolio img-responsive right' src='~/contents/socioboard/images/loading-spinner-grey.gif'></div>
+                <button id="submitButton" type="submit" class="btn btn-flat btn-primary ink-reaction"> Register</button>
+
+                <div></div>
+            </div>
+        </form>
+    </div>
+
+
+
+    <!-- SignInModal Structure -->
+    <div id="SignInModal" class="modal">
+        <div class="modal-content">
+            <h4 class="center-align Righteous_font">Sign In</h4>
+            <div class="col-md-12" id="fb-gp-login" style="display:none;">
+                <div class="alert alert-danger">
+                    <strong>Please wait for your login....</strong>
+                </div>
+            </div>
+            <hr>
+            <div class="row center-align">
+                <form onsubmit="Login(); return false;" class="col m6 s12">
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="logUserName" name="logUserName" type="email" class="validate" required onblur="retpwd();">
+                            <label for="logUserName">Email</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="logPassword" name="logPassword" type="password" data-rule-minlength="6" required class="validate">
+                            <label for="logPassword">Password</label>
+                        </div>
+                    </div>
+                    <p>
+                        <input type="checkbox" id="RememberMe" />
+                        <label for="RememberMe">Remember me</label>
+                    </p>
+                    <p>Forgot Password? <a class="modal-trigger modal-action modal-close modal-trigger" href="#ForgotPasswdModal">Click here to restore</a></p>
+
+                    <img class='img-portfolio img-responsive hide' id="logLoading" src='~/contents/socioboard/images/loading-spinner-grey.gif'>
+
+                    <div id="btnlogin">
+                        <button type="submit" class="modal-action waves-effect waves-green btn">Submit</button>
+                    </div>
+                </form>
+                <form class="col s12 m6">
+                    <p>You can also Register with your Social Account</p>
+                    <div class="input-group">
+                        <a id="fb_account" href="#" onclick="googleLogin();">
+                            <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                        </a><br>
+                        <a id="fb_account" href="#" onclick="facebookLogin();">
+   <img src="~/contents/socioboard/images/fb_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                        </a>
+                        <p>Not Yet Registered? &nbsp; <a class="modal-action modal-close modal-trigger" href="#SignUpModal">Register Now</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="ForgotPasswdModal" class="modal">
+        <form onsubmit="forgotPassword(); return false;" class="col m6 s12">
+            <div class="modal-content">
+                <h4 class="Comfortaa_font">Forgot Password</h4>
+                <div class="row">
+                    <div class="input-field col s12 box1">
+                        <input id="forgotPwdEmail" name="forgotPwdEmail" type="email" class="validate box_input">
+                        <label for="forgotPwdEmail">Email</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div onclick="forgotPassword()" class="waves-effect waves-green btn-flat">Submit</div>
+            </div>
+        </form>
+    </div>
+
+
+    <!--Import jQuery before materialize.js-->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="~/contents/socioboard/global/plugins/materialize/js/materialize.min.js"></script>
+    <script type="text/javascript" src="~/contents/socioboard/js/frontend/init.js"></script>
+    <script src="~/contents/socioboard/js/frontend/alertify.min.js"></script>
+    <link href="~/contents/socioboard/css/frontend/alertify.core.css" rel="stylesheet" type="text/css" />
+    <link href="~/contents/socioboard/css/frontend/alertify.default.css" rel="stylesheet" type="text/css" id="toggleCSS" />
+    <script type="text/javascript">
+        $('.image-wrapper').hover(function () {
+            $(this).removeClass('hoverOut').addClass('hoverIn');
+        }, function () {
+            $(this).removeClass('hoverIn').addClass('hoverOut');
+        });
+    </script>
+
+    <!-- ClickDesk Live Chat Service for websites -->
+    <script type='text/javascript'>
+        var _glc = _glc || []; _glc.push('all_ag9zfmNsaWNrZGVza2NoYXRyDwsSBXVzZXJzGOqp7qkBDA');
+        var glcpath = (('https:' == document.location.protocol) ? 'https://my.clickdesk.com/clickdesk-ui/browser/' :
+        'http://my.clickdesk.com/clickdesk-ui/browser/');
+        var glcp = (('https:' == document.location.protocol) ? 'https://' : 'http://');
+        var glcspt = document.createElement('script'); glcspt.type = 'text/javascript';
+        glcspt.async = true; glcspt.src = glcpath + 'livechat-new.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(glcspt, s);
+    </script>
+    <!-- End of ClickDesk -->
+    <!-- Start of StatCounter Code for Default Guide -->
+    <script type="text/javascript">
+        var sc_project = 9930597;
+        var sc_invisible = 1;
+        var sc_security = "3850c63d";
+        var scJsHost = (("https:" == document.location.protocol) ?
+        "https://secure." : "http://www.");
+        document.write("<sc" + "ript type='text/javascript' src='" +
+        scJsHost +
+        "statcounter.com/counter/counter.js'></" + "script>");
+    </script>
+    <noscript>
+        <div class="statcounter">
+            <a title="shopify site
+analytics" href="http://statcounter.com/shopify/"
+               target="_blank">
+                <img class="statcounter"
+                     src="http://c.statcounter.com/9930597/0/3850c63d/1/"
+                     alt="shopify site analytics" />
+            </a>
+        </div>
+    </noscript>
+    <!-- End of StatCounter Code for Default Guide -->
+    <!-- Google Analytics Socioboard -->
+    <script>
+    (function (i, s, o, g, r, a, m) {
+        i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+            (i[r].q = i[r].q || []).push(arguments)
+        }, i[r].l = 1 * new Date(); a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-62658532-1', 'auto');
+    ga('send', 'pageview');
+
+    </script>
+
+    <!-- social profiles -->
+    <script type="application/ld+json">
+        {
+        "@@context" : "http://schema.org",
+        "@@type" : "Organization",
+        "name" : "Socioboard",
+        "url" : "https://www.Socioboard.com",
+        "sameAs" : [
+        "http://www.facebook.com/SocioBoard",
+        "http://www.twitter.com/Socioboard",
+        "https://www.linkedin.com/company/socioboard",
+        "https://www.youtube.com/channel/UCo1ufEhFVWB99EMSkQKsx0Q",
+        "https://plus.google.com/u/0/105412765098773776122"
+        ]
+        }
+    </script>
+    <script src="~/contents/socioboard/js/frontend/jquery.cookie.js"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            var timezone_cookie = "timezoneoffset";
+            // jQuery.noConflict();
+            if (!$.cookie(timezone_cookie)) { // if the timezone cookie not exists create one.
+
+                // check if the browser supports cookie
+                var test_cookie = 'test cookie';
+                $.cookie(test_cookie, true);
+
+                if ($.cookie(test_cookie)) { // browser supports cookie
+
+                    // delete the test cookie.
+                    $.cookie(test_cookie, null);
+
+                    // create a new cookie
+                    $.cookie(timezone_cookie, new Date().getTimezoneOffset());
+
+                    // location.reload(); // re-load the page
+                }
+            }
+            else { // if the current timezone and the one stored in cookie are different then
+                // store the new timezone in the cookie and refresh the page.
+
+                var storedOffset = parseInt($.cookie(timezone_cookie));
+                var currentOffset = new Date().getTimezoneOffset();
+
+                if (storedOffset !== currentOffset) { // user may have changed the timezone
+                    $.cookie(timezone_cookie, new Date().getTimezoneOffset());
+                    //  location.reload();
+                }
+            }
+        });
+
+
+
+    </script>
+
+    <style>
+        .alert-danger {
+            background-color: #f2dede;
+            border-color: #ebccd1;
+            color: #a94442;
+        }
+    </style>
+    @*<script>
+        $(document).ready(function () {
+
+            $('.modal-trigger').leanModal();
+        });
+    </script>*@
+
+    <script>
+        function myFunction() {
+            $('#ImgLoading').show();
+            $('#submitButton').hide();
+
+            var firstName = $('#FirstName').val();
+            var lastName = $('#LastName').val();
+            var email = $('#EmailId').val();
+            // var company = $('#req_Company').val();
+            var Phone = $('#PhoneNumber').val();
+            var password = $('#Password').val();
+            var cnfPassword = $('#CnfPassword').val();
+            var accountType = $('#AccountType').val()
+            if (password != cnfPassword) {
+                alert('password not match');
+                $('#ImgLoading').hide();
+                $('#submitButton').show();
+                return false;
+            }
+
+            $.ajax({
+
+                type: "POST",
+
+                url: "@ViewBag.ApiDomain/api/user/Register",
+
+                data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": Phone, "password": password, "AccountType": accountType },
+
+                //contentType: "application/json; charset=utf-8",
+
+                dataType: "html",
+
+                success: function (msg) {
+                    console.log(msg);
+                    alertify.set({ delay: 5000 });
+                    alertify.success("Email verification mail sent successfully.");
+                    $('#FirstName').val("");
+                    $('#LastName').val("");
+                    $('#EmailId').val("");
+                    $('#PhoneNumber').val("");
+                    $('#Password').val("");
+                    $('#CnfPassword').val("")
+                    $('#ImgLoading').hide();
+                    $('#submitButton').show();
+                    // $('#req_skype').val("");
+                },
+                error: function (msg) {
+                    alertify.set({ delay: 5000 });
+                    alertify.error(msg.responseText);
+                    $('#ImgLoading').hide();
+                    $('#submitButton').show();
+                    return false;
+                }
+
+            });
+            $('#ImgLoading').hide();
+            $('#submitButton').show();
+            return false;
+        }
+
+        //function RegisterNow()
+        //{
+       //     $('#SignInModal').hide();
+       //     $("#SignUpModal").modal();
+        //}
+    </script>
+
+
+
+    <script>
+        function Login() {
+            $('#logLoading').show();
+            $('input[type="submit"]').attr('disabled', true);
+            $('#submitButton').hide();
+            $("#fb-gp-login").css("display", "block");
+            var userName = $('#logUserName').val();
+            var password = $('#logPassword').val();
+
+
+            $.ajax({
+
+                type: "POST",
+
+                url: "@ViewBag.Domain/Index/Login",
+
+                data: { "UserName": userName, "Password": password },
+
+                //contentType: "application/json; charset=utf-8",
+
+                dataType: "html",
+
+                success: function (msg) {
+                    $("#fb-gp-login").css("display", "none");
+                    if (msg == "UpgradePlans") {
+                        alertify.alert("your account has been expired.Please upgrade it.");
+                        setTimeout(function () {
+                            window.top.location = '/Index/UpgradePlans'
+                        }, 3000);
+                    }
+                    if (msg == "1") {
+                        $('input[type="submit"]').attr('disabled', false);
+                        if ($("#RememberMe").is(':checked')) {
+
+                            checkCookie(userName, password);
+
+                        }
+                        window.top.location = '/home/index'
+                    }
+                    else {
+                        alertify.set({ delay: 5000 });
+                        alertify.error(msg);
+                    }
+                },
+                error: function (msg) {
+                    $("#fb-gp-login").css("display", "none");
+                    alertify.error(msg);
+                    $('#logLoading').hide();
+                    $('#submitButton').show();
+                    return false;
+                }
+
+            });
+            $('#logLoading').hide();
+            $('#submitButton').show();
+            return false;
+        }
+        /*set cookies for login user*/
+        function setCookie(cemail, cpwd, exdays) {
+
+            debugger;
+
+            var d = new Date();
+
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+
+            var expires = "expires=" + d.toUTCString();
+
+            document.cookie = "logininfo" + cemail + "=" + cpwd + ";" + expires;
+
+        }
+
+        function GetAllCookies() {
+
+            var clist = [];
+
+            var j = 0;
+
+            debugger;
+
+            var Cookies = document.cookie.split(';');
+
+            for (var i = 0; i < Cookies.length; i++) {
+
+                var currentcooki = Cookies[i];
+
+                if (currentcooki.indexOf("logininfo") > -1) {
+
+                    clist[j] = currentcooki;
+
+                    j++;
+
+                }
+
+            }
+
+            return clist[0].replace("logininfo", "");
+
+        }
+
+        function getCookie(cemail) {
+
+            debugger;
+
+            var name = cemail + "=";
+
+            var ca = document.cookie.split(';');
+
+            for (var i = 0; i < ca.length; i++) {
+
+                var c = ca[i];
+
+                while (c.charAt(0) == ' ') c = c.substring(1);
+
+                if (c.indexOf(name) != -1) {
+
+                    return c.substring(name.length, c.length);
+
+                }
+
+            }
+
+            return "";
+
+        }
+
+        function checkCookie(username, password) {
+
+            debugger;
+
+            var check = getCookie("logininfo" + username);
+
+            if (check != "") {
+
+
+            } else {
+
+                if (username != "" && username != null && password != "" && password != null) {
+
+                    setCookie(username, password, 90);
+
+                }
+
+            }
+
+        }
+
+        function retpwd() {
+            debugger;
+            var email = $("#logUserName").val();
+            var pwd = getCookie("logininfo" + email.trim());
+            if (email != "" && pwd != "") {
+                $("#RememberMe").prop('checked', true);
+                //var pwd = getCookie("logininfo"+email.trim());
+                document.getElementById("logPassword").value = pwd;
+            }
+        }
+
+        function SetUser() {
+            debugger;
+            var currentcookie = GetAllCookies().split('=');
+            var email = currentcookie[0].trim();
+            var pass = currentcookie[1].trim();
+            if (email != "") {
+                $("#RememberMe").attr('checked', 'checked');
+                document.getElementById("logUserName").value = email;
+                document.getElementById("logPassword").value = pass;
+            }
+        }
+        /*end of cookies code*/
+    </script>
+
+    @*Facebook Login JS Start*@
+    <script>
+        function facebookLogin() {
+            $("#fb-gp-login").css("display","block");
+            $.ajax({
+
+                type: "GET",
+
+                url: "../FacebookManager/getFbLoginUrl",
+
+                dataType: "html",
+
+                success: function (msg) {
+
+                    window.location = msg;
+
+                }
+
+            });
+
+
+
+        }
+    </script>
+    @*Facebook Login JS End*@
+
+
+    @*Google Login JS Start*@
+    <script>
+        function googleLogin() {
+            $("#fb-gp-login").css("display", "block");
+
+            $.ajax({
+
+                type: "GET",
+
+                url: "../GoogleManager/getGoogleLoginUrl",
+
+                dataType: "html",
+
+                success: function (msg) {
+
+                    window.location = msg;
+
+                }
+
+            });
+
+
+
+        }
+    </script>
+    @*Google Login JS End*@
+
+    
+    <script>
+        function gotohome() {
+            $.ajax({
+                type: "GET",
+                url: "../Home/IsSessionExist",
+                dataType: "html",
+                success: function (msg) {
+                    console.log(msg);
+                    if (msg == "true") {
+                        console.log(msg);
+                        window.top.location = '/home';
+                    }
+                }
+            });
+        }
+       // gotohome();
+    </script>
+
+    @*Forgot password js start*@
+    <script>
+        function forgotPassword() {
+            $('#ImgLoading').show();
+            $('#submitButton').hide();
+            debugger;
+            var emailId = $('#forgotPwdEmail').val();
+
+            $('#ImgLoading').hide();
+            $('#submitButton').show();
+
+
+            $.ajax({
+
+                type: "POST",
+
+                url: "@ViewBag.ApiDomain/api/user/ForgotPasswordSendMail",
+
+                data: { "EmailId": emailId },
+
+                dataType: "html",
+
+                success: function (msg) {
+                    console.log(msg);
+                    alertify.set({ delay: 5000 });
+                    alertify.success(msg);
+                    $('#forgotPwdEmail').val("");
+                    $('#ImgLoading').hide();
+                    $('#submitButton').show();
+                },
+                error: function (msg) {
+                    alertify.set({ delay: 5000 });
+                    alertify.error(msg1.responseText);
+                    $('#ImgLoading').hide();
+                    $('#submitButton').show();
+                    return false;
+                }
+
+            });
+            $('#ImgLoading').hide();
+            $('#submitButton').show();
+            return false;
+        }
+    </script>
+    @*Forgot password js end*@
+
+    @RenderSection("Scripts", false)
+</body>
+</html>

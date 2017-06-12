@@ -124,18 +124,19 @@
                                             </ul>
                                         </div>
                                     </li>
-                                    <!--<li class="bold">
+                                    <li class="bold">
                                         <a class="collapsible-header waves-effect waves-cyan">
-                                            <i class="fa fa-linkedin"></i> LinkedIn
+                                            <i class="fa fa-linkedin"></i> LinkedIn 
                                         </a>
                                         <div class="collapsible-body">
                                             <ul>
                                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:4}">
-                                                    <a ng-click="$state.go('linkedin_comp_feeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
-                                                </li>
+                                                    <!--<a ng-click="$state.go('linkedin_comp_feeds', { 'profileId':profile.profileId})" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>-->
+                                                    <a href="#/linkedin_comp_feeds/{{profile.profileId}}" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                 </li>
                                             </ul>
                                         </div>
-                                    </li>-->
+                                    </li>
                                     <li class="bold">
                                         <a class="collapsible-header waves-effect waves-cyan">
                                             <i class="fa fa-google-plus"></i> Google Plus
@@ -220,9 +221,9 @@
                             <li class="truncate">
                                 <a href="#/automate_rss_feeds.html">Automate Rss Feeds</a>
                             </li>
-                            <li class="truncate">
+                            <!--<li class="truncate">
                                 <a href="#/rss_feeds.html">Custom Rss Feeds</a>
-                            </li>
+                            </li>-->
                             <li class="truncate">
                                 <a href="#/posted_rss_feeds.html">Posted Rss Feeds</a>
                             </li>
@@ -251,42 +252,97 @@
                         </ul>
                     </div>
                 </li>
+              
+
+                <!--reports-->
                 <li class="bold">
-                    <a class="collapsible-header waves-effect waves-cyan">
+                    <a class="collapsible-header waves-effect waves-orange">
                         <i class="icon-notebook"></i> Reports
                     </a>
                     <div class="collapsible-body">
-                        <ul>
+                        <ul class="collapsible collapsible-accordion">
                             <li class="truncate">
                                 <a href="#/groupreport.html">Socioboard Group Report</a>
                             </li>
                             <li class="truncate">
-                                <a href="#/twitterreports">Twitter Report</a>
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    Twitter
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="truncate">
+                                            <a href="#/twitterreports">
+                                                Twitter Report
+                                            </a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="#/twittercustomreports">
+                                                Twitter Custom Report
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                             <li class="truncate">
-                                <a href="#/facebookreport.html">Facebook Page Report</a>
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    Facebook
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="truncate">
+                                            <a href="#/facebookpagedetreport.html">
+                                                FB Page Report
+                                            </a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="#/facebookreport.html">
+                                                FB Page Custom Report
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                           
-                           
-                          
-                            <!--<li class="truncate">
-                                <a href="#/facebookpagereport.html">Facebook Public Page Report</a>
-                            </li>-->
                             <li class="truncate">
-                                <a href="#/instagramreport.html">Instagram Report</a>
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    Instagram
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="truncate">
+                                            <a href="#/instagramreport.html">
+                                                Instagram Report
+                                            </a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="#/instagramcustomreport.html">
+                                                Instagram Custom Report
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="truncate">
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    Youtube
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="truncate">
+                                            <a href="#/youtubeallreport.html">
+                                                Youtube Report
+                                            </a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="#/youtubereport.html">
+                                                Youtube Custom Report
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                             <li class="truncate">
                                 <a href="#/googleanalyticsreport">Google Analytics</a>
                             </li>
-                            <!--<li class="truncate">
-                                <a href="">Socioboard Team Report</a>
-                            </li>
-                            <li class="truncate">
-                                <a href="">Shareathon Group Report</a>
-                            </li>
-                            <li class="truncate">
-                                <a href="">Shareathon Page Report</a>
-                            </li>-->
                         </ul>
                     </div>
                 </li>
@@ -358,7 +414,40 @@
                 <i class="icon-layers"></i> Affiliates
             </a>
         </li>  -->
-        
+        <li class="bold">
+            <a href="#/boardlist" class="waves-effect waves-cyan">
+                <i class="icon-briefcase"></i> Board Me
+            </a>
+        </li>
+
+        <li class="bold red">
+            <a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw" class="waves-effect waves-orange  white-text" target="_blank">
+                <i class="icon-camcorder"></i> Youtube Tutorials
+            </a>
+        </li>
+        <li class="bold orange darken-2 margin-bottom-10">
+            <a href=" https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?utm_source=chrome-app-launcher-info-dialog" class="waves-effect waves-orange  white-text" target="_blank">
+            <i class="fa fa-chrome fa-3x white-text"></i> Chrome Plugins
+            </a>
+        </li>
+        <li class="bold">
+            <div class="row margin-bottom-10">
+                <div class="col s12 m12 l12">
+                    <a href="https://play.google.com/store/apps/details?id=com.socioboard&hl=en" class="waves-effect waves-orange" target="_blank" style="height: auto;">
+                        <img src="../contents/socioboard/images/google_store.png" class="responsive-img">
+                    </a>
+                </div>
+            </div>
+        </li>
+        <li class="bold">
+            <div class="row margin-bottom-10">
+                <div class="col s12 m12 l12">
+                    <a href="https://itunes.apple.com/sg/app/socioboard/id923398550?mt=8" class="waves-effect waves-orange" target="_blank" style="height: auto;">
+                        <img src="../contents/socioboard/images/iphone_store.png" class="responsive-img">
+                    </a>
+                </div>
+            </div>
+        </li>
     </ul>
     <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu"></i></a>
 </aside>

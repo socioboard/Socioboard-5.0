@@ -10,7 +10,27 @@ namespace SocioboardDataServices.Model
 {
     public class DatabaseRepository : IDatabaseRepository
     {
-      
+        public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            int PiadUser = 0;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession())
+                {
+
+                    var futureCount = session.Query<T>().Where(query).Count();
+                    PiadUser = Convert.ToInt32(futureCount);
+                }
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                }
+                catch { }
+            }
+            return PiadUser;
+        }
         public IList<T> Find<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             IList<T> result = null;

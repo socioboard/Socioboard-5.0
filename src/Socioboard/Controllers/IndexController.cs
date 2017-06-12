@@ -42,8 +42,6 @@ namespace Socioboard.Controllers
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Index()
         {
-
-            //  return RedirectToAction("paymentWithPayUMoney", "Index");
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             bool paymentsession = HttpContext.Session.GetObjectFromJson<bool>("paymentsession");
             if (paymentsession == true)
@@ -80,17 +78,6 @@ namespace Socioboard.Controllers
 
 
         }
-
-
-
-
-        //public IActionResult facebooknotification()
-        //{
-        //    FacebookClient fb = new FacebookClient();
-        //    fb.Get("v2.7 / " + _appSettings.FacebookClientId + "/subscriptions");
-        //    return Content("");
-        //}
-
 
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel userViewModel)

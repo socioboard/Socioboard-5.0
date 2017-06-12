@@ -189,7 +189,8 @@ namespace Socioboard.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "No page linked with this account";
+                    //TempData["Error"] = "No page linked with this account";
+                    TempData["Error"] = "Access token not found"; 
                     return RedirectToAction("Index", "Home");
                 }
             }

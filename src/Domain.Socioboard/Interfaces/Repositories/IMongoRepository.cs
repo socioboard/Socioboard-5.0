@@ -17,5 +17,6 @@ namespace Domain.Socioboard.Interfaces.Repositories
         Task Add<T>(T item) where T : class, new();
         void Add<T>(IEnumerable<T> items) where T : class, new();
         Task<IList<T>> Find<T>(Expression<Func<T, bool>> query) where T : class, new();
+        int Counts<T>(Expression<Func<T, bool>> query) where T : class, new();
     }
 }

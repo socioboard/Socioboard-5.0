@@ -1,0 +1,234 @@
+    <div data-ng-controller="YoutubereportController">
+            <!-- Page name -->
+            <div class="row" ng-class="loadedYAData">
+                <div class="col m4">
+                   <div class="input-field">
+                      <select class="icons" ng-model="selectedProfile" ng-change="getReportsChart(selectedProfile, 90);LoadReportData(selectedProfile)">
+                         <option ng-repeat="profile in lstProfiles | filter:{profileType:7}" my-repeat-tab-directive value="{{profile.profileId}}" data-icon="">{{profile.profileName}}</option>
+                      </select>
+                   </div>
+                </div>
+                <div class="col m8 margin-top-20">
+                                       
+                    <h6 class="pull-right">
+                        
+                        <a href="javaScript:Void(0)" class="btn btn_style" style="background-color:#B71C1C" ng-click="getChartData(15)">15</a>
+                        <a href="javaScript:Void(0)" class="btn btn_style" style="background-color:#B71C1C" ng-click="getChartData(30)">30</a>
+                        <a href="javaScript:Void(0)" class="btn btn_style" style="background-color:#B71C1C" ng-click="getChartData(60)">60</a>
+                        <a href="javaScript:Void(0)" class="btn btn_style" style="background-color:#B71C1C" ng-click="getChartData(90)">90</a>
+
+                    </h6>
+                </div>
+            </div>
+
+            <div class="row" ng-class="loadedYAData">
+
+                <div class="col s12 m12 l12">
+                    <h5 class="grey-text text-darken-1" style="font-size:24px">Showing last {{lastxDays}} days report ({{fromDate | date}} - {{toDate | date}})</h5>
+                    <div class="card" id="feeds">
+                        <h5 class="feeds_title red darken-4 white-text">
+                            <i class="fa fa-bar-chart"></i>&nbspAnalytics overview</span>
+                            <!--<small class="ng-binding">Raj software developer</small>-->
+                        </h5>
+                        <div class="collection">
+                            <div class="row">
+
+                                <div class="col l12">
+                                    <blockquote style="border-left-color:#bb0000" class="groupbox_padding grey lighten-1">
+                                        <h5>Gross Subscribers . {{totalSubscriberss}}</h5>
+                                    </blockquote>
+                                    <div id="chartdiv_subscribersTotal" class="charts" style="height: 250px;"></div>
+                                </div>
+
+
+                                <div class="col l12">
+                                    <blockquote style="border-left-color:#1e8e12" class="groupbox_padding grey lighten-1">
+                                        <h5>Views . {{totalViewss}}</h5>
+                                    </blockquote>
+                                    <div id="chartdiv_view" class="charts" style="height: 250px;"></div>
+                                </div>
+                                <div class="col l12">
+                                    <blockquote style="border-left-color:#E55B00" class="groupbox_padding grey lighten-1">
+                                        <h5>Likes . {{totalLikess}}</h5>
+                                    </blockquote>
+                                    <div id="chartdiv_like"  class="charts" style="height: 250px;"></div>
+                                </div>
+                                <div class="col l12">
+                                    <blockquote style="border-left-color:#2a63bf" class="groupbox_padding grey lighten-1">
+                                        <h5>Comments . {{totalCommentss}}</h5>
+                                    </blockquote>
+                                    <div id="chartdiv_comment" class="charts" style="height: 250px;"></div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col s12 m12 l12">
+                    <div class="card" id="feeds">
+                        <h5 class="feeds_title red darken-4 white-text">
+                            <i class="fa fa-youtube-play white-text"></i>&nbspYoutube stats</span>
+                        </h5>                     
+                                 <div class="col l6 m6 s12">
+                                    <blockquote style="border-left-color:#bb0000" class="groupbox_padding grey lighten-1">
+                                        <h5>Channel description</h5>
+                                    </blockquote>
+                                    <div class="row center" ng-repeat="channels in tableData">
+                                        <div class="dl-horizontal">
+                                            <!--<h5>Raj software developer</h5>-->
+                                            <img src="{{channels._YoutubeChannelss.channelpicUrl}}" class="circle responsive-img activator card-profile-image">
+                                        </div>
+                                        <div>
+                                            <div class="dl-horizontal">
+                                                <div class="inst_name_big_dt">{{channels._YoutubeChannelss.ytubeChannelName}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col l6 m6 s12">
+                                    <blockquote style="border-left-color:#bb0000" class="groupbox_padding grey lighten-1">
+                                        <h5>Channel statistics</h5>
+                                        <!--<h1>Raj Dotnet</h1>-->
+                                    </blockquote>
+                                    <div class="row center" ng-repeat="channels in tableData">
+                                        <div class="col m4">
+                                            <h5 class="GroupStats_twt">
+                                                <i class="icon-user fa-2x fa-fw blue-text text-darken-3"></i>
+                                            </h5><h5><strong>{{channels._YoutubeChannelss.subscribersCount}}</strong></h5>
+                                            <span>Total Subscribers</span>
+                                        </div>
+                                        <div class="col m4">
+                                            <h5 class="GroupStats_twt">
+                                                <i class="icon-camcorder fa-2x fa-fw blue-text text-darken-3"></i>
+                                            </h5><h5><strong>{{channels._YoutubeChannelss.videosCount}}</strong></h5>
+                                            <span>Total Videos</span>
+                                        </div>
+                                        <div class="col m4">
+                                            <h5 class="GroupStats_twt">
+                                                <i class="fa fa-eye fa-2x fa-fw blue-text text-darken-3"></i>
+                                            </h5><h5><strong>{{channels._YoutubeChannelss.viewsCount}}</strong></h5>
+                                            <span>Total Views</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--  -->
+
+
+
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5>Video statistics</h5>
+                                    </blockquote> 
+                                    <label>Show entries</label> 
+                                    <input style="width:100px;text-align:center" type="number" min="0" step="10" ng-model="rowLimit"/>                             
+                                    <table class="display responsive-table" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th width="50%">Videos</th>
+                                                <th width="20%">Channel Name</th>
+                                                <th width="10%">Likes</th>
+                                                <th width="10%">Comments</th>
+                                                <th width="10%">Views</th>
+                                            </tr>
+                                        </thead>
+                                        <!--<tfoot>
+                                            <tr>
+                                                <th width="50%">Videos</th>
+                                                <th width="20%">Channel Name</th>
+                                                <th width="10%">Likes</th>
+                                                <th width="10%">Comments</th>
+                                                <th width="10%">Views</th>
+                                            </tr>
+                                        </tfoot>-->
+                                        <tbody ng-repeat="channelss in tableData">                                            
+                                                <tr ng-repeat="videos in channelss._YoutubeVideoss | limitTo:rowLimit">
+                                                    <td>
+                                                        <div class="row">
+                                                            <!--<a href="{{videos.watchUrl}}" target="_blank">-->
+                                                                <div class="col m2 l1">
+                                                                    <img src="{{videos.vdoImageUrl}}" class="responsive-img" style="margin-top:8px">
+                                                                </div>
+                                                                <div class="col m10 l11">
+                                                                    <h6 class="grey-text text-darken-4">{{videos.title}}</h6>
+                                                                    <!--<span class="grey-text text-darken-1 truncate">{{videos.description}}</span>-->
+                                                                    <!--<h6 class="grey-text text-darken-4">Raj Dotnet</h6>-->
+                                                                </div>
+                                                            <!--</a>-->
+                                                        </div>
+                                                    </td>
+                                                    <td>{{videos.channelTitle}}</td>
+                                                    <td>{{videos.likeCount}}</td>
+                                                    <td>{{videos.commentCount}}</td>
+                                                    <td>{{videos.viewCount}}</td>
+                                                </tr>
+
+                                            <!--<tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col m2 l1">
+                                                            <img src="http://graph.facebook.com/226587747673015/picture?type=small" class="responsive-img" >
+                                                        </div>
+                                                        <div class="col m10 l11">
+                                                            <a href="javascript:;">
+                                                                <h6 class="grey-text text-darken-4">Heading</h6>
+                                                                <h6 class="grey-text text-darken-1">Desc</h6>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>
+                                                    <div class="row">
+                                                        <div class="col m2 l1">
+                                                            <img src="http://graph.facebook.com/226587747673015/picture?type=small" class="responsive-img" >
+                                                        </div>
+                                                        <div class="col m10 l11">
+                                                            <a href="javascript:;">
+                                                                <h6 class="grey-text text-darken-4">Heading</h6>
+                                                                <h6 class="grey-text text-darken-1">Desc</h6>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                                <td>0</td>
+                                            </tr>-->
+                                        </tbody>
+                                      
+                                    </table>
+                                </div>
+
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <div ng-class="loadingYAData">
+            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+            <div class="center">
+                <div class="preloader-wrapper small active">
+                    <div class="spinner-layer spinner-red-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait for the analytics data to be generated</h6>
+
+            </div>
+        </div>
+    </div>

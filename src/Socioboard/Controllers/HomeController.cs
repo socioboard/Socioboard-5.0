@@ -148,7 +148,7 @@ namespace Socioboard.Controllers
                     if (!string.IsNullOrEmpty(sessionSelectedGroupId))
                     {
                         ViewBag.selectedGroupId = sessionSelectedGroupId;
-                        HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
+                        HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetAllGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
                         if (groupProfilesResponse.IsSuccessStatusCode)
                         {
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
@@ -178,7 +178,7 @@ namespace Socioboard.Controllers
                         long selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
                         HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
                         ViewBag.selectedGroupId = selectedGroupId;
-                        HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
+                        HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetAllGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
                         if (groupProfilesResponse.IsSuccessStatusCode)
                         {
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();

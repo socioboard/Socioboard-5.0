@@ -43,6 +43,13 @@ namespace Api.Socioboard.Controllers
             return Ok(GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr));
         }
 
+        [HttpGet("GetAllGroupProfiles")]
+        public IActionResult GetAllGroupProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr));
+        }
+
         [HttpPost("DeleteProfile")]
         public IActionResult DeleteProfile(long groupId, long userId, string profileId)
         {

@@ -134,8 +134,11 @@ namespace Api.Socioboard.Repositories
 
         public static List<Domain.Socioboard.Models.Discovery> DiscoveryHistory(long userId, Model.DatabaseRepository dbr)
         {
-            List<Domain.Socioboard.Models.Discovery> lstdiscovery = dbr.Find<Domain.Socioboard.Models.Discovery>(t => t.userId == userId).ToList();
-            return lstdiscovery;
+            List<Domain.Socioboard.Models.Discovery> totaldata = dbr.Find<Domain.Socioboard.Models.Discovery>(t => t.userId == userId).ToList();
+
+            List<Domain.Socioboard.Models.Discovery> lstdiscovery = totaldata.OrderByDescending(t => t.createTime).ToList();
+
+                return lstdiscovery;
         }
 
        

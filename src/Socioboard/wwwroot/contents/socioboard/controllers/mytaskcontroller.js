@@ -8,17 +8,27 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
         $scope.dispbtnmark = true;
         $scope.dispbtndelete = true;
         $scope.dispbtn = true;
+        $scope.lastreached = false;
+        $scope.notasks = false;
         $scope.userTasks = [];
         $scope.selectedTask = null;
         $scope.selectedTaskIndex = null;
         $scope.getTasks = function () {
             $http.get(apiDomain + '/api/Task/GetAllPendingTasksOfUserAndGroup?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
-                              $scope.userTasks = response.data;
-                              if (response.data.length > 0) {
-                                  $scope.showTask(0);
+                              if (response.data != "") {
+                                  $scope.userTasks = response.data;
+                                  $scope.lastreached = true;
+                                  if (response.data.length > 0) {
+                                      $scope.showTask(0);
+                                  }
+                                  console.log($scope.userTasks);
                               }
-                              console.log($scope.userTasks);
+                              else
+                              {
+                                  $scope.notasks = true;
+                                  $scope.lastreached = true;
+                              }
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -112,7 +122,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        $scope.dispbtndelete = true;
 		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
 		                        $scope.selectedTask = null;
-		                        swal("Deleted!", "Your profile has been deleted", "success");
+		                        swal("Deleted!", "Your task has been deleted", "success");
 		                        $scope.replydisp = false;
 		                        $scope.$apply();
 		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {

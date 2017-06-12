@@ -1375,7 +1375,7 @@ namespace Api.Socioboard.Controllers
                 {
                     if (dbr.Find<User>(t => t.UserName.Equals(userName)).Count() > 0)
                     {
-                        return Ok("UserName already Taken.");
+                        return Ok("Username already taken by someone");
                     }
                     else
                     {
@@ -1430,16 +1430,16 @@ namespace Api.Socioboard.Controllers
                 if (res == 1)
                 {
                     _redisCache.Delete(user.EmailId);
-                    return Ok("updated");
+                    return Ok("Profile updated successfully");
                 }
                 else
                 {
-                    return Ok("issue while updating.");
+                    return Ok("Issue while updating");
                 }
             }
             else
             {
-                return NotFound("user not found");
+                return NotFound("User not found");
             }
         }
 
@@ -1463,7 +1463,7 @@ namespace Api.Socioboard.Controllers
                 {
                     if (user.Password.Equals(SBHelper.MD5Hash(newPassword)))
                     {
-                        return Ok("Current Password and New Password are same.Try with New Password");
+                        return BadRequest("Current Password and New Password are same.Try with New Password");
                     }
                     if (newPassword.Equals(conformPassword))
                     {
@@ -1703,6 +1703,66 @@ namespace Api.Socioboard.Controllers
                 return Ok("EmailId does not exist");
             }
         }
+
+
+        /// <summary>
+        /// for email id change we will verify password
+        /// then change email ID
+        /// </summary>
+        [HttpPost("VerificationPassword")]
+        public IActionResult VerificationPassword(long userId, string currentPassword)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userId);
+            if (user.EmailValidateToken.Equals("Facebook"))
+            {
+                return BadRequest("EmailId reset is not permitted as you registered in Socioboard with Facebook.");
+            }
+            if (user.EmailValidateToken.Equals("Google"))
+            {
+                return BadRequest("EmailId reset is not permitted as you registered in Socioboard with Google.");
+            }
+            if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            {
+                return Ok("Now you can change your EmailID");
+            }
+            else
+            {
+                return BadRequest("Wrong password");
+            }
+
+        }
+
+
+        [HttpPost("ChangeEmailID")]
+        public IActionResult ChangeEmailID(long userId, string newEmailID, string confirmEmailID)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userId);
+            if (user.EmailId.Equals(newEmailID))
+            {
+                return BadRequest("Current EmailId and New EmailId are same.Try with New EmailId");
+            }
+            if (newEmailID.Equals(confirmEmailID))
+            {
+                user.EmailId = newEmailID;
+                int res = dbr.Update<User>(user);
+                if (res == 1)
+                {
+                    return Ok("EmailId Updated");
+                }
+                else
+                {
+                    return BadRequest("error while updating EmailId, pls try after some time.");
+                }
+            }
+            else
+            {
+                return BadRequest("New Email and Conform Email are not same");
+            }
+
+        }
+
 
         /// <summary>
         /// when user request for demo enterprise. 

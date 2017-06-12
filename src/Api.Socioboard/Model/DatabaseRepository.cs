@@ -44,7 +44,31 @@ namespace Api.Socioboard.Model
 
             return result;
         }
+        //public int Sum<T>(Expression<Func<T, bool>> query,Expression column) where T : class, new()
+        //{
+        //    int result = 0;
+        //    try
+        //    {
+        //        using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
+        //        {
+        //            var futureCount = session.Query<T>().Where(query).Sum<T>(column);
+                       
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logger.LogCritical(ex.Message);
+        //        _logger.LogError(ex.StackTrace);
+        //        try
+        //        {
+        //            _logger.LogError(ex.InnerException.Message);
 
+        //        }
+        //        catch { }
+        //    }
+
+        //    return result;
+        //}
 
         public IList<T> FindWithRange<T>(Expression<Func<T, bool>> query, int skip, int take) where T : class, new()
         {
@@ -101,64 +125,31 @@ namespace Api.Socioboard.Model
             return PiadUser;
         }
 
-        //public int PaidUserCount(DateTime date)
-        //{
-        //    int PiadUser = 0;
-        //    try
-        //    {
-        //        using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
-        //        {
+        public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            int PiadUser = 0;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
+                {
 
-        //            var futureCount = session.QueryOver<Domain.Socioboard.Models.User>().Where(t => t.CreateDate.Date > date.Date && t.CreateDate.Date < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid)
-        //               .Select(NHibernate.Criterion.Projections.RowCount())
-        //              .FutureValue<int>()
-        //                  .Value;
-        //            PiadUser = Convert.ToInt32(futureCount);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogCritical(ex.Message);
-        //        _logger.LogError(ex.StackTrace);
-        //        try
-        //        {
-        //            _logger.LogError(ex.InnerException.Message);
+                    var futureCount = session.Query<T>().Where(query).Count();
+                    PiadUser = Convert.ToInt32(futureCount);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                try
+                {
+                    _logger.LogError(ex.InnerException.Message);
 
-        //        }
-        //        catch { }
-        //    }
-        //    return PiadUser;
-        //}
-
-
-        //public int UnPaidUserCount(DateTime date)
-        //{
-        //    int PiadUser = 0;
-        //    try
-        //    {
-        //        using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
-        //        {
-
-        //            var futureCount = session.QueryOver<Domain.Socioboard.Models.User>().Where(t => t.CreateDate.Date > date.Date && t.CreateDate.Date < date.AddMonths(1).Date && t.PaymentStatus == Domain.Socioboard.Enum.SBPaymentStatus.Paid)
-        //               .Select(NHibernate.Criterion.Projections.RowCount())
-        //              .FutureValue<int>()
-        //                  .Value;
-        //            PiadUser = Convert.ToInt32(futureCount);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogCritical(ex.Message);
-        //        _logger.LogError(ex.StackTrace);
-        //        try
-        //        {
-        //            _logger.LogError(ex.InnerException.Message);
-
-        //        }
-        //        catch { }
-        //    }
-        //    return PiadUser;
-        //}
+                }
+                catch { }
+            }
+            return PiadUser;
+        }
 
 
 

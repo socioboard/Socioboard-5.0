@@ -118,6 +118,23 @@ namespace Api.Socioboard.Controllers
             return Ok(lstTwtAcc);
         }
 
+        [HttpGet("GetAllTwitterProfiles")]
+        public IActionResult GetAllTwitterProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.TwitterAccount> lstTwtAcc = new List<Domain.Socioboard.Models.TwitterAccount>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
+            {
+                Domain.Socioboard.Models.TwitterAccount twtAcc = Repositories.TwitterRepository.getTwitterAccount(item.profileId, _redisCache, dbr);
+                if (twtAcc != null)
+                {
+                    lstTwtAcc.Add(twtAcc);
+                }
+            }
+            return Ok(lstTwtAcc);
+        }
+
         [HttpGet("GetNotifications")]
         public IActionResult GetNotifications(long groupId, long userId, int skip, int count)
         {

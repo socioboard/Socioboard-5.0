@@ -142,10 +142,16 @@ ul.side-nav.leftside-navigation li.active > a{
     top: -9px;
 }
 .groupslist i{
+    height: 45px !important;
+    line-height: 50px !important;
   display: inline-block;
   font-size: 1.2rem;
   position: relative;
  padding: 5px;
+}
+
+.dropdown-content-small li > a, .dropdown-content-small li > span{
+    padding: 0px 16px;
 }
 
 /* right_side title*/
@@ -381,4 +387,8 @@ ul.side-nav.leftside-navigation li.active > a{
     line-height: 22px !important;
     color: #464646;
     padding: 1px 5px;
+}
+
+.chip{
+    margin: 1px;
 }

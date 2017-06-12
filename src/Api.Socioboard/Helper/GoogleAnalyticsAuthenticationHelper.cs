@@ -91,7 +91,7 @@ namespace Api.Socioboard.Helper
                 {
                     HttpClientInitializer = credential,
                     ApplicationName = "SocioboardBoardMe",
-                    // ApiKey = "AIzaSyCOq-bU7EyOGIklwJzMBRExIzL152wJFC0",
+                    // ApiKey = "AIzaSyBmQ1X1UBnKi3V78EkLuh7UHk5odrGfp5M",
                 });
                 return service;
             }

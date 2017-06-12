@@ -102,7 +102,20 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
         $scope.AddInstagramComment = function (FeedId, InstagramId)
         {
+            debugger;
             var text = $('#postcomment' + FeedId).val();
+            var updatetitle = "";
+
+            var postdata = text.split("\n");//newComment
+            for (var i = 0; i < postdata.length; i++) {
+                updatetitle = updatetitle + "<br>" + postdata[i];
+            }
+            updatetitle = updatetitle.replace(/#+/g, 'hhh');
+            updatetitle = updatetitle.replace(/&+/g, 'nnn');
+            updatetitle = updatetitle.replace("+", 'ppp');
+            updatetitle = updatetitle.replace("-+", 'jjj');
+            text = updatetitle;
+
             if (text != "" && text != null && text != undefined) {
                 $scope.dispbtn =false;
                 //codes to post comments

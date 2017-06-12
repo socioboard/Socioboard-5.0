@@ -12,6 +12,8 @@ using Newtonsoft.Json.Linq;
 
 namespace Api.Socioboard.Repositories
 {
+    
+
     public class TwitterReportsRepository
     {
         public static void CreateTodayReports(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
@@ -143,5 +145,125 @@ namespace Api.Socioboard.Repositories
             }
         }
 
+
+        public static List<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports> gettwitterReport(string[] profileId, int daysCount, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            MongoRepository mongorepo = new MongoRepository("MongoTwitterDailyReports", _appSettings);
+            List<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports> inMemFacaebookPageDailyReports = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramDailyReport + profileId);
+            if (inMemFacaebookPageDailyReports != null)
+            {
+                return inMemFacaebookPageDailyReports;
+            }
+            else
+            {
+                DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-daysCount).Year, DateTime.UtcNow.AddDays(-daysCount).Month, DateTime.UtcNow.AddDays(-daysCount).Day, 0, 0, 0, DateTimeKind.Utc);
+                DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
+                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports>(t => profileId.Contains(t.profileId) && t.timeStamp <= Helper.DateExtension.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= Helper.DateExtension.ConvertToUnixTimestamp(dayStart));
+                var task = Task.Run(async () =>
+                {
+                    return await ret;
+                });
+
+                if (task.Result != null)
+                {
+                    IList<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports> lstfbpagereportdata = task.Result.ToList();
+                    if (lstfbpagereportdata.Count > 0)
+                    {
+                        _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramDailyReport + profileId, lstfbpagereportdata.ToList());
+                    }
+                    return lstfbpagereportdata.OrderBy(t => t.timeStamp).ToList();
+                }
+                return new List<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports>();
+            }
+        }
+
+        public static List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> gettwitterfeedsreport(string[] profileId, int daysCount, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed", _appSettings);
+            List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> inMeminstagramfeedsReports = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramDailyReport + profileId);
+            if (inMeminstagramfeedsReports != null)
+            {
+                return inMeminstagramfeedsReports;
+            }
+            else
+            {
+                DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-daysCount).Year, DateTime.UtcNow.AddDays(-daysCount).Month, DateTime.UtcNow.AddDays(-daysCount).Day, 0, 0, 0, DateTimeKind.Utc);
+                DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
+                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>(t => profileId.Contains(t.profileId) && t.feedTimeStamp <= Helper.DateExtension.ConvertToUnixTimestamp(dayEnd) && t.feedTimeStamp >= Helper.DateExtension.ConvertToUnixTimestamp(dayStart));
+                var task = Task.Run(async () =>
+                {
+                    return await ret;
+                });
+
+                if (task.Result != null)
+                {
+                    IList<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> lstfbpagereportdata = task.Result.ToList();
+                    if (lstfbpagereportdata.Count > 0)
+                    {
+                        _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramDailyReport + profileId, lstfbpagereportdata.ToList());
+                    }
+                    return lstfbpagereportdata.OrderBy(t => t.feedTimeStamp).ToList();
+                }
+                return new List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>();
+            }
+        }
+
+        public static List<Domain.Socioboard.Models.Mongo.twtfollowfollowing> gettwtfollofollowingReport(string[] profileId, int daysCount, Helper.Cache _redisCache, Helper.AppSettings _appSettings, DatabaseRepository dbr)
+        {
+            MongoRepository mongorepo = new MongoRepository("MongoTwitterDailyReports", _appSettings);
+            List<Domain.Socioboard.Models.Mongo.twtfollowfollowing> inMemtwtDailyReports = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.twtfollowfollowing>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramDailyReport + profileId);
+            if (inMemtwtDailyReports != null)
+            {
+                return inMemtwtDailyReports;
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.Mongo.twtfollowfollowing> reportdata = new List<twtfollowfollowing>();
+                DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-daysCount).Year, DateTime.UtcNow.AddDays(-daysCount).Month, DateTime.UtcNow.AddDays(-daysCount).Day, 0, 0, 0, DateTimeKind.Utc);
+                DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
+                var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports>(t => profileId.Contains(t.profileId) && t.timeStamp <= Helper.DateExtension.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= Helper.DateExtension.ConvertToUnixTimestamp(dayStart));
+                var task = Task.Run(async () =>
+                {
+                    return await ret;
+                });
+
+                if (task.Result != null)
+                {
+                    IList<Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports> lstfbpagereportdata = task.Result.ToList();
+                    var Instapid = lstfbpagereportdata.GroupBy(x => x.profileId).Select(x => x.First()).ToList();
+                    var random = new Random();
+                    foreach (Domain.Socioboard.Models.Mongo.MongoTwitterDailyReports twtprofiledata in Instapid)
+                    {
+                       // DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                        List<Domain.Socioboard.Models.TwitterAccount> lstTwtAcc = new List<Domain.Socioboard.Models.TwitterAccount>();
+                        Domain.Socioboard.Models.TwitterAccount twtAcc = Repositories.TwitterRepository.getTwitterAccount(twtprofiledata.profileId, _redisCache, dbr);
+                        //Domain.Socioboard.Models.TwitterAccount twtAccname = dbr.Find().twtAccname();
+                        var randomColor = String.Format("#{0:X6}", random.Next(0x1000000));
+                        Domain.Socioboard.Models.Mongo.twtfollowfollowing repo = new twtfollowfollowing();
+                        long twtFollowerCount = lstfbpagereportdata.ToList().Where(t => t.profileId == twtprofiledata.profileId).Sum(t => t.newFollowers);
+                        long twtFollowingCount = lstfbpagereportdata.ToList().Where(t => t.profileId == twtprofiledata.profileId).Sum(t => t.newFollowing);
+                        repo.startdate = dayStart;
+                        repo.endtdate = dayEnd;
+                        repo.twtFollowerCounts = twtFollowerCount;
+                        repo.twtFollowingCounts = twtFollowingCount;
+                        repo.profileId = twtprofiledata.profileId;
+
+                        repo.twtName = twtAcc.twitterScreenName;
+                        repo.profilepic = twtAcc.profileImageUrl;
+                        repo.colors = Convert.ToString(randomColor);
+                        reportdata.Add(repo);
+                    }
+                    // long TwitterFollowerCount = lstfbpagereportdata.ToList().Where(t => profileId.Contains(t.profileId)).Sum(t => t.followcount);
+                    if (lstfbpagereportdata.Count > 0)
+                    {
+                        _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramDailyReport + profileId, lstfbpagereportdata.ToList());
+                    }
+                    return reportdata.OrderBy(t => t.startdate).ToList();
+                    // return lstfbpagereportdata.OrderBy(t => t.date).ToList();
+                }
+                return new List<Domain.Socioboard.Models.Mongo.twtfollowfollowing>();
+            }
+
+        }
     }
 }

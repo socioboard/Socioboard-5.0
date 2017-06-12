@@ -67,7 +67,10 @@
 <body>
 
     <!-- hello bar for chrome plugins -->
-    
+    <div id='bizzbar'>
+        <p class='bizztext'>Download Socioboard Chrome Plugin here -> !! <a class='bizzbutton' href="https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?hl=en-GB" target="_blank">Download Now</a></p>
+        <close class="animated headShake infinite"></close>
+    </div>
     <open class="animated pulse infinite"></open>
     <div class="navbar-fixed" style="padding-top: 30px;">
         <!-- Dropdown Structure -->
@@ -192,7 +195,7 @@
                                     <option value="2">Premium</option>
                                     <option value="3">Deluxe</option>
                                 </optgroup>
-                                <optgroup label="Extra Plans">
+                                <optgroup label="Expert Plans">
                                     <option value="4">Topaz</option>
                                     <option value="5">Ruby</option>
                                     <option value="6">Gold</option>
@@ -228,6 +231,12 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="input-field col s12">
+                            <input id="PhoneNumber" name="PhoneNumber" type="tel" class="validate" title="Please enter number only" maxlength="10" pattern="[0-9]{10}">
+                            <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
+                        </div>
+                    </div>
+                    <div class="row" style="display:none">
                         <div class="input-field col s12">
                             <input id="PhoneNumber" name="PhoneNumber" type="tel" class="validate" title="Please enter number only" maxlength="10" pattern="[0-9]{10}">
                             <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>

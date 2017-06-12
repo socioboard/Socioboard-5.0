@@ -13,6 +13,7 @@ namespace Domain.Socioboard.Models.Mongo
         public ObjectId Id { get; set; }
         public double publishedtime  { get; set; }
         public string PostImageurl { get; set; }
+        public string posturl { get; set; }
         public string Text { get; set; }
         public string Title { get; set; }
         public string facebookprofileid { get; set; }

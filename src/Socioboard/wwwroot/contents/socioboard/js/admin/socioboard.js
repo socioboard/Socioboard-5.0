@@ -212,6 +212,30 @@ profilesetting = function () {
     });
 }
 
+mailsetting = function () {
+    // initialize core components
+
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+    $('input#input_text, textarea#message').characterCounter();
+
+}
+
 smartinbox = function () {
     // initialize core components
     $('.modal-trigger').leanModal();
@@ -2066,6 +2090,67 @@ facebookpagereport = function () {
 
 };
 
+
+// youtube custom report 
+youtubereport = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+
+    $(document).ready(function () {
+        $('#CONTENT_BREAKDOWN_table').DataTable();
+    });
+
+};
+
+
+// youtube all report 
+youtubeallreport = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+
+    $(document).ready(function () {
+        $('#CONTENT_BREAKDOWN_table').DataTable();
+    });
+
+};
 
 // Instagram report
 instagramreport = function () {

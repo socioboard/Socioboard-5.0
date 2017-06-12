@@ -99,31 +99,37 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
         $scope.postdirrectmessage = function () {
            // alert($rootScope.user.Id);
             var message = $('#dmmessagecomment').val();
-            var updatedmessage = "";
-            var postdata = message.split("\n");
-            $scope.sendingloader = 'show';       // for loader part
-            $scope.sendicon = 'hide';             // for loader part
-            for (var i = 0; i < postdata.length; i++) {
-                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            if (/\S/.test(message)) {
+                var updatedmessage = "";
+                var postdata = message.split("\n");
+                $scope.sendingloader = 'show';       // for loader part
+                $scope.sendicon = 'hide';             // for loader part
+                for (var i = 0; i < postdata.length; i++) {
+                    updatedmessage = updatedmessage + "<br>" + postdata[i];
+                }
+                updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+                updatedmessage = updatedmessage.replace("+", 'ppp');
+                updatedmessage = updatedmessage.replace("-+", 'jjj');
+                message = updatedmessage;
+                //codes to postdirrectmessage
+                $http.post(apiDomain + '/api/Twitter/PostTwitterDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message + '&UserId=' + $rootScope.user.Id)
+                              .then(function (response) {
+                                  //setTimeout(function () {
+                                  //$scope.sendingcomment = false;
+                                  //}, 0);
+
+                                  $scope.Conversation($rootScope.RecipientId, $rootScope.SenderId);
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                                  console.log(reason.data);
+                              });
+                // end codes to postdirrectmessage
             }
-            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
-            updatedmessage = updatedmessage.replace("+", 'ppp');
-            updatedmessage = updatedmessage.replace("-+", 'jjj');
-            message = updatedmessage;
-            //codes to postdirrectmessage
-            $http.post(apiDomain + '/api/Twitter/PostTwitterDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message + '&UserId=' + $rootScope.user.Id)
-                          .then(function (response) {
-                              //setTimeout(function () {
-                                 //$scope.sendingcomment = false;
-                              //}, 0);
-                              
-                              $scope.Conversation($rootScope.RecipientId, $rootScope.SenderId);
-                          }, function (reason) {
-                              $scope.error = reason.data;
-                              console.log(reason.data);
-                          });
-            // end codes to postdirrectmessage
+            else
+            {
+                swal("Please enter some text");
+            }
         }
 
         $scope.addTask = function (feedTableType) {

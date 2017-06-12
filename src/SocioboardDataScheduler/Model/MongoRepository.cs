@@ -50,7 +50,19 @@ namespace SocioboardDataServices.Model
                 _db.GetCollection<T>(collecionName, settings).DeleteOneAsync(filter);
             
         }
+        public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName).Count<T>(query);
+            try
+            {
+                var output = collection;
+                return Convert.ToInt32(output);
+            }
+            catch (Exception ex) { return 0; }
 
+
+        }
         public void DeleteAll<T>() where T : class, new()
         {
            

@@ -21,4 +21,16 @@ namespace Domain.Socioboard.Models.Mongo
         public double timeStamp { get; set; }
         public string profileId { get; set; }
     }
+
+    public class twtfollowfollowing
+    {
+        public long twtFollowerCounts { get; set; }
+        public long twtFollowingCounts { get; set; }
+        public DateTime startdate { get; set; }
+        public DateTime endtdate { get; set; }
+        public string twtName { get; set; }
+        public string profileId { get; set; }
+        public string colors { get; set; }
+        public string profilepic { get; set; }
+    }
 }

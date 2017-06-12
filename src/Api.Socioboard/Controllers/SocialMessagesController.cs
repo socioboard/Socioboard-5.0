@@ -15,8 +15,9 @@ using System.Threading;
 using Api.Socioboard.Repositories;
 using Domain.Socioboard.Models.Mongo;
 using MongoDB.Bson;
-
-
+using Imgur.API.Authentication.Impl;
+using Imgur.API.Endpoints.Impl;
+using Imgur.API.Models;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -55,7 +56,7 @@ namespace Api.Socioboard.Controllers
             var filename = "";
             var apiimgPath = "";
             var uploads = string.Empty;
-            
+            string imgPath = string.Empty;
 
             if (files != null)
             {
@@ -72,7 +73,7 @@ namespace Api.Socioboard.Controllers
                     //apiimgPath = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
 
                     filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
-
+                    imgPath = filename;
                     uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
                     // size += file.Length;
                     try
@@ -96,6 +97,7 @@ namespace Api.Socioboard.Controllers
             else if (!string.IsNullOrEmpty(imagePath))
             {
                 uploads = imagePath;
+                imgPath = imagePath;
             }
 
             //string[] updatedmessgae = Regex.Split(message, "<br>");
@@ -239,7 +241,7 @@ namespace Api.Socioboard.Controllers
                         new Thread(delegate ()
                         {
                             string prId = item.Substring(4, item.Length - 4);
-                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, filename, _redisCache, _appSettings, dbr);
+                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, imgPath, _redisCache, _appSettings, dbr);
 
                         }).Start();
                     }
@@ -255,7 +257,7 @@ namespace Api.Socioboard.Controllers
                         new Thread(delegate ()
                         {
                             string prId = item.Substring(12, item.Length - 12);
-                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, userId, message, prId, _redisCache, dbr, _appSettings);
+                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads,imgPath, userId, message, prId, _redisCache, dbr, _appSettings);
                         }).Start();
 
                     }
@@ -274,6 +276,8 @@ namespace Api.Socioboard.Controllers
         {
             var filename = "";
             string postmessage = "";
+            string tempfilepath = "";
+            string img = "";
             var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\" + profileId;
             if (files != null)
             {
@@ -289,6 +293,8 @@ namespace Api.Socioboard.Controllers
                     //apiimgPath = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1]}";
                     var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
                     filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+                    tempfilepath = filename;
+                  
 
                     uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
 
@@ -304,8 +310,23 @@ namespace Api.Socioboard.Controllers
             else if (!string.IsNullOrEmpty(imagePath))
             {
                 filename = imagePath;
+                tempfilepath = filename;
             }
-
+            try
+            {
+                var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                var endpoint = new ImageEndpoint(client);
+                IImage image;
+                using (var fs = new FileStream(tempfilepath, FileMode.Open))
+                {
+                    image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                }
+                img = image.Link;
+            }
+            catch (Exception)
+            {
+                img = tempfilepath;
+            }
 
             string[] updatedmessgae = Regex.Split(message, "<br>");
             foreach (var item in updatedmessgae)
@@ -391,6 +412,7 @@ namespace Api.Socioboard.Controllers
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
+                        //return Ok("Issue With Facebook schedulers");
                     }
                 }
                 if (item.StartsWith("page"))
@@ -404,6 +426,7 @@ namespace Api.Socioboard.Controllers
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
+                        // return Ok("Issue With Facebook Page schedulers");
                     }
                 }
                 if (item.StartsWith("tw"))
@@ -425,11 +448,13 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(4, item.Length - 4);
                         Domain.Socioboard.Models.LinkedInAccount objLinkedInAccount = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedInAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, "", filename, objLinkedInAccount.ProfileImageUrl, scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, "", img, objLinkedInAccount.ProfileImageUrl, scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
+
+                        // return Ok("Issue With Linkedin schedulers");
                     }
                 }
                 if (item.StartsWith("Cmpylinpage"))
@@ -438,11 +463,13 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(12, item.Length - 12);
                         Domain.Socioboard.Models.LinkedinCompanyPage objLinkedinCompanyPage = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId, "", filename, objLinkedinCompanyPage.LogoUrl, scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId, "", img, objLinkedinCompanyPage.LogoUrl, scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {
                         _logger.LogError(ex.StackTrace);
+
+                        // return Ok("Issue With Linkedin Page schedulers");
                     }
                 }
 
@@ -786,7 +813,7 @@ namespace Api.Socioboard.Controllers
             return Ok("successfully added");
         }
         [HttpPost("DraftScheduleMessage")]
-        public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId, IFormFile files)
+        public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId,  string imagePath, IFormFile files)
         {
             var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\";
             var filename = "";
@@ -815,6 +842,11 @@ namespace Api.Socioboard.Controllers
                     }
                     filename = uploads;
                 }
+            }
+            else if (!string.IsNullOrEmpty(imagePath))
+            {
+                uploads = imagePath;
+                filename = uploads;
             }
 
 

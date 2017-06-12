@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Socioboard.Models.Mongo;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,5 +30,23 @@ namespace Domain.Socioboard.Models
         public virtual DateTime LastReport_Update { get; set; }
         public virtual DateTime LastVideoListDetails_Update { get; set; }
 
+    }
+
+
+    public class YoutubeReports_all
+    {
+        public YoutubeChannel _YoutubeChannelss { get; set; }
+        public List<YoutubeVideoDetailsList> _YoutubeVideoss { get; set; }
+    }
+
+    public class TotalYoutubesubscriber
+    {
+        public int SubscribersCounts { get; set; }
+        public DateTime startdate { get; set; }
+        public DateTime endtdate { get; set; }
+        public string ChannelName { get; set; }
+        public string ChannelId { get; set; }
+        public string colors { get; set; }
+        public string Channelpic { get; set; }
     }
 }

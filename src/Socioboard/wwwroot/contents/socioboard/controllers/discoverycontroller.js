@@ -186,6 +186,15 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                 }
             }
             if ($scope.searchText != '') {
+
+                var a = $scope.searchText;
+                a = a.replace(/\s/g, '');
+                $scope.searchText = a;
+            }
+            
+
+            if ($scope.searchText != '') {
+                
                 $scope.dispbtn = false;
                 $scope.DiscoverySearchGplus();
                 $scope.DiscoverySearchTwitter();
@@ -313,5 +322,5 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
         }
         /* end code for discovery smart serch*/
     });
-  
+
 });

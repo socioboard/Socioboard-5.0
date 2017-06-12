@@ -75,6 +75,19 @@ namespace Api.Socioboard.Model
              
           
         }
+        public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName, settings).Count<T>(query);
+            try
+            {
+                var output = collection;
+                return Convert.ToInt32(output);
+            }
+            catch (Exception ex) { return 0; }
+
+
+        }
         public async Task<IList<T>> FindAll<T>() where T : class, new()
         {
             var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(Builders<T>.Filter.Empty);

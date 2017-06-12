@@ -8,7 +8,6 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
         $scope.preloadmore = true;
             
         $scope.boxload = function () {
-            //console.log('Raj');
             $('.collapsible').collapsible();
         }
 
@@ -64,7 +63,6 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
         $scope.postComments = function (videoid) {
             debugger;
             //codes to post Comments
-            //var commentText = "Raj is a good Software Developer";
             var commentText = $('#compose_' + videoid).val();
             var commentencoded = encodeURIComponent(commentText);
             if (/\S/.test(commentText)) {
@@ -97,33 +95,97 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
             var descrip = $('#youyube_desc').val();
             var category = $('#categry_vdo').val();
             var status = $('#stats_vdo').val();
-            $scope.preloadmore = false;
-            formData.append('files', $("#input-file-now").get(0).files[0]);
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/Google/uploadyoutube?channelid=' + $stateParams.profileId + '&title=' + title + '&descrip=' + descrip + '&category=' + category + '&status=' + status,
-                data: formData,
-                headers: {
-                    'Content-Type': undefined
-                },
-                transformRequest: angular.identity,
-            }).then(function (response) {
-                if (response.data == "Posted") {
-                    $('#ComposePostModal').closeModal();
-                    swal("Completed!", "Video posted successfully", "success");
-                    window.location.reload();
-                }
-                else
-                {
-                    swal("Error!", "Issue while uploading video", "error");
-                }
+            var files = $('#input-file-now').val();
+            var fileExt = files.split('.');
+            var extOfFile = (fileExt[fileExt.length - 1]);
 
-            }, function (reason) {
-                console.log(reason);
-            });
+            var updatedmessage = "";
+            var updatetitle = "";
 
+            var postdata = title.split("\n");//newComment
+            for (var i = 0; i < postdata.length; i++) {
+                updatetitle = updatetitle + "<br>" + postdata[i];
+            }
+            updatetitle = updatetitle.replace(/#+/g, 'hhh');
+            updatetitle = updatetitle.replace(/&+/g, 'nnn');
+            updatetitle = updatetitle.replace("+", 'ppp');
+            updatetitle = updatetitle.replace("-+", 'jjj');
+            title = updatetitle;
+
+            var postdata = descrip.split("\n");//newComment
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+            descrip = updatedmessage;
+
+
+
+            var fileIsSupported = false;
+            if (extOfFile == "webm" || extOfFile == "mkv" || extOfFile == "vob" || extOfFile == "flv" || extOfFile == "ogv" || extOfFile == "ogg" || extOfFile == "drc" || extOfFile == "gif" || extOfFile == "gifv" || extOfFile == "mng" || extOfFile == "avi" || extOfFile == "mov" || extOfFile == "qt" || extOfFile == "wmv" || extOfFile == "yuv" || extOfFile == "rm" || extOfFile == "rmvb" || extOfFile == "asf" || extOfFile == "amv" || extOfFile == "mp4" || extOfFile == "m4p" || extOfFile == "m4v" || extOfFile == "mpg" || extOfFile == "mp2" || extOfFile == "mpeg" || extOfFile == "mpe" || extOfFile == "mpv" || extOfFile == "mpg" || extOfFile == "mpeg" || extOfFile == "m2v" || extOfFile == "m2v" || extOfFile == "m4v" || extOfFile == "svi" || extOfFile == "3gp" || extOfFile == "3g2" || extOfFile == "roq" || extOfFile == "nsv" || extOfFile == "flv" || extOfFile == "f4v" || extOfFile == "f4p" || extOfFile == "f4a" || extOfFile == "f4b") {
+                fileIsSupported = true;
+            }
+
+            if (/\S/.test(title)) {
+                if (/\S/.test(descrip)) {
+                    if (category != null) {
+                        if (fileIsSupported) {
+                            if (status != null) {
+                                $scope.preloadmore = false;
+                                formData.append('files', $("#input-file-now").get(0).files[0]);
+                                $http({
+                                    method: 'POST',
+                                    url: apiDomain + '/api/Google/uploadyoutube?channelid=' + $stateParams.profileId + '&title=' + title + '&descrip=' + descrip + '&category=' + category + '&status=' + status,
+                                    data: formData,
+                                    headers: {
+                                        'Content-Type': undefined
+                                    },
+                                    transformRequest: angular.identity,
+                                }).then(function (response) {
+                                    if (response.data == "Posted") {
+                                        $('#ComposePostModal').closeModal();
+                                        swal({
+                                            //title: title,
+                                            text: "Video will Upload Soon.",
+                                            // imageUrl: '../contents/socioboard/images/yt.png',
+                                            imageUrl: 'http://img.fobito.com/applications/youtube-kids_android.png?w=128',
+                                            timer: 400000,
+                                            showConfirmButton: false
+                                        });
+                                        window.location.reload();
+                                    }
+                                    else {
+                                        swal("Error!", "Issue while uploading video", "error");
+                                    }
+
+                                }, function (reason) {
+                                    console.log(reason);
+                                });
+                            }
+                        else {
+                            swal("Please choose a status video");
+                        }
+                    }
+                    else {
+                        swal("Please choose a correct video format");
+                    }
+                    }
+                    else {
+                        swal("Please choose category of video");
+                    }
+                }
+                else {
+                    swal("Please enter description of video");
+                }
+            }
+            else {
+                swal("Please enter title of video")
+            }
         }
-
+    
     });
 })
 .filter('youtubeEmbedUrl', function ($sce) {

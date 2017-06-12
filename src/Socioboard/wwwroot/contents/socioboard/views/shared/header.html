@@ -12,6 +12,13 @@
                                 <i class="mdi-action-search  grey-text text-darken-4"></i>
                             </a>                              
                         </li>-->
+                        <!--emailid change feature header-->
+
+                        <!--<li>
+                            <a href="#" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
+                                <i class="icon-user grey-text text-darken-4"></i>
+                            </a>
+                        </li>-->
                         <li>
                             <a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen">
                                 <i class="icon-size-fullscreen  grey-text text-darken-4"></i>
@@ -30,13 +37,27 @@
                         </li>-->
                     </ul>
 
-                    <ul id='groups' class='dropdown-content'>
+                    <ul id='groups' class='dropdown-content dropdown-content-small'>
                         <li ng-repeat="grp in groups">
                         <span class="grey grey-text text-lighten-4" ng-if="groupId==grp.id">{{grp.groupName}}</span>
                             <span ng-click="changeGroup(grp.id)"  ng-if="groupId!=grp.id">{{grp.groupName}}</span>
                          </li>
                         <li class="divider"></li>
                         <li><a href="#/groups" >Create New</a></li>
+                    </ul>
+
+                    <!-- Accounts Structure -->
+                    <ul id="account_list" class="dropdown-content dropdown-content-small">
+                        <li>
+                            <a href="#/mail_settings">
+                                <span class="groupslist"><i class="icon-user"></i>Mail Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <span class="groupslist"><i class="icon-user"></i>Mail </span>
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </nav>

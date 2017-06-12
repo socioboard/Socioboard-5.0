@@ -12,7 +12,7 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
 
 
         $scope.GetFacebookPagePostData = function (profileId, days) {
-
+            debugger;
             //codes to load  fb page post data
             $http.get(apiDomain + '/api/FacaebookPageReports/GetFacebookPagePostData?profileId=' + profileId + '&daysCount=' + days)
                         .then(function (response) {
@@ -28,12 +28,16 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
 
 
         $scope.getReports = function (profileId, days) {
+            debugger;
             //codes to load  fb page profiles start
             $http.get(apiDomain + '/api/FacaebookPageReports/GetFacebookPageReportData?profileId=' + profileId + '&daysCount=' + days)
                           .then(function (response) {
                               $scope.dailyReportsList = response.data;
-                              console.log(response.data);
+                              console.log("daily report data");
+                              console.log($scope.dailyReportsList);
+                              $scope.getTotalFans(days);
                               $scope.getData(profileId, days);
+                              
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -41,9 +45,29 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
 
         }
 
+        // addaed by me start for total fans
+        $scope.getTotalFans = function (days) {
+
+            $http.get(apiDomain + '/api/FacaebookPageReports/GetFbTotalFanpage?userId=' + $rootScope.user.Id + '&days=' + days)
+            .then(function (response) {
+                debugger;
+                $scope.rep = response.data;
+                $scope.totalfbLikes(days);
+                $scope.totalfans(days);
+                console.log("facebook account details");
+                console.log(response.data);
+            }, function (reason) {
+                debugger;
+                $scope.error = reason.data;
+            });
+        }
+        //addaed by me end for total fans
+
 
         $scope.getData = function (profileId, days) {
             $scope.GetFacebookPagePostData(profileId, days);
+           // $scope.totalfans(days);
+            debugger;   
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
             var endDate = Date.now() / 1000;
             var totalLikes = 0;
@@ -118,9 +142,14 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
             $scope.generatePAGEIMPRESSIONSGraph(days);
             $scope.generatePageLikeUnlikeGraph(days);
             $scope.GetFacebookPagePostData(profileId, days);
+            $scope.engagement(days);
+            $scope.totalfbLikes(days);
+            $scope.totalfans(days);
+
         }
 
         $scope.getOnPageLoadReports = function () {
+            debugger;
             var canContinue = true;
             angular.forEach($rootScope.lstProfiles, function (value, key) {
                 if (canContinue && value.profileType == 1) {
@@ -132,21 +161,6 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
         }
 
         $scope.getOnPageLoadReports();
-
-
-
-        //$scope.sparkGraph = [5, 6, 7, 9, 9, 5, 3, 2, 2, 4, 6, 7, 5, 6, 7, 9, 9, 5, 3, 2, 2, 4, 6, 7];
-        //// Project Line chart ( Project Box )
-        //$(".project-line-1").sparkline($scope.sparkGraph, {
-        //    type: 'line',
-        //    width: '100%',
-        //    height: '30',
-        //    lineWidth: 2,
-        //    lineColor: '#00bcd4',
-        //    fillColor: 'rgba(0, 188, 212, 0.5)',
-        //});
-
-        // IMPRESSIONS BREAKDOWN //
 
         $scope.generateIMPRESSIONS1Graph = function (days) {
             $scope.generateChart1Data(days);
@@ -626,6 +640,242 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
         }
 
 
+        //engagement start
+        var chartData = generatechartData();
+
+        function generatechartData() {
+            var chartData = [];
+            var firstDate = new Date();
+            firstDate.setDate(firstDate.getDate() - 150);
+
+            for (var i = 0; i < 150; i++) {
+                // we create date objects here. In your data, you can have date strings
+                // and then set format of your dates using chart.dataDateFormat property,
+                // however when possible, use date objects, as this will speed up chart rendering.
+                var newDate = new Date(firstDate);
+                newDate.setDate(newDate.getDate() + i);
+
+                var visits = Math.round(Math.random() * 90 - 45);
+
+                chartData.push({
+                    date: newDate,
+                    visits: visits
+                });
+            }
+            return chartData;
+        }
+
+        // added for page info: start
+       // $scope.chartlikes = [];
+        $scope.totalfbLikes = function (days) {
+            debugger;
+            $scope.generateChartforlikes(days);
+            console.log("likes data start");
+            console.log($scope.chartlikes);
+        var chart = AmCharts.makeChart("rate_activity", {
+            "theme": "light",
+            "type": "serial",
+            "dataProvider": $scope.chartlikes,
+            "valueAxes": [{
+                "inside": true,
+                "axisAlpha": 0
+            }],
+            "graphs": [{
+                "id": "g1",
+                "balloonText": "<div style='margin:5px; font-size:19px;'><span style='font-size:13px;'>[[category]]</span><br>[[value]]</div>",
+                "bullet": "round",
+                "bulletBorderAlpha": 1,
+                "bulletBorderColor": "#FFFFFF",
+                "hideBulletsCount": 50,
+                "lineThickness": 2,
+                "lineColor": "#fdd400",
+                "negativeLineColor": "#67b7dc",
+                "valueField": "totalLikes"
+            }],
+            "chartScrollbar": {
+
+            },
+            "chartCursor": {},
+            "categoryField": "date",
+            "categoryAxis": {
+                "parseDates": true,
+                "axisAlpha": 0,
+                "minHorizontalGap": 55
+            },
+            "listeners": [{
+                "event": "dataUpdated",
+                "method": function () {
+                    if (chart) {
+                        if (chart.zoomToIndexes) {
+                            chart.zoomToIndexes(130, chartData.length - 1);
+                        }
+                    }
+                }
+            }]
+        });
+     }
+
+        $scope.generateChartforlikes = function (days) {
+            debugger;
+            $scope.chartlikes = [];
+            var totalLikes = 0;
+            var talkingAbout = 0;
+            //var paid = 0;
+
+            var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
+            angular.forEach($scope.rep, function (value, key) {
+                if (value.date > startDate) {
+                    totalLikes = totalLikes + parseInt(value.totalLikes);
+                    talkingAbout = talkingAbout + parseInt(value.talkingAbout);
+                    $scope.chartlikes.push({
+                        date: new Date((value.date * 1000)),
+                        totalLikes: value.totalLikes
+                    });
+
+                }
+            });
+            console.log("fanpage likes");
+            console.log($scope.chartlikes);
+        }
+
+        //engagement end
+
+        //total no of fans start:
+        $scope.chartFBfanpage = [];
+
+        $scope.totalfans = function (days) {
+            debugger;
+            $scope.generateChartTotalFan(days);
+            // 3d graph  start
+            var chart = AmCharts.makeChart("FBTotalFans", {
+                "theme": "light",
+                "type": "serial",
+                "startDuration": 2,
+                "dataProvider": $scope.chartFBfanpage,
+                //"dataProvider": [{
+                //    "country": "USA",
+                //    "visits": 4025,
+                //    "color": "#FF0F00"
+                //}, {
+                //    "country": "China",
+                //    "visits": 1882,
+                //    "color": "#FF6600"
+                //}, {
+                //    "country": "Japan",
+                //    "visits": 1809,
+                //    "color": "#FF9E01"
+                //}, {
+                //    "country": "Germany",
+                //    "visits": 1322,
+                //    "color": "#FCD202"
+                //}, {
+                //    "country": "UK",
+                //    "visits": 1122,
+                //    "color": "#F8FF01"
+                //}, {
+                //    "country": "France",
+                //    "visits": 1114,
+                //    "color": "#B0DE09"
+                //}, {
+                //    "country": "India",
+                //    "visits": 984,
+                //    "color": "#04D215"
+                //}, {
+                //    "country": "Spain",
+                //    "visits": 711,
+                //    "color": "#0D8ECF"
+                //}, {
+                //    "country": "Netherlands",
+                //    "visits": 665,
+                //    "color": "#0D52D1"
+                //}, {
+                //    "country": "Russia",
+                //    "visits": 580,
+                //    "color": "#2A0CD0"
+                //}, {
+                //    "country": "South Korea",
+                //    "visits": 443,
+                //    "color": "#8A0CCF"
+                //}, {
+                //    "country": "Canada",
+                //    "visits": 441,
+                //    "color": "#CD0D74"
+                //}, {
+                //    "country": "Brazil",
+                //    "visits": 395,
+                //    "color": "#754DEB"
+                //}, {
+                //    "country": "Italy",
+                //    "visits": 386,
+                //    "color": "#DDDDDD"
+                //}, {
+                //    "country": "Taiwan",
+                //    "visits": 338,
+                //    "color": "#333333"
+                //}],//$scope.chartFBfanpage,     
+                "valueAxes": [{
+                    "position": "left",
+                    "axisAlpha": 0,
+                    "gridAlpha": 0
+                }],
+                "graphs": [{
+                    "balloonText": "[[category]]: <b>[[value]]</b>",
+                    "colorField": "color",
+                    "fillAlphas": 0.85,
+                    "lineAlpha": 0.1,
+                    "type": "column",
+                    "topRadius": 1,
+                    "valueField": "totalLikes"
+                }],
+                "depth3D": 40,
+                "angle": 30,
+                "chartCursor": {
+                    "categoryBalloonEnabled": false,
+                    "cursorAlpha": 0,
+                    "zoomable": false
+                },
+                "categoryField": "date",
+                "categoryAxis": {                  
+                   "gridPosition": "start",
+                    "axisAlpha": 0,
+                    "gridAlpha": 0,
+                    "parseDates": true
+                },
+                "export": {
+                    "enabled": true,
+                  //  "position": "bottom-right"
+                }
+
+            }, 0);
+            //3d graph end
+        }
+
+        $scope.generateChartTotalFan = function (days) {
+            debugger;
+            $scope.chartFBfanpage = [];
+            var totalLikes = 0;
+            //var viral = 0;
+            //var paid = 0;
+            var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
+            angular.forEach($scope.rep, function (value, key) {
+                if (value.date > startDate) {
+                    //totalLikes = totalLikes + parseInt(value.totalLikes);
+                    totalLikes = value.totalLikes;
+                    //viral = viral + parseInt(value.FbUserName);
+                    //Date : paid + parseInt(value.paid);
+                    $scope.chartFBfanpage.push({
+                        date: new Date((value.date * 1000)),
+                        totalLikes: value.totalLikes
+                    });
+
+                }
+            });
+        }
+        //total no of fans end:
+
+        
+      
+        
 
 
         // stories graph
@@ -891,9 +1141,7 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
                     "position": "bottom-right"
                 }
             });
-
-
-        }
+       }
 
       
 

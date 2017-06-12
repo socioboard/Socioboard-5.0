@@ -7,133 +7,363 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
         $scope.lstProfiles = $rootScope.lstProfiles;
         groupreport();
         
-        $scope.chartData = [];
-        $scope.graphData = [];
-        $scope.Fans = [];
+       
         var fetchdatacomplete = false;
         
-
-        $scope.loadTopFans = function (profileId, days) {
-
-            //codes to load  fans data
-            $http.get(apiDomain + '/api/TwitterReports/GetTopFiveFans?profileId=' + profileId + '&daysCount=' + days)
+        $scope.GettwtfollowfollowingGraph = function (profileOwnerId) {
+            //codes to load  instgarm  profiles start
+              $http.get(apiDomain + '/api/TwitterReports/GettwtfollowfollowingGraph?groupId=' + profileOwnerId)
                           .then(function (response) {
-                              $scope.Fans = response.data;
+                            $scope.GettwtfollowfollowingGraph = response.data;
+                              $scope.generatefollowfollowingGraphs();
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
-            // end codes to load fb profiles
+            // end codes to load instgarm profiles
+
         }
 
-        $scope.loadtwitterRecentDetails = function (profileId) {
-
-            //codes to load  fans data
-            $http.get(apiDomain + '/api/TwitterReports/GetTwitterRecentDetails?profileId=' + profileId)
+        $scope.getprofiledata = function (profileOwnerId) {
+            //codes to load  instgarm  profiles start
+            $http.get(apiDomain + '/api/TwitterReports/GetTwitterProfilesData?groupId=' + profileOwnerId)
                           .then(function (response) {
-                              $scope.RecentDetails = response.data;
+                              $scope.getfollowerfollowingcount(profileOwnerId);
+                              $scope.getfeedsdata(profileOwnerId);
+                              $scope.getprofiledatawithdate = [];
+                              $scope.getprofilelist = response.data;
+                              angular.forEach($scope.getprofilelist, function (value, key) {
+                                  $scope.getprofiledatawithdate.push({
+
+                                      directMessagesReceived: value.directMessagesReceived,
+                                      directMessagesSent: value.directMessagesSent,
+                                      mentions: value.mentions,
+                                      messagesReceived: value.messagesReceived,
+                                      messagesSent: value.messagesSent,
+                                      newFollowers: value.newFollowers,
+                                      newFollowing: value.newFollowing,
+                                      retweets: value.retweets,
+                                      timeStamp: new Date((value.timeStamp * 1000))
+
+                                  });
+                              });
+                             
+                              $scope.getData(90);
+                              //$scope.getfollowerfollowing(profileOwnerId);
                               
+                              //$scope.getfeedsdata(profileOwnerId);
+                              $scope.generateGraphs();
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
-            // end codes to load fb profiles
-        }
-        
-       
-
-        $scope.generateChartData = function (days) {
-            $scope.chartData = [];
-            var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            angular.forEach($scope.dailyReportsList, function (value, key) {
-                if (value.timeStamp > startDate) {
-                    $scope.chartData.push({
-                        date: new Date((value.timeStamp * 1000)),
-                        mentions: value.mentions,
-                        retweets: value.retweets,
-                        followers: value.newFollowers
-                    });
-                }
-            });
-
+            // end codes to load instgarm profiles
 
         }
 
-        $scope.generateGraph = function (days) {
-            $scope.generateChartData(days);
+        $scope.getfollowerfollowingcount = function (profileOwnerId) {
+            //codes to load  instgarm  profiles start
+            $http.get(apiDomain + '/api/Twitter/GetTwitterProfiles?groupId=' + profileOwnerId)
+                          .then(function (response) {
+                              $scope.getfollowerfollowingcount = response.data;
 
-            var chart = AmCharts.makeChart("DAILYENGAGEMENT", {
-                "type": "serial",
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to load instgarm profiles
+
+        }
+
+        $scope.getfeedsdata = function (profileOwnerId) {
+            //codes to load  instgarm  profiles start
+            $http.get(apiDomain + '/api/TwitterReports/GetTwitterFeedsdata?groupId=' + profileOwnerId)
+                          .then(function (response) {
+                              $scope.getfeedsdata = response.data;
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to load instgarm profiles
+
+        }
+
+        $scope.generatefollowfollowingGraphs = function () {
+
+           //Start follower graph 
+            var chart = AmCharts.makeChart("followerchart",
+              {
+                  "type": "serial",
+                  "theme": "light",
+                  "dataProvider": $scope.GettwtfollowfollowingGraph,
+                  "valueAxes": [{
+                      //"maximum": 80000,
+                      //"minimum": 0,
+                      "axisAlpha": 0,
+                      "dashLength": 4,
+                      "position": "left"
+                  }],
+                  "startDuration": 1,
+                  "graphs": [{
+                      "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
+                      "bulletOffset": 10,
+                      "bulletSize": 52,
+                      "colorField": "colors",
+                      "cornerRadiusTop": 8,
+                      "customBulletField": "profilepic",
+                      "fillAlphas": 0.8,
+                      "lineAlpha": 0,
+                      "type": "column",
+                      "valueField": "twtFollowerCounts"
+                  }],
+                  "marginTop": 0,
+                  "marginRight": 0,
+                  "marginLeft": 0,
+                  "marginBottom": 0,
+                  "autoMargins": false,
+                  "categoryField": "twtName",
+                  "categoryAxis": {
+                      "axisAlpha": 0,
+                      "gridAlpha": 0,
+                      "inside": true,
+                      "tickLength": 0
+                  },
+                  "export": {
+                      "enabled": true
+                  }
+              });
+
+            //end follower graph
+
+            //Start following graph 
+            var chart = AmCharts.makeChart("followingchart1",
+              {
+                  "type": "serial",
+                  "theme": "light",
+                  "dataProvider": $scope.GettwtfollowfollowingGraph,
+                  "valueAxes": [{
+                      //"maximum": 80000,
+                      //"minimum": 0,
+                      "axisAlpha": 0,
+                      "dashLength": 4,
+                      "position": "left"
+                  }],
+                  "startDuration": 1,
+                  "graphs": [{
+                      "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
+                      "bulletOffset": 10,
+                      "bulletSize": 52,
+                      "colorField": "colors",
+                      "cornerRadiusTop": 8,
+                      "customBulletField": "profilepic",
+                      "fillAlphas": 0.8,
+                      "lineAlpha": 0,
+                      "type": "column",
+                      "valueField": "twtFollowingCounts"
+                  }],
+                  "marginTop": 0,
+                  "marginRight": 0,
+                  "marginLeft": 0,
+                  "marginBottom": 0,
+                  "autoMargins": false,
+                  "categoryField": "twtName",
+                  "categoryAxis": {
+                      "axisAlpha": 0,
+                      "gridAlpha": 0,
+                      "inside": true,
+                      "tickLength": 0
+                  },
+                  "export": {
+                      "enabled": true
+                  }
+              });
+
+            //end following graph
+
+
+        }
+
+        $scope.generateGraphs = function () {
+
+            $scope.fetchdatacomplete = true;
+
+           //Start Retweet
+            var chart = AmCharts.makeChart("RetweetGraph", {
                 "theme": "light",
+                "color": "#cccc00",
+                "type": "serial",
+                "startDuration": 2,
                 "legend": {
                     "useGraphSettings": true
                 },
-                "dataProvider": $scope.chartData,
-                "synchronizeGrid": true,
+                "dataProvider": $scope.getprofiledatawithdate,
                 "valueAxes": [{
-                    "id": "v1",
-                    "axisColor": "#FF6600",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "left"
-                }, {
-                    "id": "v2",
-                    "axisColor": "#FCD202",
-                    "axisThickness": 2,
-                    "axisAlpha": 1,
-                    "position": "right"
-                }, {
-                    "id": "v3",
-                    "axisColor": "#B0DE09",
-                    "axisThickness": 2,
-                    "gridAlpha": 0,
-                    "offset": 50,
-                    "axisAlpha": 1,
-                    "position": "left"
+                    "inside": true,
+                    "axisAlpha": 0,
+                    "color": "#8533ff"
                 }],
                 "graphs": [{
-                    "valueAxis": "v1",
-                    "lineColor": "#FF6600",
-                    "bullet": "round",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "mentions",
-                    "valueField": "mentions",
-                    "fillAlphas": 0
-                }, {
-                    "valueAxis": "v2",
-                    "lineColor": "#FCD202",
-                    "bullet": "square",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "retweets",
+                    "balloonText": "[[category]]: <b>[[value]]</b>",
+                    "fillColorsField": "color",
+                    "fillAlphas": 1,
+                    "lineAlpha": 0.1,
+                    "type": "column",
                     "valueField": "retweets",
-                    "fillAlphas": 0
-                }, {
-                    "valueAxis": "v3",
-                    "lineColor": "#B0DE09",
-                    "bullet": "triangleUp",
-                    "bulletBorderThickness": 1,
-                    "hideBulletsCount": 30,
-                    "title": "followers",
-                    "valueField": "followers",
-                    "fillAlphas": 0
+                    "color": "#FF9E01"
                 }],
-                "chartScrollbar": {},
+                "depth3D": 20,
+                "angle": 30,
                 "chartCursor": {
-                    "cursorPosition": "mouse"
+                    "categoryBalloonEnabled": false,
+                    "cursorAlpha": 0,
+                    "zoomable": true,
+                    "color": "#FF9E01"
                 },
-                "categoryField": "date",
+                "categoryField": "timeStamp",
                 "categoryAxis": {
+                    "gridPosition": "start",
+                    "labelRotation": 90,
+                    "color": "#ff3377",
                     "parseDates": true,
-                    "axisColor": "#DADADA",
-                    "minorGridEnabled": true
                 },
                 "export": {
-                    "enabled": true,
-                    "position": "bottom-right"
+                    "enabled": true
                 }
-            });
-        }
 
+            });
+            // End Retweet
+
+
+            //  Start postlikes
+            var chart = AmCharts.makeChart("MentionsGraph", {
+                "theme": "light",
+                "type": "serial",
+                "startDuration": 2,
+                "legend": {
+                    "useGraphSettings": true
+                },
+                "dataProvider": $scope.getprofiledatawithdate,
+                "valueAxes": [{
+                    "inside": true,
+                    "axisAlpha": 0
+                }],
+                "graphs": [{
+                    "balloonText": "[[category]]: <b>[[value]]</b>",
+                    "fillColorsField": "color",
+                    "fillAlphas": 1,
+                    "lineAlpha": 0.1,
+                    "type": "column",
+                    "valueField": "mentions"
+                }],
+                "depth3D": 20,
+                "angle": 30,
+                "chartCursor": {
+                    "categoryBalloonEnabled": false,
+                    "cursorAlpha": 0,
+                    "zoomable": true
+                },
+                "categoryField": "timeStamp",
+                "categoryAxis": {
+                    "gridPosition": "start",
+                    "labelRotation": 90,
+                    "parseDates": true,
+                },
+                "export": {
+                    "enabled": true
+                }
+
+            });
+            //  End postlikes
+
+            ////Start follower graph 
+            //var chart = AmCharts.makeChart("followerchart",
+            //  {
+            //      "type": "serial",
+            //      "theme": "light",
+            //      "dataProvider": $scope.GettwtfollowfollowingGraph,
+            //      "valueAxes": [{
+            //          //"maximum": 80000,
+            //          //"minimum": 0,
+            //          "axisAlpha": 0,
+            //          "dashLength": 4,
+            //          "position": "left"
+            //      }],
+            //      "startDuration": 1,
+            //      "graphs": [{
+            //          "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
+            //          "bulletOffset": 10,
+            //          "bulletSize": 52,
+            //          "colorField": "colors",
+            //          "cornerRadiusTop": 8,
+            //          //"customBulletField": "profilepic",
+            //          "fillAlphas": 0.8,
+            //          "lineAlpha": 0,
+            //          "type": "column",
+            //          "valueField": "twtFollowerCounts"
+            //      }],
+            //      "marginTop": 0,
+            //      "marginRight": 0,
+            //      "marginLeft": 0,
+            //      "marginBottom": 0,
+            //      "autoMargins": false,
+            //      "categoryField": "twtName",
+            //      "categoryAxis": {
+            //          "axisAlpha": 0,
+            //          "gridAlpha": 0,
+            //          "inside": true,
+            //          "tickLength": 0
+            //      },
+            //      "export": {
+            //          "enabled": true
+            //      }
+            //  });
+
+            ////end follower graph
+
+            ////Start following graph 
+            //var chart = AmCharts.makeChart("followingchart",
+            //  {
+            //      "type": "serial",
+            //      "theme": "light",
+            //      "dataProvider": $scope.GettwtfollowfollowingGraph,
+            //      "valueAxes": [{
+            //          //"maximum": 80000,
+            //          //"minimum": 0,
+            //          "axisAlpha": 0,
+            //          "dashLength": 4,
+            //          "position": "left"
+            //      }],
+            //      "startDuration": 1,
+            //      "graphs": [{
+            //          "balloonText": "<span style='font-size:13px;'>[[category]]: <b>[[value]]</b></span>",
+            //          "bulletOffset": 10,
+            //          "bulletSize": 52,
+            //          "colorField": "colors",
+            //          "cornerRadiusTop": 8,
+            //          //"customBulletField": "profilepic",
+            //          "fillAlphas": 0.8,
+            //          "lineAlpha": 0,
+            //          "type": "column",
+            //          "valueField": "twtFollowingCounts"
+            //      }],
+            //      "marginTop": 0,
+            //      "marginRight": 0,
+            //      "marginLeft": 0,
+            //      "marginBottom": 0,
+            //      "autoMargins": false,
+            //      "categoryField": "twtName",
+            //      "categoryAxis": {
+            //          "axisAlpha": 0,
+            //          "gridAlpha": 0,
+            //          "inside": true,
+            //          "tickLength": 0
+            //      },
+            //      "export": {
+            //          "enabled": true
+            //      }
+            //  });
+
+            ////end following graph
+           
+
+        }
 
         $scope.getData = function (days) {
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
@@ -146,8 +376,8 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
             var totalDirectMessagesSent = 0;
             var totalMessagesReceived = 0;
             var totalMessagesSent = 0;
-            $scope.graphData = [];
-            angular.forEach($scope.dailyReportsList, function (value, key) {
+           // $scope.graphData = [];
+            angular.forEach($scope.getprofilelist, function (value, key) {
                 if (value.timeStamp > startDate) {
                     totalNewFollowers = totalNewFollowers + value.newFollowers;
                     totalNewFollowing = totalNewFollowing + value.newFollowing;
@@ -157,7 +387,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
                     totalDirectMessagesSent = totalDirectMessagesSent + value.directMessagesSent;
                     totalMessagesReceived = totalMessagesReceived + value.messagesReceived;
                     totalMessagesSent = totalMessagesSent + value.messagesSent;
-                    $scope.graphData = $scope.graphData.concat(value);
+                   // $scope.graphData = $scope.graphData.concat(value);
                 }
             });
 
@@ -169,37 +399,20 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
             $scope.totalDirectMessagesSent = totalDirectMessagesSent;
             $scope.totalMessagesReceived = totalMessagesReceived;
             $scope.totalMessagesSent = totalMessagesSent;
-            $scope.fromDate = moment(new Date((startDate * 1000))).format('YYYY/MM/DD');
-            $scope.toDate = moment(new Date((endDate * 1000))).format('YYYY/MM/DD');
-            $scope.generateGraph(days);
+            //$scope.fromDate = moment(new Date((startDate * 1000))).format('YYYY/MM/DD');
+            //$scope.toDate = moment(new Date((endDate * 1000))).format('YYYY/MM/DD');
+           // $scope.generateGraph(days);
 
         }
-
-        $scope.getReports = function (profileId, days) {
-            //codes to load  fb profiles start
-            $http.get(apiDomain + '/api/TwitterReports/GetTwitterReports?profileId=' + profileId + '&daysCount=' + days)
-                          .then(function (response) {
-                              $scope.dailyReportsList = response.data;
-                              $scope.getData(days);
-                              $scope.fetchdatacomplete = true;
-                          }, function (reason) {
-                              $scope.error = reason.data;
-                          });
-            // end codes to load fb profiles
-            $scope.loadTopFans(profileId, days);
-            $scope.loadtwitterRecentDetails(profileId);
-        }
-
-        
-      
 
         $scope.getOnPageLoadReports = function () {
             var canContinue = true;
+            var count = 0;
             angular.forEach($rootScope.lstProfiles, function (value, key) {
-                if (canContinue && value.profileType == 2) {
-                    $scope.getReports(value.profileId, 90)
-                    $scope.selectedProfile = value.profileId;
-                    canContinue = false;
+               if (count == 0) {
+                    $scope.GettwtfollowfollowingGraph(value.profileOwnerId);
+                    $scope.getprofiledata(value.profileOwnerId)
+                    count = count + 1;
                 }
             });
         }
@@ -216,6 +429,19 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
                 $('select').material_select();
 
 
+            });
+        }
+    };
+})
+
+
+
+SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+                console.log("YtVideoListReached");
+                $('#all_video_table').DataTable();
             });
         }
     };

@@ -8,12 +8,16 @@ using Newtonsoft.Json.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
+using Domain.Socioboard.Models.Mongo;
+using Socioboard.Twitter.App.Core;
+using Socioboard.Google.Custom;
+using Api.Socioboard.Helper;
 
 namespace Api.Socioboard.Repositories
 {
     public class RssNewsContentsRepository
     {
-        public static string AddRssContentsUrl(string keywords, long userId, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
+        public static string AddRssContentsUrl(string keywords, string userId, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
             
             MongoRepository _rssNewsContents = new MongoRepository("RssNewsContents", _appSettings);
@@ -30,7 +34,7 @@ namespace Api.Socioboard.Repositories
             {
                 if (urlValue != null)
                 {
-                    string rt = ParseFeedUrl(urlValue.ToString(), keywords, userId.ToString(), _appSettings);
+                    string rt = ParseFeedUrl(urlValue.ToString(), keywords, userId, _appSettings);
                     
                     _RssContentFeeds = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(urlValue) && t.Keywords!=null);
 
@@ -56,7 +60,7 @@ namespace Api.Socioboard.Repositories
                         //_RssContentFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(urlValue) && t.Keywords == null);
                         //return urlValue;
                     }
-                    var ret = _rssNewsContents.Find<Domain.Socioboard.Models.Mongo.RssNewsContents>(t => t.RssFeedUrl.Equals(urlValue) && t.ProfileId.Contains(userId.ToString()));
+                    var ret = _rssNewsContents.Find<Domain.Socioboard.Models.Mongo.RssNewsContents>(t => t.RssFeedUrl.Equals(urlValue) && t.ProfileId.Contains(userId));
                     var task = Task.Run(async () =>
                     {
                         return await ret;
@@ -65,7 +69,7 @@ namespace Api.Socioboard.Repositories
                     if (count < 1)
                     {
                         _rssnews.Id = ObjectId.GenerateNewId();
-                        _rssnews.ProfileId = userId.ToString();
+                        _rssnews.ProfileId = userId;
                         _rssnews.RssFeedUrl = urlValue.ToString();
                         _rssnews.LastUpdate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
                         _rssNewsContents.Add(_rssnews);
@@ -393,7 +397,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> GetRssNewsFeeds(long userId, string keywords, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> GetRssNewsFeeds(string userId, string keywords, Helper.AppSettings _appSettings)
         {
             string[] profileids = null;
             MongoRepository _RssRepository = new MongoRepository("RssNewsContentsFeeds", _appSettings);
@@ -410,19 +414,211 @@ namespace Api.Socioboard.Repositories
 
 
 
-        public static List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> GetRssNewsPostedFeeds(string userId,  Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> GetRssNewsPostedFeeds(string userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             string[] profileids = null;
-            MongoRepository _RssRepository = new MongoRepository("RssNewsContentsFeeds", _appSettings);
-            List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = new List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>();
+            //MongoRepository _RssRepository = new MongoRepository("RssNewsContentsFeeds", _appSettings);
+            List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> _RssRepository = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + userId);
+            if (_RssRepository != null)
+            {
+                return _RssRepository;
+            }
+            else
+            {
+                MongoRepository mongorepo = new MongoRepository("RssNewsContentsFeeds", _appSettings);
+                // MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed", settings);
+                    var builder = Builders<RssNewsContentsFeeds>.Sort;
+                    var sort = builder.Descending(t => t.PublishingDate);
+                    var result = mongorepo.FindWithRange<RssNewsContentsFeeds>(t => t.UserId.Equals(userId), sort, 0, 200);
+                    var task = Task.Run(async () =>
+                    {
+                        return await result;
+                    });
+                    IList<RssNewsContentsFeeds> lstRss = task.Result;
+
+                    if (lstRss != null)
+                    {
+                        _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + userId, lstRss.ToList());
+
+                        return lstRss.ToList();
+                    }
+
+                    return null;
+            }
+            
+           // List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = new List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>();
             //List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId == userId).ToList();
             //profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-            var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>(t => t.UserId == userId);//UserId
-            var task = Task.Run(async () =>
+            //var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>(t => t.UserId == userId);//UserId
+            //var task = Task.Run(async () =>
+            //{
+            //    return await ret;
+            //});
+           // return lstRss = task.Result.ToList();
+        }
+
+
+        //public static string addtwitterContentfeedsdata(string keyword, string userId, Helper.AppSettings _appSettings )
+        //{
+        //    //MongoRepository mongorepo = new MongoRepository("ContentFeeds", _appSettings);
+        //    MongoRepository mongorepo = new MongoRepository("RssNewsContentsFeeds", _appSettings);
+        //    bool output = false;
+
+        //    string timeline = TwitterHashTag.TwitterBoardHashTagSearch(keyword, null);
+        //    int i = 0;
+        //    if (!string.IsNullOrEmpty(timeline) && !timeline.Equals("[]"))
+        //    {
+        //        foreach (JObject obj in JArray.Parse(timeline))
+        //        {
+        //            RssNewsContentsFeeds contentFeedsDet = new RssNewsContentsFeeds();
+        //            // Domain.Socioboard.Models.Mongo.ContentFeeds contentFeedsDet = new Domain.Socioboard.Models.Mongo.ContentFeeds();
+        //            contentFeedsDet.Id = ObjectId.GenerateNewId();
+
+        //            i++;
+        //            try
+        //            {
+        //                contentFeedsDet.Link = JArray.Parse(obj["entities"]["expanded_url"].ToString())[0]["url"].ToString();
+        //                //contentFeedsDet = JArray.Parse(obj["entities"]["expanded_url"].ToString())[0]["url"].ToString();
+        //            }
+        //            catch
+        //            {
+        //                try
+        //                {
+        //                    //contentFeedsDet.Link = JArray.Parse(obj["entities"]["urls"].ToString())[0]["expanded_url"].ToString();
+        //                    contentFeedsDet.Link = JArray.Parse(obj["entities"]["urls"].ToString())[0]["expanded_url"].ToString();
+        //                }
+        //                catch (Exception e)
+        //                {
+
+        //                }
+        //            }
+        //            try
+        //            {
+        //                //contentFeedsDet.Image = JArray.Parse(obj["extended_entities"]["media"].ToString())[0]["media_url"].ToString();
+        //                contentFeedsDet.Image = JArray.Parse(obj["extended_entities"]["media"].ToString())[0]["media_url"].ToString();
+        //            }
+        //            catch
+        //            {
+        //                try
+        //                {
+        //                    contentFeedsDet.Image = JArray.Parse(obj["entities"]["media"].ToString())[0]["media_url"].ToString();
+        //                }
+        //                catch (Exception e)
+        //                {
+
+        //                }
+        //            }
+
+        //            try
+        //            {
+        //                contentFeedsDet.Title = obj["text"].ToString();
+        //                //contentFeedsDet.Title = obj["text"].ToString();
+        //            }
+        //            catch (Exception e)
+        //            {
+
+        //            }
+
+        //            try
+        //            {
+        //                string Const_TwitterDateTemplate = "ddd MMM dd HH:mm:ss +ffff yyyy";
+        //                contentFeedsDet.PublishingDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact((string)obj["created_at"], Const_TwitterDateTemplate, new System.Globalization.CultureInfo("en-US"))).ToString();
+        //                //contentFeedsDet.CreatedDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact((string)obj["created_at"], Const_TwitterDateTemplate, new System.Globalization.CultureInfo("en-US")));
+        //            }
+        //            catch (Exception e)
+        //            {
+
+        //            }
+        //            contentFeedsDet.UserId = userId;
+        //            contentFeedsDet.keywords = keyword;
+        //            // var ret = mongorepo.Find<RssNewsContentsFeeds>(t => t.FeedId == contentFeedsDet.FeedId);
+
+        //            var ret = mongorepo.Find<RssNewsContentsFeeds>(t => t.UserId == userId && t.Image == contentFeedsDet.Image);
+        //            var task = Task.Run(async () =>
+        //            {
+        //                return await ret;
+        //            });
+        //            int count = task.Result.Count;
+        //            if (count < 1)
+        //            {
+        //                try
+        //                {
+        //                    //mongorepo.Add<RssNewsContentsFeeds>(contentFeedsDet);ContentFeeds
+        //                    mongorepo.Add<RssNewsContentsFeeds>(contentFeedsDet);
+        //                }
+        //                catch (Exception e) { }
+
+        //            }
+        //            else
+        //            {
+        //                //return "already data present";
+        //            }
+        //        }
+        //        return "data successfully added";
+        //    }
+        //    output = true;
+        //    return output.ToString();
+        //}
+
+        public static bool addGplusContentfeedsdata(string keywords, string userId, Helper.AppSettings _appSettings)
+        {
+            MongoRepository mongorepo = new MongoRepository("RssNewsContentsFeeds", _appSettings);
+            bool output = false;
+            try
             {
-                return await ret;
-            });
-            return lstRss = task.Result.ToList();
+                string searchResultObj = GplusDiscoverySearchHelper.GooglePlus(keywords);
+                JObject GplusActivities = JObject.Parse(GplusDiscoverySearchHelper.GooglePlus(keywords));
+                
+                foreach(JObject obj in JArray.Parse(GplusActivities["items"].ToString()))
+                { 
+                    RssNewsContentsFeeds contentGFeedsDet = new RssNewsContentsFeeds();
+                    contentGFeedsDet.Id = ObjectId.GenerateNewId();
+                   
+                    try
+                    {
+                        foreach (JObject att in JArray.Parse(obj["object"]["attachments"].ToString()))
+                        {
+                            contentGFeedsDet.Image = att["fullImage"]["url"].ToString();
+
+                            contentGFeedsDet.Link = att["url"].ToString();
+
+                            contentGFeedsDet.Title = att["displayName"].ToString();
+                        }
+                    }
+                    catch { }
+                    try
+                    {
+                        contentGFeedsDet.PublishingDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.Parse(obj["published"].ToString())).ToString();
+                    }
+                    catch { }
+                    
+               
+                    contentGFeedsDet.UserId = userId;
+                    contentGFeedsDet.keywords = keywords;
+                    var ret = mongorepo.Find<RssNewsContentsFeeds>(t => t.Title == contentGFeedsDet.Title);
+                    var task = Task.Run(async () =>
+                    {
+                        return await ret;
+                    });
+                    int count = task.Result.Count;
+                    if (count < 1)
+                    {
+                        try
+                        {
+                            mongorepo.Add<RssNewsContentsFeeds>(contentGFeedsDet);
+                            output = true;
+                        }
+                        catch { }
+                    }
+
+
+                }
+                return output;
+            }
+            catch { }
+
+            return output;
+
         }
 
 

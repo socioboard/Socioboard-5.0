@@ -1,44 +1,12 @@
 'use strict';
 
-SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $http, $modal, $timeout, apiDomain,domain) {
+SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $http, $modal, $timeout, $state,apiDomain,domain) {
     //alert('helo');
     
     $scope.$on('$viewContentLoaded', function () {
         $scope.dispbtn = true;
         $scope.check = false;
         $scope.draftbtn = true;
-
-        //$scope.selectedvalue = true;
-        //$scope.selectclick = function () {
-        //      var selectedvals = $scope.composeProfiles;
-        //    var selectedvals = $('#composeProfiles').val();
-        //    if (selectedvals.indexOf("selectall") != -1) {
-        //        var alloptions = $('#composeProfiles option');
-        //        angular.forEach(alloptions, function (value, key) {
-        //            //alert(value);
-        //            var tempval = value.value;//$(a).val();
-        //            var selectvalindex = selectedvals.indexOf(tempval);
-        //            if (selectvalindex == -1) {
-        //                if (tempval != "selectall" && tempval != "select") {
-        //                    selectedvals.push(tempval);
-        //                }
-        //            } else {
-        //                selectedvals.splice(selectvalindex);
-        //            }
-        //        });
-        //        if ($scope.selectedvalue == true) {
-        //            $('.dropdown-content > li:not(:first-child)').addClass("active").find('input').prop('checked', true);
-        //            $scope.selectedvalue = false;
-
-        //        }
-        //        else {
-        //            $('.dropdown-content > li:not(:first-child)').removeClass("active").find('input').prop('checked', false);
-        //            $scope.selectedvalue = true;
-
-        //        }
-        //    }
-
-        //}
 
         var getAllSelected = function () {
             var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
@@ -325,16 +293,22 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
            //codes to load  fb profiles start
             $scope.fetchProfiles = function () {
+                $scope.loaderclass = 'hide';
                 $http.get(apiDomain + '/api/Facebook/GetFacebookProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
                                       $scope.lstFbProfiles = response.data;
+                                      if ($scope.lstFbProfiles.length < 3)
+                                      {
+                                          $scope.fetchTwtProfiles();
+                                      }
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
                                       }, 3000);
                                   }
                                   else
                                   {
+                                      $scope.fetchTwtProfiles();
                                       $scope.nopro = true;
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
@@ -353,12 +327,16 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                                   console.log(response.data);
                                   if (response.data != "") {
                                       $scope.lstTwtProfiles = response.data;
+                                      if ($scope.lstTwtProfiles.length < 3) {
+                                          $scope.fetchGplusProfiles();
+                                      }
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
                                       }, 3000);
                                   }
                                   else
                                   {
+                                      $scope.fetchGplusProfiles();
                                       $scope.notwtpro = true;
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
@@ -376,12 +354,16 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               .then(function (response) {
                                   if (response.data != "") {
                                       $scope.lstGplusProfiles = response.data;
+                                      if ($scope.lstGplusProfiles.length < 3) {
+                                          $scope.fetchGAProfiles();
+                                      }
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
                                       }, 3000);
                                   }
                                   else
                                   {
+                                      $scope.fetchGAProfiles();
                                       $scope.nogpluspro = true;
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
@@ -399,12 +381,18 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               .then(function (response) {
                                   if (response.data != "") {
                                       $scope.lstAProfiles = response.data;
+                                      if ($scope.lstAProfiles.length < 3) {
+                                          $scope.fetchInstagramProfiles();
+                                      }
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
                                       }, 3000);
                                   }
                                   else
                                   {
+                                     
+                                          $scope.fetchInstagramProfiles();
+                                    
                                       $scope.noGApro = true;
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
@@ -422,12 +410,18 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               .then(function (response) {
                                   if (response.data != "") {
                                       $scope.lstinsProfiles = response.data;
+                                      if ($scope.lstinsProfiles.length < 3) {
+                                          $scope.fetchYTChannels();
+                                      }
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
                                       }, 3000);
                                   }
                                   else
                                   {
+                                     
+                                          $scope.fetchYTChannels();
+                                   
                                       $scope.noinstapro = true;
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
@@ -445,11 +439,17 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               .then(function (response) {
                                   if (response.data != "") {
                                       $scope.lstYChannel = response.data;
+                                      if ($scope.lstYChannel.length < 3) {
+                                          $scope.fetchLinkedInCompanyPagesProfiles();
+                                      }
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
                                       }, 3000);
                                   }
                                   else {
+                                     
+                                          $scope.fetchLinkedInCompanyPagesProfiles();
+                                     
                                       $scope.noYTcha = true;
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
@@ -467,12 +467,18 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               .then(function (response) {
                                   if (response.data != "") {
                                       $scope.lstlincmpnyProfiles = response.data;
+                                      if ($scope.lstlincmpnyProfiles.length < 3) {
+                                          $scope.fetchLinkedInAccountProfiles();
+                                      }
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
                                       }, 3000);
                                   }
                                   else
                                   {
+                                     
+                                          $scope.fetchLinkedInAccountProfiles();
+                                     
                                       $scope.noLinkedpro = true;
                                       setTimeout(function () {
                                           $scope.loaderclass = 'hide';
@@ -482,20 +488,52 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                                   $scope.error = reason.data;
                               });
             }
-            // end codes to load LinkedIn Comapany page profiles
+        // end codes to load LinkedIn Comapany page profiles
+
+        //codes to load  LinkedIn Account profiles start
+            $scope.fetchLinkedInAccountProfiles = function () {
+                debugger;
+                $http.get(apiDomain + '/api/LinkedIn/GetLinkedAccountProfiles?groupId=' + $rootScope.groupId)
+                              .then(function (response) {
+                                  if (response.data != "") {
+                                      $scope.lstlinAccountProfiles = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else {
+                                      $scope.noLinkedpro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+            }
+        // end codes to load LinkedIn Account profiles
+
+            $scope.contentFeeds = function (key) {
+                $rootScope.keyword = key;
+                $state.go('rss_news');       
+                //$state.go('schedulemessage');
+            }
+
+
 
             $scope.fetchProfiles();
-            $scope.fetchTwtProfiles();
-            $scope.fetchGplusProfiles();
-            $scope.fetchInstagramProfiles();
-            $scope.fetchGAProfiles();
-            $scope.fetchLinkedInCompanyPagesProfiles();
+            //$scope.fetchTwtProfiles();
+            //$scope.fetchGplusProfiles();
+            //$scope.fetchInstagramProfiles();
+            //$scope.fetchGAProfiles();
+            //$scope.fetchLinkedInCompanyPagesProfiles();
+            //$scope.fetchLinkedInAccountProfiles();
             $scope.TotalSetMessages();
             $scope.GetIncommingMessage();
             $scope.TwitterFollowerCount();
             $scope.FacebookfanPageCount();
             $scope.TwitterRecentFollower();
-            $scope.fetchYTChannels();
+            //$scope.fetchYTChannels();
 
             $scope.deleteProfile = function (profileId) {
                 // console.log(profileId);
@@ -532,6 +570,63 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     //});
 
                     //todo: code to delete profile
+                });
+            }
+
+            $scope.deleteGpProfile = function (profileId) {
+                // console.log(profileId);
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not able to see any feeds from this account!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function () {
+                    console.log(profileId)
+
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                    }).then(function (response) {
+                        if (response.data == "Deleted") {
+                           // swal("Deleted!", "Your profile has been deleted", "Success");
+                            swal("Deleted!", "Account is deleted", "success");
+                        }
+                        window.location.reload();
+                        });
+
+                });
+            }
+
+
+            $scope.deleteGaProfile = function (profileId) {
+                // console.log(profileId);
+                swal({
+                    title: "Are you sure?",
+                    text: "You will not able to see any data from this account!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes, delete it!",
+                    closeOnConfirm: false
+                },
+                function () {
+                    console.log(profileId)
+
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                    }).then(function (response) {
+                        if (response.data == "Deleted") {
+                            // swal("Deleted!", "Your profile has been deleted", "Success");
+                            swal("Deleted!", "Account is deleted", "success");
+                        }
+                        window.location.reload();
+                    });
+
                 });
             }
 
@@ -745,7 +840,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     });
                 }
                 else if ($scope.selecteGAPageProfiles.length > 0) {
-                    swal("This page is already added");
+                    swal("This account is already added");
                 }
                 else {
                     swal("Select atleast one page to add!");

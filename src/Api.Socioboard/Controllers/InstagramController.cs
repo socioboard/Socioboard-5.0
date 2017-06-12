@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Api.Socioboard.Helper;
 using Api.Socioboard.Model;
 using MongoDB.Driver;
+using System.Text.RegularExpressions;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -52,6 +53,23 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = new List<Domain.Socioboard.Models.Instagramaccounts>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram))
+            {
+                Domain.Socioboard.Models.Instagramaccounts insAcc = Repositories.InstagramRepository.getInstagramAccount(item.profileId, _redisCache, dbr);
+                if (insAcc != null)
+                {
+                    lstInsAcc.Add(insAcc);
+                }
+            }
+            return Ok(lstInsAcc);
+        }
+
+        [HttpGet("GetAllInstagramProfiles")]
+        public IActionResult GetAllInstagramProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = new List<Domain.Socioboard.Models.Instagramaccounts>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram))
             {
@@ -123,6 +141,40 @@ namespace Api.Socioboard.Controllers
         [HttpPost("AddInstagramComment")]
         public IActionResult AddInstagramComment(string FeedId, string Text, string InstagramId, long groupId)
         {
+            string postmessage = "";
+            string[] updatedText = Regex.Split(Text, "<br>");
+
+            foreach (var item in updatedText)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("hhh") || item.Contains("nnn") || item.Contains("ppp") || item.Contains("jjj"))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + item.Replace("hhh", "#");
+                        }
+                        if (item.Contains("nnn"))
+                        {
+                            postmessage = postmessage.Replace("nnn", "&");
+                        }
+                        if (item.Contains("ppp"))
+                        {
+                            postmessage = postmessage.Replace("ppp", "+");
+                        }
+                        if (item.Contains("jjj"))
+                        {
+                            postmessage = postmessage.Replace("jjj", "-+");
+                        }
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            Text = postmessage;
+
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string commentData = Repositories.InstagramRepository.AddInstagramComment(FeedId, Text, InstagramId, groupId, _appSettings, _redisCache, dbr);
             return Ok(commentData);

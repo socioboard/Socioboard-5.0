@@ -35,7 +35,7 @@
                                 </div>
                             </nav>
                         </div>
-                        <div class="col s12">
+                        <div class="col s12" ng-if="lastreached==true">
                             <div id="email-list" class="col s10 m4 l4 card-panel z-depth-1">
                                 <ul class="collection" id="task_list">
                                     <li class="collection-item avatar email-unread" ng-repeat="task in userTasks" ng-click="showTask($index)">
@@ -101,6 +101,57 @@
                         </div>
                     </div>
                    
+                    <div>
+                        <br /><br /><br /><br /><br /><br /><br />
+                        <div class="center">
+                            <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="notasks==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No tasks assigned to display<br /></h6>
+                        </div>
+                        <br />
+                        <div class="center" ng-if="lastreached!=true">
+                            <div class="preloader-wrapper small active">
+                                <div class="spinner-layer spinner-blue">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+
+                                <div class="spinner-layer spinner-red">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+
+                                <div class="spinner-layer spinner-yellow">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+
+                                <div class="spinner-layer spinner-green">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <!--end container-->

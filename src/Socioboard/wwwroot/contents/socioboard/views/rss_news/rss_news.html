@@ -1,7 +1,7 @@
 <style>
     ul.shinh li label {
-        font-size: 15px;
-        color: #333;
+        font-size: 14px;
+        color: grey;
         padding: 0 10px;
         color: #ff4081;
     }
@@ -56,11 +56,11 @@
                 <div class="card" ng-repeat="post in postedRssData | orderBy:'publishingDate':true">
                     <span ng-click="" class="right" role="button" tabindex="0" style="margin-right: 5px;"><i class="fa fa-close grey-text"></i></span>
                     <div class="card-content">
-                        <h6><strong>{{post.title}}</strong></h6>
-                        <div class="center">
-                            <a href="{{post.link}}" class="truncate" target="_blank">{{post.link}}</a>
+                        <h6 style="color:#777"><strong>{{post.title}}</strong></h6>
+                        <div class="center" >
+                            <a href="{{post.link}}" class="truncate" target="_blank" style="color:cornflowerblue">{{post.link}}</a>
                         </div>
-                        <div class="center">
+                        <div class="center" >
                             <img src="{{post.image}}" class="rssPostImage">
                         </div>
                     </div>
@@ -227,6 +227,7 @@
                 <div class="row center">
                     <div ng-init="buildbtn= {{buildbtn}}"></div>
                     <div>
+                        <!--<div ng-show="buildbtn" class="btn btn_style" ng-click="rssContentsData()">Build My Content Feed</div>contentfeedsdata-->
                         <div ng-show="buildbtn" class="btn btn_style" ng-click="rssContentsData()">Build My Content Feed</div>
                         <div ng-show="!buildbtn"> <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
                     </div>

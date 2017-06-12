@@ -30,6 +30,7 @@
 --reference:C:\Users\GLB-213\.nuget\packages\Google.GData.YouTube\2.2.0\lib\Google.GData.YouTube.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Iesi.Collections\4.0.0.4000\lib\net40\Iesi.Collections.dll
+--reference:C:\Users\GLB-213\.nuget\packages\Imgur.API\4.0.1\lib\net45\Imgur.API.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.ApplicationInsights\2.1.0\lib\net45\Microsoft.ApplicationInsights.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.ApplicationInsights.Agent.Intercept\1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.ApplicationInsights.AspNetCore\1.0.0\lib\net451\Microsoft.ApplicationInsights.AspNetCore.dll
@@ -197,6 +198,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Startup.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\AffiliatesController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\AgencyUserController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\BoardMeController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\DiscoveryController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\DraftMessageController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\ElasticMailReportController.cs
@@ -224,6 +226,8 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\TwitterReportsController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\UserController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\ValuesController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\WebHookController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\YoutubeReportController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\Listening\FacebookGroupsController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\Listening\LinkedInGroupController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Helper\AppSettings.cs
@@ -269,6 +273,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\TwitterReportsRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\TwitterRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\UploadVideo.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\YoutubeReportsRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\BoardMeRepository\BoardMeRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\BoardMeRepository\GplusRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\BoardMeRepository\InstagramRepository.cs

@@ -46,7 +46,6 @@ namespace Api.Socioboard.Repositories
 
 
         }
-
         public static string AddTwitterAccount(long userId, long groupId, bool follow, Model.DatabaseRepository dbr, oAuthTwitter OAuth, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             string twitterUserId = string.Empty;
@@ -321,7 +320,6 @@ namespace Api.Socioboard.Repositories
                 return "Your Twitter profile is not Authorized to add";
             }
         }
-
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache)
         {
             Domain.Socioboard.Models.TwitterAccount twtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(profileId) && t.userId == userId && t.isActive).FirstOrDefault();
@@ -337,7 +335,6 @@ namespace Api.Socioboard.Repositories
                 return "Account Not Exist";
             }
         }
-
         public static List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> GetTopFeeds(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
             List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> inMemFeeds = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId);
@@ -368,7 +365,6 @@ namespace Api.Socioboard.Repositories
             }
 
         }
-
         public static List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> GetUserTweets(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
             List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> inMemFeeds = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterUser100Tweets + profileId);
@@ -399,7 +395,6 @@ namespace Api.Socioboard.Repositories
             }
 
         }
-
         public static List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> GetUserNotifications(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
             List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> inMemFeeds = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterUser100Notifications + profileId);
@@ -430,7 +425,6 @@ namespace Api.Socioboard.Repositories
             }
 
         }
-
         public static List<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> GetTwitterDirectMessages(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
             List<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> inMemFeeds = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterUser100DirectMessage + profileId);
@@ -502,7 +496,6 @@ namespace Api.Socioboard.Repositories
             }
             return FollowerCount;
         }
-
         public static string GetIncommingMessage(long userId, long groupId, Model.DatabaseRepository dbr, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             string[] profileids = null;
@@ -520,12 +513,13 @@ namespace Api.Socioboard.Repositories
 
             profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
             MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => profileids.Contains(t.recipientId));
-            var task = Task.Run(async () =>
-            {
-                return await ret;
-            });
-            long TwitterFollowerCount = task.Result.Count;
+            //var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => profileids.Contains(t.recipientId));
+            //var task = Task.Run(async () =>
+            //{
+            //    return await ret;
+            //});
+            //long TwitterFollowerCount = task.Result.Count;
+            long TwitterFollowerCount = mongorepo.Counts<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => profileids.Contains(t.recipientId));
             if (TwitterFollowerCount > 1000000)
             {
                 long r = TwitterFollowerCount % 1000000;
@@ -544,8 +538,6 @@ namespace Api.Socioboard.Repositories
             }
             return IncommingMessage;
         }
-
-
         private static void SaveTwitterMessages(string profileId, string screenName, oAuthTwitter oAuth, ILogger _logger, Helper.AppSettings _appSettings)
         {
 
@@ -699,7 +691,6 @@ namespace Api.Socioboard.Repositories
                 _logger.LogError("tl.Get_Statuses_Mentions_Timeline ex.Message >> " + ex.Message);
             }
         }
-
         private static void SaveUserRetweets(string profileId, oAuthTwitter oAuth, ILogger _logger, Helper.AppSettings _appSettings)
         {
             TwitterUser twtuser;
@@ -824,7 +815,6 @@ namespace Api.Socioboard.Repositories
                 _logger.LogError("twtuser.GetStatuses_Retweet_Of_Me ex.Message >> " + ex.Message);
             }
         }
-
         private static void SaveUserTweets(string profileId, string screenName, oAuthTwitter oAuth, ILogger _logger, Helper.AppSettings _appSettings)
         {
             try
@@ -956,7 +946,6 @@ namespace Api.Socioboard.Repositories
                 _logger.LogError("twtuser.GetStatuses_User_Timeline ex.Message >> " + ex.Message);
             }
         }
-
         private static void SaveTwitterFeeds(string profileId, string screenName, oAuthTwitter oAuth, ILogger _logger, Helper.AppSettings _appSettings)
         {
             TwitterUser twtuser;
@@ -1096,7 +1085,6 @@ namespace Api.Socioboard.Repositories
                 _logger.LogError("twtuser.GetStatuses_Home_Timeline ex.Message >> " + ex.Message);
             }
         }
-
         private static void SaveTwitterDirectMessageSent(string profileId, oAuthTwitter OAuth, ILogger _logger, Helper.AppSettings _appSettings)
         {
             #region Add Twitter Direct Message
@@ -1220,8 +1208,6 @@ namespace Api.Socioboard.Repositories
             }
             #endregion
         }
-
-
         private static void SaveTwittwrDirectMessageRecieved(string profileId, oAuthTwitter OAuth, ILogger _logger, Helper.AppSettings _appSettings)
         {
             #region Add Twitter Direct Message
@@ -1344,8 +1330,6 @@ namespace Api.Socioboard.Repositories
             }
             #endregion
         }
-
-
         public static void SaveUserFollowers(oAuthTwitter OAuth, string screeenName, string TwitterUserId, ILogger _logger, Helper.AppSettings _appSettings)
         {
             try
@@ -1466,8 +1450,6 @@ namespace Api.Socioboard.Repositories
             {
             }
         }
-
-
         public static void Savetwitterrecentdetails(JArray data, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
 
@@ -1549,7 +1531,6 @@ namespace Api.Socioboard.Repositories
                mongorepo.Add<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(insertdata);
             }
         }
-
         public static string Post_ReplyStatusesUpdate(string profileId, string message, string messageId, long userId, long groupId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings, string screenName)
         {
             Domain.Socioboard.Models.TwitterAccount twtAcc = new Domain.Socioboard.Models.TwitterAccount();
@@ -1594,7 +1575,6 @@ namespace Api.Socioboard.Repositories
                 return "api issue while post reply";
             }
         }
-
         public static string TwitterRetweet_post(string profileId, string messageId, long userId, long groupId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             Domain.Socioboard.Models.TwitterAccount twtacc = new Domain.Socioboard.Models.TwitterAccount();
@@ -1637,7 +1617,6 @@ namespace Api.Socioboard.Repositories
                 return "api issue while retweet post";
             }
         }
-
         public static string TwitterFavorite_post(string profileId, string messageId, long userId, long groupId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             Domain.Socioboard.Models.TwitterAccount twtacc = new Domain.Socioboard.Models.TwitterAccount();

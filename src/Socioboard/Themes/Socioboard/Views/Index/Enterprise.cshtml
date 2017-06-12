@@ -12,7 +12,7 @@
         </div>
         <div class="col s5 hoverable">
             <div class="section">
-                <form onsubmit="CreateDemoReq(); return false;" class="row" >
+                <form onsubmit="CreateDemoReq(); return false;" id="demoForm" class="row" >
                     <div class="col s12">
                         <div class="row">
                             <div class="input-field col s12">
@@ -81,7 +81,7 @@
                                 Submit
                                 <i class="fa fa-paper-plane"></i>
                             </div>*@
-                            <a class="waves-effect waves-light btn cyan" onclick="document.getElementById('demoForm').reset();">Reset</a>
+                            <button class="waves-effect waves-light btn cyan" onclick="document.getElementById('demoForm').reset();">Reset</button>
                         </div>
                     </div>
                 </form>

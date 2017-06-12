@@ -41,7 +41,12 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger,_env);
             string FacebookPageId = Request.Form["FacebookPageId"];
-            string pagedata = Repositories.ShareathonRepository.AddPageShareathon(userId, FacebookPageId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
+            string FacebookUrl = Request.Form["FacebookUrl"];
+            if (string.IsNullOrEmpty(FacebookUrl))
+            {
+                FacebookUrl = "";
+            }
+            string pagedata = Repositories.ShareathonRepository.AddPageShareathon(userId, FacebookUrl, FacebookPageId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
             return Ok(pagedata);
         }
 
@@ -50,7 +55,12 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string FacebookPageId = Request.Form["FacebookPageId"];
-            string pagedata = Repositories.ShareathonRepository.EditPageShareathon(PageShareathodId,userId, FacebookPageId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
+            string FacebookUrl = Request.Form["FacebookUrl"];
+            if(string.IsNullOrEmpty(FacebookUrl))
+            {
+                FacebookUrl = "";
+            }
+            string pagedata = Repositories.ShareathonRepository.EditPageShareathon(PageShareathodId,userId, FacebookUrl, FacebookPageId, Facebookaccountid, Timeintervalminutes, _redisCache, _appSettings, dbr);
             return Ok(pagedata);
         }
 

@@ -50,8 +50,26 @@ namespace Api.Socioboard.Repositories
             }
             catch { }
 
+            List<Domain.Socioboard.Models.Groupprofiles> topgroupProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
+            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = topgroupProfiles.Take(3).ToList();
+            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
+            return groupProfiles;
+        }
+
+        public static List<Domain.Socioboard.Models.Groupprofiles> getAllGroupProfiles(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                if (inMemGroupProfiles != null)
+                {
+                    return inMemGroupProfiles;
+                }
+            }
+            catch { }
             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
+
             return groupProfiles;
         }
 
