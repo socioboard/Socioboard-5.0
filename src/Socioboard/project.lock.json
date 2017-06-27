@@ -2232,6 +2232,24 @@
         "runtime": {
           "net451/Socioboard.Facebook.dll": {}
         }
+      },
+      "Socioboard.Pinterest/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5.1",
+        "dependencies": {
+          "NETStandard.Library": "1.6.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "frameworkAssemblies": [
+          "System.Xml",
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "net451/Socioboard.Pinterest.dll": {}
+        },
+        "runtime": {
+          "net451/Socioboard.Pinterest.dll": {}
+        }
       }
     }
   },
@@ -6426,6 +6444,11 @@
       "type": "project",
       "path": "../Socioboard.Facebook/project.json",
       "msbuildProject": "../Socioboard.Facebook/Socioboard.Facebook.xproj"
+    },
+    "Socioboard.Pinterest/1.0.0": {
+      "type": "project",
+      "path": "../Socioboard.Pinterest/project.json",
+      "msbuildProject": "../Socioboard.Pinterest/Socioboard.Pinterest.xproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -6455,7 +6478,8 @@
       "Serilog.Extensions.Logging >= 1.1.0",
       "Serilog.Sinks.ColoredConsole >= 2.0.0",
       "Serilog.Sinks.RollingFile >= 2.1.0",
-      "Socioboard.Facebook >= 1.0.0-*"
+      "Socioboard.Facebook >= 1.0.0-*",
+      "Socioboard.Pinterest >= 1.0.0-*"
     ],
     ".NETFramework,Version=v4.5.1": [
       "Microsoft.AspNet.WebApi.Client >= 5.2.3"

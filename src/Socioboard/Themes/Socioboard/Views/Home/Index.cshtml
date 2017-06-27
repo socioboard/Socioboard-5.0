@@ -1,5 +1,6 @@
 ﻿@{
     Layout = null;
+    Domain.Socioboard.Models.User objplugin = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(ViewBag.user);
 }
 <!DOCTYPE html>
 <html lang="en" data-ng-app="SocioboardApp">
@@ -50,8 +51,8 @@
     <link href="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css" rel="stylesheet" />
     <link href="~/contents/socioboard/js/admin/plugins/chartist-js/chartist.min.css" rel="stylesheet" />
     <link href="~/contents/socioboard/global/plugins/animate.css" rel="stylesheet" />
-        <link rel="stylesheet" type="text/css" href="~/contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css">
- 
+    <link rel="stylesheet" type="text/css" href="~/contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css">
+
 
     <!-- Begin emoji-picker Stylesheets -->
     <link href="~/contents/socioboard/global/plugins/emoji-picker/lib/css/nanoscroller.css" rel="stylesheet">
@@ -64,9 +65,9 @@
 
 <body ng-model="lstProfiles">
     <input type="hidden" id="selectedGroupId" ng-init="groupId=@ViewBag.selectedGroupId" />
-    <div   ng-init="Downgrade=@ViewBag.downgrade" ></div>
-    <div  ng-init="MaxCount=@ViewBag.MaxCount" ></div>
-    <div  ng-init="profileCount=@ViewBag.profileCount" ></div>
+    <div ng-init="Downgrade=@ViewBag.downgrade"></div>
+    <div ng-init="MaxCount=@ViewBag.MaxCount"></div>
+    <div ng-init="profileCount=@ViewBag.profileCount"></div>
     <div ng-init="AccountType=@ViewBag.AccountType"></div>
     <div ng-init="groups=@ViewBag.groups"></div>
     <div ng-init="user=@ViewBag.user"></div>
@@ -141,13 +142,13 @@
     <script type="text/javascript">
 
 
-   //Disable Back Button In All Browsers.
+        //Disable Back Button In All Browsers.
         function DisableBackButtonAllBrowsers() {
             window.history.forward()
         };
-         DisableBackButtonAllBrowsers();
+        DisableBackButtonAllBrowsers();
         window.onload = DisableBackButtonAllBrowsers;
-         window.onpageshow = function (evts) { if (evts.persisted) DisableBackButtonAllBrowsers(); };
+        window.onpageshow = function (evts) { if (evts.persisted) DisableBackButtonAllBrowsers(); };
         window.onunload = function () { void (0) };
     </script>
 
@@ -187,34 +188,57 @@
     <script src="~/contents/socioboard/global/plugins/jquery-tags-input/jquery.tagsinput.js"></script>
 
     @*<!— Hotjar Tracking Code for www.socioboard.com —>*@
-        <script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:418900,hjsv:5};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'//static.hotjar.com/c/hotjar-','.js?sv=');
-        </script>
+    <script>
+        (function (h, o, t, j, a, r) {
+            h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+            h._hjSettings = { hjid: 418900, hjsv: 5 };
+            a = o.getElementsByTagName('head')[0];
+            r = o.createElement('script'); r.async = 1;
+            r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window, document, '//static.hotjar.com/c/hotjar-', '.js?sv=');
+    </script>
 
-        @if (TempData["Error"] != null)
-        {
-            <script>
+    @if (TempData["Error"] != null)
+    {
+        <script>
             $(document).ready(function () {
                 alertify.set({ delay: 5000 });
                 alertify.error("@Convert.ToString(TempData["Error"])");
             });
-            </script>
-        }
-        @if (TempData["Success"] != null)
-        {
-            <script>
+        </script>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <script>
             $(document).ready(function () {
                 alertify.set({ delay: 5000 });
                 alertify.success("@Convert.ToString(TempData["Success"])");
             });
-            </script>
+        </script>
+    }
+    <script>
+        $(document).ready(function () {
+            if ('@objplugin.Password' != "") {
+                setCookie("socioboardemailId", '@objplugin.EmailId', "90");
+                if ('@objplugin.Password' != "") {
+                    setCookie("socioboardToken", '@objplugin.Password', "90");
+                } else {
+                    setCookie("socioboardToken", 'sociallogin', "90");
+                }
+            }
+        });
+        function setCookie(cname, cvalue, exdays) {
+            var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+            cpwd = cvalue;
+            cvalue = Base64.encode(cpwd);
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         }
+
+    </script>
+    
 </body>
 </html>

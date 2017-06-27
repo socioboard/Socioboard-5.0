@@ -12,21 +12,30 @@
                                 <i class="mdi-action-search  grey-text text-darken-4"></i>
                             </a>                              
                         </li>-->
-                        <!--emailid change feature header-->
-
+                        
                         <!--<li>
-                            <a href="#" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
-                                <i class="icon-user grey-text text-darken-4"></i>
+                            <a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen">
+                                <i class="icon-size-fullscreen  grey-text text-darken-4"></i>
                             </a>
                         </li>-->
                         <li>
-                            <a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen">
-                                <i class="icon-size-fullscreen  grey-text text-darken-4"></i>
+                            <a href="#/upgradeplan" class="btn blue" ng-if="AccountType==0">Upgrade Plan</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="waves-effect waves-block waves-light dropdown-button" data-activates='help'>
+                                <i class="icon-earphones-alt grey-text text-darken-4" title="help"></i>
                             </a>
                         </li>
                         <li>
                             <a href="javascript:void(0);" class="waves-effect waves-block waves-light dropdown-button" data-activates='groups'>
-                                <i class="icon-users grey-text text-darken-4"></i>
+                                <i class="icon-users grey-text text-darken-4" title="Groups"></i>
+                            </a>
+                        </li>
+                        <!--emailid change feature header-->
+
+                        <li>
+                            <a href="#" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
+                                <i class="icon-user grey-text text-darken-4" title="Account Settings"></i>
                             </a>
                         </li>
                         <!-- Dropdown Trigger -->                        
@@ -36,26 +45,89 @@
                             </a>
                         </li>-->
                     </ul>
+                    <!-- Help -->
+                    <ul id='help' class='dropdown-content dropdown-content-small'>
+                        <li>
+                            <a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw" class="waves-effect waves-orange  white-text" target="_blank">
+                                <span class="groupslist"><i class="icon-social-youtube"></i>Youtube Tutorials </span>
+                            </a>
+                        </li>
+                        <!--<li class="bold red">
+                            <a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw" class="waves-effect waves-orange  white-text" target="_blank">
+                                <i class="icon-camcorder"></i> Youtube Tutorials
+                            </a>
+                        </li>-->
+                    </ul>
 
-                    <ul id='groups' class='dropdown-content dropdown-content-small'>
+                    <!-- Groups for all plan -->
+                    <ul id='groups' class='dropdown-content dropdown-content-small' ng-if="AccountType!=0">
                         <li ng-repeat="grp in groups">
-                        <span class="grey grey-text text-lighten-4" ng-if="groupId==grp.id">{{grp.groupName}}</span>
-                            <span ng-click="changeGroup(grp.id)"  ng-if="groupId!=grp.id">{{grp.groupName}}</span>
-                         </li>
-                        <li class="divider"></li>
-                        <li><a href="#/groups" >Create New</a></li>
+                            <a href="javascript:;" class="grey grey-text text-lighten-4">
+                                <span ng-if="groupId==grp.id">{{grp.groupName}}</span>
+                            </a>
+                            <a href="javascript:;" class="">
+                                <span ng-click="changeGroup(grp.id)" ng-if="groupId!=grp.id">{{grp.groupName}}</span>
+                            </a>
+                        </li>
+                        <!--<li class="divider"></li>-->
+                        <li><a href="#/groups" ><span>Create New</span></a></li>
+                    </ul>
+
+                    <!-- Groups for all plan -->
+                    <ul id='groups' class='dropdown-content dropdown-content-small' ng-if="AccountType==0">
+                        <li ng-repeat="grp in groups">
+                            <a href="javascript:;" class="grey grey-text text-lighten-4">
+                                <span ng-if="groupId==grp.id">{{grp.groupName}}</span>
+                            </a>
+                            <a href="javascript:;" class="">
+                                <span ng-click="changeGroup(grp.id)" ng-if="groupId!=grp.id">{{grp.groupName}}</span>
+                            </a>
+                        </li>
+                        <!--<li class="divider"></li>-->
+                        <li><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
                     </ul>
 
                     <!-- Accounts Structure -->
-                    <ul id="account_list" class="dropdown-content dropdown-content-small">
+                    <ul id="account_list" class='dropdown-content dropdown-content-small'>
                         <li>
-                            <a href="#/mail_settings">
-                                <span class="groupslist"><i class="icon-user"></i>Mail Settings</span>
+                            <a href="#profilesettings">
+                                <span class="groupslist"><i class="icon-user"></i>Profile Settings </span>
                             </a>
                         </li>
                         <li>
-                            <a href="#">
-                                <span class="groupslist"><i class="icon-user"></i>Mail </span>
+                            <a href="#/access_passwd">
+                                <span class="groupslist"><i class="icon-key"></i>Access Password</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/billing">
+                                <span class="groupslist"><i class="icon-credit-card"></i>Billing</span>
+                            </a>
+                        </li>  
+                        <li>
+                            <a href="#/mail_settings">
+                                <span class="groupslist"><i class="icon-envelope-letter"></i>Email Settings</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/extensions">
+                                <span class="groupslist"><i class="icon-screen-desktop"></i>Apps </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/ads_offer">
+                                <span class="groupslist"><i class="icon-star"></i>Free Offer</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/upgradeplan">
+                                <span class="groupslist"><i class="icon-present"></i>Upgrade Plan</span>
+                            </a>
+                        </li>
+                        <li>
+                            <!--<a ng-click="logout()"><i class="mdi-hardware-keyboard-tab"></i> Logout</a>-->
+                            <a ng-click="logout()">
+                                <span class="groupslist"><i class="icon-logout"></i>Logout</span>
                             </a>
                         </li>
                     </ul>

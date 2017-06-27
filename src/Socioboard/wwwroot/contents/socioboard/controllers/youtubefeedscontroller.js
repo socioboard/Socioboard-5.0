@@ -13,13 +13,13 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
 
         var currentVideoId = "";
         $scope.LoadVideos = function () {
-            debugger;
+        
             //codes to load videos
             $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId)
                               .then(function (response) {
                                   $scope.lstYtFeeds = response.data;
                                   $scope.preloadmorevideos = true;
-                                  console.log(response.data);
+                                 
                                   setTimeout(function () {
                                       onYouTubeIframeAPIReady();
                                   }, 15000);
@@ -32,7 +32,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
         $scope.LoadVideos();
 
         $scope.videomodal = function (vdoId) {
-            debugger;
+         
             $scope.lstYtComments = "";
             $scope.preloadmorecomments = false;
             $scope.fetchComments(vdoId);
@@ -43,7 +43,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
         }
 
         $scope.fetchComments = function (vidoId) {
-            debugger;
+        
             $scope.commentsending = 'hide';
             $scope.sendicon = 'show';
             //codes to load Comments
@@ -51,7 +51,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
                               .then(function (response) {
                                   $scope.lstYtComments = response.data;
                                   $scope.preloadmorecomments = true;
-                                  console.log(response.data);
+                                 
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -61,7 +61,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
 
 
         $scope.postComments = function (videoid) {
-            debugger;
+           
             //codes to post Comments
             var commentText = $('#compose_' + videoid).val();
             var commentencoded = encodeURIComponent(commentText);
@@ -70,7 +70,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
                 $scope.commentsending = 'show';
                 $http.post(apiDomain + '/api/Google/PostCommentsYoutube?channelId=' + $stateParams.profileId + '&videoId=' + videoid + '&commentText=' + commentencoded)
                                   .then(function (response) {
-                                      console.log(response.data);
+                                     
                                       $scope.commentsending = 'hide';
                                       $scope.sendicon = 'show';
                                       //$scope.fetchComments(videoid);
@@ -89,7 +89,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
 
         }
         $scope.uploadvideo = function () {
-            debugger;
+          
             var formData = new FormData();
             var title = $('#youyube_title').val();
             var descrip = $('#youyube_desc').val();
@@ -162,7 +162,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
                                     }
 
                                 }, function (reason) {
-                                    console.log(reason);
+                                   
                                 });
                             }
                         else {

@@ -14,7 +14,7 @@ SocioboardApp.controller('TwittercustomreportsController', function ($rootScope,
         
 
         $scope.loadTopFans = function (profileId, days) {
-            debugger;
+           
             //codes to load  fans data
             $http.get(apiDomain + '/api/TwitterReports/GetTopFiveFans?profileId=' + profileId + '&daysCount=' + days)
                           .then(function (response) {

@@ -58,7 +58,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                                   starttwitter = starttwitter + response.data.length;
                                   $scope.lastreach = true;
                                   //$scope.lstBoardFeeds.push(response.data);
-                                  console.log($scope.lstBoardFeeds);
+                               
                                   if (response.data == null) {
                                       twitterReachLast = true;
                                   }
@@ -85,7 +85,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                                   });
                                   startGplus = startGplus + response.data.length;
                                   $scope.lastreach = true;
-                                  console.log($scope.lstBoardFeeds);
+                                 
                                   if (response.data == null) {
                                       GplusReachLast = true;
                                   }
@@ -125,7 +125,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
        
 
         $scope.loadMore = function () {
-            console.log('loadMore....');
+            
             $scope.LoadTopTwitterFeeds();
             $scope.LoadTopGplusFeeds();
             $scope.LoadTopInstagramFeeds();
@@ -158,8 +158,8 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                     "shareMessage": schedulemessage.title,
                     "picUrl": schedulemessage.imageurl
                 };
-                console.log(message);
-                console.log("google");
+                //console.log(message);
+                //console.log("google");
                 $rootScope.schedulemessage = message;
             }
             else if (schedulemessage.twitterprofileid != null) {
@@ -167,8 +167,8 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                     "shareMessage": schedulemessage.text,
                     "picUrl": schedulemessage.imageurl
                 };
-                console.log(message);
-                console.log("twitter");
+                //console.log(message);
+                //console.log("twitter");
                 $rootScope.schedulemessage = message;
             }
             else if (schedulemessage.feedid != null) {
@@ -176,8 +176,8 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                     "shareMessage": schedulemessage.tags ,
                     "picUrl": schedulemessage.imageurl.split('?')[0]
                 };
-                console.log(message);
-                console.log("instagram");
+                //console.log(message);
+                //console.log("instagram");
                 $rootScope.schedulemessage = message;
             }
 

@@ -1,0 +1,93 @@
+
+<!-- START MAIN -->
+    <div  data-ng-controller="AdsOfferController">
+        <!-- START WRAPPER -->
+        <div class="wrapper">
+
+            <!-- START CONTENT -->
+            <section id="content">
+
+                <!--start container-->
+                <div class="container">
+
+                    <div class="col m12">
+                        <h4>Ads</h4>
+                    </div>
+
+                    <div class="row no-space">
+                      <div class="col l6 m6 s12">
+                        <div class="card">
+                          <div class="card-content white">
+                            <div class="row">
+                              <form class="col s12">
+                                <div class="row">
+                                  <div class="col l12">
+                                  <h6>Step 1 :</h6>
+                                  </div>
+                                  <div class="input-field col s12">
+                                    <textarea id="textarea1" class="materialize-textarea black-text" disabled>
+                                  
+                                    </textarea>
+                                    <label for="textarea1">Embaded code</label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col l12">
+                                        <h6>Step 2 :</h6>
+                                    </div>
+                                  <div class="input-field col s12">
+                                    <input id="url" type="url" ng-if="urldetails ==null" required class="validate">
+                                      <input id="url1" type="url" ng-if="urldetails !=null" required class="validate" disabled>
+                                    <label for="url" data-error="wrong" data-success="right">URL</label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col l12">
+                                        <h6>Step 3 :</h6>
+                                    </div>
+                                  <div class="input-field col s12 center">
+                                    <a href="javascript:;" class="btn blue" ng-if="urldetails ==null" ng-click="addAdsUrl()">Submit</a>
+                                      <a href="javascript:;" class="btn grey" ng-model="abcd" ng-click="message(abcd)" ng-if="urldetails !=null" disabled >Submit</a>
+                                  </div>
+                                </div>
+                              </form>
+                            </div>
+                          </div>                         
+                        </div>
+                      </div>
+
+                      <div class="col l6 m6 s12">
+                        <div class="card">
+                          <div class="card-content white">
+                            <span class="grey-text text-darken-4">Step 1 : </span><span class="grey-text text-darken-1">copy code and paste it in your website main page</span>
+                            <br>
+                            <span class="grey-text text-darken-4">Step 2 : </span><span class="grey-text text-darken-1">add your website URL</span>
+                            <br>
+                            <span class="grey-text text-darken-4">Step 3 : </span><span class="grey-text text-darken-1">verify your website where you paste above code</span>
+                          </div>                          
+                        </div>
+                          <div class="card">
+                              <div class="card-content white">
+                                  <iframe width="100%" height="200" src="https://www.youtube.com/embed/qAfskOtGDLA" frameborder="0" allowfullscreen></iframe>
+                              </div>
+                          </div>
+                          <div class="card" ng-if="urldetails !=null">
+                              <div class="card-content white">
+                                  <div class="center"><strong class="blue-text ">{{urldetails.websiteUrl}}</strong><span class="grey-text"> url is Verified</span></div>
+                              </div>
+                          </div>
+                          <div class="card" ng-if="urldetails == null">
+                              <div class="card-content white">
+                                  <div class="center"><strong class="blue-text "></strong><span class="grey-text">You don't have any verified URL</span></div>
+                              </div>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+                <!--end container-->
+            </section>
+            <!-- END CONTENT -->
+        </div>
+        <!-- END WRAPPER -->
+    </div>
+<!-- END MAIN -->

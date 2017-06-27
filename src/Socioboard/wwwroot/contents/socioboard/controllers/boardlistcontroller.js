@@ -5,31 +5,31 @@ SocioboardApp.controller('BoardlistController', function ($rootScope, $scope,$ht
     $scope.$on('$viewContentLoaded', function() {   
 
         $scope.loadBoards = function () {
-            debugger;
+          
             //codes to load  boards start
             $http.get(apiDomain + '/api/BoardMe/getUserBoards?userId=' + $rootScope.user.Id)
                           .then(function (response) {
-                              debugger;
-                              //$scope.lstBoard = [];
+                             
+                              $scope.Boards = [];
                               $scope.lstBoards = response.data;
-                              //var bname
-                              //angular.forEach($scope.lstBoards, function (value, key) {
-                              //    debugger;
-                              //    if(value.boardName.includes('SB'))
-                              //    {
-                              //        bname = value.boardName.replace('SB', '/');
-                              //    }
-                              //    else
-                              //    {
-                              //        bname = value.boardName;
-                              //    }
-                              //    $scope.lstBoard.push({
-                              //        bname: bname,
-                              //        id: value.id,
-                              //       // boardName: value.boardName,
+                              var bname
+                              angular.forEach($scope.lstBoards, function (value, key) {
+                                 
+                                  if(value.boardName.includes('SB'))
+                                  {
+                                      bname = value.boardName.replace('SB', '/');
+                                  }
+                                  else
+                                  {
+                                      bname = value.boardName;
+                                  }
+                                  $scope.Boards.push({
+                                      bname: bname,
+                                      id: value.id,
+                                      boardName: value.boardName,
                                       
-                              //        });
-                              //});
+                                      });
+                              });
                               
                               $scope.lastreach = true;
                           }, function (reason) {

@@ -11,13 +11,16 @@
                 <div class="container">
 
                     <div class="col m12">
-                        <h4>Mail Settings</h4>
+                        <h4>Email Settings</h4>
                     </div>
+                    <p>Your email <strong class="red-text">{{user.EmailId}}</strong> address  can be used to sign in to Socioboard on the web and in apps. It is also where we will send any reminders you choose below.</p>
 
                     <div class="row">
                         <div class="col s12 m12 l12">
                             <div class="card-panel">
-                                <div class="row center" id="change_email_btn">
+                                <div class="row" id="change_email_btn">
+                                    <h5><strong>Email ID</strong></h5>
+                                    <p>You can change  your email address by clicking on change email</p>
                                   <a class="btn btn_style btn-blue modal-trigger" href="#ChangeEmailModal">Change Email</a>
                                 </div>
                                 <div class="row" id="mail_div" style="display: none;">
@@ -48,6 +51,165 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card-panel">
+                                <div class="row">
+                                    <div class="col s12 m12 l12">
+                                        <div class="row">
+                                            <form class="col s12">
+                                                <h5><strong>Newsletter subscription</strong></h5>
+                                                <p>You can change your email subscription status below</p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">Daily Group Report Summary</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.dailyGrpReportsSummery" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">Weekly Group Report Summary</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.weeklyGrpReportsSummery" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">15 Days Group Report Summary</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.days15GrpReportsSummery" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">Monthly Group Report Summary</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.monthlyGrpReportsSummery" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">60 Days Group Report Summary</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.days60GrpReportsSummery" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">90 Days Group Report Summary</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.days90GrpReportsSummery" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">Other Newsletters</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.otherNewsLetters" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+
+                                            </form>
+
+                                            <form class="col s12">
+                                                <h5><strong>Schedule message update notification</strong></h5>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">Updates for success of schedule messages</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.scheduleSuccessUpdates" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+                                                <p>
+                                                    <div class="row">
+                                                        <div class="col s12">
+                                                            <h6 class="grey-text left">Updates for failure of schedule messages</h6>
+                                                            <div class="switch right">
+                                                                <label>
+
+                                                                    <input type="checkbox" ng-model="mailSettings.scheduleFailureUpdates" ng-change="UpdateMailSettings(mailSettings)">
+                                                                    <span class="lever"></span>
+
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </p>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <!--end container-->
             </section>
@@ -66,13 +228,13 @@
               <div class="row no-space">
                 <div class="input-field col s12">
                   <i class="mdi-action-lock-outline prefix"></i>
-                  <input ng-model="verifyPassword.currentPassword" type="password" class="validate">
+                  <input  id="password"  ng-model="verifyPassword.currentPassword" type="password" class="validate">
                   <label for="Currentpassword">Current Password</label>
                 </div>
               </div>
               <div class="row">
                 <div class="input-field col s12">
-                 <button class="modal-close btn cyan waves-effect waves-light right" type="submit" id="mail_btn">Submit
+                 <button class="btn cyan waves-effect waves-light right" type="submit" id="mail_btn">Submit
                   <i class="mdi-content-send right"></i>
                  </button>
                 </div>

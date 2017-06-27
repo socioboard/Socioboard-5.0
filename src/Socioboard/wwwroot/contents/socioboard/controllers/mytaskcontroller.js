@@ -22,7 +22,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
                                   if (response.data.length > 0) {
                                       $scope.showTask(0);
                                   }
-                                  console.log($scope.userTasks);
+                                
                               }
                               else
                               {
@@ -35,10 +35,10 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
         };
 
         $scope.showTask = function (index) {
-            console.log(index);
+          
             $scope.selectedTask = $scope.userTasks[index];
             $scope.selectedTaskIndex = index;
-            console.log($scope.selectedTask);
+            
             $scope.replydisp = true;
         }
 
@@ -57,7 +57,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
             else {
            
                 $scope.dispbtn = false;
-                debugger;
+               
                 //For taking special character start
                 var updatedmessage = "";
                 var postdata = newComment.split("\n");
@@ -86,9 +86,9 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
                         $("#task_rply").val("");
 
                     }
-                    console.log(response);
+                   
                 }, function (reason) {
-                    console.log(reason);
+                   
                 });
             }
 
@@ -130,9 +130,9 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        }
 
 		                    }
-		                    console.log(response);
+		                    
 		                }, function (reason) {
-		                    console.log(reason);
+		                  
 		                });
 		            }
 
@@ -173,9 +173,9 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 		                        }
 		                        
 		                    }
-		                    console.log(response);
+		                   
 		                }, function (reason) {
-		                    console.log(reason);
+		                  
 		                });
 		            }
 

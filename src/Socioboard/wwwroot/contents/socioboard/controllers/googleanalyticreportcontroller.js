@@ -23,18 +23,18 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
 	            swal("Deleted!", "Your profile has been deleted.", "Success");
 	        });
         }
-        debugger;
+      
         $scope.getReports = function (profileId, days) {
            // alert('hellogetReports');
             //codes to load profiles start
-            debugger;
+        
             $http.get(apiDomain + '/api/GoogleAnalyticsReport/GetGoogleAnalyticsReportData?profileId=' + profileId + '&daysCount=' + days)
                           .then(function (response) {
                               $scope.dailyReportsList = response.data;
                               $scope.fetchdatacomplete = true;
                               $scope.getData(profileId,days);
                           }, function (reason) {
-                              console.log;
+                             
                               $scope.error = reason.data;
                           });
             // end codes to load profiles
@@ -46,7 +46,7 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
                           .then(function (response) {
                               $scope.TwitterMentionReports = response.data;
                           }, function (reason) {
-                              console.log;
+                             
                               $scope.error = reason.data;
                           });
             // end codes to load profiles
@@ -59,7 +59,7 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
                               // $scope.ArticlesAndBlogsReports = response.data;
                               $scope.date(response.data);
                           }, function (reason) {
-                              console.log;
+                             
                               $scope.error = reason.data;
                           });
             // end codes to load profiles
@@ -194,8 +194,7 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
         $scope.generateChartData = function (days) {
             $scope.chartData = [];
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
-            console.log('reports data');
-            console.log($scope.dailyReportsList);
+         
             angular.forEach($scope.dailyReportsList, function (value, key) {
                 if (value.date > startDate) {
                     $scope.chartData.push({
@@ -208,8 +207,7 @@ SocioboardApp.controller('GoogleAnalyticreportController', function ($rootScope,
                     });
                 }
             });
-            console.log('chart data');
-            console.log($scope.chartData);
+          
         }
 
 

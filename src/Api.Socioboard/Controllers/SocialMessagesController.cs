@@ -892,6 +892,17 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.DeleteSocialMessages(socioqueueId, userId, GroupId, _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage);
         }
+
+        [HttpGet("DeleteMultiSocialMessages")]
+        public IActionResult DeleteMultiSocialMessages(string socioqueueId, long userId, long GroupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string[] lstSocioqueIdstr = socioqueueId.Split(',');
+            List<long> lstSocioqueIds = (Array.ConvertAll(lstSocioqueIdstr, Convert.ToInt64)).ToList();
+            List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.DeleteMultiSocialMessages(lstSocioqueIds, userId, GroupId, _redisCache, _appSettings, dbr);
+            return Ok(lstScheduledMessage);
+        }
+
         [HttpGet("EditScheduleMessage")]
         public IActionResult EditScheduleMessage(long socioqueueId, long userId, long GroupId, string message)
         {

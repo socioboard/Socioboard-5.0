@@ -106,7 +106,7 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-                console.log('collapse reached.');
+               
                 $('.collapsible').collapsible({
                     accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
                 });

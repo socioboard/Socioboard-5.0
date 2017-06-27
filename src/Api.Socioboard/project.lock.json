@@ -2265,6 +2265,24 @@
           "net451/Socioboard.LinkedIn.dll": {}
         }
       },
+      "Socioboard.Pinterest/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5.1",
+        "dependencies": {
+          "NETStandard.Library": "1.6.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "frameworkAssemblies": [
+          "System.Xml",
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "net451/Socioboard.Pinterest.dll": {}
+        },
+        "runtime": {
+          "net451/Socioboard.Pinterest.dll": {}
+        }
+      },
       "Socioboard.Twitter/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1",
@@ -4503,6 +4521,24 @@
         },
         "runtime": {
           "net451/Socioboard.LinkedIn.dll": {}
+        }
+      },
+      "Socioboard.Pinterest/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5.1",
+        "dependencies": {
+          "NETStandard.Library": "1.6.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "frameworkAssemblies": [
+          "System.Xml",
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "net451/Socioboard.Pinterest.dll": {}
+        },
+        "runtime": {
+          "net451/Socioboard.Pinterest.dll": {}
         }
       },
       "Socioboard.Twitter/1.0.0": {
@@ -8837,6 +8873,11 @@
       "path": "../Socioboard.LinkedIn/project.json",
       "msbuildProject": "../Socioboard.LinkedIn/Socioboard.LinkedIn.xproj"
     },
+    "Socioboard.Pinterest/1.0.0": {
+      "type": "project",
+      "path": "../Socioboard.Pinterest/project.json",
+      "msbuildProject": "../Socioboard.Pinterest/Socioboard.Pinterest.xproj"
+    },
     "Socioboard.Twitter/1.0.0": {
       "type": "project",
       "path": "../Socioboard.Twitter/project.json",
@@ -8878,6 +8919,7 @@
       "Socioboard.Google >= 1.0.0-*",
       "Socioboard.Instagram >= 1.0.0-*",
       "Socioboard.LinkedIn >= 1.0.0-*",
+      "Socioboard.Pinterest >= 1.0.0-*",
       "Socioboard.Twitter >= 1.0.0-*",
       "StackExchange.Redis >= 1.1.603",
       "Swashbuckle.SwaggerGen >= 6.0.0-beta901",

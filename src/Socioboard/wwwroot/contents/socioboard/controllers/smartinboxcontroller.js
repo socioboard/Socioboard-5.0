@@ -5,7 +5,7 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
     $scope.$on('$viewContentLoaded', function () {
         var reachLast = false;
         var x = false;
-        debugger;
+       
         $scope.getTwitterNotifications = function () {
             $http.get(apiDomain + '/api/Twitter/GetNotifications?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&skip=0&count=20')
                           .then(function (response) {
@@ -37,7 +37,7 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
             else {
                 $scope.filterType.push(option);
             }
-            console.log($scope.filterType);
+           
         };
 
         // toggle selection for a given fruit by name

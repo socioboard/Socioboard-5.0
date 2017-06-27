@@ -43,7 +43,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetTwitterProfilesData(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
             string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
             List<Domain.Socioboard.Models.TwitterAccount> lstInsAcc = new List<Domain.Socioboard.Models.TwitterAccount>();
@@ -56,7 +56,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GettwtfollowfollowingGraph(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
             string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
            // string[] lstname= lstGrpProfiles.Select(t => t.profileName).ToArray();
@@ -72,7 +72,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetTwitterFeedsdata(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
             string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
             List<Domain.Socioboard.Models.TwitterAccount> lstInsAcc = new List<Domain.Socioboard.Models.TwitterAccount>();

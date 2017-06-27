@@ -45,14 +45,14 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 //data: ,
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
             }).then(function (response) {
-                debugger;
+                
                 $rootScope.user.FirstName = response.data.firstName;
                 $rootScope.user.LastName = response.data.lastName;
                 $rootScope.user.UserName = response.data.userName;
                 $rootScope.user.PhoneNumber = response.data.phoneNumber;
                 $rootScope.user.dateOfBirth = response.data.dateOfBirth;
                 if (response.data.aboutMe != 'null') {
-                    console.log(response.data.aboutMe)
+                    
 
                     $rootScope.user.aboutMe = response.data.aboutMe;
                 }
@@ -123,6 +123,8 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
         $scope.mailSettings.days90GrpReportsSummery = $rootScope.user.days90GrpReportsSummery;
         $scope.mailSettings.otherNewsLetters = $rootScope.user.otherNewsLetters;
 
+        $scope.mailSettings.scheduleFailureUpdates = $rootScope.user.scheduleFailureUpdates;
+        $scope.mailSettings.scheduleSuccessUpdates = $rootScope.user.scheduleSuccessUpdates;
         //end codes to intilize mail settings
 
         $scope.UpdateUser = function (updateUser) {
@@ -157,17 +159,16 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
                 }, function (reason) {
                     alertify.set({ delay: 5000 });
                     alertify.error(reason.data);
-                    console.log(reason.data);
+                    
                 });
             }
         }
 
 
         $scope.checkfile = function () {
-            debugger;
+          
             var filesinput = $('#profileImage').get(0).files[0];
-            console.log('sadfkjasdf');
-            console.log(filesinput);
+           
             var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'JPEG', 'JPG', 'PNG', 'GIF', 'BMP'];
             if (filesinput != undefined && filesinput != null) {
                 if ($scope.hasExtension('#profileImage', fileExtension)) {
@@ -217,7 +218,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             }, function (reason) {
                 alertify.set({ delay: 5000 });
                 alertify.error(reason.data);
-                console.log(reason.data);
+                
             });
         }
 
@@ -239,14 +240,80 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             });
         }
 
+        //Disable User Account
+        $scope.deleteAcc = function (profileId) {
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to send any message via this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+            function () {
+                var feedback = $('#feedback').val();
+                $http.get(apiDomain + '/api/User/DisableUserAccount?Id=' + $rootScope.user.Id + '&feedbackmsg=' + feedback)
+                       .then(function (response) {
+                           $scope.status = response.data;
+                           if ($scope.status == "Disabled")
+                           {
+                               $scope.logout();
+                           }
+                          }, function (reason) {
+                           $scope.error = reason.data;
+                       });
+                });
+        }
+        //Disable User Account End
 
+        //Logout after disable account start
+        $scope.logout = function () {
+            debugger;
+            //alert('hello');
+            $rootScope.groupId = '';
+            //$rootScope.user.Id = '';
+            //codes to logout from all session
+            $http.get(domain + '/Home/Logout')
+                          .then(function (response) {
+
+                              var cookies = document.cookie.split(";");
+                              for (var i = 0; i < cookies.length; i++) {
+                                  var cookie = cookies[i];
+                                  var eqPos = cookie.indexOf("=");
+                                  var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                                  if (name.indexOf("socioboardpluginemailId") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                                  if (name.indexOf("socioboardpluginToken") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                                  if (name.indexOf("socioboardToken") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                                  if (name.indexOf("socioboardemailId") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                              }
+
+
+                              localStorage.removeItem("user");
+                              window.location.href = '../Index/Index';
+                              window.location.reload();
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+
+            // end codes to logout from all session
+        }
+        //Logout after disable account End
 
         //$scope.UpdatePassword = function (updateMailSettings) {
         //    $http({
         //        method: 'POST',
         //        url: apiDomain + '/api/User/ChangePassword?currentPassword=' + updatePassword.currentPassword + '&newPassword=' + updatePassword.newPassword + '&conformPassword=' + updatePassword.conformPassword + '&userId=' + $rootScope.user.Id,
         //        crossDomain: true,
-        //        //data: ,
+        //        data: ,
         //        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         //    }).then(function (response) {
         //        alertify.set({ delay: 5000 });
@@ -260,23 +327,24 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
         //}
 
 
-        $scope.UpdateMailSettings = function (mailSettings) {
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/User/UpdateMailSettings?dailyGrpReportsSummery=' + mailSettings.dailyGrpReportsSummery + '&weeklyGrpReportsSummery=' + mailSettings.weeklyGrpReportsSummery + '&days15GrpReportsSummery=' + mailSettings.days15GrpReportsSummery + '&monthlyGrpReportsSummery=' + mailSettings.monthlyGrpReportsSummery + '&days60GrpReportsSummery=' + mailSettings.days60GrpReportsSummery + '&days90GrpReportsSummery=' + mailSettings.days90GrpReportsSummery + '&otherNewsLetters=' + mailSettings.otherNewsLetters + '&userId=' + $rootScope.user.Id,
-                crossDomain: true,
-                //data: ,
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-            }).then(function (response) {
-                alertify.set({ delay: 5000 });
-                alertify.success("Email settings updated successfully");
-                console.log(response);
-            }, function (reason) {
-                alertify.set({ delay: 5000 });
-                alertify.error(reason.data);
-                console.log(reason.data);
-            });
-        }
+        //$scope.UpdateMailSettings = function (mailSettings) {
+        //    $http({
+        //        method: 'POST',
+        //        url: apiDomain + '/api/User/UpdateMailSettings?dailyGrpReportsSummery=' + mailSettings.dailyGrpReportsSummery + '&weeklyGrpReportsSummery=' + mailSettings.weeklyGrpReportsSummery + '&days15GrpReportsSummery=' + mailSettings.days15GrpReportsSummery + '&monthlyGrpReportsSummery=' + mailSettings.monthlyGrpReportsSummery + '&days60GrpReportsSummery=' + mailSettings.days60GrpReportsSummery + '&days90GrpReportsSummery=' + mailSettings.days90GrpReportsSummery + '&otherNewsLetters=' + mailSettings.otherNewsLetters + '&userId=' + $rootScope.user.Id + '&scheduleFailureUpdates=' + mailSettings.scheduleFailureUpdates + '&scheduleSuccessUpdates=' + mailSettings.scheduleSuccessUpdates,
+        //        crossDomain: true,
+        //        data: ,
+        //        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        //    }).then(function (response) {
+        //        alertify.set({ delay: 5000 });
+        //        alertify.success("Email settings updated successfully");
+              
+
+        //    }, function (reason) {
+        //        alertify.set({ delay: 5000 });
+        //        alertify.error(reason.data);
+              
+        //    });
+        //}
 
 
         profilesetting();

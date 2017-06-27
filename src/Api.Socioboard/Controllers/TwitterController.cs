@@ -139,7 +139,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetNotifications(long groupId, long userId, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
             {
@@ -175,7 +175,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetTwitterDirectMessage(long groupId, long userId, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             string[] arrProfile = lstGrpProfiles.Select(t => t.profileId).ToArray();
             MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
             var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => arrProfile.Contains(t.senderId) || arrProfile.Contains(t.recipientId));

@@ -36,7 +36,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
 
           $scope.LoadTopTweets = function () {
               //codes to load  recent Tweets
-              debugger;
+            
               $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
                               $scope.lstUserTweets = response.data;
@@ -59,7 +59,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               }
               $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
                            .then(function (response) {
-                               console.log(response.data);
+                             
 
                                if (response.data == null || response.data == "") {
                                    TweetsreachLast = true;
@@ -84,7 +84,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               }
               $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
                            .then(function (response) {
-                               console.log(response.data);
+                            
 
                                if (response.data == null || response.data == "") {
                                    reachLast = true;
@@ -167,7 +167,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
 
 
         $scope.saveCommentReply = function () {
-              debugger;
+             
               var message = $('#comment_text').val();
               if (/\S/.test(message)) {
                   swal({

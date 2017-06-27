@@ -77,10 +77,10 @@ namespace Api.Socioboard.Controllers
         public IActionResult getProfilesAvailableToConnect(long groupId, long userId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupProfiles = GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGroupProfiles = GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Groups> lstGroups = GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr);
             long defaultGroupId = lstGroups.FirstOrDefault(t => t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).id;
-            List<Domain.Socioboard.Models.Groupprofiles> defalutGroupProfiles = GroupProfilesRepository.getGroupProfiles(defaultGroupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> defalutGroupProfiles = GroupProfilesRepository.getAllGroupProfiles(defaultGroupId, _redisCache, dbr);
             return Ok(defalutGroupProfiles.Where(t => !lstGroupProfiles.Any(x => x.profileId.Equals(t.profileId))));
         }
 
@@ -225,6 +225,23 @@ namespace Api.Socioboard.Controllers
                         grpProfile.profileName = _YoutubeChannel.YtubeChannelName;
                         grpProfile.profileOwnerId = userId;
                         grpProfile.profilePic = _YoutubeChannel.ChannelpicUrl;
+                    }
+                    if (profileType == Domain.Socioboard.Enum.SocialProfileType.Pinterest)
+                    {
+                        Domain.Socioboard.Models.PinterestAccount pinAcc = Repositories.PinterestRepository.getPinterestAccount(profileId, _redisCache, dbr);
+                        if (pinAcc == null)
+                        {
+                            return BadRequest("Invalid profileId");
+                        }
+                        if (pinAcc.userid != userId)
+                        {
+                            return BadRequest("profile is added by other user");
+                        }
+                        grpProfile.profileName = pinAcc.firstname+" "+pinAcc.lastname;
+                        grpProfile.profileOwnerId = userId;
+                        grpProfile.profilePic = pinAcc.profileimgaeurl;
+                        grpProfile.profileType = profileType;
+
                     }
                     grpProfile.entryDate = DateTime.UtcNow;
                     grpProfile.groupId = grp.id;

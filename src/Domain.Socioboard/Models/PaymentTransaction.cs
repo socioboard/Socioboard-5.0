@@ -16,5 +16,11 @@ namespace Domain.Socioboard.Models
         public virtual string trasactionId { get; set; }
         public virtual string paymentId { get; set; }
         public virtual PaymentType PaymentType { get; set; }
+        public virtual string media { get; set; }
+        public virtual string itemname { get; set; }
+        public virtual string paymentstatus { get; set; }
+        public virtual string Payername { get; set; }
+        public virtual string payeremail { get; set; }
+        public virtual DateTime subscrdate { get; set; }
     }
 }

@@ -57,7 +57,8 @@
           "System.Drawing.Primitives": "4.0.0",
           "Swashbuckle.SwaggerGen": "6.0.0-beta901",
           "Swashbuckle.SwaggerUi": "6.0.0-beta901",
-          "Imgur.API": "4.0.1"
+          "Imgur.API": "4.0.1",
+          "Socioboard.Pinterest": "1.0.0"
         },
         "compile": {
           "Api.Socioboard.exe": {}
@@ -1512,6 +1513,17 @@
           "Socioboard.LinkedIn.dll": {}
         }
       },
+      "Socioboard.Pinterest/1.0.0": {
+        "dependencies": {
+          "System.Xml": "4.0.0.0",
+          "System.Xml.Linq": "4.0.0.0",
+          "NETStandard.Library": "1.6.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "Socioboard.Pinterest.dll": {}
+        }
+      },
       "Socioboard.Twitter/1.0.0": {
         "dependencies": {
           "System.Xml": "4.0.0.0",
@@ -1623,7 +1635,8 @@
           "System.Drawing.Primitives": "4.0.0",
           "Swashbuckle.SwaggerGen": "6.0.0-beta901",
           "Swashbuckle.SwaggerUi": "6.0.0-beta901",
-          "Imgur.API": "4.0.1"
+          "Imgur.API": "4.0.1",
+          "Socioboard.Pinterest": "1.0.0"
         },
         "runtime": {
           "Api.Socioboard.exe": {}
@@ -2938,6 +2951,17 @@
           "Socioboard.LinkedIn.dll": {}
         }
       },
+      "Socioboard.Pinterest/1.0.0": {
+        "dependencies": {
+          "System.Xml": "4.0.0.0",
+          "System.Xml.Linq": "4.0.0.0",
+          "NETStandard.Library": "1.6.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "runtime": {
+          "Socioboard.Pinterest.dll": {}
+        }
+      },
       "Socioboard.Twitter/1.0.0": {
         "dependencies": {
           "System.Xml": "4.0.0.0",
@@ -3801,6 +3825,11 @@
       "sha512": ""
     },
     "Socioboard.LinkedIn/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Socioboard.Pinterest/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

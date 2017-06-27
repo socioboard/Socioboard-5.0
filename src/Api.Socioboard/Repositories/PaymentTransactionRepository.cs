@@ -19,7 +19,7 @@ namespace Api.Socioboard.Repositories
                 return null;
             }
         }
-        public static int AddPaymentTransaction(long userId,string amount,string email,Domain.Socioboard.Enum.PaymentType PaymentType, string paymentId,string trasactionId, Model.DatabaseRepository dbr)
+        public static int AddPaymentTransaction(long userId,string amount,string email,Domain.Socioboard.Enum.PaymentType PaymentType, string paymentId,string trasactionId,DateTime subscr_date, string payer_email, string Payername, string payment_status, string item_name, string media,Model.DatabaseRepository dbr)
         {
             try
             {
@@ -31,7 +31,13 @@ namespace Api.Socioboard.Repositories
                 _PaymentTransaction.PaymentType = PaymentType;
                 _PaymentTransaction.trasactionId = trasactionId;
                 _PaymentTransaction.paymentId = paymentId;
-               int isaved= dbr.Add<Domain.Socioboard.Models.PaymentTransaction>(_PaymentTransaction);
+                _PaymentTransaction.payeremail = payer_email;
+                _PaymentTransaction.Payername = Payername;
+                _PaymentTransaction.paymentstatus = payment_status;
+                _PaymentTransaction.itemname = item_name;
+                _PaymentTransaction.media = media;
+                _PaymentTransaction.subscrdate = subscr_date;
+                int isaved= dbr.Add<Domain.Socioboard.Models.PaymentTransaction>(_PaymentTransaction);
                 return isaved;
             }
             catch (Exception)

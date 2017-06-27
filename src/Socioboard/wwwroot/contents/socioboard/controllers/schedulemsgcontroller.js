@@ -32,7 +32,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         schedulemsg();
         $scope.deleteMsg = function (profileId) {
-            // console.log(profileId);
+           
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to send any message via this account!",
@@ -49,10 +49,9 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         }
         var timeRepeat = $('#timesRepeat').val();
         var y = parseInt(timeRepeat);
-        //datess
-        debugger;
+      
         $scope.schedulemsg = function (datess) {
-            debugger;
+          
             $scope.repeat = false;
             var profiles = $('#scheduleprofiles').val();
             var message = $('#ScheduleMsg').val();
@@ -60,7 +59,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             var timeRepeat = $('#timesRepeat').val();
             var y = parseInt(timeRepeat);
 
-            console.log(profiles);
+           
  
             if (/\S/.test(message))
             {}
@@ -86,7 +85,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
             
 
-           // console.log(message);
            
             if (datess!=null) {
             
@@ -147,8 +145,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         // if (date_value != "") {
                         $scope.checkfile();
 
-                        console.log('FILE CHECK');
-                        console.log(encodeURIComponent($('#imageUrl').val()));
+                       
 
                         if ($scope.check == true) {
                             var formData = new FormData();
@@ -175,7 +172,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                         $('#input_0').val('');
                                         $('#input_1').val('');
                                         $scope.dispbtn = true;
-                                        console.log(newdate1);
+                                       
                                         $scope.rep = true;
                                         $rootScope.draftDelete = "true";
                                         swal("Message scheduled successfully");
@@ -186,13 +183,14 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                 }
                                 
                             }, function (reason) {
-                                console.log(reason);
+                               
                             });
 
                         
                         }
 
                         else if ($scope.check == false) {
+                          
                             var formData = new FormData();
                             $scope.dispbtn = false;
                             $http({
@@ -217,7 +215,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
                                 }                               
                             }, function (reason) {
-                                console.log(reason);
+                               
                             });
                         }
                         else {
@@ -248,7 +246,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         }
         var num = 0;
         $scope.chekRepat = function () {
-            debugger;
+          
             if ($scope.st) {
                 var intervalDay = $('#sche_day').val();
                 var timeRepeat = $('#timesRepeat').val();
@@ -289,8 +287,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         $scope.checkfile = function () {
             var filesinput = $('#input-file-now');
-            console.log('sadfkjasdf');
-            console.log(filesinput);
+           
             var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
             if (filesinput != undefined && filesinput[0].files[0] != null) {
                 if ($scope.hasExtension('#input-file-now', fileExtension)) {
@@ -368,7 +365,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             var newdate = new Date(date).toUTCString();
 
             
-            debugger;
+          
             if (/\S/.test(testmessage)) {
                 $scope.checkfile();//added on 19/10/2016
                 if ($scope.check == true)
@@ -390,7 +387,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         $scope.dispbtn = true;
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                        console.log(reason);
+                        
                     });
                 }
 
@@ -412,7 +409,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         $scope.dispbtn = true;
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                        console.log(reason);
+                      
                     });
                 }
                 else {

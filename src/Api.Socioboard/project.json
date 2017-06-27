@@ -37,7 +37,8 @@
     "System.Drawing.Primitives": "4.0.0",
     "Swashbuckle.SwaggerGen": "6.0.0-beta901",
     "Swashbuckle.SwaggerUi": "6.0.0-beta901",
-    "Imgur.API": "4.0.1"
+    "Imgur.API": "4.0.1",
+    "Socioboard.Pinterest": "1.0.0-*"
   },
 
   "tools": {

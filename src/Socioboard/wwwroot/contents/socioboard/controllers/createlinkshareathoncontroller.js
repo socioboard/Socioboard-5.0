@@ -46,7 +46,7 @@ SocioboardApp.controller('CreateLinkShareathonController', function ($rootScope,
         });
 
         $scope.schedulelinkshreathon = function () {
-            debugger;
+         
             $scope.pageurl = "";
             var url = $('#post_url').val();
             if (url == "")

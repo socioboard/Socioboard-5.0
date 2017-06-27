@@ -258,7 +258,7 @@ SocioboardApp.controller('YoutubereportController', function ($rootScope, $scope
             var totalSubscribers = 0;
             
             $scope.graphData = [];
-            //console.log("Rajsekhar");
+           
             angular.forEach($scope.dailyYReportsList, function (value, key) {
                 if (value.datetime_unix > startDate) {
                     totalLikes = totalLikes + value.likes;
@@ -283,14 +283,14 @@ SocioboardApp.controller('YoutubereportController', function ($rootScope, $scope
 
 
         $scope.LoadReportData = function (channelId) {
-            debugger;
+         
             $scope.rowLimit = 3;
             //$stateParams.profileId
             //codes to load tabledata
             $http.get(apiDomain + '/api/YoutubeReport/GetYtCustomTableData?channelId=' + channelId)
                               .then(function (response) {
                                   $scope.tableData = response.data;
-                                  console.log(response.data);
+                                
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -301,7 +301,7 @@ SocioboardApp.controller('YoutubereportController', function ($rootScope, $scope
 
 
         $scope.getReportsChart = function (profileId, days) {
-            debugger;
+          
             $scope.loadingYAData = 'open';
             $scope.loadedYAData = 'hide';
             //codes to load  reportdata
@@ -319,7 +319,7 @@ SocioboardApp.controller('YoutubereportController', function ($rootScope, $scope
         // end codes to load reportdata
 
 
-        debugger;
+      
         $scope.getOnPageLoadReports = function () {
             var canContinue = true;
             angular.forEach($rootScope.lstProfiles, function (value, key) {

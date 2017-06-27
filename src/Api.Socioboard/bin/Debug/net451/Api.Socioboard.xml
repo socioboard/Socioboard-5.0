@@ -183,6 +183,17 @@
             <response code="400">Invalid Access Token</response>
             <response code="500">Internal Server Error</response>
         </member>
+        <member name="M:Api.Socioboard.Controllers.PinterestController.AddPinterestAccount(System.String,System.Int64,System.Int64)">
+            <summary>
+            Add new Linkedin Account
+            </summary>
+            <param name="Code"> Code obtained after successfull authentication from pinterest. </param>
+            <param name="groupId"> Id of the group to which account is to be added. </param>
+            <param name="userId"> Id of the user. </param>
+            <remarks>Add new Linkedin account.</remarks>
+            <response code="400">Invalid Access Token.</response>
+            <response code="500">Internal Server Error</response>
+        </member>
         <member name="M:Api.Socioboard.Controllers.RssFeedController.AddRssUrl(System.Int64,System.Int64,System.String,System.String)">
             <summary>
             

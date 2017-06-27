@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using NHibernate.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -357,5 +358,40 @@ namespace Api.Socioboard.Model
             return result;
         }
 
+        public int UpdateAll<T>(IList item) where T : class, new()
+        {
+
+            int result = 0;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
+                {
+                    using (NHibernate.ITransaction transaction = session.BeginTransaction())
+                    {
+                        foreach (var temp in item)
+                        {
+                            session.Update(temp);
+                        }                       
+                        transaction.Commit();
+                        result = 1;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result = 0;
+                _logger.LogCritical(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                if (ex.InnerException != null)
+                {
+                    _logger.LogError(ex.InnerException.Message);
+                    _logger.LogError(ex.InnerException.StackTrace);
+
+                }
+            }
+
+
+            return result;
+        }
     }
 }

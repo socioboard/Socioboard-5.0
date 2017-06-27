@@ -151,40 +151,92 @@ namespace Api.Socioboard.Controllers
                         string message = Convert.ToString(x["changes"][0]["value"]["message"]);
                         _logger.LogInformation("message" + message);
 
-                        long postTime = Convert.ToInt64(x["changes"][0]["value"]["created_time"]);
+                        string postTime = Convert.ToString(x["changes"][0]["value"]["created_time"]);
                         _logger.LogInformation("postTime" + postTime);
+
+                        
+
+                        //string picture = Convert.ToString(x["changes"][0]["value"]["link"]);
 
 
                         Domain.Socioboard.Models.Mongo.MongoFacebookFeed _FacebookPagePost = new MongoFacebookFeed();
                         _FacebookPagePost.Id = ObjectId.GenerateNewId();
                         _FacebookPagePost.ProfileId = profileId;
+                        _FacebookPagePost.Type = "fb_feed";
+
                         try
                         {
                             _FacebookPagePost.FromName = sendername;
                             _logger.LogInformation("FromName" + sendername);
                         }
-                        catch { }
+                        catch
+                        {
+                            _FacebookPagePost.FromName = "";
+                        }
                         try
                         {
                             _FacebookPagePost.FeedId = postid;
                             _logger.LogInformation("FeedId" + postid);
                         }
-                        catch { }
+                        catch
+                        {
+                            _FacebookPagePost.FeedId = "";
+                        }
                         try
                         {
                             _FacebookPagePost.FeedDescription = message;
-                            _logger.LogInformation("FeedDescription" + message);
+                            
                         }
                         catch
                         {
                             _FacebookPagePost.FeedDescription = "";
                         }
+                        try
+                        {
+                            _FacebookPagePost.FromId = sendId;
+                        }
+                        catch
+                        {
+                            _FacebookPagePost.FromId = "";
+                        }
+                        try
+                        {
+                            _FacebookPagePost.Picture = "";
+                          
+                        }
+                        catch { }
+                        try
+                        {
+                            _FacebookPagePost.FbComment = "http://graph.facebook.com/" + postid + "/comments";
+                            _FacebookPagePost.FbLike = "http://graph.facebook.com/" + postid + "/likes";
+                        }
+                        catch (Exception)
+                        {
+                            _FacebookPagePost.FbComment = "";
+                            _FacebookPagePost.FbLike = "";
+
+                        }
+                        try
+                        {
+                            _FacebookPagePost.FromProfileUrl = "http://graph.facebook.com/" + profileId + "/picture?type=small";
+                            _logger.LogInformation("FromProfileUrl" + _FacebookPagePost.FromProfileUrl);
+                        }
+                        catch (Exception)
+                        {
+                            _FacebookPagePost.FromProfileUrl = "";                          
+                        }
+                        
 
 
                         try
                         {
-                            string postingTime = postTime.ToString();
-                            _FacebookPagePost.FeedDate = postingTime;
+                            double datevalue = Convert.ToDouble(postTime);                        
+                            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            dateTime = dateTime.AddSeconds(datevalue);                         
+                            string printDate = dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();                           
+                            string createddate = Convert.ToDateTime(printDate).ToString("yyyy-MM-dd h:mm tt");                          
+                            DateTime convertedDate = DateTime.SpecifyKind(DateTime.Parse(createddate), DateTimeKind.Utc);                           
+                            _FacebookPagePost.FeedDate = convertedDate.ToString();
                             //_FacebookPagePost.FeedDate = DateTime.Parse(postingTime).ToString("yyyy/MM/dd HH:mm:ss");
                             // _FacebookPagePost.FeedDate = DateTime.Parse(x["changes"][0]["value"]["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
                             _logger.LogInformation("FeedDate" + _FacebookPagePost.FeedDate);
@@ -205,7 +257,7 @@ namespace Api.Socioboard.Controllers
                             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
 
                             mongorepo.Add<MongoFacebookFeed>(_FacebookPagePost);
-                            _logger.LogInformation("first feeds " + _FacebookPagePost);
+                            _logger.LogInformation("first feeds added " + _FacebookPagePost);
                         }
                         catch (Exception ex)
                         {
@@ -236,9 +288,20 @@ namespace Api.Socioboard.Controllers
                         catch { }
                         try
                         {
+                            _FacebookPagePost.FromId = sendId;
+                        }
+                        catch
+                        {
+                            _FacebookPagePost.FromId = "";
+                        }
+                        try
+                        {
                             _FacebookPagePost.Picture = picture;
                         }
-                        catch { }
+                        catch
+                        {
+                            _FacebookPagePost.Picture = "";
+                        }
                         try
                         {
                             _FacebookPagePost.FeedId = postid;
@@ -256,7 +319,14 @@ namespace Api.Socioboard.Controllers
 
                         try
                         {
-                            _FacebookPagePost.FeedDate = postTime;
+
+                            double datevalue = Convert.ToDouble(postTime);
+                            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            dateTime = dateTime.AddSeconds(datevalue);
+                            string printDate = dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
+                            string createddate = Convert.ToDateTime(printDate).ToString("yyyy-MM-dd h:mm tt");
+                            DateTime convertedDate = DateTime.SpecifyKind(DateTime.Parse(createddate), DateTimeKind.Utc);
+                            _FacebookPagePost.FeedDate = convertedDate.ToString();
                             //_FacebookPagePost.FeedDate = DateTime.Parse(postTime).ToString("yyyy/MM/dd HH:mm:ss");
                             _logger.LogInformation("date comment " + _FacebookPagePost.FeedDate);
                         }
@@ -302,7 +372,15 @@ namespace Api.Socioboard.Controllers
                             MongoFbPostComment fbPostComment = new MongoFbPostComment();
                             fbPostComment.Id = MongoDB.Bson.ObjectId.GenerateNewId();
                             fbPostComment.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                            fbPostComment.Commentdate = postTime;
+
+                            double datevalue = Convert.ToDouble(postTime);
+                            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            dateTime = dateTime.AddSeconds(datevalue);
+                            string printDate = dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
+                            string createddate = Convert.ToDateTime(printDate).ToString("yyyy-MM-dd h:mm tt");
+                            DateTime convertedDate = DateTime.SpecifyKind(DateTime.Parse(createddate), DateTimeKind.Utc);
+                            fbPostComment.Commentdate = convertedDate.ToString();
+                            _logger.LogInformation("commnet date" + fbPostComment.Commentdate);
                             //fbPostComment.Commentdate = DateTime.Parse(postTime).ToString("yyyy/MM/dd HH:mm:ss");
                             fbPostComment.PostId = postid;
                             fbPostComment.Likes = 0;

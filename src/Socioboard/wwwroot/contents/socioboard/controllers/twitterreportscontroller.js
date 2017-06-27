@@ -61,7 +61,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
 
         $scope.getfollowerfollowingcount = function (profileOwnerId) {
             //codes to load  instgarm  profiles start
-            $http.get(apiDomain + '/api/Twitter/GetTwitterProfiles?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/Twitter/GetAllTwitterProfiles?groupId=' + profileOwnerId)
                           .then(function (response) {
                               $scope.getfollowerfollowingcount = response.data;
 
@@ -440,7 +440,7 @@ SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-                console.log("YtVideoListReached");
+               
                 $('#all_video_table').DataTable();
             });
         }

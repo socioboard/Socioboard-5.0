@@ -16,8 +16,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                               $scope.getData(days);
                               $scope.fetchdatacomplete = true;
 
-                              console.log("123");
-                              console.log(response.data);
+                             
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -108,8 +107,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                           .then(function (response) {
                               $scope.generatefacebookGraphData = response.data;
                               $scope.generatefacebookGraph(days);
-                              console.log("facebookpagegrp");
-                              console.log($scope.generatefacebookGraphData);
+                            
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -311,8 +309,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         $scope.generateIMPRESSIONS1Graph = function (days) {
             $scope.generateChart1Data(days);
 
-            console.log("impression1");
-            console.log($scope.chart1Data);
+           
 
 
             var chart = AmCharts.makeChart("BREAKDOWN_1", {
@@ -443,8 +440,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                 }
             });
 
-            console.log('chart1Data');
-            console.log($scope.chart1Data);
+         
 
 
         }
@@ -452,8 +448,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         $scope.generateIMPRESSIONS2Graph = function (days) {
             $scope.generateChart2Data(days);
 
-              console.log('chart2 data');
-            console.log($scope.chart2Data);
+           
 
             var chart = AmCharts.makeChart("BREAKDOWN_2", {
                 "type": "serial",
@@ -863,8 +858,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
         $scope.generatesharetypeGraph = function (days) {
             $scope.generatesharechart(days);
 
-            console.log('ShareType');
-            console.log($scope.chartshareData);
+           
 
             var chart = AmCharts.makeChart("ShareType", {
                 "type": "serial",
@@ -1164,8 +1158,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             //$scope.sharingByAgeMaleFollower = (maleShare * 100) / (maleShare + femaleShare);
             //$scope.sharingByAgeFemaleFollower = (femaleShare * 100) / (maleShare + femaleShare);
 
-            console.log('dsfdfgdx');
-            console.log($scope.chartMaleFemaleGraphData);
+           
 
 
         }

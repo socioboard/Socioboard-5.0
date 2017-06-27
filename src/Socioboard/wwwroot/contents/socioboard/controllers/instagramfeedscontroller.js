@@ -19,6 +19,9 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
+            $scope.filters = false;
+            $scope.preloadmorefeeds = false;
+            $scope.lstinsFeeds = null;
             $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
@@ -28,7 +31,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                               }
                                $scope.date(response.data);
                                $scope.preloadmorefeeds = true;
-                              // console.log(response.data);
+                            
                              
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -44,8 +47,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                 return false;
             }
             $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=90')
-                         .then(function (response) {
-                             console.log(response.data);
+                         .then(function (response) {                          
                              // $scope.lstProfiles = response.data;
                              if (response.data == null || response.data == "") {
                                  reachLast = true;
@@ -55,7 +57,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                              }
                              else {
                                  $scope.lstFbFeeds = $scope.lstFbFeeds.concat(response.data);
-                                 //console.log($scope.lstFbFeeds);
+                             
                                  ending = ending + 30;
                                  $scope.listData();
                              }
@@ -64,8 +66,32 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                          });
         };
 
+
+        $scope.filterSearch = function (postType) {
+            $scope.filters = true;
+            $scope.preloadmorefeeds = false;
+            $scope.lstinsFeeds = null;
+            //codes to load  recent Feeds
+            $http.get(apiDomain + '/api/Instagram/GetInstagramFilterFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30' + '&postType=' + postType)
+                          .then(function (response) {
+                              // $scope.lstProfiles = response.data;
+                              //$scope.lstinsFeeds = response.data;
+                              if (response.data == null) {
+                                  reachLast = true;
+                              }
+                              $scope.date(response.data);
+                              $scope.preloadmorefeeds = true;
+
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to load  recent Feeds
+        }
+
+
         $scope.date = function (parm) {
-            debugger;
+          
             for (var i = 0; i < parm.length; i++) {
                
                 var date = new Date(parm[i]._InstagramFeed.feedDate * 1000);
@@ -102,7 +128,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
         $scope.AddInstagramComment = function (FeedId, InstagramId)
         {
-            debugger;
+           
             var text = $('#postcomment' + FeedId).val();
             var updatetitle = "";
 

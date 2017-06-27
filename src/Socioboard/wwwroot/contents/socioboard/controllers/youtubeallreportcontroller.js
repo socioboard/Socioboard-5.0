@@ -29,8 +29,7 @@ SocioboardApp.controller('YoutubeallreportController', function ($rootScope, $sc
         }
 
         $scope.generateSubscriberCount = function () {
-            debugger;
-            var totalSubscribersss = 0;
+         var totalSubscribersss = 0;
             angular.forEach($scope.lstSubData, function (value, key) {
                 totalSubscribersss = totalSubscribersss + value.subscribersCounts;
             });
@@ -426,14 +425,14 @@ SocioboardApp.controller('YoutubeallreportController', function ($rootScope, $sc
 
 
         $scope.LoadVideoData = function () {
-            debugger;
+          
             //$stateParams.profileId
             //codes to load tableVdata
             $http.get(apiDomain + '/api/YoutubeReport/GetYtVideoTableData?groupId=' + $rootScope.groupId)
                               .then(function (response) {
-                                  debugger;
+                               
                                   $scope.tableVData = response.data;
-                                  console.log(response.data);
+                                 
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -442,14 +441,14 @@ SocioboardApp.controller('YoutubeallreportController', function ($rootScope, $sc
         }
 
         $scope.LoadReportData = function () {
-            debugger;
+           
             $scope.LoadVideoData();
             //codes to load tableCdata
             $http.get(apiDomain + '/api/YoutubeReport/GetYtChannelTableData?groupId=' + $rootScope.groupId)
                               .then(function (response) {
-                                  debugger;
+                                
                                   $scope.tableCData = response.data;
-                                  console.log(response.data);
+                                 
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -460,7 +459,7 @@ SocioboardApp.controller('YoutubeallreportController', function ($rootScope, $sc
 
 
         $scope.getBulkReportsChart = function (profileId) {
-            debugger;
+          
             $scope.loadingYAData = 'open';
             $scope.loadedYAData = 'hide';
             //codes to load  reportdata
@@ -560,7 +559,7 @@ SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-                console.log("YtVideoListReached");
+               
                 $('#all_video_table').DataTable();
             });
         }

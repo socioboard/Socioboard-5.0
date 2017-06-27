@@ -12,13 +12,16 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
         var reachLast = false; // to check the page ends last or not
         $scope.loadmore = "Loading More data..";
         $scope.getHttpsURL = function (obj) {
-            console.log(obj);
+           
             return obj.replace("http:", "https:")
         };
 
         $scope.lstGpFeeds = [];
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
+            $scope.filters = false;
+            $scope.preloadmorefeeds = false;
+            $scope.lstGpFeeds = null;
             $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
                               if (response.data != "") {
@@ -55,5 +58,28 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             $scope.lstGpFeeds = parm;
 
         }
+
+        $scope.filterSearch = function (postType) {
+            $scope.filters = true;
+            $scope.preloadmorefeeds = false;
+            $scope.lstGpFeeds = null;
+            //codes to load  recent Feeds
+            $http.get(apiDomain + '/api/Google/GetGplusFilterFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30' + '&postType=' + postType)
+                          .then(function (response) {
+                              // $scope.lstProfiles = response.data;
+                              //$scope.lstinsFeeds = response.data;
+                              if (response.data == null) {
+                                  reachLast = true;
+                              }
+                              $scope.date(response.data);
+                              $scope.preloadmorefeeds = true;
+
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to load  recent Feeds
+        }
+
     });
 });

@@ -3,6 +3,7 @@
     <div class="container">
         <div class="col m12">
             <h4>Socio Queue</h4>
+            <button type="submit" class="waves-effect waves-light btn red" ng-click="deleteMultipleMessages()" title="Delete selected"><i class="fa fa-trash"></i></button>
         </div>
     </div>
 
@@ -15,7 +16,10 @@
                 <table id="SocioQueue" class="display responsive-table striped" cellspacing="0" width="100%">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th>
+                                <input class="filled-in" type="checkbox" ng-model="allSelected" ng-model-options="{getterSetter: true}" id="socio_all"/>
+                                <label for="socio_all">Select all</label>
+                            </th>
                             <th class="center">Sent From</th>
                             <th class="center">Message</th>
                             <th class="center">Network</th>
@@ -38,7 +42,11 @@
 
 
                         <tr ng-repeat="socioqueue in lstsocioqueuemessage">
-                            <td>{{$index +1}}</td>
+                            <td>
+                                <input name="selector[]" class="filled-in subcheckbox" id="{{socioqueue.id}}" type="checkbox" ng-model="socioqueue.selected" ng-change="optionToggled()" />
+                                <label for="{{socioqueue.id}}">{{$index +1}}</label>
+                            </td>
+                            <!--<td>{{$index +1}}</td>-->
                             <td class="center">
                                 <div class="col s12" ng-if="socioqueue.profileType==0 || socioqueue.profileType==1 || socioqueue.profileType==2 || socioqueue.profileType==3 || socioqueue.profileType==4">
                                     <img src="{{getProperURL(user.ProfilePicUrl)}}" class="responsive-img profilePic">
@@ -140,6 +148,8 @@
                 <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="savesocioqueueedit()">Save</a>
             </div>
         </form>
+
+        
     </div>
     <!--</script>-->
 

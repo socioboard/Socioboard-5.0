@@ -52,7 +52,7 @@
                                     <span class="email-title">{{companypagedata.linkedinPageName}}</span>
                                     <div class="row feeds_post z-depth-1 hoverable">
                                       <div class="col m8">
-                                        <p class="break_word ultra-small">{{lincmpnypagefeed.posts}}.</p>
+                                        <p class="break_word ultra-small">{{lincmpnypagefeed.posts}}</p>
                                       </div>
                                       <div class="col m4 center" ng-if="lincmpnypagefeed.postImageUrl!=''">
                                         <img src="{{lincmpnypagefeed.postImageUrl}}" class="responsive-img ">
@@ -67,11 +67,11 @@
                                                         <span class="email-title">{{linpostcomment.firstName}} {{linpostcomment.lastName}}</span>
                                                       <div class="row dashboard_feeds z-depth-1 hoverable">
                                                         <div class="col m8">
-                                                          <p class="break_word ultra-small">{{linpostcomment.comment}}.</p>
+                                                          <p class="break_word ultra-small">{{linpostcomment.comment}}</p>
                                                         </div>
-                                                        <div class="col m4 center">
+                                                        <!--<div class="col m4 center">
                                                           <img src="{{linpostcomment.pictureUrl}}" ng-if="linpostcomment.pictureUrl!=''" class="responsive-img ">
-                                                        </div>
+                                                        </div>-->
                                                       </div>                                         
                                                       <a class="tooltipped secondary-content" data-position="left" data-delay="50">{{linpostcomment.CommentTime}}</a>
                                                     </li>
@@ -156,11 +156,11 @@
                 <!--end container-->
 
                 <!-- Compose Email Trigger -->
-                <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                <!--<div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
                   <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
                     <i class="large mdi-editor-mode-edit"></i>
                   </a>
-                </div>
+                </div>-->
 
                 <!-- Compose Email Structure -->
                 <div id="ComposePostModal" class="modal">

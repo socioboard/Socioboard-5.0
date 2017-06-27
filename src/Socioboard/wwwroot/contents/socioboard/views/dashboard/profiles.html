@@ -276,7 +276,7 @@
                                                 <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                     <i class="icon-info"></i>
                                                 </a>
-                                                <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinPageName}}</span>
+                                                <span class="card-title activator grey-text text-darken-4 truncate" title="{{linProfile.linkedinPageName}}">{{linProfile.linkedinPageName}}</span>
                                                 <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{linProfile.numFollowers}}</p>
                                                 <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{linProfile.locations}}">{{linProfile.locations}}</span></p>
                                             </div>
@@ -304,7 +304,7 @@
                                                 <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                     <i class="icon-info"></i>
                                                 </a>
-                                                <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinUserName}}</span>
+                                                <span class="card-title activator grey-text text-darken-4 truncate" title="{{linProfile.linkedinUserName}}">{{linProfile.linkedinUserName}}</span>
                                                 <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Connections:</span> {{linProfile.connections}}</p>
                                                 <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">EmailId:</span> <span title="{{linProfile.emailId}}">{{linProfile.emailId}}</span></p>
                                             </div>
@@ -319,6 +319,34 @@
                                         </div>
                                     </div>
                                     <!--LinkedIn Account profiles bind end-->
+
+                                    <!--Pinterest Account profiles bind start-->
+
+                                    <div class="col m3 l3" ng-repeat="pinProfile in lstpinAccountProfiles">
+                                        <div id="profile-card" class="card">
+                                            <div class="card-image waves-effect waves-block waves-light">
+                                                <img class="activator" src="{{pinProfile.profileimgaeurl}}" alt="{{pinProfile.firstname}} {{pinProfile.lastname}}">
+                                            </div>
+                                            <div class="card-content">
+                                                <img src="{{pinProfile.profileimgaeurl}}" alt="{{pinProfile.firstname}} {{pinProfile.lastname}}" class="circle responsive-img activator card-profile-image">
+                                                <img src="/contents/socioboard/images/pinterest.png" class="card_profile_socio_icon">
+                                                <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                    <i class="icon-info"></i>
+                                                </a>
+                                                <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{pinProfile.firstname}} {{pinProfile.lastname}}</span>
+                                                <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">pinscount:</span> {{pinProfile.pinscount}}</p>
+                                                <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">boardscount:</span> <span title="{{pinProfile.boardscount}}">{{pinProfile.boardscount}}</span></p>
+                                            </div>
+                                            <div class="card-reveal">
+                                                <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinUserName}}<i class="mdi-navigation-close right"></i></span>
+                                                <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2">username:</span> {{pinProfile.username}}</p>
+                                                <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="followingcount"></i><span class="cyan-text text-darken-2">likescount:</span> <span title="{{pinProfile.likescount}}">{{pinProfile.likescount}}</span></p>
+                                                <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followerscount:</span><span title="{{pinProfile.followerscount}}">{{pinProfile.followerscount}}</span></p>
+                                                <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followingcount:</span>{{pinProfile.followingcount}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--Pinterest Account profiles bind end-->
                                 </div>
                             </div>
                             <!--card widgets end-->

@@ -108,7 +108,7 @@ SocioboardApp.controller('SentMessagesController', function ($rootScope, $scope,
     }
 
     $scope.getProperURL = function (obj) {
-        console.log(obj);
+      
         if (obj.includes("wwwroot\\")) {
             var img = obj.split("wwwroot\\upload\\")[1];
             return apiDomain + "/api/Media/Get?id=" + img;

@@ -38,9 +38,9 @@ SocioboardApp.controller('CreateBoardController', function ($rootScope, $scope,$
                     $scope.dispbtn = true;
                     $state.go('boardlist');
                 }
-                console.log(response);
+              
             }, function (reason) {
-                console.log(reason);
+              
             });
         }
     

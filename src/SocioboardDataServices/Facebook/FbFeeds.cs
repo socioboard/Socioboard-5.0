@@ -1,5 +1,6 @@
-﻿
-using Domain.Socioboard.Models.Mongo;
+﻿using Domain.Socioboard.Models.Mongo;
+using MongoDB.Bson;
+using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using SocioboardDataServices.Model;
 using System;
@@ -172,7 +173,38 @@ namespace SocioboardDataServices.Facebook
                                     {
 
                                     }
+                                    try
+                                    {
+                                        objFacebookFeed.Likecount = result["likes"]["summary"]["total_count"].ToString();
+                                    }
+                                    catch (Exception ex)
+                                    {
 
+                                    }
+                                    try
+                                    {
+                                        objFacebookFeed.Commentcount = result["comments"]["summary"]["total_count"].ToString();
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                    }
+                                    try
+                                    {
+                                        objFacebookFeed.postType = result["type"].ToString();
+                                    }                                 
+                                    catch
+                                    {
+                                        objFacebookFeed.postType = "status";
+                                    }
+                                    try
+                                    {
+                                        objFacebookFeed.postingFrom = result["application"]["name"].ToString();
+                                    }
+                                    catch
+                                    {
+                                        objFacebookFeed.postingFrom = "Facebook";
+                                    }
                                     try
                                     {
                                         objFacebookFeed.Picture = result["picture"].ToString();
@@ -239,6 +271,16 @@ namespace SocioboardDataServices.Facebook
                                         if (count < 1)
                                         {
                                             mongorepo.Add<MongoFacebookFeed>(objFacebookFeed);
+                                        }
+                                        else
+                                        {
+                                            try
+                                            {
+                                                FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objFacebookFeed.FeedId);
+                                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom);
+                                                mongorepo.Update<MongoFacebookFeed>(update, filter);
+                                            }
+                                            catch { }
                                         }
                                     }
                                     catch (Exception ex)

@@ -6,7 +6,7 @@ SocioboardApp.controller('BoardAnalyticsController', function ($rootScope, $scop
             //codes to load  board analytics
         $http.get(apiDomain + '/api/BoardMe/getAnalytics?boardId=' + $stateParams.boardName)
                       .then(function (response) {
-                          console.log(response.data);
+                         
                           $scope.analytics = response.data;
                           var chart = AmCharts.makeChart("chartdiv", {
                               "type": "serial",

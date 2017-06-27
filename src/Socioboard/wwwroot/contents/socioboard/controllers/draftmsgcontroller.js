@@ -30,7 +30,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
 
 
         $scope.deleteafterschdu = function (draftId) {
-            debugger;
+           
 	            //todo: code to delete profile
 	            //codes to delete  draft messages start
 	            $http.get(apiDomain + '/api/DraftMessage/DeleteDraftMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&draftId=' + draftId)
@@ -71,7 +71,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
 
 
         $scope.getProperURL = function (obj) {
-            console.log(obj);
+         
             if (obj.includes("wwwroot\\")) {
                 var img = obj.split("wwwroot\\")[1];
                 return apiDomain + "/api/Media/Get?id=" + img;
@@ -84,7 +84,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
 
         $scope.editdraft = function (message, draftId)
         {
-            debugger;
+          
             $rootScope.draftmessgae = message;
             $rootScope.draftId = draftId;
             $('#EditDraftModal').openModal();
@@ -102,8 +102,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
         $scope.scheduledraft = function (schedulemessage)
         {
             var x;
-            console.log("DRAFT ");
-            console.log(schedulemessage);
+          
             $rootScope.schedulemessage = schedulemessage;
             $rootScope.grppost = false;
             $rootScope.draft_id = schedulemessage.id;
@@ -132,7 +131,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
         //}
         $scope.saveditdraft = function () {
             var message = $('#editdraftScheduleMsg').val();
-            debugger;
+            
             //For taking special character start
             var updatedmessage = "";
             var postdata = message.split("\n");

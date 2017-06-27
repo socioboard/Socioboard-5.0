@@ -13,23 +13,21 @@
             <div class="row center">
 
                 <div class="col col s12 m12 l12">
-                    <ul id="profile-dropdown" class="dropdown-content">
+                    <!--<ul id="profile-dropdown" class="dropdown-content">
                         <li>
                             <a href="#profilesettings"><i class="mdi-action-settings"></i> Settings</a>
                         </li>
-                        <!--<li>
-            <a href="#"><i class="mdi-communication-live-help"></i> Help</a>
-        </li>-->
+
                         <li class="divider"></li>
                         <li>
                             <a ng-click="logout()"><i class="mdi-hardware-keyboard-tab"></i> Logout</a>
                         </li>
-                    </ul>
+                    </ul>-->
                     <img src="https://scontent.fbom1-2.fna.fbcdn.net/v/t1.0-1/c47.0.160.160/p160x160/10354686_10150004552801856_220367501106153455_n.jpg?oh=1ee95684d33391c6a128f7fd68420032&oe=5856F349" ng-show="user.ProfilePicUrl == null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
                     <img src="{{getHttpsURL(user.ProfilePicUrl)}}" ng-show="user.ProfilePicUrl != null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image" style="width:101.25px">
 
 
-                    <a class="btn-flat dropdown-button waves-effect waves-light white-text profile-btn" href="#" data-activates="profile-dropdown"><span ng-show="user.FirstName != null">{{user.FirstName +' '}}</span><span ng-show="user.LastName != null && user.LastName != 'null'"> {{ user.LastName}}</span> <i class="mdi-navigation-arrow-drop-down right"></i></a>
+                    <a class="white-text"><span ng-show="user.FirstName != null">{{user.FirstName +' '}}</span><span ng-show="user.LastName != null && user.LastName != 'null'"> {{ user.LastName}}</span></a>
                     <p class="user-roal" data-position="top" data-delay="50">{{user.EmailId}}</p>
                 </div>
             </div>
@@ -150,6 +148,18 @@
                                             </ul>
                                         </div>
                                     </li>
+                                    <li class="bold">
+                                        <a class="collapsible-header waves-effect waves-orange">
+                                            <i class="fa fa-pinterest-square" aria-hidden="true"></i> Pinterest
+                                        </a>
+                                        <div class="collapsible-body">
+                                            <ul>
+                                                <li ng-repeat="profile in lstProfiles | filter:{profileType:13}">
+                                                    <a href="#/pinterestboards/{{profile.profileId}}"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -170,8 +180,11 @@
                             <li>
                                 <a href="#/draft">Drafts</a>
                             </li>
-                            <li>
+                            <li ng-if="user.AccountType!=0">
                                 <a href="#/calendar">Calendar View</a>
+                            </li>
+                            <li ng-if="user.AccountType==0">
+                                <a ng-model="abcd" ng-click="message(abcd)" disable>Calendar View</a>
                             </li>
                         </ul>
                     </div>
@@ -209,7 +222,7 @@
                         </ul>
                     </div>
                 </li>-->
-                <li class="bold">
+                <li class="bold" ng-if="user.AccountType!=0">
                     <a class="collapsible-header waves-effect waves-orange">
                         <i class="icon-rocket"></i> AutoMate Rss Feeds
                     </a>
@@ -233,6 +246,11 @@
                         </ul>
                     </div>
                 </li>
+                <li class="bold" ng-if="user.AccountType==0">
+                    <a class="waves-effect waves-orange" ng-model="abcd" ng-click="message(abcd)" disable>
+                        <i class="icon-rocket"></i> AutoMate Rss Feeds
+                    </a>
+                   </li>
                 <li class="bold">
                     <a class="collapsible-header  waves-effect waves-orange">
                         <i class="icon-share"></i> Shareathon
@@ -254,8 +272,8 @@
                 </li>
               
 
-                <!--reports-->
-                <li class="bold">
+                <!--reports for all-->
+                <li class="bold" ng-if="user.AccountType!=0">
                     <a class="collapsible-header waves-effect waves-orange">
                         <i class="icon-notebook"></i> Reports
                     </a>
@@ -347,6 +365,13 @@
                     </div>
                 </li>
 
+                <!--reports for free plan-->
+                <li class="bold" ng-if="user.AccountType==0">
+                    <a class="waves-effect waves-orange" ng-model="abcd" ng-click="message(abcd)" disable>
+                        <i class="icon-notebook"></i> Reports
+                    </a>
+                 </li>
+
                 <!--<li class="bold">
                     <a href="#/" class="waves-effect waves-cyan">
                         <i class="icon-wallet"></i> E-Wallet
@@ -414,27 +439,34 @@
                 <i class="icon-layers"></i> Affiliates
             </a>
         </li>  -->
-        <li class="bold">
+        <!--Board for All plan -->
+        <li class="bold" ng-if="user.AccountType!=0">
             <a href="#/boardlist" class="waves-effect waves-cyan">
                 <i class="icon-briefcase"></i> Board Me
             </a>
         </li>
 
-        <li class="bold red">
+        <!--Board for free plan -->
+        <li class="bold" ng-if="user.AccountType==0">
+            <a ng-model="abcd" ng-click="message(abcd)" disable class="waves-effect waves-cyan">
+                <i class="icon-briefcase"></i> Board Me
+            </a>
+        </li>
+        <!--<li class="bold red">
             <a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw" class="waves-effect waves-orange  white-text" target="_blank">
                 <i class="icon-camcorder"></i> Youtube Tutorials
             </a>
-        </li>
-        <li class="bold orange darken-2 margin-bottom-10">
-            <a href=" https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?utm_source=chrome-app-launcher-info-dialog" class="waves-effect waves-orange  white-text" target="_blank">
+        </li>-->
+        <!--<li class="bold orange darken-2 margin-bottom-10">
+            <a href=" https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?utm_source=chrome-app-launcher-info-dialog" class="waves-effect waves-orange" target="_blank" style="height: auto;">
             <i class="fa fa-chrome fa-3x white-text"></i> Chrome Plugins
             </a>
-        </li>
+        </li>-->
         <li class="bold">
             <div class="row margin-bottom-10">
                 <div class="col s12 m12 l12">
                     <a href="https://play.google.com/store/apps/details?id=com.socioboard&hl=en" class="waves-effect waves-orange" target="_blank" style="height: auto;">
-                        <img src="../contents/socioboard/images/google_store.png" class="responsive-img">
+                        <img src="../contents/socioboard/images/google_store_1.png" class="responsive-img">
                     </a>
                 </div>
             </div>
@@ -443,7 +475,7 @@
             <div class="row margin-bottom-10">
                 <div class="col s12 m12 l12">
                     <a href="https://itunes.apple.com/sg/app/socioboard/id923398550?mt=8" class="waves-effect waves-orange" target="_blank" style="height: auto;">
-                        <img src="../contents/socioboard/images/iphone_store.png" class="responsive-img">
+                        <img src="../contents/socioboard/images/iphone_store_1.png" class="responsive-img">
                     </a>
                 </div>
             </div>

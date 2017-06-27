@@ -8,7 +8,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
         $scope.draftbtn = true;
         rssfeeds();
         $scope.deleteMsg = function(profileId){
-        	// console.log(profileId);
+        	
         	swal({   
 	        title: "Are you sure?",   
 	        text: "You will not be able to send message via this account!",   
@@ -26,14 +26,13 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
         $('#tags').tagsInput();
 
         $scope.loadpostedrssfeed = function () {
-            console.log($rootScope.user.Id);
-            debugger;
+           
             $http.get(apiDomain + '/api/RssFeed/GetPostedRssDataByUser?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId)
             .then(function (response) {
                 if (response.data != "") {
 
                     $scope.customRssData = response.data;
-                    //console.log($scope.postedRssData);
+                  
                     $scope.fetchdatacomplete = true;
                 }
                 else {
@@ -54,7 +53,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
 
         $scope.schedulePost = function (schedulemessage) {
             $rootScope.schedulemessage = schedulemessage;
-            console.log(schedulemessage);
+           
             $rootScope.grppost = true;
             //window.location.href = "#/schedulemessage";
             $state.go('schedulemessage');
@@ -68,9 +67,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
                     "link": schedulemessage.link,
                     "image":schedulemessage.image
                 };
-              //  console.log(schedulemessage.message);
-                console.log("google");
-                console.log(message);
+             
                 $rootScope.fbComposeMessage = message;
             }
 
@@ -84,7 +81,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
 
 
         $scope.ComposeMessage = function () {
-            debugger;
+        
             $scope.disbtncom = false;
 
             var profiles = $('#composeProfiles').val();
@@ -120,7 +117,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
                         }
 
                     }, function (reason) {
-                        console.log(reason);
+                        
                     });
                 }
                 else {
@@ -198,7 +195,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
                         $('#ComposePostModal').closeModal();
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                        console.log(reason);
+                       
                     });
                 }
 
@@ -221,7 +218,7 @@ SocioboardApp.controller('RssFeedsController', function ($rootScope, $scope, $ht
                         swal("Message has got saved in draft successfully");
                        
                     }, function (reason) {
-                        console.log(reason);
+                       
                     });
                 }
                 else {

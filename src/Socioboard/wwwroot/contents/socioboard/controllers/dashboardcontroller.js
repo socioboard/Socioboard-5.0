@@ -8,6 +8,52 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         $scope.check = false;
         $scope.draftbtn = true;
 
+       
+        var objappVersion = navigator.appVersion; var objAgent = navigator.userAgent; var objbrowserName = navigator.appName; var objfullVersion = '' + parseFloat(navigator.appVersion); var objBrMajorVersion = parseInt(navigator.appVersion, 10); var objOffsetName, objOffsetVersion, ix;
+        if ((objOffsetVersion = objAgent.indexOf("Chrome")) != -1) {
+             objbrowserName = "Chrome"; objfullVersion = objAgent.substring(objOffsetVersion + 7);
+        }
+        else if ((objOffsetVersion = objAgent.indexOf("MSIE")) != -1) {
+            objbrowserName = "Microsoft Internet Explorer"; objfullVersion = objAgent.substring(objOffsetVersion + 5);
+        }
+        else if ((objOffsetVersion = objAgent.indexOf("Firefox")) != -1) {
+            objbrowserName = "Firefox";
+        }
+        else if ((objOffsetVersion = objAgent.indexOf("Safari")) != -1) {
+            objbrowserName = "Safari"; objfullVersion = objAgent.substring(objOffsetVersion + 7); if ((objOffsetVersion = objAgent.indexOf("Version")) != -1) objfullVersion = objAgent.substring(objOffsetVersion + 8);
+        }
+        else if ((objOffsetName = objAgent.lastIndexOf(' ') + 1) < (objOffsetVersion = objAgent.lastIndexOf('/'))) {
+            objbrowserName = objAgent.substring(objOffsetName, objOffsetVersion); objfullVersion = objAgent.substring(objOffsetVersion + 1); if (objbrowserName.toLowerCase() == objbrowserName.toUpperCase()) { objbrowserName = navigator.appName; }
+        }
+        if ((ix = objfullVersion.indexOf(";")) != -1) objfullVersion = objfullVersion.substring(0, ix); if ((ix = objfullVersion.indexOf(" ")) != -1) objfullVersion = objfullVersion.substring(0, ix); objBrMajorVersion = parseInt('' + objfullVersion, 10); if (isNaN(objBrMajorVersion)) { objfullVersion = '' + parseFloat(navigator.appVersion); objBrMajorVersion = parseInt(navigator.appVersion, 10); }
+        $rootScope.objbrowserName = objbrowserName;
+        //codes to save  sessionData
+        $scope.sessionData = function () {
+            $http.post(domain + '/Home/SaveSessiondata?ip=' + $scope.Ip + '&userId=' + $rootScope.user.Id + '&browserName=' + objbrowserName + '&userAgent=' + navigator.userAgent)
+                          .then(function (response) {
+                              setCookie("sociorevtoken",response.data,"90");
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+        }
+        // end codes to sessionData
+
+        function setCookie(cname, cvalue, exdays) {
+            var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+            cpwd = cvalue;
+            cvalue = Base64.encode(cpwd);
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+            var expires = "expires=" + d.toUTCString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+       
+        $.getJSON('//ip-api.com/json?callback=?', function (data) {
+            $rootScope.Ip = data.query;
+             $scope.sessionData();
+        });
+
+
         var getAllSelected = function () {
             var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
                 return profile.Selected;
@@ -50,7 +96,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             if ($rootScope.Downgrade == true) {
                 $('#ActiveProfileModal').openModal({ dismissible: false });
             }
-
+       
 
         //codes to load  TwitterRecentFollower
             $scope.TwitterRecentFollower = function () { 
@@ -109,9 +155,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
       
             //code for compose message start
             $scope.ComposeMessage = function () {
+               
                 var profiles = new Array();
                 $("#checkboxdata .subcheckbox").each(function () {
-                    debugger;
+                   
                     var attrId = $(this).attr("id");
                     if (document.getElementById(attrId).checked == false) {
                         var index = profiles.indexOf(attrId);
@@ -157,7 +204,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                             }
 
                         }, function (reason) {
-                            console.log(reason);
+                            
                         });
                     }
                     else {
@@ -254,7 +301,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         $scope.draftbtn = true;
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                        console.log(reason);
+                       
                     });
                 }
 
@@ -276,7 +323,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         $scope.draftbtn = true;
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                        console.log(reason);
+                       
                     });
                 }
                 else {
@@ -324,7 +371,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $scope.fetchTwtProfiles = function () {
                 $http.get(apiDomain + '/api/Twitter/GetTwitterProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
-                                  console.log(response.data);
+                                 
                                   if (response.data != "") {
                                       $scope.lstTwtProfiles = response.data;
                                       if ($scope.lstTwtProfiles.length < 3) {
@@ -492,7 +539,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         //codes to load  LinkedIn Account profiles start
             $scope.fetchLinkedInAccountProfiles = function () {
-                debugger;
+             
                 $http.get(apiDomain + '/api/LinkedIn/GetLinkedAccountProfiles?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
@@ -512,6 +559,30 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               });
             }
         // end codes to load LinkedIn Account profiles
+
+
+        //codes to load  Pinterest Account profiles start
+            $scope.fetchPinterestAccountProfiles = function () {
+                debugger;
+                $http.get(apiDomain + '/api/Pinterest/GetPinterestAccountProfiles?groupId=' + $rootScope.groupId)
+                              .then(function (response) {
+                                  if (response.data != "") {
+                                      $scope.lstpinAccountProfiles = response.data;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                                  else {
+                                      $scope.noLinkedpro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+            }
+        // end codes to load Pinterest Account profiles
 
             $scope.contentFeeds = function (key) {
                 $rootScope.keyword = key;
@@ -536,7 +607,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             //$scope.fetchYTChannels();
 
             $scope.deleteProfile = function (profileId) {
-                // console.log(profileId);
+               
                 swal({
                     title: "Are you sure?",
                     text: "You will not be able to send any message via this account!",
@@ -547,7 +618,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     closeOnConfirm: false
                 },
                 function () {
-                    console.log(profileId)
+               
 
                     $http({
                         method: 'POST',
@@ -574,7 +645,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
 
             $scope.deleteGpProfile = function (profileId) {
-                // console.log(profileId);
+              
                 swal({
                     title: "Are you sure?",
                     text: "You will not able to see any feeds from this account!",
@@ -585,7 +656,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     closeOnConfirm: false
                 },
                 function () {
-                    console.log(profileId)
+                
 
                     $http({
                         method: 'POST',
@@ -603,7 +674,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
 
             $scope.deleteGaProfile = function (profileId) {
-                // console.log(profileId);
+           
                 swal({
                     title: "Are you sure?",
                     text: "You will not able to see any data from this account!",
@@ -614,7 +685,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     closeOnConfirm: false
                 },
                 function () {
-                    console.log(profileId)
+                    
 
                     $http({
                         method: 'POST',
@@ -631,7 +702,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
 
             $scope.deleteChannel = function (profileId) {
-                // console.log(profileId);
+               
                 swal({
                     title: "Are you sure?",
                     text: "You will not be able to send any video via this account!",
@@ -642,7 +713,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     closeOnConfirm: false
                 },
                 function () {
-                    console.log(profileId)
+                  
 
                     $http({
                         method: 'POST',
@@ -756,7 +827,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                        
                     }
                 });
-                console.log($scope.selecteFbPageProfiles);
+             
                 if ($scope.selectedFbPageProfiles.length > 0) {
                     //$scope.modalinstance.dismiss('cancel');
                     var formData = new FormData();
@@ -936,7 +1007,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
 
             $scope.AddSelectedProfiles = function () {
-                //console.log($scope.selectedProfiles);
+               
                 if ($scope.selectedProfiles.length <= $rootScope.MaxCount) {
                     var formData = new FormData();
                     formData.append('selectedProfiles', $scope.selectedProfiles);
@@ -1010,11 +1081,11 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $scope.followChange = function () {
 
                 if ($('#TwitterFollow').is(':checked')) {
-                    console.log('../TwitterManager/AddTwitterAccount?follow=true');
+                 
                     document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount?follow=true");
                 }
                 else {
-                    console.log('../TwitterManager/AddTwitterAccount');
+                 
 
                     document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount");
                 }
@@ -1030,7 +1101,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                                 url: apiDomain + '/api/Google/AddYoutubeFeed?accesstoken=' + accesstoken + '&channelid=' + channelid,
                             }).then(function (response) {
 
-                                console.log(response);
+                               
 
                             });
                         }

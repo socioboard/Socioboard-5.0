@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="SessionHistory" table="SessionHistory" lazy="false">
+    <id name="id" column="id" />
+    <property name="userId">
+      <column name="userId" />
+    </property>
+    <property name="ipAddress">
+      <column name="ipAddress"  />
+    </property>
+    <property name="systemId">
+      <column name="systemId"  />
+    </property>
+    <property name="browseros">
+      <column name="browseros"  />
+    </property>
+    <property name="lastAccessedTime">
+      <column name="lastAccessedTime"  />
+    </property>
+    <property name="firstloginTime">
+      <column name="firstloginTime"  />
+    </property>
+    <property name="sessionStatus">
+      <column name="sessionStatus"  />
+    </property>
+  </class>
+</hibernate-mapping>

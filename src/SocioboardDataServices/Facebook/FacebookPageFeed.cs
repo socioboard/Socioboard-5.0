@@ -27,6 +27,11 @@ namespace SocioboardDataServices.Facebook
                 if (fbAcc.IsAccessTokenActive)
                 {
                     dynamic profile = Fbpages.getFbPageData(fbAcc.AccessToken);
+                    if (fbAcc.FbPageSubscription == Domain.Socioboard.Enum.FbPageSubscription.NotSubscribed)
+                    {
+                        string subscribed_apps = Fbpages.subscribed_apps(fbAcc.AccessToken, Convert.ToString(profile["id"]));
+                        fbAcc.FbPageSubscription = Domain.Socioboard.Enum.FbPageSubscription.Subscribed;
+                    }                   
                     apiHitsCount++;
                     if (Convert.ToString(profile) != "Invalid Access Token")
                     {
@@ -133,7 +138,22 @@ namespace SocioboardDataServices.Facebook
                     {
                         
                     }
-
+                    try
+                    {
+                        objFacebookFeed.postType = result["type"].ToString();
+                    }
+                    catch
+                    {
+                        objFacebookFeed.postType = "status";
+                    }
+                    try
+                    {
+                        objFacebookFeed.postingFrom = result["application"]["name"].ToString();
+                    }
+                    catch
+                    {
+                        objFacebookFeed.postingFrom = "Facebook";
+                    }
                     try
                     {
                         objFacebookFeed.Picture = result["picture"].ToString();
@@ -197,6 +217,16 @@ namespace SocioboardDataServices.Facebook
                         if (count < 1)
                         {
                             mongorepo.Add<MongoFacebookFeed>(objFacebookFeed);
+                        }
+                        else
+                        {
+                            try
+                            {
+                                FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objFacebookFeed.FeedId);
+                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom);
+                                mongorepo.Update<MongoFacebookFeed>(update, filter);
+                            }
+                            catch { }
                         }
 
                     }

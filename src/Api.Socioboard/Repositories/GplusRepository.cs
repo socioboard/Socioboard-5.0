@@ -760,6 +760,21 @@ namespace Api.Socioboard.Repositories
                 return lstMongoGplusFeed.ToList();
             }
         }
+
+        public static List<Domain.Socioboard.Models.Mongo.MongoGplusFeed> getgoogleplusActivity(string profileId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, int skip, int count, string postType)
+        {
+            MongoRepository gplusFeedRepo = new MongoRepository("MongoGplusFeed", _appSettings);            
+                var builder = Builders<MongoGplusFeed>.Sort;
+                var sort = builder.Descending(t => t.PublishedDate);
+                var ret = gplusFeedRepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoGplusFeed>(t => t.GpUserId.Equals(profileId) && t.AttachmentType.Equals(postType), sort, skip, count);
+                var task = Task.Run(async () => {
+                    return await ret;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoGplusFeed> lstMongoGplusFeed = task.Result.ToList();
+
+                return lstMongoGplusFeed.ToList();
+        }
+
         public static string DeleteYoutubeChannelProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             Domain.Socioboard.Models.YoutubeChannel fbAcc = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();

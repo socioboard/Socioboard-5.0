@@ -8,7 +8,7 @@ SocioboardApp.controller('PostedRssFeedsController', function ($rootScope, $scop
 
         $scope.loadpostedrssfeed=function()
         {
-            debugger;
+            
             //codes to load posted  rss Feeds
             $http.get(apiDomain + '/api/RssFeed/GetPostedRssDataByUser?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId)
                           .then(function (response) {

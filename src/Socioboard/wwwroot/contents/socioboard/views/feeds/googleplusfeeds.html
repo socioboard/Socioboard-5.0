@@ -6,7 +6,18 @@
                         <div class="row">
                             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                                 <div class="card" id="feeds">
-                                    <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>Google plus Live feeds</h5>
+                                    <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>Google plus Live feeds<!--<a class='dropdown-button btn btn_style right black white-text' href='javascript:void(0)' data-activates='dropdownFilter'><strong>&nbsp&nbspFilter&nbsp&nbsp</strong></a>--></h5>
+                                    <!-- Dropdown Structure -->
+                                    <ul id='dropdownFilter' class='dropdown-content'>
+                                        <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('photo')">Image</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('album')">Album</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('article')">Article</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('note')">Note</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('event')">Event</a></li>
+                                        <!--<li><a href="javascript:void(0)" ng-click="filterSearch('video')">Video</a></li>-->
+
+                                    </ul>
                                     <ul class="collection gplusfeeds">
                                         <li class="collection-item avatar" ng-repeat="gplusfeed in lstGpFeeds">
                                           <img src="{{gplusfeed.fromProfileImage}}" alt="{{gplusfeed.fromUserName}}" class="circle">
@@ -76,7 +87,7 @@
                                             <div></div>
                                             <div></div>
                                         </div>
-                                        <h6 style="margin-left:37%; color:lightgray; font-size:30px; font-family:Calibri" ng-if="nofeeds==true"><br /><br /><br /><br /><span><img style="margin-left:14%; width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
+                                        <h6 style="margin-left:37%; color:lightgray; font-size:30px; font-family:Calibri" ng-if="nofeeds==true && filters!=true"><br /><br /><br /><br /><span><img style="margin-left:14%; width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
                                     </ul>
 
                                 </div>

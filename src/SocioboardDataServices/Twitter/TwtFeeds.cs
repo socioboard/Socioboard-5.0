@@ -27,7 +27,7 @@ namespace SocioboardDataServices.Twitter
         {
             apiHitsCount = 0;
             Model.DatabaseRepository dbr = new DatabaseRepository();
-            List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(twtaccount.twitterUserId)).ToList();
+           List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(twtaccount.twitterUserId)).ToList();
             if (twtaccount.lastUpdate.AddMinutes(15) <= DateTime.UtcNow)
             {
                 if (twtaccount.isActive)
@@ -57,7 +57,7 @@ namespace SocioboardDataServices.Twitter
                         {
                             twtaccount.followersCount = twtaccount.followersCount;
                         }
-
+                        
                         try
                         {
                             twtaccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
@@ -106,11 +106,11 @@ namespace SocioboardDataServices.Twitter
                         {
                             twtaccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
                         }
-
+                       
                         dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtaccount);
                         foreach (var item_grpProfile in _grpProfile)
                         {
-                            dbr.Update<Domain.Socioboard.Models.Groupprofiles>(item_grpProfile);
+                            dbr.Update<Domain.Socioboard.Models.Groupprofiles>(item_grpProfile); 
                         }
                         if (apiHitsCount < MaxapiHitsCount)
                         {
@@ -790,6 +790,23 @@ namespace SocioboardDataServices.Twitter
                         {
                             objTwitterFeed.mediaUrl = null;
                         }
+                        try
+                        {
+                            objTwitterFeed.Retweetcount = item["retweet_count"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.StackTrace);
+                        }
+                        try
+                        {
+                            objTwitterFeed.Likecount = item["favorite_count"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.StackTrace);
+                        }
+
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed");
                        
                         var ret = mongorepo.Find<MongoTwitterFeed>(t => t.messageId.Equals(objTwitterFeed.messageId));

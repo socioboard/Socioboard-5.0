@@ -236,6 +236,103 @@ mailsetting = function () {
 
 }
 
+
+ads_offer = function () {
+    // initialize core components
+
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+    $('input#input_text, textarea#message').characterCounter();
+
+}
+
+extensions = function () {
+    // initialize core components
+
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+    $('input#input_text, textarea#message').characterCounter();
+
+}
+
+billing = function () {
+    // initialize core components
+
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+    $('input#input_text, textarea#message').characterCounter();
+
+}
+
+access_passwd = function () {
+    // initialize core components
+
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+    $('input#input_text, textarea#message').characterCounter();
+
+}
+
 smartinbox = function () {
     // initialize core components
     $('.modal-trigger').leanModal();
@@ -2296,6 +2393,36 @@ boardme = function () {
 
 };
 
+// Pinterest feeds
+pinterest = function () {
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+    $('.collapsible').collapsible();
+
+    // Basic
+    $('.dropify').dropify();
+    $('.board_pin_scroll').slimScroll({
+        color: '#d32f2f',
+        size: '10px',
+        height: '250px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+
+};
 
 googleanalyticreport = function () {
     $('ul.tabs').tabs();

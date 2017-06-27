@@ -122,6 +122,14 @@ namespace Api.Socioboard.Controllers
 
         }
 
+
+        [HttpGet("GetInstagramFilterFeeds")]
+        public IActionResult GetInstagramFilterFeeds(long userId, string instagramId, int skip, int count, string postType)
+        {
+                List<Domain.Socioboard.Models.Mongo.intafeed> lstInstagramFeeds = Repositories.InstagramRepository.GetTopInstagramFilterFeed(instagramId, _appSettings, _redisCache, skip, count, postType);
+                return Ok(lstInstagramFeeds);
+        }
+
         [HttpPost("InstagramLikeUnLike")]
         public IActionResult InstagramLikeUnLike(int LikeCount,int IsLike,string FeedId,string InstagramId, long groupId)
         {

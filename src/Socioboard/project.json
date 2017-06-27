@@ -28,7 +28,8 @@
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Socioboard.Facebook": "1.0.0-*",
     "Serilog": "2.1.0",
-    "HtmlAgilityPack": "1.4.9.5"
+    "HtmlAgilityPack": "1.4.9.5",
+    "Socioboard.Pinterest": "1.0.0-*"
   },
 
   "tools": {

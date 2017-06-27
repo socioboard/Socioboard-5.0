@@ -119,13 +119,24 @@ namespace Api.Socioboard.Controllers
             IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
             if (lstUser != null && lstUser.Count() > 0)
             {
-                DateTime d1 = DateTime.UtcNow;
-                //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
-                //userTable.LastLoginTime = d1;
-                lstUser.First().LastLoginTime = d1;
-                dbr.Update<User>(lstUser.First());
-                _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
-                return Ok(lstUser.First());
+                if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                {
+                    DateTime d1 = DateTime.UtcNow;
+                    //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
+                    //userTable.LastLoginTime = d1;
+                    lstUser.First().LastLoginTime = d1;
+                    dbr.Update<User>(lstUser.First());
+                    _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
+                    return Ok(lstUser.First());
+                }
+                else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
+                {
+                    return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                }
+                else
+                {
+                    return Ok("Something went wrong please try after sometime");
+                }
             }
             else
             {
@@ -514,6 +525,12 @@ namespace Api.Socioboard.Controllers
                 IList<Domain.Socioboard.Models.Mongo.MongoGplusFeed> lstMongoGplusFeed = task.Result;
                 return Ok(lstMongoGplusFeed);
             }
+        }
+
+        [HttpGet("GetGplusFilterFeeds")]
+        public IActionResult GetGplusFilterFeeds(string profileId, long userId, int skip, int count, string postType)
+        {
+                return Ok(Repositories.GplusRepository.getgoogleplusActivity(profileId, _redisCache, _appSettings, skip, count, postType));
         }
 
 

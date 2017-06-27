@@ -11,8 +11,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         $scope.buildbtn = true;
 
         var x = $rootScope.keyword;
-        console.log("content feeds x");
-        console.log(x);
+      
         rssnews();
 
         var getAllSelected = function () {
@@ -39,7 +38,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
 
         $scope.deleteMsg = function (profileId) {
-            // console.log(profileId);
+          
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to send message via this account!",
@@ -59,7 +58,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
 
         $scope.loadRssNewsFeed = function () {
-            debugger;
+           
             //if()
             if ($rootScope.keyword == null || $rootScope.keyword == undefined) {
 
@@ -68,7 +67,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 if (response.data != "") {
 
                     $scope.postedRssData = response.data;
-                    console.log($scope.postedRssData);
+                  
                     $scope.fetchdatacomplete = true;
                     //if ($rootScope.keyword != null) {
                     //    $scope.rssContentsData();
@@ -98,7 +97,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 $scope.buildbtn = false;
 
 
-                console.log($rootScope.user.Id);
+               
 
                 if (keywords != null && keywords != undefined) {
 
@@ -109,8 +108,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                             $scope.postedRssData = response.data;
                             if ($scope.postedRssData != "Data already added") {
 
-                                console.log("NEWS");
-                                console.log($scope.postedRssData);
+                             
                                 $scope.buildbtn = true;
                                 $('#rssSettingModal').closeModal();
                                 $scope.fetchdatacomplete = true;
@@ -158,7 +156,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             $scope.buildbtn = false;
             
            
-            console.log($rootScope.user.Id);
+          
 
             if (keywords != null && keywords != undefined) {
 
@@ -169,8 +167,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                         $scope.postedRssData = response.data;
                         if ($scope.postedRssData != "Data already added") {
 
-                            console.log("NEWS");
-                            console.log($scope.postedRssData);
+                           
                             $scope.buildbtn = true;
                             $('#rssSettingModal').closeModal();
                             $scope.fetchdatacomplete = true;
@@ -202,7 +199,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
 
         $scope.contentfeedsdata = function () {
-            debugger;
+         
             if ($('#tags').val() != null)
             {
                 var keywords = $('#tags').val();
@@ -213,7 +210,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
             $scope.buildbtn = false;
            // var keywords = $('#tags').val();
-            console.log($rootScope.user.Id);
+          
 
             if (keywords != null && keywords != undefined) {
 
@@ -224,8 +221,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                         $scope.postedRssData = response.data;
                         if ($scope.postedRssData != "Data already added") {
 
-                            console.log("NEWS");
-                            console.log($scope.postedRssData);
+                           
                             $scope.buildbtn = true;
                             $('#rssSettingModal').closeModal();
                             $scope.fetchdatacomplete = true;
@@ -305,7 +301,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 "picUrl": schedulemessage.image
             };
             $rootScope.schedulemessage = message;
-            console.log(message);
+          
             $state.go('schedulemessage');
         }
 
@@ -317,11 +313,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                     "link": contentFeed.link,
                     "image": contentFeed.image,
                 };
-                //  console.log(schedulemessage.message);
-                
-              
-                console.log("contentMessage");
-                console.log($rootScope.contentMessage);
+               
                  $rootScope.contentMessage = message;
 
             }
@@ -336,11 +328,11 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
 
         $scope.ComposeMessage = function () {
-            debugger;
+          
             $scope.disbtncom = false;
             var profiles = new Array();
             $("#checkboxdatarss .subcheckboxrss").each(function () {
-                debugger;
+             
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {
                     var index = profiles.indexOf(attrId);
@@ -388,7 +380,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                         }
 
                     }, function (reason) {
-                        console.log(reason);
+                       
                     });
                 }
                 else {
@@ -410,8 +402,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
         $scope.checkfile = function () {
             var filesinput = $('#composeImage');
-            console.log("picture");
-            console.log(filesinput);
+          
             var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
             if (filesinput != undefined && filesinput[0].files[0] != null) {
                 if ($scope.hasExtension('#composeImage', fileExtension)) {
@@ -468,7 +459,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                         $('#ComposePostModal').closeModal();
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                        console.log(reason);
+                       
                     });
                 }
 
@@ -491,7 +482,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                         swal("Message has got saved in draft successfully");
 
                     }, function (reason) {
-                        console.log(reason);
+                      
                     });
                 }
                 else {

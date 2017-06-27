@@ -349,14 +349,14 @@
                                             <span style="float:left;">Check All</span>
                                         </label>
                                     </li>
-                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                             <span style="float:left;">{{profile.profileName}}</span>
                                             <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                         </label>
                                     </li>
-                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                             <span style="float:left;">{{profile.profileName}}</span>
@@ -370,7 +370,7 @@
                                             <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                         </label>
                                     </li>
-                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:3}" style="padding:5px 0;">
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                             <span style="float:left;">{{profile.profileName}}</span>

@@ -27,4 +27,9 @@ namespace Domain.Socioboard.Models.Mongo
         public string boardid { get; set; }
         public string description { get; set; }
     }
+    public class BoardfeedData
+    {
+        public Domain.Socioboard.Models.PinterestAccount _PinterestAccount { get; set; }
+        public List<Domain.Socioboard.Models.Mongo.MongoPinterestBoard> lstMongoPinterestBoard { get; set; }
+    }
 }

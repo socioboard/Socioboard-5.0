@@ -42,7 +42,8 @@
           "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
           "Socioboard.Facebook": "1.0.0",
           "Serilog": "2.1.0",
-          "HtmlAgilityPack": "1.4.9.5"
+          "HtmlAgilityPack": "1.4.9.5",
+          "Socioboard.Pinterest": "1.0.0"
         },
         "compile": {
           "Socioboard.exe": {}
@@ -1301,6 +1302,17 @@
           "Socioboard.Facebook.dll": {}
         }
       },
+      "Socioboard.Pinterest/1.0.0": {
+        "dependencies": {
+          "System.Xml": "4.0.0.0",
+          "System.Xml.Linq": "4.0.0.0",
+          "NETStandard.Library": "1.6.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "Socioboard.Pinterest.dll": {}
+        }
+      },
       "mscorlib/4.0.0.0": {
         "compile": {
           ".NETFramework/v4.5.1/mscorlib.dll": {}
@@ -1385,7 +1397,8 @@
           "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
           "Socioboard.Facebook": "1.0.0",
           "Serilog": "2.1.0",
-          "HtmlAgilityPack": "1.4.9.5"
+          "HtmlAgilityPack": "1.4.9.5",
+          "Socioboard.Pinterest": "1.0.0"
         },
         "runtime": {
           "Socioboard.exe": {}
@@ -2504,6 +2517,17 @@
           "Socioboard.Facebook.dll": {}
         }
       },
+      "Socioboard.Pinterest/1.0.0": {
+        "dependencies": {
+          "System.Xml": "4.0.0.0",
+          "System.Xml.Linq": "4.0.0.0",
+          "NETStandard.Library": "1.6.0",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "runtime": {
+          "Socioboard.Pinterest.dll": {}
+        }
+      },
       "mscorlib/4.0.0.0": {},
       "System/4.0.0.0": {},
       "System.Core/4.0.0.0": {},
@@ -3239,6 +3263,11 @@
       "sha512": ""
     },
     "Socioboard.Facebook/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Socioboard.Pinterest/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

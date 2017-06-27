@@ -13,14 +13,14 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
 
         //codes to load  fb page post data
         $scope.GetFacebookPagePostData = function (profileId, days) {
-            debugger;
+          
 
             $http.get(apiDomain + '/api/FacaebookPageReports/GetFacebookPagePostData?profileId=' + profileId + '&daysCount=' + days)
                         .then(function (response) {
                             $scope.FacebookPagePost = response.data;
-                            console.log('facebook page post data');
+                          
                             $scope.fetchdatacomplete = 'show';
-                            console.log($scope.FacebookPagePost);
+                           
                         }, function (reason) {
                             $scope.error = reason.data;
                         });
@@ -30,12 +30,11 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
 
         //codes to load  fb page profiles start
         $scope.getReports = function (profileId, days) {
-            debugger;
+         
             $http.get(apiDomain + '/api/FacaebookPageReports/GetFacebookPageReportData?profileId=' + profileId + '&daysCount=' + days)
                           .then(function (response) {
                               $scope.dailyReportsList = response.data;
-                              console.log("daily report data");
-                              console.log($scope.dailyReportsList);
+                             
                               $scope.getTotalFans(days);
                               $scope.getfbpagedetils(days);
                               $scope.getfbpagepost(days);
@@ -51,13 +50,12 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
 
             $http.get(apiDomain + '/api/FacaebookPageReports/GetFbFanpageDetailsRep?userId=' + $rootScope.user.Id)
             .then(function (response) {
-                debugger;
+             
                 $scope.fbpagedet = response.data;
                 $scope.totalfbLikes(days);
-                console.log("facebook likes details");
-                console.log(response.data);
+              
             }, function (reason) {
-                debugger;
+           
                 $scope.error = reason.data;
             });
         }
@@ -68,13 +66,12 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
 
             $http.get(apiDomain + '/api/FacaebookPageReports/GetFbTotalFanpage?userId=' + $rootScope.user.Id + '&days=' + days)
             .then(function (response) {
-                debugger;
+              
                 $scope.rep = response.data;
                 $scope.totalfans(days);
-                console.log("facebook fans details");
-                console.log(response.data);
+               
             }, function (reason) {
-                debugger;
+               
                 $scope.error = reason.data;
             });
         }
@@ -84,13 +81,12 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         $scope.getfbpagepost = function (days) {
             $http.get(apiDomain + '/api/FacaebookPageReports/getFacebookPagePostallDet?userId=' + $rootScope.user.Id)
             .then(function (response) {
-                debugger;
+               
                 $scope.fbpagepost = response.data;
                // $scope.totalfbLikes(days);
-                console.log("facebook page likes");
-                console.log(response.data);
+               
             }, function (reason) {
-                debugger;
+            
                 $scope.error = reason.data;
             });
         }
@@ -100,7 +96,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         $scope.getData = function (profileId, days) {
             $scope.GetFacebookPagePostData(profileId, days);
             // $scope.totalfans(days);
-            debugger;
+           
             var startDate = new Date((Date.now() - (days * 86400000))) / 1000;
             var endDate = Date.now() / 1000;
             var totalLikes = 0;
@@ -182,7 +178,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         }
 
         $scope.getOnPageLoadReports = function () {
-            debugger;
+           
             var canContinue = true;
             angular.forEach($rootScope.lstProfiles, function (value, key) {
                 if (canContinue && value.profileType == 1) {
@@ -324,8 +320,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
                 }
             });
 
-            console.log('chart1Data');
-            console.log($scope.chart1Data);
+          
 
 
         }
@@ -333,8 +328,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         $scope.generateIMPRESSIONS2Graph = function (days) {
             $scope.generate2ChartData(days);
 
-            console.log('chart2 data');
-            console.log($scope.chart2Data);
+          
 
             var chart = AmCharts.makeChart("BREAKDOWN_2", {
                 "type": "serial",
@@ -701,10 +695,9 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         // added for page info: start
         // $scope.chartlikes = [];
         $scope.totalfbLikes = function (days) {
-            debugger;
+         
             $scope.generateChartforlikes(days);
-            console.log("likes data start");
-            console.log($scope.chartlikes);
+          
 
             //var chart = AmCharts.makeChart("rate_activity", {
             //    "theme": "light",
@@ -790,7 +783,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         }
 
         $scope.generateChartforlikes = function (days) {
-            debugger;
+     
             $scope.chartlikes = [];
             var totalLikes = 0;
             var talkingAbout = 0;
@@ -808,8 +801,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
 
                 }
             });
-            console.log("fanpage likes");
-            console.log($scope.chartlikes);
+           
         }
 
         //engagement end
@@ -818,7 +810,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         $scope.chartFBfanpage = [];
 
         $scope.totalfans = function (days) {
-            debugger;
+         
             $scope.generateChartTotalFan(days);
             // 3d graph  start
             var chart = AmCharts.makeChart("FBTotalFans", {
@@ -867,7 +859,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         }
 
         $scope.generateChartTotalFan = function (days) {
-            debugger;
+          
             $scope.chartFBfanpage = [];
             var totalLikes = 0;
             //var viral = 0;
@@ -958,8 +950,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         $scope.generatesharetypeGraph = function (days) {
             $scope.generatesharechart(days);
 
-            console.log('ShareType');
-            console.log($scope.chartshareData);
+          
 
             var chart = AmCharts.makeChart("ShareType", {
                 "type": "serial",

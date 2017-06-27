@@ -67,9 +67,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                     "shareMessage": schedulemessage.message,
                     "picUrl": schedulemessage.postImgUrl
                 };
-                console.log(schedulemessage.message);
-                console.log("google");
-                console.log(message);
+               
                 $rootScope.liComposeMessage = message;
             }
 
@@ -86,7 +84,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
             $scope.disbtncom = false;
             var profiles = new Array();
             $("#checkboxdata .subcheckbox").each(function () {
-                debugger;
+               
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {
                     var index = profiles.indexOf(attrId);
@@ -126,7 +124,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                         }
 
                     }, function (reason) {
-                        console.log(reason);
+                       
                     });
                 }
                 else {
@@ -247,7 +245,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                                           ending = ending + 30;
                                           $scope.dispbtn = true;
                                           $scope.continue = true;
-                                          console.log($scope.continue);
+                                        
                                       }
                                       // $scope.lstDiscoverySearchLinkedIn=response.data;
                                   }
@@ -334,7 +332,7 @@ SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-                console.log("myRepeatFeedTimeoutDirective Called");
+             
                 var $containerProducts = $("#products");
                 //$containerProducts.imagesLoaded(function () {
                     $containerProducts.masonry({

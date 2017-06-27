@@ -29,7 +29,10 @@ namespace Domain.Socioboard.Models.Mongo
         public string Picture { get; set; }
         public double Positive { get; set; }
         public double Negative { get; set; }
-       
+        public string Commentcount { get; set; }
+        public string Likecount { get; set; }
+        public string postType { get; set; }
+        public string postingFrom { get; set; }
     }
 
     public class facebookfeed

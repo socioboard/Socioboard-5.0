@@ -432,6 +432,33 @@
                                 </div>
                             </div>
                             <!--LinkedIn Account profiles bind end-->
+                            <!--Pinterest Account profiles bind start-->
+
+                            <div class="col m3 l3" ng-repeat="pinProfile in lstpinAccountProfiles">
+                                <div id="profile-card" class="card">
+                                    <div class="card-image waves-effect waves-block waves-light">
+                                        <img class="activator" src="{{pinProfile.profileimgaeurl}}" alt="{{pinProfile.firstname}} {{pinProfile.lastname}}">
+                                    </div>
+                                    <div class="card-content">
+                                        <img src="{{pinProfile.profileimgaeurl}}" alt="{{pinProfile.firstname}} {{pinProfile.lastname}}" class="circle responsive-img activator card-profile-image">
+                                        <img src="/contents/socioboard/images/pinterest.png" class="card_profile_socio_icon">
+                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                            <i class="icon-info"></i>
+                                        </a>
+                                        <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{pinProfile.firstname}} {{pinProfile.lastname}}</span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">pinscount:</span> {{pinProfile.pinscount}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">boardscount:</span> <span title="{{pinProfile.boardscount}}">{{pinProfile.boardscount}}</span></p>
+                                    </div>
+                                    <div class="card-reveal">
+                                        <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinUserName}}<i class="mdi-navigation-close right"></i></span>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2">username:</span> {{pinProfile.username}}</p>
+                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="followingcount"></i><span class="cyan-text text-darken-2">likescount:</span> <span title="{{pinProfile.likescount}}">{{pinProfile.likescount}}</span></p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followerscount:</span><span title="{{pinProfile.followerscount}}">{{pinProfile.followerscount}}</span></p>
+                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followingcount:</span>{{pinProfile.followingcount}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Pinterest Account profiles bind end-->
                         </div>
                         <div class="row">
                             <div class="col l12 m12 s12">
@@ -960,6 +987,28 @@
                                         </ul>
                                     </div>
                                 </li>
+                                <li>
+                                    <div class="collapsible-header red-text text-darken-3"><i class="fa fa-pinterest fa-fw"></i>Pinterest</div>
+                                    <div class="collapsible-body">
+                                        <ul>
+                                            <li class="social_profile container" ng-repeat="profile in lstProfiles">
+                                                <div class="row card" ng-if="profile.profileType==13">
+                                                    <a href="https://www.pinterest.com/{{profile.profileId}}" target="_blank">
+                                                        <div class="col l3 m3 s3">
+                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l7 m7 s7">
+                                                            <span class="truncate">{{profile.profileName}}</span>
+                                                        </div>
+                                                    </a>
+                                                    <div class="col l2 m2 s2 margin-top-10">
+                                                        <span ng-click="deleteChannel(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
                                 <!--<li>
                                     <div class="card center">
                                         <a class="waves-effect waves-light modal-trigger" href="#addprofile">
@@ -1128,14 +1177,14 @@
                                         <span style="float:left;">Check All</span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label >
                                         <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}"  type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                         <span style="float:left;">{{profile.profileName}}</span>
                                         <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                         <span style="float:left;">{{profile.profileName}}</span>
@@ -1149,7 +1198,7 @@
                                         <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:3}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                         <span style="float:left;">{{profile.profileName}}</span>
@@ -1187,7 +1236,7 @@
                         <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
-                        <!--<li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>-->
+                        <li class="tab col s1"><a href="#pinterest"><i class="fa fa-pinterest fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
                     </ul>
@@ -1230,12 +1279,12 @@
                         <a href="../InstagramManager/AuthenticateInstagram" class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
                     </div>
                 </div>
-                <!--<div id="tumblr" class="col s12">
+                <div id="pinterest" class="col s12">
                     <div class="center-align">
-                        <p>To allow Socioboard access to your Tumblr account, you must first give authorization from the Tumblr website</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add a tumblr Profile</a>
+                        <p>To allow Socioboard access to your Pinterest account, you must first give authorization from the Pinterest website</p>
+                        <a href="../PinterestManager/AuthenticatePinterest" class="waves-effect waves-light btn"><i class="fa fa-pinterest fa-fw"></i>Add a pinterest Profile</a>
                     </div>
-                </div>-->
+                </div>
                 <div id="youtube" class="col s12">
                     <div class="center-align">
                         <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>

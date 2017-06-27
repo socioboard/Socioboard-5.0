@@ -39,7 +39,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
 
 
         $scope.deleteProfile = function (profileId) {
-            // console.log(profileId);
+          
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to send any message via this account!",
@@ -148,7 +148,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                 $http.post(apiDomain + '/api/FacebookGroups/GetFacebookGroupFeeds?skip=' + ending + '&count=30' + '&keyword=' + categories)
                               .then(function (response) {
                                 
-                                 // console.log(urldecode(response.data));
+                               
                                   if (response.data != "") {
                                       $('#categories').val('');
                                       $('#searchcatagory').closeModal();
@@ -246,9 +246,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                     "shareMessage": schedulemessage.message,
                     "picUrl": schedulemessage.postImgUrl
                 };
-                console.log(schedulemessage.message);
-                console.log("google");
-                console.log(message);
+               
                 $rootScope.fbComposeMessage = message;
             }
             
@@ -266,7 +264,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
             $scope.disbtncom = false;
             var profiles = new Array();
             $("#checkboxdata .subcheckbox").each(function () {
-                debugger;
+              
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {
                     var index = profiles.indexOf(attrId);
@@ -312,7 +310,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                         }
 
                     }, function (reason) {
-                        console.log(reason);
+                       
                     });
                 }
                 else {
@@ -394,7 +392,7 @@ SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-                console.log("myRepeatFeedTimeoutDirective Called");
+              
                 var $containerProducts = $("#products");
                 $containerProducts.imagesLoaded(function () {
                     $containerProducts.masonry({

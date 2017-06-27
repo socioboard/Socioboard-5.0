@@ -26,5 +26,23 @@
     <property name="trasactionId">
       <column name="trasactionId"  />
     </property>
+    <property name="media">
+      <column name="media"  />
+    </property>
+    <property name="itemname">
+      <column name="itemname"  />
+    </property>
+    <property name="paymentstatus">
+      <column name="paymentstatus"  />
+    </property>
+    <property name="Payername">
+      <column name="Payername"  />
+    </property>
+    <property name="payeremail">
+      <column name="payeremail"  />
+    </property>
+    <property name="subscrdate">
+      <column name="subscrdate"  />
+    </property>
   </class>
 </hibernate-mapping>

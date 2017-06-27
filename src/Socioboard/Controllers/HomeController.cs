@@ -22,52 +22,78 @@ namespace Socioboard.Controllers
             _appSettings = settings.Value;
             _logger = logger;
         }
-        
+
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            if (user != null)
+            Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+            if (session != null)
             {
-                SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-                strdic.Add("UserName", user.EmailId);
-                if (string.IsNullOrEmpty(user.Password))
+                SortedDictionary<string, string> strdi = new SortedDictionary<string, string>();
+                strdi.Add("systemId", session.systemId);
+                string respo=  CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
+                if (respo!="false")
                 {
-                    strdic.Add("Password", "sociallogin");
-                }
-                else
-                {
-                    strdic.Add("Password", user.Password);
-                }
-                
+                    if (user != null)
+                    {
+                        SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+                        strdic.Add("UserName", user.EmailId);
+                        if (string.IsNullOrEmpty(user.Password))
+                        {
+                            strdic.Add("Password", "sociallogin");
+                        }
+                        else
+                        {
+                            strdic.Add("Password", user.Password);
+                        }
 
-                string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
 
-                if (!string.IsNullOrEmpty(response))
-                {
-                    Domain.Socioboard.Models.User _user= Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
-                    HttpContext.Session.SetObjectAsJson("User", _user);
+                        string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+
+                        if (!string.IsNullOrEmpty(response))
+                        {
+                            Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                            HttpContext.Session.SetObjectAsJson("User", _user);
+                        }
+                        else
+                        {
+                            HttpContext.Session.Remove("User");
+                            HttpContext.Session.Remove("selectedGroupId");
+                            HttpContext.Session.Clear();
+                            HttpContext.Session.Remove("revokedata");
+                        }
+                    }
                 }
                 else
                 {
                     HttpContext.Session.Remove("User");
                     HttpContext.Session.Remove("selectedGroupId");
                     HttpContext.Session.Clear();
+                    HttpContext.Session.Remove("revokedata");
                 }
+
             }
             base.OnActionExecuting(filterContext);
         }
 
         // [ResponseCache(Duration = 100)]
-        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+       [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-
+            //Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("SessionHistory");
+            //if (session == null)
+            //{
+            //    return RedirectToAction("Index", "Index");
+            //}
+            await SaveSessionData();
+            HttpContext.Session.SetObjectAsJson("twosteplogin", "false");
             if (user == null)
             {
                 return RedirectToAction("Index", "Index");
             }
+            
 
             try
             {
@@ -153,7 +179,7 @@ namespace Socioboard.Controllers
                         {
                             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
                             ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
-                           // string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+                            // string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
                             // int count = Convert.ToInt32(profileCount);
                             int count = groupProfiles.Count;
                             int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
@@ -221,7 +247,232 @@ namespace Socioboard.Controllers
             return View();
         }
 
+        private async Task SaveSessionData()
+        {
+            Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+            if (session!=null)
+            {
+                List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
+                Param.Add(new KeyValuePair<string, string>("systemId", session.systemId));
+                HttpResponseMessage respon = await WebApiReq.PostReq("/api/User/UpdateSessiondata", Param, "", "", _appSettings.ApiDomain);
+                if (respon.IsSuccessStatusCode)
+                {
+                    Domain.Socioboard.Models.SessionHistory _SessionHistory = await respon.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
+                    HttpContext.Session.SetObjectAsJson("revokedata", _SessionHistory);
+                } 
+            }
+        }
 
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> SaveSessiondata(string ip, string browserName, string userAgent)
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            string systemId = string.Empty;
+            userAgent = getBetween(userAgent, "Mozilla/5.0 (", ";");
+            string brwdata = browserName + " on " + userAgent;
+            List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
+            Param.Add(new KeyValuePair<string, string>("ip", ip));
+            Param.Add(new KeyValuePair<string, string>("brwdata", brwdata));
+            Param.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+            HttpResponseMessage respon = await WebApiReq.PostReq("/api/User/SaveSessiondata", Param, "", "", _appSettings.ApiDomain);
+            if (respon.IsSuccessStatusCode)
+            {
+                Domain.Socioboard.Models.SessionHistory _SessionHistory = await respon.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
+                systemId = _SessionHistory.systemId;
+                HttpContext.Session.SetObjectAsJson("revokedata", _SessionHistory);
+
+            }
+            Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+            return Content(systemId);
+        }
+
+
+
+
+        // [ResponseCache(Duration = 100)]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        public async Task<IActionResult> IndexForTwoStep(string EmailId)
+        {
+            HttpResponseMessage _response = await WebApiReq.GetReq("/api/User/GetUserData?emailId=" + EmailId, "", "", _appSettings.ApiDomain);
+            if (_response.IsSuccessStatusCode)
+            {
+                Domain.Socioboard.Models.User user1 = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                HttpContext.Session.SetObjectAsJson("User", user1);
+                // ViewBag.user = user;
+            }
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+
+            if (user == null)
+            {
+                return RedirectToAction("Index", "Index");
+            }
+
+
+            try
+            {
+                if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
+                {
+                    ViewBag.AccountType = "Free";
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
+                {
+                    ViewBag.AccountType = "Deluxe";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Premium)
+                {
+                    ViewBag.AccountType = "Premium";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Topaz)
+                {
+                    ViewBag.AccountType = "Topaz";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Platinum)
+                {
+                    ViewBag.AccountType = "Platinum";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Gold)
+                {
+                    ViewBag.AccountType = "Gold";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Ruby)
+                {
+                    ViewBag.AccountType = "Ruby";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Standard)
+                {
+                    ViewBag.AccountType = "Standard";
+
+                }
+                if (user.ExpiryDate < DateTime.UtcNow)
+                {
+                    //return RedirectToAction("UpgradePlans", "Index");
+                    if (user.TrailStatus != Domain.Socioboard.Enum.UserTrailStatus.inactive)
+                    {
+                        List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
+                        Param.Add(new KeyValuePair<string, string>("Id", user.Id.ToString()));
+                        HttpResponseMessage respon = await WebApiReq.PostReq("/api/User/UpdateTrialStatus", Param, "", "", _appSettings.ApiDomain);
+                        if (respon.IsSuccessStatusCode)
+                        {
+                            Domain.Socioboard.Models.User _user = await respon.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                            HttpContext.Session.SetObjectAsJson("User", _user);
+                            user = _user;
+                        }
+                    }
+
+                }
+                else if ((user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.notadded || user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.inprogress) && (user.AccountType != Domain.Socioboard.Enum.SBAccountType.Free))
+                {
+                    HttpContext.Session.SetObjectAsJson("paymentsession", true);
+                    return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId, IsLogin = true });
+                }
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Index");
+            }
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                try
+                {
+                    List<Domain.Socioboard.Models.Groups> groups = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
+                    ViewBag.groups = Newtonsoft.Json.JsonConvert.SerializeObject(groups);
+                    string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+                    if (!string.IsNullOrEmpty(sessionSelectedGroupId))
+                    {
+                        ViewBag.selectedGroupId = sessionSelectedGroupId;
+                        HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
+                        if (groupProfilesResponse.IsSuccessStatusCode)
+                        {
+                            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                            ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
+                            // string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+                            // int count = Convert.ToInt32(profileCount);
+                            int count = groupProfiles.Count;
+                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                            ViewBag.profileCount = count;
+                            ViewBag.MaxCount = MaxCount;
+                            ViewBag.AccountType = user.AccountType;
+                            if (count > MaxCount)
+                            {
+                                ViewBag.downgrade = "true";
+                            }
+                            else
+                            {
+                                ViewBag.downgrade = "false";
+                            }
+                        }
+
+
+
+                    }
+                    else
+                    {
+                        long selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
+                        HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
+                        ViewBag.selectedGroupId = selectedGroupId;
+                        HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
+                        if (groupProfilesResponse.IsSuccessStatusCode)
+                        {
+                            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
+                            ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
+                            //string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
+                            // int count = Convert.ToInt32(profileCount);
+                            int count = groupProfiles.Count;
+                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                            ViewBag.profileCount = count;
+                            ViewBag.MaxCount = MaxCount;
+                            if (count > MaxCount)
+                            {
+                                ViewBag.downgrade = "true";
+                            }
+                            else
+                            {
+                                ViewBag.downgrade = "false";
+                            }
+                        }
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    HttpContext.Session.Remove("User");
+                    HttpContext.Session.Remove("selectedGroupId");
+                    HttpContext.Session.Clear();
+                    ViewBag.user = null;
+                    ViewBag.selectedGroupId = null;
+                    ViewBag.groupProfiles = null;
+                    TempData["Error"] = "Some thing went wrong.";
+                    return RedirectToAction("Index", "Index");
+                }
+            }
+            else
+            {
+                return RedirectToAction("Index", "Index");
+            }
+            ViewBag.user = Newtonsoft.Json.JsonConvert.SerializeObject(user);
+            return View();
+        }
         [HttpPost]
         public async Task<IActionResult> PluginComposeMessage()
         {
@@ -250,7 +501,7 @@ namespace Socioboard.Controllers
             HttpResponseMessage respon = await WebApiReq.PostReq("/api/SocialMessages/PluginComposemessage", Param, "", "", _appSettings.ApiDomain);
             if (respon.IsSuccessStatusCode)
             {
-                output= await respon.Content.ReadAsStringAsync();
+                output = await respon.Content.ReadAsStringAsync();
             }
             return Content(output);
         }
@@ -298,9 +549,44 @@ namespace Socioboard.Controllers
             HttpContext.Session.SetObjectAsJson("selectedGroupId", groupId);
             return "changed";
         }
+
+
+
+
         [ResponseCache(Duration = 100)]
         [HttpGet]
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
+        {
+            HttpContext.Session.Remove("User");
+            HttpContext.Session.Remove("selectedGroupId");
+            await logoutsessiondata();
+            HttpContext.Session.Clear();
+            ViewBag.user = null;
+            ViewBag.selectedGroupId = null;
+            ViewBag.groupProfiles = null;
+
+            return Ok();
+        }
+
+        private async Task logoutsessiondata()
+        {
+            Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+            if (session != null)
+            {
+                List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
+                Param.Add(new KeyValuePair<string, string>("systemId", session.systemId));
+                Param.Add(new KeyValuePair<string, string>("sessionId", session.id.ToString()));
+                HttpResponseMessage respon = await WebApiReq.PostReq("/api/User/RevokeSession", Param, "", "", _appSettings.ApiDomain);
+                if (respon.IsSuccessStatusCode)
+                {
+                    HttpContext.Session.Remove("revokedata");
+                }
+            }
+        }
+
+        [ResponseCache(Duration = 100)]
+        [HttpGet]
+        public async Task<IActionResult> Revoke(string sessionId)
         {
             HttpContext.Session.Remove("User");
             HttpContext.Session.Remove("selectedGroupId");
@@ -308,7 +594,13 @@ namespace Socioboard.Controllers
             ViewBag.user = null;
             ViewBag.selectedGroupId = null;
             ViewBag.groupProfiles = null;
-            //return RedirectToAction("Index", "Index");
+            List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
+            Param.Add(new KeyValuePair<string, string>("sessionId", sessionId));
+            HttpResponseMessage respon = await WebApiReq.PostReq("/api/User/RevokeSession", Param, "", "", _appSettings.ApiDomain);
+            if (respon.IsSuccessStatusCode)
+            {
+            }
+
             return Ok();
         }
 
@@ -330,11 +622,17 @@ namespace Socioboard.Controllers
         [HttpGet]
         public bool IsSessionExist()
         {
+            string twostep = HttpContext.Session.GetObjectFromJson<string>("twosteplogin");
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
             {
                 return false;
             }
+            else if (twostep == "true")
+            {
+                return false;
+            }
+            else
             {
                 try
                 {

@@ -16,6 +16,7 @@ using System.Net;
 using Facebook;
 using Socioboard.Helper;
 using System.Linq;
+using Domain.Socioboard.Interfaces.Services;
 
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -27,7 +28,7 @@ namespace Socioboard.Controllers
 
         private Helpers.AppSettings _appSettings;
         private readonly ILogger _logger;
-
+        IEmailSender emailSender;
 
         public IndexController(Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings, ILogger<IndexController> logger)
         {
@@ -40,24 +41,89 @@ namespace Socioboard.Controllers
         // GET: /<controller>/
         // [ResponseCache(Duration = 604800)]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            string EmailId = string.Empty;
+            string password = string.Empty;
+            string sociorevtoken = string.Empty;
+            string twostep = HttpContext.Session.GetObjectFromJson<string>("twosteplogin");
             bool paymentsession = HttpContext.Session.GetObjectFromJson<bool>("paymentsession");
             if (paymentsession == true)
             {
                 user = null;
                 HttpContext.Session.Remove("User");
+                HttpContext.Session.Remove("revokedata");
                 HttpContext.Session.Remove("selectedGroupId");
                 HttpContext.Session.Remove("paymentsession");
                 HttpContext.Session.Clear();
             }
             if (user == null)
             {
-
+                if (Request.Cookies["sociorevtoken"] != null)
+                {
+                    sociorevtoken = Request.Cookies["sociorevtoken"].ToString();
+                    sociorevtoken = PluginHelper.Base64Decode(sociorevtoken);
+                    List<KeyValuePair<string, string>> Parame = new List<KeyValuePair<string, string>>();
+                    Parame.Add(new KeyValuePair<string, string>("systemId", sociorevtoken));
+                    HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/checksociorevtoken", Parame, "", "", _appSettings.ApiDomain);
+                    if (_response.IsSuccessStatusCode)
+                    {
+                        try
+                        {
+                            Domain.Socioboard.Models.SessionHistory _session = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
+                            HttpContext.Session.SetObjectAsJson("revokedata", _session);
+                            sociorevtoken = "true";
+                        }
+                        catch (Exception)
+                        {
+                            sociorevtoken = "false";
+                        }
+                    }
+                }
+                if (sociorevtoken == "true")
+                {
+                    if (Request.Cookies["socioboardemailId"] != null)
+                    {
+                        EmailId = Request.Cookies["socioboardemailId"].ToString();
+                        EmailId = PluginHelper.Base64Decode(EmailId);
+                    }
+                    if (Request.Cookies["socioboardToken"] != null)
+                    {
+                        password = Request.Cookies["socioboardToken"].ToString();
+                        password = PluginHelper.Base64Decode(password);
+                    }
+                }
+                if (!string.IsNullOrEmpty(EmailId) && !string.IsNullOrEmpty(password))
+                {
+                    List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+                    Parameters.Add(new KeyValuePair<string, string>("UserName", EmailId));
+                    Parameters.Add(new KeyValuePair<string, string>("Password", password));
+                    HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/CheckUserLogin", Parameters, "", "", _appSettings.ApiDomain);
+                    if (_response.IsSuccessStatusCode)
+                    {
+                        try
+                        {
+                            user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                            HttpContext.Session.SetObjectAsJson("User", user);
+                            return RedirectToAction("Index", "Home");
+                        }
+                        catch
+                        {
+                            ViewBag.ApiDomain = _appSettings.ApiDomain;
+                            ViewBag.Domain = _appSettings.Domain;
+                            return View();
+                        }
+                    }
+                }
                 ViewBag.ApiDomain = _appSettings.ApiDomain;
                 ViewBag.Domain = _appSettings.Domain;
                 return View();
+            }
+            else if (twostep == "true")
+            {
+                return View("TwoStepOtp");
             }
             else
             {
@@ -78,7 +144,7 @@ namespace Socioboard.Controllers
 
 
         }
-
+      
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel userViewModel)
         {
@@ -93,14 +159,14 @@ namespace Socioboard.Controllers
                 try
                 {
                     Domain.Socioboard.Models.User user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                    HttpContext.Session.SetObjectAsJson("User", user);
+                    //HttpContext.Session.SetObjectAsJson("User", user);
                     if (user.UserType == "SuperAdmin")
                     {
                         return Content("SuperAdmin");
                         //HttpContext.Session["Id"] = user.Id;
 
                     }
-                    output = "1";
+                    // output = "1";
                     if (user.ExpiryDate < DateTime.UtcNow)
                     {
                         //return RedirectToAction("UpgradePlans", "Index");
@@ -117,9 +183,16 @@ namespace Socioboard.Controllers
                     }
                     else if ((user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.notadded || user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.inprogress) && (user.AccountType != Domain.Socioboard.Enum.SBAccountType.Free))
                     {
-                        //return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId,IsLogin = false });
                         return Content("2");
                     }
+                    if (user.TwostepEnable == true)
+                    {
+                        HttpContext.Session.SetObjectAsJson("User", user);
+                        return Content("TwoStepLogin");
+                    }
+
+                    HttpContext.Session.SetObjectAsJson("User", user);
+                    output = "1";
                 }
                 catch (Exception e)
                 {
@@ -138,6 +211,23 @@ namespace Socioboard.Controllers
             return Content(output);
         }
 
+        public ActionResult TwoStepOtp()
+        {
+            HttpContext.Session.SetObjectAsJson("twosteplogin", "true");
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            if (user != null)
+            {
+                ViewBag.emailId = user.EmailId;
+                ViewBag.phonenumber = user.PhoneNumber;
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Index");
+            }
+        }
+
+       
 
 
         [HttpPost]
@@ -205,11 +295,36 @@ namespace Socioboard.Controllers
         {
             string output = "false";
             string plan = "";
-
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             Domain.Socioboard.Models.Package _Package = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.Package>("Package");
             string trasactionId = Generatetxnid();
+            string media = Request.Form["charset"];
+            string subscr_date = Request.Form["subscr_date"];
+            if (string.IsNullOrEmpty(subscr_date))
+            {
+                subscr_date = Request.Form["payment_date"];
+            }
+            string ipn_track_id = Request.Form["ipn_track_id"];
+            string payer_email = Request.Form["payer_email"];
+            string amount = Request.Form["amount3"];
+            if (string.IsNullOrEmpty(amount))
+            {
+                amount = Request.Form["mc_gross"];
+            }
+            string mc_currency = Request.Form["mc_currency"];
+            string Payername = Request.Form["first_name"] + " " + Request.Form["last_name"];
+            string txn_type = Request.Form["txn_type"];
+            string item_name = Request.Form["item_name"];
+            string payment_status = Request.Form["payment_status"];
+            if (string.IsNullOrEmpty(payment_status))
+            {
+                payment_status = "Completed";
+            }
             string paymentId = Request.Form["subscr_id"];
+            if (string.IsNullOrEmpty(paymentId))
+            {
+                paymentId = Request.Form["txn_id"];
+            }
             if (_Package.packagename == "Free")
             {
                 plan = "Free";
@@ -258,6 +373,12 @@ namespace Socioboard.Controllers
             Parameters.Add(new KeyValuePair<string, string>("trasactionId", trasactionId));
             Parameters.Add(new KeyValuePair<string, string>("paymentId", paymentId));
             Parameters.Add(new KeyValuePair<string, string>("accType", plan));
+            Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date));
+            Parameters.Add(new KeyValuePair<string, string>("payer_email", payer_email));
+            Parameters.Add(new KeyValuePair<string, string>("Payername", Payername));
+            Parameters.Add(new KeyValuePair<string, string>("payment_status", payment_status));
+            Parameters.Add(new KeyValuePair<string, string>("item_name", item_name));
+            Parameters.Add(new KeyValuePair<string, string>("media", media));
             HttpResponseMessage response = await WebApiReq.PostReq("/api/PaymentTransaction/UpgradeAccount", Parameters, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
@@ -290,8 +411,6 @@ namespace Socioboard.Controllers
             return Content(output);
         }
 
-
-
         [HttpGet]
         public async Task<IActionResult> SBApp(string profileType, string url, string content, string imageUrl, string name, string userImage, string screenName, string tweet, string tweetId, string type, string EmailId)
         {
@@ -315,19 +434,19 @@ namespace Socioboard.Controllers
                     {
                         _PluginData.url = string.Empty;
                     }
-                    if(profileType== "image")
+                    if (profileType == "image")
                     {
                         _PluginData.url = string.Empty;
                     }
                 }
             }
-            if (profileType== "website")
+            if (profileType == "website")
             {
                 if (url.Contains(".jpg") || url.Contains(".png"))
                 {
                     _PluginData.imageUrl = url;
                     _PluginData.url = string.Empty;
-                } 
+                }
             }
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
@@ -473,14 +592,34 @@ namespace Socioboard.Controllers
             //}
             //_logger.LogError("paypalnotifications end");
             //return RedirectToAction("Index", "Index");
+            string media = Request.Form["charset"];
+            string subscr_date = Request.Form["subscr_date"];
+            string ipn_track_id = Request.Form["ipn_track_id"];
+            string payer_email = Request.Form["payer_email"];
+            string amount = Request.Form["amount3"];
+            string mc_currency = Request.Form["mc_currency"];
+            string Payername = Request.Form["first_name"] + " " + Request.Form["last_name"];
+            string txn_type = Request.Form["txn_type"];
+            string item_name = Request.Form["item_name"];
             string subscr_id = Request.Form["subscr_id"];
             string payment_status = Request.Form["payment_status"];
+            if (string.IsNullOrEmpty(payment_status))
+            {
+                payment_status = "Completed";
+            }
             string txn_id = Request.Form["txn_id"];
             if (payment_status == "Completed")
             {
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("subscr_id", subscr_id));
                 Parameters.Add(new KeyValuePair<string, string>("txn_id", txn_id));
+                Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date));
+                Parameters.Add(new KeyValuePair<string, string>("payer_email", payer_email));
+                Parameters.Add(new KeyValuePair<string, string>("Payername", Payername));
+                Parameters.Add(new KeyValuePair<string, string>("payment_status", payment_status));
+                Parameters.Add(new KeyValuePair<string, string>("item_name", item_name));
+                Parameters.Add(new KeyValuePair<string, string>("amount", amount));
+                Parameters.Add(new KeyValuePair<string, string>("media", media));
                 HttpResponseMessage response = await WebApiReq.PostReq("/api/PaymentTransaction/UpdateRecurringUser", Parameters, "", "", _appSettings.ApiDomain);
                 if (response.IsSuccessStatusCode)
                 {

@@ -38,4 +38,9 @@ namespace Domain.Socioboard.Models.Mongo
         public string metadescription { get; set; }
         public string metafavicon { get; set; }
     }
+    public class UserlikesData
+    {
+        public Domain.Socioboard.Models.PinterestAccount _PinterestAccount { get; set; }
+        public List<Domain.Socioboard.Models.Mongo.MongoPinterestUserLikes> lstMongoPinterestUserLikes { get; set; }
+    }
 }

@@ -6,13 +6,20 @@
                         <div class="row">
                             <div class="col offset-s1 s10 offset-m2 m8 offset-l2 l6">
                                 <div class="card" id="feeds">
-                                    <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Live feeds</h5>
+                                    <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Live feeds<!--<a class='dropdown-button btn btn_style right black white-text' href='javascript:void(0)' data-activates='dropdownFilter'><strong>&nbsp&nbspFilter&nbsp&nbsp</strong></a>--></h5>
+                                    <!-- Dropdown Structure -->
+                                    <ul id='dropdownFilter' class='dropdown-content'>
+                                        <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('image')">Image</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('video')">Video</a></li>
+                                    </ul>
                                     <ul class="collection instagramfeeds">
                                         <li class="collection-item" ng-repeat="insfeed in lstinsFeeds "myRepeatTabDirective>
                                           <div class="card">
                                              
-                                              <div class="card-image waves-effect waves-block waves-light" ng-if="insfeed._InstagramFeed.type=='image'">
-                                                <img class="activator" src="{{insfeed._InstagramFeed.feedImageUrl}}" alt="imgs">
+                                              <!--<div class="card-image waves-effect waves-block waves-light" ng-if="insfeed._InstagramFeed.type=='image'">-->
+                                              <div class="card-image waves-effect waves-block waves-light">
+                                                  <img class="activator" src="{{insfeed._InstagramFeed.feedImageUrl}}" alt="imgs">
                                               </div>
                                               <div class="card-content">
                                                 <span class="card-title activator grey-text text-darken-4">{{insfeed._InstagramFeed.adminUser}}<i class="mdi-navigation-more-vert right"></i></span>
@@ -63,7 +70,7 @@
                                           </div>
                                         </li>
 
-                                        <h6 style="margin-left:31%; color:lightgray; font-size:20px" ng-if="endfeeds==true">No more Feeds to load</h6>
+                                        <h6 style="margin-left:31%; color:lightgray; font-size:20px" ng-if="endfeeds==true && filters!=true">No more Feeds to load</h6>
 
                                         <div class="center" id="load_circle_insta" ng-class="loadmorefeeds" hidden>
                                           <div class="preloader-wrapper small active">
@@ -109,7 +116,7 @@
                                           </div>
                                         </div>
 
-                                        <a href="" ng-click="listData()" style="margin-left:41%" onClick="this.style.visibility = 'hidden'; loadmore_feeds();" ng-if="preloadmorefeeds==true"><img src="http://i.imgur.com/qJdCRuG.png" /></a>
+                                        <a href="" ng-click="listData()" style="margin-left:41%" onClick="this.style.visibility = 'hidden'; loadmore_feeds();" ng-if="preloadmorefeeds==true && filters!=true"><img src="http://i.imgur.com/qJdCRuG.png" /></a>
                                         
                                         <br />
                                         

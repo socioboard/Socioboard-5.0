@@ -8,7 +8,19 @@
             <div class="row">
                 <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                     <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook live feeds</h5>
+                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook live feeds <!--<a class='dropdown-button btn btn_style right black white-text' href='javascript:void(0)' data-activates='dropdownFilter'><strong>Filter</strong></a>--></h5>
+                        <!-- Dropdown Trigger -->
+                        
+                        <!-- Dropdown Structure -->
+                        <ul id='dropdownFilter' class='dropdown-content'>
+                            <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
+                            <li><a href="javascript:void(0)" ng-click="filterSearch('socioboard')">Socioboard</a></li>
+                            <li><a href="javascript:void(0)" ng-click="filterSearch('status')">Status</a></li>
+                            <li><a href="javascript:void(0)" ng-click="filterSearch('link')">Link</a></li>
+                            <li><a href="javascript:void(0)" ng-click="filterSearch('photo')">Photo</a></li>
+                            <li><a href="javascript:void(0)" ng-click="filterSearch('video')">Video</a></li>
+                        </ul>
+
                         <ul class="collection" id="facebookfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
                                 <img src="https://graph.facebook.com/{{fbfeed._facebookFeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
@@ -17,9 +29,11 @@
                                     <div class="col m8">
                                         <p class="break_word ultra-small">{{fbfeed._facebookFeed.feedDescription}}</p>
                                     </div>
+                                    <!--<strong>{{fbfeed._facebookFeed.postType}}-------{{fbfeed._facebookFeed.postingFrom}}</strong>-->
                                     <div class="col m4 center">
                                         <img src="{{getHttpsURL(fbfeed._facebookFeed.picture)}} " ng-if="fbfeed._facebookFeed.picture!= ''" class="responsive-img">
                                     </div>
+                                    
                                     <div class="col m12">
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li>
@@ -44,7 +58,7 @@
                                                                     <div class="row">
                                                                         <div class="input-field col s12">
                                                                             <i class="icon-pencil prefix"></i>
-                                                                            <input type="text" id="postcomment_{{fbfeed._facebookFeed.feedId}}" class="materialize-textarea" />
+                                                                            <textarea type="text" id="postcomment_{{fbfeed._facebookFeed.feedId}}" class="materialize-textarea" />
                                                                             <label for="icon_prefix2">Type your comment here...</label>
                                                                         </div>
                                                                     </div>
@@ -70,7 +84,7 @@
                             </li>
                         </ul>
                         <br />
-                        <h5 style="margin-left:38%; color:lightgray; font-family:Calibri" ng-if="endfeeds==true">No More Feeds to Load</h5>
+                        <h5 style="margin-left:38%; color:lightgray; font-family:Calibri" ng-if="endfeeds==true && filters!=true">No More Feeds to Load</h5>
                         <div class="center" id="gif" ng-class="loaderclass" hidden>
                             <div class="preloader-wrapper small active">
                                 <div class="spinner-layer spinner-blue">
@@ -115,7 +129,7 @@
                             </div>
                         </div>
 
-                        <a href="" ng-click="listData()" style="margin-left:44%" onClick = "this.style.visibility = 'hidden'; chng_btn_val();" ng-if="preloadmore==true"><img src="http://i.imgur.com/Y9I2fvH.png" /></a>
+                        <a href="" ng-click="listData()" style="margin-left:44%" onClick = "this.style.visibility = 'hidden'; chng_btn_val();" ng-if="preloadmore==true && filters!=true"><img src="http://i.imgur.com/Y9I2fvH.png" /></a>
                         
                         <div class="cssload-container" ng-if="preloadmore!=true"> 
                             <div></div>

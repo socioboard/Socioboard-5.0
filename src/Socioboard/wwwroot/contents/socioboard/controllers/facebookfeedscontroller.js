@@ -21,7 +21,9 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             count = 5
         }
         $scope.LoadTopFeeds = function () {
-            debugger;
+            $scope.filters = false;
+            $scope.preloadmore = false;
+            $scope.lstFbFeeds = null;
                 //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
                               .then(function (response) {
@@ -105,6 +107,29 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
         facebookfeeds();
 
+        $scope.filterSearch = function (typeFilter) {
+            $scope.filters = true;
+            $scope.preloadmore = false;
+            $scope.lstFbFeeds = null;
+            $http.get(apiDomain + '/api/Facebook/GetTopFilterFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + 30 + '&typeFilter=' + typeFilter)
+                              .then(function (response) {
+                                  // $scope.lstProfiles = response.data;
+                                  $scope.lstFbFeeds = response.data;
+                                  $scope.preloadmore = true;
+                                  setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
+                                  // $('.collapsible').collapsible();
+                                  // $scope.feeddate(response.data);
+                                  //$scope.loaderclass = 'hide';
+                                  //console.log(response.data);
+                                  if (response.data == null) {
+                                      reachLast = true;
+                                  }
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+        };
+
+
         $scope.renderComments = function (feedId, index) {
             $scope.LoadTopComments(feedId, index);
             $('.collapsible').collapsible({
@@ -179,7 +204,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             if (!memberId.val()) {
                 swal('Please select a member to assign the task')
             }
-            else if (!taskComment) {
+            else if (!(/\S/.test(taskComment))) {
                 swal('Please write a comment to assign the task')
             }
             else {
@@ -199,7 +224,7 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-                console.log('collapse reached.');
+              
                 $('.collapsible').collapsible({
                     accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
                 });

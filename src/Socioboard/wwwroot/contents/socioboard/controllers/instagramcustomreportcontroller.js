@@ -38,8 +38,7 @@ SocioboardApp.controller('InstagramcustomreportController', function ($rootScope
 
 
         $scope.generateGraphs = function () {
-            console.log('generate graph');
-            console.log($scope.instagramReportsData);
+           
 
             var chart = AmCharts.makeChart("FollowersGraph", {
                 "type": "serial",
@@ -284,8 +283,7 @@ SocioboardApp.controller('InstagramcustomreportController', function ($rootScope
             $scope.toDate = (datevalueto.getFullYear() + '/' + (('0' + (datevalueto.getMonth() + 1)).slice(-2)) + '/' + (('0' + datevalueto.getDate()).slice(-2)));
 
 
-            //console.log('asasfd');
-            //console.log($scope.instagramReportsData);
+           
 
             $scope.totalMedia = totalMedia;
             $scope.totalFollower = totalFollower;

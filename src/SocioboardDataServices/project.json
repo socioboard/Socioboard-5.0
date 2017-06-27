@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true
@@ -17,7 +17,8 @@
     "Socioboard.LinkedIn": "1.0.0-*",
     "Socioboard.Instagram": "1.0.0-*",
     "Socioboard.Google": "1.0.0-*",
-    "StackExchange.Redis": "1.1.603"
+    "StackExchange.Redis": "1.1.603",
+    "Socioboard.Pinterest": "1.0.0-*"
   },
 
   "frameworks": {

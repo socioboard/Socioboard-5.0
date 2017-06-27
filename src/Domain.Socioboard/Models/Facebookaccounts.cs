@@ -28,6 +28,7 @@ namespace Domain.Socioboard.Models
         public virtual string about { get; set; }
         public virtual string workCompany { get; set; }
         public virtual Domain.Socioboard.Enum.FbProfileType FbProfileType { get; set; }
+        public virtual Domain.Socioboard.Enum.FbPageSubscription FbPageSubscription { get; set; }
         public virtual string ProfileUrl { get; set; }
         public virtual bool IsActive { get; set; }
         public virtual Int64 UserId { get; set; }

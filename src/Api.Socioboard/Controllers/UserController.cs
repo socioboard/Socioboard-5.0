@@ -306,9 +306,13 @@ namespace Api.Socioboard.Controllers
                     {
                         return Ok("Activate your account through email");
                     }
+                    else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
+                    {
+                        return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                    }
                     else
                     {
-                        return Ok("Your account is temporarily suspended. Please contact socioboard support for more assistance");
+                        return Ok("Something went wrong please try after sometime");
                     }
                 }
                 else
@@ -1023,6 +1027,46 @@ namespace Api.Socioboard.Controllers
 
         }
 
+
+        [HttpGet("DisableUserAccount")]
+        public IActionResult DisableUserAccount(long Id,string feedbackmsg)
+        {
+            try
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                Domain.Socioboard.Models.FeedBack feedback = new FeedBack();
+                Domain.Socioboard.Models.User _use = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == Id);
+                _use.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Disable;
+                int SavedUserStatus = dbr.Update<Domain.Socioboard.Models.User>(_use);
+                if (SavedUserStatus == 1)
+                {
+                    feedback.UserId = _use.Id;
+                    feedback.FeedBackMsg = feedbackmsg;
+                    feedback.createddate = DateTime.UtcNow;
+                    feedback.EmailId = _use.EmailId;
+                    feedback.AccountType = _use.AccountType;
+                    feedback.UserActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Disable;
+                    if (_use.EmailValidateToken != "Facebook" && _use.EmailValidateToken != "Google")
+                    {
+                        feedback.RegisterAccountType = "Normal Singup";
+                    }
+                    else
+                    {
+                        feedback.RegisterAccountType = _use.EmailValidateToken;
+                    }
+                    int SavedStatus = dbr.Add<Domain.Socioboard.Models.FeedBack>(feedback);
+                    return Ok("Disabled");
+                }
+            }
+            catch(Exception ex)
+            {
+                return Ok("Something went wrong please try after sometime");
+            }
+           
+            return Ok();
+
+        }
+
         [HttpGet("UndoUserAdmin")]
         public IActionResult UndoUserAdmin(long Id)
         {
@@ -1190,8 +1234,6 @@ namespace Api.Socioboard.Controllers
         [HttpPost("FacebookLogin")]
         public IActionResult FacebookLogin(string AccessToken, Domain.Socioboard.Enum.SBAccountType accType)
         {
-
-
             dynamic profile = FbUser.getFbUser(AccessToken);
 
             if (Convert.ToString(profile) == "Invalid Access Token")
@@ -1229,13 +1271,25 @@ namespace Api.Socioboard.Controllers
                 IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
                 if (lstUser != null && lstUser.Count() > 0)
                 {
-                    DateTime d1 = DateTime.UtcNow;
-                    //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
-                    //userTable.LastLoginTime = d1;
-                    lstUser.First().LastLoginTime = d1;
-                    dbr.Update<User>(lstUser.First());
-                    _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
-                    return Ok(lstUser.First());
+                    if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                    {
+                        DateTime d1 = DateTime.UtcNow;
+                        //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
+                        //userTable.LastLoginTime = d1;
+                        lstUser.First().LastLoginTime = d1;
+                        dbr.Update<User>(lstUser.First());
+                        _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
+                        return Ok(lstUser.First());
+                    }
+                    else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
+                    {
+                        return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                    }
+                    else
+                    {
+                        return Ok("Something went wrong please try after sometime");
+                    }
+                    
                 }
                 else
                 {
@@ -1499,7 +1553,7 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpPost("UpdateMailSettings")]
-        public IActionResult UpdateMailSettings(long userId, bool dailyGrpReportsSummery, bool weeklyGrpReportsSummery, bool days15GrpReportsSummery, bool monthlyGrpReportsSummery, bool days60GrpReportsSummery, bool days90GrpReportsSummery, bool otherNewsLetters)
+        public IActionResult UpdateMailSettings(long userId, bool dailyGrpReportsSummery, bool weeklyGrpReportsSummery, bool days15GrpReportsSummery, bool monthlyGrpReportsSummery, bool days60GrpReportsSummery, bool days90GrpReportsSummery, bool otherNewsLetters, bool scheduleFailureUpdates, bool scheduleSuccessUpdates)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
@@ -1512,6 +1566,8 @@ namespace Api.Socioboard.Controllers
                 user.days60GrpReportsSummery = days60GrpReportsSummery;
                 user.days90GrpReportsSummery = days90GrpReportsSummery;
                 user.otherNewsLetters = otherNewsLetters;
+                user.scheduleFailureUpdates = scheduleFailureUpdates;
+                user.scheduleSuccessUpdates = scheduleSuccessUpdates;
                 int res = dbr.Update<User>(user);
                 if (res == 1)
                 {
@@ -1704,6 +1760,76 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        //Enable two step login
+        [HttpPost("EnableTwoStepLogin")]
+        public IActionResult EnableTwoStepLogin(long userId, string currentPassword)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userId);
+            if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            {
+                user.TwostepEnable = true;
+                int res = dbr.Update<User>(user);
+                if (res == 1)
+                {
+                    return Ok("You successfully enabled two step login");
+                }
+                else
+                {
+                    return BadRequest("Error while enabling two step login, pls try after some time.");
+                }
+            }
+            else if(!user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            {
+                return BadRequest("Wrong password");
+            }
+           else if (user.EmailValidateToken.Equals("Facebook"))
+            {
+                return BadRequest("two step login is not permitted as you registered in Socioboard with Facebook.");
+            }
+            else if (user.EmailValidateToken.Equals("Google"))
+            {
+                return BadRequest("two step login is not permitted as you registered in Socioboard with Google.");
+            }
+           else
+            {
+                return BadRequest("Something went wrong");
+            }
+            
+
+        }
+
+
+        //Disable two step login
+        [HttpPost("DisablebleTwoStepLogin")]
+        public IActionResult DisablebleTwoStepLogin(long userId, string currentPassword)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userId);
+            if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            {
+                user.TwostepEnable = false;
+                int res = dbr.Update<User>(user);
+                if (res == 1)
+                {
+                    return Ok("You successfully disabled two step login");
+                }
+                else
+                {
+                    return BadRequest("Error while disabling two step login, pls try after some time.");
+                }
+            }
+            else if (!user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            {
+                return BadRequest("Wrong password");
+            }
+            else
+            {
+                return BadRequest("Something went wrong");
+            }
+
+
+        }
 
         /// <summary>
         /// for email id change we will verify password
@@ -1897,6 +2023,20 @@ namespace Api.Socioboard.Controllers
             return Ok(lstplan);
         }
 
+        [ResponseCache(Duration = 100)]
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("User");
+            HttpContext.Session.Remove("selectedGroupId");
+            HttpContext.Session.Clear();
+            ViewBag.user = null;
+            ViewBag.selectedGroupId = null;
+            ViewBag.groupProfiles = null;
+            //return RedirectToAction("Index", "Index");
+            return Ok();
+        }
+
         #region Admin panel dashboard Users Count Start
 
         [HttpGet("AdminPaidUsers")]
@@ -1933,5 +2073,105 @@ namespace Api.Socioboard.Controllers
         }
 
         #endregion
+
+        [HttpGet("GetUserSessions")]
+        public IActionResult GetUserSessions(long userId)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            List<SessionHistory> lstsessions = dbr.Find<SessionHistory>(t => t.userId == userId).ToList();
+            return Ok(lstsessions);
+        }
+
+        [HttpPost("SaveSessiondata")]
+        public IActionResult SaveSessiondata(string ip, string brwdata, string userId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            //userAgent = getBetween(userAgent, "Mozilla/5.0 (", ";");
+            //string brwdata= browserName + " on " + userAgent;
+            Domain.Socioboard.Models.SessionHistory _SessionHistory = new SessionHistory();
+            _SessionHistory = dbr.Find<SessionHistory>(t => t.ipAddress == ip && t.browseros == brwdata && t.sessionStatus == Domain.Socioboard.Enum.SessionHistoryStatus.active).FirstOrDefault();
+            if (_SessionHistory == null)
+            {
+                _SessionHistory = new SessionHistory();
+                _SessionHistory.browseros = brwdata;
+                _SessionHistory.firstloginTime = DateTime.UtcNow;
+                _SessionHistory.ipAddress = ip;
+                _SessionHistory.systemId = DateTime.UtcNow.Ticks.ToString("x");
+                _SessionHistory.lastAccessedTime = DateTime.UtcNow;
+                _SessionHistory.sessionStatus = Domain.Socioboard.Enum.SessionHistoryStatus.active;
+                _SessionHistory.userId = Convert.ToInt32(userId);
+                dbr.Add<SessionHistory>(_SessionHistory);
+            }
+            else
+            {
+                _SessionHistory.browseros = brwdata;
+                _SessionHistory.ipAddress = ip;
+                _SessionHistory.lastAccessedTime = DateTime.UtcNow;
+                _SessionHistory.sessionStatus = Domain.Socioboard.Enum.SessionHistoryStatus.active;
+                _SessionHistory.userId = Convert.ToInt32(userId);
+                dbr.Update<SessionHistory>(_SessionHistory);
+            }
+            Domain.Socioboard.Models.SessionHistory SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == _SessionHistory.systemId).FirstOrDefault();
+            return Ok(SessionHistory);
+        }
+
+        [HttpPost("UpdateSessiondata")]
+        public IActionResult UpdateSessiondata(string systemId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
+            Domain.Socioboard.Models.SessionHistory _SessionHistory = new SessionHistory();
+            _SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == systemId && t.sessionStatus == Domain.Socioboard.Enum.SessionHistoryStatus.active).FirstOrDefault();
+            _SessionHistory.lastAccessedTime = DateTime.UtcNow;
+            Domain.Socioboard.Models.SessionHistory SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == systemId).FirstOrDefault();
+            return Ok(SessionHistory);
+        }
+
+        [HttpPost("checksociorevtoken")]
+        public IActionResult checksociorevtoken(string systemId)
+        {
+            DatabaseRepository dnr = new Model.DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.SessionHistory> _session = dnr.Find<SessionHistory>(t => t.systemId == systemId && t.sessionStatus == Domain.Socioboard.Enum.SessionHistoryStatus.active).ToList();
+            if (_session.Count > 0)
+            {
+                return Ok(_session.FirstOrDefault());
+            }
+            else
+            {
+                return Ok("false");
+            }
+        }
+
+
+        [HttpPost("RevokeSession")]
+        public IActionResult RevokeSession(long sessionId, string systemId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            SessionHistory _SessionHistory = dbr.Find<SessionHistory>(t => t.id == sessionId && t.systemId == systemId).FirstOrDefault();
+            _SessionHistory.sessionStatus = Domain.Socioboard.Enum.SessionHistoryStatus.inactive;
+            _SessionHistory.lastAccessedTime = DateTime.UtcNow;
+            dbr.Update<SessionHistory>(_SessionHistory);
+            return Ok();
+        }
+
+
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+
+
     }
 }
+

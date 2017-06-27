@@ -135,6 +135,11 @@ namespace Api.Socioboard.Repositories
                                 res = GplusRepository.DeleteYoutubeChannelProfile(dbr, profileId, userId, _redisCache, _appSettings);
                                 break;
                             }
+                        case Domain.Socioboard.Enum.SocialProfileType.Pinterest:
+                            {
+                                res = PinterestRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                break;
+                            }
                     }
                 }
                 else
@@ -195,7 +200,12 @@ namespace Api.Socioboard.Repositories
                                     res = GplusRepository.DeleteYoutubeChannelProfile(dbr, profileId, userId, _redisCache, _appSettings);
                                     break;
                                 }
-                            
+                            case Domain.Socioboard.Enum.SocialProfileType.Pinterest:
+                                {
+                                    res = PinterestRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                                    break;
+                                }
+
                         }
                     }
                     else

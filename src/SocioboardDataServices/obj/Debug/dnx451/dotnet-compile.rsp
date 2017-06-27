@@ -65,6 +65,7 @@
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\bin\Debug\net451\Socioboard.Google.dll
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\bin\Debug\net451\Socioboard.LinkedIn.dll
+--reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Pinterest\bin\Debug\net451\Socioboard.Pinterest.dll
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Twitter\bin\Debug\net451\Socioboard.Twitter.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll
@@ -78,6 +79,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Web.Extensions.dll
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Program.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\AdsOffers\AdsOfferDataService.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Facebook\FacebookPageFeed.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Facebook\FbDataServices.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Facebook\FbFeeds.cs
@@ -93,6 +95,8 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardData
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\LinkedIn\LinkedPageFeed.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Model\DatabaseRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Model\MongoRepository.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Pinterest\PinterestDataService.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Pinterest\Pinterestfeeds.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Properties\AssemblyInfo.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Reports\GroupReports.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataServices\Reports\InstagramReports.cs

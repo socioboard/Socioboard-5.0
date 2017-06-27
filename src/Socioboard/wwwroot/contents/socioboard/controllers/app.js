@@ -194,12 +194,57 @@ initialization can be disabled and Layout.init() should be called on page load c
 /* Setup Layout Part - Header */
 SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http, domain, apiDomain, groupmember) {
     $scope.$on('$includeContentLoaded', function () {
-        console.log($rootScope.user);
+      
         localStorage.setItem("user", JSON.stringify($rootScope.user));
+        $scope.AccountType = $rootScope.user.AccountType;
+        $scope.message = function (abcd) {
+            $scope.abcd = "If You want to use this feature upgrade to higher bussiness plan ";
+            swal(abcd);
+        };
+        $scope.logout = function () {
 
+            //alert('hello');
+            $rootScope.groupId = '';
+            //$rootScope.user.Id = '';
+            //codes to logout from all session
+            $http.get(domain + '/Home/Logout')
+                          .then(function (response) {
+
+                              var cookies = document.cookie.split(";");
+                              for (var i = 0; i < cookies.length; i++) {
+                                  var cookie = cookies[i];
+                                  var eqPos = cookie.indexOf("=");
+                                  var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                                  if (name.indexOf("socioboardpluginemailId") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                                  if (name.indexOf("socioboardpluginToken") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                                  if (name.indexOf("socioboardToken") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                                  if (name.indexOf("socioboardemailId") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                                  if (name.indexOf("sociorevtoken") > -1) {
+                                      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+                                  }
+                              }
+
+
+                              localStorage.removeItem("user");
+                              window.location.href = '../Index/Index';
+                              window.location.reload();
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+
+            // end codes to logout from all session
+        }
 
         $scope.changeGroup = function (groupId) {
-            console.log($rootScope.groupId);
+           
             $http.get(domain + '/Home/changeSelectdGroupId?groupId=' + groupId)
                           .then(function (response) {
                               if (response.data == "changed") {
@@ -232,19 +277,23 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
 /* Setup Layout Part - Sidebar */
 SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $http, apiDomain, domain) {
     $scope.$on('$includeContentLoaded', function () {
-
+        $scope.AccountType = $rootScope.user.AccountType;
+        $scope.message = function (abcd) {
+            $scope.abcd = "If You want to use this feature upgrade to higher bussiness plan ";
+            swal(abcd);
+        };
         $scope.fbProfileFilter = function (item) {
             return item.profileType === 0 || item.profileType === 1;
         };
         $scope.logout = function () {
-            console.log("sdfasfsa");
+           
             //alert('hello');
             $rootScope.groupId = '';
             //$rootScope.user.Id = '';
             //codes to logout from all session
             $http.get(domain + '/Home/Logout')
                           .then(function (response) {
-                              debugger;
+                            
                               var cookies = document.cookie.split(";");
                               for (var i = 0; i < cookies.length; i++) {
                                   var cookie = cookies[i];
@@ -574,6 +623,98 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
             }
         })
 
+
+         // pinterest feeds
+
+        .state('pinterestboards', {
+            url: "/pinterestboards/{profileId}",
+            templateUrl: "../contents/socioboard/views/feeds/pinterestboards.html",
+            data: { pageTitle: 'Pinterest Boards', pageSubTitle: 'updated' },
+            controller: "PinterestBoardsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                             '../contents/socioboard/controllers/pinterestboardscontroller.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
+
+        .state('pinterestfeeds', {
+            url: "/pinterestfeeds/{profileId}",
+            templateUrl: "../contents/socioboard/views/feeds/pinterestfeeds.html",
+            data: { pageTitle: 'Pinterest Feeds', pageSubTitle: 'updated' },
+            controller: "PinterestFeedsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                             '../contents/socioboard/controllers/pinterestfeedscontroller.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
+         .state('pinterestboardpin', {
+             url: "/pinterestboardpin/{profileId}",
+             templateUrl: "../contents/socioboard/views/feeds/pinterestboardpin.html",
+             data: { pageTitle: 'Pinterest BoardPins', pageSubTitle: 'updated' },
+             controller: "PinterestBoardPinsController",
+
+             resolve: {
+                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                     return $ocLazyLoad.load({
+                         name: 'SocioboardApp',
+                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                         files: [
+                             '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                             '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                              '../contents/socioboard/controllers/pinterestboardpincontroller.js'
+
+                         ]
+                     });
+                 }]
+             }
+         })
+
+        .state('pinterestlikes', {
+            url: "/pinterestlikes/{profileId}",
+            templateUrl: "../contents/socioboard/views/feeds/pinterestlikes.html",
+            data: { pageTitle: 'Pinterest Likes', pageSubTitle: 'updated' },
+            controller: "PinterestLikesController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before',
+                        files: [
+                            '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                             '../contents/socioboard/controllers/pinterestlikescontroller.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
+
+
            // facebook feeds controller
 
          .state('facebookfeeds', {
@@ -625,7 +766,26 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
           }
       })
 
+       //ads offer
+            .state('ads_offer', {
+                url: "/ads_offer",
+                templateUrl: "../contents/socioboard/views/settings/ads_offer.html",
+                data: { pageTitle: 'Ads Offer', pageSubTitle: 'updated' },
+                controller: "AdsOfferController",
 
+                resolve: {
+                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                        return $ocLazyLoad.load({
+                            name: 'SocioboardApp',
+                            insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                            files: [
+                                '../contents/socioboard/js/admin/plugins.js',
+                                '../contents/socioboard/controllers/adsoffercontroller.js'
+                            ]
+                        });
+                    }]
+                }
+            })
            .state('mail_settings', {
                     url: "/mail_settings",
                     templateUrl: "../contents/socioboard/views/settings/mail_settings.html",
@@ -647,6 +807,68 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                 })
 
 
+        // billing
+        .state('billing', {
+            url: "/billing",
+            templateUrl: "../contents/socioboard/views/settings/billing.html",
+            data: { pageTitle: 'Billing', pageSubTitle: 'updated' },
+            controller: "BillingController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/billingcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //Access password
+        .state('access_passwd', {
+            url: "/access_passwd",
+            templateUrl: "../contents/socioboard/views/settings/access_passwd.html",
+            data: { pageTitle: 'Access &amp; Passward', pageSubTitle: 'updated' },
+            controller: "AccessPasswdController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/accesspasswdcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        //End Access password
+          //browser extensions
+        .state('extensions', {
+            url: "/extensions",
+            templateUrl: "../contents/socioboard/views/settings/extensions.html",
+            data: { pageTitle: 'Extensions', pageSubTitle: 'updated' },
+            controller: "ExtensionsController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/extensionscontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
 
       .state('upgradeplan', {
           url: "/upgradeplan",

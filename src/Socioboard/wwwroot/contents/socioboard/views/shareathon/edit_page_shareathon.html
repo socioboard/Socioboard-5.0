@@ -18,26 +18,27 @@
 			                    <form class="col s12">
 			                        <div class="input-field col s12">
 									    <select id="shraeathonfacebookaccount" >
-									      <option value="" disabled selected>Choose your option</option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0}"  selected value="{{profile.profileId}}" ng-if="pageshareathondata.facebookaccountid.indexOf(profile.profileId) > -1" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0}"   value="{{profile.profileId}}" ng-if="pageshareathondata.facebookaccountid.indexOf(profile.profileId) ==-1" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                            <option value="" disabled selected>{{pageshareathondata.facebookusername}}</option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                            <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:0}"  selected value="{{profile.profileId}}" ng-if="pageshareathondata.facebookaccountid.indexOf(profile.profileId) > -1" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0}"   value="{{profile.profileId}}" ng-if="pageshareathondata.facebookaccountid.indexOf(profile.profileId) ==-1" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>-->
 									    </select>
-									    <label>Selects An Account To Automate Post</label>
+									    <label>Select An Account To Automate Post</label>
 									</div>
 				                    <div class="input-field col s12">
 									    <select multiple id="shraeathonfacebookpage">
 									      <option value="{{pageshareathondata.facebookpageid}}"  selected>{{pageshareathondata.facebookpagename}}</option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
 									    </select>
-									    <label>Selects Pages Whose Post's You Want To Automate</label>
+									    <label>Select Pages Whose Post's You Want To Automate</label>
 									</div>		
                                     <div class="input-field col s12"  ng-if="pageshareathondata.facebookPageUrl!='' ||pageshareathondata.facebookPageUrl!=null">
                                         <input id="postpage_url" type="url" value="{{pageshareathondata.facebookPageUrl}}" class="validate">
-                                        <label for="postpage_url">You Can Also Enter Page Url Whose Post's You Want To Automate</label>
+                                        <label for="postpage_url"class="active" >You Can Also Enter Page Url Whose Post's You Want To Automate</label>
                                     </div>	
                                     <div class="input-field col s12" ng-if="pageshareathondata.facebookPageUrl=='' ||||pageshareathondata.facebookPageUrl==null ">
                                         <input id="postpage_url" type="url" value="" class="validate">
-                                        <label for="postpage_url">You Can Also Enter Page Url Whose Post's You Want To Automate</label>
+                                        <label for="postpage_url" class="active" >You Can Also Enter Page Url Whose Post's You Want To Automate</label>
                                     </div>							
 							        <div class="input-field col s12">
 									    <select id="shraeathontimeinterval">

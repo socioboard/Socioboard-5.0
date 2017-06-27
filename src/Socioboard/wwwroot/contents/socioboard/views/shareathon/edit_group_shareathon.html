@@ -16,13 +16,13 @@
                         <div class="collection">
                         	<div class="row">
 			                    <form class="col s12">
-			                        <div class="input-field col s12" ng-init="asdsdsdsdsd=grouphareathondata.facebookaccountid">
-									    <select id="groupshareathonfacebookaccount" ng-model="asdsdsdsdsd"  ng-change="getfacebookgroup()" >
-									     <option value="{{grouphareathondata.facebookaccountid}}" selected>{{grouphareathondata.facebookusername}}</option>
+			                        <div class="input-field col s12">
+									    <select id="groupshareathonfacebookaccount">
+									     <option value="" disabled selected>{{grouphareathondata.facebookusername}}</option>
                                             <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:0}" selected value="{{profile.profileId}}" ng-if="grouphareathondata.facebookaccountid.indexOf(profile.profileId) > -1" my-repeat-timeout-directive>  {{profile.profileName}} </option>-->
-                                          <option ng-repeat="profile in lstProfiles | filter:{profileType:0}" value="{{profile.profileId}}" ng-if="grouphareathondata.facebookaccountid.indexOf(profile.profileId) ==-1" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                         </select>
-									    <label>Selects An Account To Automate Post</label>
+									    <label>Select An Account To Automate Post</label>
 									</div>
                                     <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup=='123'">
                                         <span style="color: green;">Please wait we are fetching groups...</span>
@@ -32,7 +32,7 @@
 									         <option value="{{grouphareathondata.facebooknameid}}"  selected>{{grouphareathondata.facebookgroupname}}</option>
                                             <option value="{{group.name}}<:>{{group.profileGroupId}}" ng-repeat="group in lstfacebookgroup" my-repeat-timeout-directive my-repeat-dropdown-directive>{{group.name}}</option>
 									    </select>
-									    <label>Selects Groups To Automate Post</label>
+									    <label>Select Groups To Automate Post</label>
 									</div>	
                                     <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup==''">
                                         <span>No Group Found In This Account</span>
@@ -58,7 +58,7 @@
                                     </div>
 							        <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup!=''">
 							          <input id="postpage_url" type="url" value="{{grouphareathondata.facebookPageUrl}}" class="validate">
-							          <label for="postpage_url">Selects Pages Whose Post's You Want To Automate</label>
+							          <label for="postpage_url" class="active">Select Pages Whose Post's You Want To Automate</label>
 							        </div>
                                     <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup==''">
                                         <input id="postpage_url" type="url" disabled class="validate">

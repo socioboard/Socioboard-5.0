@@ -62,7 +62,7 @@ SocioboardApp.controller('CreatePageShareathonController', function ($rootScope,
             var pageId = $('#shraeathonfacebookpage').val();
             var FacebookUrl = $('#postpage_url').val();
             var timeInterval = $('#shraeathontimeinterval').val();
-            // console.log(accountId + ":" + pageId + ":" + timeInterval)
+            
             if (accountId != null && timeInterval != null) {
                 if (FacebookUrl != "") {
                     if (FacebookUrl.indexOf("facebook") == -1 || FacebookUrl.indexOf("https") == -1 || FacebookUrl.indexOf("http") == -1) {

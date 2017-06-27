@@ -34,7 +34,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             $scope.dispbtn = false;
             var profiles = new Array();
             $("#checkboxdata .subcheckbox").each(function () {
-                debugger;
+        
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {
                     var index = profiles.indexOf(attrId);
@@ -74,7 +74,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                         }
 
                     }, function (reason) {
-                        console.log(reason);
+                    
                     });
                 }
                 else {

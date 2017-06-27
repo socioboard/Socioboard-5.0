@@ -22,7 +22,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;
-                                  console.log(reason.data);
+                                 
                               });
                 // end codes to load  recent Feeds
             }
@@ -63,8 +63,8 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             $rootScope.senderScreenName = senderScreenName;
             $rootScope.senderProfileUrl = senderProfileUrl;
             $scope.Conversation(RecipientId, SenderId);
-            console.log($rootScope.profileId);
-            debugger;
+         
+           
             $scope.msgload = false;
             $('#ChatModal').openModal();
             $scope.lstGetConversation = "";
@@ -85,7 +85,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
                               $scope.msgload = true;
                           }, function (reason) {
                               $scope.error = reason.data;
-                              console.log(reason.data);
+                             
                           });
             // end codes to load  GetConversation
         }
@@ -122,7 +122,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
                                   $scope.Conversation($rootScope.RecipientId, $rootScope.SenderId);
                               }, function (reason) {
                                   $scope.error = reason.data;
-                                  console.log(reason.data);
+                                 
                               });
                 // end codes to postdirrectmessage
             }

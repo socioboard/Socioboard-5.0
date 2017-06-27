@@ -329,10 +329,10 @@
                 <h4 class="Comfortaa_font">Forgot password</h4>
                 <div class="row">
                     <div class="input-field col s12 box1">
-                        <input id="forgotPwdEmail" name="forgotPwdEmail" type="email" required class="validate box_input" >
+                        <input id="forgotPwdEmail" name="forgotPwdEmail" type="email" required class="validate box_input">
                         <label for="forgotPwdEmail">Email</label>
                     </div>
-                    
+
                 </div>
             </div>
 
@@ -348,7 +348,7 @@
             </script>
 
             <div class="modal-footer">
-                <input type="submit" onclick="" id="sub_btn" class="waves-effect waves-light btn cyan" value="Submit"/>@*Submit</input>*@
+                <input type="submit" onclick="" id="sub_btn" class="waves-effect waves-light btn cyan" value="Submit" />@*Submit</input>*@
             </div>
         </form>
     </div>
@@ -450,7 +450,7 @@ analytics" href="http://statcounter.com/shopify/"
         ]
         }
     </script>
-    
+
     <script type="text/javascript">
         $(function () {
 
@@ -618,9 +618,15 @@ analytics" href="http://statcounter.com/shopify/"
                 dataType: "html",
 
                 success: function (msg) {
+                    debugger;
                     $("#fb-gp-login").css("display", "none");
+                    //Savesessiondata();
+                    //sleep(30000);
                     if (msg == "SuperAdmin") {
                         window.top.location = '../AdminHome/Dashboard';
+                    }
+                    if (msg == "TwoStepLogin") {
+                        window.top.location = '/Index/TwoStepOtp';
                     }
                     if (msg == "UpgradePlans") {
                         alertify.alert("your account has been expired.Please upgrade it.");
@@ -680,6 +686,15 @@ analytics" href="http://statcounter.com/shopify/"
             $('#logLoading').hide();
             $('#submitButton').show();
             return false;
+        }
+
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds) {
+                    break;
+                }
+            }
         }
         /*set cookies for login user*/
         function setCookie(cemail, password, exdays) {
@@ -799,7 +814,49 @@ analytics" href="http://statcounter.com/shopify/"
             }
         }
         /*end of cookies code*/
+
+
+        function Savesessiondata() {
+            debugger;
+            var Ip = '';
+            $.getJSON('//ip-api.com/json?callback=?', function (data) {
+                Ip = data.query;
+
+                var objappVersion = navigator.appVersion; var objAgent = navigator.userAgent; var objbrowserName = navigator.appName; var objfullVersion = '' + parseFloat(navigator.appVersion); var objBrMajorVersion = parseInt(navigator.appVersion, 10); var objOffsetName, objOffsetVersion, ix;
+                if ((objOffsetVersion = objAgent.indexOf("Chrome")) != -1) {
+                    objbrowserName = "Chrome"; objfullVersion = objAgent.substring(objOffsetVersion + 7);
+                }
+                else if ((objOffsetVersion = objAgent.indexOf("MSIE")) != -1) {
+                    objbrowserName = "Microsoft Internet Explorer"; objfullVersion = objAgent.substring(objOffsetVersion + 5);
+                }
+                else if ((objOffsetVersion = objAgent.indexOf("Firefox")) != -1) {
+                    objbrowserName = "Firefox";
+                }
+                else if ((objOffsetVersion = objAgent.indexOf("Safari")) != -1) {
+                    objbrowserName = "Safari"; objfullVersion = objAgent.substring(objOffsetVersion + 7); if ((objOffsetVersion = objAgent.indexOf("Version")) != -1) objfullVersion = objAgent.substring(objOffsetVersion + 8);
+                }
+                else if ((objOffsetName = objAgent.lastIndexOf(' ') + 1) < (objOffsetVersion = objAgent.lastIndexOf('/'))) {
+                    objbrowserName = objAgent.substring(objOffsetName, objOffsetVersion); objfullVersion = objAgent.substring(objOffsetVersion + 1); if (objbrowserName.toLowerCase() == objbrowserName.toUpperCase()) { objbrowserName = navigator.appName; }
+                }
+                if ((ix = objfullVersion.indexOf(";")) != -1) objfullVersion = objfullVersion.substring(0, ix); if ((ix = objfullVersion.indexOf(" ")) != -1) objfullVersion = objfullVersion.substring(0, ix); objBrMajorVersion = parseInt('' + objfullVersion, 10); if (isNaN(objBrMajorVersion)) { objfullVersion = '' + parseFloat(navigator.appVersion); objBrMajorVersion = parseInt(navigator.appVersion, 10); }
+                $.ajax({
+                    type: "POST",
+                    url: "@ViewBag.Domain/Index/SaveSessiondata",
+                    data: { "ip": Ip, "browserName": objbrowserName, "userAgent": navigator.userAgent },
+                    dataType: "html",
+                    success: function (msg) {
+                        setCookie("sociorevtoken", msg, "90");
+                    },
+                    error: function (msg) {
+                    }
+
+                });
+            });
+
+        }
     </script>
+
+
 
     @*Facebook Login JS Start*@
     <script>
@@ -948,9 +1005,9 @@ Bizz Bar
                 $("open").slideUp()
             })
         });
-       
+
         $(document).ready(function () {
-            
+
             $("close").click(function () {
                 $('.navbar-fixed').css('padding-top', '0px');
                 $("#bizzbar").slideUp();

@@ -42,4 +42,16 @@ namespace Domain.Socioboard.Models.Mongo
         public string metadataarticlename { get; set; }
         public string metadataarticleauthorname { get; set; }
     }
+    public class UserPinData
+    {
+        public Domain.Socioboard.Models.PinterestAccount _PinterestAccount { get; set; }
+        public List<Domain.Socioboard.Models.Mongo.MongoPinterestUserPins> lstMongoPinterestUserPins { get; set; }
+        public List<Domain.Socioboard.Models.Mongo.MongoPinterestBoard> lstMongoPinterestUserBoards { get; set; }
+    }
+    public class BoardPinData
+    {
+        public Domain.Socioboard.Models.Mongo.MongoPinterestBoard _MongoPinterestBoard { get; set; }
+        public List<Domain.Socioboard.Models.Mongo.MongoPinterestUserPins> lstMongoPinterestUserPins { get; set; }
+        public List<Domain.Socioboard.Models.Mongo.MongoPinterestBoard> lstMongoPinterestUserBoards { get; set; }
+    }
 }

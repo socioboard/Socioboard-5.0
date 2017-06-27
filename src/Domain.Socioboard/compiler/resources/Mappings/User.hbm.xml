@@ -143,5 +143,17 @@
     <property name="mailstatusfor90daysreport">
       <column name="mailstatusfor90daysreport" />
     </property>
+    <property name="scheduleSuccessUpdates">
+      <column name="scheduleSuccessUpdates" />
+    </property>
+    <property name="scheduleFailureUpdates">
+      <column name="scheduleFailureUpdates" />
+    </property>
+    <property name="TwostepEnable">
+      <column name="TwostepEnable" />
+    </property>
+  <property name="Adsstatus">
+      <column name="Adsstatus" />
+    </property>
   </class>
 </hibernate-mapping>

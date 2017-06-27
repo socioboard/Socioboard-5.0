@@ -50,7 +50,7 @@ namespace Api.Socioboard.Controllers
             dynamic profile = FbUser.getFbUser(accessToken);
             try
             {
-                string x = Convert.ToString(profile);
+                 string x = Convert.ToString(profile);
                 _logger.LogError(x);
             }
             catch { }
@@ -244,6 +244,14 @@ namespace Api.Socioboard.Controllers
             // return Ok();
         }
 
+        [HttpGet("GetTopFilterFeeds")]
+        public IActionResult GetTopFilterFeeds(string profileId, long userId, int skip, int count, string typeFilter)
+        {
+                return Ok(Repositories.FacebookRepository.GetTopFacebookFilterFeed(profileId, userId, _redisCache, _appSettings, skip, count, typeFilter));
+        }
+
+
+
         [HttpGet("GetFacebookProfiles")]
         public IActionResult GetFacebookProfiles(long groupId)
         {
@@ -313,9 +321,8 @@ namespace Api.Socioboard.Controllers
             int invalidaccessToken = 0;
             foreach (var item in accesstoken)
             {
-                dynamic profile = Fbpages.getFbPageData(item);
-                string subscribed_apps = Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));
-                // string subscribed_apps= Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));
+                dynamic profile = Fbpages.getFbPageData(item); 
+               // string subscribed_apps = Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));                
                 try
                 {
                     string x = Convert.ToString(profile);
@@ -330,7 +337,7 @@ namespace Api.Socioboard.Controllers
                else
                 {
                     DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-                    Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+                    Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);                    
                     if (fbacc != null && fbacc.IsActive == true)
                     {
                         addedPageCount++;
@@ -343,7 +350,7 @@ namespace Api.Socioboard.Controllers
                         {
                             return Ok("Wrong Group Id");
                         }
-                        // Adding Facebook Page
+                        // Adding Facebook Page                     
                         int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookPage(profile, dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, item, _redisCache, _appSettings, _logger);
 
                     } 

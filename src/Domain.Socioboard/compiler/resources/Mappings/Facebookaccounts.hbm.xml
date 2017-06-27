@@ -53,6 +53,9 @@
     <property name="FbProfileType">
       <column name="FbProfileType"/>
     </property>
+    <property name="FbPageSubscription">
+      <column name="FbPageSubscription"/>
+    </property>
     <property name="ProfileUrl">
       <column name="ProfileUrl"/>
     </property>

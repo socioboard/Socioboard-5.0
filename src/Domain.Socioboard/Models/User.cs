@@ -59,9 +59,13 @@ namespace Domain.Socioboard.Models
         public DateTime mailstatusfor30daysreport { get; set; }
         public DateTime mailstatusfor60daysreport { get; set; }
         public DateTime mailstatusfor90daysreport { get; set; }
+        public bool scheduleSuccessUpdates { get; set; }
+        public bool scheduleFailureUpdates { get; set; }
+        public bool TwostepEnable { get; set; }
+        public AdsStatus Adsstatus { get; set; }
     }
 
-   public class PiadUser
+    public class PiadUser
     {
         public string month { get; set; }
         public int paiduser { get; set; }

@@ -2201,6 +2201,17 @@ tr.group:hover {
   top: 0;
   letter-spacing: 0;
 }
+.product .card .btn-pin {
+  width: 65px;
+  height: 65px;
+  font-weight: 600;
+  font-size: 1.0rem;
+  line-height: 65px;
+  margin: 10px;
+  position: absolute;
+  top: 0;
+  letter-spacing: 0;
+}
 
 .product ul.card-action-buttons {
   margin: -26px 10px 0 0;
