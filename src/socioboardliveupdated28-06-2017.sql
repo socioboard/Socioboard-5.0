@@ -15,6 +15,22 @@ CREATE DATABASE IF NOT EXISTS `socioboardlive` /*!40100 DEFAULT CHARACTER SET la
 USE `socioboardlive`;
 
 
+-- Dumping structure for table socioboardlive.adsoffers
+CREATE TABLE IF NOT EXISTS `adsoffers` (
+  `Id` int(20) NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) DEFAULT NULL,
+  `adcreateddate` datetime DEFAULT NULL,
+  `EmailId` varchar(500) DEFAULT NULL,
+  `Verified` bit(1) DEFAULT NULL,
+  `WebsiteUrl` varchar(5000) DEFAULT NULL,
+  `adsaccountstatus` bit(1) DEFAULT b'0',
+  `Verifieddate` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table socioboardlive.affiliates
 CREATE TABLE IF NOT EXISTS `affiliates` (
   `Id` bigint(20) NOT NULL,
@@ -79,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `discovery` (
 -- Dumping structure for table socioboardlive.draft
 CREATE TABLE IF NOT EXISTS `draft` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `shareMessage` varchar(10000) DEFAULT '0',
+  `shareMessage` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
   `scheduleTime` datetime DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
   `userId` bigint(20) NOT NULL,
@@ -123,6 +139,7 @@ CREATE TABLE IF NOT EXISTS `facebookaccounts` (
   `FbProfileType` tinyint(4) NOT NULL,
   `ProfileUrl` varchar(1000) DEFAULT NULL,
   `IsActive` tinyint(4) NOT NULL,
+  `FbPageSubscription` tinyint(4) NOT NULL,
   `UserId` bigint(20) NOT NULL,
   `LastUpdate` datetime DEFAULT NULL,
   `IsAccessTokenActive` bit(1) NOT NULL,
@@ -142,6 +159,22 @@ CREATE TABLE IF NOT EXISTS `facebookaccounts` (
   `lastpagereportgenerated` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `FbUserId` (`FbUserId`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table socioboardlive.feedback
+CREATE TABLE IF NOT EXISTS `feedback` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) DEFAULT NULL,
+  `createddate` datetime DEFAULT NULL,
+  `EmailId` varchar(250) DEFAULT NULL,
+  `UserActivationStatus` tinyint(4) DEFAULT NULL,
+  `AccountType` tinyint(4) DEFAULT NULL,
+  `RegisterAccountType` varchar(500) DEFAULT NULL,
+  `FeedBackMsg` varchar(5000) DEFAULT NULL,
+  PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
@@ -387,6 +420,38 @@ CREATE TABLE IF NOT EXISTS `paymenttransaction` (
   `trasactionId` varchar(50) DEFAULT NULL,
   `paymentId` varchar(50) DEFAULT NULL,
   `PaymentType` tinyint(4) DEFAULT '0',
+  `subscrdate` datetime DEFAULT NULL,
+  `payeremail` varchar(50) DEFAULT NULL,
+  `Payername` varchar(50) DEFAULT NULL,
+  `paymentstatus` varchar(50) DEFAULT NULL,
+  `itemname` varchar(50) DEFAULT NULL,
+  `media` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table socioboardlive.pinterestaccount
+CREATE TABLE IF NOT EXISTS `pinterestaccount` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userid` bigint(20) NOT NULL,
+  `isactive` tinyint(4) NOT NULL,
+  `pinscount` bigint(20) NOT NULL,
+  `followingcount` bigint(20) NOT NULL,
+  `followerscount` bigint(20) NOT NULL,
+  `boardscount` bigint(20) NOT NULL,
+  `likescount` bigint(20) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `profileid` varchar(50) NOT NULL,
+  `firstname` varchar(50) NOT NULL,
+  `lastname` varchar(50) NOT NULL,
+  `accounttype` varchar(50) NOT NULL,
+  `url` varchar(500) NOT NULL,
+  `accesstoken` varchar(500) NOT NULL,
+  `profileimgaeurl` varchar(500) NOT NULL,
+  `bio` text NOT NULL,
+  `lastupdate` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -424,6 +489,22 @@ CREATE TABLE IF NOT EXISTS `scheduledmessage` (
   PRIMARY KEY (`id`),
   KEY `scheduleTime` (`scheduleTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+
+-- Data exporting was unselected.
+
+
+-- Dumping structure for table socioboardlive.sessionhistory
+CREATE TABLE IF NOT EXISTS `sessionhistory` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `userId` bigint(20) NOT NULL,
+  `systemId` varchar(50) NOT NULL,
+  `ipAddress` varchar(50) NOT NULL,
+  `browseros` varchar(50) NOT NULL,
+  `lastAccessedTime` datetime NOT NULL,
+  `firstloginTime` datetime NOT NULL,
+  `sessionStatus` tinyint(4) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Data exporting was unselected.
 
@@ -521,6 +602,12 @@ CREATE TABLE IF NOT EXISTS `user` (
   `mailstatusfor60daysreport` datetime(6) DEFAULT NULL,
   `mailstatusfor90daysreport` datetime(6) DEFAULT NULL,
   `Dailymailstatusreport` datetime(6) DEFAULT NULL,
+  `scheduleFailureUpdates` bit(1) DEFAULT b'0',
+  `scheduleSuccessUpdates` bit(1) DEFAULT b'0',
+  `TwostepEnable` tinyint(4) DEFAULT '0',
+  `SocialLoginEnableFb` tinyint(4) DEFAULT '1',
+  `SocialLoginEnableGo` tinyint(4) DEFAULT '1',
+  `Adsstatus` bit(1) DEFAULT b'0',
   PRIMARY KEY (`Id`),
   UNIQUE KEY `EmailId` (`EmailId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -548,6 +635,9 @@ CREATE TABLE IF NOT EXISTS `youtubechannel` (
   `SubscribersCount` double DEFAULT NULL,
   `ViewsCount` double DEFAULT NULL,
   `Channel_EmailId` varchar(450) DEFAULT NULL,
+  `Days90Update` bit(1) DEFAULT NULL,
+  `LastReport_Update` datetime DEFAULT NULL,
+  `LastVideoListDetails_Update` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

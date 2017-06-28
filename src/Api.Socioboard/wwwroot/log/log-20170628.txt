@@ -1,0 +1,68 @@
+﻿2017-06-28 16:43:22.074 +05:30 [Debug] Hosting starting
+2017-06-28 16:43:22.752 +05:30 [Debug] Connection id ""0HL5U2QO9CAN6"" started.
+2017-06-28 16:43:22.808 +05:30 [Debug] Connection id ""0HL5U2QO9CAN7"" started.
+2017-06-28 16:43:22.850 +05:30 [Debug] Hosting started
+2017-06-28 16:43:23.100 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2017-06-28 16:43:23.101 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2017-06-28 16:43:23.180 +05:30 [Information] Request finished in 145.129ms 200 
+2017-06-28 16:43:23.234 +05:30 [Debug] Connection id ""0HL5U2QO9CAN6"" completed keep alive response.
+2017-06-28 16:43:26.200 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2017-06-28 16:43:26.247 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"e3659b87-b7f2-4e38-b094-33fdd77d67c5"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2017-06-28 16:43:26.359 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2017-06-28 16:43:26.448 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-06-28 16:43:26.450 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-06-28 16:43:26.507 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-06-28 16:43:26.516 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-06-28 16:43:26.519 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-06-28 16:43:27.165 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 796.4785ms
+2017-06-28 16:43:27.253 +05:30 [Information] Request finished in 4233.9874ms 200 application/json; charset=utf-8
+2017-06-28 16:43:27.255 +05:30 [Debug] Connection id ""0HL5U2QO9CAN7"" completed keep alive response.
+2017-06-28 16:43:28.287 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/checksociorevtoken application/x-www-form-urlencoded 24
+2017-06-28 16:43:28.289 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/checksociorevtoken"'.
+2017-06-28 16:43:28.291 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)"
+2017-06-28 16:43:31.975 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" with arguments (["8d4be12d2f3766d"]) - ModelState is Valid
+2017-06-28 16:43:36.886 +05:30 [Fatal] could not execute query
+[ select sessionhis0_.id as id26_, sessionhis0_.userId as userId26_, sessionhis0_.ipAddress as ipAddress26_, sessionhis0_.systemId as systemId26_, sessionhis0_.browseros as browseros26_, sessionhis0_.lastAccessedTime as lastAcce6_26_, sessionhis0_.firstloginTime as firstlog7_26_, sessionhis0_.sessionStatus as sessionS8_26_ from SessionHistory sessionhis0_ where sessionhis0_.systemId=?p0 and sessionhis0_.sessionStatus=?p1 ]
+  Name:p1 - Value:8d4be12d2f3766d  Name:p2 - Value:1
+[SQL: select sessionhis0_.id as id26_, sessionhis0_.userId as userId26_, sessionhis0_.ipAddress as ipAddress26_, sessionhis0_.systemId as systemId26_, sessionhis0_.browseros as browseros26_, sessionhis0_.lastAccessedTime as lastAcce6_26_, sessionhis0_.firstloginTime as firstlog7_26_, sessionhis0_.sessionStatus as sessionS8_26_ from SessionHistory sessionhis0_ where sessionhis0_.systemId=?p0 and sessionhis0_.sessionStatus=?p1]
+2017-06-28 16:43:36.919 +05:30 [Error]    at NHibernate.Loader.Loader.DoList(ISessionImplementor session, QueryParameters queryParameters, IResultTransformer forcedResultTransformer)
+   at NHibernate.Loader.Loader.DoList(ISessionImplementor session, QueryParameters queryParameters)
+   at NHibernate.Loader.Loader.ListIgnoreQueryCache(ISessionImplementor session, QueryParameters queryParameters)
+   at NHibernate.Loader.Loader.List(ISessionImplementor session, QueryParameters queryParameters, ISet`1 querySpaces, IType[] resultTypes)
+   at NHibernate.Loader.Hql.QueryLoader.List(ISessionImplementor session, QueryParameters queryParameters)
+   at NHibernate.Hql.Ast.ANTLR.QueryTranslatorImpl.List(ISessionImplementor session, QueryParameters queryParameters)
+   at NHibernate.Engine.Query.HQLQueryPlan.PerformList(QueryParameters queryParameters, ISessionImplementor session, IList results)
+   at NHibernate.Impl.SessionImpl.List(IQueryExpression queryExpression, QueryParameters queryParameters, IList results)
+   at NHibernate.Impl.AbstractSessionImpl.List(IQueryExpression queryExpression, QueryParameters parameters)
+   at NHibernate.Impl.AbstractQueryImpl2.List()
+   at NHibernate.Linq.DefaultQueryProvider.ExecuteQuery(NhLinqExpression nhLinqExpression, IQuery query, NhLinqExpression nhQuery)
+   at NHibernate.Linq.DefaultQueryProvider.Execute(Expression expression)
+   at NHibernate.Linq.DefaultQueryProvider.Execute[TResult](Expression expression)
+   at Remotion.Linq.QueryableBase`1.GetEnumerator()
+   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Api.Socioboard.Model.DatabaseRepository.Find[T](Expression`1 query) in E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Model\DatabaseRepository.cs:line 31
+2017-06-28 16:43:36.921 +05:30 [Error] No database selected
+2017-06-28 16:43:41.089 +05:30 [Error] An unhandled exception has occurred while executing the request
+System.ArgumentNullException: Value cannot be null.
+Parameter name: source
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Api.Socioboard.Controllers.UserController.checksociorevtoken(String systemId) in E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\UserController.cs:line 2134
+   at lambda_method(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Internal.ObjectMethodExecutor.Execute(Object target, Object[] parameters)
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeActionFilterAsync>d__28.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker.<InvokeAsync>d__18.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Builder.RouterMiddleware.<Invoke>d__4.MoveNext()
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.GetResult()
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.<Invoke>d__6.MoveNext()
+2017-06-28 16:43:43.105 +05:30 [Information] Request finished in 14828.7134ms 500 text/html; charset=utf-8
+2017-06-28 16:43:43.106 +05:30 [Debug] Connection id ""0HL5U2QO9CAN6"" completed keep alive response.
