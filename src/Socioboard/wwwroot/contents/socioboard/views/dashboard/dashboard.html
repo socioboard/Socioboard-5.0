@@ -25,11 +25,8 @@
             })
         });
     })(jQuery);
-
-
-
-
 </script>
+
 <style>
     ul.shinh li label {
         font-size: 15px;
@@ -69,8 +66,11 @@
                         <p class="card-stats-title truncate"><i class="fa fa-comments fa-fw d_card_icon"></i>Incoming Messages</p>
                         <h4 class="card-stats-number">{{TotaltIncommingMessage}}</h4>
                     </div>
-                    <div class="card-action center">
+                    <div class="card-action center" ng-if="user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                         <a href="#/inboxmessage" class="white-text">View Details</a>
+                    </div>
+                    <div class="card-action center" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
+                        <a ng-model="abcd" ng-click="message(abcd)" disable class="white-text">View Details</a>
                     </div>
                 </div>
 
@@ -81,8 +81,11 @@
                         <p class="card-stats-title"><i class="fa fa-mail-reply-all fa-fw d_card_icon"></i>Sent Messages</p>
                         <h4 class="card-stats-number">{{TotalSetMessages}}</h4>
                     </div>
-                    <div class="card-action center">
+                    <div class="card-action center" ng-if="user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                         <a href="#/sentmessages" class="white-text">View Details</a>
+                    </div>
+                    <div class="card-action center" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
+                        <a ng-model="abcd" ng-click="message(abcd)" disable class="white-text">View Details</a>
                     </div>
                 </div>
 
@@ -94,8 +97,11 @@
                         <p class="card-stats-title"><i class="fa fa-twitter fa-fw d_card_icon"></i> Twitter Followers</p>
                         <h4 class="card-stats-number">{{TwitterFollowerCount}}</h4>
                     </div>
-                    <div class="card-action center">
+                    <div class="card-action center" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7 ">
                         <a href="#/twitterreports" class="white-text">View Details</a>
+                    </div>
+                    <div class="card-action center" ng-if="user.AccountType==0 ||user.AccountType==1">
+                        <a ng-model="abcd" ng-click="message(abcd)" disable class="white-text">View Details</a>
                     </div>
                 </div>
 
@@ -106,8 +112,11 @@
                         <p class="card-stats-title"><i class="fa fa-facebook fa-fw d_card_icon"></i>Facebook Fans</p>
                         <h4 class="card-stats-number">{{FacebookfanPageCount}}</h4>
                     </div>
-                    <div class="card-action center">
+                    <div class="card-action center" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7 ">
                         <a href="#/facebookreport.html" class="white-text">View Details</a>
+                    </div>
+                    <div class="card-action center" ng-if="user.AccountType==0 ||user.AccountType==1">
+                        <a ng-model="abcd" ng-click="message(abcd)" disable class="white-text">View Details</a>
                     </div>
                 </div>
 
@@ -180,285 +189,283 @@
                                 </div>
 
                             </div>
-                            <!--facebook profile binding start-->
-                            <div class="col s12 m6 l4" ng-repeat="fbProfile in  lstFbProfiles ">
-                                <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType == 0">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}">
-                                        <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="https://graph.facebook.com/{{fbProfile.fbUserId}}/picture?type=small" alt="{{fbProfile.fbUserName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/fb_icon.png" class="card_profile_socio_icon">
+                            
+                            <div ng-repeat="data in lstAccountProfiles">
+                                <!--facebook profile binding start-->
+                                <div class="col s12 m6 l4">
+                                    <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] == 0 && data['fbaccount'] !=null ">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{data['fbaccount']['coverPic']}}">
+                                            <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{data['fbaccount']['coverPic']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="https://graph.facebook.com/{{data['fbaccount']['fbUserId']}}/picture?type=small" alt="{{data['fbaccount']['fbUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/fb_icon.png" class="card_profile_socio_icon">
 
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{fbProfile.fbUserName}}">{{fbProfile.fbUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Friends:</span> {{fbProfile.friends}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}}</span> </p>
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate" title="{{fbProfile.fbUserName}}">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p>{{fbProfile.about}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Designation"></i><span class="cyan-text text-darken-2">Designation:</span> <span title="{{fbProfile.workPosition}}">{{fbProfile.workPosition}}</span> </p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}} </span> </p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">DOB:</span> {{fbProfile.birthday}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Gender"></i><span class="cyan-text text-darken-2">Gender:</span> {{fbProfile.gender}}</p>
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['fbaccount']['fbUserName']}}">{{data['fbaccount']['fbUserName']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Friends:</span> {{data['fbaccount']['friends']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{data['fbaccount']['emailId']}}">{{data['fbaccount']['emailId']}}</span> </p>
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate" title="{{data['fbaccount']['fbUserName']}}">{{data['fbaccount']['fbUserName']}}<i class="mdi-navigation-close right"></i></span>
+                                            <p>{{fbProfile.about}}</p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Designation"></i><span class="cyan-text text-darken-2">Designation:</span> <span title="{{data['fbaccount']['workPosition']}}">{{data['fbaccount']['workPosition']}}</span> </p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{data['fbaccount']['emailId']}}">{{data['fbaccount']['emailId']}} </span> </p>
+                                            <p><i class="mdi-social-cake cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">DOB:</span> {{data['fbaccount']['birthday']}}</p>
+                                            <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Gender"></i><span class="cyan-text text-darken-2">Gender:</span> {{data['fbaccount']['gender']}}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--facebook profiles binding end-->
-                            <!--facebook pages binding start-->
-                            <div class="col s12 m6 l4" ng-repeat="fbProfile in  lstFbProfiles ">
-                                <div id="profile-card" class="card" ng-if="fbProfile.fbProfileType != 0">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}">
-                                        <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="https://graph.facebook.com/{{fbProfile.fbUserId}}/picture?type=small" alt="{{fbProfile.fbUserName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/Fb_page-icon.png" class="card_profile_socio_icon">
+                                <!--facebook profiles binding end-->
+                                <!--facebook pages binding start-->
+                                <div class="col s12 m6 l4">
+                                    <!--<h1>fbUserName:  {{ data['fbaccount']['fbUserName']}}</h1>-->
+                                    <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] != 0 && data['fbaccount'] !=null">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}">
+                                            <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="https://graph.facebook.com/{{data['fbaccount']['fbUserId']}}/picture?type=small" alt="{{data['fbaccount']['fbUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/Fb_page-icon.png" class="card_profile_socio_icon">
 
-                                        <!--<a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>-->
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{fbProfile.fbUserName}}">{{fbProfile.fbUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Fans:</span> {{fbProfile.friends}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}}</span> </p>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['fbaccount']['fbUserName']}}">{{data['fbaccount']['fbUserName']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Fans:</span> {{data['fbaccount']['friends']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{data['fbaccount']['emailId']}}">{{data['fbaccount']['emailId']}}</span> </p>
+                                        </div>
                                     </div>
-                                    <!--<div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{fbProfile.fbUserName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p>{{fbProfile.about}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Designation"></i><span class="cyan-text text-darken-2">Designation:</span> <span title="{{fbProfile.workPosition}}">{{fbProfile.workPosition}}</span> </p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{fbProfile.emailId}}">{{fbProfile.emailId}} </span> </p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">DOB:</span> {{fbProfile.birthday}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Gender"></i><span class="cyan-text text-darken-2">Gender:</span> {{fbProfile.gender}}</p>
-                                    </div>-->
-                                </div>
-                            </div>
 
 
+                                </div>
+                                <!--facebook pages binging end-->
+                                <!--Start test-->
+                                <!--twitter profiles bind start-->
+                                <div class="col s12 m6 l4">
+                                    <div id="profile-card" class="card" ng-if="data['twtaccount'] != null">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img class="activator" src="{{data['twtaccount']['profileBackgroundImageUrl']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="{{data['twtaccount']['profileImageUrl']}}" alt="{{data['twtaccount']['twitterScreenName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/twticon.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['twtaccount']['twitterScreenName']}}">{{data['twtaccount']['twitterScreenName']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator"></i><span class="cyan-text text-darken-2">Followers:</span> {{data['twtaccount']['followersCount']}}</p>
+                                            <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2 activator"></i><span class="cyan-text text-darken-2">Following:</span> {{data['twtaccount']['followingCount']}}</p>
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate">{{data['twtaccount']['twitterScreenName']}}<i class="mdi-navigation-close right"></i></span>
+                                            <p>{{data['twtaccount']['description']}}</p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Your Name"></i><span class="cyan-text text-darken-2">Name:</span> <span title="{{data['twtaccount']['twitterName']}}">{{data['twtaccount']['twitterName']}}</span></p>
+                                            <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Descriptions"></i><span class="cyan-text text-darken-2">Descriptions:</span> <span title="{{data['twtaccount']['description']}}">{{data['twtaccount']['description']}}</span></p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Following"></i><span class="cyan-text text-darken-2">Following:</span> {{data['twtaccount']['followingCount']}}</p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followers"></i><span class="cyan-text text-darken-2">followers:</span> {{data['twtaccount']['followersCount']}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--twitter profiles bind end-->
+                                <!--instagram profiles bind start-->
+                                <div class="col s12 m6 l4">
+                                    <div id="profile-card" class="card" ng-if="data['instaaccount'] != null">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img class="activator" src="{{data['instaaccount']['profileUrl']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="{{data['instaaccount']['profileUrl']}}" alt="{{data['instaaccount']['insUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/instagram_licon.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['instaaccount']['insUserName']}}">{{data['instaaccount']['insUserName']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{data['instaaccount']['followers']}}</p>
+                                            <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> <span title="{{data['instaaccount']['followedBy']}}">{{data['instaaccount']['followedBy']}} </span></p>
 
-                            <!--facebook pages binging end-->
-                            <!--twitter profiles bind start-->
-                            <div class="col s12 m6 l4" ng-repeat="twtProfile in lstTwtProfiles">
-                                <div id="profile-card" class="card">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{twtProfile.profileBackgroundImageUrl}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="{{twtProfile.profileImageUrl}}" alt="{{twtProfile.twitterScreenName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/twticon.png" class="card_profile_socio_icon">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{twtProfile.twitterScreenName}}">{{twtProfile.twitterScreenName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator"></i><span class="cyan-text text-darken-2">Followers:</span> {{twtProfile.followersCount}}</p>
-                                        <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2 activator"></i><span class="cyan-text text-darken-2">Following:</span> {{twtProfile.followingCount}}</p>
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{twtProfile.twitterScreenName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p>{{twtProfile.description}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Your Name"></i><span class="cyan-text text-darken-2">Name:</span> <span title="{{twtProfile.twitterName}}">{{twtProfile.twitterName}}</span></p>
-                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Descriptions"></i><span class="cyan-text text-darken-2">Descriptions:</span> <span title="{{twtProfile.description}}">{{twtProfile.description}}</span></p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Following"></i><span class="cyan-text text-darken-2">Following:</span> {{twtProfile.followingCount}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followers"></i><span class="cyan-text text-darken-2">followers:</span> {{twtProfile.followersCount}}</p>
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate">{{data['instaaccount']['insUserName']}}<i class="mdi-navigation-close right"></i></span>
+                                            <p>{{data['instaaccount']['bio']}}</p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="User Name"></i><span class="cyan-text text-darken-2">User Name:</span> <span title="{{data['instaaccount']['insUserName']}}">{{data['instaaccount']['insUserName']}}</span></p>
+                                            <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> <span class="cyan-text text-darken-2">Followers:</span>{{data['instaaccount']['followers']}}</p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i><span class="cyan-text text-darken-2">Following:</span> {{data['instaaccount']['followedBy']}}</p>
+                                            <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Posts"></i><span class="cyan-text text-darken-2">Total Posts:</span> {{data['instaaccount']['totalImages']}}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--twitter profiles bind end-->
-                            <!--gplus profiles binding start-->
-                            <div class="col s12 m6 l4" ng-repeat="gplusProfile in lstGplusProfiles">
-                                <div id="profile-card" class="card">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{gplusProfile.coverPic}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="{{gplusProfile.gpProfileImage}}" alt="{{gplusProfile.gpUserName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/gplus-icon.png" class="card_profile_socio_icon">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{gplusProfile.gpUserName}}">{{gplusProfile.gpUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{gplusProfile.haveYouInCircles}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{gplusProfile.emailId}}">{{gplusProfile.emailId}} </span></p>
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{gplusProfile.gpUserName}}<i class="mdi-navigation-close right"></i></span>
-                                        <!--<p>{{gplusProfile.description}}</p>-->
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> {{gplusProfile.inYourCircles}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span>{{gplusProfile.haveYouInCircles}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> <span class="cyan-text text-darken-2">Email Id:</span><span title="{{gplusProfile.emailId}}">{{gplusProfile.emailId}}</span></p>
-                                        <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>-->
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Location"></i> <span class="cyan-text text-darken-2">Location:</span> <span title="{{gplusProfile.location}}">{{gplusProfile.location}}</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--gplus profiles binding end-->
-                            <!--gA profiles binding start-->
-                            <div class="col s12 m6 l4" ng-repeat="gAProfile in lstAProfiles">
-                                <div id="profile-card" class="card cardGa">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="/contents/socioboard/images/google-analytics.jpg" alt="{{gAProfile.gaProfileName}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="/contents/socioboard/images/G-Ana-icon.png" alt="{{gAProfile.gaProfileName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/g_ana_icon.png" class="card_profile_socio_icon">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{gAProfile.gaProfileName}}">{{gAProfile.gaProfileName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> <span class="cyan-text text-darken-2">Visits:</span>{{gAProfile.visits}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{gAProfile.views}}</p>
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate" title="{{gAProfile.gaProfileName}}">{{gAProfile.gaProfileName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i><span class="cyan-text text-darken-2">Visits:</span> {{gAProfile.visits}}</p>
-                                        <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{gAProfile.views}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Website URL"></i><span class="cyan-text text-darken-2">Website URL:</span> <span title="{{gAProfile.websiteUrl}}">{{gAProfile.websiteUrl}}</span></p>
-                                        <p><i class="mdi-social-cake cyan-text text-darken-2" title="Have You In Circles"></i><span class="cyan-text text-darken-2">followers:</span> {{gAProfile.haveYouInCircles}}</p>
-                                        <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Email Id"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{gplgAProfileusProfile.emailId}}">{{gplgAProfileusProfile.emailId}}</span></p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--gA profiles binding end-->
-                            <!--instagram profiles bind start-->
-                            <div class="col s12 m6 l4" ng-repeat="insProfile in lstinsProfiles">
-                                <div id="profile-card" class="card">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{insProfile.profileUrl}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="{{insProfile.profileUrl}}" alt="{{insProfile.insUserName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/instagram_licon.png" class="card_profile_socio_icon">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{insProfile.insUserName}}">{{insProfile.insUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{insProfile.followers}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> {{insProfile.followedBy}}</p>
-                                        <!--<p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Images"></i> {{insProfile.totalImages}}</p>-->
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{insProfile.insUserName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p>{{insProfile.bio}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="User Name"></i><span class="cyan-text text-darken-2">User Name:</span> <span title="{{insProfile.insUserName}}">{{insProfile.insUserName}}</span></p>
-                                        <p><i class="icon-user-follow cyan-text text-darken-2" title="Followers"></i> <span class="cyan-text text-darken-2">Followers:</span>{{insProfile.followers}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Following"></i><span class="cyan-text text-darken-2">Following:</span> {{insProfile.followedBy}}</p>
-                                        <p class="truncate"><i class="icon-docs cyan-text text-darken-2" title="Total Posts"></i><span class="cyan-text text-darken-2">Total Posts:</span> {{insProfile.totalImages}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--instagram profiles bind end-->
-                            <!--Youtube Channels binding start-->
-                            <div class="col s12 m6 l4" ng-repeat="yTChannel in lstYChannel">
-                                <div id="profile-card" class="card">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="/contents/socioboard/images/YoutubeBG.png" alt="{{yTChannel.ytubeChannelName}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="{{yTChannel.channelpicUrl}}" alt="{{yTChannel.ytubeChannelName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/yt.png" class="card_profile_socio_icon">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="{{yTChannel.ytubeChannelName}}">{{yTChannel.ytubeChannelName}}</span>
-                                        <p><i class="icon-camcorder cyan-text text-darken-2" title="Videos"></i> <span class="cyan-text text-darken-2"> Videos:</span>{{yTChannel.videosCount}}</p>
-                                        <p class="truncate"><i class="icon-eye cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2"> Views:</span> {{yTChannel.viewsCount}}</p>
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate" title="Channel Name">{{yTChannel.ytubeChannelName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p><i class="icon-camcorder cyan-text text-darken-2" title="Total No of Videos"></i><span class="cyan-text text-darken-2"> Videos:</span> {{yTChannel.videosCount}}</p>
-                                        <p><i class="icon-speech cyan-text text-darken-2" title="Total No of Comments"></i><span class="cyan-text text-darken-2"> Comments:</span> {{yTChannel.commentsCount}}</p>
-                                        <p><i class="icon-feed cyan-text text-darken-2" title="Total No of Subscribers"></i><span class="cyan-text text-darken-2"> Subscribers:</span> {{yTChannel.subscribersCount}}</p>
-                                        <p><i class="icon-eye cyan-text text-darken-2" title="Total No of Views"></i><span class="cyan-text text-darken-2"> Views:</span> {{yTChannel.viewsCount}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--Youtube Channels binding end-->
-                            <!--LinkedIn Comapany page profiles bind start-->
-                            <div class="col s12 m6 l4" ng-repeat="linProfile in lstlincmpnyProfiles">
-                                <div id="profile-card" class="card">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{linProfile.logoUrl}}" alt="{{insProfile.linkedinPageName}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="{{linProfile.logoUrl}}" alt="{{linProfile.linkedinPageName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinPageName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{linProfile.numFollowers}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{linProfile.locations}}">{{linProfile.locations}}</span></p>
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinPageName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p>{{linProfile.specialties}}</p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Page Name"></i><span class="cyan-text text-darken-2">Page Name:</span> {{linProfile.linkedinPageName}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Description"></i><span class="cyan-text text-darken-2">Description:</span> <span title="{{linProfile.description}}">{{linProfile.description}}</span></p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Location"></i><span class="cyan-text text-darken-2">Location:</span><span title="{{linProfile.locations}}">{{linProfile.locations}}</span></p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i><span class="cyan-text text-darken-2">Followers:</span>{{linProfile.numFollowers}}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--LinkedIn Comapany page profiles bind end-->
+                                <!--instagram profiles bind end-->
+                                <!--gplus profiles binding start-->
+                                <div class="col s12 m6 l4">
+                                    <div id="profile-card" class="card" ng-if="data['gplusaccount'] != null">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img class="activator" src="{{data['gplusaccount']['coverPic']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="{{data['gplusaccount']['gpProfileImage']}}" alt="{{data['gplusaccount']['gpUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/gplus-icon.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['gplusaccount']['gpUserName']}}">{{data['gplusaccount']['gpUserName']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{data['gplusaccount']['haveYouInCircles']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{data['gplusaccount']['emailId']}}">{{data['gplusaccount']['emailId']}} </span></p>
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{data['gplusaccount']['gpUserName']}}<i class="mdi-navigation-close right"></i></span>
 
-                            <!--LinkedIn Account profiles bind start-->
-                            <div class="col s12 m6 l4" ng-repeat="linProfile in lstlinAccountProfiles">
-                                <div id="profile-card" class="card">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{linProfile.logoUrl}}" alt="{{insProfile.linkedinUserName}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="{{linProfile.profileImageUrl}}" alt="{{linProfile.linkedinUserName}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{linProfile.linkedinUserName}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Connections:</span> {{linProfile.connections}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">EmailId:</span> <span title="{{linProfile.emailId}}">{{linProfile.emailId}}</span></p>
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinUserName}}<i class="mdi-navigation-close right"></i></span>
-                                        <!--<p>{{linProfile.specialties}}</p>-->
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2">Account Id:</span> {{linProfile.linkedinUserId}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Name"></i><span class="cyan-text text-darken-2">Name:</span> <span title="{{linProfile.linkedinUserName}}">{{linProfile.linkedinUserName}}</span></p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="EmailId"></i><span class="cyan-text text-darken-2">EmailId:</span><span title="{{linProfile.emailId}}">{{linProfile.emailId}}</span></p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Connections"></i><span class="cyan-text text-darken-2">Connections:</span>{{linProfile.connections}}</p>
+                                            <!--<p>{{gplusProfile.description}}</p>-->
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> {{data['gplusaccount']['inYourCircles']}}</p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span>{{data['gplusaccount']['haveYouInCircles']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> <span class="cyan-text text-darken-2">Email Id:</span><span title="{{data['gplusaccount']['emailId']}}">{{data['gplusaccount']['emailId']}}</span></p>
+                                            <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>-->
+                                            <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Location"></i> <span class="cyan-text text-darken-2">Location:</span> <span title="{{data['gplusaccount']['location']}}">{{data['gplusaccount']['location']}}</span></p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <!--LinkedIn Account profiles bind end-->
-                            <!--Pinterest Account profiles bind start-->
+                                <!--gplus profiles binding end-->
+                                <!--gA profiles binding start-->
+                                <div class="col s12 m6 l4">
+                                    <div id="profile-card" class="card cardGa" ng-if="data['gAaccount'] != null">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img class="activator" src="/contents/socioboard/images/google-analytics.jpg" alt="{{data['gAaccount']['gaProfileName']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="/contents/socioboard/images/G-Ana-icon.png" alt="{{data['gAaccount']['gaProfileName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/g_ana_icon.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['gAaccount']['gaProfileName']}}">{{data['gAaccount']['gaProfileName']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i> <span class="cyan-text text-darken-2">Visits:</span>{{data['gAaccount']['visits']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{data['gAaccount']['views']}}</p>
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate" title="{{data['gAaccount']['gaProfileName']}}">{{data['gAaccount']['gaProfileName']}}<i class="mdi-navigation-close right"></i></span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Visits"></i><span class="cyan-text text-darken-2">Visits:</span> {{data['gAaccount']['visits']}}</p>
+                                            <p><i class="mdi-action-perm-phone-msg cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2">Views:</span> {{data['gAaccount']['views']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Website URL"></i><span class="cyan-text text-darken-2">Website URL:</span> <span title="{{data['gAaccount']['websiteUrl']}}">{{data['gAaccount']['websiteUrl']}}</span></p>
+                                            <p><i class="mdi-social-cake cyan-text text-darken-2" title="Have You In Circles"></i><span class="cyan-text text-darken-2">followers:</span> {{data['gAaccount']['haveYouInCircles']}}</p>
+                                            <p><i class="mdi-device-airplanemode-on cyan-text text-darken-2" title="Email Id"></i><span class="cyan-text text-darken-2">Email Id:</span> <span title="{{data['gAaccount']['gaProfileName']emailId}}">{{data['gAaccount']['gaProfileName']emailId}}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--gA profiles binding end-->
+                                <!--Youtube Channels binding start-->
+                                <div class="col s12 m6 l4">
+                                    <div id="profile-card" class="card" ng-if="data['ytubeaccount'] != null">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img class="activator" src="/contents/socioboard/images/YoutubeBG.png" alt="{{data['ytubeaccount']['ytubeChannelName']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="{{data['ytubeaccount']['channelpicUrl']}}" alt="{{data['ytubeaccount']['ytubeChannelName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/yt.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['ytubeaccount']['ytubeChannelName']}}">{{data['ytubeaccount']['ytubeChannelName']}}</span>
+                                            <p><i class="icon-camcorder cyan-text text-darken-2" title="Videos"></i> <span class="cyan-text text-darken-2"> Videos:</span>{{data['ytubeaccount']['videosCount']}}</p>
+                                            <p class="truncate"><i class="icon-eye cyan-text text-darken-2" title="Views"></i><span class="cyan-text text-darken-2"> Views:</span> {{data['ytubeaccount']['viewsCount']}}</p>
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate" title="Channel Name">{{data['ytubeaccount']['ytubeChannelName']}}<i class="mdi-navigation-close right"></i></span>
+                                            <p><i class="icon-camcorder cyan-text text-darken-2" title="Total No of Videos"></i><span class="cyan-text text-darken-2"> Videos:</span> {{data['ytubeaccount']['videosCount']}}</p>
+                                            <p><i class="icon-speech cyan-text text-darken-2" title="Total No of Comments"></i><span class="cyan-text text-darken-2"> Comments:</span> {{data['ytubeaccount']['commentsCount']}}</p>
+                                            <p><i class="icon-feed cyan-text text-darken-2" title="Total No of Subscribers"></i><span class="cyan-text text-darken-2"> Subscribers:</span> {{data['ytubeaccount']['subscribersCount']}}</p>
+                                            <p><i class="icon-eye cyan-text text-darken-2" title="Total No of Views"></i><span class="cyan-text text-darken-2"> Views:</span> {{data['ytubeaccount']['viewsCount']}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Youtube Channels binding end-->
+                                <!--LinkedIn Comapany page profiles bind start-->
+                                <div class="col s12 m6 l4">
+                                    <div id="profile-card" class="card" ng-if="data['linkdINcompanyaccount'] != null">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img class="activator" src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['linkdINcompanyaccount']['linkedinPageName']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate">{{data['linkdINcompanyaccount']['linkedinPageName']}}<i class="mdi-navigation-close right"></i></span>
+                                            <p>{{data['linkdINcompanyaccount']['specialties']}}</p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Page Name"></i><span class="cyan-text text-darken-2">Page Name:</span> {{data['linkdINcompanyaccount']['linkedinPageName']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Description"></i><span class="cyan-text text-darken-2">Description:</span> <span title="{{data['linkdINcompanyaccount']['description']}}">{{data['linkdINcompanyaccount']['description']}}</span></p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Location"></i><span class="cyan-text text-darken-2">Location:</span><span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i><span class="cyan-text text-darken-2">Followers:</span>{{data['linkdINcompanyaccount']['numFollowers']}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--LinkedIn Comapany page profiles bind end-->
+                                <!--LinkedIn Account profiles bind start-->
+                                <div class="col s12 m6 l4">
+                                    <div id="profile-card" class="card" ng-if="data['linkdInaccount'] != null">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img class="activator" src="{{data['linkdInaccount']['logoUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="{{data['linkdInaccount']['profileImageUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['linkdInaccount']['linkedinUserName']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{data['linkdInaccount']['connections']}}</p>
+                                            <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}} </span></p>
 
-                            <div class="col m3 l3" ng-repeat="pinProfile in lstpinAccountProfiles">
-                                <div id="profile-card" class="card">
-                                    <div class="card-image waves-effect waves-block waves-light">
-                                        <img class="activator" src="{{pinProfile.profileimgaeurl}}" alt="{{pinProfile.firstname}} {{pinProfile.lastname}}">
-                                    </div>
-                                    <div class="card-content">
-                                        <img src="{{pinProfile.profileimgaeurl}}" alt="{{pinProfile.firstname}} {{pinProfile.lastname}}" class="circle responsive-img activator card-profile-image">
-                                        <img src="/contents/socioboard/images/pinterest.png" class="card_profile_socio_icon">
-                                        <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
-                                            <i class="icon-info"></i>
-                                        </a>
-                                        <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{pinProfile.firstname}} {{pinProfile.lastname}}</span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">pinscount:</span> {{pinProfile.pinscount}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">boardscount:</span> <span title="{{pinProfile.boardscount}}">{{pinProfile.boardscount}}</span></p>
-                                    </div>
-                                    <div class="card-reveal">
-                                        <span class="card-title grey-text text-darken-4 truncate">{{linProfile.linkedinUserName}}<i class="mdi-navigation-close right"></i></span>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2">username:</span> {{pinProfile.username}}</p>
-                                        <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="followingcount"></i><span class="cyan-text text-darken-2">likescount:</span> <span title="{{pinProfile.likescount}}">{{pinProfile.likescount}}</span></p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followerscount:</span><span title="{{pinProfile.followerscount}}">{{pinProfile.followerscount}}</span></p>
-                                        <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followingcount:</span>{{pinProfile.followingcount}}</p>
+                                            <!--<p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Connections:</span><span title="{{data['linkdInaccount']['connections']}}">{{data['linkdInaccount']['connections']}}</span> {{data['linkdInaccount']['connections']}}</p>-->
+                                            <!--<p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">EmailId:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['{{emailId}}']}}</span></p>-->
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate">{{data['linkdInaccount']['linkedinUserName']}}<i class="mdi-navigation-close right"></i></span>
+
+                                            <!--<p>{{linProfile.specialties}}</p>-->
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2">Account Id:</span> {{data['linkdInaccount']['linkedinUserId']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Name"></i><span class="cyan-text text-darken-2">Name:</span> <span title="{{data['linkdInaccount']['linkedinUserName']}}">{{data['linkdInaccount']['linkedinUserName']}}</span></p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="EmailId"></i><span class="cyan-text text-darken-2">EmailId:</span><span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}}</span></p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Connections"></i><span class="cyan-text text-darken-2">Connections:</span>{{data['linkdInaccount']['connections']}}</p>
+                                        </div>
                                     </div>
                                 </div>
+                                <!--LinkedIn Account profiles bind end-->
+                                <!--Pinterest Account profiles bind start-->
+                                <div class="col s12 m6 l4" ng-if="data['pintrestaccount'] != null">
+                                    <div id="profile-card" class="card">
+                                        <div class="card-image waves-effect waves-block waves-light">
+                                            <img class="activator" src="{{data['pintrestaccount']['profileimgaeurl']}}" alt="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}">
+                                        </div>
+                                        <div class="card-content">
+                                            <img src="{{data['pintrestaccount']['profileimgaeurl']}}" alt="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}" class="circle responsive-img activator card-profile-image">
+                                            <img src="/contents/socioboard/images/pinterest.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">pinscount:</span> {{data['pintrestaccount']['pinscount']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">boardscount:</span> <span title="{{data['pintrestaccount']['boardscount']}}">{{data['pintrestaccount']['boardscount']}}</span></p>
+                                        </div>
+                                        <div class="card-reveal">
+                                            <span class="card-title grey-text text-darken-4 truncate">{{data['pintrestaccount']['linkedinUserName']}}<i class="mdi-navigation-close right"></i></span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2">username:</span> {{data['pintrestaccount']['username']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="followingcount"></i><span class="cyan-text text-darken-2">likescount:</span> <span title="{{data['pintrestaccount']['likescount']}}">{{data['pintrestaccount']['likescount']}}</span></p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followerscount:</span><span title="{{data['pintrestaccount']['followerscount']}}">{{data['pintrestaccount']['followerscount']}}</span></p>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followingcount:</span>{{data['pintrestaccount']['followingcount']}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--Pinterest Account profiles bind end-->
                             </div>
-                            <!--Pinterest Account profiles bind end-->
+
+                            
                         </div>
                         <div class="row">
                             <div class="col l12 m12 s12">
@@ -728,7 +735,7 @@
                                 <span class="collection-header">Automate Rss Feeds</span>
                                 <p>Build Your Contents</p>
                             </li>
-                            <li class="collection-item">
+                            <li class="collection-item" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7"" >
                                 <div class="row">
                                     <div class="col l12 s12">
                                         <a ng-click="contentFeeds('Analytics')" class="chip red darken-1 white-text">Analytics</a>
@@ -761,6 +768,43 @@
                                         <a ng-click="contentFeeds('Technology')" class="chip red darken-1 white-text">Technology</a>
                                         <a ng-click="contentFeeds('Travel')" class="chip red darken-1 white-text">Travel</a>
                                         <a ng-click="contentFeeds('Web Design')" class="chip red darken-1 white-text">Web Design</a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="collection-item" ng-if="user.AccountType==0 || user.AccountType==1">
+                                <div class="row">
+                                    <div class="col l12 s12">
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Analytics</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Beauty</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Business &amp; Finance</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Content Marketing</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Digital Marketing</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">eCommerce</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Entertainment</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Entrepreneurship</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Fashion</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Food &amp; Nutrition</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Health &amp; Fitness</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Home Improvement</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Humor</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Marketing</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Mental Health</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Mobile</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Music</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Parenting</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Personal finance</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Pets</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Photography</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Programming</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Real Estate</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Self Improvement</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Small business</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Social Media Marketing</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Sports</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Technology</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Travel</a>
+                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Web Design</a>
                                     </div>
                                 </div>
                             </li>
@@ -1242,7 +1286,7 @@
                     </ul>
                 </div>
                 <div id="twitter" class="col s12">
-                    <div class="center-align">
+                    <div class="center-align" ng-if="user.AccountType!=0">
                         <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
                         <a href="../TwitterManager/AddTwitterAccount?follow=true" id="TwitterAddButton" class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
                         <p>
@@ -1251,50 +1295,115 @@
                             <label for="TwitterFollow">Follow Socioboard on twitter for update &amp; announcements</label>
                         </p>
                     </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && Twtcounts==0">
+                        <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
+                        <a href="../TwitterManager/AddTwitterAccount?follow=true" id="TwitterAddButton" class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
+                        <p>
+                            <!-- ng-change="followChange()" -->
+                            <input type="checkbox" ng-click="followChange()" checked="checked" id="TwitterFollow" />
+                            <label for="TwitterFollow">Follow Socioboard on twitter for update &amp; announcements</label>
+                        </p>
+                    </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && Twtcounts==1 ">
+                        <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
+                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable id="TwitterAddButton" class="waves-effect grey waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
+                        <p>
+                            <!-- ng-change="followChange()" -->
+                            <input type="checkbox" ng-click="followChange()" checked="checked" id="TwitterFollow" />
+                            <label for="TwitterFollow">Follow Socioboard on twitter for update &amp; announcements</label>
+                        </p>
+                    </div>
                 </div>
                 <div id="facebook" class="col s12">
-                    <div class="center-align">
+                    <div class="center-align" ng-if="user.AccountType!=0">
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
                         <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
                         <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
-                      
-                    </div>
+                     </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && Fbcounts==0">
+                        <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
+                        <a href="../FacebookManager/AddFacebookAcc" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
+                        <a href="../FacebookManager/AddFacebookAcc?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
+                   </div>
+                   <div class="center-align" ng-if="user.AccountType==0 && Fbcounts==1 ">
+                        <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
+                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
+                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
+                  </div>
                 </div>
                 <div id="google" class="col s12">
-                    <div class="center-align">
+                    <div class="center-align" ng-if="user.AccountType!=0">
                         <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
                         <a href="../GoogleManager/AddGoogleAccount" class="waves-effect waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
                     </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && Gpluscounts==0">
+                        <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
+                        <a href="../GoogleManager/AddGoogleAccount" class="waves-effect waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
+                    </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && Gpluscounts==1 ">
+                        <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
+                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
+                    </div>
                 </div>
                 <div id="linkedin" class="col s12">
-                    <div class="center-align">
+                    <div class="center-align" ng-if="user.AccountType!=0">
                         <p>Grant access to your profile to share updates and view your feed.</p>
                         <a href="../LinkedinManager/AuthenticateLinkedin" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
                         <a href="../LinkedinManager/AuthenticateLinkedin?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
                     </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && LinkedIncounts==0">
+                        <p>Grant access to your profile to share updates and view your feed.</p>
+                        <a href="../LinkedinManager/AuthenticateLinkedin" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                        <a href="../LinkedinManager/AuthenticateLinkedin?Op=page" class="waves-effect waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                    </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && LinkedIncounts==1 ">
+                        <p>Grant access to your profile to share updates and view your feed.</p>
+                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                    </div>
                 </div>
                 <div id="instagram" class="col s12">
-                    <div class="center-align">
+                    <div class="center-align" ng-if="user.AccountType!=0">
                         <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
                         <a href="../InstagramManager/AuthenticateInstagram" class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
                     </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && Instacounts==0">
+                        <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
+                        <a href="../InstagramManager/AuthenticateInstagram" class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
+                    </div>
+                    <div class="center-align" ng-if="user.AccountType==0 && Instacounts==1 ">
+                        <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
+                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
+                    </div>
                 </div>
                 <div id="pinterest" class="col s12">
-                    <div class="center-align">
+                    <div class="center-align"  ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                         <p>To allow Socioboard access to your Pinterest account, you must first give authorization from the Pinterest website</p>
                         <a href="../PinterestManager/AuthenticatePinterest" class="waves-effect waves-light btn"><i class="fa fa-pinterest fa-fw"></i>Add a pinterest Profile</a>
                     </div>
+                    <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1">
+                        <p>To allow Socioboard access to your Pinterest account, you must first give authorization from the Pinterest website</p>
+                        <a  ng-model="abcd" ng-click="message(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-pinterest fa-fw"></i>Add a pinterest Profile</a>
+                    </div>
                 </div>
                 <div id="youtube" class="col s12">
-                    <div class="center-align">
+                    <div class="center-align" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7 ">
                         <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
                         <a href="../GoogleManager/AddGoogleAccount?Op=youtubelogin" class="waves-effect waves-light btn"><i class="fa fa-youtube fa-fw"></i>Add Youtube Channel</a>
                     </div>
+                    <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 ">
+                        <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
+                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-youtube fa-fw"></i>Add Youtube Channel</a>
+                    </div>
                 </div>
                 <div id="ganalytics" class="col s12">
-                    <div class="center-align">
+                    <div class="center-align" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                         <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
                         <a href="../GoogleManager/AddGoogleAccount?Op=page" class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal Google Analytics</a>
+                    </div>
+                    <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1">
+                        <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
+                        <a ng-model="abcd" ng-click="message(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal Google Analytics</a>
                     </div>
                 </div>
             </div>
@@ -1470,6 +1579,34 @@
             <a href="#!" ng-click="AddSelectedProfiles()" class="modal-action waves-effect waves-green btn-flat">Retain Profiles</a>
         </div>
     </div>
+</div>
+
+    <!-- Active Account Modal  -->
+<div id="ActiveGroupModal" class="modal" style="max-height:initial">
+    <div class="modal-content">
+        <h4>SELECT YOUR GROUPS</h4>
+        <h6>As you have modified your account, you can only use upto {{groupsMaxCount}} groups. As a {{AccountType}} user, you have added {{groupsCount}} groups. Please choose which {{groupsMaxCount}} among them you would like to retain</h6>
+        <div class="active_acc_list">
+            <ul class="collection ">
+                <li class="collection-item avatar" ng-repeat="grp in groups">
+                    <div class="left">
+                        <span class="title">{{grp.groupName}}</span>
+                        <p>Connected</p>
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" id="{{grp.groupName}}" ng-click="toggleGroupsSelection(grp.groupName)" />
+                        <label for="{{grp.groupName}}"></label>
+                    </p>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <!--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>-->
+        <a href="#!" ng-click="AddSelectedGroups()" class="modal-action waves-effect waves-green btn-flat">Retain Groups</a>
+    </div>
+</div>
 </div>
 
 <script>

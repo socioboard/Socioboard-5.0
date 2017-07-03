@@ -99,28 +99,28 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
             var fileExt = files.split('.');
             var extOfFile = (fileExt[fileExt.length - 1]);
 
-            var updatedmessage = "";
-            var updatetitle = "";
+            //var updatedmessage = "";
+            //var updatetitle = "";
 
-            var postdata = title.split("\n");//newComment
-            for (var i = 0; i < postdata.length; i++) {
-                updatetitle = updatetitle + "<br>" + postdata[i];
-            }
-            updatetitle = updatetitle.replace(/#+/g, 'hhh');
-            updatetitle = updatetitle.replace(/&+/g, 'nnn');
-            updatetitle = updatetitle.replace("+", 'ppp');
-            updatetitle = updatetitle.replace("-+", 'jjj');
-            title = updatetitle;
+            //var postdata = title.split("\n");//newComment
+            //for (var i = 0; i < postdata.length; i++) {
+            //    updatetitle = updatetitle + "<br>" + postdata[i];
+            //}
+            //updatetitle = updatetitle.replace(/#+/g, 'hhh');
+            //updatetitle = updatetitle.replace(/&+/g, 'nnn');
+            //updatetitle = updatetitle.replace("+", 'ppp');
+            //updatetitle = updatetitle.replace("-+", 'jjj');
+            //title = updatetitle;
 
-            var postdata = descrip.split("\n");//newComment
-            for (var i = 0; i < postdata.length; i++) {
-                updatedmessage = updatedmessage + "<br>" + postdata[i];
-            }
-            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
-            updatedmessage = updatedmessage.replace("+", 'ppp');
-            updatedmessage = updatedmessage.replace("-+", 'jjj');
-            descrip = updatedmessage;
+            //var postdata = descrip.split("\n");//newComment
+            //for (var i = 0; i < postdata.length; i++) {
+            //    updatedmessage = updatedmessage + "<br>" + postdata[i];
+            //}
+            //updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            //updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            //updatedmessage = updatedmessage.replace("+", 'ppp');
+            //updatedmessage = updatedmessage.replace("-+", 'jjj');
+            //descrip = updatedmessage;
 
 
 

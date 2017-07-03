@@ -2,7 +2,9 @@
 
 SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope, $http,$modal, $timeout, $stateParams, apiDomain,grouptask) {
     //alert('helo');
-    $scope.$on('$viewContentLoaded', function() {   
+    $scope.$on('$viewContentLoaded', function () {
+        $scope.disbtncom = true;
+        $scope.buildbtn = true;
         // initialize core components
         var preloadmorefeeds = false;
         var preloadmoretweets = false;
@@ -13,11 +15,39 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         var TweetsreachLast = false; // to check the user tweets ends last or not
+
+                //select all
+        var getAllSelected = function () {
+            var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
+                return profile.Selected;
+            });
+
+            return selectedItems.length === $rootScope.lstProfiles.length;
+        }
+
+        var setAllSelected = function (value) {
+            angular.forEach($rootScope.lstProfiles, function (profile) {
+                profile.Selected = value;
+            });
+        }
+
+        $scope.allSelected = function (value) {
+            if (value !== undefined) {
+                return setAllSelected(value);
+            } else {
+                return getAllSelected();
+            }
+        }
+        //end
+
         $scope.loadmore_twt = "click here to load more";
         $scope.loadmore_feed = "click here to load more";
         $scope.lstTwtFeeds = [];
         $scope.lstUserTweets = [];
         $scope.LoadTopFeeds = function () {
+            $scope.filters = false;
+            $scope.preloadmorefeeds = false;
+            $scope.lstTwtFeeds = null;
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
@@ -27,6 +57,10 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                               if (response.data == null) {
                                   reachLast = true;
                               }
+                              $scope.dropCalled = true;
+                              setTimeout(function () { 
+                                  $scope.callDropmenu();
+                              }, 1000);
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -102,7 +136,27 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                            });
           };
 
+        $scope.filterSearch = function (mediaType) {
+            $scope.filters = true;
+            $scope.preloadmorefeeds = false;
+            $scope.lstTwtFeeds = null;
+            //codes to load  recent Feeds
+            $http.get(apiDomain + '/api/Twitter/GetTwFilterFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30' + '&mediaType=' + mediaType)
+                          .then(function (response) {
+                              // $scope.lstProfiles = response.data;
+                              //$scope.lstinsFeeds = response.data;
+                              if (response.data == null) {
+                                  reachLast = true;
+                              }
+                              $scope.lstTwtFeeds = response.data;
+                              $scope.preloadmorefeeds = true;
 
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to load  recent Feeds
+        }
 
           $scope.twitterretweet = function (screenName, profileId, messageId) {
               swal({
@@ -246,6 +300,141 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
 
               }
           }
+
+
+        //repost
+
+          $scope.openComposeMessage = function (contentFeed) {
+              debugger;
+
+              if (contentFeed != null) {
+                  var message = {
+                      "title": contentFeed.feed,
+                      "image": contentFeed.mediaUrl,
+                  };
+
+                  $rootScope.contentMessage = message;
+
+              }
+
+              $('#ComposePostModal').openModal();
+              var composeImagedropify = $('#composeImage').parents('.dropify-wrapper');
+              $(composeImagedropify).find('.dropify-render').html('<img src="' + contentFeed.mediaUrl + '">');
+              $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
+              $('select').material_select();
+          }
+        //end
+
+          $scope.callDropmenu = function () {
+              $('.dropdown-button').dropdown({
+                  inDuration: 300,
+                  outDuration: 225,
+                  constrain_width: false, // Does not change width of dropdown to that of the activator
+                  hover: true, // Activate on hover
+                  gutter: 0, // Spacing from edge
+                  belowOrigin: false, // Displays dropdown below the button
+                  alignment: 'right' // Displays dropdown with edge aligned to the left of button
+              });
+          }
+
+        // start compose
+          $scope.ComposeMessage = function () {
+              debugger;
+              $scope.disbtncom = false;
+              var profiles = new Array();
+              $("#checkboxdatarss .subcheckboxrss").each(function () {
+
+                  var attrId = $(this).attr("id");
+                  if (document.getElementById(attrId).checked == false) {
+                      var index = profiles.indexOf(attrId);
+                      if (index > -1) {
+                          profiles.splice(index, 1);
+                      }
+                  } else {
+                      profiles.push(attrId);
+                  }
+              });
+
+              // var profiles = $('#composeProfiles').val();
+              var message = $('#composeMessage').val();
+              //if (image == "N/A") {
+              //    image = image.replace("N/A", "");
+              //}
+              var updatedmessage = "";
+              message = encodeURIComponent(message);
+              //var postdata = message.split("\n");
+              //for (var i = 0; i < postdata.length; i++) {
+              //    updatedmessage = updatedmessage + "<br>" + postdata[i];
+              //}
+              //updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+              if (profiles.length > 0 && message != '') {
+                  $scope.checkfile();
+                  if ($scope.check == true) {
+                      var formData = new FormData();
+                      formData.append('files', $("#composeImage").get(0).files[0]);
+                      $http({
+                          method: 'POST',
+                          url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                          data: formData,
+                          headers: {
+                              'Content-Type': undefined
+                          },
+                          transformRequest: angular.identity,
+                      }).then(function (response) {
+                          if (response.data == "Posted") {
+                              $scope.disbtncom = true;
+                              // $('#composeMessage').val('');
+                              //$('#composeMessage').val('');
+                              $('#ComposePostModal').closeModal();
+
+                              swal('Message composed successfully');
+                          }
+
+                      }, function (reason) {
+
+                      });
+                  }
+                  else {
+                      alertify.set({ delay: 3000 });
+                      alertify.error("File extension is not valid. Please upload an image file");
+                      $('#input-file-now').val('');
+                  }
+              }
+              else {
+                  $scope.disbtncom = true;
+                  if (profiles.length == 0) {
+                      swal('Please select a profile');
+                  }
+                  else {
+                      swal('Please enter some text to compose this message');
+                  }
+              }
+          }
+
+          $scope.checkfile = function () {
+              var filesinput = $('#composeImage');
+
+              var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+              if (filesinput != undefined && filesinput[0].files[0] != null) {
+                  if ($scope.hasExtension('#composeImage', fileExtension)) {
+                      $scope.check = true;
+                  }
+                  else {
+
+                      $scope.check = false;
+                  }
+              }
+              else {
+                  $scope.check = true;
+              }
+          }
+          $scope.hasExtension = function (inputID, exts) {
+              var fileName = $('#composeImage').val();
+              return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+          }
+        //end
+
+
     });
 });
 
@@ -254,4 +443,25 @@ SocioboardApp.controller('twittermodalcontroller', function ($rootScope, $scope,
     $scope.closeModal = function () {
         $scope.modalinstance.dismiss('cancel');
     }
+});
+
+// thousandSuffix to k  m 
+SocioboardApp.filter('thousandSuffix', function () {
+    debugger;
+    return function (input, decimals) {
+        var exp, rounded,
+          suffixes = ['k', 'M', 'G', 'T', 'P', 'E'];
+
+        if (window.isNaN(input)) {
+            return null;
+        }
+
+        if (input < 1000) {
+            return input;
+        }
+
+        exp = Math.floor(Math.log(input) / Math.log(1000));
+
+        return (input / Math.pow(1000, exp)).toFixed(decimals) + suffixes[exp - 1];
+    };
 });

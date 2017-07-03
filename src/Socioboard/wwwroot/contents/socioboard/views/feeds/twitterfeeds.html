@@ -6,7 +6,17 @@
                 <!--twitter feeds start-->
                 <div class="col s6 m6 l6">
                     <div class="card" id="feeds">
-                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>New Feeds</h5>
+                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>New Feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a></h5>
+                        <!-- Dropdown Structure -->
+                        <div ng-if="dropCalled==true">
+                            <ul id='dropdownFilter' class='dropdown-content'>
+                                <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('status')">Status</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('photo')">Photo</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('video')">Video</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('animated_gif')">GIF</a></li>
+                            </ul>
+                        </div>
                         <ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <li class="collection-item avatar" ng-repeat="twtfeed in lstTwtFeeds">
                                 <img src="{{twtfeed.fromProfileUrl}}" alt="{{twtfeed.fromName}}" class="circle">
@@ -19,24 +29,39 @@
                                         <img src="{{twtfeed.mediaUrl}}" ng-if="twtfeed.mediaUrl!=''" class="responsive-img ">
                                     </div>
                                 </div>
-                                <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{twtfeed.feedDate}}">{{twtfeed.feedDate}}</a>
-                                <div ng-if="user.TrailStatus!=2">
-                                    <span ng-click="twitterretweet(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
-                                        <i class="fa fa-retweet fa-fw"></i>
-                                    </span>
-                                    <span ng-click="twitterfavorite(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
-                                        <i class="fa fa-star fa-fw"></i>
-                                    </span>
-                                    <span ng-click="twitterreply(twtfeed.fromName,twtfeed.profileId,twtfeed.messageId)">
-                                        <i class="fa fa-share fa-fw"></i>
-                                    </span>
+                                <a class="tooltipped secondary-content" data-position="left">{{twtfeed.feedDate}}</a>
+                                <div class="row" ng-if="user.TrailStatus!=2">
+                                    <div class="col l2 s2">
+                                        <span ng-click="twitterretweet(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
+                                            <i class="fa fa-retweet fa-fw"></i><span>{{twtfeed.retweetcount | thousandSuffix:1}}</span>
+                                        </span>
+                                    </div>
+                                    <div class="col l2 s2">
+                                        <span ng-click="twitterfavorite(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
+                                            <i class="fa fa-star fa-fw"></i><span>{{twtfeed.likecount | thousandSuffix:1}}</span>
+                                        </span>
+                                    </div>
+                                    <div class="col l2 s2">
+                                        <span ng-click="twitterreply(twtfeed.fromName,twtfeed.profileId,twtfeed.messageId)">
+                                            <i class="fa fa-share fa-fw"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col l2 s2">
+                                        <span ng-click="tasktwtfeedModel(twtfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
+                                            <i class="icon-pin"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col l4 s4">
+                                        <a ng-click="openComposeMessage(twtfeed)" class="right black-text">
+                                            <i class="fa fa-retweet fa-fw " aria-hidden="true"></i> Re-Socio
+                                        </a>
+                                    </div>
+                                </div>
+                                <div> 
                                     <!--<a class="waves-effect waves-light  modal-trigger" ng-click="twitterreply(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)"><i class="fa fa-share fa-fw"></i></a>-->
                                     <!--<span ng-click="twitterreply(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                         <i class="fa fa-share fa-fw"></i>
                                     </span>-->
-                                    <span ng-click="tasktwtfeedModel(twtfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
-                                        <i class="icon-pin"></i>
-                                    </span>
                                 </div>
                             </li>
 
@@ -84,9 +109,9 @@
                                 </div>
                             </div>
 
-                            <h6 style="margin-left:32%; color:lightgray; font-size:20px" ng-if="endtwfeeds==true">No more Feeds to load</h6>
+                            <h6 style="margin-left:32%; color:lightgray; font-size:20px" ng-if="endtwfeeds==true && filters!=true">No more Feeds to load</h6>
 
-                            <a href="" ng-click="listData1()" style="margin-left:40%" onClick="this.style.visibility = 'hidden'; loadmore_feeds();" ng-if="preloadmorefeeds==true"><img src="http://i.imgur.com/rTD8xIS.png" /></a>
+                            <a href="" ng-click="listData1()" style="margin-left:40%" onClick="this.style.visibility = 'hidden'; loadmore_feeds();" ng-if="preloadmorefeeds==true && filters!=true"><img src="http://i.imgur.com/rTD8xIS.png" /></a>
                             <br />
                             <div class="cssload-container" ng-if="preloadmorefeeds!=true">
                                 <div></div>
@@ -117,11 +142,12 @@
                                     <div class="col m4 center">
                                         <img src="{{tweet.mediaUrl}}" ng-if="tweet.mediaUrl != ''" class="responsive-img ">
                                     </div>
-                                    <span ng-if="user.TrailStatus!=2" ng-click="tasktwttweetModel(tweet)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
-                                        <i class="icon-pin"></i>
-                                    </span>
                                 </div>
                                 <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{tweet.messageDate}}">{{tweet.messageDate}}</a>
+
+                                <span ng-if="user.TrailStatus!=2" ng-click="tasktwttweetModel(tweet)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
+                                    <i class="icon-pin"></i>
+                                </span>
                             </li>
 
                                              <div class="center" id="load_circle_twt" ng-class="loaderclasstwt" hidden>
@@ -319,6 +345,143 @@
 
     </div>
 
+
+
+<!-- Compose Email Structure -->
+<div id="ComposePostModal" class="modal">
+    <div class="modal-content" style="padding-bottom: 0px;">
+        <nav class="red">
+            <div class="nav-wrapper">
+                <div class="left col s12 m5 l5">
+                    <ul>
+                        <!--<li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                        </li>-->
+                        <li><span class="email-type">Re-Socio</span></li>
+
+                    </ul>
+                </div>
+                <div ng-init="disbtncom= {{disbtncom}}"></div>
+                <div class="col s12 m7 l7 hide-on-med-and-down">
+                    <ul class="right">
+                        <li>
+                            <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
+                            <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                        </li>
+                        <!--<li>
+                            <a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
+                        </li>-->
+                    </ul>
+                </div>
+
+            </div>
+        </nav>
+    </div>
+    <div class="model-email-content" style="padding-top: 0px;">
+        <div class="row">
+            <form class="col s12">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <div class="emoji-picker-container">
+                            <textarea id="composeMessage" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg">{{contentMessage.title}} </textarea>
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="row">
+                    <div class="col s12 m12 l12">
+                        <p>Add your hashtag</p>
+                    </div>
+                    <div class="input-field col s12">
+                        <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
+                    </div>
+                </div>-->
+                <div class="row section">
+                    <div class="col s12 m12 l12">
+                        <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
+                    </div>
+                    <input type="hidden" id="imageUrl" value="{{contentMessage.image}}" />
+                    <div class="col s12 m12 l12">
+                        <input type="file" id="composeImage" class="dropify" after-render data-default-file="{{contentMessage.image}}" />
+                    </div>
+                    <div class="col s12 m12 l12" ng-if="!contentMessage">
+                        <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
+                    </div>
+
+                </div>
+                <div class="row">
+                    <!--<div class="input-field col s12">
+                        <select multiple id="composeProfiles">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                            <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                            <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                            <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                        </select>
+                    </div>-->
+                    <div style="max-height:250px; overflow-y:scroll;">
+
+                        <ul class="shinh" id="checkboxdatarss">
+                            <li style="padding:5px 0;">
+                                <label>
+                                    <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />
+                                    <span style="float:left;">Check All</span>
+                                </label>
+                            </li>
+                            <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                <label>
+                                    <input name="selector[]" class="subcheckboxrssrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                </label>
+                            </li>
+                            <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                <label>
+                                    <input name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                </label>
+                            </li>
+                            <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
+                                <label>
+                                    <input name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                </label>
+                            </li>
+                            <li ng-repeat="profile in lstProfiles | filter:{profileType:3}" style="padding:5px 0;">
+                                <label>
+                                    <input name="selector[]" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                </label>
+                            </li>
+                            <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
+                                <label>
+                                    <input name="selector[]" class="subcheckboxrss" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <!--<div class="row">
+                    <div ng-init="draftbtn= {{draftbtn}}"></div>
+                    <div>
+                        <div ng-show="draftbtn" ng-click="draftMsg()" class="btn btn_style">Draft</div>
+                        <div ng-show="!draftbtn"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
+                    </div>
+                </div>-->
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- END CONTENT -->
+
+
+
 <!-- //////////////////////////////////////// Script Code //////////////////////////////////////////// -->
 
 <script>
@@ -430,6 +593,30 @@
 		left: 100%;
 	}
 }
+</style>
+
+
+<style>
+    ul.shinh li label {
+        font-size: 14px;
+        color: grey;
+        padding: 0 10px;
+        color: #ff4081;
+    }
+
+    ul.shinh li:hover {
+        background: #e5e5e5;
+        color: #ff4081;
+        cursor: pointer;
+        padding: 0 10px;
+    }
+
+    ul.shinh li label input {
+        margin-right: 10px;
+        height: 20px;
+        width: 20px;
+        background: transparent !important;
+    }
 </style>
 
 <!-- //////////////////////////////////////// End Style CSS for Pre Loader /////////////////////////// -->

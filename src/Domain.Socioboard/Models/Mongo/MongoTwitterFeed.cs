@@ -31,6 +31,7 @@ namespace Domain.Socioboard.Models.Mongo
         public double negative { get; set; }
         public string Retweetcount { get; set; }
         public string Likecount { get; set; }
+        public string mediaType { get; set; }
 
 
     }

@@ -11,6 +11,7 @@ body {
 .padding-10 {
     content: ' ';
     padding: 10px;
+
 }
 
 body {
@@ -70,9 +71,8 @@ body {
     background-color: #007bb6;
     border-color: #007bb6;
 }
-
 .gl {
-    background-color: #DB4437;
+        background-color: #DB4437;
     border-color: #DB4437;
 }
 
@@ -146,7 +146,6 @@ body {
 .hide {
     display: none;
 }
-
 .overlay-share {
     background-color: rgba(243, 103, 51, 0.9);
     border-radius: 1px;
@@ -159,7 +158,6 @@ body {
     display: none;
     box-shadow: 0 0 3px rgb(243, 103, 51);
 }
-
 .overlay-added {
     background-color: rgba(243, 103, 51, 0.9);
     border-radius: 1px;
@@ -172,23 +170,21 @@ body {
     display: none;
     box-shadow: 0 0 3px rgb(243, 103, 51);
 }
-
 .overlay-share img {
     margin-top: 1%;
     margin-left: 4%;
 }
 
-.overlay-share span {
-    color: rgb(255, 255, 255);
-    display: inline-block;
-    font-size: 18px;
-    margin-left: 6%;
-    overflow-y: auto;
-    text-align: center;
-    vertical-align: middle;
-    width: 69%;
-}
-
+    .overlay-share span {
+        color: rgb(255, 255, 255);
+        display: inline-block;
+        font-size: 18px;
+        margin-left: 6%;
+        overflow-y: auto;
+        text-align: center;
+        vertical-align: middle;
+        width: 69%;
+    }
 .error-text {
     display: block;
     text-align: center;
@@ -210,11 +206,9 @@ body {
 .z-i {
     z-index: 1;
 }
-
 .padd-btm-4 {
-    padding-bottom: 4px !important;
+    padding-bottom: 4px  !important;
 }
-
 .btn-t-r {
     margin: 0 auto;
     text-align: center;
@@ -246,7 +240,7 @@ body {
 }
 
 .profile-pic {
-    /*  padding: 5px;*/
+  /*  padding: 5px;*/
     background-color: #FFF;
     box-sizing: border-box;
     height: 50px;
@@ -255,7 +249,7 @@ body {
     display: inline-block;
     border-radius: 50%;
     box-shadow: 0 1px 1.8px rgba(0, 0, 0, 0.6);
-    opacity: 0.3;
+    opacity:0.3;
 }
 
     .profile-pic.selected {
@@ -550,12 +544,10 @@ body {
     .dt-tb:hover, .dt-tb:active {
         box-shadow: none;
     }
-
 hr {
     padding: 0 !important;
     margin: 0 !important;
 }
-
 .url {
     font-size: 12px;
     overflow: hidden;
@@ -569,52 +561,45 @@ hr {
 }
 
 
-.retweet {
-    cursor: pointer;
-}
+ .retweet {
+              cursor: pointer;
+            }
+            .retweet img {
+              border-radius: 3px;
+            }
+            .tweet-img {
+              width: 50px;
+              height: 50px;
+            }
+            .retweet-ctrl {
+              font-size: 11px;
+              margin-left: -4px;
+              padding: 10px;
+            }
+            .retweet-link > a:hover, .retweet-fa {
+              color: #93989C;
+            }
 
-    .retweet img {
-        border-radius: 3px;
-    }
-
-.tweet-img {
-    width: 50px;
-    height: 50px;
-}
-
-.retweet-ctrl {
-    font-size: 11px;
-    margin-left: -4px;
-    padding: 10px;
-}
-
-.retweet-link > a:hover, .retweet-fa {
-    color: #93989C;
-}
-
-.modal-dialog-login {
-    width: 360px;
-}
-
-.page-tweet {
-    color: #aaa;
-    font-size: 13px;
-    font-weight: 300;
-}
-
-.modal-content {
-    border-radius: 0;
-}
-
+            .modal-dialog-login {
+                width: 360px;
+            }
+            .page-tweet {
+               color: #aaa;
+               font-size: 13px;
+               font-weight: 300;
+            }
+            .modal-content {
+                border-radius: 0;
+            }
 .bootstrap-datetimepicker-widget {
     bottom: 30px !important;
 }
 
-/*signin*/
-.signup, .signin, .si-cb, .sign-in-link, .ca-link {
-    display: none;
-}
+ /*signin*/
+             .signup, .signin, .si-cb, .sign-in-link, .ca-link {
+              display: none;
+             }
 
-.dis-blk {
-    display: block;
-}
+             .dis-blk {
+              display: block;
+             }

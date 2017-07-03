@@ -1029,7 +1029,7 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpGet("DisableUserAccount")]
-        public IActionResult DisableUserAccount(long Id,string feedbackmsg)
+        public IActionResult DisableUserAccount(long Id, string feedbackmsg)
         {
             try
             {
@@ -1058,11 +1058,11 @@ namespace Api.Socioboard.Controllers
                     return Ok("Disabled");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Ok("Something went wrong please try after sometime");
             }
-           
+
             return Ok();
 
         }
@@ -1225,6 +1225,32 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpPost("EnableDisableSocialLogin")]
+        public IActionResult EnableDisableSocialLogin(long userId, bool checkEnable)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userId);
+            user.SocialLoginEnableFb = checkEnable;
+            int res = dbr.Update<User>(user);
+
+            if (res == 1)
+            {
+                if (checkEnable)
+                {
+                    return Ok("You have successfully enabled Social Signin for facebook account enjoy login without id and pass");
+                }
+                else
+                {
+                    return Ok("You have successfully disabled Social signin for facebook account");
+                }
+
+            }
+            else
+            {
+                return BadRequest("Error while enabling Social Signin, pls try after some time.");
+            }
+        }
+
 
         /// <summary>
         /// To validate the access token before login facebook
@@ -1268,28 +1294,93 @@ namespace Api.Socioboard.Controllers
                 }
 
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                IList<Facebookaccounts> lstFbacc = dbr.Find<Facebookaccounts>(t => t.EmailId.Equals(EmailId));
                 IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
+                IList<User> userDet = dbr.Find<User>(t => t.Id == lstFbacc.First().UserId);
                 if (lstUser != null && lstUser.Count() > 0)
                 {
-                    if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                    if (lstFbacc.First().UserId == lstUser.First().Id)
                     {
-                        DateTime d1 = DateTime.UtcNow;
-                        //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
-                        //userTable.LastLoginTime = d1;
-                        lstUser.First().LastLoginTime = d1;
-                        dbr.Update<User>(lstUser.First());
-                        _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
-                        return Ok(lstUser.First());
-                    }
-                    else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
-                    {
-                        return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                        if (lstUser.FirstOrDefault().SocialLoginEnableFb == true)
+                        {
+                            if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                            {
+                                DateTime d1 = DateTime.UtcNow;
+                                //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
+                                //userTable.LastLoginTime = d1;
+                                lstUser.First().LastLoginTime = d1;
+                                dbr.Update<User>(lstUser.First());
+                                _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
+                                return Ok(lstUser.First());
+                            }
+                            else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
+                            {
+                                return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                            }
+                            else
+                            {
+                                return Ok("Something went wrong please try after sometime");
+                            }
+                        }
+                        else
+                        {
+                            return Ok("it's look like you have disable your social signin for facebook account");
+                        }
                     }
                     else
                     {
-                        return Ok("Something went wrong please try after sometime");
+                        if (lstFbacc.First().IsActive == true)//&& userDet.First().SocialLoginEnableFb == true)
+                        {
+                            if (userDet.First().SocialLoginEnableFb == true)
+                            {
+                                long id = lstFbacc.First().UserId;
+                                //IList<User> userDet = dbr.Find<User>(t => t.Id == id);
+                                DateTime d1 = DateTime.UtcNow;
+                                userDet.First().LastLoginTime = d1;
+                                dbr.Update<User>(userDet.First());
+                                _redisCache.Set<User>(userDet.First().EmailId, userDet.First());
+                                return Ok(userDet.First());
+                            }
+                            else
+                            {
+                                return Ok("it's look like you have disable your social signin for facebook account");
+                            }
+
+                        }
+                        else
+                        {
+                            return Ok("facebook account added by other user");
+                        }
                     }
-                    
+
+
+
+                }
+                else if (lstFbacc != null && lstFbacc.Count() > 0 && lstUser.Count() == 0)
+                {
+                    if (lstFbacc.First().IsActive == true)//&& userDet.First().SocialLoginEnableFb == true)
+                    {
+                        if (userDet.First().SocialLoginEnableFb == true)
+                        {
+                            long id = lstFbacc.First().UserId;
+                            //IList<User> userDet = dbr.Find<User>(t => t.Id == id);
+                            DateTime d1 = DateTime.UtcNow;
+                            userDet.First().LastLoginTime = d1;
+                            dbr.Update<User>(userDet.First());
+                            _redisCache.Set<User>(userDet.First().EmailId, userDet.First());
+                            return Ok(userDet.First());
+                        }
+                        else
+                        {
+                            return Ok("it's look like you have disable your social signin for facebook account");
+                        }
+
+                    }
+                    else
+                    {
+                        return Ok("facebook account added by other user");
+                    }
+
                 }
                 else
                 {
@@ -1779,11 +1870,11 @@ namespace Api.Socioboard.Controllers
                     return BadRequest("Error while enabling two step login, pls try after some time.");
                 }
             }
-            else if(!user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            else if (!user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
             {
                 return BadRequest("Wrong password");
             }
-           else if (user.EmailValidateToken.Equals("Facebook"))
+            else if (user.EmailValidateToken.Equals("Facebook"))
             {
                 return BadRequest("two step login is not permitted as you registered in Socioboard with Facebook.");
             }
@@ -1791,11 +1882,11 @@ namespace Api.Socioboard.Controllers
             {
                 return BadRequest("two step login is not permitted as you registered in Socioboard with Google.");
             }
-           else
+            else
             {
                 return BadRequest("Something went wrong");
             }
-            
+
 
         }
 
@@ -2078,7 +2169,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetUserSessions(long userId)
         {
             DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            List<SessionHistory> lstsessions = dbr.Find<SessionHistory>(t => t.userId == userId).ToList();
+            List<SessionHistory> lstsessions = dbr.Find<SessionHistory>(t => t.userId == userId).OrderByDescending(t => t.firstloginTime).ToList();
             return Ok(lstsessions);
         }
 

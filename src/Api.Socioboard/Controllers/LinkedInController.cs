@@ -59,9 +59,9 @@ namespace Api.Socioboard.Controllers
                 {
                     if (linaccount.UserId == userId)
                     {
-                        return Ok("LinkedIn account already added by you.");
+                        return BadRequest("LinkedIn account already added by you.");
                     }
-                    return Ok("LinkedIn account added by other user.");
+                    return BadRequest("LinkedIn account added by other user.");
                 }
                 else
                 {
@@ -77,7 +77,7 @@ namespace Api.Socioboard.Controllers
                     }
                     else
                     {
-                        return Ok("Error while Adding Account");
+                        return BadRequest("Error while Adding Account");
                     }
                 }
             }

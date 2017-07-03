@@ -7,7 +7,14 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         $scope.dispbtn = true;
         $scope.check = false;
         $scope.draftbtn = true;
-
+        $scope.message = function (abcd) {
+            $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
+            swal(abcd);
+        };
+        $scope.profileaddmessage = function (abcd) {
+            $scope.abcd = "As per your plan you can add one profile per network If You want to add more profiles upgrade to higher business plan ";
+            swal(abcd);
+        };
        
         var objappVersion = navigator.appVersion; var objAgent = navigator.userAgent; var objbrowserName = navigator.appName; var objfullVersion = '' + parseFloat(navigator.appVersion); var objBrMajorVersion = parseInt(navigator.appVersion, 10); var objOffsetName, objOffsetVersion, ix;
         if ((objOffsetVersion = objAgent.indexOf("Chrome")) != -1) {
@@ -48,9 +55,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         }
        
-        $.getJSON('//ip-api.com/json?callback=?', function (data) {
-            $rootScope.Ip = data.query;
-             $scope.sessionData();
+        $.getJSON('//ipapi.co/json/', function (data) {
+            $rootScope.Ip = data.ip;
+            $scope.sessionData();
         });
 
 
@@ -96,7 +103,99 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             if ($rootScope.Downgrade == true) {
                 $('#ActiveProfileModal').openModal({ dismissible: false });
             }
-       
+            if ($rootScope.groupsdowngrade == true) {
+                $('#ActiveGroupModal').openModal({ dismissible: false });
+            }
+
+
+        //codes to groupprofile for restriction
+            $scope.GetGroupProfiles = function () {
+              $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfiles?groupId=' + $rootScope.groupId)
+                              .then(function (response) {
+                                  $scope.getprofile = [];
+                                  $scope.getFbprofile = [];
+                                  $scope.getTwtprofile = [];
+                                  $scope.getInstaprofile = [];
+                                  $scope.getGplusprofile = [];
+                                  $scope.getGAprofile = [];
+                                  $scope.getLinkedInprofile = [];
+                                  $scope.getGAprofile = [];
+                                  $scope.getYoutubeprofile = [];
+                                  $scope.getPinprofile = [];
+                                  $scope.GroupProfiles = response.data;
+                                  var fbcount = 0;
+                                  var Twtcount = 0;
+                                  var Instacount = 0;
+                                  var Ytubecount = 0;
+                                  var Gpluscount = 0;
+                                  var GAcount = 0;
+                                  var LinkedIncount = 0;
+                                  var Pincount = 0;
+                                  angular.forEach($scope.GroupProfiles, function (value, key) {
+                                      if (value.profileType == 1 || value.profileType == 0) {
+                                          fbcount = fbcount + 1
+                                      }
+                                      else if (value.profileType == 2) {
+                                          Twtcount = Twtcount + 1
+                                      }
+                                      else if (value.profileType == 3 || value.profileType == 4) {
+                                          LinkedIncount = LinkedIncount + 1
+                                      }
+
+                                      else if (value.profileType == 5) {
+                                          Gpluscount = Gpluscount + 1
+                                      }
+                                      else if (value.profileType == 7) {
+                                          Ytubecount = Ytubecount + 1
+                                      }
+                                      else if (value.profileType == 8) {
+                                          Instacount = Instacount + 1
+                                      }
+                                      else if (value.profileType == 10) {
+                                          GAcount = GAcount + 1
+                                      }
+                                      else if (value.profileType == 13) {
+                                          Pincount = Pincount + 1
+                                      };
+                                      ;
+
+                                  });
+                                  $scope.Fbcounts = fbcount;
+                                  $scope.Twtcounts = Twtcount;
+                                  $scope.Ytubecounts = Ytubecount;
+                                  $scope.LinkedIncounts = LinkedIncount;
+                                  $scope.Gpluscounts = Gpluscount;
+                                  $scope.Instacounts = Instacount;
+                                  $scope.GAcounts = GAcount;
+                                  $scope.Pincounts = Pincount;
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+            }
+        // end codes to groupprofile
+
+         //codes fetch all profiles start
+            $scope.fetchalllProfiles = function () {
+               $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfilesDeatails?groupId=' + $rootScope.groupId)
+                              .then(function (response) {
+                                  if (response.data != "") {
+                                      $scope.lstAccountProfiles = response.data;
+                                     
+                                      
+                                          $scope.loaderclass = 'hide';
+                                      
+                                  }
+                                  else {
+                                      $scope.noLinkedpro = true;
+                                      setTimeout(function () {
+                                          $scope.loaderclass = 'hide';
+                                      }, 3000);
+                                  }
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+            }
+        // end codes fetch all profiles
 
         //codes to load  TwitterRecentFollower
             $scope.TwitterRecentFollower = function () { 
@@ -190,7 +289,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         formData.append('files', $("#composeImage").get(0).files[0]);
                         $http({
                             method: 'POST',
-                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message,
+                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus,
                             data: formData,
                             headers: {
                                 'Content-Type': undefined
@@ -338,252 +437,6 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
            //codes for draft message end
 
-           //codes to load  fb profiles start
-            $scope.fetchProfiles = function () {
-                $scope.loaderclass = 'hide';
-                $http.get(apiDomain + '/api/Facebook/GetFacebookProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstFbProfiles = response.data;
-                                      if ($scope.lstFbProfiles.length < 3)
-                                      {
-                                          $scope.fetchTwtProfiles();
-                                      }
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else
-                                  {
-                                      $scope.fetchTwtProfiles();
-                                      $scope.nopro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 1500);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-        // end codes to load fb profiles
-
-        //codes to load  twitter profiles start
-            $scope.fetchTwtProfiles = function () {
-                $http.get(apiDomain + '/api/Twitter/GetTwitterProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                 
-                                  if (response.data != "") {
-                                      $scope.lstTwtProfiles = response.data;
-                                      if ($scope.lstTwtProfiles.length < 3) {
-                                          $scope.fetchGplusProfiles();
-                                      }
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else
-                                  {
-                                      $scope.fetchGplusProfiles();
-                                      $scope.notwtpro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 1500);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-        // end codes to load twitter profiles
-
-        //codes to load  Gplus profiles start
-            $scope.fetchGplusProfiles = function () {
-                $http.get(apiDomain + '/api/Google/GetGplusProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstGplusProfiles = response.data;
-                                      if ($scope.lstGplusProfiles.length < 3) {
-                                          $scope.fetchGAProfiles();
-                                      }
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else
-                                  {
-                                      $scope.fetchGAProfiles();
-                                      $scope.nogpluspro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 1500);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-        // end codes to load Gplus profiles
-
-        //codes to load  GA profiles start
-            $scope.fetchGAProfiles = function () {  
-                $http.get(apiDomain + '/api/Google/GetGAProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstAProfiles = response.data;
-                                      if ($scope.lstAProfiles.length < 3) {
-                                          $scope.fetchInstagramProfiles();
-                                      }
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else
-                                  {
-                                     
-                                          $scope.fetchInstagramProfiles();
-                                    
-                                      $scope.noGApro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 1500);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-            // end codes to load GA profiles
-
-            //codes to load  Instagram profiles start
-            $scope.fetchInstagramProfiles = function () { 
-                $http.get(apiDomain + '/api/Instagram/GetInstagramProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstinsProfiles = response.data;
-                                      if ($scope.lstinsProfiles.length < 3) {
-                                          $scope.fetchYTChannels();
-                                      }
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else
-                                  {
-                                     
-                                          $scope.fetchYTChannels();
-                                   
-                                      $scope.noinstapro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 1500);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-            // end codes to load Instagram profiles
-
-            //codes to load  YT Channels start
-            $scope.fetchYTChannels = function () {
-                $http.get(apiDomain + '/api/Google/GetYTChannelsSB?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstYChannel = response.data;
-                                      if ($scope.lstYChannel.length < 3) {
-                                          $scope.fetchLinkedInCompanyPagesProfiles();
-                                      }
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else {
-                                     
-                                          $scope.fetchLinkedInCompanyPagesProfiles();
-                                     
-                                      $scope.noYTcha = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 1500);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-        // end codes to load YT Channels
-
-        //codes to load  LinkedIn Comapany page profiles start
-            $scope.fetchLinkedInCompanyPagesProfiles = function () {  
-                $http.get(apiDomain + '/api/LinkedIn/GetLinkedInCompanyPagesProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstlincmpnyProfiles = response.data;
-                                      if ($scope.lstlincmpnyProfiles.length < 3) {
-                                          $scope.fetchLinkedInAccountProfiles();
-                                      }
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else
-                                  {
-                                     
-                                          $scope.fetchLinkedInAccountProfiles();
-                                     
-                                      $scope.noLinkedpro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-        // end codes to load LinkedIn Comapany page profiles
-
-        //codes to load  LinkedIn Account profiles start
-            $scope.fetchLinkedInAccountProfiles = function () {
-             
-                $http.get(apiDomain + '/api/LinkedIn/GetLinkedAccountProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstlinAccountProfiles = response.data;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else {
-                                      $scope.noLinkedpro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-        // end codes to load LinkedIn Account profiles
-
-
-        //codes to load  Pinterest Account profiles start
-            $scope.fetchPinterestAccountProfiles = function () {
-                debugger;
-                $http.get(apiDomain + '/api/Pinterest/GetPinterestAccountProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstpinAccountProfiles = response.data;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                                  else {
-                                      $scope.noLinkedpro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
-        // end codes to load Pinterest Account profiles
-
             $scope.contentFeeds = function (key) {
                 $rootScope.keyword = key;
                 $state.go('rss_news');       
@@ -591,19 +444,15 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
 
 
-
-            $scope.fetchProfiles();
-            //$scope.fetchTwtProfiles();
-            //$scope.fetchGplusProfiles();
-            //$scope.fetchInstagramProfiles();
-            //$scope.fetchGAProfiles();
-            //$scope.fetchLinkedInCompanyPagesProfiles();
-            //$scope.fetchLinkedInAccountProfiles();
+            $scope.fetchalllProfiles();
+            $scope.GetGroupProfiles();
+            //$scope.fetchProfiles();
             $scope.TotalSetMessages();
             $scope.GetIncommingMessage();
             $scope.TwitterFollowerCount();
             $scope.FacebookfanPageCount();
             $scope.TwitterRecentFollower();
+           
             //$scope.fetchYTChannels();
 
             $scope.deleteProfile = function (profileId) {
@@ -1037,8 +886,60 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             }
 
+        //Selected groups
+        //code for addselected profiles
+            $scope.toggleGroupsSelection = function (profileid) {
+                var idx = $scope.selectedGroups.indexOf(profileid);
+                var data = "";
+                // is currently selected
+                if (idx > -1) {
+                    $scope.selectedGroups.splice(idx, 1);
+                }
 
-            $scope.Addfacebookpagebyurl = function () {
+                    // is newly selected
+                else {
+                    data = profileid;
+                    $scope.selectedGroups.push(data);
+                }
+            };
+        //end code 
+            $scope.selectedGroups = [];
+        //End
+        //Add selected Groups
+            $scope.AddSelectedGroups = function () {
+                debugger;
+                if ($scope.selectedGroups.length <= $rootScope.groupsMaxCount) {
+                    var formData = new FormData();
+                    formData.append('selectedGroups', $scope.selectedGroups);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/Groups/AddSelectedGroups?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+
+                    })
+                        .then(function (response) {
+                            if (response.status == 200) {
+                                $('#ActiveGroupModal').closeModal();
+                                $rootScope.groupsdowngrade = false;
+                                window.location.reload();
+                                // swal(response.data);
+                            }
+                        }, function (reason) {
+                            swal("Error!");
+                        });
+                }
+                else {
+                    swal('please select ' + $rootScope.MaxCount + ' Profiles');
+                }
+
+            }
+        //End
+
+        $scope.Addfacebookpagebyurl = function () {
                 var url = $('#_txtinputurl').val();
                 if (url != "" && url.indexOf('facebook') > 0) {
                     //codes to load  Gplus profiles start

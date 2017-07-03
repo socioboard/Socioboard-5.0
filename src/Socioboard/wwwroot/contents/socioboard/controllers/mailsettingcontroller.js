@@ -52,23 +52,30 @@ SocioboardApp.controller('MailSettingController', function ($rootScope, $scope, 
         }
 
         $scope.UpdateEmailID = function (updateEmailID) {
-          
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/User/ChangeEmailID?newEmailID=' + updateEmailID.newEmailID + '&confirmEmailID=' + updateEmailID.confirmEmailID + '&userId=' + $rootScope.user.Id,
-                crossDomain: true,
+            debugger;
+            var Email = $('#new').val();
+            if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(Email)) {
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/User/ChangeEmailID?newEmailID=' + updateEmailID.newEmailID + '&confirmEmailID=' + updateEmailID.confirmEmailID + '&userId=' + $rootScope.user.Id,
+                    crossDomain: true,
 
-            }).then(function (response) {
-               
-                alertify.set({ delay: 5000 });
-                alertify.success(response.data);
-                window.location.reload();
-            }, function (reason) {
-             
-                alertify.set({ delay: 5000 });
-                alertify.error(reason.data);
-               
-            });
+                }).then(function (response) {
+
+                    alertify.set({ delay: 5000 });
+                    alertify.success(response.data);
+                    window.location.reload();
+                }, function (reason) {
+
+                    alertify.set({ delay: 5000 });
+                    alertify.error(reason.data);
+
+                });
+            }
+            else {
+                swal("Please Valid email address");
+
+            }   
         }
 
         $scope.UpdateMailSettings = function (mailSettings) {

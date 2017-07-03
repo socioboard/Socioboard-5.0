@@ -40,7 +40,8 @@
         
         <li class="no-padding">
             <ul class="collapsible collapsible-accordion">
-                <li class="bold">
+                  <!--Message for paid start-->
+                <li class="bold" ng-if="user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                     <a class="collapsible-header waves-effect waves-cyan">
                         <i class="icon-envelope-letter"></i> Message
                     </a>
@@ -61,6 +62,15 @@
                         </ul>
                     </div>
                 </li>
+                <!--Message for paid END-->
+                <!--Message for Unpaid start-->
+                <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
+                    <a class="waves-effect waves-cyan" ng-model="abcd" ng-click="message(abcd)" disable>
+                        <i class="icon-envelope-letter"></i> Message
+                    </a>
+                </li>
+                <!--Message for Unpaid END-->
+                <!--Feeds -->
                 <li class="bold">
                     <a class="collapsible-header  waves-effect waves-cyan">
                         <i class="icon-feed"></i> My Feeds
@@ -189,7 +199,9 @@
                         </ul>
                     </div>
                 </li>
-                <li class="bold">
+
+                <!--Discovery for paid User-->
+                <li class="bold" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 ||user.AccountType==6 || user.AccountType==7 " >
                     <a class="collapsible-header waves-effect waves-cyan">
                         <i class="icon-globe-alt"></i> Discovery
                     </a>
@@ -210,6 +222,14 @@
                         </ul>
                     </div>
                 </li>
+
+                <!--Discovery for Upaid User-->
+                <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2">
+                    <a class="waves-effect waves-cyan" ng-model="abcd" ng-click="message(abcd)" disable>
+                        <i class="icon-globe-alt"></i> Discovery
+                    </a>
+                </li>
+
                 <!--<li class="bold">
                     <a class="collapsible-header waves-effect waves-cyan">
                         <i class="icon-share-alt"></i> Competetive Analysis
@@ -222,7 +242,8 @@
                         </ul>
                     </div>
                 </li>-->
-                <li class="bold" ng-if="user.AccountType!=0">
+                <!--Rss for paid user-->
+                <li class="bold" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                     <a class="collapsible-header waves-effect waves-orange">
                         <i class="icon-rocket"></i> AutoMate Rss Feeds
                     </a>
@@ -246,12 +267,15 @@
                         </ul>
                     </div>
                 </li>
-                <li class="bold" ng-if="user.AccountType==0">
+
+                <!--Rss for Unpaid user-->
+                <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1">
                     <a class="waves-effect waves-orange" ng-model="abcd" ng-click="message(abcd)" disable>
                         <i class="icon-rocket"></i> AutoMate Rss Feeds
                     </a>
                    </li>
-                <li class="bold">
+                <!--Sharethon for paid user-->
+                <li class="bold" ng-if="user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                     <a class="collapsible-header  waves-effect waves-orange">
                         <i class="icon-share"></i> Shareathon
                     </a>
@@ -270,17 +294,24 @@
                         </ul>
                     </div>
                 </li>
-              
-
+                <!--Sharethon for Unpaid user-->
+                <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
+                    <a class="waves-effect waves-orange" ng-model="abcd" ng-click="message(abcd)" disable>
+                        <i class="icon-share"></i> Shareathon
+                    </a>
+                </li>
                 <!--reports for all-->
-                <li class="bold" ng-if="user.AccountType!=0">
+                <li class="bold" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7 ">
                     <a class="collapsible-header waves-effect waves-orange">
                         <i class="icon-notebook"></i> Reports
                     </a>
                     <div class="collapsible-body">
                         <ul class="collapsible collapsible-accordion">
-                            <li class="truncate">
+                            <li class="truncate" ng-if="user.AccountType==6 || user.AccountType==7">
                                 <a href="#/groupreport.html">Socioboard Group Report</a>
+                            </li>
+                            <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5">
+                                <a ng-model="abcd" ng-click="message(abcd)" disable>Socioboard Group Report</a>
                             </li>
                             <li class="truncate">
                                 <a class="collapsible-header waves-effect waves-orange">
@@ -293,8 +324,13 @@
                                                 Twitter Report
                                             </a>
                                         </li>
-                                        <li class="truncate">
+                                        <li class="truncate" ng-if="user.AccountType==7">
                                             <a href="#/twittercustomreports">
+                                                Twitter Custom Report
+                                            </a>
+                                        </li>
+                                        <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
+                                            <a ng-model="abcd" ng-click="message(abcd)" disable>
                                                 Twitter Custom Report
                                             </a>
                                         </li>
@@ -312,8 +348,13 @@
                                                 FB Page Report
                                             </a>
                                         </li>
-                                        <li class="truncate">
+                                        <li class="truncate" ng-if="user.AccountType==7">
                                             <a href="#/facebookreport.html">
+                                                FB Page Custom Report
+                                            </a>
+                                        </li>
+                                        <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
+                                            <a ng-model="abcd" ng-click="message(abcd)" disable>
                                                 FB Page Custom Report
                                             </a>
                                         </li>
@@ -331,8 +372,13 @@
                                                 Instagram Report
                                             </a>
                                         </li>
-                                        <li class="truncate">
+                                        <li class="truncate" ng-if="user.AccountType==7">
                                             <a href="#/instagramcustomreport.html">
+                                                Instagram Custom Report
+                                            </a>
+                                        </li>
+                                        <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
+                                            <a ng-model="abcd" ng-click="message(abcd)" disable>
                                                 Instagram Custom Report
                                             </a>
                                         </li>
@@ -350,23 +396,32 @@
                                                 Youtube Report
                                             </a>
                                         </li>
-                                        <li class="truncate">
+                                        <li class="truncate" ng-if="user.AccountType==7">
                                             <a href="#/youtubereport.html">
+                                                Youtube Custom Report
+                                            </a>
+                                        </li>
+                                        <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
+                                            <a ng-model="abcd" ng-click="message(abcd)" disable>
                                                 Youtube Custom Report
                                             </a>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
-                            <li class="truncate">
+                            <li class="truncate" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                                 <a href="#/googleanalyticsreport">Google Analytics</a>
+                            </li>
+                            <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2">
+                            <a ng-model="abcd" ng-click="message(abcd)" disable>
+                                Google Analytics</a>
                             </li>
                         </ul>
                     </div>
                 </li>
 
                 <!--reports for free plan-->
-                <li class="bold" ng-if="user.AccountType==0">
+                <li class="bold" ng-if="user.AccountType==0 ||user.AccountType==1">
                     <a class="waves-effect waves-orange" ng-model="abcd" ng-click="message(abcd)" disable>
                         <i class="icon-notebook"></i> Reports
                     </a>
@@ -440,18 +495,29 @@
             </a>
         </li>  -->
         <!--Board for All plan -->
-        <li class="bold" ng-if="user.AccountType!=0">
+        <li class="bold" ng-if="user.AccountType==6 ||user.AccountType==7">
             <a href="#/boardlist" class="waves-effect waves-cyan">
                 <i class="icon-briefcase"></i> Board Me
             </a>
         </li>
 
         <!--Board for free plan -->
-        <li class="bold" ng-if="user.AccountType==0">
+        <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5">
             <a ng-model="abcd" ng-click="message(abcd)" disable class="waves-effect waves-cyan">
                 <i class="icon-briefcase"></i> Board Me
             </a>
         </li>
+        <li class="bold">
+            <a href="javascript:;" class="waves-effect waves-orange center">
+                <div class="fb-like" data-href="https://www.facebook.com/SocioBoard/" data-layout="button_count" data-action="like" data-size="large" data-show-faces="false" data-share="false"></div>
+            </a>
+        </li>
+        <li class="bold">            
+                <a class="waves-effect waves-orange twitter-follow-button" href="https://twitter.com/Socioboard">
+                    @Socioboard
+                </a>
+        </li>
+
         <!--<li class="bold red">
             <a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw" class="waves-effect waves-orange  white-text" target="_blank">
                 <i class="icon-camcorder"></i> Youtube Tutorials
@@ -462,7 +528,7 @@
             <i class="fa fa-chrome fa-3x white-text"></i> Chrome Plugins
             </a>
         </li>-->
-        <li class="bold">
+        <!--<li class="bold">
             <div class="row margin-bottom-10">
                 <div class="col s12 m12 l12">
                     <a href="https://play.google.com/store/apps/details?id=com.socioboard&hl=en" class="waves-effect waves-orange" target="_blank" style="height: auto;">
@@ -479,8 +545,42 @@
                     </a>
                 </div>
             </div>
-        </li>
+        </li>-->
     </ul>
     <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only darken-2"><i class="mdi-navigation-menu"></i></a>
 </aside>
 <!-- END LEFT SIDEBAR NAV-->
+
+
+
+<!--facebook like script-->
+<div id="fb-root"></div>
+<script>
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.9&appId=1551064375135193";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+</script>
+
+<!--twitter script-->
+<script>
+window.twttr = (function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0],
+    t = window.twttr || {};
+  if (d.getElementById(id)) return t;
+  js = d.createElement(s);
+  js.id = id;
+  js.src = "https://platform.twitter.com/widgets.js";
+  fjs.parentNode.insertBefore(js, fjs);
+
+  t._e = [];
+  t.ready = function(f) {
+    t._e.push(f);
+  };
+
+  return t;
+}(document, "script", "twitter-wjs"));
+</script>

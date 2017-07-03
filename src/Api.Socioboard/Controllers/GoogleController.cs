@@ -117,33 +117,67 @@ namespace Api.Socioboard.Controllers
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
+            IList<Googleplusaccounts> lstgacc = dbr.Find<Googleplusaccounts>(t => t.EmailId.Equals(EmailId));
+            IList<User> userTable = dbr.Find<User>(t => t.Id == lstgacc.First().UserId);
             if (lstUser != null && lstUser.Count() > 0)
             {
-                if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                if (lstUser.FirstOrDefault().SocialLoginEnableGo == true)
                 {
-                    DateTime d1 = DateTime.UtcNow;
-                    //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
-                    //userTable.LastLoginTime = d1;
-                    lstUser.First().LastLoginTime = d1;
-                    dbr.Update<User>(lstUser.First());
-                    _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
-                    return Ok(lstUser.First());
-                }
-                else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
-                {
-                    return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                    if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                    {
+                        DateTime d1 = DateTime.UtcNow;
+                        //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
+                        //userTable.LastLoginTime = d1;
+                        lstUser.First().LastLoginTime = d1;
+                        dbr.Update<User>(lstUser.First());
+                        _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
+                        return Ok(lstUser.First());
+                    }
+                    else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
+                    {
+                        return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                    }
+                    else
+                    {
+                        return Ok("Something went wrong please try after sometime");
+                    }
                 }
                 else
                 {
-                    return Ok("Something went wrong please try after sometime");
+                    return Ok(" Oh! it's look like social signin with google has disabled");
                 }
+            }
+            else if (lstgacc != null && lstgacc.Count() > 0 && lstUser.Count() == 0 )
+            {
+                if(lstgacc.First().IsActive == true)
+                {
+                    if (userTable.First().SocialLoginEnableGo == true)
+                    {
+                        DateTime d1 = DateTime.UtcNow;
+                        //IList<User> userTable = dbr.Find<User>(t => t.Id == lstgacc.First().UserId);
+                        userTable.First().LastLoginTime = d1;
+                        dbr.Update<User>(userTable.First());
+                        _redisCache.Set<User>(userTable.First().EmailId, userTable.First());
+                        return Ok(userTable.First());
+                    }
+                    else
+                    {
+                        return Ok("it's look like you have disable your social signin option for gplus acc.");
+                    }
+                    
+                }
+                else
+                {
+                    return Ok("Google account added by other user");
+                }
+               
             }
             else
             {
                 Domain.Socioboard.Models.Googleplusaccounts gplusAcc = Api.Socioboard.Repositories.GplusRepository.getGPlusAccount(Convert.ToString(userinfo["id"]), _redisCache, dbr);
                 if (gplusAcc != null && gplusAcc.IsActive == true)
                 {
-                    return Ok("GPlus account added by other user.");
+                    return BadRequest("GPlus account added by other user.");
                 }
 
 
@@ -229,6 +263,32 @@ namespace Api.Socioboard.Controllers
 
         }
 
+        [HttpPost("EnableDisableGoogleSignIn")]
+        public IActionResult EnableDisableGoogleSignIn(long userId, bool checkEnable)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userId);
+            user.SocialLoginEnableGo = checkEnable;
+            int res = dbr.Update<User>(user);
+
+            if (res == 1)
+            {
+                if (checkEnable)
+                {
+                    return Ok("Cool! Social SignIn has Enable for your Goole Account ");
+                }
+                else
+                {
+                    return Ok("You have Successfully Disabled Social SignIn for Your Google Account");
+                }
+
+            }
+            else
+            {
+                return BadRequest("Error while enabling Social Signin, pls try after some time.");
+            }
+        }
+
         [HttpPost("GoogleLoginPhone")]
         public IActionResult GoogleLoginPhone(string refreshToken,string accessToken, Domain.Socioboard.Enum.SBAccountType accType)
         {
@@ -298,7 +358,7 @@ namespace Api.Socioboard.Controllers
                 Domain.Socioboard.Models.Googleplusaccounts gplusAcc = Api.Socioboard.Repositories.GplusRepository.getGPlusAccount(Convert.ToString(userinfo["id"]), _redisCache, dbr);
                 if (gplusAcc != null && gplusAcc.IsActive == true)
                 {
-                    return Ok("GPlus account added by other user.");
+                    return BadRequest("GPlus account added by other user.");
                 }
 
 
@@ -416,9 +476,9 @@ namespace Api.Socioboard.Controllers
             {
                 if (gplusAcc.UserId == userId)
                 {
-                    return Ok("GPlus account already added by you.");
+                    return BadRequest("GPlus account already added by you.");
                 }
-                return Ok("GPlus account added by other user.");
+                return BadRequest("GPlus account added by other user.");
             }
             Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
             if (ngrp == null)
@@ -433,7 +493,7 @@ namespace Api.Socioboard.Controllers
             }
             else
             {
-                return Ok("Issues while adding account");
+                return BadRequest("Issues while adding account");
             }
         }
 
@@ -483,9 +543,9 @@ namespace Api.Socioboard.Controllers
             {
                 if (gplusAcc.UserId == userId)
                 {
-                    return Ok("GPlus account already added by you.");
+                    return BadRequest("GPlus account already added by you.");
                 }
-                return Ok("GPlus account added by other user.");
+                return BadRequest("GPlus account added by other user.");
             }
             Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
             if (ngrp == null)
@@ -500,7 +560,7 @@ namespace Api.Socioboard.Controllers
             }
             else
             {
-                return Ok("Issues while adding account");
+                return BadRequest("Issues while adding account");
             }
         }
 

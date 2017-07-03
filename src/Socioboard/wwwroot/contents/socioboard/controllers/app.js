@@ -198,9 +198,23 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
         localStorage.setItem("user", JSON.stringify($rootScope.user));
         $scope.AccountType = $rootScope.user.AccountType;
         $scope.message = function (abcd) {
-            $scope.abcd = "If You want to use this feature upgrade to higher bussiness plan ";
+            $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
             swal(abcd);
         };
+       
+          //get group count
+        $scope.getGroupCount = function () {
+            debugger;
+            $http.get(apiDomain + '/api/Groups/GetUserGroupsCount?&userId=' + $rootScope.user.Id)
+                          .then(function (response) {
+                              $rootScope.GetUserGroupCount = response.data;
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            //}
+
+        }
         $scope.logout = function () {
 
             //alert('hello');
@@ -259,6 +273,8 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
 
 
         $scope.getOnPageLoadGroups = function () {
+            debugger;
+            $scope.getGroupCount();
             var canContinue = true;
             angular.forEach($rootScope.groups, function (value, key) {
                 if (canContinue && value.id == $rootScope.groupId) {
@@ -279,7 +295,7 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
     $scope.$on('$includeContentLoaded', function () {
         $scope.AccountType = $rootScope.user.AccountType;
         $scope.message = function (abcd) {
-            $scope.abcd = "If You want to use this feature upgrade to higher bussiness plan ";
+            $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
             swal(abcd);
         };
         $scope.fbProfileFilter = function (item) {
@@ -841,6 +857,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                             '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/js/admin/moment.min.js',
                             '../contents/socioboard/controllers/accesspasswdcontroller.js'
                         ]
                     });
@@ -849,6 +866,29 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         })
 
         //End Access password
+
+        // Link_shortening
+        .state('link_shortening', {
+            url: "/link_shortening",
+            templateUrl: "../contents/socioboard/views/settings/link_shortening.html",
+            data: { pageTitle: 'Link Shortening', pageSubTitle: 'updated' },
+            controller: "LinkShorteningController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/linkshorteningcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+        //End Link shortening
+
           //browser extensions
         .state('extensions', {
             url: "/extensions",

@@ -27,11 +27,13 @@
         max-height: 357px;
         overflow: hidden;
         border-radius: 5px;
-        float: left;
+        display: block;
+        margin: 0 auto;
+        /*float: left;
         margin-top: 23px;
         margin-right: 10px;
         margin-bottom: 10px;
-        margin-left: 2px;
+        margin-left: 2px;*/
     }
 </style>
 <div data-ng-controller="RssNewsController">
@@ -52,25 +54,33 @@
     <section id="content">
         <!-- Compose Email Structure -->
         <div class="row">
-            <div class="col offset-s1 s10 offset-m2 m8 offset-l2 10">
+            <div class="col offset-s1 s10 offset-m2 m7 offset-l2 l7">
                 <div class="card" ng-repeat="post in postedRssData | orderBy:'publishingDate':true">
-                    <span ng-click="" class="right" role="button" tabindex="0" style="margin-right: 5px;"><i class="fa fa-close grey-text"></i></span>
                     <div class="card-content">
-                        <h6 style="color:#777"><strong>{{post.title}}</strong></h6>
-                        <div class="center" >
-                            <a href="{{post.link}}" class="truncate" target="_blank" style="color:cornflowerblue">{{post.link}}</a>
-                        </div>
-                        <div class="center" >
-                            <img src="{{post.image}}" class="rssPostImage">
-                        </div>
-                    </div>
-                    <div class="card-action">
-                        <a ng-click="schedulePost(post)" class="waves-effect waves-grey btn btn_style">Schedule</a>
-                        <a ng-click="openComposeMessage(post)" class="btn btn_style right blue">1 click</a>
-                    </div>
+                        <span ng-click="" class="right" role="button" tabindex="0" style="margin-right: 5px;"><i class="fa fa-close grey-text"></i></span>
+                        <div class="row">
+                            <div class="col l12">
+                                <h6 style="color:#777"><strong>{{post.title}}</strong></h6>
+                                <div class="">
+                                    <a href="{{post.link}}" class="truncate" target="_blank" style="color:cornflowerblue">{{post.link}}</a>
+                                </div>
+                                </div>
+                            </div>
+                                <div class="row">
+                                    <div class="col l12">
+                                        <div style="display: block; margin: auto;">
+                                            <img src="{{post.image}}" class="rssPostImage">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-action">
+                                <a ng-click="schedulePost(post)" class="waves-effect waves-grey btn">Schedule</a>
+                                <a ng-click="openComposeMessage(post)" class="btn right blue">1 click</a>
+                            </div>
 
-                </div>
-            </div>
+                        </div>
+                    </div>
         </div>
 
 
@@ -160,14 +170,14 @@
                                             <span style="float:left;">Check All</span>
                                         </label>
                                     </li>
-                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" class="subcheckboxrssrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                             <span style="float:left;">{{profile.profileName}}</span>
                                             <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                         </label>
                                     </li>
-                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" style="padding:5px 0;">
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                             <span style="float:left;">{{profile.profileName}}</span>
@@ -181,7 +191,7 @@
                                             <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                         </label>
                                     </li>
-                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:3}" style="padding:5px 0;">
+                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
                                             <span style="float:left;">{{profile.profileName}}</span>

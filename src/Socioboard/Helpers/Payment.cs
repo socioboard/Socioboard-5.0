@@ -93,8 +93,8 @@ namespace Socioboard.Helpers
 
 
 
-                redirecturl += "&a1=0.0";//"&a1=0.0"; //Trial period 1 price. For a free trial period, specify 0
-
+                // redirecturl += "&a1=0.0";//"&a1=0.0"; //Trial period 1 price. For a free trial period, specify 0
+                redirecturl += "&a1=" + amount;
                 redirecturl += "&p1=1";
 
                 redirecturl += "&t1=M";

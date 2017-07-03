@@ -9,6 +9,7 @@ SocioboardApp.controller('PinterestBoardPinsController', function ($rootScope, $
         var ending = start + 30; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         var count = 30;
+        $scope.check = false;
         if ($rootScope.user.TrailStatus == 2) {
             count = 5
         }
@@ -43,27 +44,55 @@ SocioboardApp.controller('PinterestBoardPinsController', function ($rootScope, $
             else {
                 $('#pinbtn_' + boardid).html('wait');
                 var description = dec;
-                var formData = new FormData();
-                formData.append('files', $("#composePinImage").get(0).files[0]);
-                $http({
-                    method: 'POST',
-                    url: apiDomain + '/api/Pinterest/CreateUserPins?pinterestUserId=' + pinterestUserId + '&boardId=' + boardid + '&note=' + encodeURIComponent(description) + '&userId=' + $rootScope.user.Id + '&filepath=' + web_url,
-                    data: formData,
-                    headers: {
-                        'Content-Type': undefined
-                    },
-                    transformRequest: angular.identity,
-                }).then(function (response) {
-                    $('#pinbtn_' + boardid).html('saved');
-                    swal(response.data);
-                    $('#CreatePinModal').closeModal();
-                    $scope.LoadTopFeeds();
-                }, function (reason) {
-                    $scope.error = reason.data;
-                });
+                if ($scope.check==true) {
+                    var formData = new FormData();
+                    formData.append('files', $("#composePinImage").get(0).files[0]);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/Pinterest/CreateUserPins?pinterestUserId=' + pinterestUserId + '&boardId=' + boardid + '&note=' + encodeURIComponent(description) + '&userId=' + $rootScope.user.Id + '&filepath=' + web_url,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#pinbtn_' + boardid).html('saved');
+                        swal(response.data);
+                        $('#CreatePinModal').closeModal();
+                        $scope.LoadTopFeeds();
+                    }, function (reason) {
+                        $scope.error = reason.data;
+                    });
+                } else {
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File extension is not valid. Please upload an image file");
+                   
+                }
             }
         }
  
+        //code for checking the file format start
+        $scope.checkfile = function () {
+            var filesinput = $('#composePinImage');//composeImage
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
+            if (filesinput != undefined && filesinput[0].files[0] != null) {
+                if ($scope.hasExtension('#composePinImage', fileExtension)) {
+                    $scope.check = true;
+                }
+                else {
+                    $scope.check = false;
+                }
+            }
+            else {
+                $scope.check = true;
+            }
+        }
+        $scope.hasExtension = function (inputID, exts) {
+            var fileName = $('#composePinImage').val();
+            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+        }
+        //code for checking the file format end
+
  
  /*
     * Masonry container for eCommerce page

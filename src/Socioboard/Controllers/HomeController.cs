@@ -170,6 +170,19 @@ namespace Socioboard.Controllers
                 {
                     List<Domain.Socioboard.Models.Groups> groups = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
                     ViewBag.groups = Newtonsoft.Json.JsonConvert.SerializeObject(groups);
+                    int groupscount = groups.Count;
+                    int groupsMaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxGroupCount(user.AccountType);
+                    ViewBag.groupsCount = groupscount;
+                    ViewBag.groupsMaxCount = groupsMaxCount;
+                    ViewBag.AccountType = user.AccountType;
+                    if (groupscount > groupsMaxCount)
+                    {
+                        ViewBag.groupsdowngrade = "true";
+                    }
+                    else
+                    {
+                        ViewBag.groupsdowngrade = "false";
+                    }
                     string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
                     if (!string.IsNullOrEmpty(sessionSelectedGroupId))
                     {

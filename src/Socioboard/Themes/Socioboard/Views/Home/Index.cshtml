@@ -65,6 +65,13 @@
 
 <body ng-model="lstProfiles">
     <input type="hidden" id="selectedGroupId" ng-init="groupId=@ViewBag.selectedGroupId" />
+    <div ng-init="groupsdowngrade=@ViewBag.groupsdowngrade"></div>
+    <div ng-init="groupsMaxCount=@ViewBag.groupsMaxCount"></div>
+    <div ng-init="groupsCount=@ViewBag.groupsCount"></div>
+    <div ng-init="AccountType=@ViewBag.AccountType"></div>
+    <div ng-init="groups=@ViewBag.groups"></div>
+    <div ng-init="user=@ViewBag.user"></div>
+
     <div ng-init="Downgrade=@ViewBag.downgrade"></div>
     <div ng-init="MaxCount=@ViewBag.MaxCount"></div>
     <div ng-init="profileCount=@ViewBag.profileCount"></div>
@@ -103,7 +110,7 @@
         <!-- END WRAPPER -->
     </div>
     <!-- END MAIN -->
-    <div data-ng-include="'../contents/socioboard/views/shared/footer.html'" data-ng-controller="FooterController"></div>
+    @*<div data-ng-include="'../contents/socioboard/views/shared/footer.html'" data-ng-controller="FooterController"></div>*@
     <!-- Compose Email Trigger -->
     <!-- Compose Email Structure -->
     <!-- jQuery Library -->

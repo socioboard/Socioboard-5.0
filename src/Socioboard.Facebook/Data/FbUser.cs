@@ -44,7 +44,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me/feed?limit=99&fields=picture,created_time,message,description,story,from");//v2.1
+                return fb.Get("v2.7/me/feed?limit=99&fields=picture,created_time,message,description,story,from,likes.summary(true),comments.summary(true),type,application");//v2.1
             }
             catch (Exception ex)
             {

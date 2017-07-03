@@ -31,7 +31,10 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                               }
                                $scope.date(response.data);
                                $scope.preloadmorefeeds = true;
-                            
+                               $scope.dropCalled = true;
+                               setTimeout(function () {
+                                   $scope.callDropmenu();
+                               }, 1000);
                              
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -167,6 +170,18 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             $rootScope.insfeednotification = insfeednotification;
             $('#TaskModal').openModal();
 
+        }
+
+        $scope.callDropmenu = function () {
+            $('.dropdown-button').dropdown({
+                inDuration: 300,
+                outDuration: 225,
+                constrain_width: false, // Does not change width of dropdown to that of the activator
+                hover: true, // Activate on hover
+                gutter: 0, // Spacing from edge
+                belowOrigin: false, // Displays dropdown below the button
+                alignment: 'right' // Displays dropdown with edge aligned to the left of button
+            });
         }
 
         $scope.addTask = function (feedTableType) {

@@ -236,3 +236,17 @@ body{
 .no-text-shadow {
   text-shadow: none !important;
 }
+
+/*new pricing css */
+.pricing-cta {
+    border-radius: 20px;
+    background-color: #F85A0F;
+    padding: 0px 6px;
+    font-size: 10px;
+    width:85px;
+}
+
+.pricing-cta:hover {
+  background-color: #E64000;
+  color: white;
+}

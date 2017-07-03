@@ -3,7 +3,8 @@
 SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $scope, $http, $timeout,$stateParams, apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
-
+        $scope.disbtncom = true;
+        $scope.buildbtn = true;
         googleplusfeeds();
         var start = 0; // where to start data
         var preloadmorefeeds = false;// disable starter loader after loading feeds
@@ -16,6 +17,30 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             return obj.replace("http:", "https:")
         };
 
+        //select all
+        var getAllSelected = function () {
+            var selectedItems = $rootScope.lstProfiles.filter(function (profile) {
+                return profile.Selected;
+            });
+
+            return selectedItems.length === $rootScope.lstProfiles.length;
+        }
+
+        var setAllSelected = function (value) {
+            angular.forEach($rootScope.lstProfiles, function (profile) {
+                profile.Selected = value;
+            });
+        }
+
+        $scope.allSelected = function (value) {
+            if (value !== undefined) {
+                return setAllSelected(value);
+            } else {
+                return getAllSelected();
+            }
+        }
+        //end
+
         $scope.lstGpFeeds = [];
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
@@ -27,9 +52,17 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                               if (response.data != "") {
                                   $scope.date(response.data);
                                   $scope.preloadmorefeeds = true;
+                                  $scope.dropCalled = true;
+                                  setTimeout(function () {
+                                      $scope.callDropmenu();
+                                  }, 1000);
                               } else {
                                   $scope.preloadmorefeeds = true;
                                   $scope.nofeeds = true;
+                                  $scope.dropCalled = true;
+                                  setTimeout(function () {
+                                      $scope.callDropmenu();
+                                  }, 1000);
                                   //swal("No Post To Display");
                               }
                              // $scope.date(response.data);comment by sweta
@@ -59,6 +92,18 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
 
         }
 
+        $scope.callDropmenu = function () {
+            $('.dropdown-button').dropdown({
+                inDuration: 300,
+                outDuration: 225,
+                constrain_width: false, // Does not change width of dropdown to that of the activator
+                hover: true, // Activate on hover
+                gutter: 0, // Spacing from edge
+                belowOrigin: false, // Displays dropdown below the button
+                alignment: 'right' // Displays dropdown with edge aligned to the left of button
+            });
+        }
+
         $scope.filterSearch = function (postType) {
             $scope.filters = true;
             $scope.preloadmorefeeds = false;
@@ -80,6 +125,131 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                           });
             // end codes to load  recent Feeds
         }
+
+
+        
+        //repost
+
+        $scope.openComposeMessage = function (contentFeed) {
+            debugger;
+
+            if (contentFeed != null) {
+                var message = {
+                    "title": contentFeed.title,
+                    "image": contentFeed.attachment,
+                };
+
+                $rootScope.contentMessage = message;
+
+            }
+
+            $('#ComposePostModal').openModal();
+            var composeImagedropify = $('#composeImage').parents('.dropify-wrapper');
+            $(composeImagedropify).find('.dropify-render').html('<img src="' + contentFeed.attachment + '">');
+            $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
+            $('select').material_select();
+        }
+        //end
+
+
+
+        // start compose
+        $scope.ComposeMessage = function () {
+            debugger;
+            $scope.disbtncom = false;
+            var profiles = new Array();
+            $("#checkboxdatarss .subcheckboxrss").each(function () {
+
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profiles.indexOf(attrId);
+                    if (index > -1) {
+                        profiles.splice(index, 1);
+                    }
+                } else {
+                    profiles.push(attrId);
+                }
+            });
+
+            // var profiles = $('#composeProfiles').val();
+            var message = $('#composeMessage').val();
+            //if (image == "N/A") {
+            //    image = image.replace("N/A", "");
+            //}
+            var updatedmessage = "";
+            message = encodeURIComponent(message);
+            //var postdata = message.split("\n");
+            //for (var i = 0; i < postdata.length; i++) {
+            //    updatedmessage = updatedmessage + "<br>" + postdata[i];
+            //}
+            //updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            if (profiles.length > 0 && message != '') {
+                $scope.checkfile();
+                if ($scope.check == true) {
+                    var formData = new FormData();
+                    formData.append('files', $("#composeImage").get(0).files[0]);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        if (response.data == "Posted") {
+                            $scope.disbtncom = true;
+                            // $('#composeMessage').val('');
+                            //$('#composeMessage').val('');
+                            $('#ComposePostModal').closeModal();
+
+                            swal('Message composed successfully');
+                        }
+
+                    }, function (reason) {
+
+                    });
+                }
+                else {
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File extension is not valid. Please upload an image file");
+                    $('#input-file-now').val('');
+                }
+            }
+            else {
+                $scope.disbtncom = true;
+                if (profiles.length == 0) {
+                    swal('Please select a profile');
+                }
+                else {
+                    swal('Please enter some text to compose this message');
+                }
+            }
+        }
+
+        $scope.checkfile = function () {
+            var filesinput = $('#composeImage');
+
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            if (filesinput != undefined && filesinput[0].files[0] != null) {
+                if ($scope.hasExtension('#composeImage', fileExtension)) {
+                    $scope.check = true;
+                }
+                else {
+
+                    $scope.check = false;
+                }
+            }
+            else {
+                $scope.check = true;
+            }
+        }
+        $scope.hasExtension = function (inputID, exts) {
+            var fileName = $('#composeImage').val();
+            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+        }
+        //end
+
 
     });
 });

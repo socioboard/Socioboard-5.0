@@ -365,6 +365,23 @@ namespace Api.Socioboard.Repositories
             }
 
         }
+
+        public static List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> GetTopFilterFeeds(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count, string mediaType)
+        {
+
+            MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed", settings);
+            var builder = Builders<MongoTwitterFeed>.Sort;
+            var sort = builder.Descending(t => t.feedDate);
+            var result = mongorepo.FindWithRange<MongoTwitterFeed>(t => t.profileId.Equals(profileId) && t.mediaType.Equals(mediaType), sort, skip, count);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<MongoTwitterFeed> lstFbFeeds = task.Result;
+            
+            return lstFbFeeds.ToList();
+                          
+        }
         public static List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> GetUserTweets(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
             List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> inMemFeeds = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterUser100Tweets + profileId);

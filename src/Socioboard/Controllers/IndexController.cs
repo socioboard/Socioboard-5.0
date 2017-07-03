@@ -162,6 +162,7 @@ namespace Socioboard.Controllers
                     //HttpContext.Session.SetObjectAsJson("User", user);
                     if (user.UserType == "SuperAdmin")
                     {
+                        HttpContext.Session.SetObjectAsJson("User", user);
                         return Content("SuperAdmin");
                         //HttpContext.Session["Id"] = user.Id;
 
@@ -494,6 +495,7 @@ namespace Socioboard.Controllers
                 ViewBag.plugin = _PluginData;
                 ViewBag.emailId = user.EmailId;
                 ViewBag.password = user.Password;
+                ViewBag.userId = user.Id.ToString();
                 HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
                 if (response.IsSuccessStatusCode)
                 {
@@ -984,6 +986,10 @@ namespace Socioboard.Controllers
         }
 
         public IActionResult Careers()
+        {
+            return View();
+        }
+        public IActionResult Privacy()
         {
             return View();
         }

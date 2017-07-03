@@ -6,13 +6,15 @@
                         <div class="row">
                             <div class="col offset-s1 s10 offset-m2 m8 offset-l2 l6">
                                 <div class="card" id="feeds">
-                                    <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Live feeds<!--<a class='dropdown-button btn btn_style right black white-text' href='javascript:void(0)' data-activates='dropdownFilter'><strong>&nbsp&nbspFilter&nbsp&nbsp</strong></a>--></h5>
+                                    <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a></h5>
                                     <!-- Dropdown Structure -->
-                                    <ul id='dropdownFilter' class='dropdown-content'>
-                                        <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
-                                        <li><a href="javascript:void(0)" ng-click="filterSearch('image')">Image</a></li>
-                                        <li><a href="javascript:void(0)" ng-click="filterSearch('video')">Video</a></li>
-                                    </ul>
+                                    <div ng-if="dropCalled==true">
+                                        <ul id='dropdownFilter' class='dropdown-content'>
+                                            <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="filterSearch('image')">Image</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="filterSearch('video')">Video</a></li>
+                                        </ul>
+                                    </div>
                                     <ul class="collection instagramfeeds">
                                         <li class="collection-item" ng-repeat="insfeed in lstinsFeeds "myRepeatTabDirective>
                                           <div class="card">

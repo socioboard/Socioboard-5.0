@@ -4,14 +4,21 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
 
-        access_passwd();
+        $scope.hasEnableF = false;
+        $scope.hasEnableG = false;
+        $scope.access_passwd = function () {
+            $scope.hasEnableF = $rootScope.user.SocialLoginEnableFb;
+            $scope.hasEnableG = $rootScope.user.SocialLoginEnableGo;
+
+        }
         $scope.twosteploginstatus = $rootScope.user.TwostepEnable;
         $scope.password = $rootScope.user.Password;
+        $scope.access_passwd();
         //Initialization
         $scope.updatePassword = {};
 
-        
-        
+
+
 
 
 
@@ -75,6 +82,137 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
             });
         }
 
+        //codes to load  fb profiles start
+        $scope.getfbprofiles = function () {
+
+            $http.get(apiDomain + '/api/Facebook/GetFacebookProfilesOnly?groupId=' + $rootScope.groupId)
+                              .then(function (response) {
+                                  if (response.data != "") {
+                                      $scope.fbprofiles = response.data;
+                                      console.log($scope.fbprofiles);
+                                  }
+
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+        }
+        // end codes to load fb profiles
+
+        //code for google start
+        $scope.fetchGplusProfiles = function () {
+            debugger;
+            $http.get(apiDomain + '/api/Google/GetAllGplusProfiles?groupId=' + $rootScope.groupId)
+                          .then(function (response) {
+                              if (response.data != "") {
+                                  $scope.lstGplusProfiles = response.data;
+                                  console.log("dfedf");
+                                  console.log($scope.lstGplusProfiles);
+                              }
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+        }
+        //code for google end
+
+        //for message when no pass and id start
+        $scope.passNull = function (temp) {
+            if (temp == false) {
+                $scope.hasEnableF = true;
+            }
+            alertify.set({ delay: 9000 });
+            alertify.error("You can't disable it because you dont have Id & Password to login!");
+            $scope.hasEnableF = true;
+
+        }
+        //for message when no pass and id end
+
+        //Enable disable fcebook social sign fb start
+        $scope.socialLoginFB = function (hasEnableF) {
+
+            $scope.onoff = hasEnableF;
+            if ($scope.onoff) {
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/User/EnableDisableSocialLogin?userId=' + $rootScope.user.Id + '&checkEnable=' + true,
+                    crossDomain: true,
+                    //data: ,
+                }).then(function (response) {
+                    swal(response.data);
+
+                }, function (reason) {
+
+                    swal("Error!");
+
+
+                });
+            }
+            else {
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/User/EnableDisableSocialLogin?userId=' + $rootScope.user.Id + '&checkEnable=' + false,
+                    crossDomain: true,
+                    //data: ,
+                }).then(function (response) {
+                    swal(response.data);
+
+                }, function (reason) {
+
+                    swal("Error!");
+
+
+                });
+            }
+
+        }
+        //Enable disable fcebook social sign fb End
+
+        //Enable disable GoogleSignIn start
+        $scope.socialLoginGoogle = function (hasEnableGoogle) {
+
+            console.log("abcd");
+            console.log($rootScope.user.Password);
+            $scope.onoff = hasEnableGoogle;
+            if ($scope.onoff) {
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/Google/EnableDisableGoogleSignIn?userId=' + $rootScope.user.Id + '&checkEnable=' + true,
+                    crossDomain: true,
+                    //data: ,
+                }).then(function (response) {
+                    swal(response.data);
+
+                }, function (reason) {
+
+                    swal("Error!");
+
+
+                });
+            }
+            else {
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/Google/EnableDisableGoogleSignIn?userId=' + $rootScope.user.Id + '&checkEnable=' + false,
+
+                }).then(function (response) {
+                    swal(response.data);
+
+                }, function (reason) {
+
+                    swal("Error!");
+
+
+                });
+            }
+
+        }
+        //En dis GoogleSignIn end
+
+
+        //Func
+        $scope.fetchGplusProfiles();
+        $scope.getfbprofiles();
+
         //Update Password
         $scope.UpdatePassword = function (updatePassword) {
             var cookies = document.cookie.split(";");
@@ -101,6 +239,7 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
                 updatePassword.currentPassword = '';
                 updatePassword.newPassword = '';
                 updatePassword.conformPassword = '';
+                $("#change_passwd").closeModal();
             }, function (reason) {
                 alertify.set({ delay: 5000 });
                 alertify.error(reason.data);
@@ -156,7 +295,7 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
             for (var i = 0; i < parm.length; i++) {
                 //var mytimeinUtc = new Date('2017-06-24 10:55:10').toUTCString();
                 var utcTime = new Date().toUTCString();
-                
+
                 var x = new Date(parm[i].lastAccessedTime);
                 var y = new Date(parm[i].firstloginTime);
                 var test = new Date(x);//new Date(mytimeinUtc);

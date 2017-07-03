@@ -20,7 +20,7 @@
 									    <select id="groupshareathonfacebookaccount">
 									     <option value="" disabled selected>{{grouphareathondata.facebookusername}}</option>
                                             <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:0}" selected value="{{profile.profileId}}" ng-if="grouphareathondata.facebookaccountid.indexOf(profile.profileId) > -1" my-repeat-timeout-directive>  {{profile.profileName}} </option>-->
-                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                         </select>
 									    <label>Select An Account To Automate Post</label>
 									</div>

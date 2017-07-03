@@ -286,6 +286,22 @@ namespace Api.Socioboard.Controllers
             return Ok(lstFbAcc);
         }
 
+        [HttpGet("GetFacebookProfilesOnly")]
+        public IActionResult GetFacebookProfilesOnly(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = new List<Facebookaccounts>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook))
+            {
+                Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(item.profileId, _redisCache, dbr);
+                if (fbAcc != null)
+                {
+                    lstFbAcc.Add(fbAcc);
+                }
+            }
+            return Ok(lstFbAcc);
+        }
 
         [HttpPost("GetFacebookPages")]
         public IActionResult GetFacebookPages(string accesstoken, long groupId)

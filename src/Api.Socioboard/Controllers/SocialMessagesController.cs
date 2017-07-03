@@ -18,6 +18,9 @@ using MongoDB.Bson;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models;
+using System.Net;
+using Newtonsoft.Json.Linq;
+using System.Drawing;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,6 +43,7 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
+        
         /// <summary>
         /// To compose message
         /// </summary>
@@ -51,13 +55,24 @@ namespace Api.Socioboard.Controllers
         /// <param name="files"></param>
         /// <returns></returns>
         [HttpPost("ComposeMessage")]
-        public async Task<IActionResult> ComposeMessage(string message, string profileId, long userId, string imagePath, string link, IFormFile files)
+        public async Task<IActionResult> ComposeMessage(string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Enum.UrlShortener shortnerStatus, IFormFile files)
         {
             var filename = "";
             var apiimgPath = "";
             var uploads = string.Empty;
             string imgPath = string.Empty;
-
+            string temp = string.Empty;
+            string tempmsg = message;
+            if (shortnerStatus == Domain.Socioboard.Enum.UrlShortener.bitlyUri)
+            {
+                temp = GetConvertedUrls(ref tempmsg, shortnerStatus);
+                tempmsg = temp;
+            }
+            else if (shortnerStatus == Domain.Socioboard.Enum.UrlShortener.jmpUri)
+            {
+                temp = GetConvertedUrls(ref tempmsg, shortnerStatus);
+                tempmsg = temp;
+            }
             if (files != null)
             {
 
@@ -92,6 +107,7 @@ namespace Api.Socioboard.Controllers
                             uploads = imagePath;
                         }
                     }
+                   
                 }
             }
             else if (!string.IsNullOrEmpty(imagePath))
@@ -123,9 +139,9 @@ namespace Api.Socioboard.Controllers
                     string updatedtext = "";
                     string postmessage = "";
                     string url = "";
-                    if (!string.IsNullOrEmpty(message))
+                    if (!string.IsNullOrEmpty(tempmsg))
                     {
-                        string[] updatedmessgae = Regex.Split(message, "<br>");
+                        string[] updatedmessgae = Regex.Split(tempmsg, "<br>");
                         foreach (var items in updatedmessgae)
                         {
                             if (!string.IsNullOrEmpty(items))
@@ -217,6 +233,8 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
+
+
                 if (item.StartsWith("tw"))
                 {
                     try
@@ -225,7 +243,7 @@ namespace Api.Socioboard.Controllers
                         new Thread(delegate ()
                         {
                             string prId = item.Substring(3, item.Length - 3);
-                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, message, prId, userId, uploads, true, dbr, _logger);
+                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, tempmsg, prId, userId, uploads, true, dbr, _logger);
                         }).Start();
 
                     }
@@ -241,7 +259,7 @@ namespace Api.Socioboard.Controllers
                         new Thread(delegate ()
                         {
                             string prId = item.Substring(4, item.Length - 4);
-                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, message, prId, imgPath, _redisCache, _appSettings, dbr);
+                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, tempmsg, prId, imgPath, _redisCache, _appSettings, dbr);
 
                         }).Start();
                     }
@@ -257,7 +275,7 @@ namespace Api.Socioboard.Controllers
                         new Thread(delegate ()
                         {
                             string prId = item.Substring(12, item.Length - 12);
-                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads,imgPath, userId, message, prId, _redisCache, dbr, _appSettings);
+                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, imgPath, userId, tempmsg, prId, _redisCache, dbr, _appSettings);
                         }).Start();
 
                     }
@@ -294,7 +312,7 @@ namespace Api.Socioboard.Controllers
                     var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
                     filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
                     tempfilepath = filename;
-                  
+
 
                     uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
 
@@ -558,7 +576,7 @@ namespace Api.Socioboard.Controllers
                     }
                     else
                     {
-                        updatedtext = postmessage.Replace("ppp", "+"); 
+                        updatedtext = postmessage.Replace("ppp", "+");
                     }
                     int count = dbr.GetCount<ScheduledMessage>(t => t.shareMessage == updatedtext && t.profileId == objFacebookAccount.FbUserId && t.url == imgUrl && t.scheduleTime.Date == DateTime.UtcNow.Date);
                     if (count > 0)
@@ -636,7 +654,7 @@ namespace Api.Socioboard.Controllers
                                                 }
                                                 catch (Exception)
                                                 {
-                                                    url= link;
+                                                    url = link;
                                                 }
                                             }
                                             if (items.Contains("http://"))
@@ -813,7 +831,7 @@ namespace Api.Socioboard.Controllers
             return Ok("successfully added");
         }
         [HttpPost("DraftScheduleMessage")]
-        public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId,  string imagePath, IFormFile files)
+        public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId, string imagePath, IFormFile files)
         {
             var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\";
             var filename = "";
@@ -1055,6 +1073,62 @@ namespace Api.Socioboard.Controllers
             else
             {
                 return "";
+            }
+        }
+
+        public string GetConvertedUrls(ref string message, Domain.Socioboard.Enum.UrlShortener shortnerType)
+        {
+            List<string> listLinks = new List<string>();
+            Regex urlRx = new Regex(@"((https?|ftp|file)\://|www.)[A-Za-z0-9\.\-]+(/[A-Za-z0-9\?\&\=;\+!'\(\)\*\-\._~%]*)*", RegexOptions.IgnoreCase);
+            MatchCollection matches = urlRx.Matches(message);
+            foreach (Match match in matches)
+            {
+                listLinks.Add(match.Value);
+            }
+            foreach (string tempLink in listLinks)
+            {
+                string shorturl = GetShortenUrlBit(tempLink, shortnerType);
+                message = message.Replace(tempLink, shorturl);
+            }
+            return message;
+        }
+
+        public string GetShortenUrlBit(string Url, Domain.Socioboard.Enum.UrlShortener shortnerType)
+        {
+            string url = "";
+            if (!Url.Contains("http"))
+            {
+                Url = "https://" + Url;
+            }
+            try
+            {
+                if (shortnerType == Domain.Socioboard.Enum.UrlShortener.bitlyUri)
+                {
+                    url = "https://api-ssl.bitly.com/v3/shorten?access_token=71ec4ddc8eeb062bc8bf8583cae1fe7af81af4c7" + "&longUrl=" + Url + "&domain=bit.ly&format=json";
+                }
+                else
+                {
+                    url = "https://api-ssl.bitly.com/v3/shorten?access_token=71ec4ddc8eeb062bc8bf8583cae1fe7af81af4c7" + "&longUrl=" + Url + "&domain=j.mp&format=json";
+                }
+                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
+                httpRequest.Method = "GET";
+                httpRequest.ContentType = "application/x-www-form-urlencoded";
+                HttpWebResponse httResponse = (HttpWebResponse)httpRequest.GetResponse();
+                Stream responseStream = httResponse.GetResponseStream();
+                StreamReader responseStreamReader = new StreamReader(responseStream, System.Text.Encoding.Default);
+                string pageContent = responseStreamReader.ReadToEnd();
+                responseStreamReader.Close();
+                responseStream.Close();
+                httResponse.Close();
+                JObject JData = JObject.Parse(pageContent);
+                if (JData["status_txt"].ToString() == "OK")
+                    return JData["data"]["url"].ToString();
+                else
+                    return Url;
+            }
+            catch (Exception ex)
+            {
+                return Url;
             }
         }
 

@@ -50,6 +50,13 @@ namespace Api.Socioboard.Controllers
             return Ok(GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr));
         }
 
+        [HttpGet("GetAllGroupProfilesDeatails")]
+        public IActionResult GetAllGroupProfilesDeatails(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupProfilesRepository.getAllGroupProfilesdetail(groupId, _redisCache, dbr));
+        }
+
         [HttpPost("DeleteProfile")]
         public IActionResult DeleteProfile(long groupId, long userId, string profileId)
         {
@@ -63,7 +70,7 @@ namespace Api.Socioboard.Controllers
             string selectedProfiles = Request.Form["selectedProfiles"];
             string[] Profiles = selectedProfiles.Split(',');
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId)).ToList();
             foreach (var item in lstGrpProfiles)
             {
@@ -228,7 +235,7 @@ namespace Api.Socioboard.Controllers
                     }
                     if (profileType == Domain.Socioboard.Enum.SocialProfileType.Pinterest)
                     {
-                        Domain.Socioboard.Models.PinterestAccount pinAcc = Repositories.PinterestRepository.getPinterestAccount(profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.PinterestAccount pinAcc = dbr.Find<Domain.Socioboard.Models.PinterestAccount>(t => t.username.Equals(profileId)).FirstOrDefault();
                         if (pinAcc == null)
                         {
                             return BadRequest("Invalid profileId");

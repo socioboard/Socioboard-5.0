@@ -19,7 +19,7 @@
                             </a>
                         </li>-->
                         <li>
-                            <a href="#/upgradeplan" class="btn blue" ng-if="AccountType==0">Upgrade Plan</a>
+                            <a href="#/upgradeplan" class="btn blue" ng-if="AccountType!=7">Upgrade Plan</a>
                         </li>
                         <li>
                             <a href="javascript:void(0);" class="waves-effect waves-block waves-light dropdown-button" data-activates='help'>
@@ -60,7 +60,7 @@
                     </ul>
 
                     <!-- Groups for all plan -->
-                    <ul id='groups' class='dropdown-content dropdown-content-small' ng-if="AccountType!=0">
+                    <ul id='groups' class='dropdown-content dropdown-content-small' ng-if="AccountType==3 || AccountType==4 || AccountType==5 || AccountType==6 || AccountType==7">
                         <li ng-repeat="grp in groups">
                             <a href="javascript:;" class="grey grey-text text-lighten-4">
                                 <span ng-if="groupId==grp.id">{{grp.groupName}}</span>
@@ -70,11 +70,21 @@
                             </a>
                         </li>
                         <!--<li class="divider"></li>-->
-                        <li><a href="#/groups" ><span>Create New</span></a></li>
+                        <li ng-if="AccountType==3 && GetUserGroupCount<5"><a href="#/groups" ><span>Create New</span></a></li>
+                        <li ng-if="AccountType==3 && GetUserGroupCount==5"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                        <li ng-if="AccountType==4 && GetUserGroupCount<10"><a href="#/groups"><span>Create New</span></a></li>
+                        <li ng-if="AccountType==4 && GetUserGroupCount==10"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                        <li ng-if="AccountType==5 && GetUserGroupCount<15"><a href="#/groups"><span>Create New</span></a></li>
+                        <li ng-if="AccountType==5 && GetUserGroupCount==15"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                        <li ng-if="AccountType==6 && GetUserGroupCount<20"><a href="#/groups"><span>Create New</span></a></li>
+                        <li ng-if="AccountType==6 && GetUserGroupCount==20"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                        <li ng-if="AccountType==7 && GetUserGroupCount<25"><a href="#/groups"><span>Create New</span></a></li>
+                        <li ng-if="AccountType==7 && GetUserGroupCount==25"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                        <!--<li>{{GetUserGroupCount}}</li>-->
                     </ul>
 
-                    <!-- Groups for all plan -->
-                    <ul id='groups' class='dropdown-content dropdown-content-small' ng-if="AccountType==0">
+                    <!-- Groups for Free plan -->
+                    <ul id='groups' class='dropdown-content dropdown-content-small' ng-if="AccountType==0 || AccountType==1 ||AccountType==2">
                         <li ng-repeat="grp in groups">
                             <a href="javascript:;" class="grey grey-text text-lighten-4">
                                 <span ng-if="groupId==grp.id">{{grp.groupName}}</span>
@@ -85,7 +95,7 @@
                         </li>
                         <!--<li class="divider"></li>-->
                         <li><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
-                    </ul>
+                     </ul>
 
                     <!-- Accounts Structure -->
                     <ul id="account_list" class='dropdown-content dropdown-content-small'>
@@ -112,6 +122,11 @@
                         <li>
                             <a href="#/extensions">
                                 <span class="groupslist"><i class="icon-screen-desktop"></i>Apps </span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#/link_shortening">
+                                <span class="groupslist"><i class="icon-link"></i>Link Shortening</span>
                             </a>
                         </li>
                         <li>

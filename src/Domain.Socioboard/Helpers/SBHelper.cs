@@ -84,6 +84,46 @@ namespace Domain.Socioboard.Helpers
             return ret;
         }
 
+        public static int GetMaxGroupCount(SBAccountType accountType)
+        {
+            int ret = 5;
+            switch (accountType)
+            {
+                case SBAccountType.Free:
+                    ret = 1;
+                    break;
+                case SBAccountType.Standard:
+                    ret = 1;
+                    break;
+
+                case SBAccountType.Premium:
+                    ret = 1;
+                    break;
+                case SBAccountType.Deluxe:
+                    ret = 5;
+                    break;
+                case SBAccountType.Topaz:
+                    ret = 10;
+                    break;
+                case SBAccountType.Ruby:
+                    ret = 15;
+                    break;
+                case SBAccountType.Gold:
+                    ret = 20;
+                    break;
+                case SBAccountType.Platinum:
+                    ret = 25;
+                    break;
+                default:
+                    ret = 1;
+                    break;
+
+
+
+            }
+            return ret;
+        }
+
         public static DateTime ConvertFromUnixTimestamp(double timestamp)
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);

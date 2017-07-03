@@ -404,7 +404,7 @@ namespace Socioboard.Helper
             return _ThumbnailDetails;
         }
 
-     
+
         public static string GetShortenUrl(string Url)
         {
             try
@@ -453,6 +453,29 @@ namespace Socioboard.Helper
             {
                 return false;
             }
+            //string output = string.Empty;
+            //string facebookSearchUrl = url;
+            //var facebooklistpagerequest = (HttpWebRequest)WebRequest.Create(facebookSearchUrl);
+            //facebooklistpagerequest.Method = "GET";
+            //facebooklistpagerequest.Credentials = CredentialCache.DefaultCredentials;
+            //facebooklistpagerequest.AllowWriteStreamBuffering = true;
+            //facebooklistpagerequest.ServicePoint.Expect100Continue = false;
+            //facebooklistpagerequest.PreAuthenticate = false;
+            //try
+            //{
+            //    using (var response = facebooklistpagerequest.GetResponse())
+            //    {
+            //        using (var stream = new StreamReader(response.GetResponseStream(), Encoding.GetEncoding(1252)))
+            //        {
+            //            output = stream.ReadToEnd();
+            //        }
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+
+            //}
+            //return output;
         }
     }
 }

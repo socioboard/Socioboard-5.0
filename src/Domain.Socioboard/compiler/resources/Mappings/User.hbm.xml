@@ -155,5 +155,14 @@
   <property name="Adsstatus">
       <column name="Adsstatus" />
     </property>
+    <property name="SocialLoginEnableFb">
+      <column name="SocialLoginEnableFb" />
+    </property>
+    <property name="SocialLoginEnableGo">
+      <column name="SocialLoginEnableGo" />
+    </property>
+    <property name="urlShortnerStatus">
+      <column name="urlShortnerStatus" />
+    </property>
   </class>
 </hibernate-mapping>

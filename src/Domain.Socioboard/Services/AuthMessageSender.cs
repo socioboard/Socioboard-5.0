@@ -14,7 +14,7 @@ namespace Domain.Socioboard.Services
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
 
-        public string SendMail(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "", string Password = "")
+        public string SendMail(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "mailer12@socioboardmails.com", string Password = "RDmgjwos165s")
         {
             string response = "";
             try
@@ -23,6 +23,10 @@ namespace Domain.Socioboard.Services
                 {
                     MailMessage mail = new MailMessage();
                     mail.To.Add(to);
+                    if (!string.IsNullOrEmpty(cc))
+                    {
+                        mail.CC.Add(cc); 
+                    }
                     mail.From = new MailAddress(UserName);
                     mail.Subject = subject;
                     mail.Body = body;
@@ -46,7 +50,7 @@ namespace Domain.Socioboard.Services
         }
 
 
-        public string SendMailSendGrid(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "", string Password = "")
+        public string SendMailSendGrid(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "socioboard007", string Password = "SB125@#$$@d")
         {
             try
             {
@@ -57,7 +61,10 @@ namespace Domain.Socioboard.Services
 
                     // To
                     mailMsg.To.Add(new MailAddress(to));
-
+                    if (!string.IsNullOrEmpty(cc))
+                    {
+                        mailMsg.CC.Add(new MailAddress(cc)); 
+                    }
                     // From
                     mailMsg.From = new MailAddress(from);
 
@@ -79,6 +86,11 @@ namespace Domain.Socioboard.Services
                     Console.WriteLine(ex.Message);
                     return "Mail Not Send";
                 }
+
+                //string posturl = "https://api.sendgrid.com/api/mail.send.json";
+                //string postdata = "api_user=" + UserName + "&api_key=" + Password + "&to=" + to + "&toname=" + to + "&subject=" + subject + "&text=" + body + "&from=" + from;
+                //string ret = ApiSendGridHttp(posturl, postdata);
+                //return ret;
                 return "success";
             }
             catch (Exception ex)

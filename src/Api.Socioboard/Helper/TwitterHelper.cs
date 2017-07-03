@@ -42,7 +42,8 @@ namespace Api.Socioboard.Helper
                 {
                     PhotoUpload ph = new PhotoUpload();
                     string res = string.Empty;
-                    rt = ph.NewTweet(url, message, OAuthTwt, ref res);
+                     //rt = ph.Tweet(url, message, OAuthTwt);
+                      rt = ph.NewTweet(url, message, OAuthTwt, ref res);
                 }
                 catch (Exception ex)
                 {

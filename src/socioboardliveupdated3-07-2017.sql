@@ -608,6 +608,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `SocialLoginEnableFb` tinyint(4) DEFAULT '1',
   `SocialLoginEnableGo` tinyint(4) DEFAULT '1',
   `Adsstatus` bit(1) DEFAULT b'0',
+  `urlShortnerStatus` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`),
   UNIQUE KEY `EmailId` (`EmailId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

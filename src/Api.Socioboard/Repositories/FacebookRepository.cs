@@ -194,15 +194,15 @@ namespace Api.Socioboard.Repositories
         {
             int isSaved = 0;
             Domain.Socioboard.Models.Facebookaccounts fbAcc = FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
-            try
-            {
-                string subscribed_apps = Fbpages.subscribed_apps(accessToken, Convert.ToString(profile["id"]));
-                fbAcc.FbPageSubscription = Domain.Socioboard.Enum.FbPageSubscription.Subscribed;
-            }
-            catch(Exception ex)
-            {
-                fbAcc.FbPageSubscription = 0;
-            }
+            //try
+            //{
+            //    string subscribed_apps = Fbpages.subscribed_apps(accessToken, Convert.ToString(profile["id"]));
+            //    fbAcc.FbPageSubscription = Domain.Socioboard.Enum.FbPageSubscription.Subscribed;
+            //}
+            //catch(Exception ex)
+            //{
+            //    fbAcc.FbPageSubscription = 0;
+            //}
            
             if (fbAcc != null && fbAcc.IsActive == false)
             {
@@ -1679,6 +1679,7 @@ namespace Api.Socioboard.Repositories
                 lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage)).ToList();
             }
             profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+
             long FacebookfanPageCount = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => profileids.Contains(t.FbUserId) && t.IsActive).Sum(t => t.Friends);
             if (FacebookfanPageCount > 1000000)
             {

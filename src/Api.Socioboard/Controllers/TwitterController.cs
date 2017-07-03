@@ -79,6 +79,13 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpGet("GetTwFilterFeeds")]
+        public IActionResult GetTwFilterFeeds(string profileId, long userId, int skip, int count, string mediaType)
+        {
+            return Ok(Repositories.TwitterRepository.GetTopFilterFeeds(profileId, userId, _redisCache, _appSettings, skip, count, mediaType));
+        }
+
+
         [HttpGet("GetUserTweets")]
         public IActionResult GetUserTweets(string profileId, long userId, int skip, int count)
         {

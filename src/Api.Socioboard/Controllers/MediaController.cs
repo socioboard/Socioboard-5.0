@@ -35,7 +35,7 @@ namespace Api.Socioboard.Controllers
         private Helper.AppSettings _appSettings;
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
-
+        
 
         public static ImageFormat GetImageFormat(string extension)
         {
@@ -53,7 +53,7 @@ namespace Api.Socioboard.Controllers
         }
 
 
-
+     
 
         [HttpGet("Get")]
         public IActionResult Get(string id)
@@ -72,7 +72,7 @@ namespace Api.Socioboard.Controllers
                 //If requested file is an image than load file to memory  
                 if (GetImageFormat(extension) != null)
                 {
-                    return Ok(new FileStream(filePath, FileMode.Open));
+                    return Ok( new FileStream(filePath, FileMode.Open));
 
                     //ms = CopyFileToMemory(filePath);
                 }
@@ -82,29 +82,8 @@ namespace Api.Socioboard.Controllers
                 }
             }
 
-
+           
             return BadRequest();
-        }
-
-        [HttpGet("Getfilepath")]
-        public IActionResult Getfilepath(string id)
-        {
-            string filePath = _appEnv.WebRootPath + string.Concat("/upload/", id);
-            string extension = Path.GetExtension(id);
-            if (System.IO.File.Exists(filePath))
-            {
-                if (!string.IsNullOrWhiteSpace(extension))
-                {
-                    extension = extension.Substring(extension.IndexOf(".") + 1);
-                }
-
-                //If requested file is an image than load file to memory  
-                if (GetImageFormat(extension) != null)
-                {
-                    return Ok(filePath);
-                }
-            }
-            return Ok();
         }
 
 

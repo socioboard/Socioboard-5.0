@@ -25,4 +25,18 @@ namespace Domain.Socioboard.Models
         public virtual Int64 groupId { get; set; }
         public virtual DateTime entryDate { get; set; }
     }
+
+    public class profilesdetail
+    {
+        public Domain.Socioboard.Models.Facebookaccounts Fbaccount { get; set; }
+        public Domain.Socioboard.Models.TwitterAccount Twtaccount { get; set; }
+        public Domain.Socioboard.Models.Instagramaccounts Instaaccount { get; set; }
+        public Domain.Socioboard.Models.YoutubeChannel Ytubeaccount { get; set; }
+        public Domain.Socioboard.Models.LinkedInAccount LinkdInaccount { get; set; }
+        public Domain.Socioboard.Models.LinkedinCompanyPage LinkdINcompanyaccount { get; set; }
+        public Domain.Socioboard.Models.GoogleAnalyticsAccount GAaccount { get; set; }
+        public Domain.Socioboard.Models.Googleplusaccounts Gplusaccount { get; set; }
+
+        public Domain.Socioboard.Models.PinterestAccount Pintrestaccount { get; set; }
+    }
 }

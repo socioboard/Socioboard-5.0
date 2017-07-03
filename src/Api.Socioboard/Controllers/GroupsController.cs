@@ -6,6 +6,8 @@ using Api.Socioboard.Model;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Cors;
 using Domain.Socioboard.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -77,6 +79,36 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger,_appEnv);
             return  Ok(GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr));
+        }
+
+        [HttpGet("GetUserGroupsCount")]
+        public IActionResult GetUserGroupsCount(long userId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupsRepository.getAllGroupsofUserCount(userId, _redisCache, dbr));
+        }
+
+        [HttpPost("AddSelectedGroups")]
+        public IActionResult AddSelectedGroups(long userId)
+        {
+            string selectedGroups = Request.Form["selectedGroups"];
+            string[] Profiles = selectedGroups.Split(',');
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groups> lstGrp = Repositories.GroupsRepository.getGroups(userId, _redisCache, dbr);
+            lstGrp = lstGrp.Where(t => !Profiles.Contains(t.groupName)).ToList();
+            foreach (Domain.Socioboard.Models.Groups item in lstGrp)
+            {
+                if(item.groupName=="Socioboard")
+                {
+                    return BadRequest("You cann't delete default group choose other one");
+                }
+                else
+                {
+                    GroupsRepository.DeleteProfile(userId, item.id, _redisCache, dbr, _appSettings);
+                }
+               
+            }
+            return Ok();
         }
     }
 }

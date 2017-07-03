@@ -63,6 +63,9 @@ namespace Domain.Socioboard.Models
         public bool scheduleFailureUpdates { get; set; }
         public bool TwostepEnable { get; set; }
         public AdsStatus Adsstatus { get; set; }
+        public bool SocialLoginEnableFb { get; set; }
+        public bool SocialLoginEnableGo { get; set; }
+        public UrlShortener urlShortnerStatus { get; set; }
     }
 
     public class PiadUser
