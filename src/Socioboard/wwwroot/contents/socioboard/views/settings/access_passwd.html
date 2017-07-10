@@ -37,20 +37,22 @@
                     <div class="col s12 m12 l12">
                         <div class="card-panel">
                             <div class="row">
-                                <div class="col m12 s12">
+                                <div class="col m12 s12" ng-if="Userlogintype != 'Facebook' && Userlogintype != 'Google'">
                                     <h5><strong>2-Step Login</strong></h5>
                                     <p>2-Step Login, adds an extra layer of security for your Socioboard account. Whenever you log in to your account, after entering your username and password, you will be asked for a second authentication code that was sent to your mobile phone via text or free mobile app. </p>
                                     <a href="javascript:void(0);" ng-click="enableModel()" class="btn btn_style modal-trigger" ng-if="twosteploginstatus!=true">Enable 2-Step Login</a>
                                     <a href="javascript:void(0);" ng-click="disableModel()" class="btn btn_style modal-trigger" ng-if="twosteploginstatus==true">Disable 2-Step Login</a>
-                                    <!--<div class="switch">
-                                        <label>
-                                            Off
-                                            <input type="checkbox" href="#2step_login" class="modal-trigger" >
-                                            <span class="lever"></span>
-                                            On
-                                        </label>
-                                    </div>-->
-                                </div>
+                                 </div>
+                                <div class="col m12 s12" ng-if="Userlogintype == 'Facebook'">
+                                    <h5><strong>2-Step Login</strong></h5>
+                                    <p>2-Step Login, adds an extra layer of security for your Socioboard account. Whenever you log in to your account, after entering your username and password, you will be asked for a second authentication code that was sent to your mobile phone via text or free mobile app. </p>
+                                    <a ng-click="FBloginmessage(Fblogin)" class="btn btn_style grey" disable>Enable 2-Step Login</a>
+                                  </div>
+                                <div class="col m12 s12" ng-if="Userlogintype == 'Google'">
+                                    <h5><strong>2-Step Login</strong></h5>
+                                    <p>2-Step Login, adds an extra layer of security for your Socioboard account. Whenever you log in to your account, after entering your username and password, you will be asked for a second authentication code that was sent to your mobile phone via text or free mobile app. </p>
+                                    <a ng-click="Gplusloginmessage(Gpluslogin)" class="btn btn_style grey" disable>Enable 2-Step Login</a>
+                               </div>
                             </div>
                         </div>
                     </div>
@@ -111,7 +113,7 @@
                                         </li>
                                     </ul>
                                     <hr />
-                                    <ul>
+                                    <!--<ul>
                                         <li class="grey-text text-darken-4"><i class="fa fa-dot-circle-o fa-fw" aria-hidden="true"></i>Secondary Account</li>
                                         <li class="row">
                                             <div class="input-field col s6">
@@ -124,7 +126,7 @@
                                             </div>
                                             <button type="button">Submit</button>
                                         </li>
-                                    </ul>
+                                    </ul>-->
                                 </div>
                             </div>
                         </div>

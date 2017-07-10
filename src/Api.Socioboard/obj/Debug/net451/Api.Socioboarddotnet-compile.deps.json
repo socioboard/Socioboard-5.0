@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETFramework,Version=v4.5.1/",
-    "signature": "60056501a2133308a24b7f09c210cbf57202a533"
+    "signature": "4a34a937b290025b1a1bdbc4798d2706cad9cb94"
   },
   "compilationOptions": {
     "defines": [
@@ -58,10 +58,19 @@
           "Swashbuckle.SwaggerGen": "6.0.0-beta901",
           "Swashbuckle.SwaggerUi": "6.0.0-beta901",
           "Imgur.API": "4.0.1",
-          "Socioboard.Pinterest": "1.0.0"
+          "Socioboard.Pinterest": "1.0.0",
+          "TweetinviAPI": "1.3.0",
+          "RestApiSDK": "0.11.0",
+          "PayPalCoreSDK": "1.7.1",
+          "PayPalMerchantSDK": "2.16.204"
         },
         "compile": {
           "Api.Socioboard.exe": {}
+        }
+      },
+      "Autofac/3.5.2": {
+        "compile": {
+          "lib/net40/Autofac.dll": {}
         }
       },
       "EntityFramework/6.0.0": {
@@ -675,6 +684,23 @@
           "lib/net451/Microsoft.AspNetCore.WebUtilities.dll": {}
         }
       },
+      "Microsoft.Bcl/1.1.10": {
+        "dependencies": {
+          "Microsoft.Bcl.Build": "1.0.21"
+        }
+      },
+      "Microsoft.Bcl.Async/1.0.168": {
+        "dependencies": {
+          "Microsoft.Bcl": "1.1.10",
+          "System.Net": "4.0.0.0"
+        },
+        "compile": {
+          "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll": {},
+          "lib/net40/Microsoft.Threading.Tasks.Extensions.dll": {},
+          "lib/net40/Microsoft.Threading.Tasks.dll": {}
+        }
+      },
+      "Microsoft.Bcl.Build/1.0.21": {},
       "Microsoft.CodeAnalysis.Analyzers/1.1.0": {
         "dependencies": {
           "System": "4.0.0.0"
@@ -1014,6 +1040,18 @@
           "lib/netstandard1.0/Microsoft.Extensions.WebEncoders.dll": {}
         }
       },
+      "Microsoft.Net.Http/2.2.29": {
+        "dependencies": {
+          "Microsoft.Bcl": "1.1.10",
+          "Microsoft.Bcl.Build": "1.0.21",
+          "System.Net.Http": "4.0.0.0",
+          "System.Net.Http.WebRequest": "4.0.0.0"
+        },
+        "compile": {
+          "lib/net45/System.Net.Http.Extensions.dll": {},
+          "lib/net45/System.Net.Http.Primitives.dll": {}
+        }
+      },
       "Microsoft.Net.Http.Headers/1.0.0": {
         "dependencies": {
           "System.Buffers": "4.0.0",
@@ -1125,6 +1163,30 @@
       "OAuth/1.0.3": {
         "compile": {
           "lib/net40/OAuth.dll": {}
+        }
+      },
+      "PayPalCoreSDK/1.7.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/net451/PayPalCoreSDK.dll": {}
+        }
+      },
+      "PayPalMerchantSDK/2.16.204": {
+        "dependencies": {
+          "PayPalCoreSDK": "1.7.1"
+        },
+        "compile": {
+          "lib/net20/PayPalMerchantSDK.dll": {}
+        }
+      },
+      "RestApiSDK/0.11.0": {
+        "dependencies": {
+          "PayPalCoreSDK": "1.7.1"
+        },
+        "compile": {
+          "lib/net45/RestApiSDK.dll": {}
         }
       },
       "Serilog/2.1.0": {
@@ -1445,6 +1507,18 @@
           ".NETFramework/v4.5.1/Facades/System.Xml.XDocument.dll": {}
         }
       },
+      "TweetinviAPI/1.3.0": {
+        "dependencies": {
+          "Autofac": "3.5.2",
+          "Microsoft.Bcl.Async": "1.0.168",
+          "Microsoft.Bcl.Build": "1.0.21",
+          "Microsoft.Net.Http": "2.2.29",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "compile": {
+          "lib/net45/Tweetinvi.dll": {}
+        }
+      },
       "Zlib.Portable.Signed/1.11.0": {
         "compile": {
           "lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll": {}
@@ -1572,14 +1646,19 @@
           ".NETFramework/v4.5.1/System.Xml.Linq.dll": {}
         }
       },
-      "System.Drawing/4.0.0.0": {
-        "compile": {
-          ".NETFramework/v4.5.1/System.Drawing.dll": {}
-        }
-      },
       "System.Net/4.0.0.0": {
         "compile": {
           ".NETFramework/v4.5.1/System.Net.dll": {}
+        }
+      },
+      "System.Net.Http.WebRequest/4.0.0.0": {
+        "compile": {
+          ".NETFramework/v4.5.1/System.Net.Http.WebRequest.dll": {}
+        }
+      },
+      "System.Drawing/4.0.0.0": {
+        "compile": {
+          ".NETFramework/v4.5.1/System.Drawing.dll": {}
         }
       },
       "System.Data/4.0.0.0": {
@@ -1636,10 +1715,19 @@
           "Swashbuckle.SwaggerGen": "6.0.0-beta901",
           "Swashbuckle.SwaggerUi": "6.0.0-beta901",
           "Imgur.API": "4.0.1",
-          "Socioboard.Pinterest": "1.0.0"
+          "Socioboard.Pinterest": "1.0.0",
+          "TweetinviAPI": "1.3.0",
+          "RestApiSDK": "0.11.0",
+          "PayPalCoreSDK": "1.7.1",
+          "PayPalMerchantSDK": "2.16.204"
         },
         "runtime": {
           "Api.Socioboard.exe": {}
+        }
+      },
+      "Autofac/3.5.2": {
+        "runtime": {
+          "lib/net40/Autofac.dll": {}
         }
       },
       "EntityFramework/6.0.0": {
@@ -2253,6 +2341,23 @@
           "lib/net451/Microsoft.AspNetCore.WebUtilities.dll": {}
         }
       },
+      "Microsoft.Bcl/1.1.10": {
+        "dependencies": {
+          "Microsoft.Bcl.Build": "1.0.21"
+        }
+      },
+      "Microsoft.Bcl.Async/1.0.168": {
+        "dependencies": {
+          "Microsoft.Bcl": "1.1.10",
+          "System.Net": "4.0.0.0"
+        },
+        "runtime": {
+          "lib/net40/Microsoft.Threading.Tasks.Extensions.Desktop.dll": {},
+          "lib/net40/Microsoft.Threading.Tasks.Extensions.dll": {},
+          "lib/net40/Microsoft.Threading.Tasks.dll": {}
+        }
+      },
+      "Microsoft.Bcl.Build/1.0.21": {},
       "Microsoft.CodeAnalysis.Analyzers/1.1.0": {
         "dependencies": {
           "System": "4.0.0.0"
@@ -2588,6 +2693,18 @@
           "lib/netstandard1.0/Microsoft.Extensions.WebEncoders.dll": {}
         }
       },
+      "Microsoft.Net.Http/2.2.29": {
+        "dependencies": {
+          "Microsoft.Bcl": "1.1.10",
+          "Microsoft.Bcl.Build": "1.0.21",
+          "System.Net.Http": "4.0.0.0",
+          "System.Net.Http.WebRequest": "4.0.0.0"
+        },
+        "runtime": {
+          "lib/net45/System.Net.Http.Extensions.dll": {},
+          "lib/net45/System.Net.Http.Primitives.dll": {}
+        }
+      },
       "Microsoft.Net.Http.Headers/1.0.0": {
         "dependencies": {
           "System.Buffers": "4.0.0",
@@ -2699,6 +2816,30 @@
       "OAuth/1.0.3": {
         "runtime": {
           "lib/net40/OAuth.dll": {}
+        }
+      },
+      "PayPalCoreSDK/1.7.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "runtime": {
+          "lib/net451/PayPalCoreSDK.dll": {}
+        }
+      },
+      "PayPalMerchantSDK/2.16.204": {
+        "dependencies": {
+          "PayPalCoreSDK": "1.7.1"
+        },
+        "runtime": {
+          "lib/net20/PayPalMerchantSDK.dll": {}
+        }
+      },
+      "RestApiSDK/0.11.0": {
+        "dependencies": {
+          "PayPalCoreSDK": "1.7.1"
+        },
+        "runtime": {
+          "lib/net45/RestApiSDK.dll": {}
         }
       },
       "Serilog/2.1.0": {
@@ -2883,6 +3024,18 @@
       "System.Threading.Timer/4.0.0.0": {},
       "System.Xml.ReaderWriter/4.0.0.0": {},
       "System.Xml.XDocument/4.0.0.0": {},
+      "TweetinviAPI/1.3.0": {
+        "dependencies": {
+          "Autofac": "3.5.2",
+          "Microsoft.Bcl.Async": "1.0.168",
+          "Microsoft.Bcl.Build": "1.0.21",
+          "Microsoft.Net.Http": "2.2.29",
+          "Newtonsoft.Json": "9.0.1"
+        },
+        "runtime": {
+          "lib/net45/Tweetinvi.dll": {}
+        }
+      },
       "Zlib.Portable.Signed/1.11.0": {
         "runtime": {
           "lib/portable-net4+sl5+wp8+win8+wpa81+MonoTouch+MonoAndroid/Zlib.Portable.dll": {}
@@ -2982,8 +3135,9 @@
       "System.ComponentModel.DataAnnotations/4.0.0.0": {},
       "System.Security/4.0.0.0": {},
       "System.Xml.Linq/4.0.0.0": {},
-      "System.Drawing/4.0.0.0": {},
       "System.Net/4.0.0.0": {},
+      "System.Net.Http.WebRequest/4.0.0.0": {},
+      "System.Drawing/4.0.0.0": {},
       "System.Data/4.0.0.0": {},
       "System.Web.Extensions/4.0.0.0": {}
     }
@@ -2993,6 +3147,11 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Autofac/3.5.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-pGR5LjY8T/16x6SkJNd7u6EjQnE4C7JS0BZJ7Yl7pt313gIUZ/2ZnPSOIM5eaIA7ArxaudlyyLvAT4ayX5UJ/A=="
     },
     "EntityFramework/6.0.0": {
       "type": "package",
@@ -3294,6 +3453,21 @@
       "serviceable": true,
       "sha512": "sha512-D0licSnS1JgqQ/gYlN41wXbeYG3dFIdjY781YzMHZ5gBB7kczacshW+H6plZkXRr/cCnAJWGa31o1R8c5GEy/A=="
     },
+    "Microsoft.Bcl/1.1.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+tTqoh/M1pyL8El3qLy30EcwnAtyvFoDZJtdG9Cbg/WdFbh4N8kyrq198XHuEL7lnJbeD0DRO8jcX5IIOh05cQ=="
+    },
+    "Microsoft.Bcl.Async/1.0.168": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-tUNC02eBwDKpGre0BcNIvblLv1q0Q3DnS/vtkRHj2FE1sXwt386HAudztyl5C0U88hllrqHDvtlz8bK0Y8cHDA=="
+    },
+    "Microsoft.Bcl.Build/1.0.21": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-sgHu4mIt0+NVGyI12Bj4hLPypNK55UOH+ologj2LqDCjxq3EbIxe/uAtHjY+fEwbE1dtsAHG8SXHf+V/EYbKTg=="
+    },
     "Microsoft.CodeAnalysis.Analyzers/1.1.0": {
       "type": "package",
       "serviceable": true,
@@ -3469,6 +3643,11 @@
       "serviceable": true,
       "sha512": "sha512-NSSIBREmHHiyoAFXV2LMA+a6RMZtTHxgUbHJGHRtnjmTKnRyticx5HAzNpy8VG9+HCCHenL9QD7zSA8jjgAi5A=="
     },
+    "Microsoft.Net.Http/2.2.29": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fc4CPEewJ30Xgal+fSq1lYIBt582A7eKlAL7O4HXiYAiTp2VTnA4osSvk7T2n8aS4xTCPVJusQk3yKLT0XSpkg=="
+    },
     "Microsoft.Net.Http.Headers/1.0.0": {
       "type": "package",
       "serviceable": true,
@@ -3528,6 +3707,21 @@
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-hgYuURGgXcAmxg8Xn/wIlI85eCy4UuxujmR04uXpDQjUwFfgT25eM+j1FerJwI9FK+K8Mr1ViNXP4Vm9BsxW7A=="
+    },
+    "PayPalCoreSDK/1.7.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-hGOLo3X2vgOpOWJI91+vlBgr/Dchk3xZAF0bdIpKiAwjlRKMjzSC4zuT1eGwmQ8uVL1IaGBZwNGklyRHDniYlQ=="
+    },
+    "PayPalMerchantSDK/2.16.204": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uqn99kb71EYWbdYz3dIXTeTzbh5buhfa7uvSemZXDFW1BRnDi8CGAdbK2AX7ZT1JsH3GuQZqxqC0/KpWKML9Wg=="
+    },
+    "RestApiSDK/0.11.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-uexfc/d0uEYD98dkCBqLHcJEMNZW3MBOlaTg93acTcxhKOKKTZITl7ghS7mYEF0szPJL/ueJiPOB56eQtA6ywQ=="
     },
     "Serilog/2.1.0": {
       "type": "package",
@@ -3799,6 +3993,11 @@
       "serviceable": false,
       "sha512": ""
     },
+    "TweetinviAPI/1.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-F3bWNt8J4PUADh4Igt1HCt6rlK/fGEAbjR4NT9sTE3iEObCDCmfrYSqDcxgN4yuE2rQdnjzA/eJ0xHuiVN3WBw=="
+    },
     "Zlib.Portable.Signed/1.11.0": {
       "type": "package",
       "serviceable": true,
@@ -3874,12 +4073,17 @@
       "serviceable": false,
       "sha512": ""
     },
-    "System.Drawing/4.0.0.0": {
+    "System.Net/4.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""
     },
-    "System.Net/4.0.0.0": {
+    "System.Net.Http.WebRequest/4.0.0.0": {
+      "type": "referenceassembly",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "System.Drawing/4.0.0.0": {
       "type": "referenceassembly",
       "serviceable": false,
       "sha512": ""

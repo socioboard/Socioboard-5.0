@@ -53,12 +53,12 @@
     <!-- Page name -->
     <div class="container">
         <div class="col m12">
-            <h4>Dashboard</h4>
+            <h4 class="grey-text text-darken-4">Dashboard</h4>
         </div>
     </div>
 
     <!--card stats start-->
-    <div id="card-stats">
+    <!--<div id="card-stats">
         <div class="row">
             <div class="col s12 m6 l3">
                 <div class="card red white-text">
@@ -70,7 +70,7 @@
                         <a href="#/inboxmessage" class="white-text">View Details</a>
                     </div>
                     <div class="card-action center" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
-                        <a ng-model="abcd" ng-click="message(abcd)" disable class="white-text">View Details</a>
+                        <a  ng-click="message(msg)" disable class="white-text">View Details</a>
                     </div>
                 </div>
 
@@ -85,7 +85,7 @@
                         <a href="#/sentmessages" class="white-text">View Details</a>
                     </div>
                     <div class="card-action center" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
-                        <a ng-model="abcd" ng-click="message(abcd)" disable class="white-text">View Details</a>
+                        <a  ng-click="message(msg)" disable class="white-text">View Details</a>
                     </div>
                 </div>
 
@@ -101,7 +101,7 @@
                         <a href="#/twitterreports" class="white-text">View Details</a>
                     </div>
                     <div class="card-action center" ng-if="user.AccountType==0 ||user.AccountType==1">
-                        <a ng-model="abcd" ng-click="message(abcd)" disable class="white-text">View Details</a>
+                        <a  ng-click="message(msg)" disable class="white-text">View Details</a>
                     </div>
                 </div>
 
@@ -116,14 +116,14 @@
                         <a href="#/facebookreport.html" class="white-text">View Details</a>
                     </div>
                     <div class="card-action center" ng-if="user.AccountType==0 ||user.AccountType==1">
-                        <a ng-model="abcd" ng-click="message(abcd)" disable class="white-text">View Details</a>
+                        <a  ng-click="message(msg)" disable class="white-text">View Details</a>
                     </div>
                 </div>
 
             </div>
 
         </div>
-    </div>
+    </div>-->
     <!--card stats end-->
     <!-- START CONTENT -->
     <section id="content">
@@ -775,36 +775,36 @@
                             <li class="collection-item" ng-if="user.AccountType==0 || user.AccountType==1">
                                 <div class="row">
                                     <div class="col l12 s12">
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Analytics</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Beauty</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Business &amp; Finance</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Content Marketing</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Digital Marketing</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">eCommerce</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Entertainment</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Entrepreneurship</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Fashion</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Food &amp; Nutrition</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Health &amp; Fitness</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Home Improvement</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Humor</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Marketing</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Mental Health</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Mobile</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Music</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Parenting</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Personal finance</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Pets</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Photography</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Programming</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Real Estate</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Self Improvement</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Small business</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Social Media Marketing</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Sports</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Technology</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Travel</a>
-                                        <a ng-model="abcd" ng-click="message(abcd)" disable class="chip red darken-1 white-text">Web Design</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Analytics</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Beauty</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Business &amp; Finance</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Content Marketing</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Digital Marketing</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">eCommerce</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Entertainment</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Entrepreneurship</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Fashion</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Food &amp; Nutrition</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Health &amp; Fitness</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Home Improvement</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Humor</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Marketing</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Mental Health</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Mobile</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Music</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Parenting</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Personal finance</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Pets</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Photography</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Programming</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Real Estate</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Self Improvement</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Small business</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Social Media Marketing</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Sports</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Technology</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Travel</a>
+                                        <a  ng-click="message(msg)" disable class="chip red darken-1 white-text">Web Design</a>
                                     </div>
                                 </div>
                             </li>
@@ -1217,46 +1217,48 @@
                             <ul class="shinh" id="checkboxdata">
                                 <li style="padding:5px 0;">
                                     <label>
-                                        <input  type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />
+                                        <!--<input  type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />-->
+                                        <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
                                         <span style="float:left;">Check All</span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label >
-                                        <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}"  type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}"  type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
                                         <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
                                         <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]"  class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <input name="selector[]"  class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
                                         <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <input name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
                                         <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                        <input name="selector[]" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
                                         <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                     </label>
                                 </li>
                             </ul>
+
                         </div>
                     </div>
 
@@ -1306,7 +1308,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 && Twtcounts==1 ">
                         <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
-                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable id="TwitterAddButton" class="waves-effect grey waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
+                        <a  ng-click="profileaddmessage(prfilemsg)" disable id="TwitterAddButton" class="waves-effect grey waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
                         <p>
                             <!-- ng-change="followChange()" -->
                             <input type="checkbox" ng-click="followChange()" checked="checked" id="TwitterFollow" />
@@ -1327,8 +1329,8 @@
                    </div>
                    <div class="center-align" ng-if="user.AccountType==0 && Fbcounts==1 ">
                         <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand&apos;s Facebook page.</p>
-                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
-                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
+                        <a  ng-click="profileaddmessage(prfilemsg)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
+                        <a  ng-click="profileaddmessage(prfilemsg)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Page</a>
                   </div>
                 </div>
                 <div id="google" class="col s12">
@@ -1342,7 +1344,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 && Gpluscounts==1 ">
                         <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
-                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
+                        <a  ng-click="profileaddmessage(prfilemsg)" disable class="waves-effect grey waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
                     </div>
                 </div>
                 <div id="linkedin" class="col s12">
@@ -1358,8 +1360,8 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 && LinkedIncounts==1 ">
                         <p>Grant access to your profile to share updates and view your feed.</p>
-                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
-                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                        <a  ng-click="profileaddmessage(prfilemsg)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                        <a  ng-click="profileaddmessage(prfilemsg)" disable class="waves-effect grey waves-light btn margin-top-10"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
                     </div>
                 </div>
                 <div id="instagram" class="col s12">
@@ -1373,7 +1375,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 && Instacounts==1 ">
                         <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
-                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
+                        <a  ng-click="profileaddmessage(prfilemsg)" disable class="waves-effect grey waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
                     </div>
                 </div>
                 <div id="pinterest" class="col s12">
@@ -1383,7 +1385,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1">
                         <p>To allow Socioboard access to your Pinterest account, you must first give authorization from the Pinterest website</p>
-                        <a  ng-model="abcd" ng-click="message(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-pinterest fa-fw"></i>Add a pinterest Profile</a>
+                        <a   ng-click="message(msg)" disable class="waves-effect grey waves-light btn"><i class="fa fa-pinterest fa-fw"></i>Add a pinterest Profile</a>
                     </div>
                 </div>
                 <div id="youtube" class="col s12">
@@ -1393,7 +1395,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 ">
                         <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
-                        <a ng-model="abcd" ng-click="profileaddmessage(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-youtube fa-fw"></i>Add Youtube Channel</a>
+                        <a  ng-click="profileaddmessage(prfilemsg)" disable class="waves-effect grey waves-light btn"><i class="fa fa-youtube fa-fw"></i>Add Youtube Channel</a>
                     </div>
                 </div>
                 <div id="ganalytics" class="col s12">
@@ -1403,7 +1405,7 @@
                     </div>
                     <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1">
                         <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
-                        <a ng-model="abcd" ng-click="message(abcd)" disable class="waves-effect grey waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal Google Analytics</a>
+                        <a ng-click="message(msg)" disable class="waves-effect grey waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal Google Analytics</a>
                     </div>
                 </div>
             </div>
@@ -1624,4 +1626,12 @@
         });
         window.emojiPicker.discover();
     });
+
+    function check() {
+        var flag = $('#checkAll').is(":checked");
+        $('#checkboxdata input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+
 </script>

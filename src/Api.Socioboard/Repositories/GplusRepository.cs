@@ -1191,7 +1191,6 @@ namespace Api.Socioboard.Repositories
                 string videos = _Videos.Post_Comments_toVideo(lstYtChannel.First().RefreshToken, videoId, commentText);
                 JObject JVideodata = JObject.Parse(videos);
                 MongoYoutubeComments _YoutubeComments = new MongoYoutubeComments();
-
                 string cmntvideoId = JVideodata["snippet"]["videoId"].ToString();
                 string commentId = JVideodata["id"].ToString();
                 string authorDisplayName = JVideodata["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"].ToString();

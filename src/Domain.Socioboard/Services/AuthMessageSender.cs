@@ -14,7 +14,7 @@ namespace Domain.Socioboard.Services
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
 
-        public string SendMail(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "mailer12@socioboardmails.com", string Password = "RDmgjwos165s")
+        public string SendMail(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "", string Password = "")
         {
             string response = "";
             try
@@ -50,7 +50,7 @@ namespace Domain.Socioboard.Services
         }
 
 
-        public string SendMailSendGrid(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "socioboard007", string Password = "SB125@#$$@d")
+        public string SendMailSendGrid(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "", string Password = "")
         {
             try
             {

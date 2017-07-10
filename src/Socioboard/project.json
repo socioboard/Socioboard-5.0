@@ -29,7 +29,8 @@
     "Socioboard.Facebook": "1.0.0-*",
     "Serilog": "2.1.0",
     "HtmlAgilityPack": "1.4.9.5",
-    "Socioboard.Pinterest": "1.0.0-*"
+    "Socioboard.Pinterest": "1.0.0-*",
+    "iTextSharp": "5.5.11"
   },
 
   "tools": {

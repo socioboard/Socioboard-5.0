@@ -3,9 +3,17 @@
 SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http, $timeout, apiDomain,groupmember,utility) {
     $scope.$on('$viewContentLoaded', function () {
         $scope.lstInviteTeamMembers = []; // array contains list of needs to invite for current group
-
+        $scope.accountType = $rootScope.user.AccountType;
         
+        $scope.message = function (msg) {
+            $scope.msg = "If You want to use this feature upgrade to higher business plan ";
+            swal(msg);
+        };
 
+        $scope.grpmsgs = function (grpmsg) {
+            $scope.grpmsg = "You reached maximum groups count you can't create more groups  ";
+            swal(grpmsg);
+        };
 
         $scope.utility = utility;
 
@@ -110,8 +118,6 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
            // }
 
         }
-
-
 
         //get GroupProfiles to connect of a perticular group and add to groups array in group
         $scope.getGroupProfilesToconnect = function (index, groupId) {

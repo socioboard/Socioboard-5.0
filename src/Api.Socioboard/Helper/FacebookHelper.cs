@@ -24,7 +24,6 @@ namespace Api.Socioboard.Helper
         {
           
             string ret = "";
-
             FacebookClient fb = new FacebookClient();
             fb.AccessToken = accessToken;
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
@@ -44,21 +43,45 @@ namespace Api.Socioboard.Helper
                 {
                     if (!string.IsNullOrEmpty(imagePath))
                     {
-                        Uri u = new Uri(imagePath);
-                        string filename = string.Empty;
-                        string extension = string.Empty;
-                        extension = System.IO.Path.GetExtension(u.AbsolutePath).Replace(".", "");
-                        var media = new FacebookMediaObject
+                        if(!imagePath.Contains("mp4") && !imagePath.Contains("mov") && !imagePath.Contains("mpeg") && !imagePath.Contains("wmv") && !imagePath.Contains("avi") && !imagePath.Contains("flv") && !imagePath.Contains("3gp"))
                         {
-                            FileName = "filename",
-                            ContentType = "image/" + extension
-                        };
-                        //byte[] img = System.IO.File.ReadAllBytes(imagepath);
-                        var webClient = new WebClient();
-                        byte[] img = webClient.DownloadData(imagePath);
-                        media.SetValue(img);
-                        args["source"] = media;
-                        ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();//v2.1
+                            Uri u = new Uri(imagePath);
+                            string filename = string.Empty;
+                            string extension = string.Empty;
+                            extension = System.IO.Path.GetExtension(u.AbsolutePath).Replace(".", "");
+                            var media = new FacebookMediaObject
+                            {
+                                FileName = "filename",
+                                ContentType = "image/" + extension
+                            };
+                            var webClient = new WebClient();
+                            byte[] img = webClient.DownloadData(imagePath);
+                            media.SetValue(img);
+                            args["source"] = media;
+                            ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();
+                        }
+                        else
+                        {
+                            Uri u = new Uri(imagePath);
+                            string filename = string.Empty;
+                            string extension = string.Empty;
+                            filename = imagePath.Substring(imagePath.IndexOf("get?id=") + 7);
+                            if (!string.IsNullOrWhiteSpace(filename))
+                            {
+                                extension = filename.Substring(filename.IndexOf(".") + 1);
+                            }
+                            var media = new FacebookMediaObject
+                            {
+                                FileName = filename,
+                                ContentType = "video/" + extension
+                            };
+                            //byte[] img = System.IO.File.ReadAllBytes(imagepath);
+                            var webClient = new WebClient();
+                            byte[] img = webClient.DownloadData(imagePath);
+                            media.SetValue(img);
+                            args["source"] = media;
+                            ret = fb.Post("v2.7/" + fbUserId + "/videos", args).ToString();//v2.1 
+                        }
                     }
                     else
                     {
@@ -100,6 +123,8 @@ namespace Api.Socioboard.Helper
             return ret;
         }
 
+
+       
 
         public static string FacebookComposeMessageRss(string message, string accessToken, string FbUserId, string title, string link, string rssFeedId, Helper.AppSettings _appSettings)
         {

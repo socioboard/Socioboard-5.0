@@ -201,11 +201,13 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
             $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
             swal(abcd);
         };
-       
+        $scope.grpmsgs = function (grpmsg) {
+            $scope.grpmsg = "You reached maximum groups count you can't create more groups  ";
+            swal(grpmsg);
+        };
           //get group count
         $scope.getGroupCount = function () {
-            debugger;
-            $http.get(apiDomain + '/api/Groups/GetUserGroupsCount?&userId=' + $rootScope.user.Id)
+           $http.get(apiDomain + '/api/Groups/GetUserGroupsCount?&userId=' + $rootScope.user.Id)
                           .then(function (response) {
                               $rootScope.GetUserGroupCount = response.data;
 
@@ -273,8 +275,7 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
 
 
         $scope.getOnPageLoadGroups = function () {
-            debugger;
-            $scope.getGroupCount();
+             $scope.getGroupCount();
             var canContinue = true;
             angular.forEach($rootScope.groups, function (value, key) {
                 if (canContinue && value.id == $rootScope.groupId) {

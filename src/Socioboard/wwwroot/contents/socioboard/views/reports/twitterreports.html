@@ -1,3 +1,10 @@
+<style>
+    .a {
+        position: relative;
+        top: -16px;
+    }
+</style>
+
 <div data-ng-controller="TwitterreportsController">
             <!-- Page name -->
 
@@ -83,6 +90,7 @@
                                         <table class="display responsive-table striped" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
+                                                    <th>S.No.</th>
                                                     <th>Name</th>
                                                     <th>Followers</th>
                                                     <th>Following</th>
@@ -91,6 +99,7 @@
                                             </thead>
                                             <tbody ng-repeat="twtfollowfollowing in getfollowerfollowingcount">
                                                 <tr>
+                                                    <td style="width: 1%;">{{$index+1}}</td>
                                                     <td>{{twtfollowfollowing.twitterScreenName}}</td>
                                                     <td>{{twtfollowfollowing.followersCount}}</td>
                                                     <td>{{twtfollowfollowing.followingCount}}</td>
@@ -109,22 +118,24 @@
                                     <table id="all_video_table" class="display responsive-table striped" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
+                                                <th>S.No.</th>
                                                 <th>Posts</th>
-                                                <!--<th>Hits</th>
-                                                <th>Likes</th>
-                                                <th>Comments</th>
-                                                <th>Feed URL</th>
-                                                <th>Type</th>-->
+                                                <th>View Post</th>
+                                                <th>From</th>
+                                                <th>Favourate</th>
+                                                <th>Retweet</th>
+                                                <!--<th>Type</th>-->
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr ng-repeat="instapostdetails in getfeedsdata" my-repeat-video-tab-directive>
-                                                <td>{{instapostdetails.screenName}} {{instapostdetails.feedDate}} <br> {{instapostdetails.feed}}</td>
-                                                <!--<td>{{instapostdetails.commentCount + instapostdetails.likeCount}}</td>
-                                                <td>{{instapostdetails.likeCount}}</td>
-                                                <td>{{instapostdetails.commentCount}}</td>
-                                                <td><a>{{instapostdetails.feedUrl}}</a></td>
-                                                <td>{{instapostdetails.type}}</td>-->
+                                                <td style="width: 1%;">{{$index+1}}</td>
+                                                <td style="width: 50%;"><a href="https://twitter.com/{{instapostdetails.screenName}}" target="_blank">{{instapostdetails.screenName}}</a> {{instapostdetails.feedDate}} <br><a>{{instapostdetails.feed}}</a> </td>
+                                                <td style="width: 10%;"><a href="https://twitter.com/{{instapostdetails.fromName}}/status/{{instapostdetails.messageId}}" target="_blank"><i class="icon-social-twitter"></i> tweet</a></td>
+                                                <td><img class="responsive-img circle" src="{{instapostdetails.fromProfileUrl}}"><span class="a"> {{instapostdetails.fromName}}</span></td>
+                                                <td>{{instapostdetails.likecount}}</td>
+                                                <td>{{instapostdetails.retweetcount}}</td>
+                                                <!--<td>{{instapostdetails.type}}</td>-->
                                                
                                             </tr>
 

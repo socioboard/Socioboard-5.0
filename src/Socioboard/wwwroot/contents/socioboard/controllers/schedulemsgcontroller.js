@@ -144,9 +144,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                     if (scheduletime != "") {
                         // if (date_value != "") {
                         $scope.checkfile();
-
-                       
-
                         if ($scope.check == true) {
                             var formData = new FormData();
                             formData.append('files', $("#input-file-now").get(0).files[0]);
@@ -164,7 +161,11 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                 if (response.data == "scheduled") {
 
                                     if (num < y) {
+                                        
                                         $scope.chekRepat();
+                                    }
+                                    else if (num < x) {
+                                        $scope.weekloopsch();
                                     }
                                     else {
                                         $('#ScheduleMsg').val('');
@@ -203,8 +204,11 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                 transformRequest: angular.identity,
                             }).then(function (response) {
 
-                                if (num < y) {
+                                if (num < y) {                                    
                                     $scope.chekRepat();
+                                }
+                                else if (num < x) {
+                                    $scope.weekloopsch();
                                 }
                                 else {
                                     $('#ScheduleMsg').val('');
@@ -241,50 +245,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
 
 
-        $scope.justChek = function (isCheked) {
-            $scope.st = isCheked;
-        }
-        var num = 0;
-        $scope.chekRepat = function () {
-          
-            if ($scope.st) {
-                var intervalDay = $('#sche_day').val();
-                var timeRepeat = $('#timesRepeat').val();
-                var x = parseInt(intervalDay); //The parseInt() function parses a string and returns an integer
-                var y = parseInt(timeRepeat);
-                var arrdate = [];
-                var dat = [];
-                var curdate = ($('.md-input')[0]).value;
-                var date = curdate.split("/");
-                dat[0] = parseInt(date[0]);
-                
-                var datt = dat[0];
-                var secDate = datt + x;
-                arrdate[0] = secDate + "/" + date[1] + "/" + date[2];
-                for (var i = 1; i < y; i++) {
-                    var secDate = secDate + x;
-                    arrdate[i] = secDate + "/" + date[1] + "/" + date[2];
-                }
-                for (var i = 0 ; i < y; i++) {
-                    num++;
-                    $scope.schedulemsg(arrdate[i]);
-                    $scope.running = true;
-                }
-            }
-        }
-
-        //$scope.forlop = function () {
-        //    debugger;
-        //    for (var i = 0 ; i < y; i++) {
-        //        num++;
-        //        $scope.schedulemsg(arrdate[i]);
-        //        $scope.running = true;
-                
-        //    }
-        //}
-       
-       
-
         $scope.checkfile = function () {
             var filesinput = $('#input-file-now');
            
@@ -304,6 +264,242 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         $scope.hasExtension = function (inputID, exts) {
             var fileName = $('#input-file-now').val();
             return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+        }
+
+        $scope.justChek = function (isCheked) {
+            $scope.st = isCheked;
+        }
+
+        var num = 0;
+        $scope.chekRepat = function () {
+            if ($scope.st) {
+                var intervalDay = $('#sche_day').val();
+                var timeRepeat = $('#timesRepeat').val();
+                var x = parseInt(intervalDay); //The parseInt() function parses a string and returns an integer
+                var y = parseInt(timeRepeat);
+                var arrdate = [];
+                var dat = [];
+                var curdate = ($('.md-input')[0]).value;
+                var date = curdate.split("/");
+                dat[0] = parseInt(date[0]);
+
+                var datt = dat[0];
+                var secDate = datt + x;
+                arrdate[0] = secDate + "/" + date[1] + "/" + date[2];
+                for (var i = 1; i < y; i++) {
+                    var secDate = secDate + x;
+                    arrdate[i] = secDate + "/" + date[1] + "/" + date[2];
+                }
+                for (var i = 0 ; i < y; i++) {
+                    num++;
+                    $scope.schedulemsg(arrdate[i]);
+                    $scope.running = true;
+                }
+            }
+        }
+
+        
+        var arr = new Array();
+        var arr1 = new Array();
+        var numarr = new Array();
+        var dval = [];
+        var j = 0;
+        var l = 0;
+        var x=0;
+        $scope.SwitchedOn = function (abcd, dayss,num) {
+            debugger;            
+            arr.push(abcd);
+            arr1.push(dayss);
+            numarr.push(num);
+            
+            
+
+            for (var i = j; i < 7; i++)
+            {
+                if(num == j)
+                {
+                    dval[j] = dayss;
+                }
+                else
+                {
+                    if (dval[j] != null) {
+                        var v = abcd;
+                    }
+                    else {
+                        dval[j] = null;
+                    }
+                     
+                }
+                j++;
+                var k = j;
+                
+            }
+            j = k - 7;
+
+            
+           
+            console.log("dval");
+            console.log(dval);
+            $scope.dayfindFunc();
+        }
+
+        $scope.weekdayChek = function (isCheked) {
+            $scope.endisval = isCheked;
+        }
+        $scope.disableswith = function () {
+          
+                debugger;
+                var currentdate = new Date();
+                var weekday = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+                   "Friday", "Saturday");
+                var n = currentdate.getDay() - 1;
+                var dayValue = weekday[currentdate.getDay()];
+                $scope.dayscompare = dayValue;
+                $scope.numday = n;
+
+
+        }
+
+        $scope.disableswith();
+
+        var arrdate = [];
+        $scope.dayfindFunc = function () {
+            debugger;
+            var weekday = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+               "Friday", "Saturday");
+            var exactDate;
+            var currentdate = ($('.md-input')[0]).value;
+            var datevalue = currentdate.split("/");
+            
+            exactDate = datevalue[1] + "/" + datevalue[0] + "/" + datevalue[2];
+            var d = new Date(exactDate);
+            var numday = d.getDay();//for day number
+            var dayValue = weekday[d.getDay()];//for weekday
+            
+            var a = dayValue;
+            var dat = [];
+            dat[0] = parseInt(datevalue[0]);                  
+            var exactvalue = dat[0];           
+            
+            
+
+            for (var i = 0 ; i < 7; i++)
+            {
+               
+                    if (dval[i] == "Monday" )
+                    {
+                        
+                        //a = dayValue;
+                        //if (dval[i] == a)
+                        //{
+                        //    var b = 0;
+                        //}
+                        if (i > (numday-1))
+                        {
+                            //exactvalue++;
+                            arrdate[i] = exactvalue + "/" + datevalue[1] + "/" + datevalue[2];
+                        }
+                    }
+                    else if (dval[i] == "Tuesday")
+                    {
+                        
+                        a = dayValue;
+                        if (dval[i] == a) {
+                            var b = 1;
+                        }
+                        if (i > (numday - 1))
+                        {
+                            //exactvalue++;
+                            arrdate[i] = exactvalue + "/" + datevalue[1] + "/" + datevalue[2];
+
+                        }
+                    }
+                    else if (dval[i] == "Wednesday")
+                    {
+                        
+                        a = dayValue;
+                        if (dval[i] == a) {
+                            var b = 2;
+                        }
+                        if (i > (numday - 1))
+                        {
+                            //exactvalue++;
+                            arrdate[i] = exactvalue + "/" + datevalue[1] + "/" + datevalue[2];
+                        }
+                    }
+                    else if (dval[i] == "Thursday")
+                    {
+
+                        a = dayValue;
+                        if (dval[i] == a) {
+                            var b = 3;
+                        }
+                        if (i > (numday - 1))
+                        {
+                            //exactvalue++;
+                            arrdate[i] = exactvalue + "/" + datevalue[1] + "/" + datevalue[2];
+                        }
+                    }
+                    else if (dval[i] == "Friday" )
+                    {
+                        a = dayValue;
+                        if (dval[i] == a) {
+                            var b = 4;
+                        }
+                        if (i > (numday - 1))
+                        {
+                            //exactvalue++;
+                            arrdate[i] = exactvalue + "/" + datevalue[1] + "/" + datevalue[2];
+                        }
+                    }
+                    else if (dval[i] == "Saturday")
+                    {
+                        a = dayValue;
+                        if (dval[i] == a) {
+                            var b = 5;
+                        }
+                        if (i > (numday - 1))
+                        {
+                            //exactvalue++;
+                            arrdate[i] = exactvalue + "/" + datevalue[1] + "/" + datevalue[2];
+                        }
+                    }
+                    else if (dval[i] == "Sunday")
+                    {
+                        a = dayValue;
+                        if (dval[i] == a) {
+                            var b = 6;
+                        }
+                        if (i > (numday - 1))
+                        {
+                            //exactvalue++;
+                            arrdate[i] = exactvalue + "/" + datevalue[1] + "/" + datevalue[2];
+                        }
+                    }
+                    if (i >= (numday - 1))
+                    {   
+                        exactvalue++;
+                    }
+                    if (dval[i] != null) {
+                        x++;
+                    }
+                   
+            }
+
+           
+        }
+
+        $scope.weekloopsch = function () {
+
+            for (var i = 0 ; i < arrdate.length; i++) {
+                num++;
+                if (arrdate[i] != null) {
+                   
+                    $scope.schedulemsg(arrdate[i]);
+                    $scope.running = true;
+                }
+                
+            }
         }
 
 
@@ -332,9 +528,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             }
          
         };
-        
-
-
         $scope.draftmsg = function () {
             var message = $('#ScheduleMsg').val();
             var testmessage = message;
@@ -363,8 +556,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             var d4 = d.setHours(d.getHours() + 5);
             var date = moment(d4);
             var newdate = new Date(date).toUTCString();
-
-            
           
             if (/\S/.test(testmessage)) {
                 $scope.checkfile();//added on 19/10/2016
@@ -422,6 +613,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                 swal('Please type a message to save in draft');
             }
         }
+
+       
 
        
 

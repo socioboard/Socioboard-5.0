@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Domain.Socioboard.Models;
 using Domain.Socioboard.Interfaces.Services;
-using System.Threading;
+
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,6 +38,15 @@ namespace Api.Socioboard.Controllers
         {
             Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
             return Ok(Repositories.PaymentTransactionRepository.GetPackage(packagename, dbr));
+        }
+
+
+        [HttpPost("GetPaymentTransactiondata")]
+        public IActionResult GetPaymentTransactiondata(long id)
+        {
+            Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            Domain.Socioboard.Models.PaymentTransaction _PaymentTransaction = dbr.Find<Domain.Socioboard.Models.PaymentTransaction>(t => t.id == id).FirstOrDefault();
+            return Ok(_PaymentTransaction);
         }
 
         [HttpPost("UpgradeAccount")]
@@ -179,6 +188,8 @@ namespace Api.Socioboard.Controllers
             return Ok();
         }
 
+        
+
         [HttpPost("UpdateRecurringUser")]
         public IActionResult UpdateRecurringUser(string subscr_id, string txn_id, DateTime subscr_date, string payer_email, string Payername, string payment_status, string item_name, string amount,string media)
         {
@@ -221,5 +232,8 @@ namespace Api.Socioboard.Controllers
             }
             return Ok();
         }
+
+       
+
     }
 }

@@ -139,7 +139,7 @@ namespace Api.Socioboard.Repositories
                                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
                                    
                                 }
-                                return res;
+                              
                             }
                         }
                         catch (Exception ex)

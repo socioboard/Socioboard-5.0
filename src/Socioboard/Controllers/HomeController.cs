@@ -9,18 +9,22 @@ using System.Net.Http;
 using Domain.Socioboard.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Filters;
-
-
+using iTextSharp.text.pdf;
+using iTextSharp.text;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 namespace Socioboard.Controllers
 {
     public class HomeController : Controller
     {
         private Helpers.AppSettings _appSettings;
         private readonly ILogger _logger;
-        public HomeController(ILogger<HomeController> logger, Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
+        private readonly IHostingEnvironment _appEnv;
+        public HomeController(ILogger<HomeController> logger, IHostingEnvironment appEnv, Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
         {
             _appSettings = settings.Value;
             _logger = logger;
+            _appEnv = appEnv;
         }
 
 
@@ -32,8 +36,8 @@ namespace Socioboard.Controllers
             {
                 SortedDictionary<string, string> strdi = new SortedDictionary<string, string>();
                 strdi.Add("systemId", session.systemId);
-                string respo=  CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
-                if (respo!="false")
+                string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
+                if (respo != "false")
                 {
                     if (user != null)
                     {
@@ -78,7 +82,7 @@ namespace Socioboard.Controllers
         }
 
         // [ResponseCache(Duration = 100)]
-       [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
@@ -93,7 +97,7 @@ namespace Socioboard.Controllers
             {
                 return RedirectToAction("Index", "Index");
             }
-            
+
 
             try
             {
@@ -263,7 +267,7 @@ namespace Socioboard.Controllers
         private async Task SaveSessionData()
         {
             Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
-            if (session!=null)
+            if (session != null)
             {
                 List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
                 Param.Add(new KeyValuePair<string, string>("systemId", session.systemId));
@@ -272,7 +276,7 @@ namespace Socioboard.Controllers
                 {
                     Domain.Socioboard.Models.SessionHistory _SessionHistory = await respon.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
                     HttpContext.Session.SetObjectAsJson("revokedata", _SessionHistory);
-                } 
+                }
             }
         }
 
@@ -1019,6 +1023,222 @@ namespace Socioboard.Controllers
             return Content("");
         }
 
+
+        BaseFont f_cb = BaseFont.CreateFont("c:\\windows\\fonts\\calibrib.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+        BaseFont f_cn = BaseFont.CreateFont("c:\\windows\\fonts\\calibri.ttf", BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+        private void writeText(PdfContentByte cb, string Text, int X, int Y, BaseFont font, int Size)
+        {
+            cb.SetFontAndSize(font, Size);
+            cb.ShowTextAligned(PdfContentByte.ALIGN_LEFT, Text, X, Y, 0);
+        }
+
+        private PdfTemplate PdfFooter(PdfContentByte cb)//, DataRow drFoot)
+        {
+            // Create the template and assign height
+            PdfTemplate tmpFooter = cb.CreateTemplate(580, 100);
+            // Move to the bottom left corner of the template
+            tmpFooter.MoveTo(1, 1);
+            // Place the footer content
+            tmpFooter.Stroke();
+            // Begin writing the footer
+            tmpFooter.BeginText();
+            // Set the font and size
+            tmpFooter.SetFontAndSize(f_cn, 8);
+            // Write out details from the payee table
+
+
+            string supplier = "Socioboard";
+            string address1 = "TV Complex, 2, 60 Feet Rd, 6th Block";
+            string address2 = " Koramangala, Bengaluru, Karnataka";
+            string zip = "560034";
+
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, supplier.ToString(), 0, 50, 0);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, address1.ToString(), 0, 42, 0);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, address2.ToString(), 0, 34, 0);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, zip.ToString(), 0, 26, 0);
+
+            // Bold text for ther headers
+            tmpFooter.SetFontAndSize(f_cb, 8);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Phone :", 215, 50, 0);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Mail   :", 215, 42, 0);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Web   :", 215, 34, 0);
+            //tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, "Legal info", 400, 53, 0);
+            // Regular text for infomation fields
+
+            string phone = "+91 7406317771";
+            string mail = "sumit@socioboard.com";
+            string web = "https://www.socioboard.com";
+            tmpFooter.SetFontAndSize(f_cn, 8);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, phone.ToString(), 265, 50, 0);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, mail.ToString(), 265, 42, 0);
+            tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, web.ToString(), 265, 34, 0);
+            //tmpFooter.ShowTextAligned(PdfContentByte.ALIGN_LEFT, drFoot["xtrainfo"].ToString(), 400, 45, 0);
+            // End text
+            tmpFooter.EndText();
+            // Stamp a line above the page footer
+            cb.SetLineWidth(0f);
+            cb.MoveTo(30, 60);
+            cb.LineTo(570, 60);
+            cb.Stroke();
+            // Return the footer template
+            return tmpFooter;
+        }
+        
+        public async Task<FileContentResult> generatePaymentInvoicePdf(string id, string package)
+        {
+            Int32 invoiceId = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+            string filename = "Invoice_" + invoiceId + ".pdf";
+            string ReportFilePath = _appEnv.WebRootPath + "\\contents\\socioboard\\Invoice\\" + filename;
+            List<KeyValuePair<string, string>> Parameter = new List<KeyValuePair<string, string>>();
+            Parameter.Add(new KeyValuePair<string, string>("id", id));
+            HttpResponseMessage respons = await WebApiReq.PostReq("/api/PaymentTransaction/GetPaymentTransactiondata", Parameter, "", "", _appSettings.ApiDomain);
+            if (respons.IsSuccessStatusCode)
+            {
+                Domain.Socioboard.Models.PaymentTransaction _PaymentTransaction = await respons.Content.ReadAsAsync<Domain.Socioboard.Models.PaymentTransaction>();
+
+                try
+                {
+                    using (System.IO.FileStream fs = new FileStream(_appEnv.WebRootPath + "\\contents\\socioboard\\Invoice\\" + "Invoice_" + invoiceId + ".pdf", FileMode.Create))
+                    {
+                        Document document = new iTextSharp.text.Document(PageSize.A4, 25, 25, 30, 1);
+
+                        PdfWriter writer = PdfWriter.GetInstance(document, fs);
+
+                        // Add meta information to the document
+                        document.AddAuthor("Jitendra Kumar");
+                        document.AddCreator("Sample application using iTestSharp");
+                        document.AddKeywords("User Invoice");
+                        document.AddSubject("Invoice");
+                        document.AddTitle("User invoice");
+
+                        // Open the document to enable you to write to the document
+                        document.Open();
+
+                        // Makes it possible to add text to a specific place in the document using 
+                        // a X & Y placement syntax.
+                        PdfContentByte cb = writer.DirectContent;
+                        // Add a footer template to the document
+                        ///cb.AddTemplate(PdfFooter(cb, drPayee), 30, 1);
+                       // cb.AddTemplate(PdfFooter(cb), 30, 1);
+
+                        // Add a logo to the invoice                  
+
+                        iTextSharp.text.Image png = iTextSharp.text.Image.GetInstance("https://www.socioboard.com/contents/socioboard/images/Socioboard.png");
+                        png.ScaleAbsolute(200, 55);
+                        png.SetAbsolutePosition(40, 750);
+                        cb.AddImage(png);
+
+                        // First we must activate writing
+                        cb.BeginText();
+
+                        // First we write out the header information
+
+                        //User Value
+                        string invoiceType = "";
+
+                        DateTime invoiceDate = DateTime.Now;
+                        DateTime dueDate = DateTime.Now.AddMonths(1);
+
+
+
+                        // Start with the invoice type header
+                        writeText(cb, invoiceType.ToString(), 350, 820, f_cb, 14);
+                        // HEader details; invoice number, invoice date, due date and customer Id
+                        writeText(cb, "Invoice No    :", 350, 800, f_cb, 10);
+                        writeText(cb, invoiceId.ToString(), 420, 800, f_cn, 10);
+                        writeText(cb, "Invoice date :", 350, 788, f_cb, 10);
+                        writeText(cb, invoiceDate.ToString("dd/MM/yyyy"), 420, 788, f_cn, 10);
+                        writeText(cb, "Due date      :", 350, 776, f_cb, 10);
+                        writeText(cb, dueDate.ToString("dd/MM/yyyy"), 420, 776, f_cn, 10);
+                        string delCustomerName = _PaymentTransaction.Payername;
+                        string email = _PaymentTransaction.payeremail;
+                        string media = _PaymentTransaction.media;
+
+                        int left_margin = 40;
+                        int top_margin = 720;
+                        writeText(cb, "User Details :-", left_margin, top_margin, f_cb, 10);
+                        writeText(cb, delCustomerName.ToString(), left_margin, top_margin - 12, f_cn, 10);
+                        writeText(cb, email.ToString(), left_margin, top_margin - 24, f_cn, 10);
+                        writeText(cb, media.ToString(), left_margin, top_margin - 36, f_cn, 10);
+                        cb.EndText();
+                        // Separate the header from the rows with a line
+                        // Draw a line by setting the line width and position
+                        cb.SetLineWidth(0f);
+                        cb.MoveTo(40, 670);
+                        cb.LineTo(560, 670);
+                        cb.Stroke();
+                        // Don't forget to call the BeginText() method when done doing graphics!
+                        cb.BeginText();
+
+                        // Before we write the lines, it's good to assign a "last position to write"
+                        // variable to validate against if we need to make a page break while outputting.
+                        // Change it to 510 to write to test a page break; the fourth line on a new page
+                        int lastwriteposition = 100;
+
+                        // Loop thru the rows in the rows table
+                        // Start by writing out the line headers
+                        top_margin = 645;
+                        left_margin = 40;
+                        // Line headers
+                        writeText(cb, "Package", left_margin, top_margin, f_cb, 10);
+                        writeText(cb, "Description", left_margin + 70, top_margin, f_cb, 10);
+                        cb.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, "Payment Date", left_margin + 285, top_margin, 0);
+                        writeText(cb, "TransactionId", left_margin + 322, top_margin, f_cb, 10);
+                        cb.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, "PaymentStatus ", left_margin + 455, top_margin, 0);
+                        writeText(cb, "Paid Amount", left_margin + 475, top_margin, f_cb, 10);
+
+
+                        cb.EndText();
+                        // Separate the header from the rows with a line
+                        // Draw a line by setting the line width and position
+                        cb.SetLineWidth(0f);
+                        cb.MoveTo(40, 630);
+                        cb.LineTo(560, 630);
+                        cb.Stroke();
+                        // Don't forget to call the BeginText() method when done doing graphics!
+                        cb.BeginText();
+                        // First item line position starts here
+                        top_margin = 600;
+                        string Package = package;
+                        string Description = "This package provide .... facilities";
+                        DateTime Payment_Date = _PaymentTransaction.paymentdate;
+                        string PaymentStatus = _PaymentTransaction.paymentstatus;
+                        string Paid_Amount = _PaymentTransaction.amount;
+                        string TransactionId = _PaymentTransaction.paymentId;
+
+
+                        writeText(cb, Package.ToString(), left_margin, top_margin, f_cn, 10);
+                        writeText(cb, Description.ToString(), left_margin + 65, top_margin, f_cn, 10);
+                        cb.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, Payment_Date.ToString("dd/MM/yyyy"), left_margin + 285, top_margin, 0);
+                        writeText(cb, TransactionId.ToString(), left_margin + 322, top_margin, f_cn, 10);
+                        cb.ShowTextAligned(PdfContentByte.ALIGN_RIGHT, PaymentStatus.ToString(), left_margin + 455, top_margin, 0);
+                        writeText(cb, Paid_Amount.ToString(), left_margin + 475, top_margin, f_cn, 10);
+                        cb.EndText();
+
+                        // Close the document, the writer and the filestream!
+                        document.Close();
+                        writer.Close();
+                        fs.Close();
+
+                    }
+                }
+                catch (Exception error)
+                {
+                }
+
+               // return File(pdfBytes, "application/pdf", filename);
+                
+            }
+            byte[] pdfBytes = System.IO.File.ReadAllBytes(ReportFilePath);
+            if (System.IO.File.Exists(ReportFilePath))
+            {
+                System.IO.File.Delete(ReportFilePath);
+            }
+            // return new FileStreamResult(new MemoryStream(pdfBytes), "application / pdf") { FileDownloadName = filename };
+
+            return File(pdfBytes, "application/pdf", filename);
+
+        }
 
     }
 }

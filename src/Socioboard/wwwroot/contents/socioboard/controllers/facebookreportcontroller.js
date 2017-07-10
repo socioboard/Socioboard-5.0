@@ -11,13 +11,11 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
         $scope.graphData = [];
 
 
-        $scope.GetFacebookPagePostData = function (profileId, days) {
-        
+        $scope.GetFacebookPagePostData = function (profileId, days) {        
             //codes to load  fb page post data
             $http.get(apiDomain + '/api/FacaebookPageReports/GetFacebookPagePostData?profileId=' + profileId + '&daysCount=' + days)
                         .then(function (response) {
-                            $scope.FacebookPagePost = response.data;
-                           
+                            $scope.FacebookPagePost = response.data;                           
                             $scope.fetchdatacomplete = 'show';
                           
                         }, function (reason) {
@@ -26,6 +24,12 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
             // end codes to load fb page post profiles
         }
 
+        $scope.unixdatechange = function () {
+            
+            var timestamp = moment.unix(1455664452);
+            console.log(timestamp.format("DD/MM/YYYY"));
+        }
+        
 
         $scope.getReports = function (profileId, days) {
        
@@ -154,6 +158,7 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
                     $scope.getReports(value.profileId, 90)
                     $scope.selectedProfile = value.profileId;
                     canContinue = false;
+                    
                 }
             });
         }
@@ -1249,6 +1254,19 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
                 $('select').material_select();
 
 
+            });
+        }
+    };
+})
+
+
+
+SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+
+                $('#all_video_table').DataTable();
             });
         }
     };

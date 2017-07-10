@@ -132,7 +132,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
 
         $scope.openComposeMessage = function (contentFeed) {
             debugger;
-
+            jQuery('input:checkbox').removeAttr('checked');
             if (contentFeed != null) {
                 var message = {
                     "title": contentFeed.title,

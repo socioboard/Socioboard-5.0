@@ -43,7 +43,6 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
 
-        
         /// <summary>
         /// To compose message
         /// </summary>
@@ -107,7 +106,7 @@ namespace Api.Socioboard.Controllers
                             uploads = imagePath;
                         }
                     }
-                   
+                  
                 }
             }
             else if (!string.IsNullOrEmpty(imagePath))

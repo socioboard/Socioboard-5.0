@@ -19,16 +19,15 @@
                                 <div class="row">
                                     <div class="col m12">
                                         <h6><strong>Current Plan:</strong></h6>
-                                        <p>You're currently paying <b>{{plandetails.amount}}$</b> per month on your Business plan.</p>
+                                        <p>You're currently paying <b>{{plandetails.amount}}$</b> per month on your <b>{{planname}}</b> plan.</p>
                                     </div>                                  
                                     <div class="col m12 l12 s12">
                                         <a class="btn btn_style blue" href="#/upgradeplan">Switch Business Plans</a>
-
-                                        <!--<a class="btn btn_style modal-trigger" href="#ChangePaymentDetailsModal">Change Payment Details</a>-->
+                                      <a class="btn btn_style modal-trigger" ng-if="plandetails.id!=''" href="/Home/generatePaymentInvoicePdf?id={{plandetails.id}}&package={{planname}}">Download Invoice</a>
 
                                         <!--<a class="btn btn_style" href="javascript:void();" id="change_bill_btn">Change Company and Billing Details</a>-->
 
-                                        <!--<a class="btn btn_style red modal-trigger" href="#CancelPlanModal">Cancel Plan</a>-->
+                                        <a class="btn btn_style red modal-trigger" href="#CancelPlanModal">Cancel Plan</a>
                                     </div>
                                     <!--<div class="col m12" id="change_bill_div" style="display: none;">
                                         <h6><strong>Your Company and Billing Details</strong></h6>
@@ -392,31 +391,31 @@
         <div class="row no-space">
             <form class="col s12">
                 <div class="row no-space">
-                    <h4>Cancel your Business Plan</h4>
+                    <h4>Cancel your {{planname}} Plan</h4>
                     <p>We're sorry to see you go! Select your preferred plan below:</p>
                     <div class="col m6 s12 center">
-                        <input class="with-gap" name="plan" type="radio" id="Basic"  />
+                        <input class="with-gap" name="plan" type="radio" id="Basic" checked />
                         <label for="Basic">Basic</label>
                         <ul>
                             <li>Free</li>
                             <li>5 profiles</li>
-                            <li>10 queued posts</li>
+                            <li>1 Default Group</li>
                         </ul>
                     </div>
                     <div class="col m6 s12 center">
-                        <input class="with-gap" name="plan" type="radio" id="current_plan" checked />
-                        <label for="current_plan">Current</label>
+                        <input class="with-gap" name="plan" type="radio" id="current_plan" disabled />
+                        <label for="current_plan">Your Current Plan is {{planname}}</label>
                         <ul>
-                            <li>$10/month</li>
-                            <li>$102/year</li>
-                            <li>10 profiles</li>
-                            <li>100 queued posts</li>
+                            <li>{{planprice}}/month</li>
+                            <li>{{planprofiles}}</li>
+                            <li>{{plangroups}}</li>
                         </ul>
                     </div>
                 </div>
                 <div class="row no-space">
                     <div class="input-field col s12">
-                     <button class="modal-close btn cyan waves-effect waves-light right" type="submit">Confirm and Switch </button>
+                        <a class="btn cyan waves-effect waves-light right" ng-click="cancelplan();">Confirm and Switch</a>
+                     <!--<button class="btn cyan waves-effect waves-light right" ng-click="" type="submit">Confirm and Switch </button>-->
                     </div>
                 </div>
             </form>

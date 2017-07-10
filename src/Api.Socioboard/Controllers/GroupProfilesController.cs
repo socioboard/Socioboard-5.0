@@ -50,6 +50,12 @@ namespace Api.Socioboard.Controllers
             return Ok(GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr));
         }
 
+        [HttpGet("GetTop3GroupProfiles")]
+        public IActionResult GetTop3GroupProfiles(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupProfilesRepository.getTop3GroupProfiles(groupId, _redisCache, dbr));
+        }
         [HttpGet("GetAllGroupProfilesDeatails")]
         public IActionResult GetAllGroupProfilesDeatails(long groupId)
         {

@@ -41,6 +41,28 @@ namespace Api.Socioboard.Repositories
                 return null;
             }
         }
+        public static Domain.Socioboard.Models.PinterestAccount getPinterestAccountDetail(string pinterestUserId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                Domain.Socioboard.Models.PinterestAccount inMemTwitterAcc = _redisCache.Get<Domain.Socioboard.Models.PinterestAccount>(Domain.Socioboard.Consatants.SocioboardConsts.CachePinterestAccount + pinterestUserId);
+                if (inMemTwitterAcc != null)
+                {
+                    return inMemTwitterAcc;
+                }
+            }
+            catch { }
+            List<Domain.Socioboard.Models.PinterestAccount> lstpinterestaccounts = dbr.Find<Domain.Socioboard.Models.PinterestAccount>(t => t.username.Equals(pinterestUserId)).ToList();
+            if (lstpinterestaccounts != null && lstpinterestaccounts.Count() > 0)
+            {
+                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CachePinterestAccount + pinterestUserId, lstpinterestaccounts.First());
+                return lstpinterestaccounts.First();
+            }
+            else
+            {
+                return null;
+            }
+        }
         public static string AddPinterestAccount(string client_id, string client_secret, string redirect_uri, string code, long userId, long groupId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             try
@@ -61,7 +83,7 @@ namespace Api.Socioboard.Repositories
                 {
                     if (_PinterestAccount.userid == userId)
                     {
-                        return ("Twitter account already added by you.");
+                        return ("Pinterest account already added by you.");
                     }
                     return "This Account is added by other user.";
                 }

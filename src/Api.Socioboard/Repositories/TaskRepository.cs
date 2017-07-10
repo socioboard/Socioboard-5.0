@@ -6,6 +6,7 @@ using Domain.Socioboard.ViewModels;
 using Microsoft.Extensions.Logging;
 //using Google.Apis.Logging;
 using MongoDB.Bson;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -212,7 +213,12 @@ namespace Api.Socioboard.Repositories
                 Tasks selectedTask = task.Result.ToList().FirstOrDefault();
                 selectedTask.completeddOn = (long)Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
                 selectedTask.taskStatus = Domain.Socioboard.Enum.TaskStatus.Completed;
-                taskmongorepo.UpdateReplace(selectedTask, t=>t.strId == taskId );
+                //taskmongorepo.UpdateReplace(selectedTask, t=>t.strId == taskId );
+
+                FilterDefinition<BsonDocument> filter = new BsonDocument("strId", selectedTask.strId);
+                var update = Builders<BsonDocument>.Update.Set("completeddOn", selectedTask.completeddOn).Set("taskStatus", selectedTask.taskStatus);
+                taskmongorepo.Update<Tasks>(update, filter);
+
 
             }
             catch (Exception)

@@ -332,7 +332,8 @@
                             <ul class="shinh" id="checkboxdata">
                                 <li style="padding:5px 0;">
                                     <label>
-                                        <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />
+                                        <!--<input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />-->
+                                        <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
                                         <span style="float:left;">Check All</span>
                                     </label>
                                 </li>
@@ -400,3 +401,11 @@
         <!-- Compose Email Structure -->
 
     </div>
+    <script>
+    function check() {
+        var flag = $('#checkAll').is(":checked");
+        $('#checkboxdata input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+    </script>

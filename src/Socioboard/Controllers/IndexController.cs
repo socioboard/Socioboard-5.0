@@ -19,6 +19,7 @@ using System.Linq;
 using Domain.Socioboard.Interfaces.Services;
 
 
+
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Socioboard.Controllers
@@ -29,8 +30,8 @@ namespace Socioboard.Controllers
         private Helpers.AppSettings _appSettings;
         private readonly ILogger _logger;
         IEmailSender emailSender;
-
-        public IndexController(Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings, ILogger<IndexController> logger)
+       
+        public IndexController(Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings,  ILogger<IndexController> logger)
         {
             _appSettings = settings.Value;
             _logger = logger;
@@ -43,7 +44,7 @@ namespace Socioboard.Controllers
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<IActionResult> Index()
         {
-
+            
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             string EmailId = string.Empty;
             string password = string.Empty;
@@ -985,6 +986,7 @@ namespace Socioboard.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Careers()
         {
             return View();

@@ -1,4 +1,8 @@
- 
+<style>
+    #groups {
+        max-height: 300px;
+    }
+</style> 
  <!-- START HEADER -->
     <header id="header" class="page-topbar">
         <!-- start header nav-->
@@ -19,7 +23,15 @@
                             </a>
                         </li>-->
                         <li>
-                            <a href="#/upgradeplan" class="btn blue" ng-if="AccountType!=7">Upgrade Plan</a>
+                            <div style="padding: 0px 5px;">
+                                <a href="#/upgradeplan" class="btn btn_style orange" ng-if="AccountType!=7" style="height: 28px; line-height: 28px;  border-radius: 3px;">Upgrade Plan</a>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="margin-top-10">
+                                <a href="http://twitter.com/share" class="twitter-share-button" data-size="large" data-text="@Socioboard Hey Heroes! I could use a hand. :)" data-count="vertical" data-url=" " data-via="" data-hashtags="SocioboardSupport" data-related="Socioboard" data-lang="en" data-dnt="true" data-show-count="false">Tweet Us</a>
+                                <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+                            </div>
                         </li>
                         <li>
                             <a href="javascript:void(0);" class="waves-effect waves-block waves-light dropdown-button" data-activates='help'>
@@ -35,7 +47,7 @@
 
                         <li>
                             <a href="#" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
-                                <i class="icon-user grey-text text-darken-4" title="Account Settings"></i>
+                                <i class="icon-settings grey-text text-darken-4" title="Account Settings"></i>
                             </a>
                         </li>
                         <!-- Dropdown Trigger -->                        
@@ -47,7 +59,7 @@
                     </ul>
                     <!-- Help -->
                     <ul id='help' class='dropdown-content dropdown-content-small'>
-                        <li>
+                       <li>
                             <a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw" class="waves-effect waves-orange  white-text" target="_blank">
                                 <span class="groupslist"><i class="icon-social-youtube"></i>Youtube Tutorials </span>
                             </a>
@@ -69,17 +81,19 @@
                                 <span ng-click="changeGroup(grp.id)" ng-if="groupId!=grp.id">{{grp.groupName}}</span>
                             </a>
                         </li>
+                        <li><a href="#/groups" class="grey-text text-darken-4">View Groups</a></li>
                         <!--<li class="divider"></li>-->
-                        <li ng-if="AccountType==3 && GetUserGroupCount<5"><a href="#/groups" ><span>Create New</span></a></li>
-                        <li ng-if="AccountType==3 && GetUserGroupCount==5"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
-                        <li ng-if="AccountType==4 && GetUserGroupCount<10"><a href="#/groups"><span>Create New</span></a></li>
-                        <li ng-if="AccountType==4 && GetUserGroupCount==10"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
-                        <li ng-if="AccountType==5 && GetUserGroupCount<15"><a href="#/groups"><span>Create New</span></a></li>
-                        <li ng-if="AccountType==5 && GetUserGroupCount==15"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                        <li ng-if="AccountType==3 && GetUserGroupCount<5"><a href="#/groups" ><span class="grey-text text-darken-4">Create New</span></a></li>
+                        <li ng-if="AccountType==3 && GetUserGroupCount==5"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
+                        <li ng-if="AccountType==4 && GetUserGroupCount<10"><a href="#/groups"><span class="grey-text text-darken-4">Create New</span></a></li>
+                        <li ng-if="AccountType==4 && GetUserGroupCount==10"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
+                        <li ng-if="AccountType==5 && GetUserGroupCount<15"><a href="#/groups"><span class="grey-text text-darken-4">Create New</span></a></li>
+                        <li ng-if="AccountType==5 && GetUserGroupCount==15"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
                         <li ng-if="AccountType==6 && GetUserGroupCount<20"><a href="#/groups"><span>Create New</span></a></li>
-                        <li ng-if="AccountType==6 && GetUserGroupCount==20"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
-                        <li ng-if="AccountType==7 && GetUserGroupCount<25"><a href="#/groups"><span>Create New</span></a></li>
-                        <li ng-if="AccountType==7 && GetUserGroupCount==25"><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                        <li ng-if="AccountType==6 && GetUserGroupCount==20"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
+                        <li ng-if="AccountType==7 && GetUserGroupCount<25"><a href="#/groups"><span class="grey-text text-darken-4">Create New</span></a></li>
+                        <li ng-if="AccountType==7 && GetUserGroupCount==25"><a  ng-click="grpmsgs(grpmsg)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
+                        
                         <!--<li>{{GetUserGroupCount}}</li>-->
                     </ul>
 
@@ -94,7 +108,7 @@
                             </a>
                         </li>
                         <!--<li class="divider"></li>-->
-                        <li><a ng-model="abcd" ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                        <li><a  ng-click="message(abcd)" disable><span>Create New</span></a></li>
                      </ul>
 
                     <!-- Accounts Structure -->

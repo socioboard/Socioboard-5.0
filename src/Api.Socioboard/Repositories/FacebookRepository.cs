@@ -1491,7 +1491,120 @@ namespace Api.Socioboard.Repositories
             }
             return lstfacebookfeed;
         }
+        public static List<Domain.Socioboard.Models.Mongo.facebookfeed> GetFacebookSort(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count, string typeShort)
+        {
+            List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
+            List<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeedsLs = new List<MongoFacebookFeed>();
+            MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
+            var builder = Builders<MongoFacebookFeed>.Sort;
+            var sort = builder.Descending(t => t.FeedDate);
+            if (typeShort == "maxlikes")
+            {
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+                lstFbFeeds = lstFbFeeds.OrderByDescending(t => t.Likecount).ToList();
+                foreach (var item in lstFbFeeds.ToList())
+                {
+                    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
+                    var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId);
+                    var taskcomment = Task.Run(async () =>
+                    {
+                        return await resultcomment;
+                    });
+                    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                    _intafeed._facebookFeed = item;
+                    _intafeed._facebookComment = lstFbPostComment.ToList();
+                    lstfacebookfeed.Add(_intafeed);
+                }
+                return lstfacebookfeed;
+            }
+            else if (typeShort == "maxcomment")
+            {
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+                lstFbFeeds = lstFbFeeds.OrderByDescending(t => t.Commentcount).ToList();
+                foreach (var item in lstFbFeeds.ToList())
+                {
+                    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
+                    var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId);
+                    var taskcomment = Task.Run(async () =>
+                    {
+                        return await resultcomment;
+                    });
+                    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                    _intafeed._facebookFeed = item;
+                    _intafeed._facebookComment = lstFbPostComment.ToList();
+                    lstfacebookfeed.Add(_intafeed);
+                }
+                return lstfacebookfeed;
+            }
+            else if (typeShort == "leastlikes")
+            {
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+                lstFbFeeds = lstFbFeeds.OrderBy(t => t.Likecount).ToList();
+                foreach (var item in lstFbFeeds.ToList())
+                {
+                    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
+                    var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId);
+                    var taskcomment = Task.Run(async () =>
+                    {
+                        return await resultcomment;
+                    });
+                    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                    _intafeed._facebookFeed = item;
+                    _intafeed._facebookComment = lstFbPostComment.ToList();
+                    lstfacebookfeed.Add(_intafeed);
+                }
+                return lstfacebookfeed;
+            }
+            else if (typeShort == "leastcomment")
+            {
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+                lstFbFeeds = lstFbFeeds.OrderBy(t => t.Commentcount).ToList();
+                foreach (var item in lstFbFeeds.ToList())
+                {
+                    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
+                    var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId);
+                    var taskcomment = Task.Run(async () =>
+                    {
+                        return await resultcomment;
+                    });
+                    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                    _intafeed._facebookFeed = item;
+                    _intafeed._facebookComment = lstFbPostComment.ToList();
+                    lstfacebookfeed.Add(_intafeed);
+                }
+                return lstfacebookfeed;
+            }
+                return lstfacebookfeed;
 
+        }
         public static List<Domain.Socioboard.Models.Mongo.facebookfeed> GetTopFacebookFilterFeed(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count, string typeFilter)
         {
             List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
@@ -1679,7 +1792,6 @@ namespace Api.Socioboard.Repositories
                 lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage)).ToList();
             }
             profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-
             long FacebookfanPageCount = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => profileids.Contains(t.FbUserId) && t.IsActive).Sum(t => t.Friends);
             if (FacebookfanPageCount > 1000000)
             {

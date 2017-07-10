@@ -95,8 +95,8 @@
                                               <label for="ScheduleMsg">Type Your Message Here</label>
                                           </div>
                                         <div ng-if="schedulemessage">
-                                            <textarea id="ScheduleMsg" class="materialize-textarea" ng-model="schedulemessage.shareMessage" ng-if="!grppost" required name="ScheduleMsgtxt"  length="500">{{schedulemessage.shareMessage}}</textarea>
-                                            <textarea id="ScheduleMsg" class="materialize-textarea" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500"></textarea>
+                                            <textarea id="ScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage.shareMessage" ng-if="!grppost" required name="ScheduleMsgtxt"  length="500">{{schedulemessage.shareMessage}}</textarea>
+                                            <textarea id="ScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500"></textarea>
                                             <label for="ScheduleMsg">Type Your Message Here</label>
                                         </div>
                                       </div>
@@ -126,6 +126,118 @@
                                            <label>interval to repeat time</label>
                                        </div>
                                    </div>
+                                   <!--week days start-->
+                                   <div class="row">
+                                       <div class="input-field col s12 m4 l4">
+                                           <!--<input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="repetition()"/>-->
+                                           <input type="checkbox" class="filled-in" id="on_of" ng-model="weekChecked" ng-click="weekdayChek(weekChecked)" />
+                                           <label for="on_of">week days schduled</label>
+                                       </div>
+                                       <div class="col l5 m12 s12">
+                                           <div class="card-content" ng-disabled="!weekChecked" >
+                                               
+                                               <div class="row no-space">
+                                                   <div class="col l6 m6 s12 center">Monday</div>
+                                                   <div class="col l6 m6 s12">
+                                                       <div class="switch" ng-disabled="!weekChecked" >
+                                                           <label>
+                                                               Off
+                                                               <input type="checkbox"  ng-model="SwitchedOn1" ng-if="numday < 0" ng-click="SwitchedOn(SwitchedOn1, 'Monday','0')">
+                                                               <span class="lever"></span>
+                                                               On
+                                                           </label>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <div class="row no-space">
+                                                   <div class="col l6 m6 s12 center">Tuesday</div>
+                                                   <div class="col l6 m6 s12">
+                                                       <div class="switch">
+                                                           <label>
+                                                               Off
+                                                               <input type="checkbox" id="tue_val" ng-if="numday < 1" ng-disabled="!weekChecked" ng-model="SwitchedOn2" ng-click="SwitchedOn(SwitchedOn2,'Tuesday','1')">
+                                                               <span class="lever"></span>
+                                                               On
+                                                           </label>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <div class="row no-space">
+                                                   <div class="col l6 m6 s12 center">Wednesday</div>
+                                                   <div class="col l6 m6 s12">
+                                                       <div class="switch">
+                                                           <label>
+                                                               Off
+                                                               <input type="checkbox" id="wed_val" ng-if="numday < 2" ng-disabled="!weekChecked" ng-model="SwitchedOn3" ng-click="SwitchedOn(SwitchedOn3,'Wednesday','2')">
+                                                               <span class="lever"></span>
+                                                               On
+                                                           </label>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <div class="row no-space">
+                                                   <div class="col l6 m6 s12 center">Thursday</div>
+                                                   <div class="col l6 m6 s12">
+                                                       <div class="switch">
+                                                           <label>
+                                                               Off
+                                                               <input type="checkbox" id="thus_val" ng-if="numday < 3" ng-disabled="!weekChecked" ng-model="SwitchedOn4" ng-click="SwitchedOn(SwitchedOn4,'Thursday','3')">
+                                                               <span class="lever"></span>
+                                                               On
+                                                           </label>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <div class="row no-space">
+                                                   <div class="col l6 m6 s12 center">Friday</div>
+                                                   <div class="col l6 m6 s12">
+                                                       <div class="switch">
+                                                           <label>
+                                                               Off
+                                                               <input type="checkbox" id="Fri_val" ng-if="numday < 4" ng-disabled="!weekChecked" ng-model="SwitchedOn5" ng-click="SwitchedOn(SwitchedOn5,'Friday','4')">
+                                                               <span class="lever"></span>
+                                                               On
+                                                           </label>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <div class="row no-space">
+                                                   <div class="col l6 m6 s12 center">Saturday</div>
+                                                   <div class="col l6 m6 s12">
+                                                       <div class="switch">
+                                                           <label>
+                                                               Off
+                                                               <input type="checkbox" id="sat_val" ng-if="numday < 5" ng-disabled="!weekChecked" ng-model="SwitchedOn6" ng-click="SwitchedOn(SwitchedOn6,'Saturday','5')">
+                                                               <span class="lever"></span>
+                                                               On
+                                                           </label>
+                                                       </div>
+                                                   </div>
+                                               </div>
+                                               <div class="row no-space">
+                                                   <div class="col l6 m6 s12 center">Sunday</div>
+                                                   <div class="col l6 m6 s12">
+                                                       <div class="switch">
+                                                           <label>
+                                                               Off
+                                                               <input type="checkbox" id="sun_val" ng-if="numday < 6" ng-disabled="!weekChecked" ng-model="SwitchedOn7" ng-click="SwitchedOn(SwitchedOn7,'Sunday','6')">
+                                                               <span class="lever"></span>
+                                                               On
+                                                           </label>
+                                                       </div>
+                                                   </div>
+                                               </div>
+
+                                           </div>
+                                       </div>
+                                       <div class="col l7 m12 s12">
+                                           <div class="card-content">
+                                               <p>Post these x times <strong>Every Day</strong> :</p>
+                                           </div>
+                                       </div>
+                                   </div>
+                                   <!--week days End-->
+
                                    <div class="row no-space">
                                        <div class="input-field col s12">
                                            <!-- <input id="datetimepicker" type="text" > -->
@@ -182,8 +294,10 @@
                     </div>
                 </div>
             </section>
-            <!-- END CONTENT -->
-
-
-               
+            <!-- END CONTENT -->               
     </div>
+<script>
+    $(document).ready(function () {
+        Materialize.updateTextFields();
+    });
+</script>

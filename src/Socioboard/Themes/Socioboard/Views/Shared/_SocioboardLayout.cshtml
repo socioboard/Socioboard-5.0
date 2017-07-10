@@ -71,7 +71,7 @@
         <p class='bizztext'>Download Socioboard Chrome Plugin here -> !! <a class='bizzbutton' href="https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?hl=en-GB" target="_blank">Download Now</a></p>
         <close class="animated headShake infinite"></close>
     </div>
-    <open class="animated pulse infinite"></open>
+    <open id="animatedShowPlugin" class="animated pulse infinite" style="width:2px" onclick="barShow()"></open>
     <div class="navbar-fixed" style="padding-top: 30px;">
         <!-- Dropdown Structure -->
         <ul id="Versions" class="dropdown-content">
@@ -936,6 +936,10 @@ analytics" href="http://statcounter.com/shopify/"
 
     @*Forgot password js start*@
     <script>
+        function barShow() {
+            $('#bizzbar').show();
+            $('#animatedShowPlugin').hide();
+        }
         function forgotPassword() {
 
             var cookies = document.cookie.split(";");
@@ -971,8 +975,14 @@ analytics" href="http://statcounter.com/shopify/"
 
                 success: function (msg) {
                     console.log(msg);
-                    alertify.set({ delay: 10000 });
-                    alertify.success(msg);
+                    if (msg == "EmailId does not exist") {
+                        alertify.set({ delay: 10000 });
+                        alertify.error("EmailId does not exist");
+                    }
+                    else {
+                        alertify.set({ delay: 10000 });
+                        alertify.success(msg);
+                    }
                     document.getElementById("sub_btn").value = "Submit";
 
                     $('#forgotPwdEmail').val("");

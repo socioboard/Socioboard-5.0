@@ -11,7 +11,16 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
             $scope.hasEnableG = $rootScope.user.SocialLoginEnableGo;
 
         }
+        $scope.FBloginmessage = function (Fblogin) {
+            $scope.Fblogin = "You singup with Facebook,you can't use 2 step login ";
+            swal(Fblogin);
+        };
+        $scope.Gplusloginmessage = function (Gpluslogin) {
+            $scope.Gpluslogin = "You singup with Google,you can't use 2 step login  ";
+            swal(Gpluslogin);
+        };
         $scope.twosteploginstatus = $rootScope.user.TwostepEnable;
+        $scope.Userlogintype = $rootScope.user.EmailValidateToken;
         $scope.password = $rootScope.user.Password;
         $scope.access_passwd();
         //Initialization

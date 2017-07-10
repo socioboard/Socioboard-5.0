@@ -306,7 +306,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
 
           $scope.openComposeMessage = function (contentFeed) {
               debugger;
-
+              jQuery('input:checkbox').removeAttr('checked');
               if (contentFeed != null) {
                   var message = {
                       "title": contentFeed.feed,

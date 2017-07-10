@@ -10,7 +10,16 @@
             <div class="container">
 
                 <div class="col m12">
-                    <a class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Group</a>
+                    <a ng-if="accountType==3 && GetUserGroupCount<5" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Group</a>
+                    <a ng-if="accountType==3 && GetUserGroupCount==5" ng-click="message(msg)" disable class="waves-effect waves-light btn right"  >Create New Group</a>
+                    <a ng-if="accountType==4 && GetUserGroupCount<10" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Group</a>
+                    <a ng-if="accountType==4 && GetUserGroupCount==10" ng-click="message(msg)" disable class="waves-effect waves-light btn right" >Create New Group</a>
+                    <a ng-if="accountType==5 && GetUserGroupCount<15" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Group</a>
+                    <a ng-if="accountType==5 && GetUserGroupCount==15" ng-click="message(msg)" disable class="waves-effect waves-light btn right">Create New Group</a>
+                    <a ng-if="accountType==6 && GetUserGroupCount<20" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Group</a>
+                    <a ng-if="accountType==6 && GetUserGroupCount==20" ng-click="message(msg)" disable class="waves-effect waves-light btn right">Create New Group</a>
+                    <a ng-if="accountType==7 && GetUserGroupCount<25" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Group</a>
+                    <a ng-if="accountType==7 && GetUserGroupCount==25" ng-click="grpmsgs(grpmsg)" disable class="waves-effect waves-light btn right">Create New Group</a>
                     <h4>User And Group</h4>
                     <span>Groups are used to categorize social profiles together to help manage and report on your social media efforts efficiently. Learn more about Groups</span>
                 </div>
@@ -240,12 +249,12 @@
             <h4>Invite your Friend to <b class="orange-text text-darken-4">{{inviGrpName}}</b></h4>
             <p>Socioboard offers to make group by virtue of which users can reach out to each other using a highly efficient collaboration mechanism.Groups serve as a platform to share information with other team members and increase workability and efficiency.</p>
           
-                <table class="highlight centered">
+                <table class="highlight">
                     <thead>
                         <tr>
-                            <th data-field="FirstName">First Name</th>
-                            <th data-field="Last Name">Last Name</th>
-                            <th data-field="Email">Email</th>
+                            <th data-field="FirstName" style="width: 25%;">First Name</th>
+                            <th data-field="Last Name" style="width: 25%;">Last Name</th>
+                            <th data-field="Email" style="width: 41%;">Email</th>
                             <th data-field="delete">Action</th>
                         </tr>
                     </thead>

@@ -39,6 +39,9 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                               } else {
                                   $scope.lastreach = true;
                                   $scope.nomessages = true;
+                                  debugger;
+                                  $('#socio_all').attr('disabled', true);
+                                  //document.getElementById("deleteAll").disabled = true;
                               }
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -185,7 +188,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55", confirmButtonText: "Yes, delete it!",
-                cancelButtonText: "No, cancel plx!",
+                cancelButtonText: "No, cancel it!",
                 closeOnConfirm: false,
                 closeOnCancel: false
             },
@@ -195,8 +198,18 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                     $http.get(apiDomain + '/api/SocialMessages/DeleteMultiSocialMessages?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + messages)
                               .then(function (response) {
                                   closeOnConfirm: false
-                                  swal("Deleted!", "Your selected scheduled messages has been deleted.", "success");
-                                  $scope.date(response.data);
+                                  if (response.data != "") {
+                                      swal("Deleted!", "Your selected scheduled messages has been deleted.", "success");
+                                      $scope.date(response.data);
+                                      //$scope.allSelected = false;
+                                  }
+                                  else
+                                  {
+                                      swal("Deleted!", "Your selected scheduled messages has been deleted.", "success");
+                                      $scope.date(response.data);
+                                      $('#socio_all').attr('disabled', true);
+                                      $scope.allSelected = false;
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });

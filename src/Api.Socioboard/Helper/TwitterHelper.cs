@@ -17,6 +17,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using Socioboard.Twitter.Twitter.Core.UserMethods;
 
+
 namespace Api.Socioboard.Helper
 {
     public static class TwitterHelper
@@ -34,7 +35,6 @@ namespace Api.Socioboard.Helper
             OAuthTwt.AccessTokenSecret = objTwitterAccount.oAuthSecret;
             OAuthTwt.TwitterScreenName = objTwitterAccount.twitterScreenName;
             OAuthTwt.TwitterUserId = objTwitterAccount.twitterUserId;
-
             Tweet twt = new Tweet();
             if (!string.IsNullOrEmpty(url))
             {
@@ -42,8 +42,17 @@ namespace Api.Socioboard.Helper
                 {
                     PhotoUpload ph = new PhotoUpload();
                     string res = string.Empty;
-                     //rt = ph.Tweet(url, message, OAuthTwt);
-                      rt = ph.NewTweet(url, message, OAuthTwt, ref res);
+                   // rt = ph.Tweet(url, message, OAuthTwt);
+                    if (url.Contains("mp4"))
+                    {
+                        var webClient = new WebClient();
+                        byte[] img = webClient.DownloadData(url);
+                        rt = videoUploading(img,message,objTwitterAccount.oAuthToken,objTwitterAccount.oAuthSecret,_AppSettings);
+                    }
+                    else
+                    {
+                        rt = ph.NewTweet(url, message, OAuthTwt, ref res);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -91,6 +100,37 @@ namespace Api.Socioboard.Helper
             return str;
         }
 
+        public static bool videoUploading(byte[] binary,string tweetmessage,string accesstoken,string tokensecret,Helper.AppSettings _appsetting)
+        {
+            try
+            {
+                Tweetinvi.Auth.SetUserCredentials(_appsetting.twitterConsumerKey,_appsetting.twitterConsumerScreatKey,accesstoken, tokensecret);
+                string mediaType = "video/mp4";
+                var uploader = Tweetinvi.Upload.CreateChunkedUploader();
+                var half = (binary.Length / 2);
+                var first = binary.Take(half).ToArray();
+                var second = binary.Skip(half).ToArray();
+                if (uploader.Init(mediaType, binary.Length))
+                {
+                    if (uploader.Append(first, "media"))
+                    {
+                        if (uploader.Append(second, "media"))
+                        {
+                            var media = uploader.Complete();
+                            var tweet =Tweetinvi.Tweet.PublishTweet(tweetmessage, new Tweetinvi.Parameters.PublishTweetOptionalParameters
+                            {
+                                Medias = { media }
+                            });
+                        }
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         public static List<Domain.Socioboard.ViewModels.DiscoveryViewModal> DiscoverySearchTwitter(oAuthTwitter oauth, string keyword, long userId, long groupId)
         {
 

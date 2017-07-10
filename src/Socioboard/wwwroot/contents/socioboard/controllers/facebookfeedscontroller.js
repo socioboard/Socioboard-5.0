@@ -53,6 +53,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                 //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
                               .then(function (response) {
+                                  debugger;
                                   // $scope.lstProfiles = response.data;
                                   $scope.lstFbFeeds = response.data;
                                   $scope.preloadmore = true;
@@ -160,6 +161,25 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         };
 
 
+        $scope.SortSearch = function (typeShort) {
+           // debugger;
+            $scope.filters = true;
+            $scope.preloadmore = false;
+            $scope.lstFbFeeds = null;
+            $http.get(apiDomain + '/api/Facebook/Shortfeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + 30 + '&typeShort=' + typeShort)
+                              .then(function (response) {
+                                  $scope.lstFbFeeds = response.data;
+                                  $scope.preloadmore = true;
+                                  setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
+                                  if (response.data == null) {
+                                      reachLast = true;
+                                  }
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+        };
+
+
         $scope.renderComments = function (feedId, index) {
             $scope.LoadTopComments(feedId, index);
             $('.collapsible').collapsible({
@@ -248,7 +268,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
         $scope.openComposeMessage = function (contentFeed) {
             debugger;
-
+            jQuery('input:checkbox').removeAttr('checked');
             if (contentFeed != null) {
                 var message = {
                     "title": contentFeed.feedDescription,

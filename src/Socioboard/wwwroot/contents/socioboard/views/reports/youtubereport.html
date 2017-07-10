@@ -22,7 +22,50 @@
             </div>
 
             <div class="row" ng-class="loadedYAData">
+                <div class="col l6 m6 s12">
+                    <blockquote style="border-left-color:#bb0000" class="groupbox_padding grey lighten-1">
+                        <h5>Channel description</h5>
+                    </blockquote>
+                    <div class="row center" ng-repeat="channels in tableData">
+                        <div class="dl-horizontal">
+                            <!--<h5>Raj software developer</h5>-->
+                            <img src="{{channels._YoutubeChannelss.channelpicUrl}}" class="circle responsive-img activator card-profile-image">
+                        </div>
+                        <div>
+                            <div class="dl-horizontal">
+                                <div class="inst_name_big_dt">{{channels._YoutubeChannelss.ytubeChannelName}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <div class="col l6 m6 s12">
+                    <blockquote style="border-left-color:#bb0000" class="groupbox_padding grey lighten-1">
+                        <h5>Channel statistics</h5>
+                        <!--<h1>Raj Dotnet</h1>-->
+                    </blockquote>
+                    <div class="row center" ng-repeat="channels in tableData">
+                        <div class="col m4">
+                            <h5 class="GroupStats_twt">
+                                <i class="icon-user fa-2x fa-fw blue-text text-darken-3"></i>
+                            </h5><h5><strong>{{channels._YoutubeChannelss.subscribersCount}}</strong></h5>
+                            <span>Total Subscribers</span>
+                        </div>
+                        <div class="col m4">
+                            <h5 class="GroupStats_twt">
+                                <i class="icon-camcorder fa-2x fa-fw blue-text text-darken-3"></i>
+                            </h5><h5><strong>{{channels._YoutubeChannelss.videosCount}}</strong></h5>
+                            <span>Total Videos</span>
+                        </div>
+                        <div class="col m4">
+                            <h5 class="GroupStats_twt">
+                                <i class="fa fa-eye fa-2x fa-fw blue-text text-darken-3"></i>
+                            </h5><h5><strong>{{channels._YoutubeChannelss.viewsCount}}</strong></h5>
+                            <span>Total Views</span>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
                 <div class="col s12 m12 l12">
                     <h5 class="grey-text text-darken-1" style="font-size:24px">Showing last {{lastxDays}} days report ({{fromDate | date}} - {{toDate | date}})</h5>
                     <div class="card" id="feeds">
@@ -70,50 +113,7 @@
                         <h5 class="feeds_title red darken-4 white-text">
                             <i class="fa fa-youtube-play white-text"></i>&nbspYoutube stats</span>
                         </h5>                     
-                                 <div class="col l6 m6 s12">
-                                    <blockquote style="border-left-color:#bb0000" class="groupbox_padding grey lighten-1">
-                                        <h5>Channel description</h5>
-                                    </blockquote>
-                                    <div class="row center" ng-repeat="channels in tableData">
-                                        <div class="dl-horizontal">
-                                            <!--<h5>Raj software developer</h5>-->
-                                            <img src="{{channels._YoutubeChannelss.channelpicUrl}}" class="circle responsive-img activator card-profile-image">
-                                        </div>
-                                        <div>
-                                            <div class="dl-horizontal">
-                                                <div class="inst_name_big_dt">{{channels._YoutubeChannelss.ytubeChannelName}}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col l6 m6 s12">
-                                    <blockquote style="border-left-color:#bb0000" class="groupbox_padding grey lighten-1">
-                                        <h5>Channel statistics</h5>
-                                        <!--<h1>Raj Dotnet</h1>-->
-                                    </blockquote>
-                                    <div class="row center" ng-repeat="channels in tableData">
-                                        <div class="col m4">
-                                            <h5 class="GroupStats_twt">
-                                                <i class="icon-user fa-2x fa-fw blue-text text-darken-3"></i>
-                                            </h5><h5><strong>{{channels._YoutubeChannelss.subscribersCount}}</strong></h5>
-                                            <span>Total Subscribers</span>
-                                        </div>
-                                        <div class="col m4">
-                                            <h5 class="GroupStats_twt">
-                                                <i class="icon-camcorder fa-2x fa-fw blue-text text-darken-3"></i>
-                                            </h5><h5><strong>{{channels._YoutubeChannelss.videosCount}}</strong></h5>
-                                            <span>Total Videos</span>
-                                        </div>
-                                        <div class="col m4">
-                                            <h5 class="GroupStats_twt">
-                                                <i class="fa fa-eye fa-2x fa-fw blue-text text-darken-3"></i>
-                                            </h5><h5><strong>{{channels._YoutubeChannelss.viewsCount}}</strong></h5>
-                                            <span>Total Views</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--  -->
+                                 
 
 
 

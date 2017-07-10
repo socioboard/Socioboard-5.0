@@ -88,6 +88,7 @@
                                         <table id="MyTable" class="display responsive-table striped" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
+                                                    <th>S.No.</th>
                                                     <th>Name</th>
                                                     <th>Followers</th>
                                                     <th>Following</th>
@@ -96,6 +97,7 @@
                                             </thead>
                                             <tbody ng-repeat="instfollowfollowing in getfollowerfollowingCount">
                                                 <tr>
+                                                    <td style="width: 1%;">{{$index+1}}</td>
                                                     <td>{{instfollowfollowing.insUserName}}</td>
                                                     <td>{{instfollowfollowing.followers}}</td>
                                                     <td>{{instfollowfollowing.followedBy}}</td>
@@ -114,21 +116,23 @@
                                     <table id="InstagramAccountInfo" class="display responsive-table striped" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
+                                                <th>S.No.</th>
                                                 <th>Posts</th>
+                                                <th>View Post</th>
                                                 <th>Hits</th>
                                                 <th>Likes</th>
                                                 <th>Comments</th>
-                                                <th>Feed URL</th>
                                                 <th>Type</th>
                                             </tr>
                                         </thead>
                                         <tbody ng-repeat="instapostdetails in getfeedsdata">
                                             <tr>
-                                                <td>{{instapostdetails.adminUser}} {{instapostdetails.feedDate * 1000 | date:'MM/dd/yyyy  h:mma'}} <br> {{instapostdetails.feedUrl}}</td>
+                                                <td style="width: 1%;">{{$index+1}}</td>
+                                                <td><a href="https://www.instagram.com/{{instapostdetails.adminUser}}" target="_blank">{{instapostdetails.adminUser}}</a> {{instapostdetails.feedDate * 1000 | date:'MM/dd/yyyy  h:mma'}} <br> {{instapostdetails.feedUrl}}</td>
+                                                <td><a href="{{instapostdetails.feedUrl}}" target="_blank"><i class="icon-feed"></i> Post</a></td>
                                                 <td>{{instapostdetails.commentCount + instapostdetails.likeCount}}</td>
                                                 <td>{{instapostdetails.likeCount}}</td>
                                                 <td>{{instapostdetails.commentCount}}</td>
-                                                <td><a>{{instapostdetails.feedUrl}}</a></td>
                                                 <td>{{instapostdetails.type}}</td>
                                                
                                             </tr>

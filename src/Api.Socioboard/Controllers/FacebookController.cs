@@ -201,7 +201,11 @@ namespace Api.Socioboard.Controllers
             }
             return Ok();
         }
-
+        [HttpGet("Shortfeeds")]
+        public IActionResult Shortfeeds(string profileId, long userId, int skip, int count, string typeShort)
+        {
+            return Ok(Repositories.FacebookRepository.GetFacebookSort(profileId, userId, _redisCache, _appSettings, skip, count, typeShort));
+        }
 
         [HttpGet("GetTopFeeds")]
         public IActionResult GetTopFeeds(string profileId, long userId, int skip, int count)

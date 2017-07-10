@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETFramework,Version=v4.5.1/",
-    "signature": "7d5182e129e0b417e3cc00cb68711b80ebc90ef1"
+    "signature": "5fddc8259f9d031ec812da40a230125947a35fc2"
   },
   "compilationOptions": {
     "defines": [
@@ -43,7 +43,8 @@
           "Socioboard.Facebook": "1.0.0",
           "Serilog": "2.1.0",
           "HtmlAgilityPack": "1.4.9.5",
-          "Socioboard.Pinterest": "1.0.0"
+          "Socioboard.Pinterest": "1.0.0",
+          "iTextSharp": "5.5.11"
         },
         "compile": {
           "Socioboard.exe": {}
@@ -62,6 +63,11 @@
       "HtmlAgilityPack/1.4.9.5": {
         "compile": {
           "lib/Net45/HtmlAgilityPack.dll": {}
+        }
+      },
+      "iTextSharp/5.5.11": {
+        "compile": {
+          "lib/itextsharp.dll": {}
         }
       },
       "Libuv/1.9.0": {
@@ -1398,7 +1404,8 @@
           "Socioboard.Facebook": "1.0.0",
           "Serilog": "2.1.0",
           "HtmlAgilityPack": "1.4.9.5",
-          "Socioboard.Pinterest": "1.0.0"
+          "Socioboard.Pinterest": "1.0.0",
+          "iTextSharp": "5.5.11"
         },
         "runtime": {
           "Socioboard.exe": {}
@@ -1417,6 +1424,11 @@
       "HtmlAgilityPack/1.4.9.5": {
         "runtime": {
           "lib/Net45/HtmlAgilityPack.dll": {}
+        }
+      },
+      "iTextSharp/5.5.11": {
+        "runtime": {
+          "lib/itextsharp.dll": {}
         }
       },
       "Libuv/1.9.0": {
@@ -2561,6 +2573,11 @@
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-i5di/J7GO4y2kx/hhVzctPrBI8G2cefWZDMDU/FdOUD3iVkiidN1q1NDZ0FvqrhB28LSaYaM4Z0hs86Tnp0IzA=="
+    },
+    "iTextSharp/5.5.11": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-zL+YDlwSmD/kcU1uoWHE7Ph2hEsnVaV2ICnB5nYXm86v6+KKxjO5zOEh2jCotz0IlqaTLlv5XCInU5Czc2mzDw=="
     },
     "Libuv/1.9.0": {
       "type": "package",

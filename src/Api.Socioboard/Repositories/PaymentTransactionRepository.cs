@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
+using PayPal.Api;
+using PayPal.PayPalAPIInterfaceService;
+using PayPal.PayPalAPIInterfaceService.Model;
 namespace Api.Socioboard.Repositories
 {
     public class PaymentTransactionRepository
@@ -44,6 +46,62 @@ namespace Api.Socioboard.Repositories
             {
                 return 0;
             }
+        }
+        public static string CancelRecurringPayment(string ProfileID,long UserId, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                ManageRecurringPaymentsProfileStatusRequestType request =
+                new ManageRecurringPaymentsProfileStatusRequestType();
+                ManageRecurringPaymentsProfileStatusRequestDetailsType details =
+                    new ManageRecurringPaymentsProfileStatusRequestDetailsType();
+                request.ManageRecurringPaymentsProfileStatusRequestDetails = details;
+
+                details.ProfileID = ProfileID;
+
+                details.Action = StatusChangeActionType.CANCEL;
+
+                // Invoke the API
+                ManageRecurringPaymentsProfileStatusReq wrapper = new ManageRecurringPaymentsProfileStatusReq();
+                wrapper.ManageRecurringPaymentsProfileStatusRequest = request;
+
+                Dictionary<string, string> configurationMap = new Dictionary<string, string>();
+
+                configurationMap.Add("mode", "sandbox");
+                // Signature Credential
+                configurationMap.Add("account1.apiUsername", "sumit-facilitator_api1.socioboard.com");
+                configurationMap.Add("account1.apiPassword", "6N4SH6G3P8VCCV6U");
+                configurationMap.Add("account1.apiSignature", "AFcWxV21C7fd0v3bYYYRCpSSRl31AfntI711TkaeRoghorYelM2FIiRw");
+
+                // Create the PayPalAPIInterfaceServiceService service object to make the API call
+                PayPalAPIInterfaceServiceService service = new PayPalAPIInterfaceServiceService(configurationMap);
+
+                ManageRecurringPaymentsProfileStatusResponseType manageProfileStatusResponse =
+                            service.ManageRecurringPaymentsProfileStatus(wrapper);
+
+                // Check for API return status
+
+                Dictionary<string, string> responseParams = new Dictionary<string, string>();
+                responseParams.Add("API Status", manageProfileStatusResponse.Ack.ToString());
+
+                if (manageProfileStatusResponse.Ack.Equals(AckCodeType.FAILURE) || (manageProfileStatusResponse.Errors != null && manageProfileStatusResponse.Errors.Count > 0))
+                {
+                    //FAILURE
+                    //Console.WriteLine(manageProfileStatusResponse.Errors.ToString());
+                    return manageProfileStatusResponse.Errors.ToString();
+                }
+                else
+                {
+                    return "Success";
+                    //SUCCESS
+                    //Console.Write("Success!");
+                }
+            }
+            catch(Exception ex)
+            {
+                return "Failure";
+            }
+          
         }
 
     }

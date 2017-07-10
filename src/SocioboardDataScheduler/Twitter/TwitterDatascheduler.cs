@@ -50,6 +50,9 @@ namespace SocioboardDataScheduler.Twitter
                 IGrouping<string, Domain.Socioboard.Models.ScheduledMessage> items = (IGrouping<string, Domain.Socioboard.Models.ScheduledMessage>)arr[1];
 
                 Domain.Socioboard.Models.TwitterAccount _TwitterAccount = dbr.Single<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId == items.Key && t.isActive);
+
+                Domain.Socioboard.Models.User _user = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == _TwitterAccount.userId);
+
                 if (_TwitterAccount != null)
                 {
                     foreach (var item in items)
@@ -57,7 +60,7 @@ namespace SocioboardDataScheduler.Twitter
                         try
                         {
                             Console.WriteLine(item.socialprofileName + "Scheduling Started");
-                            TwitterScheduler.PostTwitterMessage(item, _TwitterAccount);
+                            TwitterScheduler.PostTwitterMessage(item, _TwitterAccount, _user);
                             Console.WriteLine(item.socialprofileName + "Scheduling");
                         }
                         catch (Exception)

@@ -806,6 +806,55 @@ namespace Api.Socioboard.Controllers
 
         }
 
+        [HttpGet("CancelPlan")]
+        public IActionResult CancelPlan(long id)
+        {
+            try
+            {
+                // string profileid = "I-6BRCLEX1BPLF";
+                Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+                User _user = dbr.Single<User>(t => t.Id == id);
+                PaymentTransaction _paymentdetail = dbr.Single<PaymentTransaction>(t => t.userid == id);
+                if (_user != null)
+                {
+                    string msg = Repositories.PaymentTransactionRepository.CancelRecurringPayment(_paymentdetail.paymentId, _user.Id, dbr);
+                    if (msg == "Success")
+                    {
+
+                        _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+                        _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
+                        _user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
+                        _user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
+                        _user.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.free;
+                        int res = dbr.Update<User>(_user);
+                        if (res == 1)
+                        {
+                            return Ok("Your plan Canceled Sucessfully");
+                        }
+                        else
+                        {
+                            return BadRequest("Issue while canceling your plan.");
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("Failed to cancel your plan please try after some time");
+                    }
+
+
+                }
+                else
+                {
+                    return BadRequest("Something went wrong");
+                }
+            }
+            catch(Exception ex)
+            {
+                return BadRequest("Something went wrong");
+            }
+         
+        }
+
 
         [HttpPost("UpdatePackageAdmin")]
         public IActionResult UpdatePackageAdmin(string amount, long id)
@@ -2261,7 +2310,15 @@ namespace Api.Socioboard.Controllers
             }
         }
 
-
+        [HttpPost("UpdateurlShortnerStatus")]
+        public string UpdateurlShortnerStatus(long userId, Domain.Socioboard.Enum.UrlShortener staTus)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User userTemp = dbr.Single<User>(t => t.Id == userId);
+            userTemp.urlShortnerStatus = staTus;
+            dbr.Update<Domain.Socioboard.Models.User>(userTemp);
+            return "Ok";
+        }
 
     }
 }

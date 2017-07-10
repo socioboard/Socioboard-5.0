@@ -13,6 +13,7 @@
 -r:"C:\Users\GLB-213\.nuget\packages\Facebook\7.0.10-beta\lib\net45\Facebook.dll"
 -r:"C:\Users\GLB-213\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll"
 -r:"C:\Users\GLB-213\.nuget\packages\HtmlAgilityPack\1.4.9.5\lib\Net45\HtmlAgilityPack.dll"
+-r:"C:\Users\GLB-213\.nuget\packages\iTextSharp\5.5.11\lib\itextsharp.dll"
 -r:"C:\Users\GLB-213\.nuget\packages\Microsoft.ApplicationInsights\2.1.0\lib\net45\Microsoft.ApplicationInsights.dll"
 -r:"C:\Users\GLB-213\.nuget\packages\Microsoft.ApplicationInsights.Agent.Intercept\1.2.1\lib\net45\Microsoft.AI.Agent.Intercept.dll"
 -r:"C:\Users\GLB-213\.nuget\packages\Microsoft.ApplicationInsights.AspNetCore\1.0.0\lib\net451\Microsoft.ApplicationInsights.AspNetCore.dll"
@@ -213,3 +214,4 @@
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Services\IEmailSender.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Services\ISmsSender.cs"
 "E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Services\MessageServices.cs"
+"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard\Services\SendMessage.cs"

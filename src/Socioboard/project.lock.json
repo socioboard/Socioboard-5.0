@@ -30,6 +30,15 @@
           "lib/Net45/HtmlAgilityPack.dll": {}
         }
       },
+      "iTextSharp/5.5.11": {
+        "type": "package",
+        "compile": {
+          "lib/itextsharp.dll": {}
+        },
+        "runtime": {
+          "lib/itextsharp.dll": {}
+        }
+      },
       "Libuv/1.9.0": {
         "type": "package",
         "dependencies": {
@@ -2418,6 +2427,19 @@
         "lib/sl5/HtmlAgilityPack.dll",
         "lib/sl5/HtmlAgilityPack.pdb",
         "readme.txt"
+      ]
+    },
+    "iTextSharp/5.5.11": {
+      "sha512": "zL+YDlwSmD/kcU1uoWHE7Ph2hEsnVaV2ICnB5nYXm86v6+KKxjO5zOEh2jCotz0IlqaTLlv5XCInU5Czc2mzDw==",
+      "type": "package",
+      "path": "iTextSharp/5.5.11",
+      "files": [
+        "AGPL.txt",
+        "iTextSharp.5.5.11.nupkg.sha512",
+        "iTextSharp.nuspec",
+        "lib/iTextSharp.xml",
+        "lib/itextsharp.dll",
+        "notice.txt"
       ]
     },
     "Libuv/1.9.0": {
@@ -6479,7 +6501,8 @@
       "Serilog.Sinks.ColoredConsole >= 2.0.0",
       "Serilog.Sinks.RollingFile >= 2.1.0",
       "Socioboard.Facebook >= 1.0.0-*",
-      "Socioboard.Pinterest >= 1.0.0-*"
+      "Socioboard.Pinterest >= 1.0.0-*",
+      "iTextSharp >= 5.5.11"
     ],
     ".NETFramework,Version=v4.5.1": [
       "Microsoft.AspNet.WebApi.Client >= 5.2.3"

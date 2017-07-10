@@ -1257,6 +1257,8 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
 
 });
 
+
+
 SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
@@ -1264,6 +1266,18 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
                 $('select').material_select();
 
 
+            });
+        }
+    };
+})
+
+
+SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+
+                $('#all_video_table').DataTable();
             });
         }
     };

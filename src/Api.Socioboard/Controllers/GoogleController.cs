@@ -275,7 +275,7 @@ namespace Api.Socioboard.Controllers
             {
                 if (checkEnable)
                 {
-                    return Ok("Cool! Social SignIn has Enable for your Goole Account ");
+                    return Ok("Cool! Social SignIn has Enable for your Google Account ");
                 }
                 else
                 {
@@ -447,7 +447,6 @@ namespace Api.Socioboard.Controllers
         [HttpPost("AddGoogleAccountPhone")]
         public IActionResult AddGoogleAccountPhone(string refreshToken, string accessToken, long groupId, long userId)
         {
-
             string ret = string.Empty;
             string objRefresh = string.Empty;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
