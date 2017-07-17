@@ -1,11 +1,11 @@
-/*! RowReorder 1.1.2
+/*! RowReorder 1.2.0
  * 2015-2016 SpryMedia Ltd - datatables.net/license
  */
 
 /**
  * @summary     RowReorder
  * @description Row reordering extension for DataTables
- * @version     1.1.2
+ * @version     1.2.0
  * @file        dataTables.rowReorder.js
  * @author      SpryMedia Ltd (www.sprymedia.co.uk)
  * @contact     www.sprymedia.co.uk/contact
@@ -170,6 +170,10 @@ $.extend( RowReorder.prototype, {
 		// Use `table().container()` rather than just the table node for IE8 -
 		// otherwise it only works once...
 		$(dt.table().container()).on( 'mousedown.rowReorder touchstart.rowReorder', this.c.selector, function (e) {
+			if ( ! that.c.enabled ) {
+				return;
+			}
+
 			var tr = $(this).closest('tr');
 
 			// Double check that it is a DataTable row
@@ -447,6 +451,7 @@ $.extend( RowReorder.prototype, {
 	 */
 	_mouseUp: function ( e )
 	{
+		var that = this;
 		var dt = this.s.dt;
 		var i, ien;
 		var dataSrc = this.c.dataSrc;
@@ -507,11 +512,19 @@ $.extend( RowReorder.prototype, {
 
 		// Editor interface
 		if ( this.c.editor ) {
+			// Disable user interaction while Editor is submitting
+			this.c.enabled = false;
+
 			this.c.editor
-				.edit( diffNodes, false, {
-					submit: 'changed'
-				} )
+				.edit(
+					diffNodes,
+					false,
+					$.extend( {submit: 'changed'}, this.c.formOptions )
+				)
 				.multiSet( dataSrc, idDiff )
+				.one( 'submitComplete', function () {
+					that.c.enabled = true;
+				} )
 				.submit();
 		}
 
@@ -648,6 +661,20 @@ RowReorder.defaults = {
 	editor: null,
 
 	/**
+	 * Enable / disable RowReorder's user interaction
+	 * @type {Boolean}
+	 */
+	enabled: true,
+
+	/**
+	 * Form options to pass to Editor when submitting a change in the row order.
+	 * See the Editor `from-options` object for details of the options
+	 * available.
+	 * @type {Object}
+	 */
+	formOptions: {},
+
+	/**
 	 * Drag handle selector. This defines the element that when dragged will
 	 * reorder a row.
 	 *
@@ -673,13 +700,44 @@ RowReorder.defaults = {
 };
 
 
+/*
+ * API
+ */
+var Api = $.fn.dataTable.Api;
+
+// Doesn't do anything - work around for a bug in DT... Not documented
+Api.register( 'rowReorder()', function () {
+	return this;
+} );
+
+Api.register( 'rowReorder.enable()', function ( toggle ) {
+	if ( toggle === undefined ) {
+		toggle = true;
+	}
+
+	return this.iterator( 'table', function ( ctx ) {
+		if ( ctx.rowreorder ) {
+			ctx.rowreorder.c.enabled = toggle;
+		}
+	} );
+} );
+
+Api.register( 'rowReorder.disable()', function () {
+	return this.iterator( 'table', function ( ctx ) {
+		if ( ctx.rowreorder ) {
+			ctx.rowreorder.c.enabled = false;
+		}
+	} );
+} );
+
+
 /**
  * Version information
  *
  * @name RowReorder.version
  * @static
  */
-RowReorder.version = '1.1.2';
+RowReorder.version = '1.2.0';
 
 
 $.fn.dataTable.RowReorder = RowReorder;

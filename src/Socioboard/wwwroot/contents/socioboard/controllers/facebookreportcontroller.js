@@ -3,6 +3,12 @@
 SocioboardApp.controller('FacebookreportController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
+        $('#Fbfeedsdetails').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+               'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
         $scope.lstProfiles = $rootScope.lstProfiles;
         facebookreport();
         $scope.fetchdatacomplete = 'hide';
@@ -122,8 +128,10 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
             else {
                 sharingByAgeFemaleFollower = 0;
             }
-            $scope.fromDate = moment(new Date((startDate * 1000))).format('YYYY/MM/DD');
-            $scope.toDate = moment(new Date((endDate * 1000))).format('YYYY/MM/DD');
+            var datevaluefrom = new Date((startDate * 1000));
+            var datevalueto = new Date((endDate * 1000));
+            $scope.fromDate = (datevaluefrom.getFullYear() + '/' + (('0' + (datevaluefrom.getMonth() + 1)).slice(-2)) + '/' + (('0' + datevaluefrom.getDate()).slice(-2)));
+            $scope.toDate = (datevalueto.getFullYear() + '/' + (('0' + (datevalueto.getMonth() + 1)).slice(-2)) + '/' + (('0' + datevalueto.getDate()).slice(-2)));
             $scope.totalLikes = totalLikes;
             $scope.talkingAbout = talkingAbout;
             $scope.newFans = newFans;
@@ -1261,13 +1269,18 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
 
 
 
-SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
-    return function (scope, element, attrs) {
-        if (scope.$last === true) {
-            $timeout(function () {
+//SocioboardApp.directive('myRepeatVideoTabDirectives', function ($timeout) {
+//    return function (scope, element, attrs) {
+//        if (scope.$last === true) {
+//           $('#Fbfeedsdetails').DataTable({
+//                    dom: 'Bfrtip',
+//                    buttons: [
+//                       'copy', 'csv', 'excel', 'pdf', 'print'
+//                    ]
+//                });
+            
+//        }
+//    };
 
-                $('#all_video_table').DataTable();
-            });
-        }
-    };
-})
+//})
+

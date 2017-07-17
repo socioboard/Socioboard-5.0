@@ -27,9 +27,9 @@ namespace Domain.Socioboard.Models.Mongo
 
     }
 
-    public class YoutubeFeed
-    {
-        public MongoYoutubeFeeds _youtubefeed { get; set; }
-        public List<MongoYoutubeComments> _youtubecomment { get; set; }
-    }
+    //public class YoutubeFeed
+    //{
+    //    public MongoYoutubeFeeds _youtubefeed { get; set; }
+    //    public List<MongoYoutubeComments> _youtubecomment { get; set; }
+    //}
 }

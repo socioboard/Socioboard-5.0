@@ -147,10 +147,11 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         if ($scope.check == true) {
                             var formData = new FormData();
                             formData.append('files', $("#input-file-now").get(0).files[0]);
+                            formData.append('messageText', message);
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + 'none' + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -193,10 +194,12 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         else if ($scope.check == false) {
                           
                             var formData = new FormData();
+                            formData.append('messageText', message);
                             $scope.dispbtn = false;
+                            debugger;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + 'none' + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined

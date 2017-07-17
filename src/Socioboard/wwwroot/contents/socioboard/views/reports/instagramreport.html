@@ -95,10 +95,10 @@
                                                     <th>Post</th>
                                                 </tr>
                                             </thead>
-                                            <tbody ng-repeat="instfollowfollowing in getfollowerfollowingCount">
+                                            <tbody ng-repeat="instfollowfollowing in getfollowerfollowingCount" my-repeat-video-tab-directives>
                                                 <tr>
                                                     <td style="width: 1%;">{{$index+1}}</td>
-                                                    <td>{{instfollowfollowing.insUserName}}</td>
+                                                    <td><a href="https://www.instagram.com/{{instfollowfollowing.insUserName}}" target="_blank">{{instfollowfollowing.insUserName}}</a></td>
                                                     <td>{{instfollowfollowing.followers}}</td>
                                                     <td>{{instfollowfollowing.followedBy}}</td>
                                                     <td>{{instfollowfollowing.totalImages}}</td>
@@ -125,7 +125,7 @@
                                                 <th>Type</th>
                                             </tr>
                                         </thead>
-                                        <tbody ng-repeat="instapostdetails in getfeedsdata">
+                                        <tbody ng-repeat="instapostdetails in getfeedsdata" my-repeat-video-tab-directive>
                                             <tr>
                                                 <td style="width: 1%;">{{$index+1}}</td>
                                                 <td><a href="https://www.instagram.com/{{instapostdetails.adminUser}}" target="_blank">{{instapostdetails.adminUser}}</a> {{instapostdetails.feedDate * 1000 | date:'MM/dd/yyyy  h:mma'}} <br> {{instapostdetails.feedUrl}}</td>

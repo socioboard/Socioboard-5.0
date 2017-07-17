@@ -377,3 +377,20 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
         }
     };
 })
+
+SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+
+                //$('#all_video_table').DataTable();
+                $('#channeldetailss').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+            });
+        }
+    };
+})

@@ -12,17 +12,17 @@
 	<style type="text/css" class="init">
 	
 	</style>
-	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.3.min.js">
+	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.12.4.js">
 	</script>
 	<script type="text/javascript" language="javascript" src="../../../../media/js/jquery.dataTables.js">
 	</script>
 	<script type="text/javascript" language="javascript" src="../../js/dataTables.buttons.js">
 	</script>
-	<script type="text/javascript" language="javascript" src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js">
+	<script type="text/javascript" language="javascript" src="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js">
 	</script>
-	<script type="text/javascript" language="javascript" src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js">
+	<script type="text/javascript" language="javascript" src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js">
 	</script>
-	<script type="text/javascript" language="javascript" src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js">
+	<script type="text/javascript" language="javascript" src="//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js">
 	</script>
 	<script type="text/javascript" language="javascript" src="../../js/buttons.html5.js">
 	</script>
@@ -38,7 +38,7 @@ $(document).ready(function() {
 	var buttonCommon = {
 		exportOptions: {
 			format: {
-				body: function ( data, column, row ) {
+				body: function ( data, row, column, node ) {
 					// Strip $ from salary column to make it numeric
 					return column === 5 ?
 						data.replace( /[$,]/g, '' ) :
@@ -93,6 +93,7 @@ $(document).ready(function() {
 				value in the output data. Since this is common to all three export buttons used, the function is placed into an object that is reused by each button - simply to
 				save repeating the same code! This is not required, but it can be a useful technique.</p>
 			</div>
+			<div class="demo-html"></div>
 			<table id="example" class="display" cellspacing="0" width="100%">
 				<thead>
 					<tr>
@@ -128,7 +129,7 @@ $(document).ready(function() {
 	var buttonCommon = {
 		exportOptions: {
 			format: {
-				body: function ( data, column, row ) {
+				body: function ( data, row, column, node ) {
 					// Strip $ from salary column to make it numeric
 					return column === 5 ?
 						data.replace( /[$,]/g, '' ) :
@@ -165,7 +166,7 @@ $(document).ready(function() {
 					<p>In addition to the above code, the following Javascript library files are loaded for use in this example:</p>
 					<ul>
 						<li>
-							<a href="//code.jquery.com/jquery-1.12.3.min.js">//code.jquery.com/jquery-1.12.3.min.js</a>
+							<a href="//code.jquery.com/jquery-1.12.4.js">//code.jquery.com/jquery-1.12.4.js</a>
 						</li>
 						<li>
 							<a href="../../../../media/js/jquery.dataTables.js">../../../../media/js/jquery.dataTables.js</a>
@@ -174,13 +175,13 @@ $(document).ready(function() {
 							<a href="../../js/dataTables.buttons.js">../../js/dataTables.buttons.js</a>
 						</li>
 						<li>
-							<a href="//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js">//cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js</a>
+							<a href="//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js">//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js</a>
 						</li>
 						<li>
-							<a href="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js">//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js</a>
+							<a href="//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js">//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js</a>
 						</li>
 						<li>
-							<a href="//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js">//cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js</a>
+							<a href="//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js">//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js</a>
 						</li>
 						<li>
 							<a href="../../js/buttons.html5.js">../../js/buttons.html5.js</a>
@@ -356,6 +357,9 @@ $(document).ready(function() {
 								<a href="../column_visibility/text.html">Internationalisation</a>
 							</li>
 							<li>
+								<a href="../column_visibility/columnText.html">Customisation of column button text</a>
+							</li>
+							<li>
 								<a href="../column_visibility/restore.html">Restore column visibility</a>
 							</li>
 							<li>
@@ -440,7 +444,7 @@ $(document).ready(function() {
 					<p>Please refer to the <a href="http://www.datatables.net">DataTables documentation</a> for full information about its API properties and methods.<br>
 					Additionally, there are a wide range of <a href="http://www.datatables.net/extensions">extensions</a> and <a href=
 					"http://www.datatables.net/plug-ins">plug-ins</a> which extend the capabilities of DataTables.</p>
-					<p class="copyright">DataTables designed and created by <a href="http://www.sprymedia.co.uk">SpryMedia Ltd</a> © 2007-2016<br>
+					<p class="copyright">DataTables designed and created by <a href="http://www.sprymedia.co.uk">SpryMedia Ltd</a> © 2007-2017<br>
 					DataTables is licensed under the <a href="http://www.datatables.net/mit">MIT license</a>.</p>
 				</div>
 			</div>

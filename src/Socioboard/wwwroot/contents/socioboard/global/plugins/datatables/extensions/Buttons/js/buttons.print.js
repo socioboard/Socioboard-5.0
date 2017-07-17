@@ -40,30 +40,42 @@ var DataTable = $.fn.dataTable;
 var _link = document.createElement( 'a' );
 
 /**
- * Convert a `link` tag's URL from a relative to an absolute address so it will
- * work correctly in the popup window which has no base URL.
+ * Clone link and style tags, taking into account the need to change the source
+ * path.
  *
  * @param  {node}     el Element to convert
  */
-var _relToAbs = function( el ) {
+var _styleToAbs = function( el ) {
 	var url;
 	var clone = $(el).clone()[0];
 	var linkHost;
 
 	if ( clone.nodeName.toLowerCase() === 'link' ) {
-		_link.href = clone.href;
-		linkHost = _link.host;
-
-		// IE doesn't have a trailing slash on the host
-		// Chrome has it on the pathname
-		if ( linkHost.indexOf('/') === -1 && _link.pathname.indexOf('/') !== 0) {
-			linkHost += '/';
-		}
-
-		clone.href = _link.protocol+"//"+linkHost+_link.pathname+_link.search;
+		clone.href = _relToAbs( clone.href );
 	}
 
 	return clone.outerHTML;
+};
+
+/**
+ * Convert a URL from a relative to an absolute address so it will work
+ * correctly in the popup window which has no base URL.
+ *
+ * @param  {string} href URL
+ */
+var _relToAbs = function( href ) {
+	// Assign to a link on the original page so the browser will do all the
+	// hard work of figuring out where the file actually is
+	_link.href = href;
+	var linkHost = _link.host;
+
+	// IE doesn't have a trailing slash on the host
+	// Chrome has it on the pathname
+	if ( linkHost.indexOf('/') === -1 && _link.pathname.indexOf('/') !== 0) {
+		linkHost += '/';
+	}
+
+	return _link.protocol+"//"+linkHost+_link.pathname+_link.search;
 };
 
 
@@ -123,22 +135,32 @@ DataTable.ext.buttons.print = {
 		// in the host document and then appended to the new window.
 		var head = '<title>'+title+'</title>';
 		$('style, link').each( function () {
-			head += _relToAbs( this );
+			head += _styleToAbs( this );
 		} );
 
-		//$(win.document.head).html( head );
-		win.document.head.innerHTML = head; // Work around for Edge
+		try {
+			win.document.head.innerHTML = head; // Work around for Edge
+		}
+		catch (e) {
+			$(win.document.head).html( head ); // Old IE
+		}
 
 		// Inject the table and other surrounding information
 		win.document.body.innerHTML =
 			'<h1>'+title+'</h1>'+
-			'<div>'+config.message+'</div>'+
+			'<div>'+
+				(typeof config.message === 'function' ?
+					config.message( dt, button, config ) :
+					config.message
+				)+
+			'</div>'+
 			html;
-		// $(win.document.body).html(
-		// 	'<h1>'+title+'</h1>'+
-		// 	'<div>'+config.message+'</div>'+
-		// 	html
-		// );
+
+		$(win.document.body).addClass('dt-print-view');
+
+		$('img', win.document.body).each( function ( i, img ) {
+			img.setAttribute( 'src', _relToAbs( img.getAttribute('src') ) );
+		} );
 
 		if ( config.customize ) {
 			config.customize( win );

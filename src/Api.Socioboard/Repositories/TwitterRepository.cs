@@ -366,6 +366,67 @@ namespace Api.Socioboard.Repositories
 
         }
 
+        public static List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> GetTwitterSort(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count, string shortvalue)
+        {
+            MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed", settings);
+            var builder = Builders<MongoTwitterFeed>.Sort;
+            var sort = builder.Descending(t => t.feedDate);
+            var result = mongorepo.FindWithRange<MongoTwitterFeed>(t => t.profileId.Equals(profileId), sort, 0, 100);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            if (shortvalue == "maxlike")
+            {
+                IList<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> lstTwtFeeds = task.Result;
+                lstTwtFeeds = lstTwtFeeds.OrderByDescending(t => Convert.ToInt64(t.Likecount)).ToList();
+
+                if (lstTwtFeeds != null)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstTwtFeeds.ToList());
+
+                    return lstTwtFeeds.ToList();
+                }
+            }
+           else if (shortvalue == "maxretweet")
+            {
+                IList<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> lstTwtFeeds = task.Result;
+                lstTwtFeeds = lstTwtFeeds.OrderByDescending(t => Convert.ToInt64(t.Retweetcount)).ToList();
+
+                if (lstTwtFeeds != null)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstTwtFeeds.ToList());
+
+                    return lstTwtFeeds.ToList();
+                }
+            }
+           else if (shortvalue == "leastlike")
+            {
+                IList<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> lstTwtFeeds = task.Result;
+                lstTwtFeeds = lstTwtFeeds.OrderBy(t => t.Likecount).ToList();
+
+                if (lstTwtFeeds != null)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstTwtFeeds.ToList());
+
+                    return lstTwtFeeds.ToList();
+                }
+            }
+           else if (shortvalue == "leastretweet")
+            {
+                IList<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> lstTwtFeeds = task.Result;
+                lstTwtFeeds = lstTwtFeeds.OrderBy(t => Convert.ToInt64(t.Retweetcount)).ToList();
+
+                if (lstTwtFeeds != null)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstTwtFeeds.ToList());
+
+                    return lstTwtFeeds.ToList();
+                }
+            }
+            return null;
+        }
+
         public static List<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> GetTopFilterFeeds(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count, string mediaType)
         {
 

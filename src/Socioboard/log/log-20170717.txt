@@ -1,0 +1,75 @@
+﻿2017-07-17 15:30:33.063 +05:30 [Information] User profile is available. Using '"C:\Users\GLB-213\AppData\Local\ASP.NET\DataProtection-Keys"' as key repository and Windows DPAPI to encrypt keys at rest.
+2017-07-17 15:30:33.304 +05:30 [Debug] Hosting starting
+2017-07-17 15:30:33.606 +05:30 [Debug] Hosting started
+2017-07-17 15:30:33.749 +05:30 [Debug] Connection id ""0HL6CVAL50KJC"" started.
+2017-07-17 15:30:33.751 +05:30 [Debug] Connection id ""0HL6CVAL50KJD"" started.
+2017-07-17 15:30:34.292 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/  
+2017-07-17 15:30:34.304 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:9821/  0
+2017-07-17 15:30:34.448 +05:30 [Information] Request finished in 397.6263ms 200 
+2017-07-17 15:30:34.554 +05:30 [Debug] Connection id ""0HL6CVAL50KJC"" completed keep alive response.
+2017-07-17 15:30:34.713 +05:30 [Debug] Reading data from file '"C:\Users\GLB-213\AppData\Local\ASP.NET\DataProtection-Keys\key-54be2a88-8acd-42d0-b5f0-1a9c4e84b787.xml"'.
+2017-07-17 15:30:34.746 +05:30 [Debug] Reading data from file '"C:\Users\GLB-213\AppData\Local\ASP.NET\DataProtection-Keys\key-efc188f6-97ba-41e1-b19b-4708dd73f175.xml"'.
+2017-07-17 15:30:34.768 +05:30 [Debug] Found key {54be2a88-8acd-42d0-b5f0-1a9c4e84b787}.
+2017-07-17 15:30:34.774 +05:30 [Debug] Found key {efc188f6-97ba-41e1-b19b-4708dd73f175}.
+2017-07-17 15:30:34.801 +05:30 [Debug] Considering key {efc188f6-97ba-41e1-b19b-4708dd73f175} with expiration date 2017-08-06 09:50:44Z as default key.
+2017-07-17 15:30:34.891 +05:30 [Debug] Decrypting secret element using Windows DPAPI.
+2017-07-17 15:30:34.910 +05:30 [Debug] Opening CNG algorithm '"AES"' from provider 'null' with chaining mode CBC.
+2017-07-17 15:30:34.927 +05:30 [Debug] Opening CNG algorithm '"SHA256"' from provider 'null' with HMAC.
+2017-07-17 15:30:34.946 +05:30 [Debug] Using key {efc188f6-97ba-41e1-b19b-4708dd73f175} as the default key.
+2017-07-17 15:30:34.984 +05:30 [Debug] The request path "/" does not match a supported file type
+2017-07-17 15:30:35.696 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-07-17 15:30:36.113 +05:30 [Debug] Executing action "Socioboard.Controllers.IndexController.Index (Socioboard)"
+2017-07-17 15:30:36.394 +05:30 [Information] Executing action method "Socioboard.Controllers.IndexController.Index (Socioboard)" with arguments (null) - ModelState is Valid
+2017-07-17 15:30:36.713 +05:30 [Debug] Executed action method "Socioboard.Controllers.IndexController.Index (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ViewResult".
+2017-07-17 15:30:37.152 +05:30 [Debug] View lookup cache miss for view '"Index"' in controller '"Index"'.
+2017-07-17 15:30:37.186 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2017-07-17 15:30:37.992 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 801.1578ms.
+2017-07-17 15:30:38.094 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' started.
+2017-07-17 15:30:44.733 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Index/Index.cshtml"' completed in 6638.4681ms.
+2017-07-17 15:30:44.747 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2017-07-17 15:30:44.756 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 8.3475ms.
+2017-07-17 15:30:44.757 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' started.
+2017-07-17 15:30:44.810 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/_ViewStart.cshtml"' completed in 51.9758ms.
+2017-07-17 15:30:44.824 +05:30 [Debug] The view '"Index"' was found.
+2017-07-17 15:30:44.827 +05:30 [Information] Executing ViewResult, running view at path "/Themes/Socioboard/Views/Index/Index.cshtml".
+2017-07-17 15:30:45.081 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2017-07-17 15:30:45.264 +05:30 [Debug] Code generation for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 181.2934ms.
+2017-07-17 15:30:45.265 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' started.
+2017-07-17 15:30:45.641 +05:30 [Debug] Compilation of the generated code for the Razor file at '"/Themes/Socioboard/Views/Shared/_SocioboardLayout.cshtml"' completed in 376.2551ms.
+2017-07-17 15:30:46.084 +05:30 [Information] Executed action "Socioboard.Controllers.IndexController.Index (Socioboard)" in 9967.4525ms
+2017-07-17 15:30:46.093 +05:30 [Information] Session started; Key:"37c86afb-1cc1-b170-65e2-25acc9b3b38a", Id:"735e4259-7dec-4fe6-71e1-1bbe80b581fb"
+2017-07-17 15:30:46.104 +05:30 [Debug] Session stored; Key:"37c86afb-1cc1-b170-65e2-25acc9b3b38a", Id:"735e4259-7dec-4fe6-71e1-1bbe80b581fb", Count:0
+2017-07-17 15:30:46.256 +05:30 [Information] Request finished in 12234.3751ms 200 text/html; charset=utf-8
+2017-07-17 15:30:46.258 +05:30 [Debug] Connection id ""0HL6CVAL50KJD"" completed keep alive response.
+2017-07-17 15:30:47.833 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home/IsSessionExist  
+2017-07-17 15:30:47.835 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/Home/IsSessionExist  
+2017-07-17 15:30:47.841 +05:30 [Debug] The request path "/Home/IsSessionExist" does not match a supported file type
+2017-07-17 15:30:47.841 +05:30 [Debug] The request path "/Home/IsSessionExist" does not match a supported file type
+2017-07-17 15:30:47.843 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-07-17 15:30:47.843 +05:30 [Debug] Request successfully matched the route with name '"default"' and template '"{controller=Index}/{action=Index}/{id?}"'.
+2017-07-17 15:30:47.852 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)"
+2017-07-17 15:30:47.862 +05:30 [Debug] Executing action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)"
+2017-07-17 15:30:49.134 +05:30 [Debug] Connection id ""0HL6CVAL50KJE"" started.
+2017-07-17 15:30:49.166 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:9821/contents/socioboard/images/loading-spinner-grey.gif  
+2017-07-17 15:30:49.169 +05:30 [Debug] The request path "/contents/socioboard/images/loading-spinner-grey.gif" does not match an existing file
+2017-07-17 15:30:49.170 +05:30 [Debug] Request did not match any routes.
+2017-07-17 15:30:49.472 +05:30 [Information] Request finished in 273.478ms 404 
+2017-07-17 15:30:49.473 +05:30 [Debug] Connection id ""0HL6CVAL50KJE"" completed keep alive response.
+2017-07-17 15:30:49.928 +05:30 [Debug] Session loaded; Key:"37c86afb-1cc1-b170-65e2-25acc9b3b38a", Id:"735e4259-7dec-4fe6-71e1-1bbe80b581fb", Count:0
+2017-07-17 15:30:49.940 +05:30 [Debug] Session loaded; Key:"37c86afb-1cc1-b170-65e2-25acc9b3b38a", Id:"735e4259-7dec-4fe6-71e1-1bbe80b581fb", Count:0
+2017-07-17 15:30:49.997 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" with arguments (null) - ModelState is Valid
+2017-07-17 15:30:50.001 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-07-17 15:30:50.008 +05:30 [Information] Executing action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" with arguments (null) - ModelState is Valid
+2017-07-17 15:30:50.014 +05:30 [Debug] Executed action method "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-07-17 15:30:50.032 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-07-17 15:30:50.032 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-07-17 15:30:50.039 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-07-17 15:30:50.039 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-07-17 15:30:50.041 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-07-17 15:30:50.042 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-07-17 15:30:50.239 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" in 2365.8926ms
+2017-07-17 15:30:50.240 +05:30 [Information] Executed action "Socioboard.Controllers.HomeController.IsSessionExist (Socioboard)" in 2356.0794ms
+2017-07-17 15:30:50.244 +05:30 [Information] Request finished in 2410.7316ms 200 application/json; charset=utf-8
+2017-07-17 15:30:50.247 +05:30 [Debug] Connection id ""0HL6CVAL50KJC"" completed keep alive response.
+2017-07-17 15:30:50.247 +05:30 [Information] Request finished in 2409.4805ms 200 application/json; charset=utf-8
+2017-07-17 15:30:50.249 +05:30 [Debug] Connection id ""0HL6CVAL50KJD"" completed keep alive response.

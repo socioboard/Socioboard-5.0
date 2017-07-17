@@ -368,7 +368,8 @@
                                         <div class="col s12 m6 l4">
                                             <div id="profile-card" class="card" ng-if="data['linkdInaccount'] != null">
                                                 <div class="card-image waves-effect waves-block waves-light">
-                                                    <img class="activator" src="{{data['linkdInaccount']['logoUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}">
+                                                    <!--<img class="activator" src="{{data['linkdInaccount']['logoUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}">-->
+                                                    <img class="activator" src="{{data['linkdInaccount']['logoUrl']}}">
                                                 </div>
                                                 <div class="card-content">
                                                     <img src="{{data['linkdInaccount']['profileImageUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}" class="circle responsive-img activator card-profile-image">
@@ -407,7 +408,7 @@
                                                     <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                         <i class="icon-info"></i>
                                                     </a>
-                                                    <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}</span>
+                                                    <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}">{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}</span>
                                                     <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">pinscount:</span> {{data['pintrestaccount']['pinscount']}}</p>
                                                     <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">boardscount:</span> <span title="{{data['pintrestaccount']['boardscount']}}">{{data['pintrestaccount']['boardscount']}}</span></p>
                                                 </div>

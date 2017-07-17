@@ -2115,6 +2115,7 @@ groupreport = function () {
 
 // facebook report
 facebookreport = function () {
+    debugger;
     // initialize core components
     $('ul.tabs').tabs();
     $('.modal-trigger').leanModal();
@@ -2158,9 +2159,9 @@ facebookreport = function () {
     });
 
 
-    $(document).ready(function () {
-        $('#CONTENT_BREAKDOWN_table').DataTable();
-    });
+    //$(document).ready(function () {
+    //    $('#CONTENT_BREAKDOWN_table').DataTable();
+    //});
 
 };
 

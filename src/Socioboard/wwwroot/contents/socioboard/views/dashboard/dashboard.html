@@ -1444,7 +1444,7 @@
         </div>
         <div class="modal-footer">
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddFacebookPages()">Connect</a>
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="msgPagecloseModals()">Close</a>
          
         </div>
     </div>
@@ -1479,7 +1479,7 @@
         </div>
         <div class="modal-footer">
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="addcompanypages()">Connect</a>
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="linpagecloseModal()">Close</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="msgPagecloseModals()">Close</a>
        
         </div>
     </div>
@@ -1587,7 +1587,7 @@
 <div id="ActiveGroupModal" class="modal" style="max-height:initial">
     <div class="modal-content">
         <h4>SELECT YOUR GROUPS</h4>
-        <h6>As you have modified your account, you can only use upto {{groupsMaxCount}} groups. As a {{AccountType}} user, you have added {{groupsCount}} groups. Please choose which {{groupsMaxCount}} among them you would like to retain</h6>
+        <h6>As you have modified your account, you can only use upto {{groupsMaxCount}} groups. As a {{AccountType}} user, you have added {{groupsCount}} groups. Please choose which {{groupsMaxCount-1}} among them you would like to retain</h6>
         <div class="active_acc_list">
             <ul class="collection ">
                 <li class="collection-item avatar" ng-repeat="grp in groups">
@@ -1595,7 +1595,11 @@
                         <span class="title">{{grp.groupName}}</span>
                         <p>Connected</p>
                     </div>
-                    <p class="right">
+                    <p class="right" ng-if="grp.groupName=='Socioboard'">
+                        <input type="checkbox" id="{{grp.groupName}}" ng-if="grp.groupName==Socioboard" selected disabled />
+                        <label for="{{grp.groupName}}" disabled></label>
+                    </p>
+                    <p class="right" ng-if="grp.groupName!='Socioboard'">
                         <input type="checkbox" id="{{grp.groupName}}" ng-click="toggleGroupsSelection(grp.groupName)" />
                         <label for="{{grp.groupName}}"></label>
                     </p>

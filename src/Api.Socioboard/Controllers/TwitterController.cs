@@ -79,6 +79,12 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpGet("ShortTwtfeeds")]
+        public IActionResult ShortTwtfeeds(string profileId, long userId, int skip, int count, string shortvalue)
+        {
+            return Ok(Repositories.TwitterRepository.GetTwitterSort(profileId, userId, _redisCache, _appSettings, skip, count, shortvalue));
+        }
+
         [HttpGet("GetTwFilterFeeds")]
         public IActionResult GetTwFilterFeeds(string profileId, long userId, int skip, int count, string mediaType)
         {

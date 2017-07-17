@@ -1532,7 +1532,7 @@ namespace Api.Socioboard.Repositories
                     return await result;
                 });
                 IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
-                lstFbFeeds = lstFbFeeds.OrderByDescending(t => t.Commentcount).ToList();
+                lstFbFeeds = lstFbFeeds.OrderByDescending(t => Convert.ToInt64(t.Commentcount)).ToList();
                 foreach (var item in lstFbFeeds.ToList())
                 {
                     Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
@@ -1584,7 +1584,7 @@ namespace Api.Socioboard.Repositories
                     return await result;
                 });
                 IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
-                lstFbFeeds = lstFbFeeds.OrderBy(t => t.Commentcount).ToList();
+                lstFbFeeds = lstFbFeeds.OrderBy(t => Convert.ToInt64(t.Commentcount)).ToList();
                 foreach (var item in lstFbFeeds.ToList())
                 {
                     Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();

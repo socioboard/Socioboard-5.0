@@ -93,20 +93,66 @@ namespace Api.Socioboard.Controllers
         {
             string selectedGroups = Request.Form["selectedGroups"];
             string[] Profiles = selectedGroups.Split(',');
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groups> lstGrp = Repositories.GroupsRepository.getGroups(userId, _redisCache, dbr);
-            lstGrp = lstGrp.Where(t => !Profiles.Contains(t.groupName)).ToList();
-            foreach (Domain.Socioboard.Models.Groups item in lstGrp)
+            List<string> temp = new List<string>();
+            foreach(string item in Profiles)
             {
-                if(item.groupName=="Socioboard")
+                temp.Add(item);
+            }
+            temp.Add("Socioboard");
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groups> lstSBGrp = Repositories.GroupsRepository.getGroups(userId, _redisCache, dbr);
+            long SBgroupId = lstSBGrp.First().id;
+            List<Domain.Socioboard.Models.Groupmembers> lstGrpmember = Repositories.GroupMembersRepository.findmember(SBgroupId,userId, _redisCache, dbr);
+            foreach(Domain.Socioboard.Models.Groupmembers member in lstGrpmember)
+            {
+                if(member.isAdmin==true)
                 {
-                    return BadRequest("You cann't delete default group choose other one");
+                    List<Domain.Socioboard.Models.Groups> lstGrp = Repositories.GroupsRepository.getAdminGroupsofUser(member.userId, _redisCache, dbr);
+                    lstGrp = lstGrp.Where(t => !temp.Contains(t.groupName)).ToList();
+                    if(lstGrp.Count !=0)
+                    {
+                        foreach (Domain.Socioboard.Models.Groups item in lstGrp)
+                        {
+                            Groupmembers nuser = dbr.Single<Groupmembers>(t => t.groupid.Equals(item.id));
+                            //List<Domain.Socioboard.Models.Groupmembers> lstmember = Repositories.GroupMembersRepository.findmember(item.id,userId, _redisCache, dbr);
+
+                            if (item.groupName == "Socioboard")
+                            {
+                                return BadRequest("You cann't delete default group choose other one");
+                            }
+                            else
+                            {
+                                dbr.Delete<Domain.Socioboard.Models.Groups>(item);
+                                dbr.Delete<Domain.Socioboard.Models.Groupmembers>(nuser);
+                            }
+                        }
+                    }
+                   
                 }
                 else
                 {
-                    GroupsRepository.DeleteProfile(userId, item.id, _redisCache, dbr, _appSettings);
+                    List<Domain.Socioboard.Models.Groups> lstGrps = Repositories.GroupsRepository.getGroupsofUser(member.userId, _redisCache, dbr);
+                    lstGrps = lstGrps.Where(t => !temp.Contains(t.groupName)).ToList();
+                    if (lstGrps.Count != 0)
+                    {
+                        foreach (Domain.Socioboard.Models.Groups items in lstGrps)
+                        {
+                            if (items.groupName == "Socioboard")
+                            {
+                                return BadRequest("You cann't delete default group choose other one");
+                            }
+                            else
+                            {
+                                Groupmembers nusers = dbr.Single<Groupmembers>(t => t.groupid==items.id && t.userId==userId);
+                                dbr.Delete<Domain.Socioboard.Models.Groupmembers>(nusers);
+                            }
+                        }
+                    }
+                        //Groupmembers nuser = dbr.Single<Groupmembers>(t => t.groupid.Equals(member.groupid));
+                    
                 }
-               
+                
             }
             return Ok();
         }

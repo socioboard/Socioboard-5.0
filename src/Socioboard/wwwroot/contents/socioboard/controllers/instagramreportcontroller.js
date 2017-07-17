@@ -443,3 +443,37 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
         }
     };
 })
+
+SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+
+                //$('#all_video_table').DataTable();
+                $('#InstagramAccountInfo').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+            });
+        }
+    };
+})
+
+SocioboardApp.directive('myRepeatVideoTabDirectives', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+
+                //$('#all_video_table').DataTable();
+                $('#MyTable').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+            });
+        }
+    };
+})

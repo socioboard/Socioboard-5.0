@@ -30,12 +30,11 @@
             </div>
 
             <div class="row" ng-class="fetchdatacomplete">
-
                 <!-- FACEBOOK STATS -->
                 <div class="col s12 m12 l12">
                     <div class="card" id="feeds">
                         <h5 class="feeds_title darken-4 white-text" style="background-color:#42c2f4">
-                            <i class="fa fa-twitter fa-fw" aria-hidden="true"></i>Twitter Report Stats</span>
+                            <i class="fa fa-twitter fa-fw" aria-hidden="true"></i>Twitter Report Stats
                         </h5>
                         <div class="collection">
                             <div class="row">
@@ -87,7 +86,7 @@
                                         <blockquote class="groupbox_padding lighten-1" style="background-color:#42c2f4">
                                             <h5><i class="fa fa-twitter fa-fw"></i>Twitter Profiles Detail</h5>
                                         </blockquote>
-                                        <table class="display responsive-table striped" cellspacing="0" width="100%">
+                                        <table id="Twtaccount" class="display responsive-table striped" cellspacing="0" width="100%">
                                             <thead>
                                                 <tr>
                                                     <th>S.No.</th>
@@ -97,10 +96,10 @@
                                                    
                                                 </tr>
                                             </thead>
-                                            <tbody ng-repeat="twtfollowfollowing in getfollowerfollowingcount">
+                                            <tbody ng-repeat="twtfollowfollowing in getfollowerfollowingcount" my-repeat-video-tab-directives>
                                                 <tr>
                                                     <td style="width: 1%;">{{$index+1}}</td>
-                                                    <td>{{twtfollowfollowing.twitterScreenName}}</td>
+                                                    <td><a href="https://twitter.com/{{twtfollowfollowing.twitterScreenName}}" target="_blank">{{twtfollowfollowing.twitterScreenName}}</a></td>
                                                     <td>{{twtfollowfollowing.followersCount}}</td>
                                                     <td>{{twtfollowfollowing.followingCount}}</td>
                                                     
@@ -135,21 +134,17 @@
                                                 <td><img class="responsive-img circle" src="{{instapostdetails.fromProfileUrl}}"><span class="a"> {{instapostdetails.fromName}}</span></td>
                                                 <td>{{instapostdetails.likecount}}</td>
                                                 <td>{{instapostdetails.retweetcount}}</td>
-                                                <!--<td>{{instapostdetails.type}}</td>-->
-                                               
+                                                <!--<td>{{instapostdetails.type}}</td>-->                                               
                                             </tr>
-
                                         </tbody>
-                                    </table>
-
-                                  
+                                    </table>                                  
                                 </div>
                             </div>
                             </div>  
                         </div>
                     </div>
-                </div>
             </div>
+            
 
             <div ng-if="fetchdatacomplete==false">
                 <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
@@ -167,12 +162,25 @@
                     </div>
                     <br />
                     <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait for the Report data to be generated</h6>
-
                 </div>
             </div>
 
+
+    
+
     </div>
 <script>
-   
+    //all_video_table
+    //$(document).ready(function () {
+        //$('#all_video_table').DataTable({
+        //    dom: 'Bfrtip',
+        //    buttons: [
+        //        'copyHtml5',
+        //        'excelHtml5',
+        //        'csvHtml5',
+        //        'pdfHtml5'
+        //    ]
+        //});
+    //});
 </script>
 

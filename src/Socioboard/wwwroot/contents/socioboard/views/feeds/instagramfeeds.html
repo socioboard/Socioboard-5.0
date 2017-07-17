@@ -6,7 +6,7 @@
                         <div class="row">
                             <div class="col offset-s1 s10 offset-m2 m8 offset-l2 l6">
                                 <div class="card" id="feeds">
-                                    <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a></h5>
+                                    <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a><a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownSort'><i class="fa fa-sort"></i></a></h5>
                                     <!-- Dropdown Structure -->
                                     <div ng-if="dropCalled==true">
                                         <ul id='dropdownFilter' class='dropdown-content'>
@@ -15,6 +15,17 @@
                                             <li><a href="javascript:void(0)" ng-click="filterSearch('video')">Video</a></li>
                                         </ul>
                                     </div>
+
+                                    <div ng-if="dropCalled==true">
+                                        <ul id='dropdownSort' class='dropdown-content'>
+                                            <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="sortSearch('mLikes')">Most Likes</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="sortSearch('mComments')">Most Comments</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="sortSearch('lLikes')">Least Likes</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="sortSearch('lComments')">Least Comments</a></li>
+                                        </ul>
+                                    </div>
+
                                     <ul class="collection instagramfeeds">
                                         <li class="collection-item" ng-repeat="insfeed in lstinsFeeds "myRepeatTabDirective>
                                           <div class="card">

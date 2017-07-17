@@ -1,0 +1,23 @@
+﻿2017-07-17 15:30:33.069 +05:30 [Debug] Hosting starting
+2017-07-17 15:30:33.660 +05:30 [Debug] Hosting started
+2017-07-17 15:30:33.828 +05:30 [Debug] Connection id ""0HL6CVAL5MJOL"" started.
+2017-07-17 15:30:33.850 +05:30 [Debug] Connection id ""0HL6CVAL5MJOM"" started.
+2017-07-17 15:30:34.561 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2017-07-17 15:30:34.512 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2017-07-17 15:30:34.699 +05:30 [Information] Request finished in 240.6995ms 200 
+2017-07-17 15:30:34.871 +05:30 [Debug] Connection id ""0HL6CVAL5MJOM"" completed keep alive response.
+2017-07-17 15:30:35.953 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2017-07-17 15:30:35.995 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"1cec12d5-1fc8-41b7-ab9f-f2cedba379ba"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2017-07-17 15:30:36.106 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2017-07-17 15:30:36.208 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-07-17 15:30:36.211 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-07-17 15:30:36.272 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-07-17 15:30:36.278 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-07-17 15:30:36.282 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-07-17 15:30:36.824 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 708.3727ms
+2017-07-17 15:30:36.908 +05:30 [Information] Request finished in 2490.8669ms 200 application/json; charset=utf-8
+2017-07-17 15:30:36.910 +05:30 [Debug] Connection id ""0HL6CVAL5MJOL"" completed keep alive response.
+2017-07-17 15:30:36.936 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/favicon.ico  
+2017-07-17 15:30:36.939 +05:30 [Debug] Request did not match any routes.
+2017-07-17 15:30:36.947 +05:30 [Information] Request finished in 10.272ms 404 
+2017-07-17 15:30:36.948 +05:30 [Debug] Connection id ""0HL6CVAL5MJOM"" completed keep alive response.

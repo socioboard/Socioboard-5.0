@@ -45,7 +45,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 
         $scope.comment = function (newComment)
         {
-            if (newComment == null || newComment == ' ') {
+            if (!(/\S/.test(newComment))) {
                 $scope.dispbtn = true;
                 return;
             }

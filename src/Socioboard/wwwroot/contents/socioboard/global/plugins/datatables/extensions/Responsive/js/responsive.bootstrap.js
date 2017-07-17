@@ -59,9 +59,13 @@ _display.modal = function ( options ) {
 		else {
 			if ( ! update ) {
 				if ( options && options.header ) {
-					_modal.find('div.modal-header')
+					var header = _modal.find('div.modal-header');
+					var button = header.find('button').detach();
+					
+					header
 						.empty()
-						.append( '<h4 class="modal-title">'+options.header( row )+'</h4>' );
+						.append( '<h4 class="modal-title">'+options.header( row )+'</h4>' )
+						.prepend( button );
 				}
 
 				_modal.find( 'div.modal-body' )

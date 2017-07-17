@@ -63,9 +63,10 @@
                                     <!--<h1 class="grey-text text-darken-4">Raj Dotnet</h1>-->
                                 </blockquote>
 
-                                <table class="display responsive-table" cellspacing="0" width="100%">
+                                <table id="channeldetailss" class="display responsive-table" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
+                                            <th width="1%">S.No</th>
                                             <th width="70%">Channel</th>
                                             <th width="10%">Subscribers</th>
                                             <th width="10%">Videos</th>
@@ -81,7 +82,8 @@
                                         </tr>
                                     </tfoot>-->
                                     <tbody>
-                                        <tr ng-repeat="channels in tableCData">
+                                        <tr ng-repeat="channels in tableCData" my-repeat-video-tab-directives>
+                                            <td style="width: 1%;">{{$index+1}}</td>
                                             <td>
                                                 <div class="row">
                                                     <!--<a href="{{channels.websiteUrl}}" target="_blank">-->
@@ -89,12 +91,12 @@
                                                         <img src="{{channels.channelpicUrl}}" class="circle responsive-img activator card-profile-image">
                                                     </div>
                                                     <div class="col m10 l11">
-                                                        <h6 class="grey-text text-darken-4">{{channels.ytubeChannelName}}</h6>
+                                                        <h6 class="grey-text text-darken-4"><a href="https://www.youtube.com/channel/{{channels.ytubeChannelId}}" target="_blank">{{channels.ytubeChannelName}}</a></h6>
                                                         <!--<h6 class="grey-text text-darken-4">Raj Software Developer</h6>
-                                                        </div>
+                                                        </div>channelId
                                                     <!--</a>-->
                                                     </div>
-
+                                                    </div>
                                             </td>
                                             <td>{{channels.subscribersCount}}</td>
                                             <td>{{channels.videosCount}}</td>
@@ -128,9 +130,10 @@
                                     <h5>Video statistics</h5>
                                 </blockquote>
 
-                                <table id="all_video_table" class="display responsive-table" cellspacing="0" width="100%">
+                                <table id="all_video_table" class="display nowrap" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
+                                            <th width="1%">S.No</th>
                                             <th width="50%">Videos</th>
                                             <th width="20%">Channel Name</th>
                                             <th width="10%">Likes</th>
@@ -149,6 +152,7 @@
                                     </tfoot>-->
                                     <tbody>
                                         <tr ng-repeat="videos in tableVData" my-repeat-video-tab-directive>
+                                            <td style="width: 1%;">{{$index+1}}</td>
                                             <td>
                                                 <div class="row">
                                                     <!--<a href="{{videos.watchUrl}}" target="_blank">-->
@@ -156,14 +160,14 @@
                                                         <img src="{{videos.vdoImageUrl}}" class="responsive-img" style="margin-top:8px; max-width: 25px">
                                                     </div>
                                                     <div class="col m10 l11">
-                                                        <h6 class="grey-text text-darken-4">&nbsp;{{videos.title}}</h6>
+                                                        <h6 class="grey-text text-darken-4">&nbsp;<a href="{{videos.watchUrl}}" target="_blank">{{videos.title}}</a></h6>
                                                         <!--<span class="grey-text text-darken-1 truncate">{{videos.description}}</span>-->
                                                         <!--<h6 class="grey-text text-darken-4">Raj Dotnet</h6>-->
                                                     </div>
                                                     <!--</a>-->
                                                 </div>
                                             </td>
-                                            <td>{{videos.channelTitle}}</td>
+                                            <td><a href="https://www.youtube.com/channel/{{videos.channelId}}" target="_blank">{{videos.channelTitle}}</a></td>
                                             <td>{{videos.likeCount}}</td>
                                             <td>{{videos.commentCount}}</td>
                                             <td>{{videos.viewCount}}</td>
@@ -238,7 +242,5 @@
         </div>
 
     </div>
-<script>
-   
-</script>
+
 

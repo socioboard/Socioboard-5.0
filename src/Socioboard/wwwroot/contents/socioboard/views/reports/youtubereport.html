@@ -123,9 +123,10 @@
                                     </blockquote> 
                                     <label>Show entries</label> 
                                     <input style="width:100px;text-align:center" type="number" min="0" step="10" ng-model="rowLimit"/>                             
-                                    <table class="display responsive-table" cellspacing="0" width="100%">
+                                    <table id="channeldetailss" class="display responsive-table" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
+                                                <th width="1%">S.No</th>
                                                 <th width="50%">Videos</th>
                                                 <th width="20%">Channel Name</th>
                                                 <th width="10%">Likes</th>
@@ -142,8 +143,9 @@
                                                 <th width="10%">Views</th>
                                             </tr>
                                         </tfoot>-->
-                                        <tbody ng-repeat="channelss in tableData">                                            
+                                        <tbody ng-repeat="channelss in tableData" my-repeat-video-tab-directive>                                            
                                                 <tr ng-repeat="videos in channelss._YoutubeVideoss | limitTo:rowLimit">
+                                                    <td style="width: 1%;">{{$index+1}}</td>
                                                     <td>
                                                         <div class="row">
                                                             <!--<a href="{{videos.watchUrl}}" target="_blank">-->

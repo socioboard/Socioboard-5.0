@@ -27,6 +27,41 @@ namespace Api.Socioboard.Repositories
             return groups;
         }
 
+        public static List<Domain.Socioboard.Models.Groups> getAdminGroupsofUser(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                List<Domain.Socioboard.Models.Groups> inMemGroups = _redisCache.Get<List<Domain.Socioboard.Models.Groups>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + userId);
+                if (inMemGroups != null)
+                {
+                    return inMemGroups;
+                }
+            }
+            catch { }
+
+            List<long> lstGroupIds = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted &&t.isAdmin==true).Select(t => t.groupid).ToList();
+            List<Domain.Socioboard.Models.Groups> groups = dbr.Find<Domain.Socioboard.Models.Groups>(t => lstGroupIds.Contains(t.id)).ToList();
+            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + userId, groups);
+            return groups;
+        }
+
+        public static List<Domain.Socioboard.Models.Groups> getGroupsofUser(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                List<Domain.Socioboard.Models.Groups> inMemGroups = _redisCache.Get<List<Domain.Socioboard.Models.Groups>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + userId);
+                if (inMemGroups != null)
+                {
+                    return inMemGroups;
+                }
+            }
+            catch { }
+
+            List<long> lstGroupIds = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted && t.isAdmin == false).Select(t => t.groupid).ToList();
+            List<Domain.Socioboard.Models.Groups> groups = dbr.Find<Domain.Socioboard.Models.Groups>(t => lstGroupIds.Contains(t.id)).ToList();
+            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + userId, groups);
+            return groups;
+        }
         public static int getAllGroupsofUserCount(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
             List<long> lstGroupIds = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted).Select(t => t.groupid).ToList();
@@ -34,14 +69,16 @@ namespace Api.Socioboard.Repositories
             int lstScheduledMessage = dbr.Counts<Domain.Socioboard.Models.Groups>(t => lstGroupIds.Contains(t.id));
             return lstScheduledMessage;
         }
-        public static List<Domain.Socioboard.Models.Groups> getGroups(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        public static List<Domain.Socioboard.Models.Groups> getSBGroup(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
-           
-
-            List<Domain.Socioboard.Models.Groups> topgroupProfiles = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId).ToList();
+           List<Domain.Socioboard.Models.Groups> topgroupProfiles = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.groupName =="Socioboard").ToList();
             return topgroupProfiles;
         }
-
+        public static List<Domain.Socioboard.Models.Groups> getGroups(long groupid, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            List<Domain.Socioboard.Models.Groups> topgroupProfiles = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == groupid && t.groupName=="Socioboard").ToList();
+            return topgroupProfiles;
+        }
         public static string DeleteProfile(long userId, long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
         {
             Domain.Socioboard.Models.Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.id == groupId).FirstOrDefault();

@@ -24,6 +24,38 @@ namespace Api.Socioboard.Repositories
             return groupMembers;
         }
 
+        public static List<Domain.Socioboard.Models.Groupmembers> findGroupsformember(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                List<Domain.Socioboard.Models.Groupmembers> inMemGroupMembers = _redisCache.Get<List<Domain.Socioboard.Models.Groupmembers>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + userId);
+                if (inMemGroupMembers != null)
+                {
+                    return inMemGroupMembers;
+                }
+            }
+            catch { }
+            List<Domain.Socioboard.Models.Groupmembers> groupMembers = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId).ToList();
+            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + userId, groupMembers);
+            return groupMembers;
+        }
+
+        public static List<Domain.Socioboard.Models.Groupmembers> findmember(long SBgroupId, long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                List<Domain.Socioboard.Models.Groupmembers> inMemGroupMembers = _redisCache.Get<List<Domain.Socioboard.Models.Groupmembers>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + userId);
+                if (inMemGroupMembers != null)
+                {
+                    return inMemGroupMembers;
+                }
+            }
+            catch { }
+            List<Domain.Socioboard.Models.Groupmembers> groupMembers = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.groupid !=SBgroupId).ToList();
+            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + userId, groupMembers);
+            return groupMembers;
+        }
+
         public static int createGroupMember(long groupId,User user,  Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
             Domain.Socioboard.Models.Groupmembers grpMember = new Domain.Socioboard.Models.Groupmembers();

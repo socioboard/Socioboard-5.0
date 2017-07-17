@@ -7,7 +7,16 @@
         <div class="row">            
             <div class="col offset-s1 s10 offset-m2 m8 offset-l2 l8">
                 <div class="card" id="feeds">
-                    <h5 class="feeds_title white-text" style="background-color:#c4302b"><i class="fa fa-youtube-play"></i>Youtube Live feeds</h5>
+                    <h5 class="feeds_title white-text" style="background-color:#c4302b"><i class="fa fa-youtube-play"></i>Youtube Live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownSort'><i class="fa fa-sort"></i></a></h5>
+                    <div ng-if="dropCalled==true">
+                        <ul id='dropdownSort' class='dropdown-content'>
+                            <li><a href="javascript:void(0)" ng-click="LoadVideos()">None</a></li>
+                            <li><a href="javascript:void(0)" ng-click="sortSearch('mLikes')">Most Likes</a></li>
+                            <li><a href="javascript:void(0)" ng-click="sortSearch('mComments')">Most Comments</a></li>
+                            <li><a href="javascript:void(0)" ng-click="sortSearch('lLikes')">Least Likes</a></li>
+                            <li><a href="javascript:void(0)" ng-click="sortSearch('lComments')">Least Comments</a></li>
+                        </ul>
+                    </div>
                     <ul>
                         <!--<div class="youtubefeeds">
                             <div class="row">
@@ -26,24 +35,22 @@
                                 </div>
                             </div>
                         </div>-->
-
                       <div class="youtubefeeds">
                         <div class="row">
                             <div class="col s12 m12 l12" ng-repeat="videos in lstYtFeeds">
                                 <div class="card  hoverable">
                                     <!--<a class="modal-trigger" ng-click="videomodal(videos.vdoTitle,videos.ytVideoId)">-->
                                         <div class="modal-content">
-                                            <!--<img src="{{videos._youtubefeed.vdoImage}}" class="responsive-img"/>-->
+                                            <!--<img src="{{videos._youtubefeed.vdoImageUrl}}" class="responsive-img"/>-->
                                             <div class="video-container">
-                                                <iframe class="yt_players" id="ytttt_{{videos._youtubefeed.ytVideoId}}" width="100%" height="360" src="{{videos._youtubefeed.ytVideoId | youtubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
+                                                <iframe class="yt_players" id="ytttt_{{videos._youtubefeed.ytvideoId}}" width="100%" height="360" src="{{videos._youtubefeed.ytvideoId | youtubeEmbedUrl }}" frameborder="0" allowfullscreen></iframe>
                                             </div>
                                         </div>
-                                        <div class="card-content no-space">
-                                            <!--<a>&nbsp;</a><i style="color:#e21212" class="fa fa-youtube-play fa-2x"></i> <a href="{{videos._youtubefeed.vdoUrl}}" style="font-weight:500" class="watchYt" target="_blank">&nbspWatch on Youtube</a>-->
-                                            <a>&nbsp;</a><img src="/contents/socioboard/images/YoutubeLogo.png" /> <a href="{{videos._youtubefeed.vdoUrl}}" style="font-weight:500" class="watchYt" target="_blank" >&nbspWatch on Youtube</a>
-
-                                            <h6 class="y_feeds_title">{{videos._youtubefeed.vdoTitle}}</h6>
-                                            <h6 class="y_feeds_desc" style="word-wrap: break-word">{{videos._youtubefeed.vdoDescription}}</h6>
+                                        <div class="card-content row">
+                                            <!--<a>&nbsp;</a><i style="color:#e21212" class="fa fa-youtube-play fa-2x"></i> <a href="{{videos._youtubefeed.watchUrl}}" style="font-weight:500" class="watchYt" target="_blank">&nbspWatch on Youtube</a>-->
+                                            <a>&nbsp;</a><img src="/contents/socioboard/images/YoutubeLogo.png" /> <a href="{{videos._youtubefeed.watchUrl}}" style="font-weight:500" class="watchYt" target="_blank" >&nbspWatch on Youtube</a>
+                                            <h6 class="y_feeds_title">{{videos._youtubefeed.title}}</h6>
+                                            <h6 class="y_feeds_desc" style="word-wrap: break-word">{{videos._youtubefeed.description}}</h6>
                                             <ul class="collapsible" data-collapsible="accordion">
                                                 <li>
                                                     <!--<div id="headers" class="collapsible-header red-text" ng-mouseover="boxload()" ng-click="videomodal(videos._youtubefeed.ytVideoId)"><i class="material-icons"></i>Show Comments</div>-->                                                    
@@ -73,12 +80,12 @@
                                                                     <div class="row">
                                                                         <div class="input-field col s11">
                                                                             <div class="emoji-picker-container">
-                                                                                <!--<input id="compose_{{videos._youtubefeed.ytVideoId}}" length="500" placeholder="Type your msg"/>-->
-                                                                                <textarea id="compose_{{videos._youtubefeed.ytVideoId}}" class="materialize-textarea" length="500" placeholder="Type your msg"></textarea>
+                                                                                <!--<input id="compose_{{videos._youtubefeed.ytvideoId}}" length="500" placeholder="Type your msg"/>-->
+                                                                                <textarea id="compose_{{videos._youtubefeed.ytvideoId}}" class="materialize-textarea" length="500" placeholder="Type your msg"></textarea>
                                                                             </div>
                                                                         </div>
                                                                         <div class="input-field col s1 margin-top-50">
-                                                                            <a href="javascript:void(0);" class="btn btn-floating red waves-effect waves-light" ng-click="postComments(videos._youtubefeed.ytVideoId)">
+                                                                            <a href="javascript:void(0);" class="btn btn-floating red waves-effect waves-light" ng-click="postComments(videos._youtubefeed.ytvideoId)">
                                                                                 <i class="icon-cursor white-text" ng-class="sendicon" style="font-size: 1rem;"></i>
                                                                                 <i class="fa fa-spinner fa-pulse fa-fw white-text" ng-class="commentsending"></i>
                                                                             </a>

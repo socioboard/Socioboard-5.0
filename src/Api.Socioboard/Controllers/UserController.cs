@@ -2133,6 +2133,8 @@ namespace Api.Socioboard.Controllers
                 {
                     _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
                 }
+                _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+                _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
                 _user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                 _user.Id = Convert.ToInt64(userId);
                 dbr.Update<User>(_user);

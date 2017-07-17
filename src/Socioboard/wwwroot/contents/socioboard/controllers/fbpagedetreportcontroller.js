@@ -1277,7 +1277,12 @@ SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
         if (scope.$last === true) {
             $timeout(function () {
 
-                $('#all_video_table').DataTable();
+                $('#Fbpost').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
             });
         }
     };

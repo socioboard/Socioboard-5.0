@@ -11,77 +11,221 @@
                 <div class="container">
 
                     <div class="col m12">
-                        <h4>Ads</h4>
+                        <h4>Get Free Socioboard Standard Plan for Life Time</h4>
                     </div>
 
                     <div class="row no-space">
-                      <div class="col l6 m6 s12">
-                        <div class="card">
-                          <div class="card-content white">
-                            <div class="row">
-                              <form class="col s12">
-                                <div class="row">
-                                  <div class="col l12">
-                                  <h6>Step 1 :</h6>
-                                  </div>
-                                  <div class="input-field col s12">
-                                    <textarea id="textarea1" class="materialize-textarea black-text" disabled>
-                                  
-                                    </textarea>
-                                    <label for="textarea1">Embaded code</label>
-                                  </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col l12">
-                                        <h6>Step 2 :</h6>
+                        <div class="col l6 m6 s12">
+                            <div class="card">
+                                <div class="card-content white">
+                                    <div class="row">
+                                        <form class="col s12">
+                                            <div class="row">
+                                                <h6 class="col l12"><strong>Step 1 :</strong></h6>
+                                                <div class="input-field col s12">
+                                                    <select ng-model="ads_img" ng-click="foo();" ng-dropdown required>
+                                                        <option value="" disabled selected>Choose your Theme</option>
+                                                        <option value="ads1">Ads Theme 1</option>
+                                                        <option value="ads2">Ads Theme 2</option>
+                                                        <option value="ads3">Ads Theme 3</option>
+                                                        <option value="ads4">Ads Theme 4</option>
+                                                        <option value="ads5">Ads Theme 5</option>
+                                                        <option value="ads6">Ads Theme 6</option>
+                                                        <option value="ads7">Ads Theme 7</option>
+                                                    </select>
+                                                    <label>Select Theme</label>
+                                                </div>
+                                                <div class="hide">
+                                                    {{ adsImg1 = (ads_img === 'ads1')}}
+                                                    {{ adsImg2 = (ads_img === 'ads2')}}
+                                                    {{ adsImg3 = (ads_img === 'ads3')}}
+                                                    {{ adsImg4 = (ads_img === 'ads4')}}
+                                                    {{ adsImg5 = (ads_img === 'ads5')}}
+                                                    {{ adsImg6 = (ads_img === 'ads6')}}
+                                                    {{ adsImg7 = (ads_img === 'ads7')}}
+                                                </div>
+                                                <div ng-if=adsImg1>
+                                                    <div class="col s12">
+                                                        <div class="center">
+                                                            <img src="/contents/socioboard/images/ads/sb_ads_1.png" class="responsive-img">
+                                                        </div>
+                                                    </div>
+                                                    <!-- ads text 1 copy code -->
+                                                    <div class="input-field col s11">
+                                                        <textarea id="ads_text_copy_1" class="materialize-textarea"><form style="border:1px solid #ccc;padding:3px;text-align:center;"><a href="https://www.socioboard.com" target="_blank"><img src="http://i.imgur.com/W6P8AmU.png" height="100%" width="100%" style="border:0" alt="sb_ads_1" /></a></form></textarea>
+                                                        <label for="ads_text_copy_1">Embaded code</label>
+                                                    </div>
+                                                    <!-- ads btn 1 copy code -->
+                                                    <div class="col s1 margin-top-30">
+                                                        <button class="btn btn_style grey btn_copy_ads tooltipped" data-position="bottom" data-delay="50" data-tooltip="click to copy" data-clipboard-target="#ads_text_copy_1">
+                                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div ng-if=adsImg2>
+                                                    <div class="col s12">
+                                                        <div class="center">
+                                                            <img src="/contents/socioboard/images/ads/sb_ads_2.png" class="responsive-img">
+                                                        </div>
+                                                    </div>
+                                                    <!-- ads text 1 copy code -->
+                                                    <div class="input-field col s11">
+                                                        <textarea id="ads_text_copy_2" class="materialize-textarea"><form style="border:1px solid #ccc;padding:3px;text-align:center;"><a href="https://www.socioboard.com" target="_blank"><img src="http://i.imgur.com/g9HUp9N.png" height="100%" width="100%" style="border:0" alt="sb_ads_2" /></a></form></textarea>
+                                                        <label for="ads_text_copy_2">Embaded code</label>
+                                                    </div>
+                                                    <!-- ads btn 1 copy code -->
+                                                    <div class="col s1 margin-top-30">
+                                                        <button class="btn btn_style grey btn_copy_ads tooltipped" data-position="bottom" data-delay="50" data-tooltip="click to copy" data-clipboard-target="#ads_text_copy_2">
+                                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div ng-if=adsImg3>
+                                                    <div class="col s12">
+                                                        <div class="center">
+                                                            <img src="/contents/socioboard/images/ads/sb_ads_3.png" class="responsive-img">
+                                                        </div>
+                                                    </div>
+                                                    <!-- ads text 1 copy code -->
+                                                    <div class="input-field col s11">
+                                                        <textarea id="ads_text_copy_3" class="materialize-textarea"><form style="border:1px solid #ccc;padding:3px;text-align:center;"><a href="https://www.socioboard.com" target="_blank"><img src="http://i.imgur.com/E6dvNA6.png" height="100%" width="100%" style="border:0" alt="sb_ads_3" /></a></form></textarea>
+                                                        <label for="ads_text_copy_3">Embaded code</label>
+                                                    </div>
+                                                    <!-- ads btn 1 copy code -->
+                                                    <div class="col s1 margin-top-30">
+                                                        <button class="btn btn_style grey btn_copy_ads tooltipped" data-position="bottom" data-delay="50" data-tooltip="click to copy" data-clipboard-target="#ads_text_copy_3">
+                                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div ng-if=adsImg4>
+                                                    <div class="col s12">
+                                                        <div class="center">
+                                                            <img src="/contents/socioboard/images/ads/sb_ads_4.jpg" class="responsive-img">
+                                                        </div>
+                                                    </div>
+                                                    <!-- ads text 1 copy code -->
+                                                    <div class="input-field col s11">
+                                                        <textarea id="ads_text_copy_4" class="materialize-textarea"><form style="border:1px solid #ccc;padding:3px;text-align:center;"><a href="https://www.socioboard.com" target="_blank"><img src="http://i.imgur.com/J9HA0Qi.jpg" height="100%" width="100%" style="border:0" alt="sb_ads_4" /></a></form></textarea>
+                                                        <label for="ads_text_copy_4">Embaded code</label>
+                                                    </div>
+                                                    <!-- ads btn 1 copy code -->
+                                                    <div class="col s1 margin-top-30">
+                                                        <button class="btn btn_style grey btn_copy_ads tooltipped" data-position="bottom" data-delay="50" data-tooltip="click to copy" data-clipboard-target="#ads_text_copy_4">
+                                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div ng-if=adsImg5>
+                                                    <div class="col s12">
+                                                        <div class="center">
+                                                            <img src="/contents/socioboard/images/ads/sb_ads_5.jpg" class="responsive-img">
+                                                        </div>
+                                                    </div>
+                                                    <!-- ads text 1 copy code -->
+                                                    <div class="input-field col s11">
+                                                        <textarea id="ads_text_copy_5" class="materialize-textarea"><form style="border:1px solid #ccc;padding:3px;text-align:center;"><a href="https://www.socioboard.com" target="_blank"><img src="http://i.imgur.com/jKPMo0P.jpg" height="100%" width="100%" style="border:0" alt="sb_ads_5" /></a></form></textarea>
+                                                        <label for="ads_text_copy_5">Embaded code</label>
+                                                    </div>
+                                                    <!-- ads btn 1 copy code -->
+                                                    <div class="col s1 margin-top-30">
+                                                        <button class="btn btn_style grey btn_copy_ads tooltipped" data-position="bottom" data-delay="50" data-tooltip="click to copy" data-clipboard-target="#ads_text_copy_5">
+                                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div ng-if=adsImg6>
+                                                    <div class="col s12">
+                                                        <div class="center">
+                                                            <img src="/contents/socioboard/images/ads/sb_ads_6.jpg" class="responsive-img">
+                                                        </div>
+                                                    </div>
+                                                    <!-- ads text 1 copy code -->
+                                                    <div class="input-field col s11">
+                                                        <textarea id="ads_text_copy_6" class="materialize-textarea"><form style="border:1px solid #ccc;padding:3px;text-align:center;"><a href="https://www.socioboard.com" target="_blank"><img src="http://i.imgur.com/usQqieY.jpg" height="100%" width="100%" style="border:0" alt="sb_ads_6" /></a></form></textarea>
+                                                        <label for="ads_text_copy_6">Embaded code</label>
+                                                    </div>
+                                                    <!-- ads btn 1 copy code -->
+                                                    <div class="col s1 margin-top-30">
+                                                        <button class="btn btn_style grey btn_copy_ads tooltipped" data-position="bottom" data-delay="50" data-tooltip="click to copy" data-clipboard-target="#ads_text_copy_6">
+                                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div ng-if=adsImg7>
+                                                    <div class="col s12">
+                                                        <div class="center">
+                                                            <img src="/contents/socioboard/images/ads/sb_ads_7.jpg" class="responsive-img">
+                                                        </div>
+                                                    </div>
+                                                    <!-- ads text 1 copy code -->
+                                                    <div class="input-field col s11">
+                                                        <textarea id="ads_text_copy_7" class="materialize-textarea"><form style="border:1px solid #ccc;padding:3px;text-align:center;"><a href="https://www.socioboard.com" target="_blank"><img src="http://i.imgur.com/4GpQCxF.jpg" height="100%" width="100%" style="border:0" alt="sb_ads_7" /></a></form></textarea>
+                                                        <label for="ads_text_copy_7">Embaded code</label>
+                                                    </div>
+                                                    <!-- ads btn 1 copy code -->
+                                                    <div class="col s1 margin-top-30">
+                                                        <button class="btn btn_style grey btn_copy_ads tooltipped" data-position="bottom" data-delay="50" data-tooltip="click to copy" data-clipboard-target="#ads_text_copy_7">
+                                                            <i class="fa fa-clipboard" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="col s12">
+                                                    <hr class="hr_dot">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <h6 class="col s12"><strong>Step 2 :</strong></h6>
+                                                <div class="input-field col s12">
+                                                    <input id="url" type="url" ng-if="urldetails ==null"  class="validate">
+                                                    <input id="url1" type="url" ng-if="urldetails !=null"  class="validate" disabled>
+                                                    <label for="url" data-error="wrong" data-success="right">Enter Home Page URL</label>
+                                                </div>
+                                                <div class="col s12">
+                                                    <hr class="hr_dot">
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <h6 class="col s12"><strong>Step 3 :</strong></h6>
+                                                <div class="input-field col s12 center">
+                                                    <a href="javascript:;" class="btn blue" ng-if="urldetails ==null" ng-click="addAdsUrl()">Submit</a>
+                                                    <a href="javascript:;" class="btn grey" ng-click="message(abcd)" ng-if="urldetails !=null" disabled>Submit</a>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                  <div class="input-field col s12">
-                                    <input id="url" type="url" ng-if="urldetails ==null" required class="validate">
-                                      <input id="url1" type="url" ng-if="urldetails !=null" required class="validate" disabled>
-                                    <label for="url" data-error="wrong" data-success="right">URL</label>
-                                  </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col l12">
-                                        <h6>Step 3 :</h6>
-                                    </div>
-                                  <div class="input-field col s12 center">
-                                    <a href="javascript:;" class="btn blue" ng-if="urldetails ==null" ng-click="addAdsUrl()">Submit</a>
-                                      <a href="javascript:;" class="btn grey" ng-click="message(abcd)" ng-if="urldetails !=null" disabled >Submit</a>
-                                  </div>
-                                </div>
-                              </form>
                             </div>
-                          </div>                         
                         </div>
-                      </div>
 
-                      <div class="col l6 m6 s12">
-                        <div class="card">
-                          <div class="card-content white">
-                            <span class="grey-text text-darken-4">Step 1 : </span><span class="grey-text text-darken-1">copy code and paste it in your website main page</span>
-                            <br>
-                            <span class="grey-text text-darken-4">Step 2 : </span><span class="grey-text text-darken-1">add your website URL</span>
-                            <br>
-                            <span class="grey-text text-darken-4">Step 3 : </span><span class="grey-text text-darken-1">verify your website where you paste above code</span>
-                          </div>                          
+                        <div class="col l6 m6 s12">
+                            <div class="card">
+                                <div class="card-content white">
+                                    <span class="grey-text text-darken-4">Step 1 : </span><span class="grey-text text-darken-1">Copy code and paste it in your website home page(Landing Page)</span>
+                                    <br>
+                                    <span class="grey-text text-darken-4">Step 2 : </span><span class="grey-text text-darken-1">Add your website's Home Page URL</span>
+                                    <br>
+                                    <span class="grey-text text-darken-4">Step 3 : </span><span class="grey-text text-darken-1">Verify your website where you paste above code</span>
+                                    <br>
+                                    <span class="grey-text text-darken-4">Note : </span><span class="red-text text-darken-1">**We took only Home Page URL for this offer</span>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-content white">
+                                    <iframe width="100%" height="300" src="https://www.youtube.com/embed/qAfskOtGDLA" frameborder="0" allowfullscreen=""></iframe>
+                                </div>
+                            </div>
+                            <div class="card" ng-if="urldetails !=null">
+                                <div class="card-content white">
+                                    <div class="center"><strong class="blue-text ">{{urldetails.websiteUrl}}</strong><span class="grey-text"> url is Verified</span></div>
+                                </div>
+                            </div>
+                            <div class="card" ng-if="urldetails == null">
+                                <div class="card-content white">
+                                    <div class="center"><strong class="blue-text "></strong><span class="grey-text">You don't have any verified URL</span></div>
+                                </div>
+                            </div>
                         </div>
-                          <div class="card">
-                              <div class="card-content white">
-                                  <iframe width="100%" height="200" src="https://www.youtube.com/embed/qAfskOtGDLA" frameborder="0" allowfullscreen></iframe>
-                              </div>
-                          </div>
-                          <div class="card" ng-if="urldetails !=null">
-                              <div class="card-content white">
-                                  <div class="center"><strong class="blue-text ">{{urldetails.websiteUrl}}</strong><span class="grey-text"> url is Verified</span></div>
-                              </div>
-                          </div>
-                          <div class="card" ng-if="urldetails == null">
-                              <div class="card-content white">
-                                  <div class="center"><strong class="blue-text "></strong><span class="grey-text">You don't have any verified URL</span></div>
-                              </div>
-                          </div>
-                      </div>
                     </div>
                 </div>
                 <!--end container-->

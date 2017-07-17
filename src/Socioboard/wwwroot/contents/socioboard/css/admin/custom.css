@@ -449,3 +449,11 @@ ul.side-nav.leftside-navigation li.active > a{
     float: right;
     box-sizing: border-box;
 }
+
+.email-type{
+    font-size: large;
+    padding-left: 10px;
+}
+.hr_dot{
+    border-top: 2px dashed #009bdf !important;
+}

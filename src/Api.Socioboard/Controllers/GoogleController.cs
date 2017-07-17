@@ -447,6 +447,7 @@ namespace Api.Socioboard.Controllers
         [HttpPost("AddGoogleAccountPhone")]
         public IActionResult AddGoogleAccountPhone(string refreshToken, string accessToken, long groupId, long userId)
         {
+
             string ret = string.Empty;
             string objRefresh = string.Empty;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
@@ -635,7 +636,7 @@ namespace Api.Socioboard.Controllers
                 List<Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles> lstGoogleAnalyticsProfiles = new List<Domain.Socioboard.ViewModels.GoogleAnalyticsProfiles>();
                 lstGoogleAnalyticsProfiles = Helper.GoogleHelper.GetGanalyticsAccount(code, _appSettings);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
                 lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics).ToList();
                 string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
                 if (lstStr.Length > 0)
@@ -819,9 +820,9 @@ namespace Api.Socioboard.Controllers
         //Fetch youtube videos data from MongoDB
 
         [HttpGet("GetYTVideos")]
-        public IActionResult GetYTVideos(string ChannelId)
+        public IActionResult GetYTVideos(string ChannelId, string sortType)
         {
-            return Ok(Repositories.GplusRepository.GetYoutubeFeeds(ChannelId, _redisCache, _appSettings));
+            return Ok(Repositories.GplusRepository.GetYoutubeFeeds(ChannelId, sortType, _redisCache, _appSettings));
 
         }
 

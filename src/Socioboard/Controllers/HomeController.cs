@@ -1083,9 +1083,11 @@ namespace Socioboard.Controllers
             // Return the footer template
             return tmpFooter;
         }
-        
+
         public async Task<FileContentResult> generatePaymentInvoicePdf(string id, string package)
         {
+            //string csv = "GroupName, ProfileName, Message,postImgUrl";
+            //return File(new System.Text.UTF8Encoding().GetBytes(csv), "text/csv", "linkedInLeads_" + (DateTime.Now.Ticks).ToString() + ".csv");
             Int32 invoiceId = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             string filename = "Invoice_" + invoiceId + ".pdf";
             string ReportFilePath = _appEnv.WebRootPath + "\\contents\\socioboard\\Invoice\\" + filename;
@@ -1226,8 +1228,8 @@ namespace Socioboard.Controllers
                 {
                 }
 
-               // return File(pdfBytes, "application/pdf", filename);
-                
+                // return File(pdfBytes, "application/pdf", filename);
+
             }
             byte[] pdfBytes = System.IO.File.ReadAllBytes(ReportFilePath);
             if (System.IO.File.Exists(ReportFilePath))
@@ -1237,8 +1239,6 @@ namespace Socioboard.Controllers
             // return new FileStreamResult(new MemoryStream(pdfBytes), "application / pdf") { FileDownloadName = filename };
 
             return File(pdfBytes, "application/pdf", filename);
-
         }
-
     }
 }

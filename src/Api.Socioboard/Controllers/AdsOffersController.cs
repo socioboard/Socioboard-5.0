@@ -46,40 +46,53 @@ namespace Api.Socioboard.Controllers
                 IList<AdsOffers> lstAdsOffers = dbr.Find<AdsOffers>(t => t.UserId == userId);
                 if (lstAdsOffers.Count == 0)
                 {
-                    string lstcontent = Repositories.AdsOffersRepository.findUrlForAds(url);
-                    if (lstcontent == "Ads found on website")
+                    Match match = Regex.Match(url, @"^(?:\w+://)?([^/?]*)");
+                    //string domain = match.Groups[1].Value;
+                    string homepageurl = match.Value;
+                    IList<AdsOffers> lstwebsites = dbr.Find<AdsOffers>(t => t.WebsiteUrl.Contains(homepageurl));
+                    if(lstwebsites.Count==0)
                     {
-                        IList<User> lstUser = dbr.Find<User>(t => t.Id == userId);
-                        string mailid = lstUser.First().EmailId;
-                        if (lstUser != null && lstUser.Count() > 0)
+                        string lstcontent = Repositories.AdsOffersRepository.findUrlForAds(homepageurl);
+                        //string lstcontents = Repositories.AdsOffersRepository.GetHomePage(url);
+                        if (lstcontent == "Ads found on website")
                         {
-                            ads.adsaccountstatus = Domain.Socioboard.Enum.AdsOfferAccountStatus.Active;
-                            ads.adcreateddate = DateTime.UtcNow;
-                            ads.UserId = userId;
-                            ads.Verified = Domain.Socioboard.Enum.AdsStatus.Verified;
-                            ads.WebsiteUrl = url;
-                            ads.EmailId = mailid;
-                            ads.Verifieddate = DateTime.UtcNow.Date;
-                            int SavedStatus = dbr.Add<Domain.Socioboard.Models.AdsOffers>(ads);
-                            if (SavedStatus == 1)
+                            IList<User> lstUser = dbr.Find<User>(t => t.Id == userId);
+                            string mailid = lstUser.First().EmailId;
+                            if (lstUser != null && lstUser.Count() > 0)
                             {
-                                lstUser.First().Adsstatus = Domain.Socioboard.Enum.AdsStatus.Verified;
-                                lstUser.First().TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.active;
-                                lstUser.First().PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
-                                lstUser.First().PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.added;
-                                lstUser.First().AccountType = Domain.Socioboard.Enum.SBAccountType.Platinum;
-                                lstUser.First().PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Paid;
-                                //int SavedUserStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
-                                int SavedUserStatus = dbr.Update<User>(lstUser.First());
-                                // int SavedUserStatus = dbr.Update<User>(user);
+                                ads.adsaccountstatus = Domain.Socioboard.Enum.AdsOfferAccountStatus.Active;
+                                ads.adcreateddate = DateTime.UtcNow;
+                                ads.UserId = userId;
+                                ads.Verified = Domain.Socioboard.Enum.AdsStatus.Verified;
+                                ads.WebsiteUrl = homepageurl;
+                                ads.EmailId = mailid;
+                                ads.Verifieddate = DateTime.UtcNow.Date;
+                                int SavedStatus = dbr.Add<Domain.Socioboard.Models.AdsOffers>(ads);
+                                if (SavedStatus == 1)
+                                {
+                                    lstUser.First().Adsstatus = Domain.Socioboard.Enum.AdsStatus.Verified;
+                                    lstUser.First().TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.active;
+                                    lstUser.First().PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
+                                    lstUser.First().PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.added;
+                                    lstUser.First().AccountType = Domain.Socioboard.Enum.SBAccountType.Standard;
+                                    lstUser.First().PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Paid;
+                                    //int SavedUserStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
+                                    int SavedUserStatus = dbr.Update<User>(lstUser.First());
+                                    // int SavedUserStatus = dbr.Update<User>(user);
+                                }
                             }
+                            return Ok("Ads found on website");
                         }
-                        return Ok("Ads found on website");
+                        else
+                        {
+                            return BadRequest("Ads not found on website");
+                        }
                     }
                     else
                     {
-                        return BadRequest("Ads not found on website");
+                        return BadRequest("website already register for this offer");
                     }
+                    
                 }
                 else
                 {

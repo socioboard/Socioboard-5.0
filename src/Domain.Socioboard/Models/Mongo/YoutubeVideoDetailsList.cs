@@ -49,4 +49,10 @@ namespace Domain.Socioboard.Models.Mongo
         public int favoriteCount { get; set; }
         public int commentCount { get; set; }
     }
+
+    public class YoutubeFeed
+    {
+        public YoutubeVideoDetailsList _youtubefeed { get; set; }
+        public List<MongoYoutubeComments> _youtubecomment { get; set; }
+    }
 }

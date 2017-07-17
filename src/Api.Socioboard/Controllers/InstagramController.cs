@@ -130,6 +130,13 @@ namespace Api.Socioboard.Controllers
                 return Ok(lstInstagramFeeds);
         }
 
+        [HttpGet("GetInstagramSortFeeds")]
+        public IActionResult GetInstagramSortFeeds(long userId, string instagramId, int skip, int count, string sortType)
+        {
+            List<Domain.Socioboard.Models.Mongo.intafeed> lstInstagramFeeds = Repositories.InstagramRepository.GetTopInstagramSortFeed(instagramId, _appSettings, _redisCache, skip, count, sortType);
+            return Ok(lstInstagramFeeds);
+        }
+
         [HttpPost("InstagramLikeUnLike")]
         public IActionResult InstagramLikeUnLike(int LikeCount,int IsLike,string FeedId,string InstagramId, long groupId)
         {

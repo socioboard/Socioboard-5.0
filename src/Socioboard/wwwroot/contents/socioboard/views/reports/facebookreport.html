@@ -163,19 +163,14 @@
 
 
                 <div class="col s12 m12 l12">
-                    <div class="card" id="feeds">
+                    <div class="card" >
                         <h5 class="feeds_title blue darken-4 white-text">
                             <i class="icon-social-facebook"></i>YOUR CONTENT <small>A breakdown of the content you post</small></span>
                         </h5>
                         <div class="collection">
                             <div class="row">
                                 <div class="col l12">
-                                    <blockquote class="groupbox_padding grey lighten-1">
-                                        <h5>CONTENT BREAKDOWN</h5>
-                                        <p>A breakdown of how your individual posts performed.</p>
-                                    </blockquote>
-
-                                    <table class="display" cellspacing="0" width="100%">
+                                   <table id="Fbfeedsdetails" class="display responsive-table striped" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
                                                 <!--<th>Message Sent</th>
@@ -190,22 +185,9 @@
                                                 <th>Engagement</th>
                                             </tr>
                                         </thead>
-                                        <tfoot>
-                                            <tr>
-                                                <!--<th>Message Sent</th>
-                                                <th>Reach</th>-->
-                                                <td>S.No.</td>
-                                                <th>Post</th>
-                                                <th>View Post</th>
-                                                <th>Talking</th>
-                                                <th>Likes</th>
-                                                <th>Comments</th>
-                                                <th>Shares</th>
-                                                <th>Engagement</th>
-                                            </tr>
-                                        </tfoot>
-                                        <tbody  my-repeat-video-tab-directive>
-                                            <tr ng-repeat="facebookpagepost in FacebookPagePost" my-repeat-video-tab-directive>
+                                     
+                                        <tbody>
+                                            <tr ng-repeat="facebookpagepost in FacebookPagePost" my-repeat-video-tab-directives>
 
                                                 <td style="width: 1%;">{{$index+1}}</td>
                                                 <td style="width: 50%;">

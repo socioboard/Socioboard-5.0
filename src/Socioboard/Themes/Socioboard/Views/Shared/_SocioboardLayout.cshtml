@@ -18,6 +18,7 @@
                 $('.modal-trigger').leanModal();
             });
         </script>*@
+    
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>
@@ -678,7 +679,7 @@ analytics" href="http://statcounter.com/shopify/"
                 },
                 error: function (msg) {
                     $("#fb-gp-login").css("display", "none");
-                    alertify.error(msg);
+                    alertify.error("It seems like your connectivity to the internet is impaired");
                     $('#logLoading').hide();
                     $('#submitButton').show();
                     return false;

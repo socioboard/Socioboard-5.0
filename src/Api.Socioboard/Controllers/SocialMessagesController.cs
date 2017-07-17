@@ -21,6 +21,7 @@ using Imgur.API.Models;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.Drawing;
+using Api.Socioboard.Helper;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -64,12 +65,12 @@ namespace Api.Socioboard.Controllers
             string tempmsg = message;
             if (shortnerStatus == Domain.Socioboard.Enum.UrlShortener.bitlyUri)
             {
-                temp = GetConvertedUrls(ref tempmsg, shortnerStatus);
+                temp = Utility.GetConvertedUrls(ref tempmsg, shortnerStatus);
                 tempmsg = temp;
             }
             else if (shortnerStatus == Domain.Socioboard.Enum.UrlShortener.jmpUri)
             {
-                temp = GetConvertedUrls(ref tempmsg, shortnerStatus);
+                temp = Utility.GetConvertedUrls(ref tempmsg, shortnerStatus);
                 tempmsg = temp;
             }
             if (files != null)
@@ -152,7 +153,7 @@ namespace Api.Socioboard.Controllers
                                         url = items;
                                         if (items.Contains("https://"))
                                         {
-                                            string links = getBetween(url + "###", "https", "###");
+                                            string links = Utility.getBetween(url + "###", "https", "###");
                                             links = "https" + links;
                                             try
                                             {
@@ -165,7 +166,7 @@ namespace Api.Socioboard.Controllers
                                         }
                                         if (items.Contains("http://"))
                                         {
-                                            string links = getBetween(url + "###", "http", "###");
+                                            string links = Utility.getBetween(url + "###", "http", "###");
                                             links = "http" + links;
                                             try
                                             {
@@ -289,8 +290,9 @@ namespace Api.Socioboard.Controllers
 
         }
         [HttpPost("ScheduleMessage")]
-        public async Task<ActionResult> ScheduleMessage(string message, string profileId, long userId, string imagePath, string link, string scheduledatetime, string localscheduletime, IFormFile files)
+        public async Task<ActionResult> ScheduleMessage(string message, string profileId, long userId, string imagePath, string link, string scheduledatetime, string localscheduletime, IFormFile files, string messageText)
         {
+            message = messageText;
             var filename = "";
             string postmessage = "";
             string tempfilepath = "";
@@ -354,7 +356,7 @@ namespace Api.Socioboard.Controllers
                     {
                         try
                         {
-                            link = "http" + getBetween(item, "http", " ");
+                            link = "http" + Utility.getBetween(item, "http", " ");
                             try
                             {
                                 link = link.Split(' ')[0].ToString();
@@ -362,13 +364,13 @@ namespace Api.Socioboard.Controllers
                             catch (Exception)
                             {
 
-                                link = "http" + getBetween(item, "http", " ");
+                                link = "http" + Utility.getBetween(item, "http", " ");
                             }
                         }
                         catch
                         {
                             string temp_item = item + "###";
-                            link = "http" + getBetween(temp_item, "http", "###");
+                            link = "http" + Utility.getBetween(temp_item, "http", "###");
                             try
                             {
                                 link = link.Split(' ')[0].ToString();
@@ -376,7 +378,7 @@ namespace Api.Socioboard.Controllers
                             catch (Exception)
                             {
 
-                                link = "http" + getBetween(temp_item, "http", "###");
+                                link = "http" + Utility.getBetween(temp_item, "http", "###");
                             }
                         }
                     }
@@ -522,7 +524,7 @@ namespace Api.Socioboard.Controllers
                                         url = items;
                                         if (items.Contains("https://"))
                                         {
-                                            string link = getBetween(url + "###", "https", "###");
+                                            string link = Utility.getBetween(url + "###", "https", "###");
                                             link = "https" + link;
                                             try
                                             {
@@ -535,7 +537,7 @@ namespace Api.Socioboard.Controllers
                                         }
                                         if (items.Contains("http://"))
                                         {
-                                            string link = getBetween(url + "###", "http", "###");
+                                            string link = Utility.getBetween(url + "###", "http", "###");
                                             link = "http" + link;
                                             try
                                             {
@@ -645,7 +647,7 @@ namespace Api.Socioboard.Controllers
                                             url = items;
                                             if (items.Contains("https://"))
                                             {
-                                                string link = getBetween(url + "###", "https", "###");
+                                                string link = Utility.getBetween(url + "###", "https", "###");
                                                 link = "https" + link;
                                                 try
                                                 {
@@ -658,7 +660,7 @@ namespace Api.Socioboard.Controllers
                                             }
                                             if (items.Contains("http://"))
                                             {
-                                                string link = getBetween(url + "###", "http", "###");
+                                                string link = Utility.getBetween(url + "###", "http", "###");
                                                 link = "http" + link;
                                                 try
                                                 {
@@ -1024,112 +1026,9 @@ namespace Api.Socioboard.Controllers
             var rows = eventList.ToArray();
             return Ok(rows);
         }
-        public static string CompareDateWithclient(string clientdate, string scheduletime)
-        {
-            try
-            {
-                var dt = DateTime.Parse(scheduletime);
-                var clientdt = DateTime.Parse(clientdate);
-                //  DateTime client = Convert.ToDateTime(clientdate);
-                DateTime client = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(clientdt, TimeZoneInfo.Local));
-                DateTime server = DateTime.UtcNow;
-                DateTime schedule = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
-                {
-                    var kind = schedule.Kind; // will equal DateTimeKind.Unspecified
-                    if (DateTime.Compare(client, server) > 0)
-                    {
-                        double minutes = (server - client).TotalMinutes;
-                        schedule = schedule.AddMinutes(minutes);
-                    }
-                    else if (DateTime.Compare(client, server) == 0)
-                    {
-                    }
-                    else if (DateTime.Compare(client, server) < 0)
-                    {
-                        double minutes = (server - client).TotalMinutes;
-                        schedule = schedule.AddMinutes(minutes);
-                    }
-                }
-                return TimeZoneInfo.ConvertTimeFromUtc(schedule, TimeZoneInfo.Local).ToString();
-                // return schedule.ToString();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.StackTrace);
-                return "";
-            }
-        }
 
-        public static string getBetween(string strSource, string strStart, string strEnd)
-        {
-            int Start, End;
-            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
-            {
-                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
-                End = strSource.IndexOf(strEnd, Start);
-                return strSource.Substring(Start, End - Start);
-            }
-            else
-            {
-                return "";
-            }
-        }
-
-        public string GetConvertedUrls(ref string message, Domain.Socioboard.Enum.UrlShortener shortnerType)
-        {
-            List<string> listLinks = new List<string>();
-            Regex urlRx = new Regex(@"((https?|ftp|file)\://|www.)[A-Za-z0-9\.\-]+(/[A-Za-z0-9\?\&\=;\+!'\(\)\*\-\._~%]*)*", RegexOptions.IgnoreCase);
-            MatchCollection matches = urlRx.Matches(message);
-            foreach (Match match in matches)
-            {
-                listLinks.Add(match.Value);
-            }
-            foreach (string tempLink in listLinks)
-            {
-                string shorturl = GetShortenUrlBit(tempLink, shortnerType);
-                message = message.Replace(tempLink, shorturl);
-            }
-            return message;
-        }
-
-        public string GetShortenUrlBit(string Url, Domain.Socioboard.Enum.UrlShortener shortnerType)
-        {
-            string url = "";
-            if (!Url.Contains("http"))
-            {
-                Url = "https://" + Url;
-            }
-            try
-            {
-                if (shortnerType == Domain.Socioboard.Enum.UrlShortener.bitlyUri)
-                {
-                    url = "https://api-ssl.bitly.com/v3/shorten?access_token=71ec4ddc8eeb062bc8bf8583cae1fe7af81af4c7" + "&longUrl=" + Url + "&domain=bit.ly&format=json";
-                }
-                else
-                {
-                    url = "https://api-ssl.bitly.com/v3/shorten?access_token=71ec4ddc8eeb062bc8bf8583cae1fe7af81af4c7" + "&longUrl=" + Url + "&domain=j.mp&format=json";
-                }
-                HttpWebRequest httpRequest = (HttpWebRequest)WebRequest.Create(url);
-                httpRequest.Method = "GET";
-                httpRequest.ContentType = "application/x-www-form-urlencoded";
-                HttpWebResponse httResponse = (HttpWebResponse)httpRequest.GetResponse();
-                Stream responseStream = httResponse.GetResponseStream();
-                StreamReader responseStreamReader = new StreamReader(responseStream, System.Text.Encoding.Default);
-                string pageContent = responseStreamReader.ReadToEnd();
-                responseStreamReader.Close();
-                responseStream.Close();
-                httResponse.Close();
-                JObject JData = JObject.Parse(pageContent);
-                if (JData["status_txt"].ToString() == "OK")
-                    return JData["data"]["url"].ToString();
-                else
-                    return Url;
-            }
-            catch (Exception ex)
-            {
-                return Url;
-            }
-        }
+       
+        
 
 
     }

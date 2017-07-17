@@ -105,11 +105,14 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             if ($rootScope.Downgrade == true) {
                 $('#ActiveProfileModal').openModal({ dismissible: false });
             }
-            if ($rootScope.groupsdowngrade == true) {
+            if ($rootScope.groupsdowngrade == true && ($rootScope.user.AccountType ==3 ||$rootScope.user.AccountType ==4 ||$rootScope.user.AccountType ==5 ||$rootScope.user.AccountType ==6 ||$rootScope.user.AccountType ==7)) {
                 $('#ActiveGroupModal').openModal({ dismissible: false });
             }
 
-
+            $scope.msgPagecloseModals = function () {
+                $rootScope.lstAddFbPages = undefined;
+                $rootScope.lstaddlinpages = undefined;
+            }
         //codes to groupprofile for restriction
             $scope.GetGroupProfiles = function () {
               $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfiles?groupId=' + $rootScope.groupId)

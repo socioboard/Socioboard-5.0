@@ -13,13 +13,17 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
 
         var currentVideoId = "";
         $scope.LoadVideos = function () {
-        
+            $scope.preloadmorevideos = false;
+            $scope.lstYtFeeds = null;
             //codes to load videos
-            $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId)
+            $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId + '&sortType=none')
                               .then(function (response) {
                                   $scope.lstYtFeeds = response.data;
                                   $scope.preloadmorevideos = true;
-                                 
+                                  $scope.dropCalled = true;
+                                  setTimeout(function () {
+                                      $scope.callDropmenu();
+                                  }, 1000);
                                   setTimeout(function () {
                                       onYouTubeIframeAPIReady();
                                   }, 15000);
@@ -36,10 +40,29 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
             $scope.lstYtComments = "";
             $scope.preloadmorecomments = false;
             $scope.fetchComments(vdoId);
-            //$scope.urlsss = vdoId;
-            //$scope.videotitle = videotle;
-            //$('#youtubefeeds_modal1').openModal();
+            
+        }
 
+        $scope.sortSearch = function (sortType) {
+            $scope.preloadmorevideos = false;
+            $scope.lstYtFeeds = null;
+            //codes to load  recent Feeds
+            $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId + '&sortType=' + sortType)
+                          .then(function (response) {
+                              $scope.lstYtFeeds = response.data;
+                              $scope.preloadmorevideos = true;
+                              $scope.dropCalled = true;
+                              setTimeout(function () {
+                                  $scope.callDropmenu();
+                              }, 1000);
+                              setTimeout(function () {
+                                  onYouTubeIframeAPIReady();
+                              }, 15000);
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to load  recent Feeds
         }
 
         $scope.fetchComments = function (vidoId) {
@@ -73,7 +96,6 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
                                      
                                       $scope.commentsending = 'hide';
                                       $scope.sendicon = 'show';
-                                      //$scope.fetchComments(videoid);
                                       swal("Posted","Comment posted successfully","success");
                                       $('#compose_' + videoid).val('');
                                   }, function (reason) {
@@ -88,6 +110,19 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
             // end codes to post Comments
 
         }
+
+        $scope.callDropmenu = function () {
+            $('.dropdown-button').dropdown({
+                inDuration: 300,
+                outDuration: 225,
+                constrain_width: false, // Does not change width of dropdown to that of the activator
+                hover: true, // Activate on hover
+                gutter: 0, // Spacing from edge
+                belowOrigin: false, // Displays dropdown below the button
+                alignment: 'right' // Displays dropdown with edge aligned to the left of button
+            });
+        }
+
         $scope.uploadvideo = function () {
           
             var formData = new FormData();

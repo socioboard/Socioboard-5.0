@@ -158,7 +158,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             debugger;
             $scope.disbtncom = false;
             var profiles = new Array();
-            $("#checkboxdatarss .subcheckboxrss").each(function () {
+            $("#checkboxdata .subcheckbox").each(function () {
 
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {

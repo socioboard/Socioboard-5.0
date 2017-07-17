@@ -257,9 +257,10 @@
                                         
                                     </blockquote>-->
 
-                                    <table class="display" cellspacing="0" width="100%">
+                                    <table id="Fbpost" class="display" cellspacing="0" width="100%">
                                         <thead>
-                                            <tr>                                               
+                                            <tr> 
+                                                <th>S.No.</th>                                              
                                                 <th>Name</th>
                                                 <th>Likes</th>
                                                 <th>Comments</th>                                                
@@ -267,16 +268,7 @@
                                                 <th>Shares</th>
                                             </tr>
                                         </thead>
-                                        <tfoot>
-                                            <tr>                                              
-                                                <th>Name</th>
-                                                <th>Likes</th>
-                                                <th>Comments</th>
-                                                <th>Post</th>
-                                                <th>Shares</th>                                              
-                                            </tr>
-                                        </tfoot>
-                                        <tbody>
+                                      <tbody>
                                             <tr ng-repeat="facebookpagepost in fbpagepost" my-repeat-video-tab-directive>
                                                 <!--<td>
                                                     <img src="http://graph.facebook.com/{{facebookpagepost.pageId}}/picture?type=small" class="responsive-img" style="height: 30px; width: 30px; float: left;">
@@ -287,7 +279,8 @@
                                                 <!--<td>{{facebookpagepost.reach}}</td>-->
                                                 <!--<td>{{facebookpagepost.engagedUsers}}</td>-->
                                                 <!--<td>{{facebookpagepost.talking}}</td>-->
-                                                <td>{{facebookpagepost.name}}</td>
+                                                <td style="width: 1%;">{{$index+1}}</td>
+                                                <td><a href="https://www.facebook.com/{{facebookpagepost.name}}" target="_blank">{{facebookpagepost.name}}</a></td>
                                                 <td>{{facebookpagepost.likes}}</td>
                                                 <td>{{facebookpagepost.commnets}}</td>
                                                 <td>{{facebookpagepost.post}}</td>

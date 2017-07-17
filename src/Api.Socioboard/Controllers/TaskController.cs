@@ -134,7 +134,11 @@ namespace Api.Socioboard.Controllers
                     }
                     else
                     {
-                        postmessage = postmessage + "\n\r" + item;
+                        postmessage = postmessage + "\n\r";
+                        if(postmessage== "\n\r")
+                        {
+                            postmessage = "\n\r" + item;
+                        }
                     }
 
 

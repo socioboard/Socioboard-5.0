@@ -53,6 +53,7 @@ SocioboardApp.controller('RssQueueController', function ($rootScope, $scope, $ht
                               }
                               else
                               {
+                                  $scope.lstrssqueue = null;
                                   $scope.nofeeds = true;
                                   $scope.fetchdatacomplete = true;
                               }

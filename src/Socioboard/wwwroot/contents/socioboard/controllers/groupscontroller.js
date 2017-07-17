@@ -143,7 +143,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         }
 
         $scope.addToInviteList = function (inviteMember) {
-           var mem =  {
+            var mem = {
                 "email": inviteMember.email,
                 "firstName": inviteMember.firstName,
                 "lastName": inviteMember.lastName,
@@ -153,26 +153,35 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                 "memberStatus": 0,
                 "groupid": $scope.inviGrpId,
                 "isAdmin": false,
-               "memberCode":""
-           };
+                "memberCode": ""
+            };
 
-           if ($scope.lstInviteTeamMembers.length > 0) {
-            
-               if (mem.email == $scope.lstInviteTeamMembers[0].email) {
-                   //alert(khusbant)
-                   swal("please fill the required field")
-                   return false;
-               }
-           }
+            // if ($scope.lstInviteTeamMembers.length > 0) {
+            //   if (mem.email == $scope.lstInviteTeamMembers[0].email) {
 
-           document.getElementById('first_name').value = "";
-           document.getElementById('last_name').value = "";
-           document.getElementById('email').value = "";
-
-           $scope.lstInviteTeamMembers.push(mem);
-           $scope.inviteMember = null;
-          
+            var lstVal = 0;
+            angular.forEach($scope.lstInviteTeamMembers, function (value, key) {
+                if (mem.email == value.email) {
+                    swal("please fill the required field")
+                    lstVal = -1;
+                    return false;
+                }
+                else {
+                    document.getElementById('first_name').value = "";
+                    document.getElementById('last_name').value = "";
+                    document.getElementById('email').value = "";
+                }
+            });
+            if (lstVal != -1) {
+                $scope.lstInviteTeamMembers.push(mem);
+                $scope.inviteMember = null;
+                document.getElementById('first_name').value = "";
+                document.getElementById('last_name').value = "";
+                document.getElementById('email').value = "";
+            }
         }
+
+        
 
         $scope.deleteFromInviteList = function (index) {
             $scope.lstInviteTeamMembers.splice(index, 1);

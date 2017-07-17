@@ -274,7 +274,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               if (!memberId.val()) {
                   swal('Please select a member to assign the task');
               }
-              else if (!taskComment) {
+              else if (!(/\S/.test(taskComment))) {
                   swal('Please write a comment to assign the task');
               }
               else {
@@ -291,7 +291,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               if (!memberId.val()) {
                   swal('Please select a member to assign the task')
               }
-              else if (!taskComment) {
+              else if (!(/\S/.test(taskComment))) {
                   swal('Please write a comment to assign the task')
               }
               else {
@@ -342,7 +342,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               debugger;
               $scope.disbtncom = false;
               var profiles = new Array();
-              $("#checkboxdatarss .subcheckboxrss").each(function () {
+              $("#checkboxdata .subcheckbox").each(function () {
 
                   var attrId = $(this).attr("id");
                   if (document.getElementById(attrId).checked == false) {
@@ -434,6 +434,27 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
           }
         //end
 
+        // max least count
+          $scope.ShortSearch = function (shortvalue) {
+              $scope.filters = true;
+              $scope.preloadmorefeeds = false;
+              $scope.lstTwtFeeds = null;
+              $http.get(apiDomain + '/api/Twitter/ShortTwtfeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30' + '&shortvalue=' + shortvalue)
+                            .then(function (response) {
+                                if (response.data == null) {
+                                    reachLast = true;
+                                }
+                                $scope.lstTwtFeeds = response.data;
+                                $scope.preloadmorefeeds = true;
+
+
+                            }, function (reason) {
+                                $scope.error = reason.data;
+                            });
+
+          }
+
+        //end
 
     });
 });

@@ -6,7 +6,7 @@
                 <!--twitter feeds start-->
                 <div class="col s6 m6 l6">
                     <div class="card" id="feeds">
-                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>New Feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a></h5>
+                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>New Feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a> <a class='dropdown-button right margin-right-10 white-text' href='javascript:void(0)' data-activates='dropdownSort'><i class="fa fa-sort"></i> </a></h5>
                         <!-- Dropdown Structure -->
                         <div ng-if="dropCalled==true">
                             <ul id='dropdownFilter' class='dropdown-content'>
@@ -17,6 +17,17 @@
                                 <li><a href="javascript:void(0)" ng-click="filterSearch('animated_gif')">GIF</a></li>
                             </ul>
                         </div>
+
+                        <div ng-if="dropCalled==true">
+                            <ul id='dropdownSort' class='dropdown-content'>
+                                <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
+                                <li><a href="javascript:void(0)" ng-click="ShortSearch('maxlike')">Max Like</a></li>
+                                <li><a href="javascript:void(0)" ng-click="ShortSearch('maxretweet')">Max Retweet</a></li>
+                                <li><a href="javascript:void(0)" ng-click="ShortSearch('leastlike')">Least Like</a></li>
+                                <li><a href="javascript:void(0)" ng-click="ShortSearch('leastretweet')">Least Retweet</a></li>
+                            </ul>
+                        </div>
+
                         <ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <li class="collection-item avatar" ng-repeat="twtfeed in lstTwtFeeds">
                                 <img src="{{twtfeed.fromProfileUrl}}" alt="{{twtfeed.fromName}}" class="circle">
@@ -31,27 +42,27 @@
                                 </div>
                                 <a class="tooltipped secondary-content" data-position="left">{{twtfeed.feedDate}}</a>
                                 <div class="row" ng-if="user.TrailStatus!=2">
-                                    <div class="col l2 s2">
+                                    <div class="col l3 s3">
                                         <span ng-click="twitterretweet(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                             <i class="fa fa-retweet fa-fw"></i><span>{{twtfeed.retweetcount | thousandSuffix:1}}</span>
                                         </span>
                                     </div>
-                                    <div class="col l2 s2">
+                                    <div class="col l4 s3">
                                         <span ng-click="twitterfavorite(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                             <i class="fa fa-star fa-fw"></i><span>{{twtfeed.likecount | thousandSuffix:1}}</span>
                                         </span>
                                     </div>
-                                    <div class="col l2 s2">
+                                    <div class="col l1 s1">
                                         <span ng-click="twitterreply(twtfeed.fromName,twtfeed.profileId,twtfeed.messageId)">
                                             <i class="fa fa-share fa-fw"></i>
                                         </span>
                                     </div>
-                                    <div class="col l2 s2">
+                                    <div class="col l1 s1">
                                         <span ng-click="tasktwtfeedModel(twtfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
                                             <i class="icon-pin"></i>
                                         </span>
                                     </div>
-                                    <div class="col l4 s4">
+                                    <div class="col l3 s3">
                                         <a ng-click="openComposeMessage(twtfeed)" class="right black-text">
                                             <i class="fa fa-retweet fa-fw " aria-hidden="true"></i> Re-Socio
                                         </a>
@@ -350,7 +361,7 @@
 <!-- Compose Email Structure -->
 <div id="ComposePostModal" class="modal">
     <div class="modal-content" style="padding-bottom: 0px;">
-        <nav class="red">
+        <nav class="blue lighten-3">
             <div class="nav-wrapper">
                 <div class="left col s12 m5 l5">
                     <ul>
@@ -420,7 +431,7 @@
         </div>-->
                     <div style="max-height:250px; overflow-y:scroll;">
 
-                        <ul class="shinh" id="checkboxdataboard">
+                        <ul class="shinh" id="checkboxdata">
                             <li style="padding:5px 0;">
                                 <label>
                                     <input id="checkAll" onclick="check();" type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" />
@@ -429,35 +440,35 @@
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input name="selector[]" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input name="selector[]" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
@@ -495,7 +506,7 @@
         function check() {
             debugger;
             var flag = $('#checkAll').is(":checked");
-            $('#checkboxdataboard input:checkbox').each(function () {
+            $('#checkboxdata input:checkbox').each(function () {
                 $(this).prop('checked', flag);
             });
         }

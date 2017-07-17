@@ -2,8 +2,13 @@
 
 SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
     //alert('helo');
-    $scope.$on('$viewContentLoaded', function() {   
-
+    $scope.$on('$viewContentLoaded', function() { 
+        $('#twt_report').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
         $scope.lstProfiles = $rootScope.lstProfiles;
         groupreport();
         
@@ -441,7 +446,30 @@ SocioboardApp.directive('myRepeatVideoTabDirective', function ($timeout) {
         if (scope.$last === true) {
             $timeout(function () {
                
-                $('#all_video_table').DataTable();
+                //$('#all_video_table').DataTable();
+                $('#all_video_table').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                         'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
+            });
+        }
+    };
+})
+
+SocioboardApp.directive('myRepeatVideoTabDirectives', function ($timeout) {
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+
+                //$('#all_video_table').DataTable();
+                $('#Twtaccount').DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                });
             });
         }
     };

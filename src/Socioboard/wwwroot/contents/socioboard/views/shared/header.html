@@ -40,7 +40,7 @@
                         </li>
                         <li>
                             <a href="javascript:void(0);" class="waves-effect waves-block waves-light dropdown-button" data-activates='groups'>
-                                <i class="icon-users grey-text text-darken-4" title="Groups"></i>
+                                <i class="icon-users grey-text text-darken-4" title="Team"></i>
                             </a>
                         </li>
                         <!--emailid change feature header-->
@@ -64,11 +64,16 @@
                                 <span class="groupslist"><i class="icon-social-youtube"></i>Youtube Tutorials </span>
                             </a>
                         </li>
-                        <!--<li class="bold red">
-                            <a href="https://www.youtube.com/channel/UCcxAmhWPh6AXfpaG2Eq4pzw" class="waves-effect waves-orange  white-text" target="_blank">
-                                <i class="icon-camcorder"></i> Youtube Tutorials
+                        <li>
+                            <a href="#/upgradeplan" class="waves-effect waves-orange  white-text">
+                                <span class="groupslist"><i class="icon-basket"></i>Pricing</span>
                             </a>
-                        </li>-->
+                        </li>
+                        <li>
+                            <a href="./Index/FAQ" class="waves-effect waves-orange  white-text">
+                                <span class="groupslist"><i class="icon-question"></i>FAQs</span>
+                            </a>
+                        </li>
                     </ul>
 
                     <!-- Groups for all plan -->
@@ -81,7 +86,7 @@
                                 <span ng-click="changeGroup(grp.id)" ng-if="groupId!=grp.id">{{grp.groupName}}</span>
                             </a>
                         </li>
-                        <li><a href="#/groups" class="grey-text text-darken-4">View Groups</a></li>
+                        <li><a href="#/groups" class="grey-text text-darken-4">View Team</a></li>
                         <!--<li class="divider"></li>-->
                         <li ng-if="AccountType==3 && GetUserGroupCount<5"><a href="#/groups" ><span class="grey-text text-darken-4">Create New</span></a></li>
                         <li ng-if="AccountType==3 && GetUserGroupCount==5"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
@@ -104,12 +109,15 @@
                                 <span ng-if="groupId==grp.id">{{grp.groupName}}</span>
                             </a>
                             <a href="javascript:;" class="">
-                                <span ng-click="changeGroup(grp.id)" ng-if="groupId!=grp.id">{{grp.groupName}}</span>
+                                <span ng-if="groupId!=grp.id && grp.groupName==Socioboard">{{grp.groupName}}</span>
+                            </a>
+                            <a href="javascript:;" class="">
+                                <span ng-click="grpmessage(grperrormsg)" disable ng-if="groupId!=grp.id && grp.groupName!=Socioboard">{{grp.groupName}}</span>
                             </a>
                         </li>
                         <!--<li class="divider"></li>-->
-                        <li><a  ng-click="message(abcd)" disable><span>Create New</span></a></li>
-                     </ul>
+                        <li><a ng-click="message(abcd)" disable><span>Create New</span></a></li>
+                    </ul>
 
                     <!-- Accounts Structure -->
                     <ul id="account_list" class='dropdown-content dropdown-content-small'>
@@ -145,7 +153,7 @@
                         </li>
                         <li>
                             <a href="#/ads_offer">
-                                <span class="groupslist"><i class="icon-star"></i>Free Offer</span>
+                                <span class="groupslist"><i class="icon-star"></i>Always Free</span>
                             </a>
                         </li>
                         <li>

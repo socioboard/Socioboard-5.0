@@ -92,6 +92,27 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             // end codes to load  recent Feeds
         }
 
+        $scope.sortSearch = function (sortType) {
+            $scope.filters = true;
+            $scope.preloadmorefeeds = false;
+            $scope.lstinsFeeds = null;
+            //codes to load  recent Feeds
+            $http.get(apiDomain + '/api/Instagram/GetInstagramSortFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=40' + '&sortType=' + sortType)
+                          .then(function (response) {
+                              // $scope.lstProfiles = response.data;
+                              //$scope.lstinsFeeds = response.data;
+                              if (response.data == null) {
+                                  reachLast = true;
+                              }
+                              $scope.lstinsFeeds = response.data;
+                              $scope.preloadmorefeeds = true;
+
+
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            // end codes to load  recent Feeds
+        }
 
         $scope.date = function (parm) {
           
