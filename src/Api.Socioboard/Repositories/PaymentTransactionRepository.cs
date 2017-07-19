@@ -69,9 +69,9 @@ namespace Api.Socioboard.Repositories
 
                 configurationMap.Add("mode", "sandbox");
                 // Signature Credential
-                configurationMap.Add("account1.apiUsername", "sumit-facilitator_api1.socioboard.com");
-                configurationMap.Add("account1.apiPassword", "6N4SH6G3P8VCCV6U");
-                configurationMap.Add("account1.apiSignature", "AFcWxV21C7fd0v3bYYYRCpSSRl31AfntI711TkaeRoghorYelM2FIiRw");
+                configurationMap.Add("account1.apiUsername", "");
+                configurationMap.Add("account1.apiPassword", "");
+                configurationMap.Add("account1.apiSignature", "");
 
                 // Create the PayPalAPIInterfaceServiceService service object to make the API call
                 PayPalAPIInterfaceServiceService service = new PayPalAPIInterfaceServiceService(configurationMap);
