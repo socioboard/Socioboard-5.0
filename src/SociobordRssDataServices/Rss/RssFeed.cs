@@ -394,8 +394,7 @@ namespace SociobordRssDataServices.Rss
         public static string TwitterComposeMessageRss(string message, string OAuthToken, string OAuthSecret, string profileid, string TwitterScreenName, string rssFeedId)
         {
             string ret = "";
-            oAuthTwitter OAuthTwt = new oAuthTwitter("h4FT0oJ46KBBMwbcifqZMw", "yfowGI2g21E2mQHjtHjUvGqkfbI7x26WDCvjiSZOjas", "https://www.socioboard.com/TwitterManager/Twitter");
-            // oAuthTwitter OAuthTwt = new oAuthTwitter("MbOQl85ZcvRGvp3kkOOJBlbFS", "GF0UIXnTAX28hFhN1ISNf3tURHARZdKWlZrsY4PlHm9A4llYjZ", "http://serv1.socioboard.com/TwitterManager/Twitter");
+            oAuthTwitter OAuthTwt = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey,Helper.AppSettings.twitterConsumerScreatKey,Helper.AppSettings.twitterRedirectionUrl);
             OAuthTwt.AccessToken = OAuthToken;
             OAuthTwt.AccessTokenSecret = OAuthSecret;
             OAuthTwt.TwitterScreenName = TwitterScreenName;
