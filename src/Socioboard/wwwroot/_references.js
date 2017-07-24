@@ -24,6 +24,7 @@
 /// <reference path="contents/socioboard/controllers/facebookpagereportcontroller.js" />
 /// <reference path="contents/socioboard/controllers/facebookreportcontroller.js" />
 /// <reference path="contents/socioboard/controllers/fbpagedetreportcontroller.js" />
+/// <reference path="contents/socioboard/controllers/gettouchcontroller.js" />
 /// <reference path="contents/socioboard/controllers/googleanalyticreportcontroller.js" />
 /// <reference path="contents/socioboard/controllers/googleplusfeedscontroller.js" />
 /// <reference path="contents/socioboard/controllers/groupreportcontroller.js" />

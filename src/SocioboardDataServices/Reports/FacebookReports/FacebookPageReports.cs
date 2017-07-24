@@ -24,7 +24,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.IsActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
-                    //lstFbAcc = lstFbAcc.Where(t => t.FbUserName.Contains("Newsocioboard")).ToList();
+                   // lstFbAcc = lstFbAcc.Where(t => t.FbUserId.Contains("1842605449304385")).ToList();
                     foreach (var item in lstFbAcc)
                     {
                         if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
@@ -84,7 +84,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
             #region likes
             try
             {
-                string facebookpageUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "?fields=fan_count,talking_about_count&access_token=" + AccessToken;
+                string facebookpageUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "?fields=fan_count,name,talking_about_count&access_token=" + AccessToken;
                 string outputfacepageUrl = getFacebookResponse(facebookpageUrl);
                 pageobj = JObject.Parse(outputfacepageUrl);
             }
@@ -328,6 +328,14 @@ namespace SocioboardDataServices.Reports.FacebookReports
                 catch
                 {
                     facebookReportViewModal.totalLikes = "0";
+                }
+                try
+                {
+                    facebookReportViewModal.name = pageobj["name"].ToString();
+                }
+                catch
+                {
+                    facebookReportViewModal.name = "";
                 }
                 try
                 {

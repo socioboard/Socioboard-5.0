@@ -41,14 +41,14 @@ namespace Api.Socioboard.Controllers
         public IActionResult CreateGroup(Domain.Socioboard.Models.Groups group)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            if(dbr.Find<Domain.Socioboard.Models.Groups>(t=>t.adminId == group.adminId && t.groupName.Equals(group.groupName)).Count  > 0)
+            if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).Count > 0)
             {
                 return Ok("Group Name Already Exist");
             }
             group.createdDate = System.DateTime.UtcNow;
-          int res =  dbr.Add<Domain.Socioboard.Models.Groups>(group);
+            int res = dbr.Add<Domain.Socioboard.Models.Groups>(group);
 
-            if(res == 1)
+            if (res == 1)
             {
                 Domain.Socioboard.Models.User user = dbr.FindSingle<User>(t => t.Id == group.adminId);
                 long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
@@ -77,8 +77,24 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetUserGroups")]
         public IActionResult GetUserGroups(long userId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger,_appEnv);
-            return  Ok(GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr));
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr));
+        }
+
+
+        [HttpGet("GetUserGroupData")]
+        public IActionResult GetUserGroupData(long userId)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            Domain.Socioboard.Models.GetUserGroupData _GetUserGroupData = new Domain.Socioboard.Models.GetUserGroupData();
+            List<Domain.Socioboard.Models.Groups> lstgroup = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId).ToList();
+            long[] lstStr = lstgroup.Select(t => t.id).ToArray();
+            List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => lstStr.Contains(t.groupId)).ToList();
+            
+            Dictionary<long, List<Groupprofiles>> myProfiles = lstgrpProfiles.GroupBy(o => o.groupId).ToDictionary(g => g.Key, g => g.ToList());
+            _GetUserGroupData.lstgroup = lstgroup;
+            _GetUserGroupData.myProfiles = myProfiles;
+            return Ok(_GetUserGroupData);
         }
 
         [HttpGet("GetUserGroupsCount")]
@@ -94,7 +110,7 @@ namespace Api.Socioboard.Controllers
             string selectedGroups = Request.Form["selectedGroups"];
             string[] Profiles = selectedGroups.Split(',');
             List<string> temp = new List<string>();
-            foreach(string item in Profiles)
+            foreach (string item in Profiles)
             {
                 temp.Add(item);
             }
@@ -103,14 +119,14 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.Groups> lstSBGrp = Repositories.GroupsRepository.getGroups(userId, _redisCache, dbr);
             long SBgroupId = lstSBGrp.First().id;
-            List<Domain.Socioboard.Models.Groupmembers> lstGrpmember = Repositories.GroupMembersRepository.findmember(SBgroupId,userId, _redisCache, dbr);
-            foreach(Domain.Socioboard.Models.Groupmembers member in lstGrpmember)
+            List<Domain.Socioboard.Models.Groupmembers> lstGrpmember = Repositories.GroupMembersRepository.findmember(SBgroupId, userId, _redisCache, dbr);
+            foreach (Domain.Socioboard.Models.Groupmembers member in lstGrpmember)
             {
-                if(member.isAdmin==true)
+                if (member.isAdmin == true)
                 {
                     List<Domain.Socioboard.Models.Groups> lstGrp = Repositories.GroupsRepository.getAdminGroupsofUser(member.userId, _redisCache, dbr);
                     lstGrp = lstGrp.Where(t => !temp.Contains(t.groupName)).ToList();
-                    if(lstGrp.Count !=0)
+                    if (lstGrp.Count != 0)
                     {
                         foreach (Domain.Socioboard.Models.Groups item in lstGrp)
                         {
@@ -128,7 +144,7 @@ namespace Api.Socioboard.Controllers
                             }
                         }
                     }
-                   
+
                 }
                 else
                 {
@@ -144,15 +160,15 @@ namespace Api.Socioboard.Controllers
                             }
                             else
                             {
-                                Groupmembers nusers = dbr.Single<Groupmembers>(t => t.groupid==items.id && t.userId==userId);
+                                Groupmembers nusers = dbr.Single<Groupmembers>(t => t.groupid == items.id && t.userId == userId);
                                 dbr.Delete<Domain.Socioboard.Models.Groupmembers>(nusers);
                             }
                         }
                     }
-                        //Groupmembers nuser = dbr.Single<Groupmembers>(t => t.groupid.Equals(member.groupid));
-                    
+                    //Groupmembers nuser = dbr.Single<Groupmembers>(t => t.groupid.Equals(member.groupid));
+
                 }
-                
+
             }
             return Ok();
         }

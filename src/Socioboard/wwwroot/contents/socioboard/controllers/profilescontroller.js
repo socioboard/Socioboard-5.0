@@ -16,7 +16,7 @@ SocioboardApp.controller('ProfilesController', function ($rootScope, $scope, $ht
         //$scope.fetchalllProfiles();
                 //codes fetch all profiles start
         $scope.fetchalllProfiles = function () {
-            debugger;
+         
                $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfilesDeatails?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {

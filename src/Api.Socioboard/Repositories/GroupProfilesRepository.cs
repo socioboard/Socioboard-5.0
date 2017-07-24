@@ -72,18 +72,30 @@ namespace Api.Socioboard.Repositories
 
             return groupProfiles;
         }
-
-        public static List<Domain.Socioboard.Models.profilesdetail> getTop3GroupProfiles(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        public static Int64 GetAllGroupProfilesCount(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
             try
             {
-                List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                if (inMemGroupProfiles != null)
-                {
-                    // return inMemGroupProfiles;
-                }
+                long groupProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId);
+                return groupProfiles;
             }
-            catch { }
+            catch (Exception)
+            {
+                return 0;
+            }
+        }
+
+        public static List<Domain.Socioboard.Models.profilesdetail> getTop3GroupProfiles(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            //try
+            //{
+            //    List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+            //    if (inMemGroupProfiles != null)
+            //    {
+            //         return inMemGroupProfiles;
+            //    }
+            //}
+            //catch { }
             //Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
             List<Domain.Socioboard.Models.profilesdetail> lstprofiledetail = new List<profilesdetail>();
             List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = dbr.FindWithRange<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId, 0, 3).ToList();

@@ -3,25 +3,25 @@
         $(document).ready(function () {
             $('#composeProfiles option').each(function (index) {
                 if (index == 2) {
-                    $(this).html('<img src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
+                    $(this).html('<img ng-src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
                 }
                 //if (index == 3 || index == 4)
                 //{
-                //     $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+                //     $(this).html('<img ng-src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
                 //}
                 if (index == 3) {
-                    $(this).html('<img src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+                    $(this).html('<img ng-src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
                 }
                 if (index == 4) {
-                    $(this).html('<img src="/contents/socioboard/images/twticon.png">' + $(this).html());
+                    $(this).html('<img ng-src="/contents/socioboard/images/twticon.png">' + $(this).html());
                 }
                 if (index == 5) {
-                    $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+                    $(this).html('<img ng-src="/contents/socioboard/images/link_icon.png">' + $(this).html());
                 }
                 if (index == 6) {
-                    $(this).html('<img src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+                    $(this).html('<img ng-src="/contents/socioboard/images/link_icon.png">' + $(this).html());
                 }
-                //$(this).html('<img src="http://jsfiddle.net/img/logo.png">' + $(this).html());
+                //$(this).html('<img ng-src="http://jsfiddle.net/img/logo.png">' + $(this).html());
             })
         });
     })(jQuery);
@@ -189,18 +189,18 @@
                                 </div>
 
                             </div>
-                            
                             <div ng-repeat="data in lstAccountProfiles">
                                 <!--facebook profile binding start-->
+                               
                                 <div class="col s12 m6 l4">
-                                    <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] == 0 && data['fbaccount'] !=null ">
+                                    <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] == 0 && data['fbaccount'] !=null && data['fbaccount'] !=''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{data['fbaccount']['coverPic']}}">
-                                            <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{data['fbaccount']['coverPic']}}">
+                                            <img ng-if="fbProfile.facebookProfile ==0" class="activator" ng-src="{{data['fbaccount']['coverPic']}}">
+                                            <img ng-if="fbProfile.facebookProfile !=0" class="activator" ng-src="{{data['fbaccount']['coverPic']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="https://graph.facebook.com/{{data['fbaccount']['fbUserId']}}/picture?type=small" alt="{{data['fbaccount']['fbUserName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/fb_icon.png" class="card_profile_socio_icon">
+                                            <img ng-src="https://graph.facebook.com/{{data['fbaccount']['fbUserId']}}/picture?type=small" alt="{{data['fbaccount']['fbUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/fb_icon.png" class="card_profile_socio_icon">
 
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
@@ -223,14 +223,14 @@
                                 <!--facebook pages binding start-->
                                 <div class="col s12 m6 l4">
                                     <!--<h1>fbUserName:  {{ data['fbaccount']['fbUserName']}}</h1>-->
-                                    <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] != 0 && data['fbaccount'] !=null">
+                                    <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] != 0 && data['fbaccount'] !=null && data['fbaccount'] !=''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{fbProfile.coverPic}}">
-                                            <img ng-if="fbProfile.facebookProfile !=0" class="activator" src="{{fbProfile.coverPic}}">
+                                            <img ng-if="fbProfile.facebookProfile ==0" class="activator" ng-src="{{fbProfile.coverPic}}">
+                                            <img ng-if="fbProfile.facebookProfile !=0" class="activator" ng-src="{{fbProfile.coverPic}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="https://graph.facebook.com/{{data['fbaccount']['fbUserId']}}/picture?type=small" alt="{{data['fbaccount']['fbUserName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/Fb_page-icon.png" class="card_profile_socio_icon">
+                                            <img ng-src="https://graph.facebook.com/{{data['fbaccount']['fbUserId']}}/picture?type=small" alt="{{data['fbaccount']['fbUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="card_profile_socio_icon">
 
                                             <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['fbaccount']['fbUserName']}}">{{data['fbaccount']['fbUserName']}}</span>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Fans:</span> {{data['fbaccount']['friends']}}</p>
@@ -244,13 +244,13 @@
                                 <!--Start test-->
                                 <!--twitter profiles bind start-->
                                 <div class="col s12 m6 l4">
-                                    <div id="profile-card" class="card" ng-if="data['twtaccount'] != null">
+                                    <div id="profile-card" class="card" ng-if="data['twtaccount'] != null && data['twtaccount'] != ''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img class="activator" src="{{data['twtaccount']['profileBackgroundImageUrl']}}">
+                                            <img class="activator" ng-src="{{data['twtaccount']['profileBackgroundImageUrl']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="{{data['twtaccount']['profileImageUrl']}}" alt="{{data['twtaccount']['twitterScreenName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/twticon.png" class="card_profile_socio_icon">
+                                            <img ng-src="{{data['twtaccount']['profileImageUrl']}}" alt="{{data['twtaccount']['twitterScreenName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/twticon.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
@@ -271,13 +271,13 @@
                                 <!--twitter profiles bind end-->
                                 <!--instagram profiles bind start-->
                                 <div class="col s12 m6 l4">
-                                    <div id="profile-card" class="card" ng-if="data['instaaccount'] != null">
+                                    <div id="profile-card" class="card" ng-if="data['instaaccount'] != null && data['instaaccount'] != ''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img class="activator" src="{{data['instaaccount']['profileUrl']}}">
+                                            <img class="activator" ng-src="{{data['instaaccount']['profileUrl']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="{{data['instaaccount']['profileUrl']}}" alt="{{data['instaaccount']['insUserName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/instagram_licon.png" class="card_profile_socio_icon">
+                                            <img ng-src="{{data['instaaccount']['profileUrl']}}" alt="{{data['instaaccount']['insUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/instagram_icon.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
@@ -299,13 +299,13 @@
                                 <!--instagram profiles bind end-->
                                 <!--gplus profiles binding start-->
                                 <div class="col s12 m6 l4">
-                                    <div id="profile-card" class="card" ng-if="data['gplusaccount'] != null">
+                                    <div id="profile-card" class="card" ng-if="data['gplusaccount'] != null && data['gplusaccount'] !=''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img class="activator" src="{{data['gplusaccount']['coverPic']}}">
+                                            <img class="activator" ng-src="{{data['gplusaccount']['coverPic']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="{{data['gplusaccount']['gpProfileImage']}}" alt="{{data['gplusaccount']['gpUserName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/gplus-icon.png" class="card_profile_socio_icon">
+                                            <img ng-src="{{data['gplusaccount']['gpProfileImage']}}" alt="{{data['gplusaccount']['gpUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/gplus-icon.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
@@ -328,13 +328,13 @@
                                 <!--gplus profiles binding end-->
                                 <!--gA profiles binding start-->
                                 <div class="col s12 m6 l4">
-                                    <div id="profile-card" class="card cardGa" ng-if="data['gAaccount'] != null">
+                                    <div id="profile-card" class="card cardGa" ng-if="data['gAaccount'] != null && data['gAaccount'] != ''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img class="activator" src="/contents/socioboard/images/google-analytics.jpg" alt="{{data['gAaccount']['gaProfileName']}}">
+                                            <img class="activator" ng-src="/contents/socioboard/images/google-analytics.jpg" alt="{{data['gAaccount']['gaProfileName']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="/contents/socioboard/images/G-Ana-icon.png" alt="{{data['gAaccount']['gaProfileName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/g_ana_icon.png" class="card_profile_socio_icon">
+                                            <img ng-src="/contents/socioboard/images/G-Ana-icon.png" alt="{{data['gAaccount']['gaProfileName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/g_ana_icon.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
@@ -355,13 +355,13 @@
                                 <!--gA profiles binding end-->
                                 <!--Youtube Channels binding start-->
                                 <div class="col s12 m6 l4">
-                                    <div id="profile-card" class="card" ng-if="data['ytubeaccount'] != null">
+                                    <div id="profile-card" class="card" ng-if="data['ytubeaccount'] != null && data['ytubeaccount'] != ''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img class="activator" src="/contents/socioboard/images/YoutubeBG.png" alt="{{data['ytubeaccount']['ytubeChannelName']}}">
+                                            <img class="activator" ng-src="/contents/socioboard/images/YoutubeBG.png" alt="{{data['ytubeaccount']['ytubeChannelName']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="{{data['ytubeaccount']['channelpicUrl']}}" alt="{{data['ytubeaccount']['ytubeChannelName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/yt.png" class="card_profile_socio_icon">
+                                            <img ng-src="{{data['ytubeaccount']['channelpicUrl']}}" alt="{{data['ytubeaccount']['ytubeChannelName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/yt.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
@@ -381,13 +381,13 @@
                                 <!--Youtube Channels binding end-->
                                 <!--LinkedIn Comapany page profiles bind start-->
                                 <div class="col s12 m6 l4">
-                                    <div id="profile-card" class="card" ng-if="data['linkdINcompanyaccount'] != null">
+                                    <div id="profile-card" class="card" ng-if="data['linkdINcompanyaccount'] != null && data['linkdINcompanyaccount'] != ''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img class="activator" src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}">
+                                            <img class="activator" ng-src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                            <img ng-src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
@@ -408,13 +408,13 @@
                                 <!--LinkedIn Comapany page profiles bind end-->
                                 <!--LinkedIn Account profiles bind start-->
                                 <div class="col s12 m6 l4">
-                                    <div id="profile-card" class="card" ng-if="data['linkdInaccount'] != null">
+                                    <div id="profile-card" class="card" ng-if="data['linkdInaccount'] != null && data['linkdInaccount'] != ''">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img class="activator" src="{{data['linkdInaccount']['logoUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}">
+                                            <img class="activator" ng-src="{{data['linkdInaccount']['logoUrl']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="{{data['linkdInaccount']['profileImageUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                            <img ng-src="{{data['linkdInaccount']['profileImageUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
@@ -438,23 +438,23 @@
                                 </div>
                                 <!--LinkedIn Account profiles bind end-->
                                 <!--Pinterest Account profiles bind start-->
-                                <div class="col s12 m6 l4" ng-if="data['pintrestaccount'] != null">
+                                <div class="col s12 m6 l4" ng-if="data['pintrestaccount'] != null && data['pintrestaccount'] != ''">
                                     <div id="profile-card" class="card">
                                         <div class="card-image waves-effect waves-block waves-light">
-                                            <img class="activator" src="{{data['pintrestaccount']['profileimgaeurl']}}" alt="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}">
+                                            <img class="activator" ng-src="{{data['pintrestaccount']['profileimgaeurl']}}" alt="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img src="{{data['pintrestaccount']['profileimgaeurl']}}" alt="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}" class="circle responsive-img activator card-profile-image">
-                                            <img src="/contents/socioboard/images/pinterest.png" class="card_profile_socio_icon">
+                                            <img ng-src="{{data['pintrestaccount']['profileimgaeurl']}}" alt="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/pinterest.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
-                                            <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}</span>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}">{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}</span>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">pinscount:</span> {{data['pintrestaccount']['pinscount']}}</p>
                                             <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">boardscount:</span> <span title="{{data['pintrestaccount']['boardscount']}}">{{data['pintrestaccount']['boardscount']}}</span></p>
                                         </div>
                                         <div class="card-reveal">
-                                            <span class="card-title grey-text text-darken-4 truncate">{{data['pintrestaccount']['linkedinUserName']}}<i class="mdi-navigation-close right"></i></span>
+                                            <span class="card-title grey-text text-darken-4 truncate">{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}<i class="mdi-navigation-close right"></i></span>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2">username:</span> {{data['pintrestaccount']['username']}}</p>
                                             <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="followingcount"></i><span class="cyan-text text-darken-2">likescount:</span> <span title="{{data['pintrestaccount']['likescount']}}">{{data['pintrestaccount']['likescount']}}</span></p>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2">followerscount:</span><span title="{{data['pintrestaccount']['followerscount']}}">{{data['pintrestaccount']['followerscount']}}</span></p>
@@ -480,17 +480,17 @@
                                 <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook recents 5 feeds</h5>
                                 <ul class="collection" id="facebookfeeds">
                                     <li class="collection-item avatar">
-                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                                        <img ng-src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
                                         <span class="email-title">Chanchal Santra</span>
                                         <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
-                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/13116515_1357421374283652_6442434339184477799_o.jpg" class="responsive-img">
+                                        <img ng-src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/13116515_1357421374283652_6442434339184477799_o.jpg" class="responsive-img">
                                         <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
                                     </li>
                                     <li class="collection-item avatar">
-                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                                        <img ng-src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
                                         <span class="email-title">Chanchal</span>
                                         <p class="truncate grey-text ultra-small">You have #Google+ request from #Abhi.</p>
-                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/s2048x2048/13055267_1351271541565302_7957063152613596705_o.jpg" class="responsive-img">
+                                        <img ng-src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/s2048x2048/13055267_1351271541565302_7957063152613596705_o.jpg" class="responsive-img">
                                         <a href="#!" class="secondary-content">09:09am</a>
                                     </li>
                                     <li class="collection-item avatar">
@@ -506,7 +506,7 @@
                                         <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
                                     </li>
                                     <li class="collection-item avatar">
-                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c8.23.160.160/p200x200/13178649_1357425650949891_8586748233671236725_n.jpg?oh=716a8ae726c63379fa46c5236d9cb29c&oe=57E12897" alt="" class="circle">
+                                        <img ng-src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c8.23.160.160/p200x200/13178649_1357425650949891_8586748233671236725_n.jpg?oh=716a8ae726c63379fa46c5236d9cb29c&oe=57E12897" alt="" class="circle">
                                         <span class="email-title">Andy Brown</span>
                                         <p class="truncate grey-text text-darken-2 ultra-small">Hay Joe, we have next project for this summer.</p>
                                         <a href="#!" class="secondary-content email-time"><span class="grey-text ultra-small">12:10am</span></a>
@@ -519,17 +519,17 @@
                                 <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Twitter recents 5 feeds</h5>
                                 <ul class="collection" id="twtfeeds">
                                     <li class="collection-item avatar">
-                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                                        <img ng-src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
                                         <span class="email-title">Chanchal Santra</span>
                                         <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
-                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/13116515_1357421374283652_6442434339184477799_o.jpg" class="responsive-img">
+                                        <img ng-src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/13116515_1357421374283652_6442434339184477799_o.jpg" class="responsive-img">
                                         <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
                                     </li>
                                     <li class="collection-item avatar">
-                                        <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                                        <img ng-src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
                                         <span class="email-title">Promotions</span>
                                         <p class="truncate grey-text ultra-small">You have Google+ request from john doe.</p>
-                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/s2048x2048/13055267_1351271541565302_7957063152613596705_o.jpg" class="responsive-img">
+                                        <img ng-src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-8/s2048x2048/13055267_1351271541565302_7957063152613596705_o.jpg" class="responsive-img">
                                         <a href="#!" class="secondary-content"><span class="new badge green">6</span></a>
                                     </li>
                                     <li class="collection-item avatar">
@@ -545,7 +545,7 @@
                                         <a href="#!" class="secondary-content email-time"><span class="blue-text ultra-small">12:10 am</span></a>
                                     </li>
                                     <li class="collection-item avatar">
-                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c8.23.160.160/p200x200/13178649_1357425650949891_8586748233671236725_n.jpg?oh=716a8ae726c63379fa46c5236d9cb29c&oe=57E12897" alt="" class="circle">
+                                        <img ng-src="https://scontent.fmaa1-2.fna.fbcdn.net/v/t1.0-1/c8.23.160.160/p200x200/13178649_1357425650949891_8586748233671236725_n.jpg?oh=716a8ae726c63379fa46c5236d9cb29c&oe=57E12897" alt="" class="circle">
                                         <span class="email-title">Andy Brown</span>
                                         <p class="truncate grey-text text-darken-2 ultra-small">Hay Joe, we have next project for this summer.</p>
                                         <a href="#!" class="secondary-content email-time"><span class="grey-text ultra-small">12:10am</span></a>
@@ -838,7 +838,7 @@
                                                 <div class="row card" ng-if="profile.profileType==0">
                                                     <a href="https://www.facebook.com/{{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -861,7 +861,7 @@
                                                 <div class="row card" ng-if="profile.profileType==1">
                                                     <a href="https://www.facebook.com/{{profile.profileName}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -884,7 +884,7 @@
                                                 <div class="row card" ng-if="profile.profileType==2">
                                                     <a href="https://twitter.com/{{profile.profileName}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -906,7 +906,7 @@
                                                 <div class="row card" ng-if="profile.profileType==5">
                                                     <a href="https://plus.google.com/{{profile.profileId}}/posts" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -929,7 +929,7 @@
                                                 <div class="row card" ng-if="profile.profileType==4">
                                                     <a href="https://www.linkedin.com/company/{{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -951,7 +951,7 @@
                                                 <div class="row card" ng-if="profile.profileType==3">
                                                     <a href="http://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -973,7 +973,7 @@
                                                 <div class="row card" ng-if="profile.profileType==8">
                                                     <a href="http://instagram.com/{{profile.profileName}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -995,7 +995,7 @@
                                                 <div class="row card" ng-if="profile.profileType==10">
                                                     <a href="https://analytics.google.com/analytics/web/" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="/contents/socioboard/images/G-Ana-icon.png" class="responsive-img">
+                                                            <img ng-src="/contents/socioboard/images/G-Ana-icon.png" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -1017,7 +1017,7 @@
                                                 <div class="row card" ng-if="profile.profileType==7">
                                                     <a href="https://www.youtube.com/channel/{{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -1039,7 +1039,7 @@
                                                 <div class="row card" ng-if="profile.profileType==13">
                                                     <a href="https://www.pinterest.com/{{profile.profileId}}" target="_blank">
                                                         <div class="col l3 m3 s3">
-                                                            <img src="{{profile.profilePic}}" class="responsive-img">
+                                                            <img ng-src="{{profile.profilePic}}" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -1098,7 +1098,7 @@
                                     <div class="card-panel center">
                                         <a href="https://twitter.com/{{twtfollower.screen_name}}" target="_blank">
                                             <div class="card-image">
-                                                <img src="{{twtfollower.profile_image_url}}" title="{{twtfollower.screen_name}}" class="responsive-img">
+                                                <img ng-src="{{twtfollower.profile_image_url}}" title="{{twtfollower.screen_name}}" class="responsive-img">
                                             </div>
                                         </a>
                                     </div>
@@ -1140,7 +1140,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div ng-init="dispbtn= {{dispbtn}}"></div>
+                    <!--<div ng-init="dispbtn= dispbtn"></div>-->
                     <div class="col s12 m7 l7 hide-on-med-and-down">
                         <ul class="right">
                             <li>
@@ -1224,37 +1224,37 @@
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label >
-                                        <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}"  type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}"  type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]"  class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <input name="selector[]"  onclick="profile();"class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                     </label>
                                 </li>
                             </ul>
@@ -1411,15 +1411,14 @@
             </div>
         </div>
     </div>
-
+   
     <div class="modal" id="FbFanpage_Modal">
         <div class="modal-content">
             <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
-
             <ul class="collection">
                 <li class="collection-item avatar" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==0">
                     <div class="left">
-                        <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
+                        <img class="circle" alt="Socioboard" ng-src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
                         <span class="title">{{fbpages.Name}}</span>
                         <p>{{fbpages.LikeCount}}</p>
                     </div>
@@ -1431,7 +1430,7 @@
 
                 <li class="collection-item avatar disabled" ng-repeat="fbpages in lstAddFbPages" ng-if="fbpages.connected==1">
                     <div class="left">
-                        <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
+                        <img class="circle" alt="Socioboard" ng-src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
                         <span class="title">{{fbpages.Name}}</span>
                         <p>{{fbpages.LikeCount}}</p>
                     </div>
@@ -1449,6 +1448,43 @@
         </div>
     </div>
 
+    <div class="modal" id="ReconnFanpage_Modal">
+        <div class="modal-content">
+            <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
+
+            <ul class="collection">
+                <li class="collection-item avatar" ng-repeat="fbpages in lstReconnFbPages" ng-if="fbpages.connected==0">
+                    <div class="left">
+                        <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
+                        <span class="title">{{fbpages.Name}}</span>
+                        <p>{{fbpages.LikeCount}}</p>
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" value="{{fbpages.AccessToken}}" id="page_{{fbpages.AccessToken}}" ng-click="toggleFbPageProfileSelection(fbpages.AccessToken)">
+                        <label for="page_{{fbpages.AccessToken}}"></label>
+                    </p>
+                </li>
+
+                <li class="collection-item avatar disabled" ng-repeat="fbpages in lstReconnFbPages" ng-if="fbpages.connected==1">
+                    <div class="left">
+                        <img class="circle" alt="Socioboard" src="https://graph.facebook.com/{{fbpages.ProfilePageId}}/picture?type=small">
+                        <span class="title">{{fbpages.Name}}</span>
+                        <p>{{fbpages.LikeCount}}</p>
+                    </div>
+                    <p class="right">
+                        <input type="checkbox" checked disabled value="" id="" />
+                        <label for=""></label>
+                    </p>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action waves-effect waves-green btn-flat" ng-click="ReconnFacebookPages()">Connect</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+
+        </div>
+    </div>
+
     <div class="modal" id="LinCompanypage_Modal">
         <div class="modal-content">
             <h4>CHOOSE LINKEDIN PAGES TO CONNECT</h4>
@@ -1456,7 +1492,7 @@
 
                 <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0">
                     <div class="left">
-                        <img class="circle" alt="" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
+                        <img class="circle" alt="" ng-src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
                         <span class="title">{{linpages.PageName}}</span>
                     </div>
                     <p class="right">
@@ -1467,7 +1503,7 @@
 
                 <li class="collection-item avatar disabled" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==1">
                     <div class="left">
-                        <img class="circle" alt="" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
+                        <img class="circle" alt="" ng-src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
                         <span class="title">{{linpages.PageName}}</span>
                     </div>
                     <p class="right">
@@ -1490,7 +1526,7 @@
             <ul class="collection">
                 <li class="collection-item avatar" ng-repeat="youtube in lstYoutube" ng-if="youtube.connected==0">
                     <div class="left">
-                        <img class="circle" alt="Socioboard" src="{{youtube.YtChannelImage}}">
+                        <img class="circle" alt="Socioboard" ng-src="{{youtube.YtChannelImage}}">
                         <span class="title">{{youtube.YtChannelName}}</span>
 
                     </div>
@@ -1502,7 +1538,7 @@
 
                 <li class="collection-item avatar disabled" ng-repeat="youtube in lstYoutube" ng-if="youtube.connected==1">
                     <div class="left">
-                        <img class="circle" alt="Socioboard" src="{{youtube.YtChannelImage}}">
+                        <img class="circle" alt="Socioboard" ng-src="{{youtube.YtChannelImage}}">
                         <span class="title">{{youtube.YtChannelName}}</span>
 
                     </div>
@@ -1515,7 +1551,7 @@
         </div>
         <div class="modal-footer">
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddYTChannels()">Connect</a>
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="msgPagecloseModals()">Close</a>
         </div>
     </div>
 
@@ -1525,7 +1561,7 @@
             <ul class="collection">
                 <li class="collection-item avatar" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==0">
                     <div class="left">
-                        <img class="circle" alt="Socioboard" src="https://www.socioboard.com/contents/socioboard/images/G-Ana-icon.png">
+                        <img class="circle" alt="Socioboard" ng-src="https://www.socioboard.com/contents/socioboard/images/G-Ana-icon.png">
                         <span class="title">{{ganalytics.ProfileName}}</span>
 
                     </div>
@@ -1537,7 +1573,7 @@
 
                 <li class="collection-item avatar disabled" ng-repeat="ganalytics in lstGanalytics" ng-if="ganalytics.connected==1">
                     <div class="left">
-                        <img class="circle" alt="Socioboard" src="https://www.socioboard.com/contents/socioboard/images/G-Ana-icon.png">
+                        <img class="circle" alt="Socioboard" ng-src="https://www.socioboard.com/contents/socioboard/images/G-Ana-icon.png">
                         <span class="title">{{ganalytics.ProfileName}}</span>
 
                     </div>
@@ -1550,7 +1586,7 @@
         </div>
         <div class="modal-footer">
             <a class="modal-action waves-effect waves-green btn-flat" ng-click="AddGaSites()">Connect</a>
-            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="fbpagecloseModal()">Close</a>
+            <a class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="msgPagecloseModals()">Close</a>
         </div>
     </div>
 
@@ -1563,7 +1599,7 @@
                 <ul class="collection ">
                     <li class="collection-item avatar" ng-repeat="profile in lstProfiles">
                         <div class="left">
-                            <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle">
+                            <img ng-src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle">
                             <span class="title">{{profile.profileName}}</span>
                             <p>Connected</p>
                         </div>
@@ -1638,4 +1674,24 @@
         });
     }
 
+
+    function profile() {
+        var count = 0;
+        $("#checkboxdata :checkbox").each(function () {
+            if (this.id != 'checkAll') {
+                if (!($("#" + this.id).prop('checked'))) {
+                    count++;
+                }
+            }
+        });
+
+        if (count > 0) {
+            //alert("no "+count);
+            $("#checkAll").prop('checked', false);
+        }
+        if (count == 0) {
+            //alert("yess " + count);
+            $("#checkAll").prop('checked', true);
+        }
+    }
 </script>

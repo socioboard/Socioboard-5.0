@@ -254,12 +254,13 @@ namespace Api.Socioboard.Repositories
             return lstRss = task.Result.ToList();
         }
 
-        public static string PostRssfeed(Domain.Socioboard.Enum.SocialProfileType profiletype, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, Helper.Cache _redisCache)
+        public static string PostRssfeed(string profileId, string Url, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, Helper.Cache _redisCache)
         {
             string ret = "";
+            string prId = profileId.Substring(5, profileId.Length - 5);
             MongoRepository _RssFeedRepository = new MongoRepository("RssFeed", _appSettings);
             List<Domain.Socioboard.Models.Mongo.RssFeed> objrssdata = new List<Domain.Socioboard.Models.Mongo.RssFeed>();
-            var rt = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Status == false && t.ProfileType.Equals(profiletype));
+            var rt = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.ProfileId.Equals(prId) && t.Status == false);
             var task = Task.Run(async () =>
             {
                 return await rt;
@@ -268,7 +269,7 @@ namespace Api.Socioboard.Repositories
             objrssdata = _objrssdata.ToList();
             foreach (var item in objrssdata)
             {
-                if (profiletype == Domain.Socioboard.Enum.SocialProfileType.Facebook)
+                if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || _objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)
                 {
                     try
                     {
@@ -281,7 +282,7 @@ namespace Api.Socioboard.Repositories
                         return "";
                     }
                 }
-                else if (profiletype == Domain.Socioboard.Enum.SocialProfileType.Twitter)
+                else if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
                 {
                     try
                     {

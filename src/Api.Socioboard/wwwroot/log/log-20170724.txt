@@ -1,0 +1,52 @@
+﻿2017-07-24 11:48:29.332 +05:30 [Debug] Hosting starting
+2017-07-24 11:48:29.858 +05:30 [Debug] Hosting started
+2017-07-24 11:48:29.892 +05:30 [Debug] Connection id ""0HL6IBF6P05DD"" started.
+2017-07-24 11:48:29.892 +05:30 [Debug] Connection id ""0HL6IBF6P05DC"" started.
+2017-07-24 11:48:30.115 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2017-07-24 11:48:30.135 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2017-07-24 11:48:30.253 +05:30 [Information] Request finished in 143.9619ms 200 
+2017-07-24 11:48:30.442 +05:30 [Debug] Connection id ""0HL6IBF6P05DC"" completed keep alive response.
+2017-07-24 11:48:31.659 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2017-07-24 11:48:31.718 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"44efb423-5e0e-45ba-93ad-8f02706ca44e"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2017-07-24 11:48:32.013 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2017-07-24 11:48:32.125 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-07-24 11:48:32.128 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-07-24 11:48:32.167 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-07-24 11:48:32.172 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-07-24 11:48:32.175 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-07-24 11:48:32.424 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 392.9293ms
+2017-07-24 11:48:32.517 +05:30 [Information] Request finished in 2479.0518ms 200 application/json; charset=utf-8
+2017-07-24 11:48:32.520 +05:30 [Debug] Connection id ""0HL6IBF6P05DD"" completed keep alive response.
+2017-07-24 11:48:32.547 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/favicon.ico  
+2017-07-24 11:48:32.550 +05:30 [Debug] Request did not match any routes.
+2017-07-24 11:48:32.558 +05:30 [Information] Request finished in 15.2859ms 404 
+2017-07-24 11:48:32.559 +05:30 [Debug] Connection id ""0HL6IBF6P05DC"" completed keep alive response.
+2017-07-24 11:48:42.945 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/checksociorevtoken application/x-www-form-urlencoded 24
+2017-07-24 11:48:42.946 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/checksociorevtoken"'.
+2017-07-24 11:48:42.948 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)"
+2017-07-24 11:48:46.516 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" with arguments (["8d4cf66679e453e"]) - ModelState is Valid
+2017-07-24 11:48:50.798 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/Login application/x-www-form-urlencoded 63
+2017-07-24 11:48:50.802 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/Login"'.
+2017-07-24 11:48:50.805 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.Login (Api.Socioboard)"
+2017-07-24 11:48:52.117 +05:30 [Fatal] could not execute query
+[ select sessionhis0_.id as id26_, sessionhis0_.userId as userId26_, sessionhis0_.ipAddress as ipAddress26_, sessionhis0_.systemId as systemId26_, sessionhis0_.browseros as browseros26_, sessionhis0_.lastAccessedTime as lastAcce6_26_, sessionhis0_.firstloginTime as firstlog7_26_, sessionhis0_.sessionStatus as sessionS8_26_ from SessionHistory sessionhis0_ where sessionhis0_.systemId=?p0 and sessionhis0_.sessionStatus=?p1 ]
+  Name:p1 - Value:8d4cf66679e453e  Name:p2 - Value:1
+[SQL: select sessionhis0_.id as id26_, sessionhis0_.userId as userId26_, sessionhis0_.ipAddress as ipAddress26_, sessionhis0_.systemId as systemId26_, sessionhis0_.browseros as browseros26_, sessionhis0_.lastAccessedTime as lastAcce6_26_, sessionhis0_.firstloginTime as firstlog7_26_, sessionhis0_.sessionStatus as sessionS8_26_ from SessionHistory sessionhis0_ where sessionhis0_.systemId=?p0 and sessionhis0_.sessionStatus=?p1]
+2017-07-24 11:48:52.137 +05:30 [Error]    at NHibernate.Loader.Loader.DoList(ISessionImplementor session, QueryParameters queryParameters, IResultTransformer forcedResultTransformer)
+   at NHibernate.Loader.Loader.DoList(ISessionImplementor session, QueryParameters queryParameters)
+   at NHibernate.Loader.Loader.ListIgnoreQueryCache(ISessionImplementor session, QueryParameters queryParameters)
+   at NHibernate.Loader.Loader.List(ISessionImplementor session, QueryParameters queryParameters, ISet`1 querySpaces, IType[] resultTypes)
+   at NHibernate.Loader.Hql.QueryLoader.List(ISessionImplementor session, QueryParameters queryParameters)
+   at NHibernate.Hql.Ast.ANTLR.QueryTranslatorImpl.List(ISessionImplementor session, QueryParameters queryParameters)
+   at NHibernate.Engine.Query.HQLQueryPlan.PerformList(QueryParameters queryParameters, ISessionImplementor session, IList results)
+   at NHibernate.Impl.SessionImpl.List(IQueryExpression queryExpression, QueryParameters queryParameters, IList results)
+   at NHibernate.Impl.AbstractSessionImpl.List(IQueryExpression queryExpression, QueryParameters parameters)
+   at NHibernate.Impl.AbstractQueryImpl2.List()
+   at NHibernate.Linq.DefaultQueryProvider.ExecuteQuery(NhLinqExpression nhLinqExpression, IQuery query, NhLinqExpression nhQuery)
+   at NHibernate.Linq.DefaultQueryProvider.Execute(Expression expression)
+   at NHibernate.Linq.DefaultQueryProvider.Execute[TResult](Expression expression)
+   at Remotion.Linq.QueryableBase`1.GetEnumerator()
+   at System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   at System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   at Api.Socioboard.Model.DatabaseRepository.Find[T](Expression`1 query) in E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Model\DatabaseRepository.cs:line 31
+2017-07-24 11:48:52.138 +05:30 [Error] No database selected

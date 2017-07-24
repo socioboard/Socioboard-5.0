@@ -2,13 +2,14 @@
 
 SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http, $timeout, $stateParams, $state, apiDomain) {
     $scope.$on('$viewContentLoaded', function () {
-        debugger;
+        var preloadmore = false;
+        $scope.dispbtn = true;
         $rootScope.boardComposeMessage = {};
         $scope.lstBoardFeeds = [];
       //  $scope.lstBoardFeeds.length = 1;
         $scope.boardName = $stateParams.boardName;
         var bname = $scope.boardName;
-        debugger;
+       
         if (bname.includes('SB'))
         {
             $scope.bname = bname.replace('SB', '/');
@@ -232,10 +233,9 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         }
 
         $scope.ComposeMessage = function () {
-            $scope.dispbtn = false;
              var profiles = new Array();
              $("#checkboxdataboard .subcheckboxboard").each(function () {
-                    debugger;
+               
                     var attrId = $(this).attr("id");
                     if (document.getElementById(attrId).checked == false) {
                         var index = profiles.indexOf(attrId);
@@ -261,6 +261,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                 $scope.checkfile();
                 if ($scope.check == true) {
                     var formData = new FormData();
+                    $scope.dispbtn = false;
                     formData.append('files', $("#composeImage").get(0).files[0]);
                     $http({
                         method: 'POST',

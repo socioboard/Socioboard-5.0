@@ -21,6 +21,7 @@ namespace SocioboardDataServices.Reports
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.AccessToken != null).ToList();
+                   // lstInsAcc = lstInsAcc.Where(r => r.InstagramId.Contains("1479225281")).ToList();
                     foreach (var item in lstInsAcc)
                     {
                         if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
@@ -131,15 +132,29 @@ namespace SocioboardDataServices.Reports
         
         public static List<Domain.Socioboard.Models.Mongo.InstagramComment> GetInstagramPostComments(string profileId, int daysCount)
         {
-            MongoRepository instagarmCommentRepo = new MongoRepository("InstagramComment");
+            //MongoRepository instagarmCommentRepo = new MongoRepository("InstagramComment");
+            //DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
+            //DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
+            //var ret = instagarmCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.InstagramId == profileId && t.CommentDate <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.CommentDate >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            //var task = Task.Run(async () =>
+            //{
+            //    return await ret;
+            //});
+            //IList<Domain.Socioboard.Models.Mongo.InstagramComment> lstInstagramPostComments = task.Result.ToList();
+            List<Domain.Socioboard.Models.Mongo.InstagramComment> lstInstagramPostComments = new List<InstagramComment>();
+            MongoRepository instagramFeedRepo = new MongoRepository("InstagramFeed");
             DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-            var ret = instagarmCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.InstagramId == profileId && t.CommentDate <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.CommentDate >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = instagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.InstagramId == profileId && t.FeedDate <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.FeedDate >= SBHelper.ConvertToUnixTimestamp(dayStart) && t.Type == "image");
             var task = Task.Run(async () =>
             {
                 return await ret;
             });
-            IList<Domain.Socioboard.Models.Mongo.InstagramComment> lstInstagramPostComments = task.Result.ToList();
+            IList<Domain.Socioboard.Models.Mongo.InstagramFeed> lstInstagramFeed = task.Result.GroupBy(x => x.FeedId).Select(g => g.First()).ToList();
+            foreach (var item in lstInstagramFeed.ToList())
+            {
+                lstInstagramPostComments.AddRange(item._InstagramComment);
+            }
             return lstInstagramPostComments.ToList();
         }
         public static List<Domain.Socioboard.Models.Mongo.InstagramPostLikes> GetInstagramPostLikes(string profileId, int daysCount)

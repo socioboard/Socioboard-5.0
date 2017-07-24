@@ -16,6 +16,16 @@ namespace SocioboardDataServices.Helper
         public const string MongoDbName = "Socioboard3";
 
 
+        //Instagram App Creds Start
+        public const string instaAuthUrl = "https://api.instagram.com/oauth/authorize/";
+        public const string instaClientId = "";
+        public const string instaClientSecret = "";
+        public const string instaReturnUrl = "http://localhost:9821/InstagramManager/Instagram";
+        public const string instaTokenRetrivelUrl = "https://api.instagram.com/oauth/access_token";
+        public const string instaApiBaseUrl = "https://api.instagram.com/v1/";
+        //End Instagram App Creds
+
+
         //Start facebook App Creds
         public const string FacebookClientId = "";
         public const string FacebookClientSecretKey = "";

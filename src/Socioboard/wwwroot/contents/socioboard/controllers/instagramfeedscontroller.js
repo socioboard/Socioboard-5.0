@@ -8,9 +8,9 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         var start = 0;
         var preloadmorefeeds = false;
         var endfeeds = false;
-        var ending = start + 30;
+        var ending = start + 10;
         var reachLast = false;
-        var count = 30;
+        var count = 10;
         $scope.dispbtn = true;
         $scope.loadmore = "Click to Load More..";
         $scope.lstFbComments = [];
@@ -22,7 +22,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             $scope.filters = false;
             $scope.preloadmorefeeds = false;
             $scope.lstinsFeeds = null;
-            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
+            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               //$scope.lstinsFeeds = response.data;
@@ -61,7 +61,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                              else {
                                  $scope.lstFbFeeds = $scope.lstFbFeeds.concat(response.data);
                              
-                                 ending = ending + 30;
+                                 ending = ending + 10;
                                  $scope.listData();
                              }
                          }, function (reason) {
@@ -75,7 +75,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             $scope.preloadmorefeeds = false;
             $scope.lstinsFeeds = null;
             //codes to load  recent Feeds
-            $http.get(apiDomain + '/api/Instagram/GetInstagramFilterFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30' + '&postType=' + postType)
+            $http.get(apiDomain + '/api/Instagram/GetInstagramFilterFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10' + '&postType=' + postType)
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               //$scope.lstinsFeeds = response.data;

@@ -21,7 +21,6 @@ namespace SocioboardDataScheduler.Facebook
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage) && t.scheduleTime <= DateTime.UtcNow).ToList();
-                    // lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("187231345114052")).ToList();
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
 
                     foreach (var items in newlstScheduledMessage)
@@ -32,14 +31,6 @@ namespace SocioboardDataScheduler.Facebook
                         thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
                         thread_pageshreathon.Start();
                         Thread.Sleep(10 * 1000);
-                        //while (noOfthreadRunning > 5)
-                        //{
-                        //    Thread.Sleep(1 * 1000);
-                        //}
-                        //new Thread(delegate ()
-                        //{
-                        //    schedulemessages();
-                        //}).Start();
 
                     }
                     Thread.Sleep(TimeSpan.FromMinutes(1));

@@ -33,7 +33,7 @@
                                 <tr ng-repeat="pageshareathon in lstpageshareathon">
                                     <td>{{current + $index}}</td>
                                     <td>{{pageshareathon.facebookusername}}</td>
-                                    <td ng-if="pageshareathon.facebookpagename!=''">{{pageshareathon.facebookpagename}}</td>
+                                    <td ng-if="pageshareathon.facebookpagename!=''">{{pageshareathon.facebookpagename}},{{pageshareathon.facebookPageUrl}}</td>
                                     <td ng-if="pageshareathon.facebookpagename==''">{{pageshareathon.facebookPageUrl}}</td>
                                     <td>{{pageshareathon.timeintervalminutes}}</td>
                                     <td>

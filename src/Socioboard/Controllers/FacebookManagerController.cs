@@ -22,58 +22,58 @@ namespace Socioboard.Controllers
             _logger = logger;
         }
 
-        public override void OnActionExecuting(ActionExecutingContext filterContext)
-        {
-            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
-            if (session != null)
-            {
-                SortedDictionary<string, string> strdi = new SortedDictionary<string, string>();
-                strdi.Add("systemId", session.systemId);
-                string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
-                if (respo != "false")
-                {
-                    if (user != null)
-                    {
-                        SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-                        strdic.Add("UserName", user.EmailId);
-                        if (string.IsNullOrEmpty(user.Password))
-                        {
-                            strdic.Add("Password", "sociallogin");
-                        }
-                        else
-                        {
-                            strdic.Add("Password", user.Password);
-                        }
+        //public override void OnActionExecuting(ActionExecutingContext filterContext)
+        //{
+        //    Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+        //    Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+        //    if (session != null)
+        //    {
+        //        SortedDictionary<string, string> strdi = new SortedDictionary<string, string>();
+        //        strdi.Add("systemId", session.systemId);
+        //        string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
+        //        if (respo != "false")
+        //        {
+        //            if (user != null)
+        //            {
+        //                SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+        //                strdic.Add("UserName", user.EmailId);
+        //                if (string.IsNullOrEmpty(user.Password))
+        //                {
+        //                    strdic.Add("Password", "sociallogin");
+        //                }
+        //                else
+        //                {
+        //                    strdic.Add("Password", user.Password);
+        //                }
 
 
-                        string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+        //                string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
 
-                        if (!string.IsNullOrEmpty(response))
-                        {
-                            Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
-                            HttpContext.Session.SetObjectAsJson("User", _user);
-                        }
-                        else
-                        {
-                            HttpContext.Session.Remove("User");
-                            HttpContext.Session.Remove("selectedGroupId");
-                            HttpContext.Session.Clear();
-                            HttpContext.Session.Remove("revokedata");
-                        }
-                    }
-                }
-                else
-                {
-                    HttpContext.Session.Remove("User");
-                    HttpContext.Session.Remove("selectedGroupId");
-                    HttpContext.Session.Clear();
-                    HttpContext.Session.Remove("revokedata");
-                }
+        //                if (!string.IsNullOrEmpty(response))
+        //                {
+        //                    Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+        //                    HttpContext.Session.SetObjectAsJson("User", _user);
+        //                }
+        //                else
+        //                {
+        //                    HttpContext.Session.Remove("User");
+        //                    HttpContext.Session.Remove("selectedGroupId");
+        //                    HttpContext.Session.Clear();
+        //                    HttpContext.Session.Remove("revokedata");
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+        //            HttpContext.Session.Remove("User");
+        //            HttpContext.Session.Remove("selectedGroupId");
+        //            HttpContext.Session.Clear();
+        //            HttpContext.Session.Remove("revokedata");
+        //        }
 
-            }
-            base.OnActionExecuting(filterContext);
-        }
+        //    }
+        //    base.OnActionExecuting(filterContext);
+        //}
 
         [HttpGet]
         public ActionResult getFbLoginUrl(string plan)
@@ -91,7 +91,9 @@ namespace Socioboard.Controllers
         {
             string fbLogin = HttpContext.Session.GetObjectFromJson<string>("fblogin");
             string fbSocial = HttpContext.Session.GetObjectFromJson<string>("fbSocial");
+            //string fbtype = HttpContext.Session.GetObjectFromJson<string>("fbprofiletype");
             string plan = HttpContext.Session.GetObjectFromJson<string>("RegisterPlan");
+
 
             if (!string.IsNullOrEmpty(fbLogin) && fbLogin.Equals("Fb_Login"))
             {
@@ -159,7 +161,46 @@ namespace Socioboard.Controllers
                 HttpContext.Session.SetObjectAsJson("fbSocial", null);
                 return RedirectToAction("AddFbPage", "FacebookManager", new { code = code });
             }
+            else if (fbSocial.Equals("0"))
+            {
+                HttpContext.Session.SetObjectAsJson("fbSocial", fbSocial);
+                return RedirectToAction("ReConnectAcc", "FacebookManager", new { code = code });
+            }
+            else if (fbSocial.Equals("null"))
+            {
+                HttpContext.Session.SetObjectAsJson("fbSocial", fbSocial);
+                return RedirectToAction("ReConnectfbpage", "FacebookManager", new { code = code });
+            }
             return RedirectToAction("Index", "Index");
+        }
+
+        [Route("socioboard/recfbcont/")]
+        [HttpGet("recfbcont")]
+        public ActionResult recfbcont(string id, string fbprofileType)
+        {
+
+            if (fbprofileType == "0")
+            {
+                try
+                {
+
+                    HttpContext.Session.SetObjectAsJson("fbSocial", fbprofileType);
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            else
+            {
+                HttpContext.Session.SetObjectAsJson("fbSocial", fbprofileType);
+            }
+
+            HttpContext.Session.SetObjectAsJson("profileId", id);
+
+
+            return Content(Socioboard.Facebook.Auth.Authentication.GetFacebookRedirectLink(_appSettings.FacebookAuthUrl, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl));
         }
 
         [HttpGet]
@@ -290,6 +331,93 @@ namespace Socioboard.Controllers
                 if (lstpages.Count > 0)
                 {
                     TempData["fbPages"] = Newtonsoft.Json.JsonConvert.SerializeObject(lstpages);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    TempData["Error"] = "No page linked with this account";
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            else
+            {
+                TempData["Error"] = "Error while hitting api.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public async Task<ActionResult> ReConnectAcc(string code)
+        {
+            string accessToken = string.Empty;
+            try
+            {
+                accessToken = Socioboard.Facebook.Auth.Authentication.getAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                TempData["Error"] = "Issue with Token";
+                return RedirectToAction("Index", "Home");
+            }
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+
+            List<KeyValuePair<string, string>> RecParameters = new List<KeyValuePair<string, string>>();
+            string profileId = HttpContext.Session.GetObjectFromJson<string>("profileId");//profileId
+            string fbreconnect = HttpContext.Session.GetObjectFromJson<string>("fbSocial");//fbSocial
+
+            RecParameters.Add(new KeyValuePair<string, string>("accessToken", accessToken));
+            RecParameters.Add(new KeyValuePair<string, string>("groupId", groupId));
+            RecParameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+            RecParameters.Add(new KeyValuePair<string, string>("reconnect", fbreconnect));
+            RecParameters.Add(new KeyValuePair<string, string>("profileId", profileId));
+
+
+
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/Facebook/ReconnectFbAccount", RecParameters, "", "", _appSettings.ApiDomain);
+
+            if (response.IsSuccessStatusCode)
+            {
+                TempData["Success"] = await response.Content.ReadAsStringAsync();
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["Error"] = "Error while hitting api.";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public async Task<ActionResult> ReConnectfbpage(string code)
+        {
+            string accessToken = string.Empty;
+            try
+            {
+                accessToken = Socioboard.Facebook.Auth.Authentication.getAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                TempData["Error"] = "Issue with Token";
+                return RedirectToAction("Index", "Home");
+            }
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+            string profileId = HttpContext.Session.GetObjectFromJson<string>("profileId");//profileId
+            List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Add(new KeyValuePair<string, string>("accesstoken", accessToken));
+            Parameters.Add(new KeyValuePair<string, string>("groupId", groupId));
+            Parameters.Add(new KeyValuePair<string, string>("profileId", profileId));
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/Facebook/GetFacebookPagesDet", Parameters, "", "", _appSettings.ApiDomain);
+            if (response.IsSuccessStatusCode)
+            {
+                List<Domain.Socioboard.Models.Facebookpage> lstpages = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Facebookpage>>();
+                lstpages = lstpages.Where(t => t.ProfilePageId.Contains(profileId)).ToList();
+                if (lstpages.Count > 0)
+                {
+                    TempData["fbReconnect"] = Newtonsoft.Json.JsonConvert.SerializeObject(lstpages);
                     return RedirectToAction("Index", "Home");
                 }
                 else

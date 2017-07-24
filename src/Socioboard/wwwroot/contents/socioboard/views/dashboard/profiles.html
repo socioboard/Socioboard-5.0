@@ -343,8 +343,18 @@
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img class="activator" src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}">
                                                 </div>
-                                                <div class="card-content">
+                                                <div class="card-content" ng-if="data['linkdINcompanyaccount']['profileImageUrl']!= null">
                                                     <img src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}" class="circle responsive-img activator card-profile-image">
+                                                    <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                                    <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                        <i class="icon-info"></i>
+                                                    </a>
+                                                    <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['linkdINcompanyaccount']['linkedinPageName']}}</span>
+                                                    <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
+                                                    <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
+                                                </div>
+                                                <div class="card-content" ng-if="data['linkdINcompanyaccount']['profileImageUrl']== null">
+                                                    <img src="https://scontent.xx.fbcdn.net/v/t1.0-1/s50x50/10354686_10150004552801856_220367501106153455_n.jpg?oh=80bd8eaa14db0da19b54cadea160b538&oe=5A096540" class="circle responsive-img activator card-profile-image">
                                                     <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
                                                     <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                         <i class="icon-info"></i>
@@ -371,8 +381,21 @@
                                                     <!--<img class="activator" src="{{data['linkdInaccount']['logoUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}">-->
                                                     <img class="activator" src="{{data['linkdInaccount']['logoUrl']}}">
                                                 </div>
-                                                <div class="card-content">
-                                                    <img src="{{data['linkdInaccount']['profileImageUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}" class="circle responsive-img activator card-profile-image">
+                                                    <div class="card-content" ng-if="data['linkdInaccount']['profileImageUrl']!= null">
+                                                    <img src="{{data['linkdInaccount']['profileImageUrl']}}" class="circle responsive-img activator card-profile-image">
+                                                    <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                                    <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                        <i class="icon-info"></i>
+                                                    </a>
+                                                    <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['linkdInaccount']['linkedinUserName']}}</span>
+                                                    <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{data['linkdInaccount']['connections']}}</p>
+                                                    <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}} </span></p>
+
+                                                    <!--<p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Connections:</span><span title="{{data['linkdInaccount']['connections']}}">{{data['linkdInaccount']['connections']}}</span> {{data['linkdInaccount']['connections']}}</p>-->
+                                                    <!--<p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">EmailId:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['{{emailId}}']}}</span></p>-->
+                                                </div>
+                                                <div class="card-content" ng-if="data['linkdInaccount']['profileImageUrl']== null">
+                                                    <img src="https://scontent.xx.fbcdn.net/v/t1.0-1/s50x50/10354686_10150004552801856_220367501106153455_n.jpg?oh=80bd8eaa14db0da19b54cadea160b538&oe=5A096540" class="circle responsive-img activator card-profile-image">
                                                     <img src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
                                                     <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                         <i class="icon-info"></i>

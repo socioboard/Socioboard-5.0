@@ -153,7 +153,7 @@ namespace Api.Socioboard.Repositories
                                 new Thread(delegate ()
                                 {
                                     GetInstagramPostLikes(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
-                                    GetInstagramPostComments(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
+                                    //GetInstagramPostComments(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
                                 }).Start();
 
                                 return "Added_Successfully";
@@ -186,7 +186,7 @@ namespace Api.Socioboard.Repositories
                                 new Thread(delegate ()
                                 {
                                     GetInstagramPostLikes(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
-                                    GetInstagramPostComments(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
+                                   // GetInstagramPostComments(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
                                 }).Start();
 
 
@@ -204,7 +204,7 @@ namespace Api.Socioboard.Repositories
 
         public static void GetInstagramSelfFeeds(string instagramId, string accessToken, Helper.AppSettings _appSettings)
         {
-            MongoRepository instagarmCommentRepo = new MongoRepository("InstagramComment", _appSettings);
+            //MongoRepository instagarmCommentRepo = new MongoRepository("InstagramComment", _appSettings);
             MongoRepository instagramFeedRepo = new MongoRepository("InstagramFeed", _appSettings);
             try
             {
@@ -297,24 +297,6 @@ namespace Api.Socioboard.Repositories
                                 objInstagramFeed.FeedUrl = item["link"].ToString();
                             }
                             catch { }
-
-                            var ret = instagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.FeedId.Equals(objInstagramFeed.FeedId) && t.InstagramId.Equals(objInstagramFeed.InstagramId));
-                            var task = Task.Run(async () =>
-                            {
-                                return await ret;
-                            });
-                            int count = task.Result.Count;
-
-                            if (count < 1)
-                            {
-                                instagramFeedRepo.Add(objInstagramFeed);
-                            }
-                            else
-                            {
-                                FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objInstagramFeed.FeedId);
-                                var update = Builders<BsonDocument>.Update.Set("IsLike", objInstagramFeed.IsLike).Set("CommentCount", objInstagramFeed.CommentCount).Set("LikeCount", objInstagramFeed.LikeCount).Set("Type", objInstagramFeed.Type).Set("VideoUrl", objInstagramFeed.VideoUrl);
-                                instagramFeedRepo.Update<Domain.Socioboard.Models.Mongo.InstagramFeed>(update, filter);
-                            }
                             List<Domain.Socioboard.Models.Mongo.InstagramComment> lstInstagramComment = new List<Domain.Socioboard.Models.Mongo.InstagramComment>();
                             usercmts = objComment.GetComment(objInstagramFeed.FeedId, accessToken);
                             for (int cmt = 0; cmt < usercmts.data.Count(); cmt++)
@@ -366,7 +348,26 @@ namespace Api.Socioboard.Repositories
 
                                 }
                             }
-                            instagarmCommentRepo.AddList(lstInstagramComment);
+                            objInstagramFeed._InstagramComment = lstInstagramComment;
+                            var ret = instagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.FeedId.Equals(objInstagramFeed.FeedId) && t.InstagramId.Equals(objInstagramFeed.InstagramId));
+                            var task = Task.Run(async () =>
+                            {
+                                return await ret;
+                            });
+                            int count = task.Result.Count;
+
+                            if (count < 1)
+                            {
+                                instagramFeedRepo.Add(objInstagramFeed);
+                            }
+                            else
+                            {
+                                FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objInstagramFeed.FeedId);
+                                var update = Builders<BsonDocument>.Update.Set("IsLike", objInstagramFeed.IsLike).Set("CommentCount", objInstagramFeed.CommentCount).Set("LikeCount", objInstagramFeed.LikeCount).Set("Type", objInstagramFeed.Type).Set("VideoUrl", objInstagramFeed.VideoUrl).Set("_InstagramComment", objInstagramFeed._InstagramComment);
+                                instagramFeedRepo.Update<Domain.Socioboard.Models.Mongo.InstagramFeed>(update, filter);
+                            }
+                           
+                           // instagarmCommentRepo.AddList(lstInstagramComment);
                         }
                         catch (Exception ex)
                         {
@@ -852,40 +853,45 @@ namespace Api.Socioboard.Repositories
 
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.intafeed> GetInstagramFeeds(string instagramId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
+        public static List<Domain.Socioboard.Models.Mongo.InstagramFeed> GetInstagramFeeds(string instagramId, Helper.AppSettings _appSettings, Helper.Cache _redisCache,int skip,int count)
         {
            
             List<Domain.Socioboard.Models.Mongo.intafeed> lstintafeed = new List<Domain.Socioboard.Models.Mongo.intafeed>();
             List<Domain.Socioboard.Models.Mongo.InstagramFeed> iMmemInstagramFeed = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.InstagramFeed>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramFeed + instagramId);
 
             MongoRepository InstagramFeedRepo = new MongoRepository("InstagramFeed", _appSettings);
-            var ret = InstagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.InstagramId.Equals(instagramId));
+          //  var ret = InstagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.InstagramId.Equals(instagramId));
+            var builder = Builders<Domain.Socioboard.Models.Mongo.InstagramFeed>.Sort;
+            var sort = builder.Descending(t => t.FeedDate);
+            var ret = InstagramFeedRepo.FindWithRange<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.InstagramId.Equals(instagramId), sort, skip, count);
             var task = Task.Run(async () =>
             {
                 return await ret;
             });
             IList<Domain.Socioboard.Models.Mongo.InstagramFeed> _lstInstagramFeed = task.Result;
-            var sortt= _lstInstagramFeed.OrderByDescending(t => t.FeedDate);
-            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramFeed + instagramId, sortt.ToList());
-            foreach (var item in sortt.ToList())
-            {
-                Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
-                MongoRepository InstagramCommentRepo = new MongoRepository("InstagramComment", _appSettings);
-                var ret1 = InstagramCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.FeedId.Equals(item.FeedId));
-                var taskq = Task.Run(async () =>
-                {
-                    return await ret1;
-                });
-                IList<Domain.Socioboard.Models.Mongo.InstagramComment> _lstInstagramComment = taskq.Result;
-                _intafeed._InstagramFeed = item;
-                _intafeed._InstagramComment = _lstInstagramComment.ToList();
-                lstintafeed.Add(_intafeed);
-            }
-            return lstintafeed;
+            //var sortt= _lstInstagramFeed.OrderByDescending(t => t.FeedDate);
+            //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramFeed + instagramId, sortt.ToList());
+            //foreach (var item in sortt.ToList())
+            //{
+            //    Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
+            //    MongoRepository InstagramCommentRepo = new MongoRepository("InstagramComment", _appSettings);
+            //    var builderComment = Builders<Domain.Socioboard.Models.Mongo.InstagramComment>.Sort;
+            //    var sortcomment = builderComment.Descending(t => t.CommentDate);
+            //    var ret1 = InstagramCommentRepo.FindWithRange<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.FeedId.Equals(item.FeedId), sortcomment, skip, 5);
+            //    var taskq = Task.Run(async () =>
+            //    {
+            //        return await ret1;
+            //    });
+            //    IList<Domain.Socioboard.Models.Mongo.InstagramComment> _lstInstagramComment = taskq.Result;
+            //    _intafeed._InstagramFeed = item;
+            //    _intafeed._InstagramComment = _lstInstagramComment.ToList();
+            //    lstintafeed.Add(_intafeed);
+            //}
+            return _lstInstagramFeed.ToList();
 
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.intafeed> GetTopInstagramFilterFeed(string instagramId, Helper.AppSettings _appSettings, Helper.Cache _redisCache, int skip, int count, string typeFilter)
+        public static List<Domain.Socioboard.Models.Mongo.InstagramFeed> GetTopInstagramFilterFeed(string instagramId, Helper.AppSettings _appSettings, Helper.Cache _redisCache, int skip, int count, string typeFilter)
         {
             List<Domain.Socioboard.Models.Mongo.intafeed> lstintafeed = new List<Domain.Socioboard.Models.Mongo.intafeed>();
             List<Domain.Socioboard.Models.Mongo.InstagramFeed> lstInstaFeedsLs = new List<InstagramFeed>();
@@ -902,32 +908,32 @@ namespace Api.Socioboard.Repositories
                 lstInstaFeedsLs = lstInstaFeeds.ToList();
 
 
-            List<string> postIds = new List<string>();
-            foreach (var x in lstInstaFeedsLs)
-            {
-                postIds.Add(x.FeedId);
-            }
-            MongoRepository mongorepocomment = new MongoRepository("InstagramComment", _appSettings);
-            var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => postIds.Contains(t.FeedId));
-            var taskcomment = Task.Run(async () =>
-            {
-                return await resultcomment;
-            });
-            IList<Domain.Socioboard.Models.Mongo.InstagramComment> lstFbPostComment = taskcomment.Result;
-            List<Domain.Socioboard.Models.Mongo.InstagramComment> tempData = lstFbPostComment.ToList();
+            //List<string> postIds = new List<string>();
+            //foreach (var x in lstInstaFeedsLs)
+            //{
+            //    postIds.Add(x.FeedId);
+            //}
+            //MongoRepository mongorepocomment = new MongoRepository("InstagramComment", _appSettings);
+            //var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => postIds.Contains(t.FeedId));
+            //var taskcomment = Task.Run(async () =>
+            //{
+            //    return await resultcomment;
+            //});
+            //IList<Domain.Socioboard.Models.Mongo.InstagramComment> lstFbPostComment = taskcomment.Result;
+            //List<Domain.Socioboard.Models.Mongo.InstagramComment> tempData = lstFbPostComment.ToList();
 
-            foreach (var item in lstInstaFeedsLs)
-            {
-                Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
-                List<Domain.Socioboard.Models.Mongo.InstagramComment> lstFbPostCommentTemp = tempData.Where(t => t.FeedId == item.FeedId).ToList();
-                _intafeed._InstagramFeed = item;
-                _intafeed._InstagramComment = lstFbPostCommentTemp.ToList();
-                lstintafeed.Add(_intafeed);
-            }
-            return lstintafeed;
+            //foreach (var item in lstInstaFeedsLs)
+            //{
+            //    Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
+            //    List<Domain.Socioboard.Models.Mongo.InstagramComment> lstFbPostCommentTemp = tempData.Where(t => t.FeedId == item.FeedId).ToList();
+            //    _intafeed._InstagramFeed = item;
+            //    _intafeed._InstagramComment = lstFbPostCommentTemp.ToList();
+            //    lstintafeed.Add(_intafeed);
+            //}
+            return lstInstaFeedsLs.ToList();
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.intafeed> GetTopInstagramSortFeed(string instagramId, Helper.AppSettings _appSettings, Helper.Cache _redisCache, int skip, int count, string typeSort)
+        public static List<Domain.Socioboard.Models.Mongo.InstagramFeed> GetTopInstagramSortFeed(string instagramId, Helper.AppSettings _appSettings, Helper.Cache _redisCache, int skip, int count, string typeSort)
         {
             List<Domain.Socioboard.Models.Mongo.intafeed> lstintafeed = new List<Domain.Socioboard.Models.Mongo.intafeed>();
             List<Domain.Socioboard.Models.Mongo.InstagramFeed> lstInstaFeedsLs = new List<InstagramFeed>();
@@ -965,29 +971,29 @@ namespace Api.Socioboard.Repositories
             lstInstaFeedsLs = tempFeeds.ToList();
 
 
-            List<string> postIds = new List<string>();
-            foreach (var x in lstInstaFeedsLs)
-            {
-                postIds.Add(x.FeedId);
-            }
-            MongoRepository mongorepocomment = new MongoRepository("InstagramComment", _appSettings);
-            var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => postIds.Contains(t.FeedId));
-            var taskcomment = Task.Run(async () =>
-            {
-                return await resultcomment;
-            });
-            IList<Domain.Socioboard.Models.Mongo.InstagramComment> lstFbPostComment = taskcomment.Result;
-            List<Domain.Socioboard.Models.Mongo.InstagramComment> tempData = lstFbPostComment.ToList();
+            //List<string> postIds = new List<string>();
+            //foreach (var x in lstInstaFeedsLs)
+            //{
+            //    postIds.Add(x.FeedId);
+            //}
+            //MongoRepository mongorepocomment = new MongoRepository("InstagramComment", _appSettings);
+            //var resultcomment = mongorepocomment.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => postIds.Contains(t.FeedId));
+            //var taskcomment = Task.Run(async () =>
+            //{
+            //    return await resultcomment;
+            //});
+            //IList<Domain.Socioboard.Models.Mongo.InstagramComment> lstFbPostComment = taskcomment.Result;
+            //List<Domain.Socioboard.Models.Mongo.InstagramComment> tempData = lstFbPostComment.ToList();
 
-            foreach (var item in lstInstaFeedsLs)
-            {
-                Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
-                List<Domain.Socioboard.Models.Mongo.InstagramComment> lstFbPostCommentTemp = tempData.Where(t => t.FeedId == item.FeedId).ToList();
-                _intafeed._InstagramFeed = item;
-                _intafeed._InstagramComment = lstFbPostCommentTemp.ToList();
-                lstintafeed.Add(_intafeed);
-            }
-            return lstintafeed;
+            //foreach (var item in lstInstaFeedsLs)
+            //{
+            //    Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
+            //    List<Domain.Socioboard.Models.Mongo.InstagramComment> lstFbPostCommentTemp = tempData.Where(t => t.FeedId == item.FeedId).ToList();
+            //    _intafeed._InstagramFeed = item;
+            //    _intafeed._InstagramComment = lstFbPostCommentTemp.ToList();
+            //    lstintafeed.Add(_intafeed);
+            //}
+            return lstInstaFeedsLs.ToList();
         }
 
         public static void InstagramLikeUnLike(int LikeCount, int IsLike, string FeedId, string InstagramId,long groupId, Helper.AppSettings _appSettings, Helper.Cache _redisCache,Model.DatabaseRepository dbr)

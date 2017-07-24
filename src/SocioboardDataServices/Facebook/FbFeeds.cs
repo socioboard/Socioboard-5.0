@@ -2,8 +2,10 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
+using Socioboard.Facebook.Data;
 using SocioboardDataServices.Model;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SocioboardDataServices.Facebook
@@ -255,7 +257,7 @@ namespace SocioboardDataServices.Facebook
                                     }
                                     objFacebookFeed.FeedDescription = message;
                                     objFacebookFeed.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-
+                                    objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, fbAcc.AccessToken);
 
 
                                     try
@@ -277,7 +279,7 @@ namespace SocioboardDataServices.Facebook
                                             try
                                             {
                                                 FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objFacebookFeed.FeedId);
-                                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom);
+                                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom).Set("Likecount", objFacebookFeed.Likecount).Set("Commentcount", objFacebookFeed.Commentcount);
                                                 mongorepo.Update<MongoFacebookFeed>(update, filter);
                                             }
                                             catch { }
@@ -290,7 +292,7 @@ namespace SocioboardDataServices.Facebook
                                     }
                                     if (apiHitsCount < MaxapiHitsCount)
                                     {
-                                        AddFbPostComments(objFacebookFeed.FeedId, fbAcc.AccessToken);
+                                        //AddFbPostComments(objFacebookFeed.FeedId, fbAcc.AccessToken);
                                     }
 
                                 }
@@ -451,6 +453,124 @@ namespace SocioboardDataServices.Facebook
                 //_logger.LogError(ex.StackTrace);
             }
             return ret;
+        }
+
+        public static List<MongoFbPostComment> FbPostComments(string postid, string AccessToken)
+        {
+
+            List<MongoFbPostComment> lstFbPOstComment = new List<MongoFbPostComment>();
+            string ret = string.Empty;
+            try
+            {
+
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
+                dynamic post = FbUser.getPostComments(AccessToken, postid);
+
+                foreach (var item in post["data"])
+                {
+                    MongoFbPostComment fbPostComment = new MongoFbPostComment();
+                    fbPostComment.Id = MongoDB.Bson.ObjectId.GenerateNewId();
+                    fbPostComment.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                    fbPostComment.PostId = postid;
+
+                    try
+                    {
+                        fbPostComment.CommentId = item["id"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.Comment = item["message"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.Likes = Convert.ToInt32(item["like_count"]);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.UserLikes = Convert.ToInt32(item["user_likes"]);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.Commentdate = DateTime.Parse(item["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                    }
+                    catch (Exception ex)
+                    {
+                        fbPostComment.Commentdate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                    }
+                    try
+                    {
+                        fbPostComment.FromName = item["from"]["name"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.FromId = item["from"]["id"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.PictureUrl = item["id"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+
+                    try
+                    {
+                        lstFbPOstComment.Add(fbPostComment);
+
+                        //MongoRepository fbPostRepo = new MongoRepository("MongoFbPostComment", settings);
+                        //fbPostRepo.Add<MongoFbPostComment>(fbPostComment);
+                    }
+                    catch (Exception ex)
+                    {
+
+
+                        new List<MongoFbPostComment>();
+
+                    }
+                    try
+                    {
+                        //   AddFbPagePostCommentsLikes(objFbPageComment.CommentId, accesstoken, userid);
+                    }
+                    catch (Exception ex)
+                    {
+
+
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+
+            }
+            return lstFbPOstComment;
         }
     }
 }

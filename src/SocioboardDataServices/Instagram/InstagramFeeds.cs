@@ -37,20 +37,20 @@ namespace SocioboardDataServices.Instagram
                   //  Domain.Socioboard.Models.Instagramaccounts Instagramaccounts = new Domain.Socioboard.Models.Instagramaccounts();
                     Domain.Socioboard.Models.Instagramaccounts objInstagramAccount;
                     UserController objusercontroller = new UserController();
-                    ConfigurationIns configi = new ConfigurationIns("https://api.instagram.com/oauth/authorize/", Helper.AppSettings.InstagramApiKey, Helper.AppSettings.InstagramSecretKey, "https://www.socioboard.com/InstagramManager/Instagram", "https://api.instagram.com/oauth/access_token", "https://api.instagram.com/v1/", "");
+                    ConfigurationIns configi = new ConfigurationIns(Helper.AppSettings.instaAuthUrl, Helper.AppSettings.instaClientId, Helper.AppSettings.instaClientSecret, Helper.AppSettings.instaReturnUrl, Helper.AppSettings.instaTokenRetrivelUrl, Helper.AppSettings.instaApiBaseUrl, "");
                     oAuthInstagram _api = new oAuthInstagram();
                     _api = oAuthInstagram.GetInstance(configi);
                     InstagramResponse<User> objuser = objusercontroller.GetUserDetails(insAcc.InstagramId,insAcc.AccessToken);
 
-                    //  objInstagramAccount = new Domain.Socioboard.Models.Instagramaccounts();
+                  //  objInstagramAccount = new Domain.Socioboard.Models.Instagramaccounts();
 
 
-                    if (objuser != null)
+                    if (objuser!=null)
                     {
                         try
                         {
                             insAcc.ProfileUrl = objuser.data.profile_picture;
-                            _grpProfile.Select(s => { s.profilePic = objuser.data.profile_picture; return s; }).ToList();
+                            _grpProfile.Select(s => { s.profilePic = objuser.data.profile_picture;  return s; }).ToList();
                         }
                         catch (Exception ex)
                         {
@@ -94,7 +94,7 @@ namespace SocioboardDataServices.Instagram
                         {
                             dbr.Update<Domain.Socioboard.Models.Groupprofiles>(item_grpProfile);
                         }
-                        dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(insAcc);
+                        dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(insAcc); 
                     }
                     if (apiHitsCount<MaxapiHitsCount)
                     {
@@ -236,7 +236,58 @@ namespace SocioboardDataServices.Instagram
                                 objInstagramFeed.FeedUrl = item["link"].ToString();
                             }
                             catch { }
+                            List<Domain.Socioboard.Models.Mongo.InstagramComment> lstInstagramComment = new List<Domain.Socioboard.Models.Mongo.InstagramComment>();
+                            usercmts = objComment.GetComment(objInstagramFeed.FeedId, accessToken);
+                            for (int cmt = 0; cmt < usercmts.data.Count(); cmt++)
+                            {
+                                try
+                                {
+                                    Domain.Socioboard.Models.Mongo.InstagramComment objInstagramComment = new Domain.Socioboard.Models.Mongo.InstagramComment();
+                                    try
+                                    {
+                                        objInstagramComment.Comment = usercmts.data[cmt].text;
+                                    }
+                                    catch { }
+                                    try
+                                    {
+                                        objInstagramComment.CommentDate = Convert.ToDouble(usercmts.data[cmt].created_time.ToString());
+                                    }
+                                    catch { }
+                                    try
+                                    {
+                                        objInstagramComment.CommentId = usercmts.data[cmt].id;
+                                    }
+                                    catch { }
 
+                                    try
+                                    {
+                                        objInstagramComment.FeedId = objInstagramFeed.FeedId;
+                                    }
+                                    catch { }
+                                    try
+                                    {
+                                        objInstagramComment.InstagramId = instagramId;
+                                    }
+                                    catch { }
+                                    try
+                                    {
+                                        objInstagramComment.FromName = usercmts.data[cmt].from.username;
+                                    }
+                                    catch { }
+                                    try
+                                    {
+                                        objInstagramComment.FromProfilePic = usercmts.data[cmt].from.profile_picture;
+                                    }
+                                    catch { }
+
+                                    lstInstagramComment.Add(objInstagramComment);
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+                            }
+                            objInstagramFeed._InstagramComment = lstInstagramComment;
                             var ret = instagramFeedRepo.Find<Domain.Socioboard.Models.Mongo.InstagramFeed>(t => t.FeedId.Equals(objInstagramFeed.FeedId) && t.InstagramId.Equals(objInstagramFeed.InstagramId));
                             var task = Task.Run(async () =>
                             {
@@ -251,85 +302,85 @@ namespace SocioboardDataServices.Instagram
                             else
                             {
                                 FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objInstagramFeed.FeedId);
-                                var update = Builders<BsonDocument>.Update.Set("IsLike", objInstagramFeed.IsLike).Set("CommentCount", objInstagramFeed.CommentCount).Set("LikeCount", objInstagramFeed.LikeCount).Set("Type", objInstagramFeed.Type).Set("VideoUrl", objInstagramFeed.VideoUrl);
+                                var update = Builders<BsonDocument>.Update.Set("IsLike", objInstagramFeed.IsLike).Set("CommentCount", objInstagramFeed.CommentCount).Set("LikeCount", objInstagramFeed.LikeCount).Set("Type", objInstagramFeed.Type).Set("VideoUrl", objInstagramFeed.VideoUrl).Set("_InstagramComment", objInstagramFeed._InstagramComment);
                                 instagramFeedRepo.Update<Domain.Socioboard.Models.Mongo.InstagramFeed>(update, filter);
                             }
-                            List<Domain.Socioboard.Models.Mongo.InstagramComment> lstInstagramComment = new List<Domain.Socioboard.Models.Mongo.InstagramComment>();
-                            usercmts = objComment.GetComment(objInstagramFeed.FeedId, accessToken);
-                            if (usercmts.data.Count() > 0)
-                            {
-                                apiHitsCount++;
-                                for (int cmt = 0; cmt < usercmts.data.Count(); cmt++)
-                                {
-                                    try
-                                    {
-                                        Domain.Socioboard.Models.Mongo.InstagramComment objInstagramComment = new Domain.Socioboard.Models.Mongo.InstagramComment();
-                                        try
-                                        {
-                                            objInstagramComment.Comment = usercmts.data[cmt].text;
-                                        }
-                                        catch { }
-                                        try
-                                        {
-                                            objInstagramComment.CommentDate = Convert.ToDouble(usercmts.data[cmt].created_time.ToString());
-                                        }
-                                        catch { }
-                                        try
-                                        {
-                                            objInstagramComment.CommentId = usercmts.data[cmt].id;
-                                        }
-                                        catch { }
+                            //List<Domain.Socioboard.Models.Mongo.InstagramComment> lstInstagramComment = new List<Domain.Socioboard.Models.Mongo.InstagramComment>();
+                            //usercmts = objComment.GetComment(objInstagramFeed.FeedId, accessToken);
+                            //if (usercmts.data.Count() > 0)
+                            //{
+                            //    apiHitsCount++;
+                            //    for (int cmt = 0; cmt < usercmts.data.Count(); cmt++)
+                            //    {
+                            //        try
+                            //        {
+                            //            Domain.Socioboard.Models.Mongo.InstagramComment objInstagramComment = new Domain.Socioboard.Models.Mongo.InstagramComment();
+                            //            try
+                            //            {
+                            //                objInstagramComment.Comment = usercmts.data[cmt].text;
+                            //            }
+                            //            catch { }
+                            //            try
+                            //            {
+                            //                objInstagramComment.CommentDate = Convert.ToDouble(usercmts.data[cmt].created_time.ToString());
+                            //            }
+                            //            catch { }
+                            //            try
+                            //            {
+                            //                objInstagramComment.CommentId = usercmts.data[cmt].id;
+                            //            }
+                            //            catch { }
 
-                                        try
-                                        {
-                                            objInstagramComment.FeedId = objInstagramFeed.FeedId;
-                                        }
-                                        catch { }
-                                        try
-                                        {
-                                            objInstagramComment.InstagramId = instagramId;
-                                        }
-                                        catch { }
-                                        try
-                                        {
-                                            objInstagramComment.FromName = usercmts.data[cmt].from.username;
-                                        }
-                                        catch { }
-                                        try
-                                        {
-                                            objInstagramComment.FromProfilePic = usercmts.data[cmt].from.profile_picture;
-                                        }
-                                        catch { }
+                            //            try
+                            //            {
+                            //                objInstagramComment.FeedId = objInstagramFeed.FeedId;
+                            //            }
+                            //            catch { }
+                            //            try
+                            //            {
+                            //                objInstagramComment.InstagramId = instagramId;
+                            //            }
+                            //            catch { }
+                            //            try
+                            //            {
+                            //                objInstagramComment.FromName = usercmts.data[cmt].from.username;
+                            //            }
+                            //            catch { }
+                            //            try
+                            //            {
+                            //                objInstagramComment.FromProfilePic = usercmts.data[cmt].from.profile_picture;
+                            //            }
+                            //            catch { }
 
-                                        lstInstagramComment.Add(objInstagramComment);
-                                    }
-                                    catch (Exception ex)
-                                    {
+                            //            lstInstagramComment.Add(objInstagramComment);
+                            //        }
+                            //        catch (Exception ex)
+                            //        {
 
-                                    }
-                                }
-                                //Here you have to apply filter 
-                                if (lstInstagramComment != null)
-                                {
-                                    foreach (var itemss in lstInstagramComment)
-                                    {
-                                        // MongoRepository _CompanyPagePostsRepository = new MongoRepository("LinkedinCompanyPagePosts");
+                            //        }
+                            //    }
+                            //    //Here you have to apply filter 
+                            //    if (lstInstagramComment != null)
+                            //    {
+                            //        foreach (var itemss in lstInstagramComment)
+                            //        {
+                            //            // MongoRepository _CompanyPagePostsRepository = new MongoRepository("LinkedinCompanyPagePosts");
 
-                                        var ret1 = instagarmCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.CommentId == itemss.CommentId);
-                                        var task1 = Task.Run(async () =>
-                                        {
-                                            return await ret1;
-                                        });
-                                        int count1 = task1.Result.Count;
-                                        if (count1 <= 1)
-                                        {
-                                            instagarmCommentRepo.Add(itemss);
-                                        }
-                                    }
-                                }
+                            //            var ret1 = instagarmCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.CommentId == itemss.CommentId);
+                            //            var task1 = Task.Run(async () =>
+                            //            {
+                            //                return await ret1;
+                            //            });
+                            //            int count1 = task1.Result.Count;
+                            //            if (count1 <= 1)
+                            //            {
+                            //                instagarmCommentRepo.Add(itemss);
+                            //            }
+                            //        }
+                            //    }
 
-                                // instagarmCommentRepo.AddList(lstInstagramComment); 
-                            }
+                            //    // instagarmCommentRepo.AddList(lstInstagramComment); 
+                            //}
                         }
                         catch (Exception ex)
                         {

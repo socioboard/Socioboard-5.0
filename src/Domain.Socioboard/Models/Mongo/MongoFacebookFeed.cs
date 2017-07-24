@@ -33,6 +33,8 @@ namespace Domain.Socioboard.Models.Mongo
         public string Likecount { get; set; }
         public string postType { get; set; }
         public string postingFrom { get; set; }
+        public List<MongoFbPostComment> _facebookComment { get; set; }
+
     }
 
     public class facebookfeed

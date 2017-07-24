@@ -32,23 +32,23 @@
                                              
                                               <!--<div class="card-image waves-effect waves-block waves-light" ng-if="insfeed._InstagramFeed.type=='image'">-->
                                               <div class="card-image waves-effect waves-block waves-light">
-                                                  <img class="activator" src="{{insfeed._InstagramFeed.feedImageUrl}}" alt="imgs">
+                                                  <img class="activator" src="{{insfeed.feedImageUrl}}" alt="imgs">
                                               </div>
                                               <div class="card-content">
-                                                <span class="card-title activator grey-text text-darken-4">{{insfeed._InstagramFeed.adminUser}}<i class="mdi-navigation-more-vert right"></i></span>
+                                                <span class="card-title activator grey-text text-darken-4">{{insfeed.adminUser}}<i class="mdi-navigation-more-vert right"></i></span>
                                                   <p>
-                                                      <a ng-if="insfeed._InstagramFeed.isLike==0" ng-click="InstagramLikeUnLike(insfeed._InstagramFeed.likeCount,insfeed._InstagramFeed.isLike,insfeed._InstagramFeed.feedId,insfeed._InstagramFeed.instagramId)"><i class="icon-heart red-text"></i>{{insfeed._InstagramFeed.likeCount}} likes</a>
-                                                      <a ng-if="insfeed._InstagramFeed.isLike==1" ng-click="InstagramLikeUnLike(insfeed._InstagramFeed.likeCount,insfeed._InstagramFeed.isLike,insfeed._InstagramFeed.feedId,insfeed._InstagramFeed.instagramId)"><i class="fa fa-heart red-text"></i>{{insfeed._InstagramFeed.likeCount}} likes</a>
-                                                      {{insfeed._InstagramFeed.commentCount}} Comments
+                                                      <a ng-if="insfeed.isLike==0" ng-click="InstagramLikeUnLike(insfeed.likeCount,insfeed.isLike,insfeed.feedId,insfeed.instagramId)"><i class="icon-heart red-text"></i>{{insfeed.likeCount}} likes</a>
+                                                      <a ng-if="insfeed.isLike==1" ng-click="InstagramLikeUnLike(insfeed.likeCount,insfeed.isLike,insfeed.feedId,insfeed.instagramId)"><i class="fa fa-heart red-text"></i>{{insfeed.likeCount}} likes</a>
+                                                      {{insfeed.commentCount}} Comments
 
                                                   </p>
-                                                  <a ng-click="TaskModal(insfeed._InstagramFeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
+                                                  <a ng-click="TaskModal(insfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
                                                       <i class="icon-pin"></i>
                                                   </a>
                                               </div>
                                               <div class="card-reveal">
-                                                <span class="card-title grey-text text-darken-4">{{insfeed._InstagramFeed.adminUser}}<i class="mdi-navigation-close right"></i></span>
-                                                <p ng-if="insfeed._InstagramFeed.feed!=null">{{insfeed._InstagramFeed.feed}}</p>
+                                                <span class="card-title grey-text text-darken-4">{{insfeed.adminUser}}<i class="mdi-navigation-close right"></i></span>
+                                                <p ng-if="insfeed.feed!=null">{{insfeed.feed}}</p>
                                                 <div>
                                                   <ul class="collection instagramcommand">
                                                     <li class="collection-item avatar" ng-repeat="inscomment in insfeed._InstagramComment">
@@ -65,11 +65,11 @@
                                                       <form class="col s12">
                                                         <div class="row">
                                                           <div class="input-field col s10">
-                                                            <textarea id="postcomment{{insfeed._InstagramFeed.feedId}}" class="materialize-textarea"></textarea>
+                                                            <textarea id="postcomment{{insfeed.feedId}}" class="materialize-textarea"></textarea>
                                                             <label for="icon_prefix2">Add a comment…</label>
                                                           </div>
-                                                            <div ng-init="dispbtn= {{dispbtn}}"></div>
-                                                          <div ng-show="dispbtn" class="col s2" ng-click="AddInstagramComment(insfeed._InstagramFeed.feedId,insfeed._InstagramFeed.instagramId)">
+                                                            <!--<div ng-init="dispbtn= {{dispbtn}}"></div>-->
+                                                          <div ng-show="dispbtn" class="col s2" ng-click="AddInstagramComment(insfeed.feedId,insfeed.instagramId)">
                                                             <i class="icon-cursor instagram_text_color"></i>
                                                           </div>
                                                             <div ng-show="!dispbtn" class="col s2">

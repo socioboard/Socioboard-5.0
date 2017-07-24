@@ -1,8 +1,8 @@
 'use strict';
 
-SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $http, $modal, $timeout, $state,apiDomain,domain) {
+SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $http, $modal, $timeout, $state, apiDomain, domain) {
     //alert('helo');
-    
+
     $scope.$on('$viewContentLoaded', function () {
         $scope.dispbtn = true;
         $scope.check = false;
@@ -17,10 +17,13 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $scope.prfilemsg = "As per your plan you can add one profile per network If You want to add more profiles upgrade to higher business plan ";
             swal(prfilemsg);
         };
+
        
+
+
         var objappVersion = navigator.appVersion; var objAgent = navigator.userAgent; var objbrowserName = navigator.appName; var objfullVersion = '' + parseFloat(navigator.appVersion); var objBrMajorVersion = parseInt(navigator.appVersion, 10); var objOffsetName, objOffsetVersion, ix;
         if ((objOffsetVersion = objAgent.indexOf("Chrome")) != -1) {
-             objbrowserName = "Chrome"; objfullVersion = objAgent.substring(objOffsetVersion + 7);
+            objbrowserName = "Chrome"; objfullVersion = objAgent.substring(objOffsetVersion + 7);
         }
         else if ((objOffsetVersion = objAgent.indexOf("MSIE")) != -1) {
             objbrowserName = "Microsoft Internet Explorer"; objfullVersion = objAgent.substring(objOffsetVersion + 5);
@@ -40,7 +43,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         $scope.sessionData = function () {
             $http.post(domain + '/Home/SaveSessiondata?ip=' + $scope.Ip + '&userId=' + $rootScope.user.Id + '&browserName=' + objbrowserName + '&userAgent=' + navigator.userAgent)
                           .then(function (response) {
-                              setCookie("sociorevtoken",response.data,"90");
+                              setCookie("sociorevtoken", response.data, "90");
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -56,11 +59,21 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             var expires = "expires=" + d.toUTCString();
             document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         }
-       
-        $.getJSON('//ipapi.co/json/', function (data) {
-            $rootScope.Ip = data.ip;
-            $scope.sessionData();
-        });
+
+
+        $http.get('//ipapi.co/json/')
+            .then(function (response) {
+                //$scope.TwitterRecentFollower = response.data;
+                $rootScope.Ip = response.data.ip;
+                $scope.sessionData();
+            }, function (reason) {
+                $scope.error = reason.data;
+            });
+
+        //$.getJSON('//ipapi.co/json/', function (data) {
+        //    $rootScope.Ip = data.ip;
+        //    $scope.sessionData();
+        //});
 
 
         var getAllSelected = function () {
@@ -85,237 +98,240 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
         }
 
-       
+
         //Auth.login().success(function () { });
         $scope.getHttpsURL = function (obj) {
             return obj.replace("http:", "https:")
         };
-            if ($rootScope.lstAddFbPages != undefined) {
-                $('#FbFanpage_Modal').openModal();
-            }
-            if ($rootScope.lstaddlinpages != undefined) {
-                $('#LinCompanypage_Modal').openModal();
-            }
-            if ($rootScope.lstGanalytics != undefined) {
-                $('#GoogleAnalytics_Modal').openModal();
-            }
-            if ($rootScope.lstYoutube != undefined) {
-                $('#Youtube_Modal').openModal();
-            }
-            if ($rootScope.Downgrade == true) {
-                $('#ActiveProfileModal').openModal({ dismissible: false });
-            }
-            if ($rootScope.groupsdowngrade == true && ($rootScope.user.AccountType ==3 ||$rootScope.user.AccountType ==4 ||$rootScope.user.AccountType ==5 ||$rootScope.user.AccountType ==6 ||$rootScope.user.AccountType ==7)) {
-                $('#ActiveGroupModal').openModal({ dismissible: false });
-            }
+        if ($rootScope.lstAddFbPages != undefined) {
+            $('#FbFanpage_Modal').openModal();
+        }
+        if ($rootScope.lstReconnFbPages != undefined) {
+            $('#ReconnFanpage_Modal').openModal();
+        }
+        if ($rootScope.lstaddlinpages != undefined) {
+            $('#LinCompanypage_Modal').openModal();
+        }
+        if ($rootScope.lstGanalytics != undefined) {
+            $('#GoogleAnalytics_Modal').openModal();
+        }
+        if ($rootScope.lstYoutube != undefined) {
+            $('#Youtube_Modal').openModal();
+        }
+        if ($rootScope.Downgrade == true) {
+            $('#ActiveProfileModal').openModal({ dismissible: false });
+        }
+        if ($rootScope.groupsdowngrade == true && ($rootScope.user.AccountType == 3 || $rootScope.user.AccountType == 4 || $rootScope.user.AccountType == 5 || $rootScope.user.AccountType == 6 || $rootScope.user.AccountType == 7)) {
+            $('#ActiveGroupModal').openModal({ dismissible: false });
+        }
 
-            $scope.msgPagecloseModals = function () {
-                $rootScope.lstAddFbPages = undefined;
-                $rootScope.lstaddlinpages = undefined;
-            }
+        $scope.msgPagecloseModals = function () {
+            $rootScope.lstAddFbPages = undefined;
+            $rootScope.lstaddlinpages = undefined;
+            $rootScope.lstYoutube = undefined;
+            $rootScope.lstGanalytics = undefined;
+        }
         //codes to groupprofile for restriction
-            $scope.GetGroupProfiles = function () {
-              $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  $scope.getprofile = [];
-                                  $scope.getFbprofile = [];
-                                  $scope.getTwtprofile = [];
-                                  $scope.getInstaprofile = [];
-                                  $scope.getGplusprofile = [];
-                                  $scope.getGAprofile = [];
-                                  $scope.getLinkedInprofile = [];
-                                  $scope.getGAprofile = [];
-                                  $scope.getYoutubeprofile = [];
-                                  $scope.getPinprofile = [];
-                                  $scope.GroupProfiles = response.data;
-                                  var fbcount = 0;
-                                  var Twtcount = 0;
-                                  var Instacount = 0;
-                                  var Ytubecount = 0;
-                                  var Gpluscount = 0;
-                                  var GAcount = 0;
-                                  var LinkedIncount = 0;
-                                  var Pincount = 0;
-                                  angular.forEach($scope.GroupProfiles, function (value, key) {
-                                      if (value.profileType == 1 || value.profileType == 0) {
-                                          fbcount = fbcount + 1
-                                      }
-                                      else if (value.profileType == 2) {
-                                          Twtcount = Twtcount + 1
-                                      }
-                                      else if (value.profileType == 3 || value.profileType == 4) {
-                                          LinkedIncount = LinkedIncount + 1
-                                      }
+        $scope.GetGroupProfiles = function () {
+            $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfiles?groupId=' + $rootScope.groupId)
+                            .then(function (response) {
+                                $scope.getprofile = [];
+                                $scope.getFbprofile = [];
+                                $scope.getTwtprofile = [];
+                                $scope.getInstaprofile = [];
+                                $scope.getGplusprofile = [];
+                                $scope.getGAprofile = [];
+                                $scope.getLinkedInprofile = [];
+                                $scope.getGAprofile = [];
+                                $scope.getYoutubeprofile = [];
+                                $scope.getPinprofile = [];
+                                $scope.GroupProfiles = response.data;
+                                var fbcount = 0;
+                                var Twtcount = 0;
+                                var Instacount = 0;
+                                var Ytubecount = 0;
+                                var Gpluscount = 0;
+                                var GAcount = 0;
+                                var LinkedIncount = 0;
+                                var Pincount = 0;
+                                angular.forEach($scope.GroupProfiles, function (value, key) {
+                                    if (value.profileType == 1 || value.profileType == 0) {
+                                        fbcount = fbcount + 1
+                                    }
+                                    else if (value.profileType == 2) {
+                                        Twtcount = Twtcount + 1
+                                    }
+                                    else if (value.profileType == 3 || value.profileType == 4) {
+                                        LinkedIncount = LinkedIncount + 1
+                                    }
 
-                                      else if (value.profileType == 5) {
-                                          Gpluscount = Gpluscount + 1
-                                      }
-                                      else if (value.profileType == 7) {
-                                          Ytubecount = Ytubecount + 1
-                                      }
-                                      else if (value.profileType == 8) {
-                                          Instacount = Instacount + 1
-                                      }
-                                      else if (value.profileType == 10) {
-                                          GAcount = GAcount + 1
-                                      }
-                                      else if (value.profileType == 13) {
-                                          Pincount = Pincount + 1
-                                      };
-                                      ;
+                                    else if (value.profileType == 5) {
+                                        Gpluscount = Gpluscount + 1
+                                    }
+                                    else if (value.profileType == 7) {
+                                        Ytubecount = Ytubecount + 1
+                                    }
+                                    else if (value.profileType == 8) {
+                                        Instacount = Instacount + 1
+                                    }
+                                    else if (value.profileType == 10) {
+                                        GAcount = GAcount + 1
+                                    }
+                                    else if (value.profileType == 13) {
+                                        Pincount = Pincount + 1
+                                    };
+                                    ;
 
-                                  });
-                                  $scope.Fbcounts = fbcount;
-                                  $scope.Twtcounts = Twtcount;
-                                  $scope.Ytubecounts = Ytubecount;
-                                  $scope.LinkedIncounts = LinkedIncount;
-                                  $scope.Gpluscounts = Gpluscount;
-                                  $scope.Instacounts = Instacount;
-                                  $scope.GAcounts = GAcount;
-                                  $scope.Pincounts = Pincount;
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
+                                });
+                                $scope.Fbcounts = fbcount;
+                                $scope.Twtcounts = Twtcount;
+                                $scope.Ytubecounts = Ytubecount;
+                                $scope.LinkedIncounts = LinkedIncount;
+                                $scope.Gpluscounts = Gpluscount;
+                                $scope.Instacounts = Instacount;
+                                $scope.GAcounts = GAcount;
+                                $scope.Pincounts = Pincount;
+                            }, function (reason) {
+                                $scope.error = reason.data;
+                            });
+        }
         // end codes to groupprofile
 
-         //codes fetch all profiles start
-            $scope.fetchalllProfiles = function () {
-                $http.get(apiDomain + '/api/GroupProfiles/GetTop3GroupProfiles?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      $scope.lstAccountProfiles = response.data;
-                                     
-                                      
-                                          $scope.loaderclass = 'hide';
-                                      
-                                  }
-                                  else {
-                                      $scope.noLinkedpro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
-                                  }
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-            }
+        //codes fetch all profiles start
+        $scope.fetchalllProfiles = function () {
+            $http.get(apiDomain + '/api/GroupProfiles/GetTop3GroupProfiles?groupId=' + $rootScope.groupId)
+                          .then(function (response) {
+                              if (response.data != "") {
+                                  $rootScope.lstAccountProfiles = response.data;
+
+
+                                  $scope.loaderclass = 'hide';
+
+                              }
+                              else {
+                                  $scope.noLinkedpro = true;
+                                  setTimeout(function () {
+                                      $scope.loaderclass = 'hide';
+                                  }, 3000);
+                              }
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+        }
         // end codes fetch all profiles
 
         //codes to load  TwitterRecentFollower
-            $scope.TwitterRecentFollower = function () { 
-                $http.get(apiDomain + '/api/Twitter/TwitterRecentFollower?groupId=' + $rootScope.groupId)
-                              .then(function (response) {
-                                  $scope.TwitterRecentFollower = response.data;
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });  
-            }
+        $scope.TwitterRecentFollower = function () {
+            $http.get(apiDomain + '/api/Twitter/TwitterRecentFollower?groupId=' + $rootScope.groupId)
+                          .then(function (response) {
+                              $scope.TwitterRecentFollower = response.data;
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+        }
         // end codes to TwitterRecentFollower
 
-            $scope.ComposePostModal = function () {
-                $('#ComposePostModal').openModal();
-            }
+        $scope.ComposePostModal = function () {
+            $('#ComposePostModal').openModal();
+        }
 
-      
-            //code for compose message start
-            $scope.ComposeMessage = function () {
-               
-                var profiles = new Array();
-                $("#checkboxdata .subcheckbox").each(function () {
-                   
-                    var attrId = $(this).attr("id");
-                    if (document.getElementById(attrId).checked == false) {
-                        var index = profiles.indexOf(attrId);
-                        if (index > -1) {
-                            profiles.splice(index, 1);
+
+        //code for compose message start
+        $scope.ComposeMessage = function () {
+
+            var profiles = new Array();
+            $("#checkboxdata .subcheckbox").each(function () {
+
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profiles.indexOf(attrId);
+                    if (index > -1) {
+                        profiles.splice(index, 1);
+                    }
+                } else {
+                    profiles.push(attrId);
+                }
+            });
+
+            $scope.dispbtn = false;
+            // var profiles = $('#composeProfiles').val();
+            var message = $('#composeMessage').val();
+            var updatedmessage = "";
+            var testmsg = message;
+            message = encodeURIComponent(message);
+            //var postdata = message.split("\n");
+            //for (var i = 0; i < postdata.length; i++) {
+            //    updatedmessage = updatedmessage + "<br>" + postdata[i];
+            //}
+            // updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+
+
+            if (profiles.length != 0 && /\S/.test(testmsg)) {
+                $scope.checkfile();
+                if ($scope.check == true) {
+                    var formData = new FormData();
+                    formData.append('files', $("#composeImage").get(0).files[0]);
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus,
+                        data: formData,
+                        headers: {
+                            'Content-Type': undefined
+                        },
+                        transformRequest: angular.identity,
+                    }).then(function (response) {
+                        if (response.data == "Posted") {
+                            $scope.dispbtn = true;
+                            $('#ComposePostModal').closeModal();
+                            swal('Message composed successfully');
                         }
-                    } else {
-                        profiles.push(attrId);
-                    }
-                });
 
-                $scope.dispbtn = false;
-               // var profiles = $('#composeProfiles').val();
-                var message = $('#composeMessage').val();
-                var updatedmessage = "";
-                var testmsg=message;
-                message = encodeURIComponent(message);
-                //var postdata = message.split("\n");
-                //for (var i = 0; i < postdata.length; i++) {
-                //    updatedmessage = updatedmessage + "<br>" + postdata[i];
-                //}
-                // updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+                    }, function (reason) {
 
-              
-                    if (profiles.length != 0 && /\S/.test(testmsg)) {
-                    $scope.checkfile();
-                    if ($scope.check == true) {
-                        var formData = new FormData();
-                        formData.append('files', $("#composeImage").get(0).files[0]);
-                        $http({
-                            method: 'POST',
-                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus,
-                            data: formData,
-                            headers: {
-                                'Content-Type': undefined
-                            },
-                            transformRequest: angular.identity,
-                        }).then(function (response) {
-                            if (response.data == "Posted") {
-                                $scope.dispbtn = true;
-                                $('#ComposePostModal').closeModal();
-                                swal('Message composed successfully');
-                            }
-
-                        }, function (reason) {
-                            
-                        });
-                    }
-                    else {
-                        alertify.set({ delay: 3000 });
-                        alertify.error("File extension is not valid. Please upload an image file");
-                        $('#input-file-now').val('');
-                    }
+                    });
                 }
                 else {
-                    $scope.dispbtn = true;
-                    if (profiles.length == 0) {
-                        swal('Please select a profile');
-                    }
-                    else {
-                        swal('Please enter some text to compose this message');
-                    }
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File extension is not valid. Please upload an image file");
+                    $('#input-file-now').val('');
                 }
             }
-            //code for compose message end
-
-            //code for checking the file format start
-            $scope.checkfile = function () {
-                var filesinput = $('#composeImage');//composeImage
-                var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
-                if (filesinput != undefined && filesinput[0].files[0] != null) {
-                    if ($scope.hasExtension('#composeImage', fileExtension)) {
-                        $scope.check = true;
-                    }
-                    else
-                    {
-                        $scope.check = false;
-                    }
+            else {
+                $scope.dispbtn = true;
+                if (profiles.length == 0) {
+                    swal('Please select a profile');
                 }
-                else
-                {
+                else {
+                    swal('Please enter some text to compose this message');
+                }
+            }
+        }
+        //code for compose message end
+
+        //code for checking the file format start
+        $scope.checkfile = function () {
+            var filesinput = $('#composeImage');//composeImage
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
+            if (filesinput != undefined && filesinput[0].files[0] != null) {
+                if ($scope.hasExtension('#composeImage', fileExtension)) {
                     $scope.check = true;
                 }
+                else {
+                    $scope.check = false;
+                }
             }
-            $scope.hasExtension = function (inputID, exts) {
-                var fileName = $('#composeImage').val();
-                return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+            else {
+                $scope.check = true;
             }
-            //code for checking the file format end
+        }
+        $scope.hasExtension = function (inputID, exts) {
+            var fileName = $('#composeImage').val();
+            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+        }
+        //code for checking the file format end
 
-          // codes to draft message start
-            $scope.draftMsg = function () {
+        // codes to draft message start
+        $scope.draftMsg = function () {
             $scope.draftbtn = false;
             var message = $('#composeMessage').val();
             var updatedmessage = "";
@@ -328,11 +344,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             updatedmessage = updatedmessage.replace("+", 'ppp');
             updatedmessage = updatedmessage.replace("-+", 'jjj');
             message = updatedmessage;
-          
+
             if (message != "" && message != undefined) {
                 $scope.checkfile();
-                if ($scope.check == true)
-                {
+                if ($scope.check == true) {
                     var formData = new FormData();
                     formData.append('files', $("#composeImage").get(0).files[0]);
                     //$scope.dispbtn = false;
@@ -351,17 +366,16 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         $('#ComposePostModal').closeModal();
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                       
+
                     });
                 }
 
-                else if ($scope.check == false) 
-                {
+                else if ($scope.check == false) {
                     var formData = new FormData();
                     $scope.draftbtn = false;
                     $http({
                         method: 'POST',
-                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' +""+ '&groupId=' + $rootScope.groupId,
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + "" + '&groupId=' + $rootScope.groupId,
                         data: formData,
                         headers: {
                             'Content-Type': undefined
@@ -374,7 +388,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         $('#ComposePostModal').closeModal();
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                       
+
                     });
                 }
                 else {
@@ -386,574 +400,575 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             else {
                 swal('Please type a message to save in draft');
             }
-            }
-           //codes for draft message end
+        }
+        //codes for draft message end
 
-            $scope.contentFeeds = function (key) {
-                $rootScope.keyword = key;
-                $state.go('rss_news');       
-                //$state.go('schedulemessage');
-            }
+        $scope.contentFeeds = function (key) {
+            $rootScope.keyword = key;
+            $state.go('rss_news');
+            //$state.go('schedulemessage');
+        }
 
-
+        if ($rootScope.lstAccountProfiles == undefined) {
             $scope.fetchalllProfiles();
-            $scope.GetGroupProfiles();
-            $scope.TwitterRecentFollower();
-           
-            //$scope.fetchYTChannels();
+        } else {
+            $scope.loaderclass = 'hide';
+        }
+       // $scope.GetGroupProfiles();
+        $scope.TwitterRecentFollower();
 
-            $scope.deleteProfile = function (profileId) {
-               
-                swal({
-                    title: "Are you sure?",
-                    text: "You will not be able to send any message via this account!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it!",
-                    closeOnConfirm: false
-                },
-                function () {
-               
+        //$scope.fetchYTChannels();
 
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
-                    }).then(function (response) {
-                        if (response.data == "Deleted") {
-                           // swal("Deleted!", "Your profile has been deleted", "Success");
-                            swal("Deleted!", "Account is deleted", "success");
-                        }
-                        window.location.reload();
-                        });
-                    //    else {
-                    //        //  swal("Deleted!", response.data, "success");
-                    //        swal("Deleted!","success");
-                    //    }
+        $scope.deleteProfile = function (profileId) {
 
-                    //}, function (reason) {
-                    //    // swal("Deleted!", reason, "success");
-                    //    swal("Deleted!","success");
-                    //});
-
-                    //todo: code to delete profile
-                });
-            }
-
-            $scope.deleteGpProfile = function (profileId) {
-              
-                swal({
-                    title: "Are you sure?",
-                    text: "You will not able to see any feeds from this account!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it!",
-                    closeOnConfirm: false
-                },
-                function () {
-                
-
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
-                    }).then(function (response) {
-                        if (response.data == "Deleted") {
-                           // swal("Deleted!", "Your profile has been deleted", "Success");
-                            swal("Deleted!", "Account is deleted", "success");
-                        }
-                        window.location.reload();
-                        });
-
-                });
-            }
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to send any message via this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+            function () {
 
 
-            $scope.deleteGaProfile = function (profileId) {
-           
-                swal({
-                    title: "Are you sure?",
-                    text: "You will not able to see any data from this account!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it!",
-                    closeOnConfirm: false
-                },
-                function () {
-                    
-
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
-                    }).then(function (response) {
-                        if (response.data == "Deleted") {
-                            // swal("Deleted!", "Your profile has been deleted", "Success");
-                            swal("Deleted!", "Account is deleted", "success");
-                        }
-                        window.location.reload();
-                    });
-
-                });
-            }
-
-            $scope.deleteChannel = function (profileId) {
-               
-                swal({
-                    title: "Are you sure?",
-                    text: "You will not be able to send any video via this account!",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "Yes, delete it!",
-                    closeOnConfirm: false
-                },
-                function () {
-                  
-
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
-                    }).then(function (response) {
-                        if (response.data == "Deleted") {
-                            // swal("Deleted!", "Your profile has been deleted", "Success");
-                            swal("Deleted!", "Account is deleted", "success");
-                        }
-                        window.location.reload();
-                    });
-                    //    else {
-                    //        //  swal("Deleted!", response.data, "success");
-                    //        swal("Deleted!","success");
-                    //    }
-
-                    //}, function (reason) {
-                    //    // swal("Deleted!", reason, "success");
-                    //    swal("Deleted!","success");
-                    //});
-
-                    //todo: code to delete profile
-                });
-            }
-
-
-            //codes to add linkedin pages
-            $scope.toggleLinkedinProfileSelection = function (profileid, token, name) {
-                var idx = $scope.selectedLinkedinProfiles.indexOf(profileid, token, name);
-                var data = "";
-                // is currently selected
-                if (idx > -1) {
-                    $scope.selectedLinkedinProfiles.splice(idx, 1);
-                }
-
-                    // is newly selected
-                else {
-                    data = profileid + '<:>' + token + '<:>' + name;
-                    $scope.selectedLinkedinProfiles.push(data);
-                }
-            };
-            $scope.selectedLinkedinProfiles = [];
-            $scope.selecteLinkedinProfiles = [];
-            $scope.addcompanypages = function () {
-
-                angular.forEach($rootScope.lstProfiles, function (value, key) {
-                    if (value.profileType == 4) {
-                        if ($rootScope.lstaddlinpages.indexOf(value.profileId) == -1) {
-
-                            $scope.selecteLinkedinProfiles.push(value.profileId);
-                        }
-
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                }).then(function (response) {
+                    if (response.data == "Deleted") {
+                        // swal("Deleted!", "Your profile has been deleted", "Success");
+                        swal("Deleted!", "Account is deleted", "success");
                     }
+                    window.location.reload();
                 });
+                //    else {
+                //        //  swal("Deleted!", response.data, "success");
+                //        swal("Deleted!","success");
+                //    }
 
-                if ($scope.selectedLinkedinProfiles.length > 0) {
-                    // $scope.modalinstance.dismiss('cancel');
-                    var formData = new FormData();
-                    formData.append('profileaccesstoken', $scope.selectedLinkedinProfiles);
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/LinkedIn/AddLinkedInPages?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
-                        data: formData,
-                        headers: {
-                            'Content-Type': undefined
-                        },
-                        transformRequest: angular.identity,
+                //}, function (reason) {
+                //    // swal("Deleted!", reason, "success");
+                //    swal("Deleted!","success");
+                //});
 
-                    }).then(function (response) {
-                        if (response.status == 200) {
-                            window.location.reload();
-                            swal(response.data);
-                        }
-                    }, function (reason) {
-                        swal("Error!");
-                    });
-                } else if ($scope.selecteLinkedinProfiles.length > 0) {
-                    swal("This page is already added");
-                }
-                else {
-                    swal("Select atleast one page to add!");
-                }
-            }
-            // end codes to add linkedin pages
+                //todo: code to delete profile
+            });
+        }
+
+        $scope.deleteGpProfile = function (profileId) {
+
+            swal({
+                title: "Are you sure?",
+                text: "You will not able to see any feeds from this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+            function () {
 
 
-            //codes to add facebook pages
-            $scope.toggleFbPageProfileSelection = function (option) {
-                var idx = $scope.selectedFbPageProfiles.indexOf(option);
-
-                // is currently selected
-                if (idx > -1) {
-                    $scope.selectedFbPageProfiles.splice(idx, 1);
-                }
-
-                    // is newly selected
-                else {
-                    $scope.selectedFbPageProfiles.push(option);
-                }
-            };
-            $scope.selectedFbPageProfiles = [];
-            $scope.selecteFbPageProfiles = [];
-           // toggleGAeProfileSelection();
-            $scope.AddFacebookPages = function () {
-                angular.forEach($rootScope.lstProfiles, function (value, key) {
-                    if (value.profileType == 1) {
-                        if ($rootScope.lstAddFbPages.indexOf(value.profileId) == -1) {
-                           
-                            $scope.selecteFbPageProfiles.push(value.profileId);
-                        }
-                       
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                }).then(function (response) {
+                    if (response.data == "Deleted") {
+                        // swal("Deleted!", "Your profile has been deleted", "Success");
+                        swal("Deleted!", "Account is deleted", "success");
                     }
+                    window.location.reload();
                 });
-             
-                if ($scope.selectedFbPageProfiles.length > 0) {
-                    //$scope.modalinstance.dismiss('cancel');
-                    var formData = new FormData();
-                    formData.append('profileaccesstoken', $scope.selectedFbPageProfiles);
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/Facebook/AddFacebookPages?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
-                        data: formData,
-                        headers: {
-                            'Content-Type': undefined
-                        },
-                        transformRequest: angular.identity,
 
-                    }).then(function (response) {
-                        if (response.status == 200) {
-                            window.location.reload();
-                            swal(response.data);
-                        }
-                    }, function (reason) {
-                        swal("Error!");
-                    });
-                } else if ($scope.selecteFbPageProfiles.length > 0)
-                {
-                    swal("This page is already added");
-                }
-                else {
-                    swal("Select atleast one page to add!");
-                }
-            }
-            //end codes to add facebook pages
+            });
+        }
 
 
-            //code to add Ga Sites
-            $scope.toggleGAeProfileSelection = function (AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl,internalWebPropertyId) {
-                var idx = $scope.selectedGAPageProfiles.indexOf(AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl, internalWebPropertyId);
-                var data = "";
-                // is currently selected
-                if (idx > -1) {
-                    $scope.selectedGAPageProfiles.splice(idx, 1);
-                }
+        $scope.deleteGaProfile = function (profileId) {
 
-                    // is newly selected
-                else {
-                    data = AccessToken + '<:>' + RefreshToken + '<:>' + AccountId + '<:>' + AccountName + '<:>' + EmailId + '<:>' + ProfileId + '<:>' + ProfileName + '<:>' + WebPropertyId + '<:>' + WebsiteUrl + '<:>' + internalWebPropertyId;
-                    $scope.selectedGAPageProfiles.push(data);
-                }
-            }
-            $scope.selectedGAPageProfiles = [];
-            $scope.selecteGAPageProfiles = [];
-            $scope.AddGaSites = function () {
-                angular.forEach($rootScope.lstProfiles, function (value, key) {
-                    if (value.profileType == 10) {
-                        if ($rootScope.lstGanalytics.indexOf(value.profileId) == -1) {
+            swal({
+                title: "Are you sure?",
+                text: "You will not able to see any data from this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+            function () {
 
-                            $scope.selecteGAPageProfiles.push(value.profileId);
-                        }
 
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                }).then(function (response) {
+                    if (response.data == "Deleted") {
+                        // swal("Deleted!", "Your profile has been deleted", "Success");
+                        swal("Deleted!", "Account is deleted", "success");
                     }
+                    window.location.reload();
                 });
 
+            });
+        }
 
-                if ($scope.selectedGAPageProfiles.length > 0) {
-                    var formData = new FormData();
-                    formData.append('profileaccesstoken', $scope.selectedGAPageProfiles);
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/Google/AddGaSites?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
-                        data: formData,
-                        headers: {
-                            'Content-Type': undefined
-                        },
-                        transformRequest: angular.identity,
+        $scope.deleteChannel = function (profileId) {
 
-                    }).then(function (response) {
-                        if (response.status == 200) {
-                            window.location.reload();
-                            swal(response.data);
-                        }
-                    }, function (reason) {
-                        swal("Error!");
-                    });
-                }
-                else if ($scope.selecteGAPageProfiles.length > 0) {
-                    swal("This account is already added");
-                }
-                else {
-                    swal("Select atleast one page to add!");
-                }
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to send any video via this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+            function () {
+
+
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                }).then(function (response) {
+                    if (response.data == "Deleted") {
+                        // swal("Deleted!", "Your profile has been deleted", "Success");
+                        swal("Deleted!", "Account is deleted", "success");
+                    }
+                    window.location.reload();
+                });
+                //    else {
+                //        //  swal("Deleted!", response.data, "success");
+                //        swal("Deleted!","success");
+                //    }
+
+                //}, function (reason) {
+                //    // swal("Deleted!", reason, "success");
+                //    swal("Deleted!","success");
+                //});
+
+                //todo: code to delete profile
+            });
+        }
+
+
+        //codes to add linkedin pages
+        $scope.toggleLinkedinProfileSelection = function (profileid, token, name) {
+            var idx = $scope.selectedLinkedinProfiles.indexOf(profileid + '<:>' + token + '<:>' + name);
+            var data = "";
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedLinkedinProfiles.splice(idx, 1);
             }
-            //end codes to add Ga Sites
+
+                // is newly selected
+            else {
+                data = profileid + '<:>' + token + '<:>' + name;
+                $scope.selectedLinkedinProfiles.push(data);
+            }
+        };
+        $scope.selectedLinkedinProfiles = [];
+        $scope.selecteLinkedinProfiles = [];
+        $scope.addcompanypages = function () {
+
+            angular.forEach($rootScope.lstProfiles, function (value, key) {
+                if (value.profileType == 4) {
+                    if ($rootScope.lstaddlinpages.indexOf(value.profileId) == -1) {
+
+                        $scope.selecteLinkedinProfiles.push(value.profileId);
+                    }
+
+                }
+            });
+
+            if ($scope.selectedLinkedinProfiles.length > 0) {
+                // $scope.modalinstance.dismiss('cancel');
+                var formData = new FormData();
+                formData.append('profileaccesstoken', $scope.selectedLinkedinProfiles);
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/LinkedIn/AddLinkedInPages?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        window.location.reload();
+                        swal(response.data);
+                    }
+                }, function (reason) {
+                    swal("Error!");
+                });
+            } else if ($scope.selecteLinkedinProfiles.length > 0) {
+                swal("This page is already added");
+            }
+            else {
+                swal("Select atleast one page to add!");
+            }
+        }
+        // end codes to add linkedin pages
+
+
+        //codes to add facebook pages
+        $scope.toggleFbPageProfileSelection = function (option) {
+            var idx = $scope.selectedFbPageProfiles.indexOf(option);
+
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedFbPageProfiles.splice(idx, 1);
+            }
+
+                // is newly selected
+            else {
+                $scope.selectedFbPageProfiles.push(option);
+            }
+        };
+        $scope.selectedFbPageProfiles = [];
+        $scope.selecteFbPageProfiles = [];
+        // toggleGAeProfileSelection();
+        $scope.AddFacebookPages = function () {
+            angular.forEach($rootScope.lstProfiles, function (value, key) {
+                if (value.profileType == 1) {
+                    if ($rootScope.lstAddFbPages.indexOf(value.profileId) == -1) {
+
+                        $scope.selecteFbPageProfiles.push(value.profileId);
+                    }
+
+                }
+            });
+
+            if ($scope.selectedFbPageProfiles.length > 0) {
+                //$scope.modalinstance.dismiss('cancel');
+                var formData = new FormData();
+                formData.append('profileaccesstoken', $scope.selectedFbPageProfiles);
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/Facebook/AddFacebookPages?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        window.location.reload();
+                        swal(response.data);
+                    }
+                }, function (reason) {
+                    swal("Error!");
+                });
+            } else if ($scope.selecteFbPageProfiles.length > 0) {
+                swal("This page is already added");
+            }
+            else {
+                swal("Select atleast one page to add!");
+            }
+        }
+        //end codes to add facebook pages
+
+
+        //code to add Ga Sites
+        $scope.toggleGAeProfileSelection = function (AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl, internalWebPropertyId) {
+            var idx = $scope.selectedGAPageProfiles.indexOf(AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl, internalWebPropertyId);
+            var data = "";
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedGAPageProfiles.splice(idx, 1);
+            }
+
+                // is newly selected
+            else {
+                data = AccessToken + '<:>' + RefreshToken + '<:>' + AccountId + '<:>' + AccountName + '<:>' + EmailId + '<:>' + ProfileId + '<:>' + ProfileName + '<:>' + WebPropertyId + '<:>' + WebsiteUrl + '<:>' + internalWebPropertyId;
+                $scope.selectedGAPageProfiles.push(data);
+            }
+        }
+        $scope.selectedGAPageProfiles = [];
+        $scope.selecteGAPageProfiles = [];
+        $scope.AddGaSites = function () {
+            angular.forEach($rootScope.lstProfiles, function (value, key) {
+                if (value.profileType == 10) {
+                    if ($rootScope.lstGanalytics.indexOf(value.profileId) == -1) {
+
+                        $scope.selecteGAPageProfiles.push(value.profileId);
+                    }
+
+                }
+            });
+
+
+            if ($scope.selectedGAPageProfiles.length > 0) {
+                var formData = new FormData();
+                formData.append('profileaccesstoken', $scope.selectedGAPageProfiles);
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/Google/AddGaSites?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        window.location.reload();
+                        swal(response.data);
+                    }
+                }, function (reason) {
+                    swal("Error!");
+                });
+            }
+            else if ($scope.selecteGAPageProfiles.length > 0) {
+                swal("This account is already added");
+            }
+            else {
+                swal("Select atleast one page to add!");
+            }
+        }
+        //end codes to add Ga Sites
 
         //code to add Youtube Channels
 
-            var access;
-            var chaid;
+        var access;
+        var chaid;
 
-            $scope.toggleYTProfileSelection = function (Accesstoken, Refreshtoken, YtChannelId, YtChannelName, YtChannelDescrip, PublishDate, viewscount, commentscount, videoscount, YtChannelImage, subscriberscount) {
-                var idx = $scope.selectedYTChannels.indexOf(Accesstoken, Refreshtoken, YtChannelId, YtChannelName, YtChannelDescrip, PublishDate, viewscount, commentscount, videoscount, YtChannelImage, subscriberscount);
+        $scope.toggleYTProfileSelection = function (Accesstoken, Refreshtoken, YtChannelId, YtChannelName, YtChannelDescrip, PublishDate, viewscount, commentscount, videoscount, YtChannelImage, subscriberscount) {
+            var idx = $scope.selectedYTChannels.indexOf(Accesstoken, Refreshtoken, YtChannelId, YtChannelName, YtChannelDescrip, PublishDate, viewscount, commentscount, videoscount, YtChannelImage, subscriberscount);
 
-                access = Accesstoken;
-                chaid = YtChannelId;
+            access = Accesstoken;
+            chaid = YtChannelId;
 
-                var data = "";
-                // is currently selected
-                if (idx > -1) {
-                    $scope.selectedYTChannels.splice(idx, 1);
-                }
-
-                    // is newly selected
-                else {
-                    data = Accesstoken + '<:>' + Refreshtoken + '<:>' + YtChannelId + '<:>' + YtChannelName + '<:>' + YtChannelDescrip + '<:>' + PublishDate + '<:>' + viewscount + '<:>' + commentscount + '<:>' + videoscount + '<:>' + YtChannelImage + '<:>' + subscriberscount;
-                    $scope.selectedYTChannels.push(data);
-                }
+            var data = "";
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedYTChannels.splice(idx, 1);
             }
-            $scope.selectedYTChannels = [];
-            $scope.selecteYTChannels = [];
-            $scope.AddYTChannels = function () {
-                angular.forEach($rootScope.lstProfiles, function (value, key) {
-                    if (value.profileType == 10) {
-                        if ($rootScope.lstYoutube.indexOf(value.profileId) == -1) {
 
-                            $scope.selecteYTChannels.push(value.profileId);
-                        }
+                // is newly selected
+            else {
+                data = Accesstoken + '<:>' + Refreshtoken + '<:>' + YtChannelId + '<:>' + YtChannelName + '<:>' + YtChannelDescrip + '<:>' + PublishDate + '<:>' + viewscount + '<:>' + commentscount + '<:>' + videoscount + '<:>' + YtChannelImage + '<:>' + subscriberscount;
+                $scope.selectedYTChannels.push(data);
+            }
+        }
+        $scope.selectedYTChannels = [];
+        $scope.selecteYTChannels = [];
+        $scope.AddYTChannels = function () {
+            angular.forEach($rootScope.lstProfiles, function (value, key) {
+                if (value.profileType == 10) {
+                    if ($rootScope.lstYoutube.indexOf(value.profileId) == -1) {
 
+                        $scope.selecteYTChannels.push(value.profileId);
                     }
+
+                }
+            });
+
+
+            if ($scope.selectedYTChannels.length > 0) {
+                var formData = new FormData();
+                formData.append('profileaccesstoken', $scope.selectedYTChannels);
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/Google/AddYoutubeChannels?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        window.location.reload();
+                        swal(response.data);
+                        $scope.addinitialfeeds(access, chaid);
+                    }
+                }, function (reason) {
+                    swal("Error!");
                 });
-
-
-                if ($scope.selectedYTChannels.length > 0) {
-                    var formData = new FormData();
-                    formData.append('profileaccesstoken', $scope.selectedYTChannels);
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/Google/AddYoutubeChannels?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
-                        data: formData,
-                        headers: {
-                            'Content-Type': undefined
-                        },
-                        transformRequest: angular.identity,
-
-                    }).then(function (response) {
-                        if (response.status == 200) {
-                            window.location.reload();
-                            swal(response.data);
-                            $scope.addinitialfeeds(access, chaid);
-                        }
-                    }, function (reason) {
-                        swal("Error!");
-                    });
-                }
-                else if ($scope.selecteYTChannels.length > 0) {
-                    swal("This channel is already added");
-                }
-                else {
-                    swal("Select atleast one channel to add!");
-                }
             }
+            else if ($scope.selecteYTChannels.length > 0) {
+                swal("This channel is already added");
+            }
+            else {
+                swal("Select atleast one channel to add!");
+            }
+        }
         //end codes to add Youtube Channels
 
         //code for addselected profiles
-            $scope.toggleProfileSelection = function (profileid) {
-                var idx = $scope.selectedProfiles.indexOf(profileid);
-                var data = "";
-                // is currently selected
-                if (idx > -1) {
-                    $scope.selectedProfiles.splice(idx, 1);
-                }
+        $scope.toggleProfileSelection = function (profileid) {
+            var idx = $scope.selectedProfiles.indexOf(profileid);
+            var data = "";
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedProfiles.splice(idx, 1);
+            }
 
-                    // is newly selected
-                else {
-                    data = profileid;
-                    $scope.selectedProfiles.push(data);
-                }
-            };
+                // is newly selected
+            else {
+                data = profileid;
+                $scope.selectedProfiles.push(data);
+            }
+        };
         //end code 
-            $scope.selectedProfiles = [];
+        $scope.selectedProfiles = [];
 
 
-            $scope.AddSelectedProfiles = function () {
-               
-                if ($scope.selectedProfiles.length <= $rootScope.MaxCount) {
-                    var formData = new FormData();
-                    formData.append('selectedProfiles', $scope.selectedProfiles);
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/GroupProfiles/AddSelectedProfiles?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
-                        data: formData,
-                        headers: {
-                            'Content-Type': undefined
-                        },
-                        transformRequest: angular.identity,
+        $scope.AddSelectedProfiles = function () {
 
-                    }).then(function (response) {
+            if ($scope.selectedProfiles.length <= $rootScope.MaxCount) {
+                var formData = new FormData();
+                formData.append('selectedProfiles', $scope.selectedProfiles);
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupProfiles/AddSelectedProfiles?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        $('#ActiveProfileModal').closeModal();
+                        $rootScope.Downgrade = false;
+                        window.location.reload();
+                        // swal(response.data);
+                    }
+                }, function (reason) {
+                    swal("Error!");
+                });
+            }
+            else {
+                swal('please select ' + $rootScope.MaxCount + ' Profiles');
+            }
+
+        }
+
+        //Selected groups
+        //code for addselected profiles
+        $scope.toggleGroupsSelection = function (profileid) {
+            var idx = $scope.selectedGroups.indexOf(profileid);
+            var data = "";
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedGroups.splice(idx, 1);
+            }
+
+                // is newly selected
+            else {
+                data = profileid;
+                $scope.selectedGroups.push(data);
+            }
+        };
+        //end code 
+        $scope.selectedGroups = [];
+        //End
+        //Add selected Groups
+        $scope.AddSelectedGroups = function () {
+          
+            if ($scope.selectedGroups.length <= $rootScope.groupsMaxCount) {
+                var formData = new FormData();
+                formData.append('selectedGroups', $scope.selectedGroups);
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/Groups/AddSelectedGroups?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },
+                    transformRequest: angular.identity,
+
+                })
+                    .then(function (response) {
                         if (response.status == 200) {
-                            $('#ActiveProfileModal').closeModal();
-                            $rootScope.Downgrade = false;
+                            $('#ActiveGroupModal').closeModal();
+                            $rootScope.groupsdowngrade = false;
                             window.location.reload();
-                           // swal(response.data);
+                            // swal(response.data);
                         }
                     }, function (reason) {
                         swal("Error!");
                     });
-                }
-                else {
-                    swal('please select ' + $rootScope.MaxCount + ' Profiles');
-                }
-
+            }
+            else {
+                swal('please select ' + $rootScope.groupsMaxCount + ' Groups');
             }
 
-        //Selected groups
-        //code for addselected profiles
-            $scope.toggleGroupsSelection = function (profileid) {
-                var idx = $scope.selectedGroups.indexOf(profileid);
-                var data = "";
-                // is currently selected
-                if (idx > -1) {
-                    $scope.selectedGroups.splice(idx, 1);
-                }
-
-                    // is newly selected
-                else {
-                    data = profileid;
-                    $scope.selectedGroups.push(data);
-                }
-            };
-        //end code 
-            $scope.selectedGroups = [];
-        //End
-        //Add selected Groups
-            $scope.AddSelectedGroups = function () {
-                debugger;
-                if ($scope.selectedGroups.length <= $rootScope.groupsMaxCount) {
-                    var formData = new FormData();
-                    formData.append('selectedGroups', $scope.selectedGroups);
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/Groups/AddSelectedGroups?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
-                        data: formData,
-                        headers: {
-                            'Content-Type': undefined
-                        },
-                        transformRequest: angular.identity,
-
-                    })
-                        .then(function (response) {
-                            if (response.status == 200) {
-                                $('#ActiveGroupModal').closeModal();
-                                $rootScope.groupsdowngrade = false;
-                                window.location.reload();
-                                // swal(response.data);
-                            }
-                        }, function (reason) {
-                            swal("Error!");
-                        });
-                }
-                else {
-                    swal('please select ' + $rootScope.groupsMaxCount + ' Groups');
-                }
-
-            }
+        }
         //End
 
         $scope.Addfacebookpagebyurl = function () {
-                var url = $('#_txtinputurl').val();
-                if (url != "" && url.indexOf('facebook') > 0) {
-                    //codes to load  Gplus profiles start
-                    $http.get(apiDomain + '/api/Facebook/AddFacebookPagesByUrl?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&url=' + url)
-                                  .then(function (response) {
-                                      if (response.data!="")
-                                      {
-                                          swal(response.data)
-                                          $('#_txtinputurl').val('');
-                                          if (response.data == "added successfully") {
-                                              window.location.reload();
-                                          }
-                                      }
-                                      
-
-
-                                  }, function (reason) {
-                                      $scope.error = reason.data;
-                                  });
-                    // end codes to load Gplus profiles
-                }
-                else {
-                    swal("Please Enter a valid url");
-                }
-            }
-
-
-            $scope.changeGroup = function (groupId) {
-                $http.get(domain + '/Home/changeSelectdGroupId?groupId=' + groupId)
+            var url = $('#_txtinputurl').val();
+            if (url != "" && url.indexOf('facebook') > 0) {
+                //codes to load  Gplus profiles start
+                $http.get(apiDomain + '/api/Facebook/AddFacebookPagesByUrl?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&url=' + url)
                               .then(function (response) {
-                                  if (response.data == "changed") {
-                                      $rootScope.groupId = groupId;
-                                      window.location.reload();
+                                  if (response.data != "") {
+                                      swal(response.data)
+                                      $('#_txtinputurl').val('');
+                                      if (response.data == "added successfully") {
+                                          window.location.reload();
+                                      }
                                   }
+
+
+
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
+                // end codes to load Gplus profiles
             }
-
-            $scope.followChange = function () {
-
-                if ($('#TwitterFollow').is(':checked')) {
-                 
-                    document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount?follow=true");
-                }
-                else {
-                 
-
-                    document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount");
-                }
+            else {
+                swal("Please Enter a valid url");
             }
-            dashboard();
-            $('#tags').tagsInput();
+        }
 
-            //add initial youtube feeds to mongo
-            $scope.addinitialfeeds = function (accesstoken,channelid) {
 
-                            $http({
-                                method: 'POST',
-                                url: apiDomain + '/api/Google/AddYoutubeFeed?accesstoken=' + accesstoken + '&channelid=' + channelid,
-                            }).then(function (response) {
+        $scope.changeGroup = function (groupId) {
+            $http.get(domain + '/Home/changeSelectdGroupId?groupId=' + groupId)
+                          .then(function (response) {
+                              if (response.data == "changed") {
+                                  $rootScope.groupId = groupId;
+                                  window.location.reload();
+                              }
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+        }
 
-                               
+        $scope.followChange = function () {
 
-                            });
-                        }
+            if ($('#TwitterFollow').is(':checked')) {
 
-        });
+                document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount?follow=true");
+            }
+            else {
+
+
+                document.getElementById("TwitterAddButton").setAttribute('href', "../TwitterManager/AddTwitterAccount");
+            }
+        }
+        dashboard();
+        $('#tags').tagsInput();
+
+        //add initial youtube feeds to mongo
+        $scope.addinitialfeeds = function (accesstoken, channelid) {
+
+            $http({
+                method: 'POST',
+                url: apiDomain + '/api/Google/AddYoutubeFeed?accesstoken=' + accesstoken + '&channelid=' + channelid,
+            }).then(function (response) {
+
+
+
+            });
+        }
+
+    });
 });
 

@@ -60,6 +60,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
                
                 //For taking special character start
                 var updatedmessage = "";
+                var commentencoded = encodeURIComponent(newComment);
                 var postdata = newComment.split("\n");
                 for (var i = 0; i < postdata.length; i++) {
                     updatedmessage = updatedmessage + "<br>" + postdata[i];
@@ -73,7 +74,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 
                 $http({
                     method: 'POST',
-                    url: apiDomain + '/api/Task/AddComment?taskId=' + $scope.selectedTask.tasks.strId + '&userId=' + $rootScope.user.Id + '&commentText=' + newComment,
+                    url: apiDomain + '/api/Task/AddComment?taskId=' + $scope.selectedTask.tasks.strId + '&userId=' + $rootScope.user.Id + '&commentText=' + commentencoded,
                 }).then(function (response) {
                     if (response.data != null);
                     {

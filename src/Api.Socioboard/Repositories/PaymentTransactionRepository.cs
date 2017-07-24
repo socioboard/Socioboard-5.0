@@ -47,7 +47,7 @@ namespace Api.Socioboard.Repositories
                 return 0;
             }
         }
-        public static string CancelRecurringPayment(string ProfileID,long UserId, Model.DatabaseRepository dbr)
+        public static string CancelRecurringPayment(string ProfileID,long UserId,string paypalapiusername,string paypalpassword,string paypalsignature,Model.DatabaseRepository dbr)
         {
             try
             {
@@ -67,11 +67,11 @@ namespace Api.Socioboard.Repositories
 
                 Dictionary<string, string> configurationMap = new Dictionary<string, string>();
 
-                configurationMap.Add("mode", "sandbox");
+                configurationMap.Add("mode", "live");
                 // Signature Credential
-                configurationMap.Add("account1.apiUsername", "");
-                configurationMap.Add("account1.apiPassword", "");
-                configurationMap.Add("account1.apiSignature", "");
+                configurationMap.Add("account1.apiUsername", paypalapiusername);
+                configurationMap.Add("account1.apiPassword", paypalpassword);
+                configurationMap.Add("account1.apiSignature", paypalsignature);
 
                 // Create the PayPalAPIInterfaceServiceService service object to make the API call
                 PayPalAPIInterfaceServiceService service = new PayPalAPIInterfaceServiceService(configurationMap);

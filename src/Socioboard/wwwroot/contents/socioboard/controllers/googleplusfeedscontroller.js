@@ -9,7 +9,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
         var start = 0; // where to start data
         var preloadmorefeeds = false;// disable starter loader after loading feeds
         var nofeeds = false;
-        var ending = start + 30; // how much data need to add on each function call
+        var ending = start + 10; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         $scope.loadmore = "Loading More data..";
         $scope.getHttpsURL = function (obj) {
@@ -47,7 +47,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             $scope.filters = false;
             $scope.preloadmorefeeds = false;
             $scope.lstGpFeeds = null;
-            $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
+            $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               if (response.data != "") {
                                   $scope.date(response.data);
@@ -131,7 +131,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
         //repost
 
         $scope.openComposeMessage = function (contentFeed) {
-            debugger;
+        
             jQuery('input:checkbox').removeAttr('checked');
             if (contentFeed != null) {
                 var message = {
@@ -155,7 +155,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
 
         // start compose
         $scope.ComposeMessage = function () {
-            debugger;
+            
             $scope.disbtncom = false;
             var profiles = new Array();
             $("#checkboxdata .subcheckbox").each(function () {

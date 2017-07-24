@@ -87,7 +87,7 @@ namespace Api.Socioboard.Controllers
         {
             if (skip + count < 100)
             {
-                List<Domain.Socioboard.Models.Mongo.intafeed> lstInstagramFeeds = Repositories.InstagramRepository.GetInstagramFeeds(instagramId, _appSettings, _redisCache);
+                List<Domain.Socioboard.Models.Mongo.InstagramFeed> lstInstagramFeeds = Repositories.InstagramRepository.GetInstagramFeeds(instagramId, _appSettings, _redisCache,skip,count);
                 return Ok(lstInstagramFeeds);
             }
             else
@@ -103,21 +103,23 @@ namespace Api.Socioboard.Controllers
                     return await ret;
                 });
                 IList<Domain.Socioboard.Models.Mongo.InstagramFeed> _lstInstagramFeed = task.Result;
-                foreach (var item in _lstInstagramFeed.ToList())
-                {
-                    Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
-                    MongoRepository InstagramCommentRepo = new MongoRepository("InstagramComment", _appSettings);
-                    var ret1 = InstagramCommentRepo.Find<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.FeedId.Equals(item.FeedId));
-                    var taskq = Task.Run(async () =>
-                    {
-                        return await ret1;
-                    });
-                    IList<Domain.Socioboard.Models.Mongo.InstagramComment> _lstInstagramComment = taskq.Result;
-                    _intafeed._InstagramFeed = item;
-                    _intafeed._InstagramComment = _lstInstagramComment.ToList();
-                    lstintafeed.Add(_intafeed);
-                }
-                return Ok(lstintafeed.OrderByDescending(t=>t._InstagramFeed.FeedDate));
+                //foreach (var item in _lstInstagramFeed.ToList())
+                //{
+                //    Domain.Socioboard.Models.Mongo.intafeed _intafeed = new Domain.Socioboard.Models.Mongo.intafeed();
+                //    MongoRepository InstagramCommentRepo = new MongoRepository("InstagramComment", _appSettings);
+                //    var builderComment = Builders<Domain.Socioboard.Models.Mongo.InstagramComment>.Sort;
+                //    var sortcomment = builderComment.Descending(t => t.CommentDate);
+                //    var ret1 = InstagramCommentRepo.FindWithRange<Domain.Socioboard.Models.Mongo.InstagramComment>(t => t.FeedId.Equals(item.FeedId),sortcomment,skip,5);
+                //    var taskq = Task.Run(async () =>
+                //    {
+                //        return await ret1;
+                //    });
+                //    IList<Domain.Socioboard.Models.Mongo.InstagramComment> _lstInstagramComment = taskq.Result;
+                //    _intafeed._InstagramFeed = item;
+                //    _intafeed._InstagramComment = _lstInstagramComment.ToList();
+                //    lstintafeed.Add(_intafeed);
+                //}
+                return Ok(_lstInstagramFeed.OrderByDescending(t=>t.FeedDate));
             }
 
         }
@@ -126,14 +128,14 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetInstagramFilterFeeds")]
         public IActionResult GetInstagramFilterFeeds(long userId, string instagramId, int skip, int count, string postType)
         {
-                List<Domain.Socioboard.Models.Mongo.intafeed> lstInstagramFeeds = Repositories.InstagramRepository.GetTopInstagramFilterFeed(instagramId, _appSettings, _redisCache, skip, count, postType);
+                List<Domain.Socioboard.Models.Mongo.InstagramFeed> lstInstagramFeeds = Repositories.InstagramRepository.GetTopInstagramFilterFeed(instagramId, _appSettings, _redisCache, skip, count, postType);
                 return Ok(lstInstagramFeeds);
         }
 
         [HttpGet("GetInstagramSortFeeds")]
         public IActionResult GetInstagramSortFeeds(long userId, string instagramId, int skip, int count, string sortType)
         {
-            List<Domain.Socioboard.Models.Mongo.intafeed> lstInstagramFeeds = Repositories.InstagramRepository.GetTopInstagramSortFeed(instagramId, _appSettings, _redisCache, skip, count, sortType);
+            List<Domain.Socioboard.Models.Mongo.InstagramFeed> lstInstagramFeeds = Repositories.InstagramRepository.GetTopInstagramSortFeed(instagramId, _appSettings, _redisCache, skip, count, sortType);
             return Ok(lstInstagramFeeds);
         }
 

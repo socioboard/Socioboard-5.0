@@ -76,7 +76,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 }
                 else {
                     $scope.nofeeds = true;
-                    $scope.fetchdatacomplete = true;
+                    $scope.fetchdatacomplete = false;
 
                 }
             }, function () {
@@ -144,59 +144,64 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         $scope.loadRssNewsFeed();
 
         $scope.rssContentsData = function () {
+            var title = $('#tags').val();
+            if (/\S/.test(title)) {
+                if ($('#tags').val() != null) {
+                    var keywords = $('#tags').val();
+                }
+                else {
+                    var keywords = $rootScope.keyword;
+                }
 
-            if ($('#tags').val() != null) {
-                var keywords = $('#tags').val();
-            }
-            else {
-                var keywords = $rootScope.keyword;
-            }
+
+                $scope.buildbtn = false;
 
 
-            $scope.buildbtn = false;
-            
-           
-          
 
-            if (keywords != null && keywords != undefined) {
 
-                $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrl?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
-                .then(function (response) {
-                    if (response.data != "") {
+                if (keywords != null && keywords != undefined) {
 
-                        $scope.postedRssData = response.data;
-                        if ($scope.postedRssData != "Data already added") {
+                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrl?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
+                    .then(function (response) {
+                        if (response.data != "") {
 
-                           
+                            $scope.postedRssData = response.data;
+                            if ($scope.postedRssData != "Data already added") {
+
+
+                                $scope.buildbtn = true;
+                                $('#rssSettingModal').closeModal();
+                                $scope.fetchdatacomplete = true;
+                                //$scope.rssNewsFeed(keywords);
+                                $('#tags').val('');
+                            }
+                            else {
+
+                                $scope.buildbtn = true;
+                                $('#rssSettingModal').closeModal();
+                                swal("Data already added");
+                                $('#tags').val('');
+                            }
+
+                        }
+                        else {
+                            $scope.nofeeds = true;
                             $scope.buildbtn = true;
                             $('#rssSettingModal').closeModal();
                             $scope.fetchdatacomplete = true;
-                            //$scope.rssNewsFeed(keywords);
-                            $('#tags').val('');
                         }
-                        else {
+                    }, function () {
+                        $scope.error = reason.data;
 
-                            $scope.buildbtn = true;
-                            $('#rssSettingModal').closeModal();
-                            swal("Data already added");
-                            $('#tags').val('');
-                        }
-
-                    }
-                    else {
-                        $scope.nofeeds = true;
-                        $scope.buildbtn = true;
-                        $('#rssSettingModal').closeModal();
-                        $scope.fetchdatacomplete = true;
-                    }
-                }, function () {
-                    $scope.error = reason.data;
-
-                });
+                    });
+                }
             }
+            else {
+                swal("Please enter tag first")
+            }
+
+
         }
-
-
 
         $scope.contentfeedsdata = function () {
          
@@ -306,7 +311,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         }
 
         $scope.openComposeMessage = function (contentFeed) {
-
+            jQuery('input:checkbox').removeAttr('checked');
             if (contentFeed != null) {
                 var message = {
                     "title": contentFeed.title,
@@ -323,6 +328,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             $(composeImagedropify).find('.dropify-render').html('<img src="' + contentFeed.image + '">');
             $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
             $('select').material_select();
+          
         }
 
 

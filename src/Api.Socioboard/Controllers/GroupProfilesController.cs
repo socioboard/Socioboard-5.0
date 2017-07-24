@@ -49,6 +49,12 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             return Ok(GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr));
         }
+        [HttpGet("GetAllGroupProfilesCount")]
+        public IActionResult GetAllGroupProfilesCount(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupProfilesRepository.GetAllGroupProfilesCount(groupId, _redisCache, dbr));
+        }
 
         [HttpGet("GetTop3GroupProfiles")]
         public IActionResult GetTop3GroupProfiles(long groupId)
@@ -324,5 +330,7 @@ namespace Api.Socioboard.Controllers
             }
             return Ok(lstPluginProfile);
         }
+
+
     }
 }

@@ -106,6 +106,15 @@ namespace Api.Socioboard.Controllers
             return Ok("Added Successfully");
         }
 
+        [HttpPost("PostRssFeeds")]
+        public IActionResult PostRssFeeds(string profileId, string userId, string rssUrl)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string ret = Repositories.RssFeedRepository.PostRssfeed(profileId, rssUrl, _appSettings, dbr, _redisCache);
+            return Ok(ret);
+        }
+
+
         [HttpGet("GetPostedRssDataByUser")]
         public IActionResult GetPostedRssDataByUser(long userId, long groupId)
         {

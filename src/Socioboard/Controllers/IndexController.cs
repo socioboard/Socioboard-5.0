@@ -17,6 +17,7 @@ using Facebook;
 using Socioboard.Helper;
 using System.Linq;
 using Domain.Socioboard.Interfaces.Services;
+using System.Threading;
 
 
 
@@ -30,8 +31,8 @@ namespace Socioboard.Controllers
         private Helpers.AppSettings _appSettings;
         private readonly ILogger _logger;
         IEmailSender emailSender;
-       
-        public IndexController(Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings,  ILogger<IndexController> logger)
+
+        public IndexController(Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings, ILogger<IndexController> logger)
         {
             _appSettings = settings.Value;
             _logger = logger;
@@ -41,14 +42,21 @@ namespace Socioboard.Controllers
 
         // GET: /<controller>/
         // [ResponseCache(Duration = 604800)]
-        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+       [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+       // [ResponseCache(Duration = 100)]
         public async Task<IActionResult> Index()
         {
-            
+            //await Task.Run(() =>
+            //{
+            //    UserSession();
+            //}
+            //);
+            //new Thread(delegate ()
+            //{
+            //    UserSession();
+            //}).Start();
+          //  await UserSession();
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            string EmailId = string.Empty;
-            string password = string.Empty;
-            string sociorevtoken = string.Empty;
             string twostep = HttpContext.Session.GetObjectFromJson<string>("twosteplogin");
             bool paymentsession = HttpContext.Session.GetObjectFromJson<bool>("paymentsession");
             if (paymentsession == true)
@@ -60,66 +68,10 @@ namespace Socioboard.Controllers
                 HttpContext.Session.Remove("paymentsession");
                 HttpContext.Session.Clear();
             }
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
             if (user == null)
             {
-                if (Request.Cookies["sociorevtoken"] != null)
-                {
-                    sociorevtoken = Request.Cookies["sociorevtoken"].ToString();
-                    sociorevtoken = PluginHelper.Base64Decode(sociorevtoken);
-                    List<KeyValuePair<string, string>> Parame = new List<KeyValuePair<string, string>>();
-                    Parame.Add(new KeyValuePair<string, string>("systemId", sociorevtoken));
-                    HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/checksociorevtoken", Parame, "", "", _appSettings.ApiDomain);
-                    if (_response.IsSuccessStatusCode)
-                    {
-                        try
-                        {
-                            Domain.Socioboard.Models.SessionHistory _session = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
-                            HttpContext.Session.SetObjectAsJson("revokedata", _session);
-                            sociorevtoken = "true";
-                        }
-                        catch (Exception)
-                        {
-                            sociorevtoken = "false";
-                        }
-                    }
-                }
-                if (sociorevtoken == "true")
-                {
-                    if (Request.Cookies["socioboardemailId"] != null)
-                    {
-                        EmailId = Request.Cookies["socioboardemailId"].ToString();
-                        EmailId = PluginHelper.Base64Decode(EmailId);
-                    }
-                    if (Request.Cookies["socioboardToken"] != null)
-                    {
-                        password = Request.Cookies["socioboardToken"].ToString();
-                        password = PluginHelper.Base64Decode(password);
-                    }
-                }
-                if (!string.IsNullOrEmpty(EmailId) && !string.IsNullOrEmpty(password))
-                {
-                    List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
-                    Parameters.Add(new KeyValuePair<string, string>("UserName", EmailId));
-                    Parameters.Add(new KeyValuePair<string, string>("Password", password));
-                    HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/CheckUserLogin", Parameters, "", "", _appSettings.ApiDomain);
-                    if (_response.IsSuccessStatusCode)
-                    {
-                        try
-                        {
-                            user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                            HttpContext.Session.SetObjectAsJson("User", user);
-                            return RedirectToAction("Index", "Home");
-                        }
-                        catch
-                        {
-                            ViewBag.ApiDomain = _appSettings.ApiDomain;
-                            ViewBag.Domain = _appSettings.Domain;
-                            return View();
-                        }
-                    }
-                }
-                ViewBag.ApiDomain = _appSettings.ApiDomain;
-                ViewBag.Domain = _appSettings.Domain;
                 return View();
             }
             else if (twostep == "true")
@@ -140,12 +92,93 @@ namespace Socioboard.Controllers
                 {
                     return RedirectToAction("Index", "Index");
                 }
-                return RedirectToAction("Index", "Home");
+               //return RedirectToAction("Index", "Home");
+                return View();
             }
 
-
         }
-      
+        //[HttpGet]
+        //private async Task UserSession()
+        //{
+        //    Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+        //    string EmailId = string.Empty;
+        //    string password = string.Empty;
+        //    string sociorevtoken = string.Empty;
+
+        //    try
+        //    {
+        //        if (user == null)
+        //        {
+        //            if (Request.Cookies["sociorevtoken"] != null)
+        //            {
+        //                sociorevtoken = Request.Cookies["sociorevtoken"].ToString();
+        //                sociorevtoken = PluginHelper.Base64Decode(sociorevtoken);
+        //                try
+        //                {
+        //                    List<KeyValuePair<string, string>> Parame = new List<KeyValuePair<string, string>>();
+        //                    Parame.Add(new KeyValuePair<string, string>("systemId", sociorevtoken));
+        //                    HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/checksociorevtoken", Parame, "", "", _appSettings.ApiDomain);
+        //                    if (_response.IsSuccessStatusCode)
+        //                    {
+        //                        try
+        //                        {
+        //                            Domain.Socioboard.Models.SessionHistory _session = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
+        //                            HttpContext.Session.SetObjectAsJson("revokedata", _session);
+        //                            sociorevtoken = "true";
+        //                        }
+        //                        catch (Exception ex)
+        //                        {
+        //                            sociorevtoken = "false";
+        //                        }
+        //                    }
+        //                }
+        //                catch (Exception)
+        //                {
+
+        //                    throw;
+        //                }
+        //            }
+        //            if (sociorevtoken == "true")
+        //            {
+        //                if (Request.Cookies["socioboardemailId"] != null)
+        //                {
+        //                    EmailId = Request.Cookies["socioboardemailId"].ToString();
+        //                    EmailId = PluginHelper.Base64Decode(EmailId);
+        //                }
+        //                if (Request.Cookies["socioboardToken"] != null)
+        //                {
+        //                    password = Request.Cookies["socioboardToken"].ToString();
+        //                    password = PluginHelper.Base64Decode(password);
+        //                }
+        //            }
+        //            if (!string.IsNullOrEmpty(EmailId) && !string.IsNullOrEmpty(password))
+        //            {
+        //                List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+        //                Parameters.Add(new KeyValuePair<string, string>("UserName", EmailId));
+        //                Parameters.Add(new KeyValuePair<string, string>("Password", password));
+        //                HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/CheckUserLogin", Parameters, "", "", _appSettings.ApiDomain);
+        //                if (_response.IsSuccessStatusCode)
+        //                {
+        //                    try
+        //                    {
+        //                        user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+        //                        HttpContext.Session.SetObjectAsJson("User", user);
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
+
+        //                    }
+        //                }
+        //            }
+
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+                
+        //    }
+        //}
+
         [HttpPost]
         public async Task<IActionResult> Login(UserLoginViewModel userViewModel)
         {
@@ -229,8 +262,49 @@ namespace Socioboard.Controllers
             }
         }
 
-       
+        [HttpGet]
+        public ActionResult SingIn()
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            string twostep = HttpContext.Session.GetObjectFromJson<string>("twosteplogin");
+            bool paymentsession = HttpContext.Session.GetObjectFromJson<bool>("paymentsession");
+            if (paymentsession == true)
+            {
+                user = null;
+                HttpContext.Session.Remove("User");
+                HttpContext.Session.Remove("revokedata");
+                HttpContext.Session.Remove("selectedGroupId");
+                HttpContext.Session.Remove("paymentsession");
+                HttpContext.Session.Clear();
+            }
+            ViewBag.ApiDomain = _appSettings.ApiDomain;
+            ViewBag.Domain = _appSettings.Domain;
+            if (user == null)
+            {
+                return View();
+            }
+            else if (twostep == "true")
+            {
+                return View("TwoStepOtp");
+            }
+            else
+            {
+                try
+                {
+                    if (user.ExpiryDate < DateTime.UtcNow)
+                    {
+                        return RedirectToAction("UpgradePlans", "Index");
 
+                    }
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Index", "Index");
+                }
+                 return RedirectToAction("Index", "Home");
+                //return View();
+            }
+        }
 
         [HttpPost]
         public async Task<IActionResult> AjaxPluginLogin()
@@ -996,6 +1070,10 @@ namespace Socioboard.Controllers
             return View();
         }
 
+        public IActionResult Refund_Policy()
+        {
+            return View();
+        }
         public IActionResult Training()
         {
             return View();

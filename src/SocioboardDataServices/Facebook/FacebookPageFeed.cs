@@ -162,6 +162,22 @@ namespace SocioboardDataServices.Facebook
                     {
                         objFacebookFeed.Picture = "";
                     }
+                    try
+                    {
+                        objFacebookFeed.Likecount = result["likes"]["summary"]["total_count"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    try
+                    {
+                        objFacebookFeed.Commentcount = result["comments"]["summary"]["total_count"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
 
                     string message = string.Empty;
 
@@ -204,7 +220,7 @@ namespace SocioboardDataServices.Facebook
                     }
                     objFacebookFeed.FeedDescription = message;
                     objFacebookFeed.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-
+                    objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, AccessToken);
                     try
                     {
                         MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed");
@@ -223,7 +239,7 @@ namespace SocioboardDataServices.Facebook
                             try
                             {
                                 FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objFacebookFeed.FeedId);
-                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom);
+                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom).Set("Likecount", objFacebookFeed.Likecount).Set("Commentcount", objFacebookFeed.Commentcount);
                                 mongorepo.Update<MongoFacebookFeed>(update, filter);
                             }
                             catch { }
@@ -235,7 +251,7 @@ namespace SocioboardDataServices.Facebook
                         apiHitsCount = MaxapiHitsCount;
                     }
                     if (apiHitsCount < MaxapiHitsCount) {
-                         AddFbPostComments(objFacebookFeed.FeedId, AccessToken);
+                        // AddFbPostComments(objFacebookFeed.FeedId, AccessToken);
                     }
                        
                 }
@@ -246,6 +262,124 @@ namespace SocioboardDataServices.Facebook
                 apiHitsCount = MaxapiHitsCount;
             }
 
+        }
+
+        public static List<MongoFbPostComment> FbPostComments(string postid, string AccessToken)
+        {
+
+            List<MongoFbPostComment> lstFbPOstComment = new List<MongoFbPostComment>();
+            string ret = string.Empty;
+            try
+            {
+
+                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
+                dynamic post = FbUser.getPostComments(AccessToken, postid);
+
+                foreach (var item in post["data"])
+                {
+                    MongoFbPostComment fbPostComment = new MongoFbPostComment();
+                    fbPostComment.Id = MongoDB.Bson.ObjectId.GenerateNewId();
+                    fbPostComment.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                    fbPostComment.PostId = postid;
+
+                    try
+                    {
+                        fbPostComment.CommentId = item["id"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.Comment = item["message"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.Likes = Convert.ToInt32(item["like_count"]);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.UserLikes = Convert.ToInt32(item["user_likes"]);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.Commentdate = DateTime.Parse(item["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                    }
+                    catch (Exception ex)
+                    {
+                        fbPostComment.Commentdate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                    }
+                    try
+                    {
+                        fbPostComment.FromName = item["from"]["name"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.FromId = item["from"]["id"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+                    try
+                    {
+                        fbPostComment.PictureUrl = item["id"];
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.StackTrace);
+                    }
+
+                    try
+                    {
+                        lstFbPOstComment.Add(fbPostComment);
+
+                        //MongoRepository fbPostRepo = new MongoRepository("MongoFbPostComment", settings);
+                        //fbPostRepo.Add<MongoFbPostComment>(fbPostComment);
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                       
+                        new List<MongoFbPostComment>();
+
+                    }
+                    try
+                    {
+                        //   AddFbPagePostCommentsLikes(objFbPageComment.CommentId, accesstoken, userid);
+                    }
+                    catch (Exception ex)
+                    {
+                        
+                       
+                    }
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+                
+               
+            }
+            return lstFbPOstComment;
         }
 
         public static void SavePageConversations(string AccessToken, string ProfileId)
@@ -1013,7 +1147,7 @@ namespace SocioboardDataServices.Facebook
                     }
                     catch (Exception ex)
                     {
-                        //_logger.LogInformation(ex.Message);
+                        //
                         //_logger.LogError(ex.StackTrace);
                     }
                     try
@@ -1022,7 +1156,7 @@ namespace SocioboardDataServices.Facebook
                     }
                     catch (Exception ex)
                     {
-                        //_logger.LogInformation(ex.Message);
+                        //
                         //_logger.LogError(ex.StackTrace);
                     }
 
@@ -1031,7 +1165,7 @@ namespace SocioboardDataServices.Facebook
             }
             catch (Exception ex)
             {
-                //_logger.LogInformation(ex.Message);
+                //
                 //_logger.LogError(ex.StackTrace);
             }
             return ret;

@@ -328,7 +328,7 @@
             <param name="userId">Id of the user</param>
             <returns></returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.UserController.ChangePassword(System.Int64,System.String,System.String,System.String)">
+        <member name="M:Api.Socioboard.Controllers.UserController.ChangePassword(System.Int64)">
             <summary>
             To change the password when user request it.
             </summary>
@@ -359,13 +359,14 @@
             Email Id does not exist: When email id does not exist in db.
             </returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.UserController.ResetPasswordMail(System.String,System.String,System.String)">
+        <member name="M:Api.Socioboard.Controllers.UserController.ResetPasswordMail(System.String,System.String,System.String,System.String)">
             <summary>
             sending mail to user after reseting the password.
             </summary>
             <param name="emailId">User email id </param>
             <param name="changePassword">changed password</param>
             <param name="token">Forgot password token</param>
+            <param name="systemId">systemId for usersession</param>
             <returns>Password changed successfully:if user data present in db and validate token.
             EmailId does not exist:when user emailid does not exist
             </returns>

@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using NHibernate.Criterion;
 using System.Threading;
+using Api.Socioboard.Helper;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -817,7 +818,7 @@ namespace Api.Socioboard.Controllers
                 PaymentTransaction _paymentdetail = dbr.Single<PaymentTransaction>(t => t.userid == id);
                 if (_user != null)
                 {
-                    string msg = Repositories.PaymentTransactionRepository.CancelRecurringPayment(_paymentdetail.paymentId, _user.Id, dbr);
+                    string msg = Repositories.PaymentTransactionRepository.CancelRecurringPayment(_paymentdetail.paymentId, _user.Id, _appSettings.paypalapiUsername, _appSettings.paypalapiPassword, _appSettings.paypalapiSignature, dbr);
                     if (msg == "Success")
                     {
 
@@ -848,11 +849,11 @@ namespace Api.Socioboard.Controllers
                     return BadRequest("Something went wrong");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest("Something went wrong");
             }
-         
+
         }
 
 
@@ -1647,8 +1648,13 @@ namespace Api.Socioboard.Controllers
         /// <param name="conformPassword">confirm password </param>
         /// <returns></returns>
         [HttpPost("ChangePassword")]
-        public IActionResult ChangePassword(long userId, string currentPassword, string newPassword, string conformPassword)
+        public IActionResult ChangePassword(long userId)
         {
+            string currentPassword = Request.Form["currentPassword"];
+            string newPassword= Request.Form["newPassword"];
+            string conformPassword= Request.Form["conformPassword"];
+            string systemId= Request.Form["systemId"];
+            systemId = Utility.Base64Decode(systemId);
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
             if (user != null && user.Password != null)
@@ -1665,6 +1671,16 @@ namespace Api.Socioboard.Controllers
                         int res = dbr.Update<User>(user);
                         if (res == 1)
                         {
+                            new Thread(delegate ()
+                            {
+                                List<SessionHistory> _SessionHistory = dbr.Find<SessionHistory>(t => t.userId == userId && !t.systemId.Contains(systemId)).ToList();
+                                foreach (var item in _SessionHistory)
+                                {
+                                    item.sessionStatus = Domain.Socioboard.Enum.SessionHistoryStatus.inactive;
+                                    item.lastAccessedTime = DateTime.UtcNow;
+                                    dbr.Update<SessionHistory>(item);
+                                }
+                            }).Start();
                             return Ok("Password Updated");
                         }
                         else
@@ -1675,7 +1691,7 @@ namespace Api.Socioboard.Controllers
                     }
                     else
                     {
-                        return BadRequest("new password and conform password are not matching.");
+                        return BadRequest("new password and confirm password are not matching.");
                     }
                 }
                 else
@@ -1856,11 +1872,12 @@ namespace Api.Socioboard.Controllers
         /// <param name="emailId">User email id </param>
         /// <param name="changePassword">changed password</param>
         /// <param name="token">Forgot password token</param>
+        /// <param name="systemId">systemId for usersession</param>
         /// <returns>Password changed successfully:if user data present in db and validate token.
         /// EmailId does not exist:when user emailid does not exist
         /// </returns>
         [HttpPost("ResetPasswordMail")]
-        public IActionResult ResetPasswordMail(string emailId, string changePassword, string token)
+        public IActionResult ResetPasswordMail(string emailId, string changePassword, string token,string systemId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = null;
@@ -1881,6 +1898,16 @@ namespace Api.Socioboard.Controllers
                     int res = dbr.Update<User>(user);
                     if (res == 1)
                     {
+                        new Thread(delegate ()
+                        {
+                            List<SessionHistory> _SessionHistory = dbr.Find<SessionHistory>(t => t.userId == user.Id && !t.systemId.Contains(systemId)).ToList();
+                            foreach (var item in _SessionHistory)
+                            {
+                                item.sessionStatus = Domain.Socioboard.Enum.SessionHistoryStatus.inactive;
+                                item.lastAccessedTime = DateTime.UtcNow;
+                                dbr.Update<SessionHistory>(item);
+                            }
+                        }).Start();
                         return Ok("Password changed successfully");
                     }
                     else
@@ -2019,7 +2046,7 @@ namespace Api.Socioboard.Controllers
                 }
                 else
                 {
-                    return BadRequest("error while updating EmailId, pls try after some time.");
+                    return BadRequest("Email already associated with another Socioboard account");
                 }
             }
             else
@@ -2260,13 +2287,20 @@ namespace Api.Socioboard.Controllers
         [HttpPost("UpdateSessiondata")]
         public IActionResult UpdateSessiondata(string systemId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            try
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
 
-            Domain.Socioboard.Models.SessionHistory _SessionHistory = new SessionHistory();
-            _SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == systemId && t.sessionStatus == Domain.Socioboard.Enum.SessionHistoryStatus.active).FirstOrDefault();
-            _SessionHistory.lastAccessedTime = DateTime.UtcNow;
-            Domain.Socioboard.Models.SessionHistory SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == systemId).FirstOrDefault();
-            return Ok(SessionHistory);
+                Domain.Socioboard.Models.SessionHistory _SessionHistory = new SessionHistory();
+                _SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == systemId && t.sessionStatus == Domain.Socioboard.Enum.SessionHistoryStatus.active).FirstOrDefault();
+                _SessionHistory.lastAccessedTime = DateTime.UtcNow;
+                Domain.Socioboard.Models.SessionHistory SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == systemId).FirstOrDefault();
+                return Ok(SessionHistory);
+            }
+            catch (Exception)
+            {
+                return Ok("Not Found");
+            }
         }
 
         [HttpPost("checksociorevtoken")]
@@ -2297,20 +2331,7 @@ namespace Api.Socioboard.Controllers
         }
 
 
-        public static string getBetween(string strSource, string strStart, string strEnd)
-        {
-            int Start, End;
-            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
-            {
-                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
-                End = strSource.IndexOf(strEnd, Start);
-                return strSource.Substring(Start, End - Start);
-            }
-            else
-            {
-                return "";
-            }
-        }
+
 
         [HttpPost("UpdateurlShortnerStatus")]
         public string UpdateurlShortnerStatus(long userId, Domain.Socioboard.Enum.UrlShortener staTus)

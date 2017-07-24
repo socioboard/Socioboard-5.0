@@ -2,6 +2,7 @@ body{
 	background: #eef5f9;
 }
 .box1{
+    width: 95% !important;
 	background: #fff;
     border-radius: 5px;
     box-sizing: border-box;

@@ -498,7 +498,7 @@ SocioboardApp.controller('YoutubeallreportController', function ($rootScope, $sc
 
 
 
-        //debugger;
+       
         //$scope.getOnPageLoadReports = function () {
         //    var canContinue = true;
         //    angular.forEach($rootScope.lstProfiles, function (value, key) {

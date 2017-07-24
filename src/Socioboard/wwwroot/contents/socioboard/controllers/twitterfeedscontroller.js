@@ -12,7 +12,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         var endtwtweets = false;
         twitterfeeds();
         var start = 0; // where to start data
-        var ending = start + 30; // how much data need to add on each function call
+        var ending = start + 10; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
         var TweetsreachLast = false; // to check the user tweets ends last or not
 
@@ -49,7 +49,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
             $scope.preloadmorefeeds = false;
             $scope.lstTwtFeeds = null;
             //codes to load  recent Feeds
-            $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
+            $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               $scope.lstTwtFeeds = response.data;
@@ -71,7 +71,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
           $scope.LoadTopTweets = function () {
               //codes to load  recent Tweets
             
-              $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
+              $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               $scope.lstUserTweets = response.data;
                               $scope.preloadmoretweets = true;
@@ -91,7 +91,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               if (TweetsreachLast) {
                   return false;
               }
-              $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
+              $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=10')
                            .then(function (response) {
                              
 
@@ -103,7 +103,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                                }
                                else {
                                    $scope.lstUserTweets = $scope.lstUserTweets.concat(response.data);
-                                   ending = ending + 30;
+                                   ending = ending + 10;
                                    $scope.listData();
                                }
                            }, function (reason) {
@@ -116,7 +116,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               if (reachLast) {
                   return false;
               }
-              $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=30')
+              $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=10')
                            .then(function (response) {
                             
 
@@ -128,7 +128,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                                }
                                else {
                                    $scope.lstTwtFeeds = $scope.lstTwtFeeds.concat(response.data);
-                                   ending = ending + 30;
+                                   ending = ending + 10;
                                    $scope.listData1();
                                }
                            }, function (reason) {
@@ -141,7 +141,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
             $scope.preloadmorefeeds = false;
             $scope.lstTwtFeeds = null;
             //codes to load  recent Feeds
-            $http.get(apiDomain + '/api/Twitter/GetTwFilterFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30' + '&mediaType=' + mediaType)
+            $http.get(apiDomain + '/api/Twitter/GetTwFilterFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10' + '&mediaType=' + mediaType)
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               //$scope.lstinsFeeds = response.data;
@@ -305,7 +305,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         //repost
 
           $scope.openComposeMessage = function (contentFeed) {
-              debugger;
+             
               jQuery('input:checkbox').removeAttr('checked');
               if (contentFeed != null) {
                   var message = {
@@ -339,7 +339,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
 
         // start compose
           $scope.ComposeMessage = function () {
-              debugger;
+            
               $scope.disbtncom = false;
               var profiles = new Array();
               $("#checkboxdata .subcheckbox").each(function () {
@@ -439,7 +439,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               $scope.filters = true;
               $scope.preloadmorefeeds = false;
               $scope.lstTwtFeeds = null;
-              $http.get(apiDomain + '/api/Twitter/ShortTwtfeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30' + '&shortvalue=' + shortvalue)
+              $http.get(apiDomain + '/api/Twitter/ShortTwtfeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10' + '&shortvalue=' + shortvalue)
                             .then(function (response) {
                                 if (response.data == null) {
                                     reachLast = true;
@@ -468,7 +468,7 @@ SocioboardApp.controller('twittermodalcontroller', function ($rootScope, $scope,
 
 // thousandSuffix to k  m 
 SocioboardApp.filter('thousandSuffix', function () {
-    debugger;
+   
     return function (input, decimals) {
         var exp, rounded,
           suffixes = ['k', 'M', 'G', 'T', 'P', 'E'];

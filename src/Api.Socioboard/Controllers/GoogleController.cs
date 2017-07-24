@@ -725,7 +725,7 @@ namespace Api.Socioboard.Controllers
                 List<Domain.Socioboard.ViewModels.YoutubeProfiles> lstYoutubeProfiles = new List<Domain.Socioboard.ViewModels.YoutubeProfiles>();
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
                 lstYoutubeProfiles = Helper.GoogleHelper.GetYoutubeAccount(code, _appSettings,dbr);
-                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
                 lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
                 string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
                 if (lstStr.Length > 0)

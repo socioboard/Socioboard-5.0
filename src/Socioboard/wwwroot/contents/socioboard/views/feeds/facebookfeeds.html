@@ -8,7 +8,10 @@
             <div class="row">
                 <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                     <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a><a class='dropdown-button right margin-right-10 white-text' href='javascript:void(0)' data-activates='dropdownSort'><i class="fa fa-sort"></i></a></h5>
+                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a><a class='dropdown-button right margin-right-10 white-text' href='javascript:void(0)' data-activates='dropdownSort'><i class="fa fa-sort"></i></a>
+                            <a class='right white-text btn light-blue accent-3' href="javascript:void(0)" ng-click="fbprofiles()" style="font-size: 14px !important;padding: 0px 5px 0px 5px !important;height: 28px;line-height: 15px;border-radius: 4px;">
+                                <span class="white-text text-darken-4"><i class="fa fa-refresh fa-fw"></i>Reconnect</span>
+                            </a></h5>
                         <!-- Dropdown Trigger -->
                         
                         <!-- Dropdown Structure -->
@@ -35,25 +38,26 @@
 
                         <ul class="collection" id="facebookfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
-                                <img src="https://graph.facebook.com/{{fbfeed._facebookFeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
-                                <span class="email-title">{{fbfeed._facebookFeed.fromName}}</span>
+                                <img ng-src="https://graph.facebook.com/{{fbfeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
+                                <span class="email-title">{{fbfeed.fromName}}</span>
                                 <div class="row feeds_post">
                                     <div class="col m8">
-                                        <p class="break_word ultra-small">{{fbfeed._facebookFeed.feedDescription}}</p>
+                                        <p class="break_word ultra-small">{{fbfeed.feedDescription}}</p>
                                     </div>
-                                    <!--<strong>{{fbfeed._facebookFeed.postType}}-------{{fbfeed._facebookFeed.postingFrom}}</strong>-->
+                                    <!--<strong>{{fbfeed.postType}}-------{{fbfeed.postingFrom}}</strong>-->
                                     <div class="col m4 center">
-                                        <img src="{{getHttpsURL(fbfeed._facebookFeed.picture)}} " ng-if="fbfeed._facebookFeed.picture!= ''" class="responsive-img">
+                                        <img ng-src="{{getHttpsURL(fbfeed.picture)}} " ng-if="fbfeed.picture!= ''" class="responsive-img">
                                     </div>
                                     
                                     <div class="col m12">
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li>
-                                                <div class="collapsible-header"><i class="icon-speech"></i>Comments <span class="blue-text"> {{fbfeed._facebookFeed.commentcount}} </span></div>
-                                                <div class="collapsible-body">
+                                                <div class="collapsible-header"><i class="icon-speech"></i>Comments <span class="blue-text"> {{fbfeed.commentcount}} </span></div>
+                                               
+                                                 <div class="collapsible-body">
                                                     <ul class="collection facebookfeeds">
                                                         <li class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive>
-                                                            <img src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
+                                                            <img ng-src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
                                                             <span class="email-title">{{fbcomments.fromName}}</span>
                                                             <div class="row dashboard_feeds z-depth-1 hoverable">
                                                                 <div class="col m8">
@@ -70,13 +74,13 @@
                                                                     <div class="row">
                                                                         <div class="input-field col s12">
                                                                             <i class="icon-pencil prefix"></i>
-                                                                            <textarea type="text" id="postcomment_{{fbfeed._facebookFeed.feedId}}" class="materialize-textarea" />
+                                                                            <textarea type="text" id="postcomment_{{fbfeed.feedId}}" class="materialize-textarea" />
                                                                             <label for="icon_prefix2">Type your comment here...</label>
                                                                         </div>
                                                                     </div>
                                                                 </form>
                                                                 <span class="col s12 center">
-                                                                    <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed._facebookFeed.feedId,fbfeed._facebookFeed.profileId)"><i ng-if="sendingcomment==true" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-if="sendicon!=true" class="icon-cursor"></i></a>
+                                                                    <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed.feedId,fbfeed.profileId)"><i ng-if="sendingcomment==true" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-if="sendicon!=true" class="icon-cursor"></i></a>
                                                                 </span>
                                                             </div>
                                                         </li>
@@ -89,23 +93,23 @@
                                 <div class="row">
                                     <div class="col l8 s8">
                                         <a class="">
-                                            <i class="icon-like fa-fw"></i><span> {{fbfeed._facebookFeed.likecount}}</span>
+                                            <i class="icon-like fa-fw"></i><span> {{fbfeed.likecount}}</span>
                                         </a>
                                     </div>
                                     <div class="col l2 s2">
                                         <div class="right">
-                                            <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed._facebookFeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
+                                            <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
                                                 <i class="icon-pin"></i> Task
                                             </a>
                                         </div>
                                     </div>
                                     <div class="col l2 s2">
                                         <div class="center">
-                                            <a ng-click="openComposeMessage(fbfeed._facebookFeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
+                                            <a ng-click="openComposeMessage(fbfeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
                                         </div>                                       
                                     </div>
                                 </div>
-                                <a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.feedDate}}</a>
+                                <a class="tooltipped secondary-content" data-position="left">{{fbfeed.feedDate}}</a>
                             </li>
                         </ul>
                         <br />
@@ -154,7 +158,7 @@
                             </div>
                         </div>
 
-                        <a href="" ng-click="listData()" style="margin-left:44%" onClick = "this.style.visibility = 'hidden'; chng_btn_val();" ng-if="preloadmore==true && filters!=true"><img src="http://i.imgur.com/Y9I2fvH.png" /></a>
+                        <a href="" ng-click="listData()" style="margin-left:44%" onClick = "this.style.visibility = 'hidden'; chng_btn_val();" ng-if="preloadmore==true && filters!=true"><img ng-src="http://i.imgur.com/Y9I2fvH.png" /></a>
                         
                         <div class="cssload-container" ng-if="preloadmore!=true"> 
                             <div></div>
@@ -222,7 +226,7 @@
 
                     </ul>
                 </div>
-                <div ng-init="disbtncom= {{disbtncom}}"></div>
+                <!--<div ng-init="disbtncom= {{disbtncom}}"></div>-->
                 <div class="col s12 m7 l7 hide-on-med-and-down">
                     <ul class="right">
                         <li>
@@ -291,37 +295,37 @@
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
-                                    <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
-                                    <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
-                                    <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
-                                    <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                 <label>
-                                    <input name="selector[]" class="subcheckboxboard" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                     <span style="float:left;">{{profile.profileName}}</span>
-                                    <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
                             </li>
                         </ul>
@@ -355,6 +359,26 @@
             $('#checkboxdataboard input:checkbox').each(function () {
                 $(this).prop('checked', flag);
             });
+        }
+
+        function profile() {
+            var count = 0;
+            $("#checkboxdataboard :checkbox").each(function () {
+                if (this.id != 'checkAll') {
+                    if (!($("#" + this.id).prop('checked'))) {
+                        count++;
+                    }
+                }
+            });
+
+            if (count > 0) {
+                //alert("no "+count);
+                $("#checkAll").prop('checked', false);
+            }
+            if (count == 0) {
+                //alert("yess " + count);
+                $("#checkAll").prop('checked', true);
+            }
         }
 </script>
 

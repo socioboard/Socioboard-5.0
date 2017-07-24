@@ -39,7 +39,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                               } else {
                                   $scope.lastreach = true;
                                   $scope.nomessages = true;
-                                  debugger;
+                                 
                                   $('#socio_all').attr('disabled', true);
                                   //document.getElementById("deleteAll").disabled = true;
                               }

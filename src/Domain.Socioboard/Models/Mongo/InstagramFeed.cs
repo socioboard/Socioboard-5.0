@@ -18,9 +18,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string strId { get; set; }
         public string FeedImageUrl { get; set; }
         public double FeedDate { get; set; }
-
         public string InstagramId { get; set; }
-
         public int LikeCount { get; set; }
         public string FeedId { get; set; }
         public int CommentCount { get; set; }
@@ -32,7 +30,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string FromId { get; set; }
         public string Type { get; set; }
         public string VideoUrl { get; set; }
-        
+        public List<InstagramComment> _InstagramComment { get; set; }
     }
     public class intafeed {
         public InstagramFeed _InstagramFeed { get; set; }

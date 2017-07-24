@@ -13,6 +13,8 @@ using iTextSharp.text.pdf;
 using iTextSharp.text;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Socioboard.Helper;
+
 namespace Socioboard.Controllers
 {
     public class HomeController : Controller
@@ -39,35 +41,35 @@ namespace Socioboard.Controllers
                 string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
                 if (respo != "false")
                 {
-                    if (user != null)
-                    {
-                        SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-                        strdic.Add("UserName", user.EmailId);
-                        if (string.IsNullOrEmpty(user.Password))
-                        {
-                            strdic.Add("Password", "sociallogin");
-                        }
-                        else
-                        {
-                            strdic.Add("Password", user.Password);
-                        }
+                    //if (user != null)
+                    //{
+                    //    SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+                    //    strdic.Add("UserName", user.EmailId);
+                    //    if (string.IsNullOrEmpty(user.Password))
+                    //    {
+                    //        strdic.Add("Password", "sociallogin");
+                    //    }
+                    //    else
+                    //    {
+                    //        strdic.Add("Password", user.Password);
+                    //    }
 
 
-                        string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+                    //    string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
 
-                        if (!string.IsNullOrEmpty(response))
-                        {
-                            Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
-                            HttpContext.Session.SetObjectAsJson("User", _user);
-                        }
-                        else
-                        {
-                            HttpContext.Session.Remove("User");
-                            HttpContext.Session.Remove("selectedGroupId");
-                            HttpContext.Session.Clear();
-                            HttpContext.Session.Remove("revokedata");
-                        }
-                    }
+                    //    if (!string.IsNullOrEmpty(response))
+                    //    {
+                    //        Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                    //        HttpContext.Session.SetObjectAsJson("User", _user);
+                    //    }
+                    //    else
+                    //    {
+                    //        HttpContext.Session.Remove("User");
+                    //        HttpContext.Session.Remove("selectedGroupId");
+                    //        HttpContext.Session.Clear();
+                    //        HttpContext.Session.Remove("revokedata");
+                    //    }
+                    //}
                 }
                 else
                 {
@@ -86,11 +88,6 @@ namespace Socioboard.Controllers
         public async Task<IActionResult> Index()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            //Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("SessionHistory");
-            //if (session == null)
-            //{
-            //    return RedirectToAction("Index", "Index");
-            //}
             await SaveSessionData();
             HttpContext.Session.SetObjectAsJson("twosteplogin", "false");
             if (user == null)
@@ -167,14 +164,13 @@ namespace Socioboard.Controllers
             {
                 return RedirectToAction("Index", "Index");
             }
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroups?userId=" + user.Id, "", "", _appSettings.ApiDomain);
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroupData?userId=" + user.Id, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 try
                 {
-                    List<Domain.Socioboard.Models.Groups> groups = await response.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groups>>();
-                    ViewBag.groups = Newtonsoft.Json.JsonConvert.SerializeObject(groups);
-                    int groupscount = groups.Count;
+                    Domain.Socioboard.Models.GetUserGroupData groups = await response.Content.ReadAsAsync<Domain.Socioboard.Models.GetUserGroupData>();
+                    int groupscount = groups.lstgroup.Count;
                     int groupsMaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxGroupCount(user.AccountType);
                     ViewBag.groupsCount = groupscount;
                     ViewBag.groupsMaxCount = groupsMaxCount;
@@ -187,64 +183,53 @@ namespace Socioboard.Controllers
                     {
                         ViewBag.groupsdowngrade = "false";
                     }
+                    ViewBag.groups = Newtonsoft.Json.JsonConvert.SerializeObject(groups.lstgroup);
                     string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
                     if (!string.IsNullOrEmpty(sessionSelectedGroupId))
                     {
                         ViewBag.selectedGroupId = sessionSelectedGroupId;
-                        HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetAllGroupProfiles?groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
-                        if (groupProfilesResponse.IsSuccessStatusCode)
+                        var keyValuePairProfiles = groups.myProfiles.Single(x => x.Key == Convert.ToInt32(sessionSelectedGroupId));
+                        List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = keyValuePairProfiles.Value.ToList();
+                        ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
+                        int count = groupProfiles.Count;
+                        int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                        ViewBag.profileCount = count;
+                        ViewBag.MaxCount = MaxCount;
+                        ViewBag.AccountType = user.AccountType;
+                        if (count > MaxCount)
                         {
-                            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
-                            ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
-                            // string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
-                            // int count = Convert.ToInt32(profileCount);
-                            int count = groupProfiles.Count;
-                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
-                            ViewBag.profileCount = count;
-                            ViewBag.MaxCount = MaxCount;
-                            ViewBag.AccountType = user.AccountType;
-                            if (count > MaxCount)
-                            {
-                                ViewBag.downgrade = "true";
-                            }
-                            else
-                            {
-                                ViewBag.downgrade = "false";
-                            }
+                            ViewBag.downgrade = "true";
                         }
-
-
-
+                        else
+                        {
+                            ViewBag.downgrade = "false";
+                        }
                     }
                     else
                     {
-                        long selectedGroupId = groups.FirstOrDefault(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
+
+                        long selectedGroupId = groups.lstgroup.Single(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
                         HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
                         ViewBag.selectedGroupId = selectedGroupId;
-                        HttpResponseMessage groupProfilesResponse = await WebApiReq.GetReq("/api/GroupProfiles/GetAllGroupProfiles?groupId=" + selectedGroupId, "", "", _appSettings.ApiDomain);
-                        if (groupProfilesResponse.IsSuccessStatusCode)
+                        var keyValuePairProfiles = groups.myProfiles.Single(x => x.Key == selectedGroupId);
+                        List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = keyValuePairProfiles.Value.ToList();
+                        ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
+                        int count = groupProfiles.Count;
+                        int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                        ViewBag.profileCount = count;
+                        ViewBag.MaxCount = MaxCount;
+                        if (count > MaxCount)
                         {
-                            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = await groupProfilesResponse.Content.ReadAsAsync<List<Domain.Socioboard.Models.Groupprofiles>>();
-                            ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
-                            //string profileCount = await ProfilesHelper.GetUserProfileCount(user.Id, _appSettings, _logger);
-                            // int count = Convert.ToInt32(profileCount);
-                            int count = groupProfiles.Count;
-                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
-                            ViewBag.profileCount = count;
-                            ViewBag.MaxCount = MaxCount;
-                            if (count > MaxCount)
-                            {
-                                ViewBag.downgrade = "true";
-                            }
-                            else
-                            {
-                                ViewBag.downgrade = "false";
-                            }
+                            ViewBag.downgrade = "true";
+                        }
+                        else
+                        {
+                            ViewBag.downgrade = "false";
                         }
 
                     }
                 }
-                catch (Exception e)
+                catch(Exception ex)
                 {
                     HttpContext.Session.Remove("User");
                     HttpContext.Session.Remove("selectedGroupId");
@@ -274,9 +259,20 @@ namespace Socioboard.Controllers
                 HttpResponseMessage respon = await WebApiReq.PostReq("/api/User/UpdateSessiondata", Param, "", "", _appSettings.ApiDomain);
                 if (respon.IsSuccessStatusCode)
                 {
-                    Domain.Socioboard.Models.SessionHistory _SessionHistory = await respon.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
-                    HttpContext.Session.SetObjectAsJson("revokedata", _SessionHistory);
+                    try
+                    {
+                        Domain.Socioboard.Models.SessionHistory _SessionHistory = await respon.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
+                        HttpContext.Session.SetObjectAsJson("revokedata", _SessionHistory);
+                    }
+                    catch (Exception)
+                    {
+                        HttpContext.Session.Remove("User");
+                        HttpContext.Session.Remove("selectedGroupId");
+                        HttpContext.Session.Clear();
+                        HttpContext.Session.Remove("revokedata");
+                    }
                 }
+
             }
         }
 
@@ -576,13 +572,21 @@ namespace Socioboard.Controllers
         {
             HttpContext.Session.Remove("User");
             HttpContext.Session.Remove("selectedGroupId");
+            // await Task.Run(() =>
+            // {
+            //     logoutsessiondata();
+            // }
+            //);
+            // Task.Run(logoutsessiondata);
             await logoutsessiondata();
+            //await logoutsessiondata();
             HttpContext.Session.Clear();
             ViewBag.user = null;
             ViewBag.selectedGroupId = null;
             ViewBag.groupProfiles = null;
 
             return Ok();
+            // return RedirectToAction("Index", "Index");
         }
 
         private async Task logoutsessiondata()
@@ -665,6 +669,94 @@ namespace Socioboard.Controllers
                 }
                 return true;
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UserSession()
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            string EmailId = string.Empty;
+            string password = string.Empty;
+            string sociorevtoken = string.Empty;
+
+            try
+            {
+                if (user == null)
+                {
+                    if (Request.Cookies["sociorevtoken"] != null)
+                    {
+                        sociorevtoken = Request.Cookies["sociorevtoken"].ToString();
+                        sociorevtoken = PluginHelper.Base64Decode(sociorevtoken);
+                        try
+                        {
+                            List<KeyValuePair<string, string>> Parame = new List<KeyValuePair<string, string>>();
+                            Parame.Add(new KeyValuePair<string, string>("systemId", sociorevtoken));
+                            HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/checksociorevtoken", Parame, "", "", _appSettings.ApiDomain);
+                            if (_response.IsSuccessStatusCode)
+                            {
+                                try
+                                {
+                                    Domain.Socioboard.Models.SessionHistory _session = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.SessionHistory>();
+                                    HttpContext.Session.SetObjectAsJson("revokedata", _session);
+                                    sociorevtoken = "true";
+                                }
+                                catch (Exception ex)
+                                {
+                                    sociorevtoken = "false";
+                                }
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            throw;
+                        }
+                    }
+                    if (sociorevtoken == "true")
+                    {
+                        if (Request.Cookies["socioboardemailId"] != null)
+                        {
+                            EmailId = Request.Cookies["socioboardemailId"].ToString();
+                            EmailId = PluginHelper.Base64Decode(EmailId);
+                        }
+                        if (Request.Cookies["socioboardToken"] != null)
+                        {
+                            password = Request.Cookies["socioboardToken"].ToString();
+                            password = PluginHelper.Base64Decode(password);
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(EmailId) && !string.IsNullOrEmpty(password))
+                    {
+                        List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+                        Parameters.Add(new KeyValuePair<string, string>("UserName", EmailId));
+                        Parameters.Add(new KeyValuePair<string, string>("Password", password));
+                        HttpResponseMessage _response = await WebApiReq.PostReq("/api/User/CheckUserLogin", Parameters, "", "", _appSettings.ApiDomain);
+                        if (_response.IsSuccessStatusCode)
+                        {
+                            try
+                            {
+                                user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                                HttpContext.Session.SetObjectAsJson("User", user);
+                                return Content("true");
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    return Content("true");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Content("false");
         }
 
         [HttpPost]

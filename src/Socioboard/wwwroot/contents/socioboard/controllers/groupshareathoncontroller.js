@@ -5,6 +5,7 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
     $scope.$on('$viewContentLoaded', function() {   
     
         groupshareathon();
+        $scope.dispbtnsharethon = true;
         $scope.deletegrouphareathon = function (profileId) {
         	swal({   
 	        title: "Are you sure?",   
@@ -57,18 +58,19 @@ SocioboardApp.controller('GroupShareathonController', function ($rootScope, $sco
 
 
         $scope.editgrouphareathon = function (grouphareathon) {
-            
+            $scope.dispbtnsharethon = false;
             $rootScope.grouphareathondata = grouphareathon;
             $http.get(apiDomain + '/api/Facebook/GetFacebookGroup?profileId=' + $rootScope.grouphareathondata.facebookaccountid)
                      .then(function (response) {
                          $rootScope.lstfacebookgroup = response.data;
+                         window.location.href = "#/edit_group_shareathon.html";
                      }, function (reason) {
                          $scope.error = reason.data;
                      });
-            $scope.editgrouphareathon = function (grouphareathondata) {
-                $rootScope.grouphareathondata = grouphareathon;
-                window.location.href = "#/edit_group_shareathon.html";
-            }
+            //$scope.editgrouphareathon = function (grouphareathondata) {
+            //    $rootScope.grouphareathondata = grouphareathon;
+            //    window.location.href = "#/edit_group_shareathon.html";
+            //}
         }
   });
 

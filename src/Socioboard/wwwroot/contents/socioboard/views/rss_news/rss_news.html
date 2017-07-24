@@ -166,41 +166,41 @@
                                 <ul class="shinh" id="checkboxdatarss">
                                     <li style="padding:5px 0;">
                                         <label>
-                                            <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />
+                                            <input id="checkAll" onclick="check();" type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" />
                                             <span style="float:left;">Check All</span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
-                                            <input name="selector[]" class="subcheckboxrssrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <input onclick="profile();" name="selector[]" class="subcheckboxrssrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
                                             <span style="float:left;">{{profile.profileName}}</span>
                                             <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
-                                            <input name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <span style="float:left;">{{profile.profileName}}</span>
                                             <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                         <label>
-                                            <input name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
                                             <span style="float:left;">{{profile.profileName}}</span>
                                             <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
-                                            <input name="selector[]" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
                                             <span style="float:left;">{{profile.profileName}}</span>
                                             <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                         <label>
-                                            <input name="selector[]" class="subcheckboxrss" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" ng-model="profile.Selected" />
+                                            <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <span style="float:left;">{{profile.profileName}}</span>
                                             <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
@@ -295,4 +295,34 @@
       });
       window.emojiPicker.discover();
     });
+
+    function check() {
+        debugger;
+        var flag = $('#checkAll').is(":checked");
+        $('#checkboxdatarss input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+
+    
+
+    function profile() {
+        var count = 0;
+        $("#checkboxdatarss  :checkbox").each(function () {
+            if (this.id != 'checkAll') {
+                if (!($("#" + this.id).prop('checked'))) {
+                    count++;
+                }
+            }
+        });
+
+        if (count > 0) {
+            //alert("no "+count);
+            $("#checkAll").prop('checked', false);
+        }
+        if (count == 0) {
+            //alert("yess " + count);
+            $("#checkAll").prop('checked', true);
+        }
+    }
 </script>

@@ -57,14 +57,14 @@ namespace Api.Socioboard.Helper
 
                         ScheduledMessage scheduledMessage = new ScheduledMessage();
                         scheduledMessage.createTime = DateTime.UtcNow;
-                        scheduledMessage.picUrl = ImageUrl;
+                        scheduledMessage.picUrl = _LinkedInAccount.ProfileImageUrl;
                         scheduledMessage.profileId = ProfileId;
                         scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.LinkedIn;
                         scheduledMessage.scheduleTime = DateTime.UtcNow;
                         scheduledMessage.shareMessage = comment;
                         scheduledMessage.userId = userid;
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                        scheduledMessage.url = json;
+                        scheduledMessage.url = ImageUrl;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";
@@ -98,14 +98,14 @@ namespace Api.Socioboard.Helper
 
                         ScheduledMessage scheduledMessage = new ScheduledMessage();
                         scheduledMessage.createTime = DateTime.UtcNow;
-                        scheduledMessage.picUrl = ImageUrl;
+                        scheduledMessage.picUrl = _LinkedInAccount.ProfileImageUrl;
                         scheduledMessage.profileId = ProfileId;
                         scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.LinkedIn;
                         scheduledMessage.scheduleTime = DateTime.UtcNow;
                         scheduledMessage.shareMessage = comment;
                         scheduledMessage.userId = userid;
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                        scheduledMessage.url = json;
+                        scheduledMessage.url = ImageUrl;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";
@@ -167,14 +167,14 @@ namespace Api.Socioboard.Helper
 
                         ScheduledMessage scheduledMessage = new ScheduledMessage();
                         scheduledMessage.createTime = DateTime.UtcNow;
-                        scheduledMessage.picUrl = upload;
+                        scheduledMessage.picUrl = objlicompanypage.LogoUrl;
                         scheduledMessage.profileId = objlicompanypage.LinkedinPageId;
                         scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage;
                         scheduledMessage.scheduleTime = DateTime.UtcNow;
                         scheduledMessage.shareMessage = comment;
                         scheduledMessage.userId = userid;
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                        scheduledMessage.url = json;
+                        scheduledMessage.url = upload;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";
@@ -211,14 +211,14 @@ namespace Api.Socioboard.Helper
 
                         ScheduledMessage scheduledMessage = new ScheduledMessage();
                         scheduledMessage.createTime = DateTime.UtcNow;
-                        scheduledMessage.picUrl = upload;
+                        scheduledMessage.picUrl = objlicompanypage.LogoUrl;
                         scheduledMessage.profileId = objlicompanypage.LinkedinPageId;
                         scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage;
                         scheduledMessage.scheduleTime = DateTime.UtcNow;
                         scheduledMessage.shareMessage = comment;
                         scheduledMessage.userId = userid;
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                        scheduledMessage.url = json;
+                        scheduledMessage.url = upload;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";

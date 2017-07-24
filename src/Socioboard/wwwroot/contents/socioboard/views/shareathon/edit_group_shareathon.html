@@ -29,7 +29,7 @@
                                     </div>	
 				                    <div class="input-field col s12" ng-controller="CreateGroupShareathonController" ng-if="lstfacebookgroup!=''">
 									    <select multiple id="facebookgroupid">
-									         <option value="{{grouphareathondata.facebooknameid}}"  selected>{{grouphareathondata.facebookgroupname}}</option>
+									         <option value="{{grouphareathondata.facebooknameid}}" disabled selected>{{grouphareathondata.facebookgroupname}}</option>
                                             <option value="{{group.name}}<:>{{group.profileGroupId}}" ng-repeat="group in lstfacebookgroup" my-repeat-timeout-directive my-repeat-dropdown-directive>{{group.name}}</option>
 									    </select>
 									    <label>Select Groups To Automate Post</label>
@@ -64,7 +64,6 @@
                                         <input id="postpage_url" type="url" disabled class="validate">
                                         <label for="postpage_url">Enter Page Url Whose Post's You Want To Automate</label>
                                     </div>
-                                    <div ng-init="dispbtn= {{dispbtn}}"></div>
 				                    <div class="col l12 center margin-top-50">
                                         <a ng-show="dispbtn" ng-click="EditGroupShareathon(grouphareathondata.strId)" class="btn grey darken-4 waves-effect waves-light">Save</a>
 				                      	<a ng-show="!dispbtn" href="javascript:;" class="btn grey darken-4 waves-effect waves-light">Wait</a>

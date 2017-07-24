@@ -9,9 +9,9 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         $scope.buildbtn = true;
         var endfeeds = false;
         var start = 0; // where to start data
-        var ending = start + 30; // how much data need to add on each function call
+        var ending = start + 10; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
-        var count = 30;
+        var count = 10;
         $scope.loadmore = "Load More Feeds";
         $scope.lstFbComments = [];
         $scope.getHttpsURL = function (obj) {
@@ -53,7 +53,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                 //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
                               .then(function (response) {
-                                  debugger;
+                            
                                   // $scope.lstProfiles = response.data;
                                   $scope.lstFbFeeds = response.data;
                                   $scope.preloadmore = true;
@@ -127,7 +127,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                              else {
                                  $scope.lstFbFeeds = $scope.lstFbFeeds.concat(response.data);
                                  //console.log($scope.lstFbFeeds);
-                                 ending = ending + 30;
+                                 ending = ending + 10;
                                  $scope.listData();
                              }
                          }, function (reason) {
@@ -137,6 +137,47 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
 
         facebookfeeds();
+
+        $scope.reconnect = function (xyz) {
+           
+         
+            $http.get(domain + '/socioboard/recfbcont?id=' + $stateParams.profileId + '&fbprofileType=' + xyz)
+                              .then(function (response) {
+                                  window.location.href = response.data;
+
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+
+        };
+
+        $scope.fbprofiles = function () {
+            
+            $http.get(apiDomain + '/api/Facebook/GetFacebookProfilesOnly?groupId=' + $rootScope.groupId)
+            .then(function (response) {
+                console.log(response.data)
+                if (response.data != null) {
+
+                    $scope.profiledet = response.data;
+                    angular.forEach($scope.profiledet, function (value, key) {
+
+
+
+                        if (value.fbUserId == $stateParams.profileId) {
+                            $scope.reconnect(value.fbProfileType);
+                        }
+                        else {
+                            $scope.reconnect(null);
+                        }
+
+                    });
+
+                }
+            }, function (reason) {
+                $scope.error = reason.data;
+            });
+
+        };
 
         $scope.filterSearch = function (typeFilter) {
             $scope.filters = true;
@@ -162,7 +203,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
 
         $scope.SortSearch = function (typeShort) {
-           // debugger;
+      
             $scope.filters = true;
             $scope.preloadmore = false;
             $scope.lstFbFeeds = null;
@@ -267,7 +308,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         //repost
 
         $scope.openComposeMessage = function (contentFeed) {
-            debugger;
+       
             jQuery('input:checkbox').removeAttr('checked');
             if (contentFeed != null) {
                 var message = {

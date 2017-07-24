@@ -1,0 +1,79 @@
+   <style type="text/css">
+    
+     .dropify-wrapper{
+        height: 100px;
+     }
+   </style>
+       <!-- START MAIN -->
+    <div  data-ng-controller="GetTouchController">
+        <!-- START WRAPPER -->
+        <div class="wrapper">
+
+            <!-- START CONTENT -->
+            <section id="content">
+
+                <!--start container-->
+                <div class="container">
+                    <div class="col m12">
+                        <h4>Get In Touch</h4>
+                    </div>
+                      <div class="row">
+                        <div class="col s12 m12 l12">
+                          <div class="card-panel">
+                            <div class="row">
+                              <form class="col s12" ng-submit="sendEmail()">
+                                <strong>Whether you're after some help or just want to say hello, we would love to hear from you! Email us below and we'll get back to you quickly.</strong>
+                                <div class="row">
+                                  <div class="input-field col s6">
+                                    <input id="first_name" type="text" placeholder="Your name" value="{{valuesData.nameUser}}" required>
+                                    <label for="first_name">Name</label>
+                                  </div>                                        
+                                  <div class="input-field col s6">
+                                    <input id="email5" type="email" class="validate" placeholder="Socioboard email" value="{{valuesData.emailUser}}" required>
+                                    <label for="email">Email</label>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                  <div class="input-field col s6">
+                                    <input id="subject" type="text" class="validate" required>
+                                    <label for="subject">subject</label>
+                                  </div>
+                                  <div class="input-field col s6">                        
+                                    <select id="priority" name="priority">
+                                        <option value="No issue">This is just a heads-up</option>
+                                        <option value="Low">I can cope, but please fix this</option>
+                                        <option value="Normal">I'm stuck - nothing I try works</option>
+                                        <option value="High">I'm pulling my hair out</option>
+                                        <option value="Urgent">Emergency: this is critical</option>
+                                    </select>
+                                    <label>Choose your problem</label>
+                                  </div>
+                                </div>               
+                                <div class="row">
+                                  <div class="file-field input-field col s12 m4 l4">
+                                      <input type="file" id="input_file_getintouch" class="dropify" data-default-file="" style="height: 100px;" />
+                                  </div>
+                                  <div class="input-field col s12 m8 l8">
+                                    <textarea id="message" class="materialize-textarea" maxlength="120"  required></textarea>
+                                    <label for="message">Message</label>
+                                  </div>
+                                </div>
+                                  <div>
+                                      <button id="subBtn" class="btn btn_style right blue" type="submit" style="width:10%"><strong ng-class="btnLd">{{btnValue}}</strong><i ng-class="btnLding" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></button>
+                                  </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+                <!--end container-->
+            </section>
+            <!-- END CONTENT -->
+
+        </div>
+        <!-- END WRAPPER -->
+
+    </div>
+    <!-- END MAIN -->
+

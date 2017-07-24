@@ -11,7 +11,7 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <title data-ng-bind="'Socioboard   ' + $state.current.data.pageTitle"></title>
-    <link rel="apple-touch-icon" sizes="57x57" href="~/contents/socioboard/images/favicon/apple-icon-57x57.png">
+    @*<link rel="apple-touch-icon" sizes="57x57" href="~/contents/socioboard/images/favicon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="~/contents/socioboard/images/favicon/apple-icon-60x60.png">
     <link rel="apple-touch-icon" sizes="72x72" href="~/contents/socioboard/images/favicon/apple-icon-72x72.png">
     <link rel="apple-touch-icon" sizes="76x76" href="~/contents/socioboard/images/favicon/apple-icon-76x76.png">
@@ -20,35 +20,34 @@
     <link rel="apple-touch-icon" sizes="144x144" href="~/contents/socioboard/images/favicon/apple-icon-144x144.png">
     <link rel="apple-touch-icon" sizes="152x152" href="~/contents/socioboard/images/favicon/apple-icon-152x152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="~/contents/socioboard/images/favicon/apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/frontend//imgs/favicon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="~/contents/socioboard/images/favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96" href="~/contents/socioboard/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/frontend//imgs/favicon/android-icon-192x192.png">*@
+    @*<link rel="icon" type="image/png" sizes="32x32" href="~/contents/socioboard/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="~/contents/socioboard/images/favicon/favicon-96x96.png">*@
     <link rel="icon" type="image/png" sizes="16x16" href="~/contents/socioboard/images/favicon/favicon-16x16.png">
-    <link rel="manifest" href="~/contents/socioboard/images/favicon/manifest.json">
-    <meta name="msapplication-TileColor" content="#ffffff">
+    @*<link rel="manifest" href="~/contents/socioboard/images/favicon/manifest.json">*@
+    @*<meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="~/contents/socioboard/images/favicon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <meta property="og:site_name" content="socioboard.com">
-    <meta property="og:title" content="Socioboard - Open Source Social Technology Enabler | Find More Customers on Social Media">
+    <meta property="og:site_name" content="socioboard.com">*@
+    @*<meta property="og:title" content="Socioboard - Open Source Social Technology Enabler | Find More Customers on Social Media">
     <meta property="og:description" content="Be it marketing(finding leads/customers) on Social media, or listening to customer complaints, replying to them, managing multiple social media accounts from one single dashboard, finding influencers in a particular category and reaching out to them and many more things, Socioboard products can do it.">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://i.imgur.com/1B8wv5m.png">
     <meta property="og:url" content="https://www.facebook.com/SocioBoard">
-    <meta name="google-site-verification" content="xCSHLNCGW3vt4KPtqZk8aYo41D1_FNVDaWspZPIc8ac" />
+    <meta name="google-site-verification" content="xCSHLNCGW3vt4KPtqZk8aYo41D1_FNVDaWspZPIc8ac" />*@
     <!-- CORE CSS-->
     <link href="~/contents/socioboard/css/admin/custom.css" rel="stylesheet" />
     <link href="~/contents/socioboard/css/admin/materialize.css" type="text/css" rel="stylesheet" media="screen,projection">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
     <link href="~/contents/socioboard/css/admin/style.css" type="text/css" rel="stylesheet" media="screen,projection">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
-    <link href="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css" rel="stylesheet" />
     <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
     <link href="~/contents/socioboard/js/admin/plugins/perfect-scrollbar/perfect-scrollbar.css" type="text/css" rel="stylesheet" media="screen,projection">
     <link href="~/contents/socioboard/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+    <link href="~/contents/socioboard/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" type="text/css" href="~/contents/socioboard/global/plugins/dropify/dist/css/dropify.min.css">
     <link href="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" />
-    <link href="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css" rel="stylesheet" />
+    <link href="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.min.css" rel="stylesheet" />
     <link href="~/contents/socioboard/js/admin/plugins/chartist-js/chartist.min.css" rel="stylesheet" />
     <link href="~/contents/socioboard/global/plugins/animate.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="~/contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css">
@@ -61,9 +60,7 @@
     <link rel="stylesheet" type="text/css" href="~/contents/socioboard/global/plugins/jquery-tags-input/jquery.tagsinput.css" />
     <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->
     <link id="ng_load_plugins_before" />
-    <script src="https://cdn.datatables.net/buttons/1.0.3/js/buttons.html5.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.3.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
@@ -92,6 +89,11 @@
     @if (TempData["fbPages"] != null)
     {
         <div ng-init="lstAddFbPages=@TempData["fbPages"]"></div>
+    }
+    @if (TempData["fbReconnect"] != null)
+    {
+        <div ng-init="lstReconnFbPages=@TempData["fbReconnect"]"></div>
+
     }
     @if (TempData["linPages"] != null)
     {
@@ -152,10 +154,10 @@
     <link href="~/contents/socioboard/css/frontend/alertify.core.css" rel="stylesheet" type="text/css" />
     <link href="~/contents/socioboard/css/frontend/alertify.default.css" rel="stylesheet" type="text/css" id="toggleCSS" />
     <script src="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js"></script>
-    <script src="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.js"></script>
+    <script src="~/contents/socioboard/global/plugins/mdPickers/dist/mdPickers.min.js"></script>
     <script src="../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js"></script>
-    <script type="text/javascript" src="~/contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="~/contents/socioboard/js/admin/plugins/chartist-js/chartist.min.js"></script>
+    @*<script type="text/javascript" src="~/contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js"></script>*@
+    @*<script type="text/javascript" src="~/contents/socioboard/js/admin/plugins/chartist-js/chartist.min.js"></script>*@
     <script type="text/javascript">
 
 
@@ -182,7 +184,7 @@
         });
         </script>*@
     <!-- ====  Scripts  ==== -->
-    <script>
+    @*<script>
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
                 (i[r].q = i[r].q || []).push(arguments)
@@ -191,7 +193,7 @@
         })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
         ga('create', 'UA-58515856-3', 'auto');
         ga('send', 'pageview');
-    </script>
+    </script>*@
 
     <!-- Begin emoji-picker JavaScript -->
     <script src="~/contents/socioboard/global/plugins/emoji-picker/lib/js/nanoscroller.min.js"></script>

@@ -269,7 +269,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
 
         //Logout after disable account start
         $scope.logout = function () {
-            debugger;
+          
             //alert('hello');
             $rootScope.groupId = '';
             //$rootScope.user.Id = '';
@@ -307,6 +307,21 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             // end codes to logout from all session
         }
         //Logout after disable account End
+
+        //Get User detail start
+        $scope.GetUserdetail = function () {
+            debugger;
+            $http.get(apiDomain + '/api/User/GetUser?Id=' + $rootScope.user.Id)
+                          .then(function (response) {
+                              $scope.userdetails = response.data;
+                              $scope.accountType = $scope.userdetails.accountType;
+                            
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+        }
+        //Get User detail End
+
 
         //$scope.UpdatePassword = function (updateMailSettings) {
         //    $http({
@@ -349,5 +364,11 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
 
         profilesetting();
         personalsettingload();
+
+         $scope.getOnPageLoadReports = function () {
+            $scope.GetUserdetail();
+        }
+
+        $scope.getOnPageLoadReports();
     });
 });

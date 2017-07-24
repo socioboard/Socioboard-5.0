@@ -63,21 +63,24 @@ namespace Api.Socioboard.Controllers
             {
                 if (!string.IsNullOrEmpty(item))
                 {
-                    if (item.Contains("hhh"))
+                    if (item.Contains("hhh") || item.Contains("nnn") || item.Contains("ppp") || item.Contains("jjj"))
                     {
-                        postmessage = postmessage + item.Replace("hhh", "#");
-                    }
-                    if (item.Contains("nnn"))
-                    {
-                        postmessage = postmessage.Replace("nnn", "&");
-                    }
-                    if (item.Contains("ppp"))
-                    {
-                        postmessage = postmessage.Replace("ppp", "+");
-                    }
-                    if (item.Contains("jjj"))
-                    {
-                        postmessage = postmessage.Replace("jjj", "-+");
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + item.Replace("hhh", "#");
+                        }
+                        if (item.Contains("nnn"))
+                        {
+                            postmessage = postmessage.Replace("nnn", "&");
+                        }
+                        if (item.Contains("ppp"))
+                        {
+                            postmessage = postmessage.Replace("ppp", "+");
+                        }
+                        if (item.Contains("jjj"))
+                        {
+                            postmessage = postmessage.Replace("jjj", "-+");
+                        }
                     }
                     else
                     {

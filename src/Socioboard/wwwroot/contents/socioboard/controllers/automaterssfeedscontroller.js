@@ -29,6 +29,7 @@ SocioboardApp.controller('AutoMateRssFeedsController', function ($rootScope, $sc
                                       } else {
                                           $scope.dispbtn = true;
                                           swal(response.data);
+                                          $scope.postrssfeeds(profiles, rssfeedurl);
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;
@@ -45,6 +46,22 @@ SocioboardApp.controller('AutoMateRssFeedsController', function ($rootScope, $sc
                 swal('Please select a profile for RSS post');
             }
         }
+
+
+
+        $scope.postrssfeeds = function (profiles, rssfeedurl) {
+           
+            $http.post(apiDomain + '/api/RssFeed/PostRssFeeds?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&rssUrl=' + rssfeedurl)
+                                 .then(function (response) {
+                                     if (response.data != null)
+                                         $scope.postesData = response.data;
+                                     console.log("data");
+                                     console.log($scope.postesData);
+
+                                 }, function (reason) {
+                                     $scope.error = reason.data;
+                     });
+             }
 
     });
 

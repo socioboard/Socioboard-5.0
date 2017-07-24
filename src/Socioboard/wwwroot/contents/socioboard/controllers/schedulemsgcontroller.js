@@ -196,7 +196,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             var formData = new FormData();
                             formData.append('messageText', message);
                             $scope.dispbtn = false;
-                            debugger;
+                         
                             $http({
                                 method: 'POST',
                                 url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + 'none' + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
@@ -310,7 +310,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         var l = 0;
         var x=0;
         $scope.SwitchedOn = function (abcd, dayss,num) {
-            debugger;            
+                    
             arr.push(abcd);
             arr1.push(dayss);
             numarr.push(num);
@@ -351,7 +351,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         }
         $scope.disableswith = function () {
           
-                debugger;
+               
                 var currentdate = new Date();
                 var weekday = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
                    "Friday", "Saturday");
@@ -367,7 +367,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         var arrdate = [];
         $scope.dayfindFunc = function () {
-            debugger;
+           
             var weekday = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
                "Friday", "Saturday");
             var exactDate;

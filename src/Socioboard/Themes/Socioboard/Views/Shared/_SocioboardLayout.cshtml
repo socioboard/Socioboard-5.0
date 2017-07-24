@@ -13,12 +13,44 @@
 
     @*<script>
             $(document).ready(function () {
-               // debugger;
+               //
 
                 $('.modal-trigger').leanModal();
             });
         </script>*@
-    
+    @*<script>
+            document.addEventListener('DOMContentLoaded', function () {
+
+                if (Notification.permission !== "granted") {
+                    Notification.requestPermission();
+                }
+                customnotify('Shivam', 'Hello how are you', 'http://www.aspbucket.com')
+            });
+
+            function customnotify(title, desc, url) {
+
+                if (Notification.permission !== "granted") {
+                    Notification.requestPermission();
+                }
+                else {
+                    var notification = new Notification(title, {
+                        icon: 'http://Your_Website.com/logo.png',
+                        body: desc,
+                    });
+
+                    /* Remove the notification from Notification Center when clicked.*/
+                    notification.onclick = function () {
+                        window.open(url);
+                    };
+
+                    /* Callback function when the notification is closed. */
+                    notification.onclose = function () {
+                        console.log('Notification closed');
+                    };
+
+                }
+            }
+        </script>*@
     <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>
@@ -55,8 +87,8 @@
 
     <!-- CSS  -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="~/contents/socioboard/global/plugins/materialize/css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection" />
-    <link href="~/contents/socioboard/global/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css">
+    <link href="~/contents/socioboard/global/plugins/materialize/css/materialize.min.css" type="text/css" rel="stylesheet" media="screen,projection" />
+    <link href="~/contents/socioboard/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="~/contents/socioboard/css/frontend/style.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="~/contents/socioboard/css/frontend/hello_bar.css" rel="stylesheet" />
     <link href="~/contents/socioboard/css/frontend/custom.css" rel="stylesheet" />
@@ -113,7 +145,7 @@
                     <li><a href="~/Index/Training">Training</a></li>
                     <li><a href="~/Index/FAQ">FAQs</a></li>
                     <li><a class="modal-trigger" href="#SignUpModal" onclick="SetUser()">Signup</a></li>
-                    <li><a class="waves-effect waves-light btn modal-trigger  grey darken-4 " href="#SignInModal">SignIn</a></li>
+                    <li><a class="waves-effect waves-light btn modal-trigger  grey darken-4 " href="../Index/SingIn">SignIn</a></li>
                 </ul>
 
                 <ul id="nav-mobile" class="side-nav">
@@ -126,7 +158,7 @@
                     <li><a href="~/Index/training">Training</a></li>
                     <li><a href="~/Index/FAQ">FAQs</a></li>
                     <li><a class="modal-trigger" href="#SignUpModal">Signup</a></li>
-                    <li><a class="waves-effect waves-light btn modal-trigger grey darken-4" href="#SignInModal">SignIn</a></li>
+                    <li><a class="waves-effect waves-light btn modal-trigger grey darken-4" href="../Index/SingIn" >SignIn</a></li>
                 </ul>
                 <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
             </div>
@@ -166,9 +198,10 @@
             <div class="container center">
                 <!-- Made by with ♥ <a class="brown-text text-lighten-3" href="https://www.behance.net/chanchalsantra">Chanchal Santra</a> -->
                 Copyright © 2014 - 2017 Socioboard Technologies Pvt. Ltd. All Rights Reserved.
-               &nbsp; <a href="../Index/Privacy" target="_blank">Privacy Policy</a>
+                &nbsp; <a href="../Index/Privacy" target="_blank" class="grey-text text-darken-4">Privacy Policy</a>
+                &nbsp; <a href="../Index/Refund_Policy" target="_blank" class="grey-text text-darken-4">Refund Policy</a>
             </div>
-            
+
         </div>
     </footer>
 
@@ -303,7 +336,7 @@
                     </p>
                     <p>Forgot password? <a class="modal-trigger modal-action modal-close modal-trigger" href="#ForgotPasswdModal" onclick="chng_btn_val_rev()">Click here to restore</a></p>
 
-                    <img class='img-portfolio img-responsive hide' id="logLoading" src='~/contents/socioboard/images/loading-spinner-grey.gif'>
+                    @*<img class='img-portfolio img-responsive hide' id="logLoading" src='~/contents/socioboard/images/loading-spinner-grey.gif'>*@
 
                     <div id="btnlogin">
                         <button type="submit" class="modal-action waves-effect waves-green btn">Submit</button>
@@ -351,7 +384,8 @@
             </script>
 
             <div class="modal-footer">
-                <input type="submit" onclick="" id="sub_btn" class="waves-effect waves-light btn cyan" value="Submit" />@*Submit</input>*@
+                @*<input type="submit" onclick="" id="sub_btn" class="waves-effect waves-light btn cyan" value="Submit" />@*Submit</input>*@
+                <button id="sub_btn" type="submit" class="waves-effect waves-light btn cyan" value="submit">Submit</button>
             </div>
         </form>
     </div>
@@ -621,7 +655,7 @@ analytics" href="http://statcounter.com/shopify/"
                 dataType: "html",
 
                 success: function (msg) {
-                    debugger;
+
                     $("#fb-gp-login").css("display", "none");
                     //Savesessiondata();
                     //sleep(30000);
@@ -704,7 +738,7 @@ analytics" href="http://statcounter.com/shopify/"
             var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
             cpwd = password;
             var encodedString = Base64.encode(cpwd);
-            debugger;
+
             var d = new Date();
 
             d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -721,7 +755,7 @@ analytics" href="http://statcounter.com/shopify/"
 
             var j = 0;
 
-            debugger;
+
 
             var Cookies = document.cookie.split(';');
 
@@ -745,7 +779,7 @@ analytics" href="http://statcounter.com/shopify/"
 
         function getCookie(cemail) {
 
-            debugger;
+
 
             var name = cemail + "=";
 
@@ -771,7 +805,7 @@ analytics" href="http://statcounter.com/shopify/"
 
         function checkCookie(username, password) {
 
-            debugger;
+
 
             var check = getCookie("logininfo" + username);
             if (check != "") {
@@ -791,7 +825,7 @@ analytics" href="http://statcounter.com/shopify/"
 
         function retpwd() {
             var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
-            debugger;
+
             var email = $("#logUserName").val();
             var pwd = getCookie("logininfo" + email.trim());
             var decodedString = Base64.decode(pwd);
@@ -806,7 +840,7 @@ analytics" href="http://statcounter.com/shopify/"
         }
 
         function SetUser() {
-            debugger;
+
             var currentcookie = GetAllCookies().split('=');
             var email = currentcookie[0].trim();
             var pass = currentcookie[1].trim();
@@ -820,7 +854,7 @@ analytics" href="http://statcounter.com/shopify/"
 
 
         function Savesessiondata() {
-            debugger;
+
             var Ip = '';
             $.getJSON('//ip-api.com/json?callback=?', function (data) {
                 Ip = data.query;
@@ -918,21 +952,37 @@ analytics" href="http://statcounter.com/shopify/"
 
     <script>
         function gotohome() {
-            // alert('hello calling');
             $.ajax({
                 type: "GET",
                 url: "../Home/IsSessionExist",
                 dataType: "html",
                 success: function (msg) {
-                    console.log(msg);
                     if (msg == "true") {
-                        console.log(msg);
                         window.top.location = '/home';
+                    } else {
+                        $.ajax({
+                            type: "GET",
+                            url: "../Home/UserSession",
+                            dataType: "html",
+                            async: true,
+                            success: function (msg) {
+                                if (msg == "true") {
+                                    window.top.location = '/home';
+                                }
+                            }
+                        });
+
                     }
                 }
             });
         }
-        gotohome();
+      
+        function UserSession() {
+            gotohome();
+            sleep(3000);
+            $('#SignInModal').openModal();
+        }
+       //  gotohome();
     </script>
 
     @*Forgot password js start*@
@@ -957,7 +1007,7 @@ analytics" href="http://statcounter.com/shopify/"
             }
             $('#ImgLoading').show();
             $('#submitButton').hide();
-            debugger;
+
             var emailId = $('#forgotPwdEmail').val();
 
             $('#ImgLoading').hide();

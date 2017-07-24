@@ -95,6 +95,15 @@ namespace Api.Socioboard.Helper
         //facebooklimits
         public int FacebookScheduleMessageMaxLimit { get; set; }
 
+        //get in touch
+        public string socioUserFromMail { get; set; }
+        public string getInTouchSubject { get; set; }
+        public string getInTouchToMail { get; set; }
+        public string getInTouchToMailCc { get; set; }
+
+        public string paypalapiUsername { get; set; }
+        public string paypalapiPassword { get; set; }
+        public string paypalapiSignature { get; set; }
 
     }
 }
