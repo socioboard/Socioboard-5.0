@@ -422,7 +422,7 @@ namespace Socioboard.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "No page linked with this account";
+                    TempData["Error"] = "Page has not been linked with current login account,please login with linked facebook account";
                     return RedirectToAction("Index", "Home");
                 }
             }

@@ -73,6 +73,7 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
           
             var memberId = $('.task-user-member:checked');
             var taskComment = $('#taskComment').val();
+            var TempTaskMessage = taskComment;
             var updatedmessage = "";
             var postdata = taskComment.split("\n");
             for (var i = 0; i < postdata.length; i++) {
@@ -87,7 +88,7 @@ SocioboardApp.controller('SmartInboxController', function ($rootScope, $scope, $
             if (!memberId.val()) {
                 swal('Please select a member to assign the task')
             }
-            else if (!taskComment) {
+            else if (!(/\S/.test(TempTaskMessage))) {
                 swal('Please write a comment to assign the task')
             }
             else {

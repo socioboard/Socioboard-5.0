@@ -8,6 +8,7 @@ using Api.Socioboard.Repositories;
 using Api.Socioboard.Model;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Cors;
+using Domain.Socioboard.Models;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -91,6 +92,48 @@ namespace Api.Socioboard.Controllers
             return Ok();
         }
 
+        [HttpPost("AddSelectedProfilesForBasicPlan")]
+        public IActionResult AddSelectedProfilesForBasicPlan(long groupId, long userId)
+        {
+            string selectedProfiles = Request.Form["selectedProfiles"];
+            string[] Profiles = selectedProfiles.Split(',');
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            //User user = dbr.Single<User>(t => t.Id == userId);
+            //Domain.Socioboard.Enum.SBAccountType accounttype = user.AccountType;
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            long FBProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage));
+            long TwtProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter));
+            long GplusProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus && t.profileType == Domain.Socioboard.Enum.SocialProfileType.GplusPage));
+            long LinkedInProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn && t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage));
+            long InstaProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram));
+            lstGrpProfiles = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId)).ToList();
+            long lstFBProfile= lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && (t.profileType== Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage)).Count();
+            long lstTwtProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).Count();
+            long lstInstaProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram).Count();
+            long lstLinkedInProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn|| t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage)).Count();
+            long lstGplusProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus || t.profileType == Domain.Socioboard.Enum.SocialProfileType.GplusPage)).Count();
+
+            long FbCount = FBProfiles - lstFBProfile;
+            long twtCount = TwtProfiles - lstTwtProfile;
+            long InstaCount = InstaProfiles - lstInstaProfile;
+            long LinkedInCount = LinkedInProfiles - lstLinkedInProfile;
+            long GplusCount = GplusProfiles - lstGplusProfile;
+
+            if(FbCount>1 || twtCount > 1|| InstaCount > 1|| LinkedInCount > 1|| GplusCount > 1)
+            {
+                return BadRequest("As per your plan you can use only one profile per network.Please choose profiles as per your plan");
+            }
+            else
+            {
+                foreach (var item in lstGrpProfiles)
+                {
+                    GroupProfilesRepository.DeleteProfile(groupId, userId, item.profileId, _redisCache, dbr, _appSettings);
+                }
+                return Ok();
+            }
+            //return Ok();
+
+        }
 
         [HttpGet("getProfilesAvailableToConnect")]
         public IActionResult getProfilesAvailableToConnect(long groupId, long userId)
@@ -330,7 +373,5 @@ namespace Api.Socioboard.Controllers
             }
             return Ok(lstPluginProfile);
         }
-
-
     }
 }

@@ -6,7 +6,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
         youtubefeeds();
         $('#tags').tagsInput();
         $scope.preloadmore = true;
-            
+        $scope.SorttTxtt = 'Popular';
         $scope.boxload = function () {
             $('.collapsible').collapsible();
         }
@@ -15,6 +15,8 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
         $scope.LoadVideos = function () {
             $scope.preloadmorevideos = false;
             $scope.lstYtFeeds = null;
+            $scope.SorttTxtt = 'Popular';
+
             //codes to load videos
             $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId + '&sortType=none')
                               .then(function (response) {
@@ -43,9 +45,11 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
             
         }
 
-        $scope.sortSearch = function (sortType) {
+        $scope.sortSearch = function (sortType, txtt) {
             $scope.preloadmorevideos = false;
             $scope.lstYtFeeds = null;
+            $scope.SorttTxtt = txtt;
+
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId + '&sortType=' + sortType)
                           .then(function (response) {

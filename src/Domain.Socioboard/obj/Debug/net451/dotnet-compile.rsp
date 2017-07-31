@@ -86,6 +86,7 @@
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Consatants\SocioboardConsts.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\AdsOfferAccountStatus.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\AdsStatus.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\AdvanceSearchpostType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\ArticlesAndBlogsTypes.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\DemoPlantype.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\EwalletStatus.cs
@@ -95,6 +96,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\FeedTableType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\GPlusProfileType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\GroupMemberStatus.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\NetworkType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PaymentType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PayPalAccountStatus.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBAccountType.cs
@@ -166,7 +168,6 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\FacebookGroupPostComments.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\LinkedGroupPost.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\LinkedInCompanyPagePost.cs
-E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\AdvanceSerachData.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ArticlesAndBlogs.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ElasticmailReport.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacaebookPageDailyReports.cs

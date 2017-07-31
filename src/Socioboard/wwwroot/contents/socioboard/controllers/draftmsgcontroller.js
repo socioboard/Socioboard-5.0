@@ -88,6 +88,7 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
             $rootScope.draftmessgae = message;
             $rootScope.draftId = draftId;
             $('#EditDraftModal').openModal();
+            document.getElementById('editdraftScheduleMsg').value = message;
             //$scope.modalinstance = $modal.open({
             //    templateUrl: 'editdraftModalContent.html',
             //    controller: 'DraftMessageController',

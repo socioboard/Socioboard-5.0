@@ -164,72 +164,118 @@ namespace Socioboard.Controllers
             {
                 return RedirectToAction("Index", "Index");
             }
-            HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroupData?userId=" + user.Id, "", "", _appSettings.ApiDomain);
+            string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+            HttpResponseMessage response = await WebApiReq.GetReq("/api/Groups/GetUserGroupData?userId=" + user.Id + "&groupId=" + sessionSelectedGroupId, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 try
                 {
                     Domain.Socioboard.Models.GetUserGroupData groups = await response.Content.ReadAsAsync<Domain.Socioboard.Models.GetUserGroupData>();
-                    int groupscount = groups.lstgroup.Count;
-                    int groupsMaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxGroupCount(user.AccountType);
-                    ViewBag.groupsCount = groupscount;
-                    ViewBag.groupsMaxCount = groupsMaxCount;
-                    ViewBag.AccountType = user.AccountType;
-                    if (groupscount > groupsMaxCount)
-                    {
-                        ViewBag.groupsdowngrade = "true";
-                    }
-                    else
-                    {
-                        ViewBag.groupsdowngrade = "false";
-                    }
+                    //int groupscount = groups.lstgroup.Count;
+                    //int groupsMaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxGroupCount(user.AccountType);
+                    //ViewBag.groupsCount = groupscount;
+                    //ViewBag.groupsMaxCount = groupsMaxCount;
+                    //ViewBag.AccountType = user.AccountType;
+                    //if (groupscount > groupsMaxCount)
+                    //{
+                    //    ViewBag.groupsdowngrade = "true";
+                    //}
+                    //else
+                    //{
+                    //    ViewBag.groupsdowngrade = "false";
+                    //}
                     ViewBag.groups = Newtonsoft.Json.JsonConvert.SerializeObject(groups.lstgroup);
-                    string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+
                     if (!string.IsNullOrEmpty(sessionSelectedGroupId))
                     {
                         ViewBag.selectedGroupId = sessionSelectedGroupId;
-                        var keyValuePairProfiles = groups.myProfiles.Single(x => x.Key == Convert.ToInt32(sessionSelectedGroupId));
-                        List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = keyValuePairProfiles.Value.ToList();
-                        ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
-                        int count = groupProfiles.Count;
-                        int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
-                        ViewBag.profileCount = count;
-                        ViewBag.MaxCount = MaxCount;
-                        ViewBag.AccountType = user.AccountType;
-                        if (count > MaxCount)
+                        try
                         {
-                            ViewBag.downgrade = "true";
+                            var keyValuePairProfiles = groups.myProfiles.Single(x => x.Key == Convert.ToInt32(sessionSelectedGroupId));
+                            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = keyValuePairProfiles.Value.ToList();
+                            ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
+                            int count = groupProfiles.Count;
+                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                            ViewBag.profileCount = count;
+                            ViewBag.MaxCount = MaxCount;
+                            ViewBag.AccountType = user.AccountType;
+                            if (count > MaxCount)
+                            {
+                                ViewBag.downgrade = "true";
+                            }
+                            else
+                            {
+                                ViewBag.downgrade = "false";
+                            }
                         }
-                        else
+                        catch (Exception)
                         {
-                            ViewBag.downgrade = "false";
+
+                            ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(new List<Groupprofiles>());
+                            int count = 0;
+                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                            ViewBag.profileCount = count;
+                            ViewBag.MaxCount = MaxCount;
+                            ViewBag.AccountType = user.AccountType;
+                            if (count > MaxCount)
+                            {
+                                ViewBag.downgrade = "true";
+                            }
+                            else
+                            {
+                                ViewBag.downgrade = "false";
+                            }
                         }
                     }
                     else
                     {
+                        try
+                        {
+                            long selectedGroupId = groups.lstgroup.Single(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
+                            HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
+                            ViewBag.selectedGroupId = selectedGroupId;
+                            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = new List<Groupprofiles>();
+                            if (groups.myProfiles.Count != 0)
+                            {
+                                var keyValuePairProfiles = groups.myProfiles.Single(x => x.Key == selectedGroupId);
+                                groupProfiles = keyValuePairProfiles.Value.ToList();
+                            }
+                            ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
+                            int count = groupProfiles.Count;
+                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                            ViewBag.profileCount = count;
+                            ViewBag.MaxCount = MaxCount;
+                            if (count > MaxCount)
+                            {
+                                ViewBag.downgrade = "true";
+                            }
+                            else
+                            {
+                                ViewBag.downgrade = "false";
+                            }
+                        }
+                        catch
+                        {
+                            ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(new List<Groupprofiles>());
+                            int count = 0;
+                            int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
+                            ViewBag.profileCount = count;
+                            ViewBag.MaxCount = MaxCount;
+                            ViewBag.AccountType = user.AccountType;
+                            if (count > MaxCount)
+                            {
+                                ViewBag.downgrade = "true";
+                            }
+                            else
+                            {
+                                ViewBag.downgrade = "false";
+                            }
+                        }
 
-                        long selectedGroupId = groups.lstgroup.Single(t => t.groupName == Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName).id;
-                        HttpContext.Session.SetObjectAsJson("selectedGroupId", selectedGroupId);
-                        ViewBag.selectedGroupId = selectedGroupId;
-                        var keyValuePairProfiles = groups.myProfiles.Single(x => x.Key == selectedGroupId);
-                        List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = keyValuePairProfiles.Value.ToList();
-                        ViewBag.groupProfiles = Newtonsoft.Json.JsonConvert.SerializeObject(groupProfiles);
-                        int count = groupProfiles.Count;
-                        int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
-                        ViewBag.profileCount = count;
-                        ViewBag.MaxCount = MaxCount;
-                        if (count > MaxCount)
-                        {
-                            ViewBag.downgrade = "true";
-                        }
-                        else
-                        {
-                            ViewBag.downgrade = "false";
-                        }
 
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     HttpContext.Session.Remove("User");
                     HttpContext.Session.Remove("selectedGroupId");
@@ -641,17 +687,17 @@ namespace Socioboard.Controllers
         }
 
         [HttpGet]
-        public bool IsSessionExist()
+        public IActionResult IsSessionExist()
         {
             string twostep = HttpContext.Session.GetObjectFromJson<string>("twosteplogin");
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             if (user == null)
             {
-                return false;
+                return Content("false");
             }
             else if (twostep == "true")
             {
-                return false;
+                return Content("TwoStepLogin");
             }
             else
             {
@@ -662,12 +708,17 @@ namespace Socioboard.Controllers
                         // return false;
 
                     }
+                    else if (user.TwostepEnable == true)
+                    {
+                       // HttpContext.Session.SetObjectAsJson("twosteplogin", "true");
+                        return Content("TwoStepLogin");
+                    }
                 }
                 catch (Exception)
                 {
-                    return false;
+                    return Content("false");
                 }
-                return true;
+                return Content("true");
             }
         }
 
@@ -737,6 +788,11 @@ namespace Socioboard.Controllers
                             {
                                 user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
                                 HttpContext.Session.SetObjectAsJson("User", user);
+                                if (user.TwostepEnable == true)
+                                {
+                                    HttpContext.Session.SetObjectAsJson("twosteplogin", "true");
+                                    return Content("false");
+                                }
                                 return Content("true");
                             }
                             catch (Exception ex)

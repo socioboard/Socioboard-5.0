@@ -4,19 +4,20 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
     $scope.$on('$viewContentLoaded', function () {
         $scope.lstInviteTeamMembers = []; // array contains list of needs to invite for current group
         $scope.accountType = $rootScope.user.AccountType;
-        
+        $scope.userEmail = $rootScope.user.EmailId;        
         $scope.message = function (msg) {
-            $scope.msg = "If You want to use this feature upgrade to higher business plan ";
+            $scope.msg = "As per your plan you already added maximum number of members.If you want to add more members in your team upgrade your plan. ";
             swal(msg);
         };
 
-        $scope.grpmsgs = function (grpmsg) {
-            $scope.grpmsg = "You reached maximum groups count you can't create more groups  ";
-            swal(grpmsg);
-        };
+        //$scope.grpmsgs = function (grpmsg) {
+        //    $scope.grpmsg = "You reached maximum groups count you can't create more groups  ";
+        //    swal(grpmsg);
+        //};
 
         $scope.utility = utility;
-
+        $scope.btnLded = 'temp';
+        $scope.btnLding = 'hide';
         $scope.deleteProfile = function(profileId, groupId){
             swal({
                 title: "Are you sure?",
@@ -134,9 +135,147 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 
         }
 
+        $scope.getadminDetails = function (index, groupId) {
+
+            $http.get(apiDomain + '/api/GroupMember/GetGroupAdmin?groupId=' + groupId + '&userId=' + $rootScope.user.Id)
+                          .then(function (response) {
+                              $rootScope.groups[index].admin = response.data;
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            //}
+
+        }
+
+        $scope.adminDelete = function (index, groupId) {
+
+            $http.get(apiDomain + '/api/GroupMember/DeleteGroup?groupId=' + groupId + '&userId=' + $rootScope.user.Id)
+                          .then(function (response) {
+                              debugger;
+                              $scope.success = response.data;
+                              swal("Team is deleted");
+                              window.location.reload();
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+        }
+        $scope.leaveGroup = function (index, groupId) {
+
+            $http.get(apiDomain + '/api/GroupMember/LeaveGroup?groupId=' + groupId + '&userId=' + $rootScope.user.Id)
+                          .then(function (response) {
+                              debugger;
+                              $scope.success = response.data;
+                              swal("successfully Leave");
+                              window.location.reload();
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+        }
+
+
+
+
+
+
+        //Get Group members count
+        $scope.getgroupsmembercount = function () {
+            $http.get(apiDomain + '/api/Groups/GetUserGroupsMembersCount?&userId=' + $rootScope.user.Id)
+                 .then(function (response) {
+                     $scope.membercount = response.data;
+
+                     $http.get(apiDomain + '/api/GroupMember/RetainGrpMber?userId=' + $rootScope.user.Id)
+                     .then(function (response) {
+                         $scope.grpdetails = response.data;
+
+                         if ($scope.membercount > 2 && $rootScope.user.AccountType == 0) {
+                             $scope.maxmember = 2;
+                             $('#ActiveMemberModal').openModal({ dismissible: false });
+                         }
+                         else if ($scope.membercount > 5 && $rootScope.user.AccountType == 1) {
+                             $scope.maxmember = 5;
+                             $('#ActiveMemberModal').openModal({ dismissible: false });
+                         }
+                         else if ($scope.membercount > 10 && $rootScope.user.AccountType == 2) {
+                             $scope.maxmember = 10;
+                             $('#ActiveMemberModal').openModal({ dismissible: false });
+                         }
+                         else if ($scope.membercount > 20 && $rootScope.user.AccountType == 3) {
+                             $scope.maxmember = 20;
+                             $('#ActiveMemberModal').openModal({ dismissible: false });
+                         }
+                         else if ($scope.membercount > 30 && $rootScope.user.AccountType == 4) {
+                             $scope.maxmember = 30;
+                             $('#ActiveMemberModal').openModal({ dismissible: false });
+                         }
+                         else if ($scope.membercount > 50 && $rootScope.user.AccountType == 5) {
+                             $scope.maxmember = 50;
+                             $('#ActiveMemberModal').openModal({ dismissible: false });
+                         }
+                         else if ($scope.membercount > 80 && $rootScope.user.AccountType == 6) {
+                             $scope.maxmember = 80;
+                             $('#ActiveMemberModal').openModal({ dismissible: false });
+                         }
+                         else if ($scope.membercount > 100 && $rootScope.user.AccountType == 7) {
+                             $scope.maxmember = 100;
+                             $('#ActiveMemberModal').openModal({ dismissible: false });
+                         }
+                     }, function (reason) {
+                         $scope.error = reason.data;
+                     });
+
+
+
+
+
+                 }, function (reason) {
+                     $scope.error = reason.data;
+                 });
+            //}
+
+        }
+
+
+
+        $scope.retainMemberSelection = function (option) {
+            var idx = $scope.selectedMembersrestrict.indexOf(option);
+
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedMembersrestrict.splice(idx, 1);
+            }
+
+                // is newly selected
+            else {
+                $scope.selectedMembersrestrict.push(option);
+            }
+        };
+        $scope.selectedMembersrestrict = [];
+        //retain group
+        $scope.retainGrpMember = function (max, current) {
+            var tempMembers = current - max;
+            debugger;
+            if ($scope.selectedMembersrestrict.length >= tempMembers) {
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupMember/DeleteGroupMembers?grpMmbrIdss=' + $scope.selectedMembersrestrict,
+                }).then(function (response) {
+                    if (response.data != "") {
+                        alertify.success('Selected team members has been deleted successfully');
+                        window.location.reload();
+                    }
+                    else {
+                        alertify.set({ delay: 1000 });
+                        alertify.error(response.data);
+                    }
+                }, function (reason) {
+                    alertify.set({ delay: 1000 });
+                    alertify.error(reason.data);
+                });
+            }
+        };
 
         $scope.openMemberInvitationModal = function (groupId, groupName) {
-          
+            $('#InviteMembersModal').openModal();
             $scope.inviGrpName = groupName;
             $scope.inviGrpId = groupId;
             $scope.lstInviteTeamMembers = [];
@@ -188,7 +327,6 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         }
 
         $scope.SendInvitations = function (groupId) {
-           
             var mem ='';
             for (var i = 0; i < $scope.lstInviteTeamMembers.length ; i++)
             {
@@ -196,7 +334,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
             }
 
            
-            if (mem!="") {
+            if (mem != "") {
                 $http({
                     method: 'POST',
                     url: apiDomain + '/api/GroupMember/InviteGroupMembers?groupId=' + $scope.inviGrpId + '&members=' + mem,
@@ -225,6 +363,8 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
             groupmember.getGroupMembers(index, groupId);
             $scope.getGroupProfiles(index, groupId);
             $scope.getGroupProfilesToconnect(index, groupId);
+            $scope.getadminDetails(index, groupId);
+            $rootScope.adminDelete(index, groupId);
         }
 
         $scope.addProfileToGroup = function (groupId, profileId, profileType) {
@@ -251,7 +391,53 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
             });
         }
 
+        $scope.toggleMemberSelection = function (option) {
+            var idx = $scope.selectedMembers.indexOf(option);
+
+            // is currently selected
+            if (idx > -1) {
+                $scope.selectedMembers.splice(idx, 1);
+            }
+
+                // is newly selected
+            else {
+                $scope.selectedMembers.push(option);
+            }
+        };
+        $scope.selectedMembers = [];
+
+        $scope.deleteGrpMember = function (groupId) {
+            if ($scope.selectedMembers.length != 0) {
+                $scope.btnLded = 'hide';
+                $scope.btnLding = 'temp';
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupMember/DeleteGroupMembers?grpMmbrIdss=' + $scope.selectedMembers,
+                }).then(function (response) {
+                    if (response.data != "") {
+                        $scope.btnLded = 'temp';
+                        $scope.btnLding = 'hide';
+                        alertify.success('Selected team members has been deleted successfully');
+                        window.location.reload();
+                    }
+                    else {
+                        alertify.set({ delay: 1000 });
+                        alertify.error(response.data);
+                    }
+                }, function (reason) {
+                    alertify.set({ delay: 1000 });
+                    alertify.error(reason.data);
+                });
+            }
+        };
+
+        $scope.openDeleteModal = function (idss) {
+            var temp = '#Edit_' + idss;
+            $(temp).openModal();
+        }
+
         $scope.getOnPageLoadGroups = function () {
+            $scope.getgroupsmembercount();
             var canContinue = true;
             angular.forEach($rootScope.groups, function (value, key) {
                 if (canContinue && value.id == $rootScope.groupId) {

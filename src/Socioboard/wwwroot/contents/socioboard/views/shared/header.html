@@ -75,55 +75,22 @@
                             </a>
                         </li>
                         <li>
-                            <a href="./Index/FAQ" class="waves-effect waves-orange  white-text">
+                            <a href="https://www.socioboard.com/Index/FAQ" target="_blank" class="waves-effect waves-orange  white-text">
                                 <span class="groupslist"><i class="icon-question"></i>FAQs</span>
                             </a>
                         </li>
                     </ul>
 
                     <!-- Groups for all plan -->
-                    <ul id='groups' class='dropdown-content dropdown-content-small' ng-if="AccountType==3 || AccountType==4 || AccountType==5 || AccountType==6 || AccountType==7">
+                    <ul id='groups' class='dropdown-content dropdown-content-small'>
                         <li ng-repeat="grp in groups">
-                            <a href="javascript:;" class="grey grey-text text-lighten-4">
-                                <span ng-if="groupId==grp.id">{{grp.groupName}}</span>
-                            </a>
-                            <a href="javascript:;" class="">
-                                <span ng-click="changeGroup(grp.id)" ng-if="groupId!=grp.id">{{grp.groupName}}</span>
-                            </a>
+                            <span class="grey grey-text text-lighten-4" ng-if="groupId==grp.id">{{grp.groupName}}</span>
+                            <span ng-click="changeGroup(grp.id)" ng-if="groupId!=grp.id">{{grp.groupName}}</span>
                         </li>
+                        <li class="divider"></li>
                         <li><a href="#/groups" class="grey-text text-darken-4">View Team</a></li>
-                        <!--<li class="divider"></li>-->
-                        <li ng-if="AccountType==3 && GetUserGroupCount<5"><a href="#/groups" ><span class="grey-text text-darken-4">Create New</span></a></li>
-                        <li ng-if="AccountType==3 && GetUserGroupCount==5"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
-                        <li ng-if="AccountType==4 && GetUserGroupCount<10"><a href="#/groups"><span class="grey-text text-darken-4">Create New</span></a></li>
-                        <li ng-if="AccountType==4 && GetUserGroupCount==10"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
-                        <li ng-if="AccountType==5 && GetUserGroupCount<15"><a href="#/groups"><span class="grey-text text-darken-4">Create New</span></a></li>
-                        <li ng-if="AccountType==5 && GetUserGroupCount==15"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
-                        <li ng-if="AccountType==6 && GetUserGroupCount<20"><a href="#/groups"><span>Create New</span></a></li>
-                        <li ng-if="AccountType==6 && GetUserGroupCount==20"><a  ng-click="message(abcd)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
-                        <li ng-if="AccountType==7 && GetUserGroupCount<25"><a href="#/groups"><span class="grey-text text-darken-4">Create New</span></a></li>
-                        <li ng-if="AccountType==7 && GetUserGroupCount==25"><a  ng-click="grpmsgs(grpmsg)" disable><span class="grey-text text-darken-4">Create New</span></a></li>
-                        
-                        <!--<li>{{GetUserGroupCount}}</li>-->
+                        <li><a href="#/groups">Create New</a></li>
                     </ul>
-
-                    <!-- Groups for Free plan -->
-                    <ul id='groups' class='dropdown-content dropdown-content-small' ng-if="AccountType==0 || AccountType==1 ||AccountType==2">
-                        <li ng-repeat="grp in groups">
-                            <a href="javascript:;" class="grey grey-text text-lighten-4">
-                                <span ng-if="groupId==grp.id">{{grp.groupName}}</span>
-                            </a>
-                            <a href="javascript:;" class="">
-                                <span ng-if="groupId!=grp.id && grp.groupName==Socioboard">{{grp.groupName}}</span>
-                            </a>
-                            <a href="javascript:;" class="">
-                                <span ng-click="grpmessage(grperrormsg)" disable ng-if="groupId!=grp.id && grp.groupName!=Socioboard">{{grp.groupName}}</span>
-                            </a>
-                        </li>
-                        <!--<li class="divider"></li>-->
-                        <li><a ng-click="message(abcd)" disable><span>Create New</span></a></li>
-                    </ul>
-
                     <!-- Accounts Structure -->
                     <ul id="account_list" class='dropdown-content dropdown-content-small'>
                         <li>

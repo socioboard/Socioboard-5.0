@@ -1,6 +1,6 @@
 ﻿'use strict';
 
-SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope, $http, $timeout, $stateParams, apiDomain, grouptask) {
+SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope, $http, $timeout, $stateParams, apiDomain, domain, grouptask) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         // initialize core components
@@ -8,6 +8,8 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         $scope.disbtncom = true;
         $scope.buildbtn = true;
         var endfeeds = false;
+        $scope.filterrTxtt = 'All Posts';
+        $scope.SorttTxtt = 'Popular';
         var start = 0; // where to start data
         var ending = start + 10; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
@@ -50,10 +52,12 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             $scope.filters = false;
             $scope.preloadmore = false;
             $scope.lstFbFeeds = null;
+            $scope.filterrTxtt = 'All Posts';
+            $scope.SorttTxtt = 'Popular';
                 //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
                               .then(function (response) {
-                            
+                               
                                   // $scope.lstProfiles = response.data;
                                   $scope.lstFbFeeds = response.data;
                                   $scope.preloadmore = true;
@@ -139,8 +143,8 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         facebookfeeds();
 
         $scope.reconnect = function (xyz) {
-           
-         
+     
+            console.log(xyz);
             $http.get(domain + '/socioboard/recfbcont?id=' + $stateParams.profileId + '&fbprofileType=' + xyz)
                               .then(function (response) {
                                   window.location.href = response.data;
@@ -152,37 +156,43 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         };
 
         $scope.fbprofiles = function () {
-            
+         
             $http.get(apiDomain + '/api/Facebook/GetFacebookProfilesOnly?groupId=' + $rootScope.groupId)
             .then(function (response) {
                 console.log(response.data)
                 if (response.data != null) {
-
+                    var ac = false;
                     $scope.profiledet = response.data;
                     angular.forEach($scope.profiledet, function (value, key) {
-
-
-
                         if (value.fbUserId == $stateParams.profileId) {
                             $scope.reconnect(value.fbProfileType);
-                        }
-                        else {
-                            $scope.reconnect(null);
+                            ac = true;
                         }
 
                     });
 
+                    if (!ac) {
+                        $scope.reconnect(null);
+                    }
+
                 }
+
+
             }, function (reason) {
                 $scope.error = reason.data;
             });
 
         };
 
-        $scope.filterSearch = function (typeFilter) {
+        $scope.confirmation = function () {
+
+        }
+
+        $scope.filterSearch = function (typeFilter, txtt) {
             $scope.filters = true;
             $scope.preloadmore = false;
             $scope.lstFbFeeds = null;
+            $scope.filterrTxtt = txtt;
             $http.get(apiDomain + '/api/Facebook/GetTopFilterFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + 30 + '&typeFilter=' + typeFilter)
                               .then(function (response) {
                                   // $scope.lstProfiles = response.data;
@@ -202,11 +212,12 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         };
 
 
-        $scope.SortSearch = function (typeShort) {
-      
+        $scope.SortSearch = function (typeShort, txtt) {
+         
             $scope.filters = true;
             $scope.preloadmore = false;
             $scope.lstFbFeeds = null;
+            $scope.SorttTxtt = txtt;
             $http.get(apiDomain + '/api/Facebook/Shortfeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + 30 + '&typeShort=' + typeShort)
                               .then(function (response) {
                                   $scope.lstFbFeeds = response.data;
@@ -308,7 +319,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         //repost
 
         $scope.openComposeMessage = function (contentFeed) {
-       
+           
             jQuery('input:checkbox').removeAttr('checked');
             if (contentFeed != null) {
                 var message = {

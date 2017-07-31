@@ -48,6 +48,12 @@
         width: 20px;
         background: transparent !important;
     }
+    .iconprofile{
+    position: absolute;
+    top: 36px;
+    z-index: 1;
+    left: 44px;
+    }
 </style>
 <div data-ng-controller="DashboardController">
     <!-- Page name -->
@@ -385,13 +391,23 @@
                                         <div class="card-image waves-effect waves-block waves-light">
                                             <img class="activator" ng-src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}">
                                         </div>
-                                        <div class="card-content">
+                                        <div class="card-content" ng-if="data['linkdINcompanyaccount']['logoUrl']!=null">
                                             <img ng-src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}" class="circle responsive-img activator card-profile-image">
                                             <img ng-src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
-                                            <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['linkdINcompanyaccount']['linkedinPageName']}}</span>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdINcompanyaccount']['linkedinPageName']}}"</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
+                                        </div>
+                                        <div class="card-content" ng-if="data['linkdINcompanyaccount']['logoUrl']==null">
+                                            <img ng-src="http://walyou.com/wp-content/uploads//2010/12/facebook-profile-picture-no-pic-avatar.jpg" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdINcompanyaccount']['linkedinPageName']}}"</span>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
                                             <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
                                         </div>
@@ -412,13 +428,26 @@
                                         <div class="card-image waves-effect waves-block waves-light">
                                             <img class="activator" ng-src="{{data['linkdInaccount']['logoUrl']}}">
                                         </div>
-                                        <div class="card-content">
+                                        <div class="card-content" ng-if="data['linkdInaccount']['profileImageUrl']!=null">
                                             <img ng-src="{{data['linkdInaccount']['profileImageUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}" class="circle responsive-img activator card-profile-image">
                                             <img ng-src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
-                                            <span class="card-title activator grey-text text-darken-4 truncate" title="Logo Url">{{data['linkdInaccount']['linkedinUserName']}}</span>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdInaccount']['linkedinUserName']}}"</span>
+                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{data['linkdInaccount']['connections']}}</p>
+                                            <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}} </span></p>
+
+                                            <!--<p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Connections:</span><span title="{{data['linkdInaccount']['connections']}}">{{data['linkdInaccount']['connections']}}</span> {{data['linkdInaccount']['connections']}}</p>-->
+                                            <!--<p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">EmailId:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['{{emailId}}']}}</span></p>-->
+                                        </div>
+                                        <div class="card-content" ng-if="data['linkdInaccount']['profileImageUrl']==null">
+                                            <img ng-src="http://walyou.com/wp-content/uploads//2010/12/facebook-profile-picture-no-pic-avatar.jpg" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="/contents/socioboard/images/link_icon.png" class="card_profile_socio_icon">
+                                            <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
+                                                <i class="icon-info"></i>
+                                            </a>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdInaccount']['linkedinUserName']}}"</span>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{data['linkdInaccount']['connections']}}</p>
                                             <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Following:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}} </span></p>
 
@@ -928,8 +957,11 @@
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
                                                 <div class="row card" ng-if="profile.profileType==4">
                                                     <a href="https://www.linkedin.com/company/{{profile.profileId}}" target="_blank">
-                                                        <div class="col l3 m3 s3">
+                                                        <div class="col l3 m3 s3" ng-if="profile.profilePic!=null">
                                                             <img ng-src="{{profile.profilePic}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l3 m3 s3" ng-if="profile.profilePic==null">
+                                                            <img ng-src="http://walyou.com/wp-content/uploads//2010/12/facebook-profile-picture-no-pic-avatar.jpg" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -950,8 +982,11 @@
                                             <li class="social_profile container" ng-repeat="profile in lstProfiles">
                                                 <div class="row card" ng-if="profile.profileType==3">
                                                     <a href="http://www.linkedin.com/profile/view?id={{profile.profileId}}" target="_blank">
-                                                        <div class="col l3 m3 s3">
+                                                        <div class="col l3 m3 s3" ng-if="profile.profilePic!=null">
                                                             <img ng-src="{{profile.profilePic}}" class="responsive-img">
+                                                        </div>
+                                                        <div class="col l3 m3 s3" ng-if="profile.profilePic==null">
+                                                            <img ng-src="http://walyou.com/wp-content/uploads//2010/12/facebook-profile-picture-no-pic-avatar.jpg" class="responsive-img">
                                                         </div>
                                                         <div class="col l7 m7 s7">
                                                             <span class="truncate">{{profile.profileName}}</span>
@@ -1090,7 +1125,7 @@
                     </ul>
                     <!--end container-->
                     <!--start container-->
-                    <div class="container">
+                    <!--<div class="container">
                         <div class="card-panel grey lighten-5 z-depth-1">
                             <h6 class="r_side_title"><i class="icon-user-following"></i>Recent Followers</h6>
                             <div class="row" id="#recent_followers_list">
@@ -1106,7 +1141,7 @@
 
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <!--end container-->
                 </div>
             </div>
@@ -1490,7 +1525,7 @@
             <h4>CHOOSE LINKEDIN PAGES TO CONNECT</h4>
             <ul class="collection">
 
-                <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0">
+                <li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==0"><!--ng-if="linpages.connected==0"-->
                     <div class="left">
                         <img class="circle" alt="" ng-src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
                         <span class="title">{{linpages.PageName}}</span>
@@ -1501,7 +1536,7 @@
                     </p>
                 </li>
 
-                <li class="collection-item avatar disabled" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==1">
+                <!--<li class="collection-item avatar" ng-repeat="linpages in lstaddlinpages" ng-if="linpages.connected==1">
                     <div class="left">
                         <img class="circle" alt="" ng-src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
                         <span class="title">{{linpages.PageName}}</span>
@@ -1510,7 +1545,7 @@
                         <input type="checkbox" checked disabled value="" id="" />
                         <label for=""></label>
                     </p>
-                </li>
+                </li>-->
             </ul>
         </div>
         <div class="modal-footer">
@@ -1591,9 +1626,10 @@
     </div>
 
     <!-- Active Account Modal  -->
+    <!-- Active Account Modal  -->
     <div id="ActiveProfileModal" class="modal" style="max-height:initial">
         <div class="modal-content">
-            <h4>SELECT YOUR ACCOUNTS</h4>
+            <h4>SELECT YOUR PROFILES</h4>
             <h6>As you have modified your account, you can only use upto {{MaxCount}} profiles. As a {{AccountType}} user, you have added {{profileCount}} profiles. Please choose which {{MaxCount}} among them you would like to retain</h6>
             <div class="active_acc_list">
                 <ul class="collection ">
@@ -1603,9 +1639,296 @@
                             <span class="title">{{profile.profileName}}</span>
                             <p>Connected</p>
                         </div>
-                        <p class="right">
-                            <input type="checkbox" id="{{profile.profileId}}" ng-click="toggleProfileSelection(profile.profileId)" />
-                            <label for="{{profile.profileId}}"></label>
+                        <p class="right" ng-if="profile.profileType==0">
+                            <img ng-src="/contents/socioboard/images/fb_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==1">
+                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==2">
+                            <img ng-src="/contents/socioboard/images/twticon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==3||profile.profileType==4">
+                            <img ng-src="/contents/socioboard/images/link_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==5||profile.profileType==6">
+                            <img ng-src="/contents/socioboard/images/gplus-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==7">
+                            <img ng-src="/contents/socioboard/images/yt.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==8">
+                            <img ng-src="/contents/socioboard/images/instagram_licon.png" class="iconprofile">
+                            <input type="checkbox" id="Active_7" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="Active_7"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==10">
+                            <img ng-src="/contents/socioboard/images/g_ana_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==11">
+                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==13">
+                            <img ng-src="/contents/socioboard/images/pinterest.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_active" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_active"></label>
+                        </p>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>-->
+            <a href="#!" ng-click="AddSelectedProfiles()" class="modal-action waves-effect waves-green btn-flat">Retain Profiles</a>
+        </div>
+    </div>
+
+    <!-- Active Account Modal For Basic Plan -->
+    <div id="ActiveProfileModalForBasicPlan" class="modal" style="max-height:initial">
+        <div class="modal-content">
+            <h4>SELECT YOUR PROFILES</h4>
+            <h6>
+                As you have modified your account, you can only use upto {{MaxCount}} profiles. As a {{AccountType}} user, you have added {{profileCount}} profiles. Please choose which {{MaxCount}} among them you would like to retain as per your plan you can use only one per network profile.Ex:<i class="fa fa-facebook fa-fw blue-text text-darken-4" aria-hidden="true"></i>
+                <i class="fa fa-twitter fa-fw blue-text text-lighten-2" aria-hidden="true"></i>
+                <i class="fa fa-linkedin fa-fw light-blue-text text-accent-4" aria-hidden="true"></i>
+                <i class="fa fa-google-plus fa-fw red-text text-darken-4" aria-hidden="true"></i>
+                <i class="fa fa-instagram fa-fw pink-text text-darken-3" aria-hidden="true"></i>
+            </h6>
+            <div class="active_acc_list">
+                <ul class="collection ">
+                    <li class="collection-item avatar" ng-repeat="profile in lstProfiles">
+                        <div class="left">
+                            <img ng-src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle">
+                            <span class="title">{{profile.profileName}}</span>
+                            <p>Connected</p>
+                        </div>
+                        <p class="right" ng-if="profile.profileType==0">
+                            <img ng-src="/contents/socioboard/images/fb_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==1">
+                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==2">
+                            <img ng-src="/contents/socioboard/images/twticon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==3||profile.profileType==4">
+                            <img ng-src="/contents/socioboard/images/link_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==5||profile.profileType==6">
+                            <img ng-src="/contents/socioboard/images/gplus-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==7">
+                            <img ng-src="/contents/socioboard/images/yt.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" disabled />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==8">
+                            <img ng-src="/contents/socioboard/images/instagram_licon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==10">
+                            <img ng-src="/contents/socioboard/images/g_ana_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" disabled />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==11">
+                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==13">
+                            <img ng-src="/contents/socioboard/images/pinterest.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" disabled />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>-->
+            <a href="#!" ng-click="AddSelectedProfilesForBasicPlan()" class="modal-action waves-effect waves-green btn-flat">Retain Profiles</a>
+        </div>
+    </div>
+
+    <!-- Active Account Modal For Standard Plan -->
+    <div id="ActiveProfileModalForStandardPlan" class="modal" style="max-height:initial">
+        <div class="modal-content">
+            <h4>SELECT YOUR PROFILES</h4>
+            <h6>
+                As you have modified your account, you can only use upto {{MaxCount}} profiles. As a {{AccountType}} user, you have added {{profileCount}} profiles. Please choose which {{MaxCount}} among them you would like to retain as per your plan you can use only these network profile.Ex:<i class="fa fa-facebook fa-fw blue-text text-darken-4" aria-hidden="true"></i>
+                <i class="fa fa-twitter fa-fw blue-text text-lighten-2" aria-hidden="true"></i>
+                <i class="fa fa-linkedin fa-fw light-blue-text text-accent-4" aria-hidden="true"></i>
+                <i class="fa fa-google-plus fa-fw red-text text-darken-4" aria-hidden="true"></i>
+                <i class="fa fa-instagram fa-fw pink-text text-darken-3" aria-hidden="true"></i>
+            </h6>
+            <div class="active_acc_list">
+                <ul class="collection ">
+                    <li class="collection-item avatar" ng-repeat="profile in lstProfiles">
+                        <div class="left">
+                            <img ng-src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle">
+                            <span class="title">{{profile.profileName}}</span>
+                            <p>Connected</p>
+                        </div>
+                        <p class="right" ng-if="profile.profileType==0">
+                            <img ng-src="/contents/socioboard/images/fb_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==1">
+                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==2">
+                            <img ng-src="/contents/socioboard/images/twticon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==3||profile.profileType==4">
+                            <img ng-src="/contents/socioboard/images/link_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==5||profile.profileType==6">
+                            <img ng-src="/contents/socioboard/images/gplus-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Basic"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==7">
+                            <img ng-src="/contents/socioboard/images/yt.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Basic" ng-click="toggleProfileSelection(profile.profileId)" disabled />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==8">
+                            <img ng-src="/contents/socioboard/images/instagram_licon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==10">
+                            <img ng-src="/contents/socioboard/images/g_ana_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" disabled />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==11">
+                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==13">
+                            <img ng-src="/contents/socioboard/images/pinterest.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Standard" ng-click="toggleProfileSelection(profile.profileId)" disabled />
+                            <label for="{{profile.profileId}}_Standard"></label>
+                        </p>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <!--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>-->
+            <a href="#!" ng-click="AddSelectedProfiles()" class="modal-action waves-effect waves-green btn-flat">Retain Profiles</a>
+        </div>
+    </div>
+
+    <!-- Active Account Modal For Premium Plan -->
+    <div id="ActiveProfileModalForPremiumPlan" class="modal" style="max-height:initial">
+        <div class="modal-content">
+            <h4>SELECT YOUR PROFILES</h4>
+            <h6>
+                As you have modified your account, you can only use upto {{MaxCount}} profiles. As a {{AccountType}} user, you have added {{profileCount}} profiles. Please choose which {{MaxCount}} among them you would like to retain as per your plan you can use only these network profile.Ex:<i class="fa fa-facebook fa-fw blue-text text-darken-4" aria-hidden="true"></i>
+                <i class="fa fa-twitter fa-fw blue-text text-lighten-2" aria-hidden="true"></i>
+                <i class="fa fa-linkedin fa-fw light-blue-text text-accent-4" aria-hidden="true"></i>
+                <i class="fa fa-google-plus fa-fw red-text text-darken-4" aria-hidden="true"></i>
+                <i class="fa fa-instagram fa-fw pink-text text-darken-3" aria-hidden="true"></i>
+                <i class="fa fa-pinterest-p fa-fw red-text text-accent-4" aria-hidden="true"></i>
+            </h6>
+            <div class="active_acc_list">
+                <ul class="collection ">
+                    <li class="collection-item avatar" ng-repeat="profile in lstProfiles">
+                        <div class="left">
+                            <img ng-src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle">
+                            <span class="title">{{profile.profileName}}</span>
+                            <p>Connected</p>
+                        </div>
+                        <p class="right" ng-if="profile.profileType==0">
+                            <img ng-src="/contents/socioboard/images/fb_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==1">
+                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==2">
+                            <img ng-src="/contents/socioboard/images/twticon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==3||profile.profileType==4">
+                            <img ng-src="/contents/socioboard/images/link_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==5">
+                            <img ng-src="/contents/socioboard/images/gplus-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==7">
+                            <img ng-src="/contents/socioboard/images/yt.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" disabled />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==8">
+                            <img ng-src="/contents/socioboard/images/instagram_licon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==10">
+                            <img ng-src="/contents/socioboard/images/g_ana_icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" disabled />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==11">
+                            <img ng-src="/contents/socioboard/images/Fb_page-icon.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Premium"></label>
+                        </p>
+                        <p class="right" ng-if="profile.profileType==13">
+                            <img ng-src="/contents/socioboard/images/pinterest.png" class="iconprofile">
+                            <input type="checkbox" id="{{profile.profileId}}_Premium" ng-click="toggleProfileSelection(profile.profileId)" />
+                            <label for="{{profile.profileId}}_Premium"></label>
                         </p>
                     </li>
 
@@ -1619,8 +1942,8 @@
     </div>
 </div>
 
-    <!-- Active Account Modal  -->
-<div id="ActiveGroupModal" class="modal" style="max-height:initial">
+    <!-- Active Group Modal  -->
+<!--<div id="ActiveGroupModal" class="modal" style="max-height:initial">
     <div class="modal-content">
         <h4>SELECT YOUR GROUPS</h4>
         <h6>As you have modified your account, you can only use upto {{groupsMaxCount}} groups. As a {{AccountType}} user, you have added {{groupsCount}} groups. Please choose which {{groupsMaxCount-1}} among them you would like to retain</h6>
@@ -1645,10 +1968,10 @@
         </div>
     </div>
     <div class="modal-footer">
-        <!--<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>-->
+      
         <a href="#!" ng-click="AddSelectedGroups()" class="modal-action waves-effect waves-green btn-flat">Retain Groups</a>
     </div>
-</div>
+</div>-->
 </div>
 
 <script>

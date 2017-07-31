@@ -121,6 +121,27 @@ namespace Api.Socioboard.Controllers
             return Ok(GroupMembersRepository.getGroupMembers(groupId, _redisCache, dbr));
         }
 
+        [HttpGet ("GetGroupAdmin")]
+        public IActionResult GetGroupAdmin(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupMembersRepository.getGroupadmin(groupId, _redisCache, dbr));
+        }
+
+        [HttpGet("DeleteGroup")]
+        public IActionResult DeleteGroup(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupMembersRepository.adminDelete(groupId, _redisCache, dbr));
+        }
+
+        [HttpGet("LeaveGroup")]
+        public IActionResult LeaveGroup(long groupId, long userId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupMembersRepository.LeaveTeam(groupId, userId, _redisCache, dbr));
+        }
+
         [HttpPost("ActivateGroupMember")]
         public IActionResult ActivateGroupMember(string code, string email)
         {
@@ -148,5 +169,21 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpPost("DeleteGroupMembers")]
+        public IActionResult DeleteGroupMembers(string grpMmbrIdss)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Int64> grpIdsList = grpMmbrIdss.Split(',').Select(Int64.Parse).ToList();
+            int tempp = Convert.ToInt32(grpIdsList.First());
+            List<Domain.Socioboard.Models.Groupmembers> lstgrpMembers = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => grpIdsList.Contains(t.id)).ToList();
+            dbr.DeleteAllList<Domain.Socioboard.Models.Groupmembers>(lstgrpMembers);
+            return Ok("Deleted");
+        }
+        [HttpGet("RetainGrpMber")]
+        public IActionResult RetainGrpMber(long userId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupMembersRepository.RetainGrpMber(userId, _redisCache, dbr));
+        }
     }
 }

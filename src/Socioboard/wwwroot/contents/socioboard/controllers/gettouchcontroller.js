@@ -39,6 +39,9 @@ SocioboardApp.controller('GetTouchController', function ($rootScope, $scope, $ht
                             $scope.btnLding = 'hide';
                             $("#subBtn").attr("class", "btn btn_style right blue");
                             alertify.success("Great, thanks for your email. We're on the case!");
+                            $('#subject').val(null);
+                            $('#message').val(null);
+                            $('.dropify-clear').click();
                         });
                     }
                     else {
@@ -55,7 +58,7 @@ SocioboardApp.controller('GetTouchController', function ($rootScope, $scope, $ht
         }
         $scope.checkfile = function () {
             var filesinput = $('#input_file_getintouch');
-            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'PNG'];
             if (filesinput != undefined && filesinput[0].files[0] != null) {
                 if ($scope.hasExtension('#input_file_getintouch', fileExtension)) {
                     $scope.checkedFile = true;

@@ -60,6 +60,11 @@ namespace Api.Socioboard.Controllers
             }
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> grpProfiles = Api.Socioboard.Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+           
+
+
+            //if (grpProfiles.First().profileId == fbacc.FbUserId)
             if (fbacc != null && fbacc.IsActive == true)
             {
                 if (fbacc.UserId == userId)
@@ -89,6 +94,61 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        [HttpPost("ReconnectFbAccount")]
+        public IActionResult ReconnectFbAccount(string accessToken, long groupId, long userId, string reconnect, string profileId)
+        {
+
+            dynamic profile = FbUser.getFbUser(accessToken);
+
+
+            try
+            {
+                string x = Convert.ToString(profile);
+                _logger.LogError(x);
+            }
+            catch { }
+            if (Convert.ToString(profile) == "Invalid Access Token")
+            {
+                return Ok("Invalid Access Token");
+            }
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+            Domain.Socioboard.Models.Facebookaccounts fbaccw = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(profileId, _redisCache, dbr);
+            //fbacc = fbacc.Where(t => t.FbUserId.Contains("127471161024815")).ToList();
+
+
+            if (fbacc.FbUserId == profileId)
+            {
+                if (fbacc != null && fbacc.IsActive == true)
+                {
+                    if (fbacc.UserId == userId)
+                    {
+                        Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
+                        if (ngrp == null)
+                        {
+                            return Ok("Wrong Group Id");
+                        }
+                        int res = Api.Socioboard.Repositories.FacebookRepository.ReFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, reconnect, _redisCache, _appSettings, _logger);
+                        if (res == 1)
+                        {
+                            return Ok("Facebook account Reconnect Successfully");
+                        }
+                        else
+                        {
+                            return Ok("Error while Reconnecting Account");
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                return Ok("Oops! login information is wrong , login the profile which to be reconneted");
+            }
+
+            return Ok();
+
+        }
 
         [HttpPost("ComposeMessage")]
         public IActionResult ComposeMessage(string message, string profileId, long userId, string imagePath, string link)
@@ -399,6 +459,92 @@ namespace Api.Socioboard.Controllers
                 return Ok("Pages added successfully and " + addedPageCount + " pages added by other user");
             }
             return Ok("Page added successfully");
+        }
+
+
+        [HttpPost("GetFacebookPagesDet")]
+        public IActionResult GetFacebookPagesDet(string accesstoken, long groupId)
+        {
+            try
+            {
+                List<Domain.Socioboard.Models.Facebookpage> lstpages = new List<Facebookpage>();
+                lstpages = Fbpages.Getfacebookpages(accesstoken);
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+                lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
+                string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
+                if (lstStr.Length > 0)
+                {
+                    lstpages.Where(t => lstStr.Contains(t.ProfilePageId)).ToList();
+                }
+                return Ok(lstpages);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("GetFacebookPages" + ex.StackTrace);
+                _logger.LogError("GetFacebookPages" + ex.Message);
+                return Ok(new List<Domain.Socioboard.Models.Facebookpage>());
+            }
+        }
+
+        [HttpPost("ReconnFacebookPages")]
+        public IActionResult ReconnFacebookPages(long userId, long groupId, string accessToken)
+        {
+
+
+            int invalidaccessToken = 0;
+            dynamic profile = Fbpages.getFbPageData(accessToken);
+                          
+            try
+            {
+                string x = Convert.ToString(profile);
+                _logger.LogError(x);
+            }
+            catch { }
+            if (Convert.ToString(profile) == "Invalid Access Token")
+            {
+                invalidaccessToken++;
+            }
+            else
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+                  
+                int isSaved = 0;                           
+                if (fbacc != null)
+                {
+                    fbacc.IsActive = true;
+                    fbacc.UserId = userId;
+                    fbacc.Is90DayDataUpdated = false;
+                    try
+                    {
+                        fbacc.Friends = (Convert.ToInt64(profile["fan_count"]));
+                    }
+                    catch (Exception)
+                    {
+                        fbacc.Friends = 0;
+                    }
+                    try
+                    {
+                        fbacc.coverPic = (Convert.ToString(profile["cover"]["source"]));
+                    }
+                    catch (Exception)
+                    {
+
+                    }
+                    fbacc.AccessToken = accessToken;
+                    isSaved = dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbacc);
+                    if (isSaved>0)
+                    {
+                        return Ok("Page Reconnected Successfully");
+                    }
+                    else
+                    {
+                        return Ok("some thing went wrong");
+                    }
+                }
+            }
+            return Ok("Page reconnect successfully");
         }
 
         [HttpGet("GetFacebookPostComment")]

@@ -1,5 +1,14 @@
     <!-- START MAIN -->
 <div data-ng-controller="GroupsController">
+    <style>
+        .profile-text {
+            margin-top: -25px;
+            padding-left: 25px!important;
+        }
+        .email-txt{    margin-top: -10px;}
+        .delete_btn{margin-right: 5px;}
+        .text-color{color:#0800f1;}
+    </style>
     <!-- START WRAPPER -->
     <div class="wrapper">
 
@@ -10,23 +19,14 @@
             <div class="container">
 
                 <div class="col m12">
-                    <a ng-if="accountType==3 && GetUserGroupCount<5" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Team</a>
-                    <a ng-if="accountType==3 && GetUserGroupCount==5" ng-click="message(msg)" disable class="waves-effect waves-light btn right"  >Create New Team</a>
-                    <a ng-if="accountType==4 && GetUserGroupCount<10" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Team</a>
-                    <a ng-if="accountType==4 && GetUserGroupCount==10" ng-click="message(msg)" disable class="waves-effect waves-light btn right" >Create New Team</a>
-                    <a ng-if="accountType==5 && GetUserGroupCount<15" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Team</a>
-                    <a ng-if="accountType==5 && GetUserGroupCount==15" ng-click="message(msg)" disable class="waves-effect waves-light btn right">Create New Team</a>
-                    <a ng-if="accountType==6 && GetUserGroupCount<20" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Team</a>
-                    <a ng-if="accountType==6 && GetUserGroupCount==20" ng-click="message(msg)" disable class="waves-effect waves-light btn right">Create New Team</a>
-                    <a ng-if="accountType==7 && GetUserGroupCount<25" class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Team</a>
-                    <a ng-if="accountType==7 && GetUserGroupCount==25" ng-click="grpmsgs(grpmsg)" disable class="waves-effect waves-light btn right">Create New Team</a>
-                    <h4>User And Team</h4>
+                    <a class="waves-effect waves-light btn modal-trigger right" href="#CreateGroupModal">Create New Team</a>
+                    <h4>User And Teams</h4>
                     <span>Teams are used to categorize social profiles together to help manage and report on your social media efforts efficiently. Learn more about Teams</span>
                 </div>
                 <div class="row">
                     <!--start  code to display all groups in tabs-->
                     <div class="col s12">
-                        <ul class="tabs">
+                        <ul class="tabs" style="display: inline">
                             <li class="tab col s3 groups_tabs" ng-repeat="grp in groups">
                                 <a class="active" ng-if="groupId==grp.id" href="#Socioboard_{{grp.id}}">{{grp.groupName}}</a>
                                 <a ng-click="getGroupsData($index, grp.id)" ng-if="groupId!=grp.id" href="#Socioboard_{{grp.id}}">{{grp.groupName}}</a>
@@ -95,7 +95,23 @@
 
                             <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
                                 <div class="card-panel">
-                                    <a class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="#InviteMembersModal">Invite New Team Members</a>
+                                    <a ng-if="accountType==0 && membercount>=2" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==1 && membercount>=5" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==2 && membercount>=10" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==3 && membercount>=20" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==4 && membercount>=30" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==5 && membercount>=50" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==6 && membercount>=80" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==7 && membercount>=100" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+
+                                    <a ng-if="accountType==0 && membercount<2" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                    <a ng-if="accountType==1 && membercount<5" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                    <a ng-if="accountType==2 && membercount<10" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                    <a ng-if="accountType==3 && membercount<20" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                    <a ng-if="accountType==4 && membercount<30" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                    <a ng-if="accountType==5 && membercount<50" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                    <a ng-if="accountType==6 && membercount<80" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                    <a ng-if="accountType==7 && membercount<100" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
                                     <h5>Pending Team Members</h5>
                                     <div class="row" id="social_profile_list">
                                         <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
@@ -135,29 +151,23 @@
                         <!--codes end to render group profiles of selected group-->
 
                         <div class="row" ng-if="groupId!=grp.id">
+                           
                             <div class="col s12 m12 l12">
-                                <div class="card-panel">
-                                    <h5>Profile Linked To <b class="orange-text text-darken-4">{{grp.groupName}}</b></h5>
-                                    <div class="row" id="social_profile_list">
-                                        <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profiles ">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image center">
-                                                    <div ng-click="deleteProfile(profile.profileId, grp.id)" class="delet_icon"></div>
-                                                    <img src="{{profile.profilePic}}" class="responsive-img group-profile-image" ng-if="profile.ProfilePic != ''">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="profile.profilePic == ''">
-                                                    <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/Fb_page-icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==4" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==11" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/instagram.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==8" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/yt.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==7" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/G-Ana-icon.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==10" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/pinterest.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==13" class="profile_socio_icon">
-                                                </div>
-                                            </div>
+                                <div class="card-panel" ng-repeat="admin in groups[$index].admin">
+                                    <div>
+                                        <h5>Admin of <b class="orange-text text-darken-4">{{grp.groupName}}</b> Team</h5>
+                                        <a class="waves-effect waves-light btn modal-trigger right" ng-click="openDeleteModal(grp.id)" href="javascript:void(0)" ng-if="admin.email==userEmail">Edit Team</a>
+                                        <!--<a class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>-->
+                                        <a class="waves-effect waves-light btn modal-trigger right delete_btn" ng-click="adminDelete(index,grp.id)" ng-if="admin.email==userEmail">Delete Team</a>
+                                        <a class="waves-effect waves-light btn modal-trigger right delete_btn" ng-click="leaveGroup(index,grp.id)" ng-if="admin.email!=userEmail">Leave Team</a>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col s12 m1">
+                                            <img src="http://www.freeiconspng.com/uploads/login-icon-png-27.png" width="100" />
+                                        </div>
+                                        <div class="col s12 m10 profile-text">
+                                            <p>Name : <b class="light-blue-text text-darken-4">{{admin.firstName}} {{admin.lastName}}</b></p>
+                                            <p class="email-txt">Email Id : <b class="light-blue-text text-darken-4">{{admin.email}}</b> </p>
                                         </div>
 
                                     </div>
@@ -165,74 +175,119 @@
                             </div>
 
                             <div class="col s12 m12 l12">
-                                <div class="card-panel">
-                                    <h5>Profiles available for connection</h5>
-                                    <div class="row" id="social_profile_list" ng-if="grp.groupName != 'Socioboard'">
-                                        <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profilesToConnect">
-                                            <div class="card-panel social_profile">
-                                                <div class="card-image center">
-                                                    <div ng-click="addProfileToGroup(grp.id, profile.profileId, profile.profileType)" class="add_icon" role="button" tabindex="0"></div>
-                                                    <img src="{{profile.profilePic}}" class="responsive-img group-profile-image">
-                                                    <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/Fb_page-icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==4" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==11" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/instagram.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==8" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/yt.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==7" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/G-Ana-icon.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==10" class="profile_socio_icon">
-                                                    <img src="/contents/socioboard/images/pinterest.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==13" class="profile_socio_icon">
+                                    <div class="card-panel">
+                                        <h5>Profile Linked To <b class="orange-text text-darken-4">{{grp.groupName}}</b></h5>
+                                        <div class="row" id="social_profile_list">
+                                            <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profiles ">
+                                                <div class="card-panel social_profile">
+                                                    <div class="card-image center">
+                                                        <div ng-click="deleteProfile(profile.profileId, grp.id)" class="delet_icon"></div>
+                                                        <img src="{{profile.profilePic}}" class="responsive-img group-profile-image" ng-if="profile.ProfilePic != ''">
+                                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="profile.profilePic == ''">
+                                                        <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/Fb_page-icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==4" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==11" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/instagram.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==8" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/yt.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==7" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/G-Ana-icon.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==10" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/pinterest.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==13" class="profile_socio_icon">
+                                                    </div>
+                                                </div>
+                                            </div>
 
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <div class="col s12 m12 l12">
+                                    <div class="card-panel">
+                                        <h5>Profiles available for connection</h5>
+                                        <div class="row" id="social_profile_list" ng-if="grp.groupName != 'Socioboard'">
+                                            <div class="col s12 m1 l1" ng-repeat="profile in groups[$index].profilesToConnect">
+                                                <div class="card-panel social_profile">
+                                                    <div class="card-image center">
+                                                        <div ng-click="addProfileToGroup(grp.id, profile.profileId, profile.profileType)" class="add_icon" role="button" tabindex="0"></div>
+                                                        <img src="{{profile.profilePic}}" class="responsive-img group-profile-image">
+                                                        <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==0" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/Fb_page-icon.png" ng-if="profile.profileType==1" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==3" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/linkedin.png" style="width: 24px; height: 24px; margin-top: -29%;" ng-if="profile.profileType==4" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/fb_icon.png" ng-if="profile.profileType==11" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/gplus-icon.png" ng-if="profile.profileType==5" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/twticon.png" ng-if="profile.profileType==2" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/instagram.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==8" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/yt.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==7" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/G-Ana-icon.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==10" class="profile_socio_icon">
+                                                        <img src="/contents/socioboard/images/pinterest.png" style="width: 24px; height: 24px; margin-top: -21%;" ng-if="profile.profileType==13" class="profile_socio_icon">
+
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
+                                    </div>
                                 </div>
-                            </div>
 
                             <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
-                                <div class="card-panel">
-                                    <a class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="#InviteMembersModal">Invite New Team Members</a>
-                                    <h5>Pending Team Members</h5>
-                                    <div class="row" id="social_profile_list">
-                                        <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
-                                            <div title="{{member.firstName +' ' + member.lastName}}" class="card-panel social_profile">
-                                                <div class="card-image center">
-                                                    <img src="{{utility.getHttpsUrl(member.profileImg)}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
-                                                    <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
+                                    <div class="card-panel">
+                                        <a ng-if="accountType==0 && membercount>=2" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==1 && membercount>=5" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==2 && membercount>=10" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==3 && membercount>=20" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==4 && membercount>=30" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==5 && membercount>=50" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==6 && membercount>=80" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==7 && membercount>=100" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
 
-                                                    <!--<h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>-->
-                                                    <img title="{{member.firstName +' ' + member.lastName}}" src="/contents/socioboard/images/SocioboardCore_logo.png" style="width:30px">
+                                        <a ng-if="accountType==0 && membercount<2" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                        <a ng-if="accountType==1 && membercount<5" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                        <a ng-if="accountType==2 && membercount<10" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                        <a ng-if="accountType==3 && membercount<20" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                        <a ng-if="accountType==4 && membercount<30" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                        <a ng-if="accountType==5 && membercount<50" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                        <a ng-if="accountType==6 && membercount<80" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                        <a ng-if="accountType==7 && membercount<100" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
+                                        <h5>Pending Team Members</h5>
+                                        <div class="row" id="social_profile_list">
+                                            <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
+                                                <div title="{{member.firstName +' ' + member.lastName}}" class="card-panel social_profile">
+                                                    <div class="card-image center">
+                                                        <img src="{{utility.getHttpsUrl(member.profileImg)}}" class="responsive-img group-profile-image" ng-if="member.profileImg != ''">
+                                                        <img src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
+
+                                                        <!--<h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>-->
+                                                        <img title="{{member.firstName +' ' + member.lastName}}" src="/contents/socioboard/images/SocioboardCore_logo.png" style="width:30px">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
                             <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
-                                <div class="card-panel">
-                                    <h5>Accepted Team Members</h5>
-                                    <div class="row" id="social_profile_list">
-                                        <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}">
-                                            <div title="{{member.firstName +' ' + member.lastName}}" class="card-panel social_profile">
-                                                <div class="card-image center">
-                                                    <img src="{{utility.getHttpsUrl(member.profileImg)}}" class="responsive-img group-profile-image" ng-if="member.profileImg != '' ">
-                                                    <img title="{{member.firstName +' ' + member.lastName}}" src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
+                                    <div class="card-panel">
+                                        <h5>Accepted Team Members</h5>
+                                        <div class="row" id="social_profile_list">
+                                            <div class="col s12 m1 l1" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}">
+                                                <div title="{{member.firstName +' ' + member.lastName}}" class="card-panel social_profile">
+                                                    <div class="card-image center">
+                                                        <img src="{{utility.getHttpsUrl(member.profileImg)}}" class="responsive-img group-profile-image" ng-if="member.profileImg != '' ">
+                                                        <img title="{{member.firstName +' ' + member.lastName}}" src="https://scontent.fmaa1-2.fna.fbcdn.net/t31.0-1/c282.0.960.960/p960x960/10506738_10150004552801856_220367501106153455_o.jpg" class="responsive-img" ng-if="member.profileImg == ''">
 
-                                                    <!--<h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>-->
-                                                    <img title="{{member.firstName +' ' + member.lastName}}" src="/contents/socioboard/images/SocioboardCore_logo.png" style="width:30px">
+                                                        <!--<h6 class="center-align">{{member.firstName +' ' + member.lastName}}</h6>-->
+                                                        <img title="{{member.firstName +' ' + member.lastName}}" src="/contents/socioboard/images/SocioboardCore_logo.png" style="width:30px">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                           
                     </div>
 
                 </div>
@@ -247,7 +302,7 @@
     <div id="InviteMembersModal" class="modal">
         <div class="modal-content">
             <h4>Invite your Friend to <b class="orange-text text-darken-4">{{inviGrpName}}</b></h4>
-            <p>Socioboard offers to make group by virtue of which users can reach out to each other using a highly efficient collaboration mechanism.Groups serve as a platform to share information with other team members and increase workability and efficiency.</p>
+            <p>Socioboard offers to make Team by virtue of which users can reach out to each other using a highly efficient collaboration mechanism.Teams serve as a platform to share information with other team members and increase workability and efficiency.</p>
           
                 <table class="highlight">
                     <thead>
@@ -298,14 +353,14 @@
     <!-- Create Group Modal Structure -->
     <div id="CreateGroupModal" class="modal" >
         <div class="modal-content">
-            <h4>Create a <b class="orange-text text-darken-4">Group</b></h4>
-            <p>Groups help you organize your social profiles and team members. Name your group and you can begin connecting social profiles and adding team members to it. Twitter or Facebook required to create a group.</p>
+            <h4>Create a <b class="orange-text text-darken-4">Team</b></h4>
+            <p>Teams help you organize your social profiles and team members. Name your Team and you can begin connecting social profiles and adding team members to it. Twitter or Facebook required to create a team.</p>
             <form class="col s12">
                 <div class="row">
                     <div class="input-field col s12">
                         <i class="icon-users prefix"></i>
                         <input placeholder="Type Your Group Name" ng-model="groupName" id="icon_prefix" type="text" class="validate">
-                        <label for="icon_prefix">Group Name</label>
+                        <label class="active" for="icon_prefix">Team Name</label>
                     </div>
                     </div>
             </form>
@@ -313,6 +368,88 @@
         <div class="modal-footer">
             <a href="" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="closegroupmodal()" >Close</a>
             <a href="" ng-click="addGroup(groupName)" class="modal-action waves-effect waves-green btn-flat">Create</a>
+        </div>
+    </div>
+    <div ng-repeat="grp in groups" id="Edit_{{grp.id}}" class="modal">
+        <!-- Edit Team Members Modal Structure -->
+        <div class="modal-content">
+            <h5>Choose accepted team members to delete</h5>
+            <ul class="collection">
+                <li class="collection-item avatar" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}" ng-if="$index==0">
+                    <div class="left">
+                        <img class="circle" alt="{{member.firstName +' ' + member.lastName}}" ng-src="{{utility.getHttpsUrl(member.profileImg)}}">
+                        <span class="title">{{member.firstName +' ' + member.lastName}}</span>
+                        <br />
+                        <label><strong disabled>Team admin</strong></label>
+
+                    </div>
+                    <div class="right">
+                        <input type="checkbox" value="{{member.id}}" id="mbrId{{member.id}}" ng-click="toggleMemberSelection(member.id)" disabled>
+                        <label for="mbrId{{member.id}}"></label>
+                    </div>
+                </li>
+                <li class="collection-item avatar" ng-repeat="member in groups[$index].members | filter:{memberStatus:1}" ng-if="$index!=0">
+                    <div class="left">
+                        <img class="circle" alt="{{member.firstName +' ' + member.lastName}}" ng-src="{{utility.getHttpsUrl(member.profileImg)}}">
+                        <span class="title">{{member.firstName +' ' + member.lastName}}</span>
+
+                    </div>
+                    <div class="right">
+                        <input type="checkbox" value="{{member.id}}" id="mbrId{{member.id}}" ng-click="toggleMemberSelection(member.id)">
+                        <label for="mbrId{{member.id}}"></label>
+                    </div>
+                </li>
+            </ul>
+            <h5>Choose pending team members to delete</h5>
+            <ul class="collection">
+                <li class="collection-item avatar" ng-repeat="member in groups[$index].members | filter:{memberStatus:0}">
+                    <div class="left">
+                        <img class="circle" alt="{{member.firstName +' ' + member.lastName}}" ng-src="{{utility.getHttpsUrl(member.profileImg)}}">
+                        <span class="title">{{member.firstName +' ' + member.lastName}}</span>
+
+                    </div>
+                    <div class="right">
+                        <input type="checkbox" value="{{member.id}}" id="mbrId{{member.id}}" ng-click="toggleMemberSelection(member.id)">
+                        <label for="mbrId{{member.id}}"></label>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <a href="" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="layerRemove()">Close</a>
+            <a ng-class="btnLded" class="modal-action waves-effect waves-green btn-flat" ng-click="deleteGrpMember(grp.id)">Delete</a>
+            <a ng-class="btnLding" class="modal-action waves-effect btn-flat"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></a>
+        </div>
+        <!--Edit Team member modal end-->
+    </div>
+    <!-- Active Group Modal  -->
+    <div id="ActiveMemberModal" class="modal" style="max-height:initial">
+        <div class="modal-content">
+            <h4>SELECT MEMBERS</h4>
+            <h6>As you have modified your account, you can only use upto {{maxmember}} members.As per your account, you have added {{membercount}} members. Please choose which {{membercount-maxmember}} among them you would like to delete</h6>
+            <div class="active_acc_list">
+                <ul class="collection ">
+                    <li class="collection-item avatar" ng-repeat="grp in grpdetails">
+                        <div class="left">
+                           <span class="text-color"> User Name</span> :<span class="title"><b>{{grp.username}}</b></span>
+                            <br />
+                            <span class="text-color">Group Name</span> :<span class="title"><b>{{grp.grpname}}</b></span>
+                            <br />
+                            <span class="text-color">Admin</span> :<span class="title"><b>{{grp.type}}</b></span>
+                          </div>
+                        <p class="right">
+                            <input type="checkbox" id="{{grp.memberid}}" ng-click="retainMemberSelection(grp.memberid)"/>
+                            <label for="{{grp.memberid}}"></label>
+                        </p>
+                       
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+
+            <a ng-click="retainGrpMember(maxmember,membercount)" class="modal-action waves-effect waves-green btn-flat">Delete Member</a>
         </div>
     </div>
 

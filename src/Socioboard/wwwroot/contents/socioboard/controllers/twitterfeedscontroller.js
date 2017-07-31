@@ -10,6 +10,8 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         var preloadmoretweets = false;
         var endtwfeeds = false;
         var endtwtweets = false;
+        $scope.filterrTxtt = 'All Posts';
+        $scope.SorttTxtt = 'Popular';
         twitterfeeds();
         var start = 0; // where to start data
         var ending = start + 10; // how much data need to add on each function call
@@ -48,6 +50,8 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
             $scope.filters = false;
             $scope.preloadmorefeeds = false;
             $scope.lstTwtFeeds = null;
+            $scope.filterrTxtt = 'All Posts';
+            $scope.SorttTxtt = 'Popular';
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
@@ -136,10 +140,11 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                            });
           };
 
-        $scope.filterSearch = function (mediaType) {
+        $scope.filterSearch = function (mediaType, txtt) {
             $scope.filters = true;
             $scope.preloadmorefeeds = false;
             $scope.lstTwtFeeds = null;
+            $scope.filterrTxtt = txtt;
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Twitter/GetTwFilterFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10' + '&mediaType=' + mediaType)
                           .then(function (response) {
@@ -435,10 +440,11 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         //end
 
         // max least count
-          $scope.ShortSearch = function (shortvalue) {
+          $scope.ShortSearch = function (shortvalue, txtt) {
               $scope.filters = true;
               $scope.preloadmorefeeds = false;
               $scope.lstTwtFeeds = null;
+              $scope.SorttTxtt = txtt;
               $http.get(apiDomain + '/api/Twitter/ShortTwtfeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10' + '&shortvalue=' + shortvalue)
                             .then(function (response) {
                                 if (response.data == null) {

@@ -69,7 +69,7 @@
                                 <div class="row">
                                     <div class="col l12">
                                         <div style="display: block; margin: auto;">
-                                            <img src="{{post.image}}" class="rssPostImage">
+                                            <img ng-src="{{post.image}}" class="rssPostImage">
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,6 @@
 
                             </ul>
                         </div>
-                        <div ng-init="disbtncom= {{disbtncom}}"></div>
                         <div class="col s12 m7 l7 hide-on-med-and-down">
                             <ul class="right">
                                 <li>
@@ -143,7 +142,7 @@
                             </div>
                             <input type="hidden" id="imageUrl" value="{{contentMessage.image}}" />
                             <div class="col s12 m12 l12">
-                                <input type="file" id="composeImage" class="dropify" after-render  data-default-file="{{contentMessage.image}}" />
+                                <input type="file" id="composeImage" class="dropify" after-render  />
                             </div>
                             <div class="col s12 m12 l12" ng-if="!contentMessage">
                                 <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
@@ -174,28 +173,28 @@
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckboxrssrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
                                             <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
                                             <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
                                             <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
@@ -209,7 +208,6 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div ng-init="draftbtn= {{draftbtn}}"></div>
                             <div>
                                 <div ng-show="draftbtn" ng-click="draftMsg()" class="btn btn_style">Draft</div>
                                 <div ng-show="!draftbtn"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
@@ -235,7 +233,6 @@
                     </div>
                 </div>
                 <div class="row center">
-                    <div ng-init="buildbtn= {{buildbtn}}"></div>
                     <div>
                         <!--<div ng-show="buildbtn" class="btn btn_style" ng-click="rssContentsData()">Build My Content Feed</div>contentfeedsdata-->
                         <div ng-show="buildbtn" class="btn btn_style" ng-click="rssContentsData()">Build My Content Feed</div>
@@ -280,7 +277,7 @@
 
     <div class="center" ng-if="nofeeds==true">
         <br /><br /><br /><br /><br /><br />
-        <h6 style="color:gray; font-size:20px; font-family:Calibri"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No RSS feeds posted to display<br /></h6>
+        <h6 style="color:gray; font-size:20px; font-family:Calibri"><span><img style="width:60px" ng-src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No RSS feeds posted to display<br /></h6>
     </div>
 
 </div>

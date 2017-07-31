@@ -15,13 +15,13 @@ using System.Threading;
 using Api.Socioboard.Repositories;
 using Domain.Socioboard.Models.Mongo;
 using MongoDB.Bson;
-using Imgur.API.Authentication.Impl;
-using Imgur.API.Endpoints.Impl;
-using Imgur.API.Models;
 using System.Net;
 using Newtonsoft.Json.Linq;
 using System.Drawing;
 using Api.Socioboard.Helper;
+using Imgur.API.Authentication.Impl;
+using Imgur.API.Endpoints.Impl;
+using Imgur.API.Models;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 

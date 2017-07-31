@@ -25,4 +25,17 @@ namespace Domain.Socioboard.Models
         [Required]
         public virtual string memberCode { get; set; }
     }
+
+
+    public class retaingroup
+    {
+        //public List<Domain.Socioboard.Models.Groupmembers> memberofadmin { get; set; }
+        //public List<Domain.Socioboard.Models.Groupmembers> memberofNonadmin { get; set; }
+        public string grpname { get; set;}
+        public string username { get; set; }
+        public string userId { get; set; }
+        public long grpid { get; set; }
+        public long memberid { get; set; }
+        public string type { get; set; }
+    }
 }

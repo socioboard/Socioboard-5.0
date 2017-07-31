@@ -69,6 +69,26 @@ namespace Api.Socioboard.Repositories
             int lstScheduledMessage = dbr.Counts<Domain.Socioboard.Models.Groups>(t => lstGroupIds.Contains(t.id));
             return lstScheduledMessage;
         }
+        public static int getMemberCount(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            List<Groupmembers> lstgrpmember = dbr.Find<Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted && t.isAdmin==true).ToList();
+            List<long> tempLst = new List<long>();
+            foreach(var itemLst in lstgrpmember)
+            {
+                tempLst.Add(itemLst.groupid);
+            }
+            int membersAdminGrp = dbr.Counts<Domain.Socioboard.Models.Groupmembers>(t => tempLst.Contains(t.groupid) && t.memberStatus==Domain.Socioboard.Enum.GroupMemberStatus.Accepted);
+            //int lstGrp = dbr.GetCount<Domain.Socioboard.Models.Groups>(t => t.adminId == userId);
+            //long[] lstgrpId = lstGrp.Select(t => t.id).ToArray();
+            ////int GrpMemberCount = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => lstgrpId.Contains(t.groupid) && t.isAdmin==false).Count();
+            //int GrpMemberCount = dbr.Counts<Domain.Socioboard.Models.Groupmembers>(t => lstgrpId.Contains(t.groupid) && t.isAdmin == false);
+            int nonadminMemberCount = dbr.GetCount<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.isAdmin!=true && t.memberStatus==Domain.Socioboard.Enum.GroupMemberStatus.Accepted);
+            //int GrpMemberCount = dbr.GetCount<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.memberStatus==Domain.Socioboard.Enum.GroupMemberStatus.Accepted)- (lstGrp+ nonadminMemberCount);
+            int GrpMemberCount = nonadminMemberCount + membersAdminGrp - tempLst.Count;
+            return GrpMemberCount;
+        }
+
+
         public static List<Domain.Socioboard.Models.Groups> getSBGroup(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
            List<Domain.Socioboard.Models.Groups> topgroupProfiles = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.groupName =="Socioboard").ToList();

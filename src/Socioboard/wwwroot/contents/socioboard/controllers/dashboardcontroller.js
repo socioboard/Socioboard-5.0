@@ -118,12 +118,21 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         if ($rootScope.lstYoutube != undefined) {
             $('#Youtube_Modal').openModal();
         }
-        if ($rootScope.Downgrade == true) {
+        if ($rootScope.Downgrade == true && ($rootScope.user.AccountType == 3 || $rootScope.user.AccountType == 4 || $rootScope.user.AccountType == 5 || $rootScope.user.AccountType == 6 || $rootScope.user.AccountType == 7)) {
             $('#ActiveProfileModal').openModal({ dismissible: false });
         }
-        if ($rootScope.groupsdowngrade == true && ($rootScope.user.AccountType == 3 || $rootScope.user.AccountType == 4 || $rootScope.user.AccountType == 5 || $rootScope.user.AccountType == 6 || $rootScope.user.AccountType == 7)) {
-            $('#ActiveGroupModal').openModal({ dismissible: false });
+        if ($rootScope.Downgrade == true && $rootScope.user.AccountType == 0) {
+            $('#ActiveProfileModalForBasicPlan').openModal({ dismissible: false });
         }
+        if ($rootScope.Downgrade == true && $rootScope.user.AccountType == 1) {
+            $('#ActiveProfileModalForStandardPlan').openModal({ dismissible: false });
+        }
+        if ($rootScope.Downgrade == true && $rootScope.user.AccountType == 2) {
+            $('#ActiveProfileModalForPremiumPlan').openModal({ dismissible: false });
+        }
+        //if ($rootScope.groupsdowngrade == true && ($rootScope.user.AccountType == 3 || $rootScope.user.AccountType == 4 || $rootScope.user.AccountType == 5 || $rootScope.user.AccountType == 6 || $rootScope.user.AccountType == 7)) {
+        //    $('#ActiveGroupModal').openModal({ dismissible: false });
+        //}
 
         $scope.msgPagecloseModals = function () {
             $rootScope.lstAddFbPages = undefined;
@@ -131,10 +140,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $rootScope.lstYoutube = undefined;
             $rootScope.lstGanalytics = undefined;
         }
+
         //codes to groupprofile for restriction
         $scope.GetGroupProfiles = function () {
-            $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfiles?groupId=' + $rootScope.groupId)
-                            .then(function (response) {
+            $scope.GroupProfiles = $rootScope.lstProfiles;
                                 $scope.getprofile = [];
                                 $scope.getFbprofile = [];
                                 $scope.getTwtprofile = [];
@@ -145,7 +154,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                                 $scope.getGAprofile = [];
                                 $scope.getYoutubeprofile = [];
                                 $scope.getPinprofile = [];
-                                $scope.GroupProfiles = response.data;
+                                //$scope.GroupProfiles = response.data;
                                 var fbcount = 0;
                                 var Twtcount = 0;
                                 var Instacount = 0;
@@ -191,11 +200,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                                 $scope.Instacounts = Instacount;
                                 $scope.GAcounts = GAcount;
                                 $scope.Pincounts = Pincount;
-                            }, function (reason) {
-                                $scope.error = reason.data;
-                            });
+                            ;
         }
-        // end codes to groupprofile
+        // end codes to groupprofile for restriction
 
         //codes fetch all profiles start
         $scope.fetchalllProfiles = function () {
@@ -221,14 +228,14 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         // end codes fetch all profiles
 
         //codes to load  TwitterRecentFollower
-        $scope.TwitterRecentFollower = function () {
-            $http.get(apiDomain + '/api/Twitter/TwitterRecentFollower?groupId=' + $rootScope.groupId)
-                          .then(function (response) {
-                              $scope.TwitterRecentFollower = response.data;
-                          }, function (reason) {
-                              $scope.error = reason.data;
-                          });
-        }
+        //$scope.TwitterRecentFollower = function () {
+        //    $http.get(apiDomain + '/api/Twitter/TwitterRecentFollower?groupId=' + $rootScope.groupId)
+        //                  .then(function (response) {
+        //                      $scope.TwitterRecentFollower = response.data;
+        //                  }, function (reason) {
+        //                      $scope.error = reason.data;
+        //                  });
+        //}
         // end codes to TwitterRecentFollower
 
         $scope.ComposePostModal = function () {
@@ -414,8 +421,8 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         } else {
             $scope.loaderclass = 'hide';
         }
-       // $scope.GetGroupProfiles();
-        $scope.TwitterRecentFollower();
+        $scope.GetGroupProfiles();
+        //$scope.TwitterRecentFollower();
 
         //$scope.fetchYTChannels();
 
@@ -518,7 +525,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             swal({
                 title: "Are you sure?",
-                text: "You will not be able to send any video via this account!",
+                text: "You will not be able to send any content via this account!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -670,6 +677,25 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             }
         }
         //end codes to add facebook pages
+
+        //reconnect facebook page start           
+            $scope.ReconnFacebookPages = function () {
+                console.log("access token");
+                console.log($scope.selectedFbPageProfiles);
+                $http.post(apiDomain + '/api/Facebook/ReconnFacebookPages?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId +'&accessToken=' +$scope.selectedFbPageProfiles)
+             .then(function (response) {
+              
+                 if (response.status == 200) {
+                     //  window.location.reload();
+                     $('#ReconnFanpage_Modal').closeModal();
+                     swal(response.data);
+                 }
+             }, function (reason) {
+                 swal("Error!");
+             });               
+            
+            }
+        //reconnect facebook page end
 
 
         //code to add Ga Sites
@@ -849,84 +875,114 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         }
 
-        //Selected groups
-        //code for addselected profiles
-        $scope.toggleGroupsSelection = function (profileid) {
-            var idx = $scope.selectedGroups.indexOf(profileid);
-            var data = "";
-            // is currently selected
-            if (idx > -1) {
-                $scope.selectedGroups.splice(idx, 1);
-            }
 
-                // is newly selected
-            else {
-                data = profileid;
-                $scope.selectedGroups.push(data);
-            }
-        };
-        //end code 
-        $scope.selectedGroups = [];
-        //End
-        //Add selected Groups
-        $scope.AddSelectedGroups = function () {
-          
-            if ($scope.selectedGroups.length <= $rootScope.groupsMaxCount) {
+        //retain profile for Basic plan
+        $scope.AddSelectedProfilesForBasicPlan = function () {
+
+            if ($scope.selectedProfiles.length <= $rootScope.MaxCount) {
                 var formData = new FormData();
-                formData.append('selectedGroups', $scope.selectedGroups);
+                formData.append('selectedProfiles', $scope.selectedProfiles);
                 $http({
                     method: 'POST',
-                    url: apiDomain + '/api/Groups/AddSelectedGroups?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+                    url: apiDomain + '/api/GroupProfiles/AddSelectedProfilesForBasicPlan?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
                     data: formData,
                     headers: {
                         'Content-Type': undefined
                     },
                     transformRequest: angular.identity,
 
-                })
-                    .then(function (response) {
-                        if (response.status == 200) {
-                            $('#ActiveGroupModal').closeModal();
-                            $rootScope.groupsdowngrade = false;
-                            window.location.reload();
-                            // swal(response.data);
-                        }
-                    }, function (reason) {
-                        swal("Error!");
-                    });
+                }).then(function (response) {
+                    if (response.status == 200) {
+                        $('#ActiveProfileModalForBasicPlan').closeModal();
+                        $rootScope.Downgrade = false;
+                        window.location.reload();
+                        // swal(response.data);
+                    }
+                }, function (reason) {
+                    swal(reason.data);
+                });
             }
             else {
-                swal('please select ' + $rootScope.groupsMaxCount + ' Groups');
+                swal('please select ' + $rootScope.MaxCount + ' Profiles');
             }
 
         }
-        //End
+        //End retain profile for Basic plan
 
-        $scope.Addfacebookpagebyurl = function () {
-            var url = $('#_txtinputurl').val();
-            if (url != "" && url.indexOf('facebook') > 0) {
-                //codes to load  Gplus profiles start
-                $http.get(apiDomain + '/api/Facebook/AddFacebookPagesByUrl?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&url=' + url)
-                              .then(function (response) {
-                                  if (response.data != "") {
-                                      swal(response.data)
-                                      $('#_txtinputurl').val('');
-                                      if (response.data == "added successfully") {
-                                          window.location.reload();
-                                      }
-                                  }
+        ////code for addselected Groups
+        //$scope.toggleGroupsSelection = function (profileid) {
+        //    var idx = $scope.selectedGroups.indexOf(profileid);
+        //    var data = "";
+        //    if (idx > -1) {
+        //        $scope.selectedGroups.splice(idx, 1);
+        //    }
+        //    else {
+        //        data = profileid;
+        //        $scope.selectedGroups.push(data);
+        //    }
+        //};
+        ////end code 
+        //$scope.selectedGroups = [];
+        ////End
+        ////Add selected Groups
+        //$scope.AddSelectedGroups = function () {
+          
+        //    if ($scope.selectedGroups.length <= $rootScope.groupsMaxCount) {
+        //        var formData = new FormData();
+        //        formData.append('selectedGroups', $scope.selectedGroups);
+        //        $http({
+        //            method: 'POST',
+        //            url: apiDomain + '/api/Groups/AddSelectedGroups?userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId,
+        //            data: formData,
+        //            headers: {
+        //                'Content-Type': undefined
+        //            },
+        //            transformRequest: angular.identity,
+
+        //        })
+        //            .then(function (response) {
+        //                if (response.status == 200) {
+        //                    $('#ActiveGroupModal').closeModal();
+        //                    $rootScope.groupsdowngrade = false;
+        //                    window.location.reload();
+        //                    // swal(response.data);
+        //                }
+        //            }, function (reason) {
+        //                swal("Error!");
+        //            });
+        //    }
+        //    else {
+        //        swal('please select ' + $rootScope.groupsMaxCount + ' Groups');
+        //    }
+
+        //}
+        ////End
+
+        //$scope.Addfacebookpagebyurl = function () {
+        //    var url = $('#_txtinputurl').val();
+        //    if (url != "" && url.indexOf('facebook') > 0) {
+        //        //codes to load  Gplus profiles start
+        //        $http.get(apiDomain + '/api/Facebook/AddFacebookPagesByUrl?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&url=' + url)
+        //                      .then(function (response) {
+        //                          if (response.data != "") {
+        //                              swal(response.data)
+        //                              $('#_txtinputurl').val('');
+        //                              if (response.data == "added successfully") {
+        //                                  window.location.reload();
+        //                              }
+        //                          }
 
 
 
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
-                // end codes to load Gplus profiles
-            }
-            else {
-                swal("Please Enter a valid url");
-            }
-        }
+        //                      }, function (reason) {
+        //                          $scope.error = reason.data;
+        //                      });
+        //        // end codes to load Gplus profiles
+        //    }
+        //    else {
+        //        swal("Please Enter a valid url");
+        //    }
+        //}
 
 
         $scope.changeGroup = function (groupId) {

@@ -959,7 +959,10 @@ analytics" href="http://statcounter.com/shopify/"
                 success: function (msg) {
                     if (msg == "true") {
                         window.top.location = '/home';
-                    } else {
+                    }else if (msg == "TwoStepLogin") {
+                        window.top.location = '/Index/TwoStepOtp';
+                    }
+                    else {
                         $.ajax({
                             type: "GET",
                             url: "../Home/UserSession",
@@ -968,6 +971,9 @@ analytics" href="http://statcounter.com/shopify/"
                             success: function (msg) {
                                 if (msg == "true") {
                                     window.top.location = '/home';
+                                } else {
+                                    window.top.location = '/Index';
+
                                 }
                             }
                         });

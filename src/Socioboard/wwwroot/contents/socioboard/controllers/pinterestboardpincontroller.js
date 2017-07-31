@@ -1,9 +1,9 @@
 ﻿'use strict';
- 
+
 SocioboardApp.controller('PinterestBoardPinsController', function ($rootScope, $scope, $http, $timeout, $mdpDatePicker, $mdpTimePicker, $stateParams, apiDomain) {
     //alert('helo');
-    $scope.$on('$viewContentLoaded', function() {  
-     
+    $scope.$on('$viewContentLoaded', function () {
+
         pinterest();
         var start = 0; // where to start data
         var ending = start + 30; // how much data need to add on each function call
@@ -26,6 +26,26 @@ SocioboardApp.controller('PinterestBoardPinsController', function ($rootScope, $
         }
         $scope.LoadTopFeeds();
 
+        $scope.CheckStatus = function () {
+            var web_url = $('#web_url').val();
+            if (web_url != "") {
+                if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(web_url)) {
+
+                } else {
+                    swal('please upload any valid image url for pin');
+                    return false;
+                }
+            } else {
+                $scope.checkfile();
+                if ($scope.check == false) {
+                    alertify.set({ delay: 3000 });
+                    alertify.error("File extension is not valid. Please upload an image file");
+                } else {
+                }
+            }
+
+        }
+
         $scope.CreatePin = function (pinterestUserId, boardid) {
             var web_url = $('#web_url').val();
             if (web_url != "") {
@@ -44,7 +64,7 @@ SocioboardApp.controller('PinterestBoardPinsController', function ($rootScope, $
             else {
                 $('#pinbtn_' + boardid).html('wait');
                 var description = dec;
-                if ($scope.check==true) {
+                if ($scope.check == true) {
                     var formData = new FormData();
                     formData.append('files', $("#composePinImage").get(0).files[0]);
                     $http({
@@ -66,11 +86,11 @@ SocioboardApp.controller('PinterestBoardPinsController', function ($rootScope, $
                 } else {
                     alertify.set({ delay: 3000 });
                     alertify.error("File extension is not valid. Please upload an image file");
-                   
+
                 }
             }
         }
- 
+
         //code for checking the file format start
         $scope.checkfile = function () {
             var filesinput = $('#composePinImage');//composeImage
@@ -93,20 +113,20 @@ SocioboardApp.controller('PinterestBoardPinsController', function ($rootScope, $
         }
         //code for checking the file format end
 
- 
- /*
-    * Masonry container for eCommerce page
-    */
-    //var $containerProducts = $("#pins_board");
-    //$containerProducts.imagesLoaded(function() {
-    //  $containerProducts.masonry({
-    //    itemSelector: ".product",
-    //    columnWidth: ".product-sizer",
-    //  });
-    //});
- 
-  });
- 
+
+        /*
+           * Masonry container for eCommerce page
+           */
+        //var $containerProducts = $("#pins_board");
+        //$containerProducts.imagesLoaded(function() {
+        //  $containerProducts.masonry({
+        //    itemSelector: ".product",
+        //    columnWidth: ".product-sizer",
+        //  });
+        //});
+
+    });
+
 });
 SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
     return function (scope, element, attrs) {

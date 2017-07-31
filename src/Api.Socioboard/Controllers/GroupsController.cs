@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Cors;
 using Domain.Socioboard.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -83,14 +84,25 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpGet("GetUserGroupData")]
-        public IActionResult GetUserGroupData(long userId)
+        public IActionResult GetUserGroupData(long userId,string groupId)
         {
             DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
             Domain.Socioboard.Models.GetUserGroupData _GetUserGroupData = new Domain.Socioboard.Models.GetUserGroupData();
-            List<Domain.Socioboard.Models.Groups> lstgroup = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId).ToList();
-            long[] lstStr = lstgroup.Select(t => t.id).ToArray();
-            List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => lstStr.Contains(t.groupId)).ToList();
-            
+            List<Domain.Socioboard.Models.Groups> lstgroup = new List<Groups>();
+            List<Domain.Socioboard.Models.Groupmembers> lstgrpmember = new List<Groupmembers>();
+            lstgrpmember = dbr.Find<Groupmembers>(t => t.userId == userId && t.memberStatus==Domain.Socioboard.Enum.GroupMemberStatus.Accepted).ToList();
+            long[] lstgrpId = lstgrpmember.Select(t => t.groupid).ToArray();
+            lstgroup = dbr.Find<Domain.Socioboard.Models.Groups>(t => lstgrpId.Contains(t.id)).ToList();
+            List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = new List<Groupprofiles>();
+            if (string.IsNullOrEmpty(groupId))
+            {
+                long[] lstStr = lstgroup.Select(t => t.id).ToArray();
+                lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => lstStr.Contains(t.groupId)).ToList(); 
+            }
+            else
+            {
+                lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t =>t.groupId==Convert.ToInt32(groupId)).ToList();
+            }
             Dictionary<long, List<Groupprofiles>> myProfiles = lstgrpProfiles.GroupBy(o => o.groupId).ToDictionary(g => g.Key, g => g.ToList());
             _GetUserGroupData.lstgroup = lstgroup;
             _GetUserGroupData.myProfiles = myProfiles;
@@ -103,7 +115,12 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             return Ok(GroupsRepository.getAllGroupsofUserCount(userId, _redisCache, dbr));
         }
-
+        [HttpGet("GetUserGroupsMembersCount")]
+        public IActionResult GetUserGroupsMembersCount(long userId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupsRepository.getMemberCount(userId, _redisCache, dbr));
+        }
         [HttpPost("AddSelectedGroups")]
         public IActionResult AddSelectedGroups(long userId)
         {

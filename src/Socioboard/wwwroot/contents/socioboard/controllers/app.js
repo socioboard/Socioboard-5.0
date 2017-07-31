@@ -197,18 +197,18 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
 
         localStorage.setItem("user", JSON.stringify($rootScope.user));
         $scope.AccountType = $rootScope.user.AccountType;
-        $scope.message = function (abcd) {
-            $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
-            swal(abcd);
-        };
-        $scope.grpmessage = function (grperrormsg) {
-            $scope.grperrormsg = "If You want to use this Group upgrade to higher business plan ";
-            swal(grperrormsg);
-        };
-        $scope.grpmsgs = function (grpmsg) {
-            $scope.grpmsg = "You reached maximum groups count you can't create more groups  ";
-            swal(grpmsg);
-        };
+        //$scope.message = function (abcd) {
+        //    $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
+        //    swal(abcd);
+        //};
+        //$scope.grpmessage = function (grperrormsg) {
+        //    $scope.grperrormsg = "If You want to use this Group upgrade to higher business plan ";
+        //    swal(grperrormsg);
+        //};
+        //$scope.grpmsgs = function (grpmsg) {
+        //    $scope.grpmsg = "You reached maximum groups count you can't create more groups  ";
+        //    swal(grpmsg);
+        //};
         //get group count
         $scope.getGroupCount = function () {
             $http.get(apiDomain + '/api/Groups/GetUserGroupsCount?&userId=' + $rootScope.user.Id)
@@ -389,6 +389,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
 
     // Redirect any unmatched url
     $urlRouterProvider.otherwise("/dashboard");
+
     $stateProvider
         // Dashboard
         .state('dashboard', {
@@ -597,6 +598,67 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                             '../contents/socioboard/js/admin/plugins/fullcalendar/fullcalendar-script.js',
                             '../contents/socioboard/js/admin/plugins.js',
                             '../contents/socioboard/controllers/calendarcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+         // Content Studio 
+        .state('trending_content', {
+            url: "/trending_content.html",
+            templateUrl: "../contents/socioboard/views/content_studio/trending_content.html",
+            data: {pageTitle: 'Trending Content', pageSubTitle: 'updated'},
+            controller: "TrendingContentController",
+             
+            resolve: {
+                deps: ['$ocLazyLoad', function($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/global/plugins/moment.js',
+                            '../contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css',
+                            '../contents/socioboard/global/plugins/mdPickers/dist/mdPickers.js',
+                            '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                             '../contents/socioboard/controllers/trendingcontentcontroller.js'
+ 
+                        ] 
+                    });
+                }]
+            }
+        })
+
+        // Most Shared controller
+
+        .state('MostShared', {
+            url: "/mostshared.html",
+            templateUrl: "../contents/socioboard/views/content_studio/mostshared.html",
+            data: { pageTitle: 'Most Shared', pageSubTitle: 'updated' },
+            controller: "MostSharedController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/global/plugins/datatables/media/css/jquery.dataTables.min.css',
+                            '../contents/socioboard/global/plugins/datatables/media/js/jquery.dataTables.min.js',
+
+                            'https://cdn.datatables.net/buttons/1.3.1/css/buttons.dataTables.min.css',
+                            'https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js',
+                            '//cdn.datatables.net/buttons/1.3.1/js/buttons.flash.min.js',
+                            '//cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js',
+                            '//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/pdfmake.min.js',
+                            '//cdn.rawgit.com/bpampuch/pdfmake/0.1.27/build/vfs_fonts.js',
+                            '//cdn.datatables.net/buttons/1.3.1/js/buttons.html5.min.js',
+                            '//cdn.datatables.net/buttons/1.3.1/js/buttons.print.min.js',
+
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/mostsharedcontroller.js'
                         ]
                     });
                 }]

@@ -8,31 +8,34 @@
             <div class="row">
                 <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                     <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-4 white-text"><i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a><a class='dropdown-button right margin-right-10 white-text' href='javascript:void(0)' data-activates='dropdownSort'><i class="fa fa-sort"></i></a>
-                            <a class='right white-text btn light-blue accent-3' href="javascript:void(0)" ng-click="fbprofiles()" style="font-size: 14px !important;padding: 0px 5px 0px 5px !important;height: 28px;line-height: 15px;border-radius: 4px;">
-                                <span class="white-text text-darken-4"><i class="fa fa-refresh fa-fw"></i>Reconnect</span>
-                            </a></h5>
+                        <h5 class="feeds_title blue darken-4 white-text">
+                            <i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="LoadTopFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>
+                            <a class='right white-text btn green accent-4' href="javascript:void(0)" ng-click="fbprofiles()" style="font-size: 14px !important;padding: 0px 5px 0px 5px !important;height: 28px;line-height: 15px;border-radius: 4px;">
+                                <span class="white-text text-darken-4"><i class="fa fa-refresh fa-fw"></i><strong>Reconnect</strong></span>&nbsp;&nbsp;&nbsp;
+                            </a>
+                        </h5>                            
                         <!-- Dropdown Trigger -->
                         
                         <!-- Dropdown Structure -->
                         <div ng-if="dropCalled==true">
                             <ul id='dropdownFilter' class='dropdown-content'>
-                                <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('socioboard')">Socioboard</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('status')">Status</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('link')">Link</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('photo')">Photo</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('video')">Video</a></li>
+                                <li><a href="javascript:void(0)"><strong style="color:black">Filter</strong></a></li>
+                                <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">All Posts</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('socioboard','Socioboard')">Sent from Socioboard</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('photo','Image')">Image posts</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('video','Video')">Video posts</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('link','Link')">Link posts</a></li>
+                                <li><a href="javascript:void(0)" ng-click="filterSearch('status','Status')">Status posts</a></li>
                             </ul>
                         </div>
-                           
+
                         <div ng-if="dropCalled==true">
                             <ul id='dropdownSort' class='dropdown-content'>
-                                <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
-                                <li><a href="javascript:void(0)" ng-click="SortSearch('maxlikes')">Max Likes</a></li>
-                                <li><a href="javascript:void(0)" ng-click="SortSearch('maxcomment')">Max Comments</a></li>
-                                <li><a href="javascript:void(0)" ng-click="SortSearch('leastlikes')">Least Likes</a></li>
-                                <li><a href="javascript:void(0)" ng-click="SortSearch('leastcomment')">Least Comments</a></li>
+                                <li><a href="javascript:void(0)"><strong style="color:black">Popular</strong></a></li>
+                                <li><a href="javascript:void(0)" ng-click="SortSearch('maxlikes','Most likes')">Most Likes</a></li>
+                                <li><a href="javascript:void(0)" ng-click="SortSearch('maxcomment','Most comments')">Most Comments</a></li>
+                                <li><a href="javascript:void(0)" ng-click="SortSearch('leastlikes','Least likes')">Least Likes</a></li>
+                                <li><a href="javascript:void(0)" ng-click="SortSearch('leastcomment','Least comments')">Least Comments</a></li>
                             </ul>
                         </div>
 
@@ -53,8 +56,7 @@
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li>
                                                 <div class="collapsible-header"><i class="icon-speech"></i>Comments <span class="blue-text"> {{fbfeed.commentcount}} </span></div>
-                                               
-                                                 <div class="collapsible-body">
+                                                <div class="collapsible-body">
                                                     <ul class="collection facebookfeeds">
                                                         <li class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive>
                                                             <img ng-src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">

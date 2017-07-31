@@ -191,6 +191,82 @@ namespace Api.Socioboard.Repositories
 
         }
 
+        public static int ReFacebookAccount(dynamic profile, Int64 friends, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, Domain.Socioboard.Enum.FbProfileType fbProfileType, string accessToken, string reconnect, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        {
+            int isSaved = 0;
+            Domain.Socioboard.Models.Facebookaccounts fbAcc;
+           
+          
+           fbAcc = FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+               
+
+            
+            if (fbAcc != null )
+            {
+                fbAcc.IsActive = true;
+                fbAcc.UserId = userId;
+                fbAcc.Friends = friends;
+                fbAcc.AccessToken = accessToken;
+                try
+                {
+                    fbAcc.EmailId = (Convert.ToString(profile["email"]));
+                }
+                catch { }
+                try
+                {
+                    fbAcc.ProfileUrl = (Convert.ToString(profile["link"]));
+                }
+                catch { }
+                try
+                {
+                    fbAcc.gender = (Convert.ToString(profile["gender"]));
+                }
+                catch { }
+                try
+                {
+                    fbAcc.bio = (Convert.ToString(profile["bio"]));
+                }
+                catch { }
+                try
+                {
+                    fbAcc.about = (Convert.ToString(profile["about"]));
+                }
+                catch { }
+                try
+                {
+                    fbAcc.coverPic = (Convert.ToString(profile["cover"]["source"]));
+                }
+                catch { }
+                try
+                {
+                    fbAcc.birthday = (Convert.ToString(profile["birthday"]));
+                }
+                catch { }
+                try
+                {
+                    JArray arry = JArray.Parse(profile["education"]);
+                    if (arry.Count() > 0)
+                    {
+                        fbAcc.college = Convert.ToString(arry[arry.Count() - 1]["school"]["name"]);
+                        fbAcc.education = Convert.ToString(arry[arry.Count() - 1]["concentration"]["name"]);
+                    }
+                }
+                catch { }
+                try
+                {
+                    JArray arry = JArray.Parse(profile["work"]);
+                    if (arry.Count() > 0)
+                    {
+                        fbAcc.workPosition = Convert.ToString(arry[0]["position"]["name"]);
+                        fbAcc.workCompany = Convert.ToString(arry[0]["employer"]["name"]);
+                    }
+                }
+                catch { }
+                isSaved = dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+            }
+            return isSaved;
+        }
+
         public static int AddFacebookPage(dynamic profile, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, Domain.Socioboard.Enum.FbProfileType fbProfileType, string accessToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
         {
             int isSaved = 0;
@@ -393,9 +469,6 @@ namespace Api.Socioboard.Repositories
             {
                 return null;
             }
-
-
-
         }
 
         public static void SaveFbPublicPagePost(string accesstoken, string profileid, Helper.AppSettings _appSettings)
@@ -1813,8 +1886,10 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
-                fbAcc.IsActive = false;
-                dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+
+              //  fbAcc.IsActive = false;
+              //  dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+                dbr.Delete<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + profileId);
 
                 UpdateDeletesPagehreathon(profileId, _appSettings, userId);

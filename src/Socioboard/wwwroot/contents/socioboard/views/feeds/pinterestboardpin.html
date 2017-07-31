@@ -105,7 +105,7 @@
                                      <div class="row">
                                          <div class="col l12 s12"><h5 class="no-space">Save from a website</h5></div>
                                          <div class="input-field col s10">
-                                             <input placeholder="https://kot.rogacz.com/Science/Studies/06/lpp/projekt/Installer/ServerInstaller/Resources/png/DotNet-513.png" id="web_url" type="text" class="validate">
+                                             <input placeholder="https://kot.rogacz.com/Science/Studies/06/lpp/projekt/Installer/ServerInstaller/Resources/png/DotNet-513.png" onchange="angular.element(this).scope().CheckStatus()" id="web_url" type="text" class="validate">
                                              <label for="web_url">Enter url</label>
                                          </div>
                                          <div class="col l2 s2 center">
@@ -123,10 +123,10 @@
                                      <div class="row">
                                          <div class="col l12 s12"><h5 class="no-space">Upload a Pin</h5></div>
                                          <div class="input-field col s12">
-                                             <input type="file" id="composePinImage" class="dropify" data-default-file="" />
+                                             <input type="file" id="composePinImage"  onchange="angular.element(this).scope().CheckStatus()" class="dropify" data-default-file="" />
                                          </div>
                                          <div class="input-field col l12 s12">
-                                             <a href="#SavePinModal" class="modal-trigger btn btn_style right modal-action modal-close">Next</a>
+                                             <a  href="#SavePinModal" class="modal-trigger btn btn_style right modal-action modal-close">Next</a>
                                          </div>
                                      </div>
                                  </div>

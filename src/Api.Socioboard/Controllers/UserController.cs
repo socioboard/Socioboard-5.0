@@ -1280,25 +1280,34 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
-            user.SocialLoginEnableFb = checkEnable;
-            int res = dbr.Update<User>(user);
-
-            if (res == 1)
+            if(user.TwostepEnable == false)
             {
-                if (checkEnable)
+                user.SocialLoginEnableFb = checkEnable;
+                int res = dbr.Update<User>(user);
+
+                if (res == 1)
                 {
-                    return Ok("You have successfully enabled Social Signin for facebook account enjoy login without id and pass");
+                    if (checkEnable)
+                    {
+                        return Ok("You have successfully enabled Social Signin for facebook account enjoy login without id and pass");
+                    }
+                    else
+                    {
+                        return Ok("You have successfully disabled Social signin for facebook account");
+                    }
+
                 }
                 else
                 {
-                    return Ok("You have successfully disabled Social signin for facebook account");
+                    return BadRequest("Error while enabling Social Signin, pls try after some time.");
                 }
 
             }
             else
             {
-                return BadRequest("Error while enabling Social Signin, pls try after some time.");
+                return BadRequest("Can't enable social signin because two steps login has already enabled.");
             }
+           
         }
 
 
@@ -1933,34 +1942,41 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
-            if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            if (user.SocialLoginEnableFb == false && user.SocialLoginEnableGo == false)
             {
-                user.TwostepEnable = true;
-                int res = dbr.Update<User>(user);
-                if (res == 1)
+                if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
                 {
-                    return Ok("You successfully enabled two step login");
+                    user.TwostepEnable = true;
+                    int res = dbr.Update<User>(user);
+                    if (res == 1)
+                    {
+                        return Ok("You successfully enabled two step login");
+                    }
+                    else
+                    {
+                        return BadRequest("Error while enabling two step login, pls try after some time.");
+                    }
+                }
+                else if (!user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+                {
+                    return BadRequest("Wrong password");
+                }
+                else if (user.EmailValidateToken.Equals("Facebook"))
+                {
+                    return BadRequest("two step login is not permitted as you registered in Socioboard with Facebook.");
+                }
+                else if (user.EmailValidateToken.Equals("Google"))
+                {
+                    return BadRequest("two step login is not permitted as you registered in Socioboard with Google.");
                 }
                 else
                 {
-                    return BadRequest("Error while enabling two step login, pls try after some time.");
+                    return BadRequest("Something went wrong");
                 }
-            }
-            else if (!user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
-            {
-                return BadRequest("Wrong password");
-            }
-            else if (user.EmailValidateToken.Equals("Facebook"))
-            {
-                return BadRequest("two step login is not permitted as you registered in Socioboard with Facebook.");
-            }
-            else if (user.EmailValidateToken.Equals("Google"))
-            {
-                return BadRequest("two step login is not permitted as you registered in Socioboard with Google.");
             }
             else
             {
-                return BadRequest("Something went wrong");
+                return BadRequest("can't enabled two steps login as you have already enabled socail sign in login");
             }
 
 

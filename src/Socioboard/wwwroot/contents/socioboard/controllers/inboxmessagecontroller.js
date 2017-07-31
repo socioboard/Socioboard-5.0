@@ -139,7 +139,7 @@ SocioboardApp.controller('InboxMessageController', function ($rootScope, $scope,
             if (!memberId.val()) {
                 swal('Please select a member to assign the task')
             }
-            else if (!taskComment) {
+            else if (!(/\S/.test(taskComment))) {
                 swal('Please write a comment to assign the task')
             }
             else {

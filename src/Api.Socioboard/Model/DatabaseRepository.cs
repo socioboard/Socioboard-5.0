@@ -393,5 +393,34 @@ namespace Api.Socioboard.Model
 
             return result;
         }
+
+        public void DeleteAllList<T>(IList item) where T : class, new()
+        {
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
+                {
+                    using (NHibernate.ITransaction transaction = session.BeginTransaction())
+                    {
+                        foreach (var temp in item)
+                        {
+                            session.Delete(temp);
+                        }
+                        transaction.Commit();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                if (ex.InnerException != null)
+                {
+                    _logger.LogError(ex.InnerException.Message);
+                    _logger.LogError(ex.InnerException.StackTrace);
+
+                }
+            }
+        }
     }
 }

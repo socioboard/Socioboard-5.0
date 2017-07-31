@@ -219,7 +219,7 @@ namespace SocioboardDataScheduler.Twitter
 
         public static string SendMailbySendGrid(string from, string passsword, string to, string bcc, string cc, string subject, string body, string Name, DateTime time, bool schStatus, string UserName = "", string Password = "")
         {
-            from = "support@socioboard.com";
+            from = "asd@asd.com";
             subject = "Socioboard updates";
             string datetime = time.ToString("MMM dd,yyyy HH:mm");
             if (schStatus)

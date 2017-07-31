@@ -51,12 +51,12 @@ namespace Api.Socioboard.Repositories
                 }
             }
             catch { }
-            List<Domain.Socioboard.Models.Groupmembers> groupMembers = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.groupid !=SBgroupId).ToList();
+            List<Domain.Socioboard.Models.Groupmembers> groupMembers = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.groupid != SBgroupId).ToList();
             _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + userId, groupMembers);
             return groupMembers;
         }
 
-        public static int createGroupMember(long groupId,User user,  Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        public static int createGroupMember(long groupId, User user, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
             Domain.Socioboard.Models.Groupmembers grpMember = new Domain.Socioboard.Models.Groupmembers();
             grpMember.groupid = groupId;
@@ -68,7 +68,88 @@ namespace Api.Socioboard.Repositories
             grpMember.userId = user.Id;
             grpMember.memberCode = "Admin";
             grpMember.isAdmin = true;
-          return  dbr.Add<Groupmembers>(grpMember);
+            return dbr.Add<Groupmembers>(grpMember);
+        }
+
+        public static List<Domain.Socioboard.Models.Groupmembers> getGroupadmin(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+           List<Domain.Socioboard.Models.Groupmembers> adminDetails = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.groupid == groupId && t.isAdmin).ToList();
+
+            return adminDetails;
+        }
+
+        public static List<Domain.Socioboard.Models.Groupmembers> adminDelete(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            List<Domain.Socioboard.Models.Groupmembers> adminDetails = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.groupid == groupId).ToList();
+
+            foreach (Domain.Socioboard.Models.Groupmembers item in adminDetails)
+            {
+                Groupmembers user =item;
+                dbr.Delete<Domain.Socioboard.Models.Groupmembers>(user);
+            }
+            List<Domain.Socioboard.Models.Groups> groupName = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.id== groupId).ToList();
+            foreach (Domain.Socioboard.Models.Groups item in groupName)
+            {
+                Groups group = item;
+                dbr.Delete<Domain.Socioboard.Models.Groups>(group);
+            }
+            return adminDetails;
+        }
+        public static List<Domain.Socioboard.Models.Groupmembers> LeaveTeam(long groupId, long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            List<Domain.Socioboard.Models.Groupmembers> leave = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.groupid == groupId && t.userId == userId).ToList();
+            foreach (Domain.Socioboard.Models.Groupmembers item in leave)
+            {
+                dbr.Delete<Domain.Socioboard.Models.Groupmembers>(item);
+            }
+
+            return leave;
+        }
+
+        public static List<Domain.Socioboard.Models.retaingroup> RetainGrpMber(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            List<Domain.Socioboard.Models.retaingroup> lstgrpdetal = new List<retaingroup>();
+            List<Groupmembers> lstadmingrpmember = dbr.Find<Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted && t.isAdmin == true).ToList();
+            List<long> tempLst = new List<long>();
+            foreach (var itemLst in lstadmingrpmember)
+            {
+                tempLst.Add(itemLst.groupid);
+            }
+            List<Groupmembers> membersAdminGrp = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => tempLst.Contains(t.groupid) && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted && t.isAdmin!=true).ToList();
+            List<Groupmembers> lstnonadmingrpmember = dbr.Find<Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted && t.isAdmin != true).ToList();
+
+            foreach(var item in membersAdminGrp)
+            {
+                Domain.Socioboard.Models.retaingroup lstretailgrp = new retaingroup();
+
+                Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.id==item.groupid).First();
+                string grpname = grp.groupName;
+                lstretailgrp.grpname = grpname;
+                lstretailgrp.username = item.firstName;
+                lstretailgrp.userId = item.email;
+                lstretailgrp.memberid = item.id;
+                lstretailgrp.grpid = item.groupid;
+                lstretailgrp.type = "You";
+                
+                lstgrpdetal.Add(lstretailgrp);
+            }
+            foreach (var item in lstnonadmingrpmember)
+            {
+                Domain.Socioboard.Models.retaingroup lstretailgrp = new retaingroup();
+
+                Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.id == item.groupid).First();
+                string grpname = grp.groupName;
+                lstretailgrp.grpname = grpname;
+                lstretailgrp.username = item.firstName;
+                lstretailgrp.userId = item.email;
+                lstretailgrp.memberid = item.id;
+                lstretailgrp.grpid = item.groupid;
+                lstretailgrp.type = "Other";
+                lstgrpdetal.Add(lstretailgrp);
+            }
+            //lstretailgrp.memberofadmin = membersAdminGrp;
+            //lstretailgrp.memberofNonadmin = lstnonadmingrpmember;
+            return lstgrpdetal;
         }
     }
 }
