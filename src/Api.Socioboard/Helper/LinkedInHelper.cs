@@ -25,7 +25,7 @@ namespace Api.Socioboard.Helper
             try
             {
 
-                if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://"))
+                if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://") && !string.IsNullOrEmpty(ImageUrl))
                 {
                     var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
                     var endpoint = new ImageEndpoint(client);
@@ -133,7 +133,7 @@ namespace Api.Socioboard.Helper
         {
            try
             {
-                if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://"))
+                if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://") && !string.IsNullOrEmpty(ImageUrl))
                 {
                     var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
                     var endpoint = new ImageEndpoint(client);

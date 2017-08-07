@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $scope, $http, $timeout,$stateParams, apiDomain) {
+SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $scope, $http, $timeout,$stateParams, apiDomain,domain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
         $scope.disbtncom = true;
@@ -126,7 +126,18 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             // end codes to load  recent Feeds
         }
 
+        $scope.ReconnectGplus = function (xyz) {
 
+
+            $http.get(domain + '/socioboard/ReconnGoacc?option=' + xyz)
+                              .then(function (response) {
+                                  window.location.href = response.data;
+
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+
+        };
         
         //repost
 

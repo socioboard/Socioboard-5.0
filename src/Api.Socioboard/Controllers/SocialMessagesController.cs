@@ -606,7 +606,6 @@ namespace Api.Socioboard.Controllers
                         {
                             string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, twitterText, ids[0], userId, imgUrl, true, dbr, _logger);
                         }
-
                     }
                     else
                     {

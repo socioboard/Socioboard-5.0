@@ -382,7 +382,20 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
-        } 
+        }
+        #endregion
+
+        #region MutualFriends
+        public JArray Get_Friends_ById(oAuthTwitter oauth, string Userid)
+        {
+            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendsIdUrl;
+            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+            strdic.Add("user_id", Userid);
+            string response = oauth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            if (!response.StartsWith("["))
+                response = "[" + response + "]";
+            return JArray.Parse(response);
+        }
         #endregion
 
         #region Get_Blocks_List

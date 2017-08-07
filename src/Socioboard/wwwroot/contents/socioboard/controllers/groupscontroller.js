@@ -90,11 +90,11 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                     $('#CreateGroupModal').closeModal();
                     alertify.set({ delay: 1000 });
                     alertify.success(response.data);
-                    window.location.reload();
                 }
                 else {
                     alertify.set({ delay: 1000 });
                     alertify.error(response.data);
+                    window.location.reload();
                 }
             }, function (reason) {
                

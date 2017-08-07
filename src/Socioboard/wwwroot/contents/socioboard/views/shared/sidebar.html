@@ -303,7 +303,7 @@
                     </a>
                    </li>
                 <!--Sharethon for paid user-->
-                <li class="bold" ng-if="user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
+                <li class="bold" ng-if="user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                     <a class="collapsible-header  waves-effect waves-orange">
                         <i class="icon-share"></i> Shareathon
                     </a>
@@ -323,7 +323,7 @@
                     </div>
                 </li>
                 <!--Sharethon for Unpaid user-->
-                <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
+                <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 ||user.AccountType==4">
                     <a class="waves-effect waves-orange"  ng-click="message(abcd)" disable>
                         <i class="icon-share"></i> Shareathon
                     </a>

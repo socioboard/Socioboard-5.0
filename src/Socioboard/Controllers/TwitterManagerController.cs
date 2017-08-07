@@ -214,5 +214,112 @@ namespace Socioboard.Controllers
             }
             return View();
         }
+
+
+        [Route("socioboard/Reconntwtacc/")]
+        [HttpGet("Reconntwtacc")]
+        public ActionResult Reconntwtacc(bool code )
+        {
+
+
+
+            return RedirectToAction("ReconnectTwitter", "TwitterManager", new { code = true});
+
+
+            // return Content(Socioboard.Facebook.Auth.Authentication.GetFacebookRedirectLink(_appSettings.FacebookAuthUrl, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl));
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> ReconnectTwitter(bool code)
+        {
+            int count = 0;
+            string profileCount = "";
+            List<Domain.Socioboard.Models.Groups> groups = new List<Domain.Socioboard.Models.Groups>();
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            
+            string sessionSelectedGroupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+           
+            
+           
+            
+                if (code)
+                {
+                    HttpContext.Session.SetObjectAsJson("Twitter", "Twitter_Account_Follow");
+                }
+                else
+                {
+                    HttpContext.Session.SetObjectAsJson("Twitter", "Twitter_Account");
+                }
+                OAuthCredentials credentials = new OAuthCredentials()
+                {
+                    Type = OAuthType.RequestToken,
+                    SignatureMethod = OAuthSignatureMethod.HmacSha1,
+                    ParameterHandling = OAuthParameterHandling.HttpAuthorizationHeader,
+                    ConsumerKey = _appSettings.twitterConsumerKey,
+                    ConsumerSecret = _appSettings.twitterConsumerScreatKey,
+                    CallbackUrl = "http://localhost:9821/TwitterManager/RecTwitter"
+                };
+                // Use Hammock to create a rest client
+                var client = new RestClient
+                {
+                    Authority = "https://api.twitter.com/oauth",
+                    Credentials = credentials,
+                };
+                // Use Hammock to create a request
+                var request = new RestRequest
+                {
+                    Path = "request_token"
+                };
+                // Get the response from the request
+                var _response = client.Request(request);
+                var collection = HttpUtility.ParseQueryString(_response.Content);
+                //string str = collection[1].ToString();
+                //HttpContext.Current.Session["requestSecret"] = collection[1];
+                string rest = "https://api.twitter.com/oauth/authorize?oauth_token=" + collection[0];
+                HttpContext.Session.SetObjectAsJson("requestSecret", collection[1]);
+
+                return Content(rest);
+            
+
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> RecTwitter(string oauth_token, string oauth_verifier)
+        {
+            string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+            string requestSecret = HttpContext.Session.GetObjectFromJson<string>("requestSecret");
+            string twitterSession = HttpContext.Session.GetObjectFromJson<string>("Twitter");
+            if (twitterSession.Equals("Twitter_Account") || twitterSession.Equals("Twitter_Account_Follow"))
+            {
+                Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+                List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+                Parameters.Add(new KeyValuePair<string, string>("requestToken", oauth_token));
+                Parameters.Add(new KeyValuePair<string, string>("requestSecret", requestSecret));
+                Parameters.Add(new KeyValuePair<string, string>("requestVerifier", oauth_verifier));
+               // Parameters.Add(new KeyValuePair<string, string>("groupId", groupId));
+                Parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+                if (twitterSession.Equals("Twitter_Account_Follow"))
+                {
+                    Parameters.Add(new KeyValuePair<string, string>("follow", "true"));
+
+                }
+                HttpContext.Session.SetObjectAsJson("Twitter", null);
+
+
+                HttpResponseMessage response = await WebApiReq.PostReq("/api/Twitter/ReconnectTwtAcc", Parameters, "", "", _appSettings.ApiDomain);
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["Success"] = await response.Content.ReadAsStringAsync();
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    TempData["Error"] = "Error while hitting api.";
+                    return RedirectToAction("Index", "Home");
+                }
+            }
+            return View();
+        }
     }
 }

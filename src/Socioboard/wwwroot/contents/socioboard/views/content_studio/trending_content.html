@@ -1,10 +1,5 @@
  <style type="text/css">
-     md-dialog{
-      opacity: 1 !important;      
-     }
-     .md-dialog-container{
-        z-index: 9999 !important;
-     }
+     
    </style>
     <div data-ng-controller="TrendingContentController">
             <!-- Page name -->
@@ -12,138 +7,292 @@
                 <div class="col m12">
                     <h4>Today's Trending Content</h4> 
                 </div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col s6">
+                          <div class="input-field col s10">
+                            <input placeholder="Placeholder" id="first_name" type="text" class="validate" placeholder="Search by keywords, 'exact phrases', or a domain...">
+                            <label for="first_name">Enter Keywords</label>
+                          </div>
+                          <div class="input-field col s1">
+                            <a href="javascript:;" class="btn btn_style">Search</a>
+                          </div>
+                        </div>
+                        <div class="col s6">
+                          <div class="input-field col s6">
+                            <select class="dropdown_list_style">
+                              <option value="Trending">Trending</option>
+                              <option value="Quotes">Quotes</option>
+                            </select>
+                            <label>Suggestions</label>
+                          </div>
+                          <div class="input-field col s6">
+                            <select class="dropdown_list_style">
+                              <option class=""><a href="">Autos &amp; Vehicles</a></option>
+                              <option class=""><a href="">Comedy</a></option>
+                              <option class=""><a href="">Education</a></option>
+                              <option class=""><a href="">Entertainment</a></option>
+                              <option class=""><a href="">Howto &amp; Style</a></option>
+                              <option class=""><a href="">News &amp; Politics</a></option>
+                              <option class=""><a href="">Science &amp; Technology</a></option>
+                              <option class=""><a href="">Sports</a></option>
+                              <option class=""><a href="">Travel</a></option>
+                            </select>
+                            <label>Quick Topics</label>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="row white-text grey darken-4">
+                      <div class="">
+                        <div class="col m4 s12 margin-top-10">    
+                            <!--<a  class="btn btn_style" ng-click="globeSearch()"><i class="fa fa-globe"></i></a>           
+                            <a  class="btn btn_style" ng-click="dailyMotion('')"><i class="fa fa-facebook"></i></a>-->           
+                            <a class="btn btn_style" ng-click="youtubeSearch('twitter')" ><i class="fa fa-youtube"></i></a>           
+                            <!--<a  class="btn btn_style" ng-click="twitterSearch('twitter')"><i class="fa fa-twitter"></i></a> 
+                            <a class="btn btn_style" ng-click="twitterSearch('instagram')"><i class="fa fa-instagram"></i></a>
+                            <a class="btn btn_style" ng-click="flickrSearch('flickr')"><i class="fa fa-flickr"></i></a>-->           
+                        </div>
+                        <div class="col m8 s12 right">
+                            <div class="input-field col s3">
+                                <select class="dropdown_list_style">
+                                  <option><a href="javascript:void(0)">Trending</a></option> 
+                                  <option><a href="javascript:void(0)">Most Shared</a></option> 
+                                  <option><a href="javascript:void(0)">Facebook Shares</a></option> 
+                                  <option><a href="javascript:void(0)">Pinterest Shares</a></option> 
+                                  <option><a href="javascript:void(0)">LinkedIn Shares</a></option>
+                                </select>
+                                <label>Sort By</label>
+                            </div>
+                            <div class="input-field col s2">
+                                <select class="dropdown_list_style">
+                                  <option data-range-key="1 hour">1 hour</option>
+                                  <option data-range-key="3 hours">3 hours</option>
+                                  <option data-range-key="6 hours">6 hours</option>
+                                  <option data-range-key="12 hours">12 hours</option>
+                                  <option data-range-key="24 hours">24 hours</option>
+                                  <option data-range-key="48 hours">48 hours</option>
+                                  <option data-range-key="Last 3 days">Last 3 days</option>
+                                  <option data-range-key="Last 7 days">Last 7 days</option>
+                                </select>
+                                <label>Duration</label>
+                            </div>
+                            <div class="input-field col s2">
+                                <select class="dropdown_list_style">
+                                  <option><a href="javascript:void(0)" value="world"><i class="fa fa-globe"></i> World </a></option>
+                                  <option><a href="javascript:void(0)" value="au"> Australia </a></option>
+                                  <option><a href="javascript:void(0)" value="be"> Belgium </a></option>
+                                  <option><a href="javascript:void(0)" value="ca"> Canada </a></option>
+                                  <option><a href="javascript:void(0)" value="us"> United States </a></option>
+                                  <option><a href="javascript:void(0)" value="uk"> United Kingdom </a></option>
+                                  <option><a href="javascript:void(0)" value="fr"> France </a></option>
+                                  <option><a href="javascript:void(0)" value="de"> Germany </a></option>
+                                  <option><a href="javascript:void(0)" value="in"> India </a></option>
+                                  <option><a href="javascript:void(0)" value="it"> Italy </a></option>
+                                  <option><a href="javascript:void(0)" value="my"> Malaysia </a></option>
+                                  <option><a href="javascript:void(0)" value="sg"> Singapore </a></option>
+                                  <option><a href="javascript:void(0)" value="es"> Spain </a></option>
+                                  <option><a href="javascript:void(0)" value="ch"> Switzerland </a></option>
+                                  <option><a href="javascript:void(0)" value="pl"> Poland </a></option>
+                                  <option><a href="javascript:void(0)" value="pk"> Pakistan </a></option>
+                                  <option><a href="javascript:void(0)" value="ua"> Ukraine </a></option>
+                                  <option><a href="javascript:void(0)" value="br"> Brazil </a></option>
+                                  <option><a href="javascript:void(0)" value="at"> Austria </a></option>
+                                  <option><a href="javascript:void(0)" value="nz"> Newzeland </a></option>
+                                  <option><a href="javascript:void(0)" value="ru"> Russia </a></option>
+                                  <option><a href="javascript:void(0)" value="ie"> Ireland </a></option>
+                                  <option><a href="javascript:void(0)" value="no"> Norway </a></option>
+                                  <option><a href="javascript:void(0)" value="hu"> Hungary </a></option>
+                                  <option><a href="javascript:void(0)" value="ro"> Romania </a></option>
+                                  <option><a href="javascript:void(0)" value="dk"> Denmark </a></option>
+                                  <option><a href="javascript:void(0)" value="fi"> Finland </a></option>
+                                  <option><a href="javascript:void(0)" value="sk"> Slovakia </a></option>
+                                  <option><a href="javascript:void(0)" value="cz"> Czech Republic </a></option>
+                                  <option><a href="javascript:void(0)" value="gr"> Greece </a></option>
+                                </select>
+                                <label>Region</label>
+                            </div>
+                            <div class="input-field col s2">
+                                <select class="dropdown_list_style">
+                                  <option value="All">All</option>
+                                  <option><a href="javascript:void(0)" value="en">English</a></option>
+                                  <option><a href="javascript:void(0)" value="fr">Français</a></option>
+                                  <option><a href="javascript:void(0)" value="nl">Nederlands</a></option>
+                                  <option><a href="javascript:void(0)" value="de">Deutsch</a></option>
+                                  <option><a href="javascript:void(0)" value="es">Español</a></option>
+                                  <option><a href="javascript:void(0)" value="tr">Turkish</a></option>
+                                  <option><a href="javascript:void(0)" value="pl">Polski</a></option>
+                                  <option><a href="javascript:void(0)" value="it">Italiano</a></option>
+                                  <option><a href="javascript:void(0)" value="pt">Português</a></option>
+                                  <option><a href="javascript:void(0)" value="se">Swedish</a></option>
+                                </select>
+                                <label>Language</label>
+                            </div>
+                            <div class="input-field col s2">
+                                <select class="dropdown_list_style">
+                                  <option value="Any">Any</option>
+                                  <option value="Full">Full</option>
+                                  <option value="Abstract">Abstract</option>
+                                </select>
+                                <label>Length</label>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
             </div>
             <!-- statr products list -->
-            <div id="products" class="row">
-                <div class="product-sizer"></div>
-                    <div class="product ">
-                        <div class="card hoverable">
-                            <div class="row margin-top-10 no-bottom-space">
-                                <div class="col s12" style="display: inline-flex;">
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
-                                        <br>
-                                        <span>99k</span>
+            <div id="products" class="row">               
+                    <div class="product_content-sizer"></div>
+                    <div style="padding:20px;"  my-repeat-feed-timeout-directive>
+                        <div class="product_content" ng-repeat="feed in lstData">
+                            <div class="card hoverable">
+                                <div class="card-image waves-effect waves-block waves-light">
+                                    <a href="#" class="btn-floating btn-large btn-save waves-effect waves-light blue accent-2 content_icon"><i class="fa fa-floppy-o fa-fw" aria-hidden="true"></i></a>
+                                    <a href="" target="_blank">
+                                        <img class="responsive-img circle" src="{{feed.imageUrl}}" alt="product-img">
+                                    </a>
+                                </div>
+                                <div class="">
+                                    <div class="row no-space">
+                                        <div class="col s12">
+                                            <p class="card-title grey-text text-darken-4">
+                                                {{feed.title}}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light light-blue accent-2"><i class="fa fa-twitter fa-fw"></i></a>
-                                        <br>
-                                        <span>99k</span>
+                                    <div class="row">
+                                        <div class="col s12 m12">
+                                            <a href="{{feed.postUrl}}" class="truncate">{{feed.postUrl}}</a>
+                                        </div>
                                     </div>
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light red darken-4"><i class="fa fa-pinterest fa-fw"></i></a>
-                                        <br>
-                                        <span>999</span>
+                                    <!--<div class="col s12 m6 ">
+                                    <span>| </span><span class="grey-text right truncate">10 hrs ago</span>
+                                    </div>-->
+                                    <!--<div class="row">
+                                        <div class="col s12 m12 center">
+                                            <div class="grey-text text-darken-4">Trending Score:</div>
+                                            <div><strong></strong></div>
+                                        </div>
+                                    </div>-->
+                                    <div class="row">
+                                    <div class="col s12 m12 center">
+                                         <div class="grey-text text-darken-4">Total Shares:</div>
+                                    <div><strong>{{feed.totalShareCount}}</strong></div>
                                     </div>
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light red accent-4"><i class="fa fa-google-plus fa-fw"></i></a>
-                                        <br>
-                                        <span>99k</span>
                                     </div>
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light blue darken-4"><i class="fa fa-linkedin fa-fw"></i></a>
-                                        <br>
-                                        <span>999</span>
+                                </div>
+                            
+
+                                <div class="row margin-top-10 no-bottom-space">
+                                    <div class="col s12 center" style="display: inline-flex;">
+                                        <!--<div class="center">
+                                            <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
+                                            <br>
+                                            <span>{{feed.totalShareCount}}</span>
+                                        </div>-->
+                                        <div class="center">
+                                            <a class="btn-floating waves-effect waves-light light-blue accent-2"><i class="fa fa-twitter fa-fw"></i></a>
+                                            <br>
+                                            <span>{{feed.twtShareCount}}</span>
+                                        </div>
+                                        <div class="center">
+                                            <a class="btn-floating waves-effect waves-light red darken-4"><i class="fa fa-pinterest fa-fw"></i></a>
+                                            <br>
+                                            <span>{{feed.pinShareCount}}</span>
+                                        </div>
+                                        <div class="center">
+                                            <a class="btn-floating waves-effect waves-light red accent-4"><i class="fa fa-google-plus fa-fw"></i></a>
+                                            <br>
+                                            <span>{{feed.gplusShareCount}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <a href="#" class="btn-floating btn-large btn-save waves-effect waves-light blue accent-2 content_icon"><i class="fa fa-floppy-o fa-fw" aria-hidden="true"></i></a>
-                                <a href="http://www.npr.org/sections/thetwo-way/2017/07/16/537545144/dr-who-is-a-woman-jodie-whittaker-announced-as-13th-time-lord-in-bbc-series" target="_blank">
-                                    <img src="https://media.npr.org/assets/img/2017/07/16/ap_16339701449510_wide-33ec48c63cc878dd3281539309ca43343b03d8ac.jpg?s=1400" alt="product-img">
-                                </a>
+
                             </div>
-                            <div class="card-content">
-                                <div class="row no-space">
-                                    <div class="col s12">
-                                        <p class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
-                                        </p>
-                                    </div>
-                                    <div class="col s12 m6">
-                                        <a href="javascript:;" class="truncate">weblink.com</a>
-                                    </div>
-                                    <div class="col s12 m6 ">
-                                        <span>| </span><span class="grey-text right truncate">10 hrs ago</span>
-                                    </div>
-                                    <hr>
-                                    <div class="col s12 m6 center">
-                                        <div class="grey-text text-darken-4">Trending Score:</div>
-                                        <div><strong>99</strong></div>
-                                    </div>
-                                    <div class="col s12 m6 center">
-                                        <div class="grey-text text-darken-4">Total Shares:</div>
-                                        <div><strong>99</strong></div>
-                                    </div>
+                        <!--<script>
+                            $(document).ready(function () {
+                                var $containerProducts = $("#products");
+                                $containerProducts.imagesLoaded(function () {
+                                    $containerProducts.masonry({
+                                        itemSelector: ".product_content",
+                                        columnWidth: ".product_content-sizer",
+                                    });
+                                });
+                            });
+                            
+                        </script>-->
+                        </div>
+                    </div>
+                </div>
+                   
+<!--                <div class="product_content">-->
+                    <!--<div class="card hoverable">
+                        <div class="row margin-top-10 no-bottom-space">
+                            <div class="col s12 no-space" style="display: inline-flex;">
+                                <div class="center">
+                                    <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
+                                    <br>
+                                    <span>99k</span>
+                                </div>
+                                <div class="center">
+                                    <a class="btn-floating waves-effect waves-light light-blue accent-2"><i class="fa fa-twitter fa-fw"></i></a>
+                                    <br>
+                                    <span>99k</span>
+                                </div>
+                                <div class="center">
+                                    <a class="btn-floating waves-effect waves-light red darken-4"><i class="fa fa-pinterest fa-fw"></i></a>
+                                    <br>
+                                    <span>999</span>
+                                </div>
+                                <div class="center">
+                                    <a class="btn-floating waves-effect waves-light red accent-4"><i class="fa fa-google-plus fa-fw"></i></a>
+                                    <br>
+                                    <span>99k</span>
+                                </div>
+                                <div class="center">
+                                    <a class="btn-floating waves-effect waves-light blue darken-4"><i class="fa fa-linkedin fa-fw"></i></a>
+                                    <br>
+                                    <span>999</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="product">
-                        <div class="card hoverable">
-                            <div class="row margin-top-10 no-bottom-space">
-                                <div class="col s12" style="display: inline-flex;">
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
-                                        <br>
-                                        <span>99k</span>
-                                    </div>
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light light-blue accent-2"><i class="fa fa-twitter fa-fw"></i></a>
-                                        <br>
-                                        <span>99k</span>
-                                    </div>
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light red darken-4"><i class="fa fa-pinterest fa-fw"></i></a>
-                                        <br>
-                                        <span>999</span>
-                                    </div>
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light red accent-4"><i class="fa fa-google-plus fa-fw"></i></a>
-                                        <br>
-                                        <span>99k</span>
-                                    </div>
-                                    <div class="center">
-                                        <a class="btn-floating waves-effect waves-light blue darken-4"><i class="fa fa-linkedin fa-fw"></i></a>
-                                        <br>
-                                        <span>999</span>
-                                    </div>
+                        <div class="card-image waves-effect waves-block waves-light">
+                            <a href="#" class="btn-floating btn-large btn-save waves-effect waves-light blue accent-2 content_icon"><i class="fa fa-floppy-o fa-fw" aria-hidden="true"></i></a>
+                            <a href="http://www.npr.org/sections/thetwo-way/2017/07/16/537545144/dr-who-is-a-woman-jodie-whittaker-announced-as-13th-time-lord-in-bbc-series" target="_blank">
+                                <img src="http://a57.foxnews.com/images.foxnews.com/content/fox-news/world/2017/07/18/australians-stunned-by-minneapolis-police-shooting-woman/_jcr_content/par/featured-media/media-0.img.jpg/0/0/1500358098340.jpg?ve=1" alt="product-img">
+                            </a>
+                        </div>
+                        <div class="card-content">
+                            <div class="row no-space">
+                                <div class="col s12">
+                                    <p class="card-title grey-text text-darken-4">
+                                        <a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
+                                    </p>
                                 </div>
-                            </div>
-                            <div class="card-image waves-effect waves-block waves-light">
-                                <a href="#" class="btn-floating btn-large btn-save waves-effect waves-light blue accent-2 content_icon"><i class="fa fa-floppy-o fa-fw" aria-hidden="true"></i></a>
-                                <a href="http://www.npr.org/sections/thetwo-way/2017/07/16/537545144/dr-who-is-a-woman-jodie-whittaker-announced-as-13th-time-lord-in-bbc-series" target="_blank">
-                                    <img src="http://a57.foxnews.com/images.foxnews.com/content/fox-news/world/2017/07/18/australians-stunned-by-minneapolis-police-shooting-woman/_jcr_content/par/featured-media/media-0.img.jpg/0/0/1500358098340.jpg?ve=1" alt="product-img">
-                                </a>
-                            </div>
-                            <div class="card-content">
-                                <div class="row no-space">
-                                    <div class="col s12">
-                                        <p class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
-                                        </p>
-                                    </div>
-                                    <div class="col s12 m6">
-                                        <a href="javascript:;" class="truncate">weblink.com</a>
-                                    </div>
-                                    <div class="col s12 m6 ">
-                                        <span>| </span><span class="grey-text right truncate">10 hrs ago</span>
-                                    </div>
-                                    <hr>
-                                    <div class="col s12 m6 center">
-                                        <div class="grey-text text-darken-4">Trending Score:</div>
-                                        <div><strong>99</strong></div>
-                                    </div>
-                                    <div class="col s12 m6 center">
-                                        <div class="grey-text text-darken-4">Total Shares:</div>
-                                        <div><strong>99</strong></div>
-                                    </div>
+                                <div class="col s12 m6">
+                                    <a href="javascript:;" class="truncate">weblink.com</a>
+                                </div>
+                                <div class="col s12 m6 ">
+                                    <span>| </span><span class="grey-text right truncate">10 hrs ago</span>
+                                </div>
+                                <hr>
+                                <div class="col s12 m6 center">
+                                    <div class="grey-text text-darken-4">Trending Score:</div>
+                                    <div><strong>99</strong></div>
+                                </div>
+                                <div class="col s12 m6 center">
+                                    <div class="grey-text text-darken-4">Total Shares:</div>
+                                    <div><strong>99</strong></div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="product">
+                    </div>-->
+                <!--</div>-->
+                    <!--<div class="product_content">
                         <div class="card hoverable">
                             <div class="row margin-top-10 no-bottom-space">
-                                <div class="col s12" style="display: inline-flex;">
+                                <div class="col s12 no-space" style="display: inline-flex;">
                                     <div class="center">
                                         <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
                                         <br>
@@ -180,7 +329,8 @@
                             <div class="card-content">
                                 <div class="row no-space">
                                     <div class="col s12">
-                                        <p class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
+                                        <p class="card-title grey-text text-darken-4">
+                                            <a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
                                         </p>
                                     </div>
                                     <div class="col s12 m6">
@@ -201,11 +351,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="product">
+                    </div>-->
+                    <!--<div class="product_content">
                         <div class="card hoverable">
                             <div class="row margin-top-10 no-bottom-space">
-                                <div class="col s12" style="display: inline-flex;">
+                                <div class="col s12 no-space" style="display: inline-flex;">
                                     <div class="center">
                                         <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
                                         <br>
@@ -242,7 +392,8 @@
                             <div class="card-content">
                                 <div class="row no-space">
                                     <div class="col s12">
-                                        <p class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
+                                        <p class="card-title grey-text text-darken-4">
+                                            <a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
                                         </p>
                                     </div>
                                     <div class="col s12 m6">
@@ -263,11 +414,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="product">
+                    </div>-->
+                    <!--<div class="product_content">
                         <div class="card hoverable">
                             <div class="row margin-top-10 no-bottom-space">
-                                 <div class="col s12" style="display: inline-flex;">
+                                <div class="col s12 no-space" style="display: inline-flex;">
                                     <div class="center">
                                         <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
                                         <br>
@@ -304,7 +455,8 @@
                             <div class="card-content">
                                 <div class="row no-space">
                                     <div class="col s12">
-                                        <p class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
+                                        <p class="card-title grey-text text-darken-4">
+                                            <a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
                                         </p>
                                     </div>
                                     <div class="col s12 m6">
@@ -325,11 +477,11 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="product">
+                    </div>-->
+                    <!--<div class="product_content">
                         <div class="card hoverable">
                             <div class="row margin-top-10 no-bottom-space">
-                                <div class="col s12" style="display: inline-flex;">
+                                <div class="col s12 no-space" style="display: inline-flex;">
                                     <div class="center">
                                         <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
                                         <br>
@@ -366,7 +518,8 @@
                             <div class="card-content">
                                 <div class="row no-space">
                                     <div class="col s12">
-                                        <p class="card-title grey-text text-darken-4"><a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
+                                        <p class="card-title grey-text text-darken-4">
+                                            <a href="#" class="grey-text text-darken-4">Doctor Who Is A Woman: Jodie Whittaker Announced As 13th Time Lord In BBC Series</a>
                                         </p>
                                     </div>
                                     <div class="col s12 m6">
@@ -387,9 +540,81 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
+                <!--<div ng-if="lstBoardFeeds.length==null">
+                    <span>
+                        No Post availabe for this keyword
+                    </span>
+                </div>-->
+                <!--<div ng-if="lastreach!=true">
+                    <br /><br /><br /><br /><br /><br /><br /><br />
+                    <div class="center">
+                        <div>
+                            <div class="preloader-wrapper small active">
+                                <div class="spinner-layer spinner-blue">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
 
-            </div>
+                                <div class="spinner-layer spinner-red">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+
+                                <div class="spinner-layer spinner-yellow">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+
+                                <div class="spinner-layer spinner-green">
+                                    <div class="circle-clipper left">
+                                        <div class="circle"></div>
+                                    </div><div class="gap-patch">
+                                        <div class="circle"></div>
+                                    </div><div class="circle-clipper right">
+                                        <div class="circle"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <!--</div>-->
             <!--/ end items list -->
 
-    </div>
+    <!--</div>-->
+<script>
+
+    //SocioboardApp.directive('TrendingContentController', function ($timeout) {
+    //    return function (scope, element, attrs) {
+    //        if (scope.$last === true) {
+    //            $timeout(function () {
+    //                console.log("TrendingContentController Called");
+    //                var $containerProducts = $("#products");
+    //                $containerProducts.masonry({
+    //                    itemSelector: ".product_content",
+    //                    columnWidth: ".product_content-sizer",
+    //                });
+    //            });
+
+
+    //        };
+    //    }
+    //});
+
+</script>

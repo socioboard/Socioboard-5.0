@@ -56,6 +56,20 @@ namespace Api.Socioboard.Controllers
             return Ok(output);
         }
 
+        [HttpPost("ReconnectTwtAcc")]
+        public IActionResult ReconnectTwtAcc(long userId,  string requestToken, string requestSecret, string requestVerifier, bool follow)
+        {
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            oAuthTwitter OAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
+            OAuth.AccessToken = requestToken;
+            OAuth.AccessTokenSecret = requestVerifier;
+            OAuth.AccessTokenGet(requestToken, requestVerifier);
+            string output = Repositories.TwitterRepository.ReconnecTwitter(userId, follow, dbr, OAuth, _logger, _redisCache, _appSettings);
+
+            return Ok(output);
+        }
+
 
         [HttpGet("GetFeeds")]
         public IActionResult GetFeeds(string profileId, long userId, int skip, int count)
@@ -306,10 +320,64 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        [HttpGet("TwitterMutual")]
+        public IActionResult TwitterMutual(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.TwitterMutualFans> lstTwittermutualfans = Helper.TwitterHelper.twittermutual(groupId, dbr, _appSettings);
+            return Ok(lstTwittermutualfans);
+        }
 
 
+        [HttpGet("Twitterfans")]
+        public IActionResult Twitterfans(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.TwitterMutualFans> lstTwitterUserfans = Helper.TwitterHelper.twitterfans(groupId, dbr, _appSettings);
+            return Ok(lstTwitterUserfans);
+        }
 
 
+        [HttpGet("TwitterUserFollowers")]
+        public IActionResult TwitterUserFollowers(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.TwitterMutualFans> lstTwitterUserfans = Helper.TwitterHelper.twitterfollowerslist(groupId, dbr, _appSettings);
+            return Ok(lstTwitterUserfans);
+        }
+
+        [HttpPost("BlocksUser")]
+        public IActionResult BlocksUser(string profileId, string ToTwitterUserId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string TwitterRetweet_post = Helper.TwitterHelper.TwitterBlockUsers(profileId, ToTwitterUserId, dbr, _logger, _redisCache, _appSettings);
+            return Ok(TwitterRetweet_post);
+        }
+
+        [HttpPost("UnBlocksUser")]
+        public IActionResult UnBlocksUser(string profileId, string ToTwitterUserId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string TwitterRetweet_post = Helper.TwitterHelper.TwitterUnBlockUsers(profileId, ToTwitterUserId, dbr, _logger, _redisCache, _appSettings);
+            return Ok(TwitterRetweet_post);
+        }
+
+        [HttpPost("FollowUser")]
+        public IActionResult FollowUser(string profileId, string ToTwitterUserId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string TwitterRetweet_post = Helper.TwitterHelper.TwitterUserFollow(profileId, ToTwitterUserId, dbr, _logger, _redisCache, _appSettings);
+            return Ok(TwitterRetweet_post);
+        }
+
+        [HttpPost("FriendRelationship")]
+        public IActionResult FriendRelationship(string profileId, string ToTwitterUserId)
+        {
+            Domain.Socioboard.Models.TwitterFriendRelation lstRelationFriends = new Domain.Socioboard.Models.TwitterFriendRelation();
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            lstRelationFriends = Helper.TwitterHelper.TwitterFrindsRelation(profileId, ToTwitterUserId, dbr, _logger, _redisCache, _appSettings);
+            return Ok(lstRelationFriends);
+        }
 
     }
 }

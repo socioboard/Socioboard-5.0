@@ -150,7 +150,7 @@
                                     </div>
                                     <div ng-repeat="data in lstAccountProfiles | filter:query">
                                         <!--facebook profile binding start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] == 0 && data['fbaccount'] !=null ">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img ng-if="fbProfile.facebookProfile ==0" class="activator" src="{{data['fbaccount']['coverPic']}}">
@@ -179,7 +179,7 @@
                                         </div>
                                         <!--facebook profiles binding end-->
                                         <!--facebook pages binding start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <!--<h1>fbUserName:  {{ data['fbaccount']['fbUserName']}}</h1>-->
                                             <div id="profile-card" class="card" ng-if="data['fbaccount']['fbProfileType'] != 0 && data['fbaccount'] !=null">
                                                 <div class="card-image waves-effect waves-block waves-light">
@@ -201,7 +201,7 @@
                                         <!--facebook pages binging end-->
                                         <!--Start test-->
                                         <!--twitter profiles bind start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <div id="profile-card" class="card" ng-if="data['twtaccount'] != null">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img class="activator" src="{{data['twtaccount']['profileBackgroundImageUrl']}}">
@@ -228,7 +228,7 @@
                                         </div>
                                         <!--twitter profiles bind end-->
                                         <!--instagram profiles bind start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <div id="profile-card" class="card" ng-if="data['instaaccount'] != null">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img class="activator" src="{{data['instaaccount']['profileUrl']}}">
@@ -256,7 +256,7 @@
                                         </div>
                                         <!--instagram profiles bind end-->
                                         <!--gplus profiles binding start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <div id="profile-card" class="card" ng-if="data['gplusaccount'] != null">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img class="activator" src="{{data['gplusaccount']['coverPic']}}">
@@ -285,7 +285,7 @@
                                         </div>
                                         <!--gplus profiles binding end-->
                                         <!--gA profiles binding start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <div id="profile-card" class="card cardGa" ng-if="data['gAaccount'] != null">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img class="activator" src="/contents/socioboard/images/google-analytics.jpg" alt="{{data['gAaccount']['gaProfileName']}}">
@@ -312,7 +312,7 @@
                                         </div>
                                         <!--gA profiles binding end-->
                                         <!--Youtube Channels binding start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <div id="profile-card" class="card" ng-if="data['ytubeaccount'] != null">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img class="activator" src="/contents/socioboard/images/YoutubeBG.png" alt="{{data['ytubeaccount']['ytubeChannelName']}}">
@@ -338,7 +338,7 @@
                                         </div>
                                         <!--Youtube Channels binding end-->
                                         <!--LinkedIn Comapany page profiles bind start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <div id="profile-card" class="card" ng-if="data['linkdINcompanyaccount'] != null">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img class="activator" src="{{data['linkdINcompanyaccount']['logoUrl']}}" alt="{{data['linkdINcompanyaccount']['linkedinPageName']}}">
@@ -375,7 +375,7 @@
                                         </div>
                                         <!--LinkedIn Comapany page profiles bind end-->
                                         <!--LinkedIn Account profiles bind start-->
-                                        <div class="col s12 m6 l4">
+                                        <div class="col s12 m6 l3">
                                             <div id="profile-card" class="card" ng-if="data['linkdInaccount'] != null">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <!--<img class="activator" src="{{data['linkdInaccount']['logoUrl']}}" alt="{{data['linkdInaccount']['linkedinUserName']}}">-->
@@ -420,7 +420,7 @@
                                         </div>
                                         <!--LinkedIn Account profiles bind end-->
                                         <!--Pinterest Account profiles bind start-->
-                                        <div class="col s12 m6 l4" ng-if="data['pintrestaccount'] != null">
+                                        <div class="col s12 m6 l3" ng-if="data['pintrestaccount'] != null">
                                             <div id="profile-card" class="card">
                                                 <div class="card-image waves-effect waves-block waves-light">
                                                     <img class="activator" src="{{data['pintrestaccount']['profileimgaeurl']}}" alt="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}">

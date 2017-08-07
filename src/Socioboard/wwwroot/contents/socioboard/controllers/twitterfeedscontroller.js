@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope, $http,$modal, $timeout, $stateParams, apiDomain,grouptask) {
+SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope, $http, $modal, $timeout, $stateParams, apiDomain, domain, grouptask) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         $scope.disbtncom = true;
@@ -138,7 +138,22 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                            }, function (reason) {
                                $scope.error = reason.data;
                            });
-          };
+        };
+
+
+
+        $scope.ReconnectTwt = function (xyz) {
+
+           
+            $http.get(domain + '/socioboard/Reconntwtacc?code=' + true)
+                              .then(function (response) {
+                                  window.location.href = response.data;
+
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+
+        };
 
         $scope.filterSearch = function (mediaType, txtt) {
             $scope.filters = true;

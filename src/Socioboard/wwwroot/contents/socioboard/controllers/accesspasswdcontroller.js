@@ -23,8 +23,6 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
             $scope.twostepsociallogin = "You can't use this feature as you enable social singin or singup with Social network";
             swal(twostepsociallogin);
         };
-        $scope.twosteploginstatus = $rootScope.user.TwostepEnable;
-        $scope.Userlogintype = $rootScope.user.EmailValidateToken;
         $scope.password = $rootScope.user.Password;
         $scope.access_passwd();
         //Initialization
@@ -155,7 +153,7 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
 
                 }, function (reason) {
 
-                    swal("Error!");
+                    swal(response.data);
 
 
                 });
@@ -286,6 +284,15 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
         }
         $scope.fetchUserSession();
 
+        $scope.getuserdata = function () {
+            $http.get(apiDomain + '/api/User/GetUser?Id=' + $rootScope.user.Id)
+                            .then(function (response) {
+                                $scope.userdata = response.data;
+                               
+                            }, function (reason) {
+                                $scope.error = reason.data;
+                            });
+        }
         $scope.Revokesession = function (sessionId, systemId) {
             $http.post(apiDomain + '/api/User/RevokeSession?sessionId=' + sessionId + '&systemId=' + systemId)
                             .then(function (response) {
@@ -348,7 +355,11 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
             $scope.Sessions = parm;
 
         }
+        $scope.getOnPageLoad = function () {
+            $scope.getuserdata();
+        }
 
+        $scope.getOnPageLoad();
 
     });
 });

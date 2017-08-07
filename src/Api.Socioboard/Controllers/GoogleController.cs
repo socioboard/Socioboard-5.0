@@ -563,7 +563,68 @@ namespace Api.Socioboard.Controllers
                 return BadRequest("Issues while adding account");
             }
         }
+        
+        [HttpPost("RecGoogleAccount")]
+        public IActionResult RecGoogleAccount(string code, long userId)
+        {
 
+            string ret = string.Empty;
+            string objRefresh = string.Empty;
+            string refreshToken = string.Empty;
+            string access_token = string.Empty;
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            oAuthToken objToken = new oAuthToken(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+            JObject userinfo = new JObject();
+            try
+            {
+                objRefresh = ObjoAuthTokenGPlus.GetRefreshToken(code);
+                JObject objaccesstoken = JObject.Parse(objRefresh);
+                _logger.LogInformation(objaccesstoken.ToString());
+                try
+                {
+                    refreshToken = objaccesstoken["refresh_token"].ToString();
+                }
+                catch { }
+                access_token = objaccesstoken["access_token"].ToString();
+                string user = objToken.GetUserInfo("self", access_token.ToString());
+                //_logger.LogInformation(user);
+                userinfo = JObject.Parse(JArray.Parse(user)[0].ToString());
+                string people = objToken.GetPeopleInfo("self", access_token.ToString(), Convert.ToString(userinfo["id"]));
+                userinfo = JObject.Parse(JArray.Parse(people)[0].ToString());
+            }
+            catch (Exception ex)
+            {
+                //access_token = objaccesstoken["access_token"].ToString();
+                //ObjoAuthTokenGPlus.RevokeToken(access_token);
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                ret = "Access Token Not Found";
+                return Ok(ret);
+            }
+            Domain.Socioboard.Models.Googleplusaccounts gplusAcc = Api.Socioboard.Repositories.GplusRepository.getGPlusAccount(Convert.ToString(userinfo["id"]), _redisCache, dbr);
+
+            if (gplusAcc != null && gplusAcc.IsActive == true)
+            {
+                if (gplusAcc.UserId == userId)
+                {
+                    
+                }
+                //return BadRequest("GPlus account added by other user.");
+            }
+           
+            // Adding GPlus Profile
+            int x = Api.Socioboard.Repositories.GplusRepository.ReconnectGplusAccount(userinfo, dbr, userId, access_token, refreshToken, _redisCache, _appSettings, _logger);
+            if (x == 1)
+            {
+                return Ok("Gplus Account Reconnect Successfully");
+            }
+            else
+            {
+                return BadRequest("Issues while adding account");
+            }
+        }
 
         [HttpGet("GetGplusFeeds")]
         public IActionResult GetGplusFeeds(string profileId, long userId, int skip, int count)
@@ -742,6 +803,31 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+
+        [HttpPost("GetReconnYtAccDetail")]
+        public IActionResult GetReconnYtAccDetail(string code, long groupId, long userId)
+        {
+            try
+            {
+                List<Domain.Socioboard.ViewModels.YoutubeProfiles> lstYoutubeProfiles = new List<Domain.Socioboard.ViewModels.YoutubeProfiles>();
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                lstYoutubeProfiles = Helper.GoogleHelper.GetYoutubeAccount(code, _appSettings, dbr);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+                lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
+                string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
+                if (lstStr.Length > 0)
+                {
+                    lstYoutubeProfiles.Where(t => lstStr.Contains(t.YtChannelId)).ToList();
+                }
+                return Ok(lstYoutubeProfiles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("GetGetYoutubeAccount" + ex.StackTrace);
+                _logger.LogError("GetGetYoutubeAccount" + ex.Message);
+                return Ok(new List<Domain.Socioboard.ViewModels.YoutubeProfiles>());
+            }
+        }
 
         [HttpPost("AddYoutubeChannels")]
         public IActionResult AddYoutubeChannels(long groupId, long userId)

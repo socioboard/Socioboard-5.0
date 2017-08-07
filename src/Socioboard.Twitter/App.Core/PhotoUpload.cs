@@ -154,11 +154,7 @@ namespace Socioboard.Twitter.App.Core
                 //HttpContext.Current.Response.Write("<script>alert(\""+imageFile+"\")</script>");
 
                 #region For Loacl Testing
-                //oauth["consumer_key"] = "udiFfPxtCcwXWl05wTgx6w";//oAuth.ConsumerKey;
-
-                //oauth["consumer_secret"] = "jutnq6N32Rb7cgbDSgfsrUVgRQKMbUB34yuvAfCqTI";//oAuth.ConsumerKeySecret;
-                //oauth["token"] = "1904022338-Ao9chvPouIU8ejE1HMG4yJsP3hOgEoXJoNRYUF7";//oAuth.AccessToken;
-                //oauth["token_secret"] = "Wj93a8csVFfaFS1MnHjbmbPD3V6DJbhEIf4lgSAefORZ5";//oAuth.AccessTokenSecret; 
+               
                 #endregion
 
                 #region For Post data Reference
@@ -210,11 +206,7 @@ namespace Socioboard.Twitter.App.Core
                 oauth.ConsumerSecret = oAuth.ConsumerKeySecret;
                 oauth.TokenSecret = oAuth.AccessTokenSecret;
                 oauth.Token = oAuth.AccessToken;
-                //oauth["consumer_key"] = oAuth.ConsumerKey;
-
-                //oauth["consumer_secret"] = oAuth.ConsumerKeySecret;
-                //oauth["token"] = oAuth.AccessToken;
-                //oauth["token_secret"] = oAuth.AccessTokenSecret;
+              
                 #endregion
 
                 var url = GetTwitterUpdateUrl(imageFile, message);

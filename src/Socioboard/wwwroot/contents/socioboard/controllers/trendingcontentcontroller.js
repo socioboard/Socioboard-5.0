@@ -1,31 +1,13 @@
 'use strict';
 
-SocioboardApp.controller('TrendingContentController', function ($rootScope, $scope, $http, $timeout, $mdpDatePicker, $mdpTimePicker) {
+SocioboardApp.controller('TrendingContentController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
     
 
-$scope.currentDate = new Date();
-    $scope.showDatePicker = function(ev) {
-      $mdpDatePicker($scope.currentDate, {
-        targetEvent: ev
-      }).then(function(selectedDate) {
-        $scope.currentDate = selectedDate;
-      });;
-    };
     
-    $scope.filterDate = function(date) {
-      return moment(date).date() % 2 == 0;
-    };
-    
-    $scope.showTimePicker = function(ev) {
-      $mdpTimePicker($scope.currentTime, {
-        targetEvent: ev
-      }).then(function(selectedDate) {
-        $scope.currentTime = selectedDate;
-      });;
-    } 
 
+    var lastreach = false;
     
         TrendingContent();
         $scope.deleteProfile = function(profileId){
@@ -44,20 +26,59 @@ $scope.currentDate = new Date();
 	            });
         }
 
+        var startData = 0; // where to start data
+        var endingData = startData + 30; // how much data need to add on each function call
+        var ReachLast = false; // to check the page ends last or not
+        $scope.youtubeSearch = function (abc) {
+            if (!ReachLast) {
+               // var abc = "twitter";
+            var abcd = 0;
+            $http.get(apiDomain + '/api/AdvanceSearch/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=10')
+                              .then(function (response) {
+                                  $scope.lstData = response.data;
+                                  $scope.funt();
+                                  console.log($scope.lstData);
+                                  startData = response.data.length;
+                                  $scope.lastreach = true;
+                                 // $scope.funt();
+                                  if (response.data == null) {
+                                      ReachLast = true;
+                                  }
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+            }
+        }
 
-
-
- /*
-    * Masonry container for eCommerce page
-    */
-    var $containerProducts = $("#products");
-    $containerProducts.imagesLoaded(function() {
-      $containerProducts.masonry({
-        itemSelector: ".product",
-        columnWidth: ".product-sizer",
-      });
-    });
+        $scope.funt = function () {
+            var $containerProducts = $("#products");
+            $containerProducts.imagesLoaded(function () {
+                $containerProducts.masonry({
+                    itemSelector: ".product_content",
+                    columnWidth: ".product_content-sizer",
+                });
+            });
+        }
+        //funt();
 
   });
 
 });
+
+//SocioboardApp.controller('TrendingContentController', function ($timeout) {
+//    return function (scope, element, attrs) {
+//        if (scope.$last === true) {
+//            $timeout(function () {
+//                console.log("TrendingContentController Called");
+//                var $containerProducts = $("#products");
+//                //$containerProducts.imagesLoaded(function () {
+//                $containerProducts.masonry({
+//                    itemSelector: ".product_content",
+//                    columnWidth: ".product_content-sizer",
+//                });
+//            });
+
+
+//        };
+//    }
+//});

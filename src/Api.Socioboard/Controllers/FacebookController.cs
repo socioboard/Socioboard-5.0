@@ -143,7 +143,7 @@ namespace Api.Socioboard.Controllers
             }
             else
             {
-                return Ok("Oops! login information is wrong , login the profile which to be reconneted");
+                return Ok("Oops! login information is wrong , login the profile which has to be reconnected");
             }
 
             return Ok();

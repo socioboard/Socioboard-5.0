@@ -55,7 +55,7 @@ namespace Api.Socioboard.Controllers
                 long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
                 GroupMembersRepository.createGroupMember(GroupId, user, _redisCache, dbr);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + group.adminId);
-                return Ok("Group Added");
+                return Ok("Team Added Successfully ");
             }
             else
             {

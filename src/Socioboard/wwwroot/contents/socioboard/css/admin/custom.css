@@ -392,6 +392,17 @@ ul.side-nav.leftside-navigation li.active > a{
     padding: 3px 2px 3px 0px !important;
 }
 
+
+.dropdown_list_style li > a, .dropdown_list_style li > span{
+    padding: 0px 16px;
+    color: #325981 !important;
+    min-height: 25px !important;
+}
+
+.dropify-wrapper .dropify-message p{
+    text-align: center;
+}
+
 /* youtube feeds css*/
 
 .y_feeds_title{
@@ -456,4 +467,136 @@ ul.side-nav.leftside-navigation li.active > a{
 }
 .hr_dot{
     border-top: 2px dashed #009bdf !important;
+}
+
+/* content studio */
+
+@media screen and (max-width: 2200px) {
+  
+  .product_content-sizer {
+    width: 20%;
+  }
+  .product_content {
+    width: 20%;
+  }
+}
+
+@media screen and (max-width: 1800px) {
+  
+  .product_content-sizer {
+    width: 30%;
+  }
+  .product_content {
+    width: 30%;
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  
+  .product_content-sizer {
+    width: 20%;
+  }
+  .product_content {
+    width: 20%;
+  }
+}
+
+@media screen and (max-width: 1224px) {
+  
+  .product_content-sizer {
+    width: 33.33%;
+  }
+  .product_content {
+    width: 33.33%;
+  }
+ 
+}
+
+@media screen and (max-width: 980px) {
+  
+  .product_content-sizer {
+    width: 50%;
+  }
+  .product_content {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 720px) {
+  
+  .product_content-sizer {
+    width: 50%;
+  }
+  .product_content {
+    width: 50%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  
+  .product_content-sizer {
+    width: 100%;
+  }
+  .product_content {
+    width: 100%;
+  }
+}
+
+
+.product_content .card .btn-save {
+    width: 50px;
+    height: 50px;
+    font-weight: 600;
+    font-size: 1.0rem;
+    line-height: 50px;
+    margin: 10px;
+    position: absolute;
+    top: 0;
+    letter-spacing: 0;
+}
+
+.content_icon i{
+    line-height: 50px !important;
+}
+
+
+/* -----product_content Masonery ----- */
+.product_content .card .card-content .card-title, .product_content .card .card-reveal .card-title {
+  font-size: 1.1rem;
+  line-height: 1.6rem;
+  font-weight: 400;
+}
+
+.product_content {
+  /*width: 25%;*/
+  padding: 10px;
+}
+
+.product_content .card {
+  margin: 0;
+}
+
+.product_content ul.card-action-buttons {
+  margin: -26px 10px 0 0;
+  text-align: right;
+}
+
+.product_content ul.card-action-buttons li {
+  display: inline-block;
+  padding-left: 5px;
+}
+
+.product_content-sizer {
+  width: 20%;
+}
+
+
+.dropdown_list_style li > a, .dropdown_list_style li > span{
+    padding: 0px 16px;
+    color: #325981 !important;
+    min-height: 25px !important;
+}
+
+.dropify-wrapper .dropify-message p{
+    text-align: center;
 }

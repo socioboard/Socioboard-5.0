@@ -356,6 +356,137 @@ namespace Api.Socioboard.Repositories
         }
 
 
+        public static int ReconnectGplusAccount(JObject profile, Model.DatabaseRepository dbr, Int64 userId, string accessToken, string refreshToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        {
+            int isSaved = 0;
+            Domain.Socioboard.Models.Googleplusaccounts gplusAcc = GplusRepository.getGPlusAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
+
+            if (gplusAcc != null && gplusAcc.IsActive == false)
+            {
+                gplusAcc.IsActive = true;
+                gplusAcc.UserId = userId;
+                gplusAcc.AccessToken = accessToken;
+                gplusAcc.RefreshToken = refreshToken;
+                gplusAcc.EntryDate = DateTime.UtcNow;
+                try
+                {
+                    gplusAcc.GpUserName = profile["displayName"].ToString();
+                }
+                catch
+                {
+                    try
+                    {
+                        gplusAcc.GpUserName = profile["name"].ToString();
+                    }
+                    catch { }
+                }
+                try
+                {
+                    gplusAcc.GpProfileImage = Convert.ToString(profile["image"]["url"]);
+                }
+                catch
+                {
+                    try
+                    {
+                        gplusAcc.GpProfileImage = Convert.ToString(profile["picture"]);
+                    }
+                    catch { }
+
+                }
+                gplusAcc.AccessToken = accessToken;
+                try
+                {
+                    gplusAcc.about = Convert.ToString(profile["tagline"]);
+                }
+                catch
+                {
+                    gplusAcc.about = "";
+                }
+                try
+                {
+                    gplusAcc.college = Convert.ToString(profile["organizations"][0]["name"]);
+                }
+                catch
+                {
+                    gplusAcc.college = "";
+                }
+                try
+                {
+                    gplusAcc.coverPic = Convert.ToString(profile["cover"]["coverPhoto"]["url"]);
+                }
+                catch
+                {
+                    gplusAcc.coverPic = "";
+                }
+                try
+                {
+                    gplusAcc.education = Convert.ToString(profile["organizations"][0]["type"]);
+                }
+                catch
+                {
+                    gplusAcc.education = "";
+                }
+                try
+                {
+                    gplusAcc.EmailId = Convert.ToString(profile["emails"][0]["value"]);
+                }
+                catch
+                {
+                    gplusAcc.EmailId = "";
+                }
+                try
+                {
+                    gplusAcc.gender = Convert.ToString(profile["gender"]);
+                }
+                catch
+                {
+                    gplusAcc.gender = "";
+                }
+                try
+                {
+                    gplusAcc.workPosition = Convert.ToString(profile["occupation"]);
+                }
+                catch
+                {
+                    gplusAcc.workPosition = "";
+                }
+                gplusAcc.LastUpdate = DateTime.UtcNow;
+                #region Get_InYourCircles
+                try
+                {
+                    string _InyourCircles = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetPeopleList.Replace("[userId]", gplusAcc.GpUserId).Replace("[collection]", "visible") + "?key=" + settings.GoogleApiKey, accessToken);
+                    JObject J_InyourCircles = JObject.Parse(_InyourCircles);
+                    gplusAcc.InYourCircles = Convert.ToInt32(J_InyourCircles["totalItems"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    gplusAcc.InYourCircles = 0;
+                }
+                #endregion
+
+                #region Get_HaveYouInCircles
+                try
+                {
+                    string _HaveYouInCircles = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetPeopleProfile + gplusAcc.GpUserId + "?key=" + settings.GoogleApiKey, accessToken);
+                    JObject J_HaveYouInCircles = JObject.Parse(_HaveYouInCircles);
+                    gplusAcc.HaveYouInCircles = Convert.ToInt32(J_HaveYouInCircles["circledByCount"].ToString());
+                }
+                catch (Exception ex)
+                {
+                    gplusAcc.HaveYouInCircles = 0;
+                }
+                #endregion
+                int isaved = dbr.Update<Domain.Socioboard.Models.Googleplusaccounts>(gplusAcc);
+                if (isaved == 1)
+                {
+                    return isaved;
+                }
+            }           
+            return isSaved;
+        }
+
+
         public static void GetUserActivities(string ProfileId, string AcessToken, Helper.AppSettings settings, ILogger _logger)
         {
             oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey,settings.GoogleConsumerSecret,settings.GoogleRedirectUri);

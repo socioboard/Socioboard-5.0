@@ -144,7 +144,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
         $scope.reconnect = function (xyz) {
      
-            console.log(xyz);
+            
             $http.get(domain + '/socioboard/recfbcont?id=' + $stateParams.profileId + '&fbprofileType=' + xyz)
                               .then(function (response) {
                                   window.location.href = response.data;

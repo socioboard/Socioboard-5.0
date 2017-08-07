@@ -39,13 +39,21 @@
                                 </span>
                             </td>
                             <td class="center">
-                                <div class="col s12" ng-if="rssqueue.profileType==0 ||rssqueue.profileType==1 ">
+                                <div class="col s12" ng-if="rssqueue.profileType==0 ">
                                     <img src="https://graph.facebook.com/{{rssqueue.profileId}}/picture?type=small" class="responsive-img profilePic">
                                     <img src="/contents/socioboard/images/fb_icon.png" class="responsive-img msgiconPoss">
+                                </div>
+                                <div class="col s12" ng-if="rssqueue.profileType== 1">
+                                    <img src="https://graph.facebook.com/{{rssqueue.profileId}}/picture?type=small" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/Fb_page-icon.png" class="responsive-img msgiconPoss">
                                 </div>
                                 <div class="col s12" ng-if="rssqueue.profileType==2">
                                     <img src="{{rssqueue.profileImageUrl}}" class="responsive-img profilePic" >
                                     <img src="/contents/socioboard/images/twticon.png" class="responsive-img msgiconPoss">
+                                </div>
+                                <div class="col s12" ng-if="rssqueue.profileType==3 || rssqueue.profileType==4 ">
+                                    <img src="{{rssqueue.profileImageUrl}}" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/linkedin.png" class="responsive-img msgiconPoss">
                                 </div>
                                 <div class="col s12">
                                     <span>{{rssqueue.profileName}}</span>

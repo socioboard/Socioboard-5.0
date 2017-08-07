@@ -320,6 +320,135 @@ namespace Api.Socioboard.Repositories
                 return "Your Twitter profile is not Authorized to add";
             }
         }
+
+
+        public static string ReconnecTwitter(long userId, bool follow, Model.DatabaseRepository dbr, oAuthTwitter OAuth, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            string twitterUserId = string.Empty;
+            Users userinfo = new Users();
+            JArray profile = userinfo.Get_Users_LookUp_ByScreenName(OAuth, OAuth.TwitterScreenName);
+            Domain.Socioboard.Models.TwitterAccount twitterAccount = new Domain.Socioboard.Models.TwitterAccount();
+            TwitterUser twtuser;
+            if (profile.Count != 0)
+            {
+                var item = profile[0];
+                try
+                {
+                    twitterUserId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                }
+                catch (Exception er)
+                {
+                    try
+                    {
+                        twitterUserId = item["id"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    _logger.LogError(er.StackTrace);
+                }
+                twitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(twitterUserId, _redisCache, dbr);
+                    
+                
+                
+                
+                if (twitterAccount.userId == userId )
+                {
+                    twitterAccount.twitterUserId = twitterUserId;
+                    twitterAccount.lastUpdate = DateTime.UtcNow;
+                    try
+                    {
+                        twitterAccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.followersCount = Convert.ToInt64(item["followers_count"].ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+
+                    twitterAccount.isActive = true;
+                    twitterAccount.oAuthSecret = OAuth.AccessTokenSecret;
+                    twitterAccount.oAuthToken = OAuth.AccessToken;
+                    try
+                    {
+                        twitterAccount.profileImageUrl = item["profile_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                    }
+                    try
+                    {
+                        twitterAccount.profileBackgroundImageUrl = item["profile_banner_url"].ToString().TrimStart('"').TrimEnd('"');
+
+                    }
+                    catch (Exception ex)
+                    {
+                        twitterAccount.profileBackgroundImageUrl = item["profile_background_image_url_https"].ToString().TrimStart('"').TrimEnd('"');
+                        _logger.LogError(ex.StackTrace);
+
+                    }
+                    try
+                    {
+                        twitterAccount.profileUrl = string.Empty;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.location = item["location"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.description = item["description"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    try
+                    {
+                        twitterAccount.twitterScreenName = item["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                    twitterAccount.userId = userId;
+                    twitterAccount.isAccessTokenActive = true;
+                    int isSaved = dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twitterAccount);
+
+                    return "Twitter Account Reconnected Successfully ";
+                }
+                else
+                {
+                    return "Twitter login information not correct, !please login twitter account which has to be reconnect";
+                }             
+                
+            }
+            else
+            {
+                return "Your Twitter profile is not Authorized to add";
+            }
+        }
+
+
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache)
         {
             Domain.Socioboard.Models.TwitterAccount twtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(profileId) && t.userId == userId && t.isActive).FirstOrDefault();

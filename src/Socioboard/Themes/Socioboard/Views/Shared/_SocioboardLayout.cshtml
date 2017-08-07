@@ -108,25 +108,25 @@
     <div class="navbar-fixed" style="padding-top: 30px;">
         <!-- Dropdown Structure -->
         <ul id="Versions" class="dropdown-content">
-            <li><a href="http://socioboard.org/">Community</a></li>
+            <li><a href="http://socioboard.org/" target="_blank">Community</a></li>
             <li><a href="~/Index/Agency">Agency</a></li>
             <li><a href="~/Index/Enterprise">Enterprise</a></li>
         </ul>
         <ul id="Versions_mob" class="dropdown-content">
-            <li><a href="http://socioboard.org/">Community</a></li>
+            <li><a href="http://socioboard.org/" target="_blank">Community</a></li>
             <li><a href="~/Index/Agency">Agency</a></li>
             <li><a href="~/Index/Enterprise">Enterprise</a></li>
         </ul>
         <ul id="Insights" class="dropdown-content">
-            <li><a href="http://wiki.socioboard.com/index.php/Main_Page">Wiki</a></li>
-            <li><a href="http://blog.socioboard.com/category/cases">Cases</a></li>
-            <li><a href="http://blog.socioboard.com/">Blogs</a></li>
+            <li><a href="http://wiki.socioboard.com/index.php/Main_Page" target="_blank">Wiki</a></li>
+            @*<li><a href="http://blog.socioboard.com/category/cases">Cases</a></li>*@
+            <li><a href="http://blog.socioboard.com/" target="_blank">Blogs</a></li>
             <li><a href="~/Index/Download">Download</a></li>
         </ul>
         <ul id="Insights_mob" class="dropdown-content">
-            <li><a href="http://wiki.socioboard.com/index.php/Main_Page">Wiki</a></li>
-            <li><a href="http://blog.socioboard.com/category/cases">Cases</a></li>
-            <li><a href="http://blog.socioboard.com/">Blogs</a></li>
+            <li><a href="http://wiki.socioboard.com/index.php/Main_Page" target="_blank">Wiki</a></li>
+            @*<li><a href="http://blog.socioboard.com/category/cases">Cases</a></li>*@
+            <li><a href="http://blog.socioboard.com/" target="_blank">Blogs</a></li>
             <li><a href="~/Index/Download">Download</a></li>
             @*<li><a href="https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?utm_source=chrome-app-launcher-info-dialog">Download Chrome Plugin</a></li>*@
         </ul>
@@ -215,7 +215,7 @@
                     <div class="row">
                         <div class="input-field col s12 m12">
                             <div class="center">
-                                <a id="fb_account" onclick="googleLogin();">
+                                <a id="fb_account"  href="#" onclick="googleLogin();">
                                     <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
                                 </a><br>
                                 <a id="fb_account" href="#" onclick="facebookLogin();">
@@ -365,7 +365,7 @@
                 <h4 class="Comfortaa_font">Forgot password</h4>
                 <div class="row">
                     <div class="input-field col s12 box1">
-                        <input id="forgotPwdEmail" name="forgotPwdEmail" type="email" required class="validate box_input">
+                        <input id="forgotPwdEmail" name="forgotPwdEmail" type="email" required class="validate box_input" style="cursor:auto">
                         <label for="forgotPwdEmail">Email</label>
                     </div>
 
@@ -959,10 +959,7 @@ analytics" href="http://statcounter.com/shopify/"
                 success: function (msg) {
                     if (msg == "true") {
                         window.top.location = '/home';
-                    }else if (msg == "TwoStepLogin") {
-                        window.top.location = '/Index/TwoStepOtp';
-                    }
-                    else {
+                    } else {
                         $.ajax({
                             type: "GET",
                             url: "../Home/UserSession",
@@ -971,9 +968,6 @@ analytics" href="http://statcounter.com/shopify/"
                             success: function (msg) {
                                 if (msg == "true") {
                                     window.top.location = '/home';
-                                } else {
-                                    window.top.location = '/Index';
-
                                 }
                             }
                         });

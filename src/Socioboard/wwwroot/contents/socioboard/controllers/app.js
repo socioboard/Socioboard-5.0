@@ -378,11 +378,11 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
 // }]);
 
 /* Setup Layout Part - Footer */
-SocioboardApp.controller('FooterController', ['$scope', function ($scope) {
-    $scope.$on('$includeContentLoaded', function () {
-        // Layout.initFooter(); // init footer
-    });
-}]);
+//SocioboardApp.controller('FooterController', ['$scope', function ($scope) {
+//    $scope.$on('$includeContentLoaded', function () {
+//        // Layout.initFooter(); // init footer
+//    });
+//}]);
 
 /* Setup Rounting For All Pages */
 SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {

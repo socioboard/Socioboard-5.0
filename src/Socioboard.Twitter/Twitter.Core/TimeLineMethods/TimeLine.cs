@@ -218,7 +218,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.statusesHomeTimelineUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            strdic.Add("count", "10");
+            strdic.Add("count", "100");
             string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             return JArray.Parse(response);
         }

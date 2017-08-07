@@ -6,7 +6,10 @@
                         <div class="row">
                             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                                 <div class="card" id="feeds">
-                                    <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>Google plus Live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a></h5>
+                                    <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>Google plus Live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a>
+                                        <a class='right white-text btn_style black' ng-click="ReconnectGplus('recgplus')" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Reconnect</a>
+                                    </h5>
+
                                     <!-- Dropdown Structure -->
                                     <div ng-if="dropCalled==true">
                                         <ul id='dropdownFilter' class='dropdown-content'>

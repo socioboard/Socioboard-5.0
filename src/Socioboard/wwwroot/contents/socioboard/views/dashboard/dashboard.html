@@ -1434,11 +1434,11 @@
                     </div>
                 </div>
                 <div id="ganalytics" class="col s12">
-                    <div class="center-align" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
+                    <div class="center-align" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                         <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
                         <a href="../GoogleManager/AddGoogleAccount?Op=page" class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal Google Analytics</a>
                     </div>
-                    <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1">
+                    <div class="center-align" ng-if="user.AccountType==0 || user.AccountType==1 ||user.AccountType==2">
                         <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
                         <a ng-click="message(msg)" disable class="waves-effect grey waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal Google Analytics</a>
                     </div>

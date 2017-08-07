@@ -107,6 +107,11 @@
     {
         <div ng-init="lstYoutube=@TempData["Youtube"]"></div>
     }
+
+    @if (TempData["ReconnectYoutube"] != null)
+    {
+        <div ng-init="lstReconnYT=@TempData["ReconnectYoutube"]"></div>
+    }
     <div data-ng-include="'../contents/socioboard/views/shared/header.html'" data-ng-controller="HeaderController"></div>
     <!-- END HEADER -->
     <!-- START MAIN -->

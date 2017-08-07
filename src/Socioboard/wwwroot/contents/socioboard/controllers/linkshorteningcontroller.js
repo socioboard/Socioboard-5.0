@@ -5,7 +5,12 @@ SocioboardApp.controller('LinkShorteningController', function ($rootScope, $scop
     $scope.$on('$viewContentLoaded', function() {   
 
         link_shortening();
-
+        $scope.accountType = $rootScope.user.AccountType;
+        $scope.shortnerSettingsdisabled = 0;
+        $scope.message = function () {
+            swal("If You want to use this feature upgrade to higher business plan ");
+            
+        };
         if ($rootScope.user.urlShortnerStatus == 0) {
             $scope.shortnerSettings = 0;
         }
