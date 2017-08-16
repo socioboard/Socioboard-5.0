@@ -841,8 +841,9 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.GoogleAnalyticsAccount fbAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
-                fbAcc.IsActive = false;
-                dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(fbAcc);
+                //fbAcc.IsActive = false;
+                //dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(fbAcc);
+                dbr.Delete<Domain.Socioboard.Models.GoogleAnalyticsAccount>(fbAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGAAccount + profileId);
                 return "Deleted";
             }
@@ -857,8 +858,9 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.Googleplusaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
-                fbAcc.IsActive = false;
-                dbr.Update<Domain.Socioboard.Models.Googleplusaccounts>(fbAcc);
+                //fbAcc.IsActive = false;
+                //dbr.Update<Domain.Socioboard.Models.Googleplusaccounts>(fbAcc);
+                dbr.Delete<Domain.Socioboard.Models.Googleplusaccounts>(fbAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusAccount + profileId);
                 return "Deleted";
             }
@@ -911,8 +913,9 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.YoutubeChannel fbAcc = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
-                fbAcc.IsActive = false;
-                dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(fbAcc);
+                //fbAcc.IsActive = false;
+                //dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(fbAcc);
+                dbr.Delete<Domain.Socioboard.Models.YoutubeChannel>(fbAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheYTChannel + profileId);
                 return "Deleted";
             }

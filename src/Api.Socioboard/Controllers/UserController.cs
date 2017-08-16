@@ -1590,30 +1590,31 @@ namespace Api.Socioboard.Controllers
 
             if (user != null)
             {
-
+                var uploads = string.Empty;
+                var filename = "";
                 var imgPath = "";
                 if (files != null && files.Length > 0)
                 {
                     var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
-                    // await file.s(Path.Combine(uploads, fileName));
-                    imgPath = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                    filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
                             .Parse(files.ContentDisposition)
                             .FileName
                             .Trim('"');
-                    imgPath = _appEnv.WebRootPath + "\\upload" + $@"\{Domain.Socioboard.Helpers.SBHelper.RandomString(11) + '.' + fileName.Split('.')[1]}";
-                    // size += file.Length;
+                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+                    imgPath = filename;
+                    uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
                     try
                     {
-                        using (FileStream fs = System.IO.File.Create(imgPath))
+                        using (FileStream fs = System.IO.File.Create(filename))
                         {
                             files.CopyTo(fs);
                             fs.Flush();
-                            user.ProfilePicUrl = imgPath;
                         }
+                        user.ProfilePicUrl = uploads;
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
-
                     }
                 }
 

@@ -9,13 +9,13 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         $scope.draftbtn = true;
         $scope.query = {};
         $scope.queryBy = '$';
-        $scope.message = function (msg) {
+        $scope.message = function () {
             $scope.msg = "If You want to use this feature upgrade to higher business plan ";
-            swal(msg);
+            swal($scope.msg);
         };
-        $scope.profileaddmessage = function (prfilemsg) {
+        $scope.profileaddmessage = function () {
             $scope.prfilemsg = "As per your plan you can add one profile per network If You want to add more profiles upgrade to higher business plan ";
-            swal(prfilemsg);
+            swal($scope.prfilemsg);
         };
 
        
@@ -97,8 +97,69 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 return getAllSelected();
             }
         }
+        //codes to groupprofile for restriction
+        $scope.GetGroupProfiles = function () {
+            $scope.GroupProfiles = $rootScope.lstProfiles;
+            $scope.getprofile = [];
+            $scope.getFbprofile = [];
+            $scope.getTwtprofile = [];
+            $scope.getInstaprofile = [];
+            $scope.getGplusprofile = [];
+            $scope.getGAprofile = [];
+            $scope.getLinkedInprofile = [];
+            $scope.getGAprofile = [];
+            $scope.getYoutubeprofile = [];
+            $scope.getPinprofile = [];
+            //$scope.GroupProfiles = response.data;
+            var fbcount = 0;
+            var Twtcount = 0;
+            var Instacount = 0;
+            var Ytubecount = 0;
+            var Gpluscount = 0;
+            var GAcount = 0;
+            var LinkedIncount = 0;
+            var Pincount = 0;
+            angular.forEach($scope.GroupProfiles, function (value, key) {
+                if (value.profileType == 1 || value.profileType == 0) {
+                    fbcount = fbcount + 1
+                }
+                else if (value.profileType == 2) {
+                    Twtcount = Twtcount + 1
+                }
+                else if (value.profileType == 3 || value.profileType == 4) {
+                    LinkedIncount = LinkedIncount + 1
+                }
 
+                else if (value.profileType == 5) {
+                    Gpluscount = Gpluscount + 1
+                }
+                else if (value.profileType == 7) {
+                    Ytubecount = Ytubecount + 1
+                }
+                else if (value.profileType == 8) {
+                    Instacount = Instacount + 1
+                }
+                else if (value.profileType == 10) {
+                    GAcount = GAcount + 1
+                }
+                else if (value.profileType == 13) {
+                    Pincount = Pincount + 1
+                };
+                ;
 
+            });
+            $scope.Fbcounts = fbcount;
+            $scope.Twtcounts = Twtcount;
+            $scope.Ytubecounts = Ytubecount;
+            $scope.LinkedIncounts = LinkedIncount;
+            $scope.Gpluscounts = Gpluscount;
+            $scope.Instacounts = Instacount;
+            $scope.GAcounts = GAcount;
+            $scope.Pincounts = Pincount;
+            ;
+        }
+        // end codes to groupprofile for restriction
+        $scope.GetGroupProfiles();
         //Auth.login().success(function () { });
         $scope.getHttpsURL = function (obj) {
             return obj.replace("http:", "https:")
@@ -121,13 +182,13 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         if ($rootScope.Downgrade == true && ($rootScope.user.AccountType == 3 || $rootScope.user.AccountType == 4 || $rootScope.user.AccountType == 5 || $rootScope.user.AccountType == 6 || $rootScope.user.AccountType == 7)) {
             $('#ActiveProfileModal').openModal({ dismissible: false });
         }
-        if ($rootScope.Downgrade == true && $rootScope.user.AccountType == 0) {
+        if (($rootScope.Downgrade == true && $rootScope.user.AccountType == 0) || ($rootScope.user.AccountType == 0 && ($scope.GAcounts >= 1 || $scope.Ytubecounts >= 1 || $scope.Pincounts >= 1))) {
             $('#ActiveProfileModalForBasicPlan').openModal({ dismissible: false });
         }
-        if ($rootScope.Downgrade == true && $rootScope.user.AccountType == 1) {
+        if (($rootScope.Downgrade == true && $rootScope.user.AccountType == 1) || ($rootScope.user.AccountType == 1 && ($scope.GAcounts >= 1 || $scope.Ytubecounts >= 1 || $scope.Pincounts>=1))) {
             $('#ActiveProfileModalForStandardPlan').openModal({ dismissible: false });
         }
-        if ($rootScope.Downgrade == true && $rootScope.user.AccountType == 2) {
+        if (($rootScope.Downgrade == true && $rootScope.user.AccountType == 2) || ($rootScope.user.AccountType == 2 && ($scope.GAcounts >= 1 || $scope.Ytubecounts >=1))) {
             $('#ActiveProfileModalForPremiumPlan').openModal({ dismissible: false });
         }
         //if ($rootScope.groupsdowngrade == true && ($rootScope.user.AccountType == 3 || $rootScope.user.AccountType == 4 || $rootScope.user.AccountType == 5 || $rootScope.user.AccountType == 6 || $rootScope.user.AccountType == 7)) {
@@ -141,68 +202,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $rootScope.lstGanalytics = undefined;
         }
 
-        //codes to groupprofile for restriction
-        $scope.GetGroupProfiles = function () {
-            $scope.GroupProfiles = $rootScope.lstProfiles;
-                                $scope.getprofile = [];
-                                $scope.getFbprofile = [];
-                                $scope.getTwtprofile = [];
-                                $scope.getInstaprofile = [];
-                                $scope.getGplusprofile = [];
-                                $scope.getGAprofile = [];
-                                $scope.getLinkedInprofile = [];
-                                $scope.getGAprofile = [];
-                                $scope.getYoutubeprofile = [];
-                                $scope.getPinprofile = [];
-                                //$scope.GroupProfiles = response.data;
-                                var fbcount = 0;
-                                var Twtcount = 0;
-                                var Instacount = 0;
-                                var Ytubecount = 0;
-                                var Gpluscount = 0;
-                                var GAcount = 0;
-                                var LinkedIncount = 0;
-                                var Pincount = 0;
-                                angular.forEach($scope.GroupProfiles, function (value, key) {
-                                    if (value.profileType == 1 || value.profileType == 0) {
-                                        fbcount = fbcount + 1
-                                    }
-                                    else if (value.profileType == 2) {
-                                        Twtcount = Twtcount + 1
-                                    }
-                                    else if (value.profileType == 3 || value.profileType == 4) {
-                                        LinkedIncount = LinkedIncount + 1
-                                    }
-
-                                    else if (value.profileType == 5) {
-                                        Gpluscount = Gpluscount + 1
-                                    }
-                                    else if (value.profileType == 7) {
-                                        Ytubecount = Ytubecount + 1
-                                    }
-                                    else if (value.profileType == 8) {
-                                        Instacount = Instacount + 1
-                                    }
-                                    else if (value.profileType == 10) {
-                                        GAcount = GAcount + 1
-                                    }
-                                    else if (value.profileType == 13) {
-                                        Pincount = Pincount + 1
-                                    };
-                                    ;
-
-                                });
-                                $scope.Fbcounts = fbcount;
-                                $scope.Twtcounts = Twtcount;
-                                $scope.Ytubecounts = Ytubecount;
-                                $scope.LinkedIncounts = LinkedIncount;
-                                $scope.Gpluscounts = Gpluscount;
-                                $scope.Instacounts = Instacount;
-                                $scope.GAcounts = GAcount;
-                                $scope.Pincounts = Pincount;
-                            ;
-        }
-        // end codes to groupprofile for restriction
+      
 
         //codes fetch all profiles start
         $scope.fetchalllProfiles = function () {
@@ -421,7 +421,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         } else {
             $scope.loaderclass = 'hide';
         }
-        $scope.GetGroupProfiles();
+        //$scope.GetGroupProfiles();
         //$scope.TwitterRecentFollower();
 
         //$scope.fetchYTChannels();
@@ -525,7 +525,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             swal({
                 title: "Are you sure?",
-                text: "You will not be able to send any content via this account!",
+                text: "You will not be able to send any video via this account!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",

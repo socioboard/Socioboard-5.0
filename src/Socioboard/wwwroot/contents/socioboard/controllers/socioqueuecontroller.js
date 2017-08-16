@@ -184,7 +184,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
            
             swal({
                 title: "Are you sure?",
-                text: "Your will not be able to recover this scheduled messages!",
+                text: "You will not be able to recover this scheduled messages!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55", confirmButtonText: "Yes, delete it!",

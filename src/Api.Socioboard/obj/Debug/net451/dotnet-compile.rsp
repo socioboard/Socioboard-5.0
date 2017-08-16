@@ -209,10 +209,12 @@
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Program.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Startup.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\AdsOffersController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\AdvanceSearchController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\AffiliatesController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\AgencyUserController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\BillingController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\BoardMeController.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\ContentStudioController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\DiscoveryController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\DraftMessageController.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Controllers\ElasticMailReportController.cs
@@ -266,6 +268,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Model\MongoRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\AdsOffersRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\AffiliatesRepository.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\ContentStudioRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\DiscoveryRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\DraftMessageRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Api.Socioboard\Repositories\ElasticMailReportRepository.cs

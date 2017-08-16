@@ -1076,8 +1076,9 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.Instagramaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
-                fbAcc.IsActive = false;
-                dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(fbAcc);
+                //fbAcc.IsActive = false;
+                //dbr.Update<Domain.Socioboard.Models.Instagramaccounts>(fbAcc);
+                dbr.Delete<Domain.Socioboard.Models.Instagramaccounts>(fbAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheInstagramAccount + profileId);
                 return "Deleted";
             }

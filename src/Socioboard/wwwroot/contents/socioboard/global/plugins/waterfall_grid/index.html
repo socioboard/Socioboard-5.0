@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jQuery newWaterfall.js Pljugin Demo</title>
+	<meta charset="utf-8" name="viewport" content="initial-scale=1,maximum-scale=1">
+	<link rel="stylesheet" type="text/css" href="res/reset2.0.min.css">
+    <!-- <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css"> -->
+	<style type="text/css">
+body {
+  background: rgb(245,245,245);
+  font-size: 1em;
+  letter-spacing: 0.1em;
+  line-height: 1.6em;
+  font-family: 'Roboto';
+  font-weight: lighter;
+  color: rgba(0,0,0,0.6);
+  overflow-x: hidden;
+}
+
+#waterfall { margin: 10px; }
+
+#waterfall li {
+  /*position: absolute;*/
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transform: translateY(100px);
+}
+
+#waterfall li.show {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s, top 1s;
+}
+
+#waterfall li > div {
+  color: rgba(0,0,0,0.6);
+  font-size: 32px;
+  border-radius: 3px;
+  margin: 10px;
+  padding: 15px;
+  background: rgb(255,255,255);
+  border: 1px solid rgba(038, 191, 64, 0);
+  transition: all 0.5s;
+}
+
+#waterfall li > div:hover {
+  transform: translateY(-10px);
+  border: 1px solid rgba(038, 191, 64, 1);
+  box-shadow: 0 10px 15px rgba(038, 191, 64, 0.1);
+  transition: all 0.3s;
+}
+h1 { margin:150px auto 30px auto; text-align:center}
+</style>
+	</head>
+	<body> 
+  <div id="Center">
+    <ul id="waterfall">
+    </ul>
+  </div>
+<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script> 
+<script type="text/javascript" src="newWaterfall.js"></script> 
+<script type="text/javascript">
+		$(document).ready(function()
+		{
+			$('#waterfall').NewWaterfall();
+		});
+
+		// 自动加载更多
+		function random(min,max)
+		{
+			return min + Math.floor(Math.random() * (max - min + 1))
+		}
+		var loading  = false;
+		var dist = 300;
+		var num = 1;
+
+		setInterval(function(){
+			if($(window).scrollTop() >= $(document).height() - $(window).height() - dist && !loading)
+			{
+				loading = true;
+
+				$("#waterfall").append("<li><div style='height:" + random(50,500) +  "px'>" + num + "</div></li>");
+				num++;
+
+				loading = false;
+			}
+		},60);
+	</script>
+</body
+</html>

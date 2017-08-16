@@ -27,9 +27,9 @@ SocioboardApp.controller('AdsOfferController', function ($rootScope, $scope, $ht
    	$('#textarea1').val('<form style="border:1px solid #ccc;padding:3px;text-align:center;" ><a href="https://www.socioboard.com" target="_blank"><img src="https://s-media-cache-ak0.pinimg.com/236x/29/e4/62/29e46244a4e361f225eca086d451f28e.jpg" height="100" width="100" style="border:0" alt="" /></a></form>');
     $('#textarea1').trigger('autoresize');
     
-    $scope.message = function (abcd) {
+    $scope.message = function () {
         $scope.abcd = "You have already verified your website for free account ";
-        swal(abcd);
+        swal($scope.abcd);
     };
 
         //add ads url

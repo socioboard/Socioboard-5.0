@@ -138,7 +138,7 @@ namespace Api.Socioboard.Helper
                 var args = new Dictionary<string, object>();
                 args["message"] = message;
                 args["link"] = link;
-                ret = fb.Post("v2.0/" + FbUserId + "/feed", args).ToString();
+                ret = fb.Post("v2.7/" + FbUserId + "/feed", args).ToString();
                 var builders = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", rssFeedId);
                 var update = Builders<BsonDocument>.Update.Set("Status", true);

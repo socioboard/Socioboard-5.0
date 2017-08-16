@@ -327,7 +327,7 @@ namespace Socioboard.Controllers
                 List<Domain.Socioboard.ViewModels.YoutubeProfiles> lstpages = await response.Content.ReadAsAsync<List<Domain.Socioboard.ViewModels.YoutubeProfiles>>();
                 if (lstpages.Count > 0)
                 {
-                    TempData["ReconnectYoutube"] = Newtonsoft.Json.JsonConvert.SerializeObject(lstpages);
+                    TempData["Youtube"] = Newtonsoft.Json.JsonConvert.SerializeObject(lstpages);
                     return RedirectToAction("Index", "Home");
                 }
                 else

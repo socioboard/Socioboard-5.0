@@ -454,8 +454,9 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.TwitterAccount twtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(profileId) && t.userId == userId && t.isActive).FirstOrDefault();
             if (twtAcc != null)
             {
-                twtAcc.isActive = false;
-                dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtAcc);
+                //twtAcc.isActive = false;
+                //dbr.Update<Domain.Socioboard.Models.TwitterAccount>(twtAcc);
+                dbr.Delete<Domain.Socioboard.Models.TwitterAccount>(twtAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterAccount + profileId);
                 return "Deleted";
             }

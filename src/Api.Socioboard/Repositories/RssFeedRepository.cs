@@ -16,30 +16,59 @@ namespace Api.Socioboard.Repositories
     public class RssFeedRepository
     {
 
-        public static Domain.Socioboard.Models.RssFeedUrl AddRssUrl(string Url, Model.DatabaseRepository dbr)
+        public static string AddRssUrl(string profileId ,string Url, Model.DatabaseRepository dbr)
         {
-            Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url) && t.Keywords==null   );
-            if (_RssFeedUrl != null)
+            string[] profilesList = null;
+            if (profileId != null)
             {
-                return _RssFeedUrl;
+                profilesList = profileId.Split(',');
+                profileId = profilesList[0];
             }
-            else
+           
+            foreach (var item in profilesList)
             {
-                _RssFeedUrl = new Domain.Socioboard.Models.RssFeedUrl();
-                _RssFeedUrl.rssurl = Url;
-                _RssFeedUrl.LastUpdate = DateTime.UtcNow;
-                 dbr.Add<Domain.Socioboard.Models.RssFeedUrl>(_RssFeedUrl);
-                _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url)&& t.Keywords==null);
-                return _RssFeedUrl;
+                string prid = null;
+                if (item.Contains("page_"))
+                {
+                    prid = item.Substring(5, item.Length - 5);
+                }
+                else if(item.Contains("tw_"))
+                {
+                    prid = item.Substring(3, item.Length - 3);
+                }
+                else
+                {
+                     prid = item.Substring(3, item.Length - 3);
+                }
+                
+                Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url) && t.Keywords == null && t.ProfileId == prid);
+
+                if (_RssFeedUrl != null)
+                {
+                    return "null";
+                }
+                else
+                {
+                    _RssFeedUrl = new Domain.Socioboard.Models.RssFeedUrl();
+                    _RssFeedUrl.rssurl = Url;
+                    _RssFeedUrl.ProfileId = prid;
+                    _RssFeedUrl.LastUpdate = DateTime.UtcNow;
+                    dbr.Add<Domain.Socioboard.Models.RssFeedUrl>(_RssFeedUrl);
+                    _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(Url) && t.Keywords == null);
+                   
+                }
+               
             }
+            return "success";
         }
 
-        public static string AddRssFeed(string TextUrl, long Userid, Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl, string profileId, Domain.Socioboard.Enum.SocialProfileType ProfileType, string profileimageurl, string profilename, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        public static string AddRssFeed(string TextUrl, long Userid, string profileId, Domain.Socioboard.Enum.SocialProfileType ProfileType, string profileimageurl, string profilename, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
         {
             int UrlAdded = 0;
             string RetMsg = string.Empty;
             MongoRepository _RssRepository = new MongoRepository("Rss", _appSettings);
-
+            Domain.Socioboard.Models.RssFeedUrl rssobj = new Domain.Socioboard.Models.RssFeedUrl();
+            rssobj = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.ProfileId == profileId && t.rssurl == TextUrl);
             string rt = ParseFeedUrl(TextUrl, ProfileType, profileId, Userid, profilename, profileimageurl, _appSettings);
             var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.RssFeedUrl.Equals(TextUrl) && t.ProfileId.Contains(profileId) && t.ProfileType == ProfileType && t.UserId.Equals(Userid));
             var task = Task.Run(async () =>
@@ -47,6 +76,9 @@ namespace Api.Socioboard.Repositories
                 return await ret;
             });
             int count = task.Result.Count;
+
+
+
             if (count < 1)
             {
 
@@ -61,7 +93,7 @@ namespace Api.Socioboard.Repositories
                     _Rss.UserId = Userid;
                     _Rss.ProfileImageUrl = profileimageurl;
                     _Rss.ProfileName = profilename;
-                    _Rss.rssFeedUrl = _RssFeedUrl;
+                    _Rss.rssFeedUrl = rssobj;
                     _Rss.CreatedOn = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                     _RssRepository.Add(_Rss);
                     UrlAdded++;
@@ -257,72 +289,82 @@ namespace Api.Socioboard.Repositories
         public static string PostRssfeed(string profileId, string Url, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, Helper.Cache _redisCache)
         {
             string ret = "";
-            string prId = profileId.Substring(5, profileId.Length - 5);
-            MongoRepository _RssFeedRepository = new MongoRepository("RssFeed", _appSettings);
-            List<Domain.Socioboard.Models.Mongo.RssFeed> objrssdata = new List<Domain.Socioboard.Models.Mongo.RssFeed>();
-            var rt = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.ProfileId.Equals(prId) && t.Status == false);
-            var task = Task.Run(async () =>
+            string[] lstProfileIds = null;
+            if (profileId != null)
             {
-                return await rt;
-            });
-            IList<Domain.Socioboard.Models.Mongo.RssFeed> _objrssdata = task.Result;
-            objrssdata = _objrssdata.ToList();
-            foreach (var item in objrssdata)
+                lstProfileIds = profileId.Split(',');
+                profileId = lstProfileIds[0];
+            }
+          
+            foreach (var itemPrf in lstProfileIds)
             {
-                if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || _objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)
+                string prId = itemPrf.Substring(5, itemPrf.Length - 5);
+                MongoRepository _RssFeedRepository = new MongoRepository("RssFeed", _appSettings);
+                List<Domain.Socioboard.Models.Mongo.RssFeed> objrssdata = new List<Domain.Socioboard.Models.Mongo.RssFeed>();
+                var rt = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.ProfileId.Equals(prId) && t.Status == false);
+                var task = Task.Run(async () =>
                 {
-                    try
-                    {
-                        Domain.Socioboard.Models.Facebookaccounts _Facebookaccounts = Repositories.FacebookRepository.getFacebookAccount(item.ProfileId, _redisCache, dbr);
-                        ret = Helper.FacebookHelper.FacebookComposeMessageRss(item.Message, _Facebookaccounts.AccessToken, _Facebookaccounts.FbUserId, item.Title, item.Link, item.strId, _appSettings);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        return "";
-                    }
-                }
-                else if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
+                    return await rt;
+                });
+                IList<Domain.Socioboard.Models.Mongo.RssFeed> _objrssdata = task.Result;
+                objrssdata = _objrssdata.ToList();
+                foreach (var item in objrssdata)
                 {
-                    try
+                    if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || _objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)
                     {
-                        string message = "";
-                        string UrlShortendata = GetShortenUrl(item.Link, _appSettings);
-                        string shortenUrl = string.Empty;
                         try
                         {
-                            JObject JData = JObject.Parse(UrlShortendata);
-                            if (JData["status_txt"].ToString() == "OK")
-                                shortenUrl = JData["data"]["url"].ToString();
+                            Domain.Socioboard.Models.Facebookaccounts _Facebookaccounts = Repositories.FacebookRepository.getFacebookAccount(item.ProfileId, _redisCache, dbr);
+                            ret = Helper.FacebookHelper.FacebookComposeMessageRss(item.Message, _Facebookaccounts.AccessToken, _Facebookaccounts.FbUserId, item.Title, item.Link, item.strId, _appSettings);
+
                         }
                         catch (Exception ex)
                         {
-
+                            return "";
                         }
-
-                        if (item.Message.Length > 115)
-                        {
-                            message = item.Message.Substring(0, 115);
-                        }
-                        else
-                        {
-                            message = item.Message;
-                        }
-                        message += " " + shortenUrl;
-                        Domain.Socioboard.Models.TwitterAccount _TwitterAccount = Repositories.TwitterRepository.getTwitterAccount(item.ProfileId, _redisCache, dbr);
-                        ret = Helper.TwitterHelper.TwitterComposeMessageRss(message, _TwitterAccount.oAuthToken, _TwitterAccount.oAuthSecret, _TwitterAccount.twitterUserId, _TwitterAccount.twitterScreenName, item.strId, _appSettings);
-
                     }
-                    catch (Exception ex)
+                    else if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
                     {
-                        return "";
+                        try
+                        {
+                            string message = "";
+                            string UrlShortendata = GetShortenUrl(item.Link, _appSettings);
+                            string shortenUrl = string.Empty;
+                            try
+                            {
+                                JObject JData = JObject.Parse(UrlShortendata);
+                                if (JData["status_txt"].ToString() == "OK")
+                                    shortenUrl = JData["data"]["url"].ToString();
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+
+                            if (item.Message.Length > 115)
+                            {
+                                message = item.Message.Substring(0, 115);
+                            }
+                            else
+                            {
+                                message = item.Message;
+                            }
+                            message += " " + shortenUrl;
+                            Domain.Socioboard.Models.TwitterAccount _TwitterAccount = Repositories.TwitterRepository.getTwitterAccount(item.ProfileId, _redisCache, dbr);
+                            ret = Helper.TwitterHelper.TwitterComposeMessageRss(message, _TwitterAccount.oAuthToken, _TwitterAccount.oAuthSecret, _TwitterAccount.twitterUserId, _TwitterAccount.twitterScreenName, item.strId, _appSettings);
+
+                        }
+                        catch (Exception ex)
+                        {
+                            return "";
+                        }
                     }
+
+
                 }
-
-
+                return ret;
             }
             return ret;
-
         }
 
         public static string EditFeedUrl(string NewFeedUrl, string OldFeedUrl, string RssId, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)

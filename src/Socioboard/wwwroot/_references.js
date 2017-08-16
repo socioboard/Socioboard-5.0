@@ -1208,6 +1208,7 @@
 /// <reference path="contents/socioboard/global/plugins/typeahead/handlebars.min.js" />
 /// <reference path="contents/socioboard/global/plugins/typeahead/typeahead.bundle.js" />
 /// <reference path="contents/socioboard/global/plugins/uniform/jquery.uniform.js" />
+/// <reference path="contents/socioboard/global/plugins/waterfall_grid/newWaterfall.js" />
 /// <reference path="contents/socioboard/js/admin/imagesloaded.pkgd.min.js" />
 /// <reference path="contents/socioboard/js/admin/jquery-1.11.2.min.js" />
 /// <reference path="contents/socioboard/js/admin/materialize.js" />

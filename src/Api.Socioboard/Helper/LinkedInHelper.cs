@@ -27,7 +27,7 @@ namespace Api.Socioboard.Helper
 
                 if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://") && !string.IsNullOrEmpty(ImageUrl))
                 {
-                    var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                    var client = new ImgurClient("api key", "api secret");
                     var endpoint = new ImageEndpoint(client);
                     IImage image;
                     using (var fs = new FileStream(imagepath, FileMode.Open))
@@ -90,7 +90,16 @@ namespace Api.Socioboard.Helper
                     }
                     else
                     {
-                        json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, imagepath);
+                        var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                        var endpoint = new ImageEndpoint(client);
+                        IImage image;
+                        using (var fs = new FileStream(imagepath, FileMode.Open))
+                        {
+                            image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                        }
+
+                        var img = image.Link;
+                        json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, img);
                     }
 
                     if (!string.IsNullOrEmpty(json))
@@ -135,7 +144,7 @@ namespace Api.Socioboard.Helper
             {
                 if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://") && !string.IsNullOrEmpty(ImageUrl))
                 {
-                    var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                    var client = new ImgurClient("api key", "api secret");
                     var endpoint = new ImageEndpoint(client);
                     IImage image;
                     using (var fs = new FileStream(ImageUrl, FileMode.Open))
@@ -204,7 +213,15 @@ namespace Api.Socioboard.Helper
                     }
                     else
                     {
-                        json = company.SetPostOnPageWithImage(Linkedin_oauth, objlicompanypage.LinkedinPageId, ImageUrl, comment);
+                        var client = new ImgurClient("api key", "api secret");
+                        var endpoint = new ImageEndpoint(client);
+                        IImage image;
+                        using (var fs = new FileStream(ImageUrl, FileMode.Open))
+                        {
+                            image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                        }
+                        var img = image.Link;
+                        json = company.SetPostOnPageWithImage(Linkedin_oauth, objlicompanypage.LinkedinPageId, img, comment);
                     }
                     if (!string.IsNullOrEmpty(json))
                     {

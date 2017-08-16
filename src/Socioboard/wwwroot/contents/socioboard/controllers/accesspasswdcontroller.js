@@ -19,9 +19,9 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
         //    $scope.Gpluslogin = "You singup with Google,you can't use 2 step login  ";
         //    swal(Gpluslogin);
         //};
-        $scope.twostepsocialmessage = function (twostepsociallogin) {
+        $scope.twostepsocialmessage = function () {
             $scope.twostepsociallogin = "You can't use this feature as you enable social singin or singup with Social network";
-            swal(twostepsociallogin);
+            swal($scope.twostepsociallogin);
         };
         $scope.password = $rootScope.user.Password;
         $scope.access_passwd();

@@ -44,7 +44,7 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).Count > 0)
             {
-                return Ok("Group Name Already Exist");
+                return Ok("Team Name Already Exist");
             }
             group.createdDate = System.DateTime.UtcNow;
             int res = dbr.Add<Domain.Socioboard.Models.Groups>(group);
@@ -69,7 +69,7 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.groupName.Equals(groupName)).Count > 0)
             {
-                return Ok("Group Name Already Exist");
+                return Ok("Team Name Already Exist");
             }
             return Ok("No Group Found With this Name.");
         }

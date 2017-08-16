@@ -65,7 +65,7 @@
                 <!--Message for paid END-->
                 <!--Message for Unpaid start-->
                 <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
-                    <a class="waves-effect waves-cyan"  ng-click="message(abcd)" disable>
+                    <a class="waves-effect waves-cyan"  ng-click="message()" disable>
                         <i class="icon-envelope-letter"></i> Message
                     </a>
                 </li>
@@ -194,7 +194,7 @@
                                 <a href="#/calendar">Calendar View</a>
                             </li>
                             <li ng-if="user.AccountType==0">
-                                <a  ng-click="message(abcd)" disable>Calendar View</a>
+                                <a  ng-click="message()" disable>Calendar View</a>
                             </li>
                         </ul>
                     </div>
@@ -205,26 +205,26 @@
                         <i class="icon-microphone"></i> Content Studio
                     </a>
                     <div class="collapsible-body">
-                        <ul>
-                            <li class="truncate">
+                        <ul>-->
+                            <!--<li class="truncate">
                                 <a href="#/savedcontent.html">Saved Content</a>
-                            </li>
-                            <li class="truncate">
+                            </li>-->
+                            <!--<li class="truncate">
                                 <a href="#/mostshared.html">Most Shared</a>
                             </li>
                             <li class="truncate">
                                 <a href="#/trending_content.html">Trending Now</a>
-                            </li>
-                            <li class="truncate">
+                            </li>-->
+                            <!--<li class="truncate">
                                 <a href="#/backlinks.html">Backlinks</a>
-                            </li>
-                            <li class="truncate">
+                            </li>-->
+                            <!--<li class="truncate">
                                 <a href="#/contentanalysis.html">Content Analysis</a>
                             </li>
                             <li class="truncate">
                                 <a href="#/facebookanalyzer.html">Facebook Analyzer</a>
-                            </li>
-                        </ul>
+                            </li>-->
+                        <!--</ul>
                     </div>
                 </li>-->
                 <!--content studio end-->
@@ -253,7 +253,7 @@
 
                 <!--Discovery for Upaid User-->
                 <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2">
-                    <a class="waves-effect waves-cyan"  ng-click="message(abcd)" disable>
+                    <a class="waves-effect waves-cyan"  ng-click="message()" disable>
                         <i class="icon-globe-alt"></i> Discovery
                     </a>
                 </li>
@@ -298,7 +298,7 @@
 
                 <!--Rss for Unpaid user-->
                 <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1">
-                    <a class="waves-effect waves-orange"  ng-click="message(abcd)" disable>
+                    <a class="waves-effect waves-orange"  ng-click="message()" disable>
                         <i class="icon-rocket"></i> AutoMate Rss Feeds
                     </a>
                    </li>
@@ -324,7 +324,7 @@
                 </li>
                 <!--Sharethon for Unpaid user-->
                 <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 ||user.AccountType==4">
-                    <a class="waves-effect waves-orange"  ng-click="message(abcd)" disable>
+                    <a class="waves-effect waves-orange"  ng-click="message()">
                         <i class="icon-share"></i> Shareathon
                     </a>
                 </li>
@@ -339,7 +339,7 @@
                                 <a href="#/groupreport.html">Socioboard Team Report</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5">
-                                <a  ng-click="message(abcd)" disable>Socioboard Team Report</a>
+                                <a  ng-click="message()" disable>Socioboard Team Report</a>
                             </li>
                             <li class="truncate">
                                 <a class="collapsible-header waves-effect waves-orange">
@@ -358,7 +358,7 @@
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
-                                            <a  ng-click="message(abcd)" disable>
+                                            <a  ng-click="message()" disable>
                                                 Twitter Custom Report
                                             </a>
                                         </li>
@@ -382,7 +382,7 @@
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
-                                            <a  ng-click="message(abcd)" disable>
+                                            <a  ng-click="message()" disable>
                                                 FB Page Custom Report
                                             </a>
                                         </li>
@@ -406,7 +406,7 @@
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
-                                            <a  ng-click="message(abcd)" disable>
+                                            <a  ng-click="message()" disable>
                                                 Instagram Custom Report
                                             </a>
                                         </li>
@@ -430,7 +430,7 @@
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
-                                            <a  ng-click="message(abcd)" disable>
+                                            <a  ng-click="message()" disable>
                                                 Youtube Custom Report
                                             </a>
                                         </li>
@@ -441,7 +441,7 @@
                                 <a href="#/googleanalyticsreport">Google Analytics</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2">
-                            <a  ng-click="message(abcd)" disable>
+                            <a  ng-click="message()" disable>
                                 Google Analytics</a>
                             </li>
                         </ul>
@@ -450,7 +450,7 @@
 
                 <!--reports for free plan-->
                 <li class="bold" ng-if="user.AccountType==0 ||user.AccountType==1">
-                    <a class="waves-effect waves-orange"  ng-click="message(abcd)" disable>
+                    <a class="waves-effect waves-orange"  ng-click="message()" disable>
                         <i class="icon-notebook"></i> Reports
                     </a>
                  </li>
@@ -531,7 +531,7 @@
 
         <!--Board for free plan -->
         <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5">
-            <a  ng-click="message(abcd)" disable class="waves-effect waves-cyan">
+            <a  ng-click="message()" disable class="waves-effect waves-cyan">
                 <i class="icon-briefcase"></i> Board Me
             </a>
         </li>

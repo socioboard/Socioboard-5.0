@@ -164,5 +164,11 @@
     <property name="urlShortnerStatus">
       <column name="urlShortnerStatus" />
     </property>
+    <property name="Country">
+      <column name="Country" />
+    </property>
+    <property name="PhoneCode">
+      <column name="PhoneCode" />
+    </property>
   </class>
 </hibernate-mapping>

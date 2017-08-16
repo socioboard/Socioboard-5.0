@@ -8,6 +8,7 @@
         .email-txt{    margin-top: -10px;}
         .delete_btn{margin-right: 5px;}
         .text-color{color:#0800f1;}
+        .indicator{ display:none;}
     </style>
     <!-- START WRAPPER -->
     <div class="wrapper">
@@ -95,14 +96,14 @@
 
                             <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
                                 <div class="card-panel">
-                                    <a ng-if="accountType==0 && membercount>=2" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                    <a ng-if="accountType==1 && membercount>=5" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                    <a ng-if="accountType==2 && membercount>=10" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                    <a ng-if="accountType==3 && membercount>=20" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                    <a ng-if="accountType==4 && membercount>=30" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                    <a ng-if="accountType==5 && membercount>=50" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                    <a ng-if="accountType==6 && membercount>=80" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                    <a ng-if="accountType==7 && membercount>=100" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==0 && membercount>=2" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==1 && membercount>=5" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==2 && membercount>=10" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==3 && membercount>=20" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==4 && membercount>=30" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==5 && membercount>=50" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==6 && membercount>=80" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                    <a ng-if="accountType==7 && membercount>=100" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
 
                                     <a ng-if="accountType==0 && membercount<2" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
                                     <a ng-if="accountType==1 && membercount<5" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
@@ -234,14 +235,14 @@
 
                             <div class="col s12 m12 l12" ng-if="grp.groupName !='Socioboard'">
                                     <div class="card-panel">
-                                        <a ng-if="accountType==0 && membercount>=2" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                        <a ng-if="accountType==1 && membercount>=5" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                        <a ng-if="accountType==2 && membercount>=10" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                        <a ng-if="accountType==3 && membercount>=20" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                        <a ng-if="accountType==4 && membercount>=30" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                        <a ng-if="accountType==5 && membercount>=50" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                        <a ng-if="accountType==6 && membercount>=80" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
-                                        <a ng-if="accountType==7 && membercount>=100" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message(msg)" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==0 && membercount>=2" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==1 && membercount>=5" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==2 && membercount>=10" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==3 && membercount>=20" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==4 && membercount>=30" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==5 && membercount>=50" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==6 && membercount>=80" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
+                                        <a ng-if="accountType==7 && membercount>=100" class="waves-effect waves-light btn grey modal-trigger right" ng-click="message()" disable>Invite New Team Members</a>
 
                                         <a ng-if="accountType==0 && membercount<2" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>
                                         <a ng-if="accountType==1 && membercount<5" class="waves-effect waves-light btn modal-trigger right" ng-click="openMemberInvitationModal(grp.id,grp.groupName)" href="javascript:void(0)">Invite New Team Members</a>

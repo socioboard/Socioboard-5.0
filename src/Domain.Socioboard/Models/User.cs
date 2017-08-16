@@ -25,6 +25,8 @@ namespace Domain.Socioboard.Models
         public string Password { get; set; }
         public string TimeZone { get; set; }
         public string ProfilePicUrl { get; set; }
+        public string Country { get; set; }
+        public string PhoneCode { get; set; }
         public string PhoneNumber { get; set; }
         public string EmailValidateToken { get; set; }
         public DateTime ValidateTokenExpireDate { get; set; }

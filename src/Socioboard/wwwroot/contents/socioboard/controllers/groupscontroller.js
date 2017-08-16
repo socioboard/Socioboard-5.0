@@ -5,9 +5,9 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         $scope.lstInviteTeamMembers = []; // array contains list of needs to invite for current group
         $scope.accountType = $rootScope.user.AccountType;
         $scope.userEmail = $rootScope.user.EmailId;        
-        $scope.message = function (msg) {
+        $scope.message = function () {
             $scope.msg = "As per your plan you already added maximum number of members.If you want to add more members in your team upgrade your plan. ";
-            swal(msg);
+            swal($scope.msg);
         };
 
         //$scope.grpmsgs = function (grpmsg) {
@@ -79,7 +79,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         $scope.addGroup = function (groupName) {
             if (groupName == null || groupName == '') {
                 alertify.set({ delay: 1000 });
-                alertify.error("Group name should not be empty");
+                alertify.error("Team name should not be empty");
                 return ;
             }
             $http({
@@ -93,7 +93,8 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                 }
                 else {
                     alertify.set({ delay: 1000 });
-                    alertify.error(response.data);
+                    alertify.success(response.data);
+                    $('#CreateGroupModal').closeModal();
                     window.location.reload();
                 }
             }, function (reason) {

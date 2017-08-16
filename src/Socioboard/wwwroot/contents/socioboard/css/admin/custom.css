@@ -559,37 +559,76 @@ ul.side-nav.leftside-navigation li.active > a{
     line-height: 50px !important;
 }
 
-
+ 
 /* -----product_content Masonery ----- */
+.product_content .card .card-content{
+    padding: 4px 0px;
+}
 .product_content .card .card-content .card-title, .product_content .card .card-reveal .card-title {
   font-size: 1.1rem;
   line-height: 1.6rem;
   font-weight: 400;
 }
-
+ 
 .product_content {
   /*width: 25%;*/
   padding: 10px;
 }
-
+ 
 .product_content .card {
   margin: 0;
 }
-
+ 
 .product_content ul.card-action-buttons {
   margin: -26px 10px 0 0;
   text-align: right;
 }
-
+ 
 .product_content ul.card-action-buttons li {
   display: inline-block;
   padding-left: 5px;
 }
-
+ 
 .product_content-sizer {
-  width: 20%;
+  width: 25%;
 }
-
+/* product content new studio_card*/
+.studio_card .card .btn-save {
+    width: 50px;
+    height: 50px;
+    font-weight: 600;
+    font-size: 1.0rem;
+    line-height: 50px;
+    margin: 10px;
+    position: absolute;
+    top: 0;
+    letter-spacing: 0;
+}
+.studio_card .card .card-content{
+    padding: 4px 0px;
+}
+.studio_card .card .card-content .card-title{
+  font-size: 1.1rem;
+  line-height: 1.6rem;
+  font-weight: 400;
+}
+ 
+.studio_card {
+  padding: 10px;
+}
+ 
+.studio_card .card {
+  margin: 0;
+}
+ 
+.share_studio{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+ 
 
 .dropdown_list_style li > a, .dropdown_list_style li > span{
     padding: 0px 16px;

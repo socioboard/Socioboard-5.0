@@ -305,9 +305,9 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
 SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $http, apiDomain, domain) {
     $scope.$on('$includeContentLoaded', function () {
         $scope.AccountType = $rootScope.user.AccountType;
-        $scope.message = function (abcd) {
-            $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
-            swal(abcd);
+        $scope.message = function () {
+           $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
+            swal($scope.abcd);
         };
         $scope.fbProfileFilter = function (item) {
             return item.profileType === 0 || item.profileType === 1;
@@ -617,12 +617,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
-                            '../contents/socioboard/global/plugins/moment.js',
-                            '../contents/socioboard/global/plugins/mdPickers/dist/mdPickers.css',
-                            '../contents/socioboard/global/plugins/mdPickers/dist/mdPickers.js',
-                            '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            '../contents/socioboard/global/plugins/waterfall_grid/newWaterfall.js',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
                              '../contents/socioboard/controllers/trendingcontentcontroller.js'
  
                         ] 

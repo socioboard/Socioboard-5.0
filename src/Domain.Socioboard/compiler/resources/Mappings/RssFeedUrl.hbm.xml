@@ -14,5 +14,8 @@
     <property name="Keywords">
       <column name="Keywords"/>
     </property>
+    <property name="ProfileId">
+      <column name="ProfileId"/>
+    </property>
   </class>
 </hibernate-mapping>

@@ -258,7 +258,10 @@ namespace Api.Socioboard.Controllers
             MongoRepository boardrepo = new MongoRepository("MongoBoardTwtFeeds", _appSettings);
             try
             {
-                var result = boardrepo.Find<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag)).ConfigureAwait(false);
+                var builder = Builders<MongoBoardTwtFeeds>.Sort;
+                var sort = builder.Descending(t => t.Publishedtime);
+                //var result = boardrepo.FindWithRange<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag),sort,skip,count).ConfigureAwait(false); ;
+                 var result = boardrepo.BoardFind<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag)).ConfigureAwait(false);
                 var task = Task.Run(async () =>
                 {
                     return await result;
@@ -286,8 +289,10 @@ namespace Api.Socioboard.Controllers
             try
             {
 
-                var result = boardrepo.Find<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag)).ConfigureAwait(false);
-
+                var builder = Builders<MongoBoardInstagramFeeds>.Sort;
+                var sort = builder.Descending(t => t.Publishedtime);
+                //var result = boardrepo.FindWithRange<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag),sort,skip, count).ConfigureAwait(false);
+                var result = boardrepo.BoardFind<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag)).ConfigureAwait(false);
                 var task = Task.Run(async () =>
                 {
                     return await result;
@@ -315,7 +320,10 @@ namespace Api.Socioboard.Controllers
             try
             {
                 //List<MongoBoardGplusFeeds> objBoardGplusPagefeeds = boardrepo.getBoardGplusfeedsbyrange(Guid.Parse(BoardGplusprofileId), Convert.ToInt32(_noOfDataToSkip), Convert.ToInt32(_noOfResultsFromTop));
-                var result = boardrepo.Find<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag)).ConfigureAwait(false);
+                var builder = Builders<MongoBoardGplusFeeds>.Sort;
+                var sort = builder.Descending(t => t.Publishedtime);
+                //var result = boardrepo.FindWithRange<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag),sort,Convert.ToInt32(skip),Convert.ToInt32(count)).ConfigureAwait(false);
+                var result = boardrepo.BoardFind<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag)).ConfigureAwait(false);
                 var task = Task.Run(async () =>
                 {
                     return await result;

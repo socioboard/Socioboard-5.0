@@ -47,7 +47,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         }
 
 
-
+        var fetchTwtdataSucess = false;
         $scope.LoadTopTwitterFeeds = function () {
             if (!twitterReachLast) {
                 //codes to load  recent Feeds
@@ -59,9 +59,12 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                                   starttwitter = starttwitter + response.data.length;
                                   $scope.lastreach = true;
                                   //$scope.lstBoardFeeds.push(response.data);
-                               
+                                  fetchTwtdataSucess = true;
                                   if (response.data == null) {
                                       twitterReachLast = true;
+                                  }
+                                  if (fetchTwtdataSucess && fetchinstadataSucess && fetchGplusdataSucess) {
+                                      $scope.resizeimg();
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;
@@ -75,6 +78,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         var startGplus = 0; // where to start data
         var endingGplus = startGplus + 30; // how much data need to add on each function call
         var GplusReachLast = false; // to check the page ends last or not
+        var fetchGplusdataSucess = false;
         $scope.LoadTopGplusFeeds = function () {
             if (!GplusReachLast) {
                 //codes to load  recent Feeds
@@ -86,9 +90,12 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                                   });
                                   startGplus = startGplus + response.data.length;
                                   $scope.lastreach = true;
-                                 
+                                  fetchGplusdataSucess = true;
                                   if (response.data == null) {
                                       GplusReachLast = true;
+                                  }
+                                  if (fetchTwtdataSucess && fetchinstadataSucess && fetchGplusdataSucess) {
+                                      $scope.resizeimg();
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;
@@ -101,21 +108,27 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         var startInstagram = 0; // where to start data
         var endingInstagram = startInstagram + 30; // how much data need to add on each function call
         var InstagramReachLast = false; // to check the page ends last or not
+        var fetchinstadataSucess=false;
         $scope.LoadTopInstagramFeeds = function () {
             if (!InstagramReachLast) {
                 //codes to load  recent Feeds
                 $http.get(apiDomain + '/api/BoardMe/getInstagramFeeds?boardId=' + $stateParams.boardId + '&userId=' + $rootScope.user.Id + '&skip=' + startInstagram + '&count=30')
                               .then(function (response) {
+                                  debugger;
                                   response.data.forEach(function (feed) {
                                       $scope.lstBoardFeeds.push(feed);
                                   });
                                   startInstagram = startInstagram + response.data.length;
                                   $scope.lastreach = true;
+                                  fetchinstadataSucess = true;
                                   ////$scope.lstBoardFeeds = response.data;
                                   //$scope.lstBoardFeeds.push(response.data[0]);
                                   //console.log($scope.lstBoardFeeds);
                                   if (response.data == null) {
                                       InstagramReachLast = true;
+                                  }
+                                  if (fetchTwtdataSucess && fetchinstadataSucess && fetchGplusdataSucess) {
+                                      $scope.resizeimg();
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;
@@ -132,7 +145,17 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             $scope.LoadTopInstagramFeeds();
         }
         $scope.loadMore();
+        $scope.resizeimg = function () {
+            var $containerProducts = $("#products");
+            console.log($containerProducts);
+            $containerProducts.imagesLoaded(function () {
+                $containerProducts.masonry({
+                    itemSelector: ".product",
+                    columnWidth: ".product-sizer",
+                });
+            });
 
+        }
         boardme();
         $scope.deleteProfile = function (profileId) {
             // console.log(profileId);
@@ -326,18 +349,18 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
     });
 
 });
-
+ 
 SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
                 console.log("myRepeatFeedTimeoutDirective Called");
-                var $containerProducts = $("#products");
-                //$containerProducts.imagesLoaded(function () {
-                $containerProducts.masonry({
-                    itemSelector: ".product",
-                    columnWidth: ".product-sizer",
-                });
+                //var $containerProducts = $("#products");
+                ////$containerProducts.imagesLoaded(function () {
+                //$containerProducts.masonry({
+                //    itemSelector: ".product",
+                //    columnWidth: ".product-sizer",
+                //});
             });
 
 

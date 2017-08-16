@@ -1843,8 +1843,9 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.PinterestAccount pinAcc = dbr.Find<Domain.Socioboard.Models.PinterestAccount>(t => t.username.Equals(profileId) && t.userid == userId && t.isactive).FirstOrDefault();
             if (pinAcc != null)
             {
-                pinAcc.isactive = false;
-                dbr.Update<Domain.Socioboard.Models.PinterestAccount>(pinAcc);
+                //pinAcc.isactive = false;
+                //dbr.Update<Domain.Socioboard.Models.PinterestAccount>(pinAcc);
+                dbr.Delete<Domain.Socioboard.Models.PinterestAccount>(pinAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CachePinterestAccount + profileId);
                 return "Deleted";
             }

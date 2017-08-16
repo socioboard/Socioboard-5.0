@@ -58,11 +58,11 @@ namespace Api.Socioboard.Controllers
             catch (Exception ex)
             {
                 return Ok("This Url Does't  Conatin Rss Feed");
-            }
+            }           
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = Repositories.RssFeedRepository.AddRssUrl(rssUrl, dbr);
-            if (_RssFeedUrl != null)
+            string _RssFeedUrl = Repositories.RssFeedRepository.AddRssUrl(profileId, rssUrl, dbr);
+            if (_RssFeedUrl != "null") 
             {
                 string[] lstProfileIds = null;
                 if (profileId != null)
@@ -81,7 +81,7 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(3, item.Length - 3);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, _RssFeedUrl, prId, Domain.Socioboard.Enum.SocialProfileType.Facebook, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, dbr, _appSettings);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.Facebook, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, dbr, _appSettings);
 
                     }
 
@@ -89,14 +89,14 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(5, item.Length - 5);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, _RssFeedUrl, prId, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, dbr, _appSettings);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, dbr, _appSettings);
 
                     }
                     if (item.StartsWith("tw"))
                     {
                         string prId = item.Substring(3, item.Length - 3);
                         Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
-                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, _RssFeedUrl, prId, Domain.Socioboard.Enum.SocialProfileType.Twitter, objTwitterAccount.profileImageUrl, objTwitterAccount.twitterName, dbr, _appSettings);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.Twitter, objTwitterAccount.profileImageUrl, objTwitterAccount.twitterName, dbr, _appSettings);
 
                     }
                 }

@@ -1078,7 +1078,10 @@ namespace Socioboard.Controllers
         {
             return View();
         }
-
+        public IActionResult Sitemap()
+        {
+            return View();
+        }
         public IActionResult FAQ()
         {
             return View();

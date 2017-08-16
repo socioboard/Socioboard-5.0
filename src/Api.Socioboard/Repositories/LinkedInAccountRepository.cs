@@ -122,6 +122,7 @@ namespace Api.Socioboard.Repositories
                 }
                 catch (Exception ex)
                 {
+                    _LinkedInAccount.ProfileImageUrl = "https://www.takeaway.com/images/icons/_blankprofile.png";
 
                 }
                 try
@@ -275,7 +276,10 @@ namespace Api.Socioboard.Repositories
                 {
                     _LinkedInAccount.LogoUrl = profile.logo_url.ToString();
                 }
-                catch { }
+                catch(Exception ex)
+                {
+                    _LinkedInAccount.LogoUrl = "https://www.takeaway.com/images/icons/_blankprofile.png";
+                }
                 try
                 {
                     _LinkedInAccount.SquareLogoUrl = profile.square_logo_url.ToString();
@@ -419,8 +423,9 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.LinkedInAccount fbAcc = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.LinkedinUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
-                fbAcc.IsActive = false;
-                dbr.Update<Domain.Socioboard.Models.LinkedInAccount>(fbAcc);
+                //fbAcc.IsActive = false;
+                //dbr.Update<Domain.Socioboard.Models.LinkedInAccount>(fbAcc);
+                dbr.Delete<Domain.Socioboard.Models.LinkedInAccount>(fbAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheLinkedInAccount + profileId);
                 return "Deleted";
             }
@@ -435,8 +440,9 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.LinkedinCompanyPage fbAcc = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.LinkedinPageId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
             if (fbAcc != null)
             {
-                fbAcc.IsActive = false;
-                dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(fbAcc);
+                //fbAcc.IsActive = false;
+                //dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(fbAcc);
+                dbr.Delete<Domain.Socioboard.Models.LinkedinCompanyPage>(fbAcc);
                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheLinkedInCompanyPage + profileId);
                 return "Deleted";
             }

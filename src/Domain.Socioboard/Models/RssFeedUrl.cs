@@ -11,5 +11,6 @@ namespace Domain.Socioboard.Models
         public virtual string rssurl { get; set; }
         public virtual DateTime LastUpdate { get; set; }
         public virtual string Keywords { get; set; }
+        public virtual string ProfileId { get; set; }
     }
 }
