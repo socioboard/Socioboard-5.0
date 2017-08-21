@@ -8,7 +8,7 @@
                     <div class="card" id="feeds">
                         <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Feeds<a class='dropdown-button right white-text btn_style black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">{{filterrTxtt}}</a><span class="right">&nbsp;</span>
                         <a class='dropdown-button right white-text btn_style black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">{{SorttTxtt}}</a><span class="right">&nbsp;</span>
-                        <a class='right white-text btn_style black' ng-click="LoadTopFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a><span class="right">&nbsp;</span>
+                        <a class='right white-text btn_style black' ng-click="ReLoadingTopFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a><span class="right">&nbsp;</span>
                         <a class='right white-text btn_style  blue darken-2' ng-click="ReconnectTwt()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Reconnect</a><span class="right">&nbsp;</span></h5>
                         <!-- Dropdown Structure -->
                         <div ng-if="dropCalled==true">
@@ -37,7 +37,7 @@
                                 <span class="email-title">{{twtfeed.fromName}}</span>
                                 <div class="row feeds_post">
                                     <div class="col m8">
-                                        <p class="break_word ultra-small">{{twtfeed.feed}}</p>
+                                        <a class="break_word ultra-small black-text" href="https://twitter.com/{{twtfeed.screenName}}/status/{{twtfeed.messageId}}" target="_blank">{{twtfeed.feed}}</a>
                                     </div>
                                     <div class="col m4 center">
                                         <img src="{{twtfeed.mediaUrl}}" ng-if="twtfeed.mediaUrl!=''" class="responsive-img ">
@@ -45,14 +45,23 @@
                                 </div>
                                 <a class="tooltipped secondary-content" data-position="left">{{twtfeed.feedDate}}</a>
                                 <div class="row" ng-if="user.TrailStatus!=2">
-                                    <div class="col l3 s3">
+                                    <div class="col l2 s2">
                                         <span ng-click="twitterretweet(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                             <i class="fa fa-retweet fa-fw"></i><span>{{twtfeed.retweetcount | thousandSuffix:1}}</span>
                                         </span>
                                     </div>
-                                    <div class="col l4 s3">
+                                    <div class="col l1 s2">
                                         <span ng-click="twitterfavorite(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                             <i class="fa fa-star fa-fw"></i><span>{{twtfeed.likecount | thousandSuffix:1}}</span>
+                                        </span>
+                                    </div>
+                                    <div class="col l3 s1">
+                                        <span>
+                                            <i class="fa fa-envelope fa-fw"></i> Email</span>
+                                    </div>
+                                    <div class="col l1 s1">
+                                        <span ng-click="markSpam(twtfeed.fromScreenName,twtfeed.profileId)">
+                                            <i class="fa fa-bug fa-fw"></i>
                                         </span>
                                     </div>
                                     <div class="col l1 s1">
@@ -151,7 +160,7 @@
                                 <span class="email-title">{{tweet.fromName}}</span>
                                 <div class="row feeds_post">
                                     <div class="col m8">
-                                        <p class="break_word ultra-small">{{tweet.twitterMsg}}</p>
+                                        <a class="break_word ultra-small black-text" href="https://twitter.com/{{tweet.screenName}}/status/{{tweet.messageId}}" target="_blank">{{tweet.twitterMsg}}</a>
                                     </div>
                                     <div class="col m4 center">
                                         <img src="{{tweet.mediaUrl}}" ng-if="tweet.mediaUrl != ''" class="responsive-img ">
@@ -444,20 +453,23 @@
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                 </label>
@@ -465,6 +477,7 @@
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
@@ -472,7 +485,8 @@
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
                             </li>

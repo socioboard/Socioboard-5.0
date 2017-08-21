@@ -1,0 +1,271 @@
+<style>
+    ul.shinh li label {
+        font-size: 14px;
+        color: grey;
+        padding: 0 10px;
+        color: #ff4081;
+    }
+
+    ul.shinh li:hover {
+        background: #e5e5e5;
+        color: #ff4081;
+        cursor: pointer;
+        padding: 0 10px;
+    }
+
+    ul.shinh li label input {
+        margin-right: 10px;
+        height: 20px;
+        width: 20px;
+        background: transparent !important;
+    }
+</style>
+<div data-ng-controller="ImgLibraryController">
+    <!-- Page name -->
+    <div class="container">
+        <div class="row">
+            <div class="col m6 s12">
+                <h5>Private Image Library</h5>                
+            </div>
+            <div class="col m6 s12">
+                <h5 class="right" ng-model="totalimgsize">Total Used Space - <span class="blue-text">{{totalimagesize}} / 20MB</span></h5>
+             </div>
+        </div>
+        
+    </div>
+
+    <!-- START CONTENT -->
+    <section id="content">
+        <!--start container-->
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m12 l12">
+                    <a class="waves-effect waves-light btn btn_style grey darken-4 modal-trigger" href="#ImgUploadModal"><i class="icon-cloud-upload"></i> <span>Upload Image</span></a>
+                </div>
+                <!-- Modal Structure -->
+                <div id="ImgUploadModal" class="modal">
+                    <div class="modal-content">
+                        <form class="col s12" ng-submit="SaveImageforPrivate()">
+                            <div class="row">
+                               <h4 class="left">Image Upload</h4>
+                                <!--<a href="#!" class="modal-action modal-close waves-effect waves-orange btn-flat right"><i class="fa fa-close"></i></a>-->
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                  <input id="img_name" type="text" class="validate" required>
+                                  <label for="img_name">Enter Name of Image</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                              <div class="col s12 m12 l12">
+                                 <p>Select your file [Ex: gif, jpeg, png]</p>
+                              </div>
+                              <div class="col s12 m12 l12">
+                                  <input required type="file" id="input-file-now" class="dropify" data-default-file="" data-allowed-file-extensions="png gif jpeg"/>
+                              </div>
+                            </div>
+                            <div class="row margin-bottom-10 margin-top-10">
+                                <button class="btn blue white-text modal-action waves-effect waves-blue btn-flat right" type="submit" id="mail_btn">
+                                    Upload
+                                    <i class="icon-cloud-upload"></i>
+                                </button>
+                            </div>
+                          </form>
+                    </div>
+                 </div>
+            </div>
+            <div class="row">
+                <div class="col s12 m2" ng-repeat="img in imgdetails">
+                    <div class="card">
+                        <div class="card-content modal-trigger" style="padding: 2px;">
+                            <img src={{img.imagePath}} class="responsive-img card_img_h" id="image1" ng-click="openimgmodel(img)">
+
+                            <div class="card-action share_studio" style="padding: 10px;">
+                                <!--<div class="center">
+                                    <p class="btn btn_style">
+                                        <i class="icon-pencil"></i>
+                                        <input value="edit" type='image' ng-click="launchEditor(img.id, img.imagePath);" />
+                                        <a href="#"
+                                           target-selector='img'
+                                           target-src='{{img.imagePath}}'
+                                           
+                                           ng-aviary>Edit photo</a>
+                                      </p>
+                                </div>-->
+                                <div class="center">
+                                    <a class="btn btn_style modal-trigger" ng-click="opencomposemodel(img)"><i class="icon-note"></i></a>
+                                </div>
+                                <div class="center">
+                                    <span ng-click="deleteImages(img.id)" class="btn btn_style"><i class="icon-close"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+   </div>
+        <!--end container-->
+        <!-- Compose Email Structure -->
+        <div id="ComposePostModal" class="modal">
+            <div class="modal-content">
+                <nav class="red">
+                    <div class="nav-wrapper">
+                        <div class="left col s12 m5 l5">
+                            <ul>
+                                <li>
+                                    <a class="email-type">Compose</a>
+                                </li>
+                            </ul>
+                        </div>
+                      </div>
+                </nav>
+            </div>
+            <div class="model-email-content">
+                <div class="row no-space">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="col s12 m6 l7">
+                                <p>Select Profiles</p>
+                                <div class="lst_scroll">
+                                   <ul class="shinh" id="checkboxdataboard">
+                                        <li style="padding:5px 0;">
+                                            <label>
+                                                <input id="checkAll" onclick="check();" type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" />
+                                                <span style="float:left;">Check All</span>
+                                            </label>
+                                        </li>
+                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                            
+                                            <label>
+                                                <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />        
+                                                <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                <span style="float:left;"> {{profile.profileName}}</span>
+                                                <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                            </label>
+                                        </li>
+                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                            
+                                            <label>
+                                                <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                <img src="{{profile.profilePic}}"  style="width:20px;float:left;margin-right: 5px;"/>
+                                                <span style="float:left;"> {{profile.profileName}}</span>
+                                                <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                            </label>
+                                        </li>
+                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">                                            
+                                            <label>
+                                                <input name="selector[]" class="subcheckboxboard" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                <span style="float:left;"> {{profile.profileName}}</span>
+                                                <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                            </label>
+                                        </li>
+                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">                                            
+                                            <label>
+                                                <input name="selector[]" class="subcheckboxboard" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                <img src="{{profile.profilePic}}"  style="width:20px;float:left;margin-right: 5px;"/>
+                                                <span style="float:left;"> {{profile.profileName}}</span>
+                                                <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                            </label>
+                                        </li>
+                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">                                            
+                                            <label>
+                                                <input name="selector[]" class="subcheckboxboard" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                <img src="{{profile.profilePic}}"  style="width:20px;float:left;margin-right: 5px;"/>
+                                                <span style="float:left;"> {{profile.profileName}}</span>
+                                                <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col s12 m6 l5">
+                                <p>Select your file</p>
+                                <input type="hidden" id="imageUrl" value="{{composePostdata.image}}" />
+                                <input type="file" id="composeImage" class="dropify" disabled="disabled" after-render data-default-file="{{composePostdata.image}}" />
+                            </div>
+                        </div>
+                        <div class="row no-space">
+                            <div class="input-field col s12">
+                                <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
+                                <label for="compose">Message</label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <a href="javascript:;" class="btn blue" ng-show="dispbtn" ng-click="ComposeMessage()">Send<i class="modal-action  mdi-content-send"></i></a>
+                            <a ng-show="!dispbtn" class="btn blue">Send<i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></a>
+                            
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ImgDesModal Modal Structure -->
+        <div id="ImgDesModal" class="modal">
+            <div class="modal-content">
+                <form>
+                    <div class="row">
+                        <div class="col l12 s12">
+                            <h5>Image Details</h5>
+                        </div>
+                        <div class="col l8 s12 center">
+                            <img src="{{imagedetail.imagePath}}" class="responsive-img">
+                        </div>
+                        <div class="col l4 s12">
+                            <div class="card no-space">
+                                <div class="card-content card_img_details">
+                                    <h5 class="blue-text no-space">Asset Details</h5>
+                                    <hr />
+                                    <h6 class="grey-text text-darken-1" >Name : <span class="grey-text text-darken-4">{{imagedetail.imageName}}</span></h6>
+                                    <h6 class="grey-text text-darken-1">Uploaded : <span class="grey-text text-darken-4">{{imagedetail.imageuploadeddate | date:'medium'}}</span> </h6>
+                                    <h6 class="grey-text text-darken-1">Tags : <span class="grey-text text-darken-4">{{imagedetail.tags}}</span> </h6>
+                                    <h6 class="grey-text text-darken-1">Image Type : <span class="grey-text text-darken-4">{{imagedetail.folderType}}</span> </h6>
+                                    <h6 class="grey-text text-darken-1">Image Size : <span class="grey-text text-darken-4">{{imglength}}</span> </h6>
+                                    <a class="btn btn_style col s12 img_comp_btn" ng-click="opencomposemodel(imagedetail)">Compose</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!-- END CONTENT -->
+</div>
+
+
+<script type='text/javascript'>
+//var featherEditor = new Aviary.Feather({
+//    apiKey: 'your-client-id-here',
+//    theme: 'dark', // Check out our new 'light' and 'dark' themes!
+//    tools: 'all',
+//    appendTo: '',
+//    onSave: function(imageID, newURL) {
+//        var img = document.getElementById(imageID);
+//        img.src = newURL;
+//    },
+//    onError: function(errorObj) {
+//        alert(errorObj.message);
+//    }
+//});
+//function launchEditor(img) {
+//    alert(img);
+//    console.log(" -=   > ", img);
+//    featherEditor.launch({
+//        image: id,
+//        url: src
+//    });
+//    return false;
+//}
+ 
+</script>
+<script>
+    function check() {
+       var flag = $('#checkAll').is(":checked");
+        $('#checkboxdataboard input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+</script>

@@ -3,15 +3,14 @@
 SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $scope, $http, $timeout,$stateParams, apiDomain,grouptask) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
-
         likedinfeeds();
-
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/LinkedIn/GetTopCompanyPagePosts?pageId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
                               $scope.companypagedata = response.data._LinkedinCompanyPage;
                               $scope.postdate(response.data._LinkedinCompanyPagePosts);
+                              $scope.reloadFeeds();
                               setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
                               if (response.data == null) {
                                   reachLast = true;
@@ -21,10 +20,14 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
                           });
             // end codes to load  recent Feeds
         }
-
         $scope.LoadTopFeeds();
+        $scope.ReLoadingTopFeeds = function () {
+            $scope.LoadTopFeeds();
+        }
+        $scope.reloadFeeds = function () {
+            setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+        }
         $scope.postdate = function (parm) {
-
             for (var i = 0; i < parm.length; i++) {
                 var date = moment(parm[i].postDate);
                 var newdate = date.toString();
@@ -33,9 +36,7 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
                 parm[i].postDate = date;
             }
             $scope.lstlincmpnypageFeeds = parm;
-
         }
-
         $scope.getpostcomment = function (OAuthToken, PageId, UpdateKey) {
             //codes to load  comments of  Feeds
             $http.get(apiDomain + '/api/LinkedIn/GetLinkdeinPagePostComment?pageId=' + PageId + '&userId=' + $rootScope.user.Id + '&updatekey=' + UpdateKey + '&OAuthToken=' + OAuthToken)

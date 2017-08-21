@@ -27,7 +27,7 @@ namespace Api.Socioboard.Helper
 
                 if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://") && !string.IsNullOrEmpty(ImageUrl))
                 {
-                    var client = new ImgurClient("api key", "api secret");
+                    var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
                     var endpoint = new ImageEndpoint(client);
                     IImage image;
                     using (var fs = new FileStream(imagepath, FileMode.Open))
@@ -144,7 +144,7 @@ namespace Api.Socioboard.Helper
             {
                 if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://") && !string.IsNullOrEmpty(ImageUrl))
                 {
-                    var client = new ImgurClient("api key", "api secret");
+                    var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
                     var endpoint = new ImageEndpoint(client);
                     IImage image;
                     using (var fs = new FileStream(ImageUrl, FileMode.Open))
@@ -213,7 +213,7 @@ namespace Api.Socioboard.Helper
                     }
                     else
                     {
-                        var client = new ImgurClient("api key", "api secret");
+                        var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
                         var endpoint = new ImageEndpoint(client);
                         IImage image;
                         using (var fs = new FileStream(ImageUrl, FileMode.Open))

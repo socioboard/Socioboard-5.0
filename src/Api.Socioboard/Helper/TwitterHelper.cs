@@ -517,6 +517,11 @@ namespace Api.Socioboard.Helper
                         Domain.Socioboard.Models.TwitterMutualFans objTwitterFollowers = new Domain.Socioboard.Models.TwitterMutualFans();
                         objTwitterFollowers.screen_name = item["screen_name"].ToString();
                         objTwitterFollowers.name = item["name"].ToString();
+                        objTwitterFollowers.description = item["description"].ToString();
+                        objTwitterFollowers.followers = item["followers_count"].ToString();
+                        objTwitterFollowers.following= item["friends_count"].ToString();
+                        objTwitterFollowers.location = item["location"].ToString();
+                        objTwitterFollowers.profile_image_url = item["profile_image_url"].ToString();
                         lstfollowerlist.Add(objTwitterFollowers);
                     }
 

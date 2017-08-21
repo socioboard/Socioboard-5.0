@@ -69,7 +69,7 @@ dashboard = function () {
         alwaysVisible: true
     });
 
-    $('#social_profile_list').slimScroll({
+    $('#social_profilest').slimScroll({
         color: '#424242',
         size: '10px',
         height: '400px',
@@ -2534,6 +2534,34 @@ MostShared = function () {
 
 };
 
+//ImageLibrary
+
+ImgLibrary = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    }
+    );
+    // Basic
+    $('.dropify').dropify();
+    $('.lst_scroll').slimScroll({
+        color: '#424242',
+        size: '10px',
+        height: '250px',
+        alwaysVisible: true
+    });
+
+}
 googleanalyticreport = function () {
     $('ul.tabs').tabs();
 };

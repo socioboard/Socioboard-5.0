@@ -54,6 +54,7 @@
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AdsOffers.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AdsOffers.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Affiliates.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Affiliates.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AgencyUser.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AgencyUser.hbm.xml
+--resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AssestLibrary.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AssestLibrary.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Coupons.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Coupons.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DemoRequest.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DemoRequest.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Discovery.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Discovery.hbm.xml
@@ -67,6 +68,7 @@
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Group.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Group.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Groupmembers.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Groupmembers.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Groupprofiles.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Groupprofiles.hbm.xml
+--resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\ImgLibrary.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.ImgLibrary.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Instagramaccounts.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Instagramaccounts.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\LinkedinAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.LinkedinAccount.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\LinkedinCompanyPage.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.LinkedinCompanyPage.hbm.xml
@@ -130,6 +132,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AdsOffers.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Affiliates.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AgencyUser.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AssestLibrary.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Coupons.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DemoRequest.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Discovery.cs
@@ -144,6 +147,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Groupmembers.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Groupprofiles.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Groups.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\ImgLibrary.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Instagramaccounts.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\InstagramDiscoveryFeed.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\LinkedinAccount.cs
@@ -172,6 +176,8 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Listening\LinkedInCompanyPagePost.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\AdvanceSerachData.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ArticlesAndBlogs.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentFeedsShareathon.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentShareDataId.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ElasticmailReport.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacaebookPageDailyReports.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPagePost.cs

@@ -1867,5 +1867,48 @@ namespace Api.Socioboard.Repositories
                 return "api issue while favourite post";
             }
         }
+
+        public static string TwitterSpam_user(string profileId, string screenName, long userId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            Domain.Socioboard.Models.TwitterAccount twtacc = new Domain.Socioboard.Models.TwitterAccount();
+            Domain.Socioboard.Models.TwitterAccount imtwtacc = _redisCache.Get<Domain.Socioboard.Models.TwitterAccount>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterAccount + profileId);
+            if (imtwtacc == null)
+            {
+                twtacc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(profileId) && t.userId == userId).FirstOrDefault();
+                if (twtacc != null)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterAccount + profileId, twtacc);
+                }
+            }
+            else
+            {
+                twtacc = imtwtacc;
+            }
+            oAuthTwitter oAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
+            oAuth.AccessToken = twtacc.oAuthToken;
+            oAuth.AccessTokenSecret = twtacc.oAuthSecret;
+            oAuth.TwitterScreenName = twtacc.twitterScreenName;
+            oAuth.TwitterUserId = twtacc.twitterUserId;
+            Tweet twt = new Tweet();
+            try
+            {
+                JArray favoritepost = twt.Post_report_as_spammer(oAuth, screenName);
+                if (favoritepost.HasValues == true)
+                {
+                    return "Repoted as spam successfully";
+                }
+
+                else
+                {
+                    return "Already this account reported as spam";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("TwitterSpam_Account" + ex.StackTrace);
+                _logger.LogError("TwitterSpam_Account" + ex.Message);
+                return "api issue while spam account";
+            }
+        }
     }
 }

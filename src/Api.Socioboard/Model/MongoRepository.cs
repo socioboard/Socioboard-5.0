@@ -75,6 +75,33 @@ namespace Api.Socioboard.Model
              
           
         }
+        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query);//.Limit(1000);
+            try
+            {
+                var output = await collection.ToListAsync().ConfigureAwait(false);
+                return output;
+            }
+            catch (Exception ex) { return null; }
+
+
+        }
+
+        //public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
+        //{
+        //    // Return the enumerable of the collection
+        //    var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
+        //    try
+        //    {
+        //        var output = await collection.ToListAsync().ConfigureAwait(false);
+        //        return output;
+        //    }
+        //    catch (Exception ex) { return null; }
+
+
+        //}
 
         public async Task<IList<T>> BoardFind<T>(Expression<Func<T, bool>> query) where T : class, new()
         {

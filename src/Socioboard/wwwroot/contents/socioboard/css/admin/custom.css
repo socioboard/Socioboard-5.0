@@ -620,6 +620,25 @@ ul.side-nav.leftside-navigation li.active > a{
 .studio_card .card {
   margin: 0;
 }
+
+.my-dropdown{ 
+    top:40px !important;
+}
+.my-dropdown:before{
+    position: absolute;
+    top: -7px;
+    right: 9px;
+    display: inline-block !important;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid #eee;
+    border-left: 7px solid transparent;
+    border-bottom-color: rgba(0, 0, 0, 0.2);
+    content: '';
+}
+.my-dropdown li > a, .my-dropdown li > span{
+    padding: 0px 16px !important;
+    color: #325981 !important;
+}
  
 .share_studio{
     display: flex;
@@ -638,4 +657,41 @@ ul.side-nav.leftside-navigation li.active > a{
 
 .dropify-wrapper .dropify-message p{
     text-align: center;
+}
+
+
+/* Img Library */
+.card_img_details{
+  padding: 10px !important;
+  border-top: 3px solid #f85c37 !important;
+}
+
+.card_img_h {
+    margin: auto;
+    display: block;
+    min-height: 100px;
+    height: 130px !important;
+}
+.img_comp_btn{
+    border-radius: 20px !important;
+    margin-bottom: 8px;
+    border:1px solid #ff6262; 
+    -webkit-border-radius: 3px; 
+    -moz-border-radius: 3px;
+    font-size:12px;
+    font-family:arial, helvetica, sans-serif; 
+    padding: 10px 10px 10px 10px; 
+    text-decoration:none; 
+    display:inline-block;
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+    font-weight:bold; 
+    color: #FFFFFF;
+    background-color: #ff9a9a; 
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#ff9a9a), to(#ff4040));
+    background-image: -webkit-linear-gradient(top, #ff9a9a, #ff4040);
+    background-image: -moz-linear-gradient(top, #ff9a9a, #ff4040);
+    background-image: -ms-linear-gradient(top, #ff9a9a, #ff4040);
+    background-image: -o-linear-gradient(top, #ff9a9a, #ff4040);
+    background-image: linear-gradient(to bottom, #ff9a9a, #ff4040);
+    filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#ff9a9a, endColorstr=#ff4040);
 }

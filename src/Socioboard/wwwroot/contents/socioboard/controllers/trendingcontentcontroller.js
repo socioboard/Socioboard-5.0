@@ -4,12 +4,12 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
     //alert('helo');
     $scope.$on('$viewContentLoaded', function() {   
     
-
-    
+        TrendingContent();
+        $('.modal-trigger').leanModal();
 
     var lastreach = false;
     
-        TrendingContent();
+        
         $scope.deleteProfile = function(profileId){
         	// console.log(profileId);
         	swal({   
@@ -33,40 +33,55 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                // var abc = "twitter";
             var abcd = 0;
-            $http.get(apiDomain + '/api/AdvanceSearch/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
                               .then(function (response) {
                                   $scope.lstData = response.data;
                                   $scope.funt();
                                   console.log($scope.lstData);
                                   startData = response.data.length;
                                   $scope.lastreach = true;
+                                  $('.modal-trigger').leanModal();
                                  // $scope.funt();
                                   if (response.data == null) {
                                       ReachLast = true;
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;
+                                  $('.modal-trigger').leanModal();
                               });
             }
         }
+
+
+        $scope.sortclick = function () {
+            $('#ShareathonModal').openModal();
+        }
+        //$('#ShareathonModal').leanModal();
+        //var composeImagedropify = $('#composeImage').parents('.dropify-wrapper');
+        //$(composeImagedropify).find('.dropify-render').html('<img src="' + schedulemessage.imageurl + '">');
+        //$(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
+        //$('select').material_select();
 
         $scope.dailyMotion = function (abc) {
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/AdvanceSearch/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                       $scope.funt();
                                       console.log($scope.lstData);
                                       startData = response.data.length;
                                       $scope.lastreach = true;
+                                      $('.modal-trigger').leanModal();
                                       // $scope.funt();
                                       if (response.data == null) {
                                           ReachLast = true;
+                                          $('.modal-trigger').leanModal();
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;
+                                      $('.modal-trigger').leanModal();
                                   });
             }
         }
@@ -75,19 +90,22 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/AdvanceSearch/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                       $scope.funt();
                                       console.log($scope.lstData);
                                       startData = response.data.length;
                                       $scope.lastreach = true;
+                                       $('.modal-trigger').leanModal();
                                       // $scope.funt();
                                       if (response.data == null) {
                                           ReachLast = true;
+                                          $('.modal-trigger').leanModal();
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;
+                                       $('.modal-trigger').leanModal();
                                   });
             }
         }
@@ -97,19 +115,22 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/AdvanceSearch/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                       $scope.funt();
                                       console.log($scope.lstData);
                                       startData = response.data.length;
                                       $scope.lastreach = true;
+                                      $('.modal-trigger').leanModal();
                                       // $scope.funt();
                                       if (response.data == null) {
                                           ReachLast = true;
+                                          $('.modal-trigger').leanModal();
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;
+                                       $('.modal-trigger').leanModal();
                                   });
             }
         }
@@ -119,19 +140,22 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/AdvanceSearch/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                       $scope.funt();
                                       console.log($scope.lstData);
                                       startData = response.data.length;
                                       $scope.lastreach = true;
+                                      $('.modal-trigger').leanModal();
                                       // $scope.funt();
                                       if (response.data == null) {
                                           ReachLast = true;
+                                          $('.modal-trigger').leanModal();
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;
+                                       $('.modal-trigger').leanModal();
                                   });
             }
         }
@@ -141,19 +165,23 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/AdvanceSearch/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
+                                    
                                       $scope.lstData = response.data;
                                       $scope.funt();
                                       console.log($scope.lstData);
                                       startData = response.data.length;
                                       $scope.lastreach = true;
+                                      
                                       // $scope.funt();
                                       if (response.data == null) {
                                           ReachLast = true;
+                                         
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;
+                                     
                                   });
             }
         }
@@ -164,19 +192,22 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/AdvanceSearch/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=10')
+                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=10')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                       $scope.funt();
                                       console.log($scope.lstData);
                                       startData = response.data.length;
                                       $scope.lastreach = true;
+                                      $('.modal-trigger').leanModal();
                                       // $scope.funt();
                                       if (response.data == null) {
                                           ReachLast = true;
+                                          $('.modal-trigger').leanModal();
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;
+                                      $('.modal-trigger').leanModal();
                                   });
             }
         }
@@ -190,6 +221,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
                                   $scope.funt();
                               }, function (reason) {
                                   $scope.error = reason.data;
+                                 
                               });
             // end codes to load Data
         }
@@ -197,6 +229,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         $scope.SearchData = function () {
             var tempTextSearch = $('#textSearch').val();
             $scope.Loaddata(tempTextSearch);
+            $('.modal-trigger').leanModal();
         }
 
 
@@ -233,54 +266,64 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         //    });
         //}
         //funt();
-
+       
 
         $scope.sortBy = function (sortType) {
-            debugger;
-            $http.get(apiDomain + '/api/AdvanceSearch/GetSortByData?sortType=' + sortType + '&skip=' + startData + '&count=70')
+            
+            $http.get(apiDomain + '/api/ContentStudio/GetSortByData?sortType=' + sortType + '&skip=' + startData + '&count=70')
                           .then(function (response) {
-                              debugger;
+                             
                               $scope.lstData = response.data;
                               $scope.funt();
                               console.log($scope.lstData);
                               startData = response.data.length;
                               $scope.lastreach = true;
+                             
                               // $scope.funt();
                               if (response.data == null) {
                                   ReachLast = true;
+                                   
                               }
                           }, function (reason) {
                               $scope.error = reason.data;
+                              
                           });
 
         }
 
 
         $scope.topic = function (networkType) {
-            debugger;
-            $http.get(apiDomain + '/api/AdvanceSearch/QuickTopics?networkType=' + networkType + '&skip=' + startData + '&count=30')
+           
+            $http.get(apiDomain + '/api/ContentStudio/QuickTopics?networkType=' + networkType + '&skip=' + startData + '&count=30')
                           .then(function (response) {
-                              debugger;
+                            
                               $scope.lstData = response.data;
                               $scope.funt();
                               console.log($scope.lstData);
                               startData = response.data.length;
                               $scope.lastreach = true;
+                             
                               // $scope.funt();
                               if (response.data == null) {
                                   ReachLast = true;
+                                 
                               }
                           }, function (reason) {
                               $scope.error = reason.data;
+                             
                           });
 
         }
 
         $scope.getOnPageLoadReports = function () {
-            $scope.globeSearch();
+            var abcd = 'general';
+            $scope.globeSearch(abcd);
+            $('.modal-trigger').leanModal();
         }
 
         $scope.getOnPageLoadReports();
+        $('.modal-trigger').leanModal();
+
 
   });
 

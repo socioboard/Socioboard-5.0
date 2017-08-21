@@ -3,6 +3,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
     $scope.$on('$viewContentLoaded', function() {   
         $scope.disbtncom = true;
         $scope.draftbtn = true;
+        $scope.dispbtn = true;
         $scope.composePostdata = {};
         MostShared();
         $scope.deleteMsg = function(profileId){
@@ -32,11 +33,96 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
         }
         $scope.Loaddata('none');
 
+        $scope.saveshreathondata = function () {
+           
+            var pageId = $('#shraeathonfacebookpage').val();
+            var timeInterval = $('#shraeathontimeinterval').val();
+            if (pageId == "") {
+                if (FacebookUrl == "") {
+                    swal("please enter any facebook page url or select any facebook page");
+                    return false;
+                }
+            }
+            var formData = new FormData();
+            if (pageId != null && timeInterval != null) {
+              
+                $scope.datasharethon = [];
+                $scope.datasharethon = $scope.selectedContentfeed;
+                var sb = $scope.datasharethon;
+                var x=angular.toJson(sb);
+                console.log("data");
+                console.log($scope.selectedContentfeed);
+                $scope.dispbtn = false;
+               
+
+                 formData.append('FacebookPageId', pageId);
+                var shareData = $scope.datasharethon;
+                formData.append('shareData', x);
+                //var data = {
+                //    'fbuserIds': $('#shraeathonfacebookpage').val(),
+                //    'timeIntervals': $('#shraeathontimeinterval').val(),
+                   // 'shareData': $scope.datasharethon
+            //    }
+               // formData1.append('shareData', data);
+                //codes to add  page shreathon     long userId, string fbuserId, int timeInterval
+                //  $http.post(apiDomain + '/api/Shareathon/AddPageShareathon?userId=' + $rootScope.user.Id + '&FacebookPageId=' + pageId + '&Facebookaccountid=' + accountId + '&Timeintervalminutes=' + timeInterval)
+              //  $http.post(apiDomain + '/api/ContentStudio/saveDataIdForShare?shareData=' + datasharethon + '&fbuserIds=' + pageId + '&timeIntervals=' + timeInterval)
+                //$http.post(apiDomain + '/api/ContentStudio/saveDataIdForShare',{
+                //    params: {
+                //        fbuserIds:pageId,
+                //        timeIntervals: timeInterval, 
+                //        shareData:datasharethon
+                //    }
+                //})
+                //var shareData = JSON.stringify($scope.datasharethon);
+               // console.log(" --- > encodeURIComponent(datasharethon) : ", shareData);
+                $http({
+
+                    method: 'POST',
+                    url: apiDomain + '/api/ContentStudio/saveDataIdForShare?fbuserIds=' + pageId + '&timeIntervals=' + timeInterval,
+                    data: formData,
+                    headers: {
+                        'Content-Type': undefined
+                    },                               
+                    transformRequest: angular.identity,
+                })     
+                
+                //$http({
+                //    method: "POST",
+                  
+                //    url: apiDomain + '/api/ContentStudio/saveDataIdForShare',
+                //    data: sb,
+                //    headers: {
+                //        "Content-Type": "application/json"
+                //    },
+                //    transformRequest: angular.identity,
+                //})
+
+                    .then(function (response) {
+                        $scope.lstAdvSearhDataaa = response.data;
+                        $scope.dispbtn = true;
+                          swal(response.data);
+                      }, function (reason) {
+                          $scope.error = reason.data;
+                      });
+                // end codes to add page shreathon
+            }
+            else {
+                $scope.dispbtn = true;
+                swal('Please fill in all the details');
+            }
+        }
+     
+
+
+
         $scope.SearchData = function () {
             var tempTextSearch = $('#textSearch').val();
             $scope.Loaddata(tempTextSearch);
         }
-
+        $scope.sorttype = function () {
+            $('#ShareathonModal').openModal();
+        }
         $scope.ComposeMessageModal = function (lstData) {
             jQuery('input:checkbox').removeAttr('checked');
             if (lstData != null) {
@@ -127,6 +213,41 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
             var fileName = $('#composeImage').val();
             return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }
+
+        $scope.tekeDatashare = function (getshare) {
+
+            $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchData?keywords=' + key)
+                           .then(function (response) {
+                               $scope.lstAdvSearhDataaa = response.data;
+                           }, function (reason) {
+                               $scope.error = reason.data;
+                           });
+
+        }
+
+        $scope.selectedContentfeed = [];
+        $scope.Toggle = function (lstforshare) {
+         
+
+            var index = $scope.selectedContentfeed.indexOf(lstforshare);
+            if (index > -1) {
+                //if already selected then removed
+                $scope.selectedContentfeed.splice(index, 1);
+            }
+            else {
+                $scope.selectedContentfeed.push(lstforshare);
+            }         
+        }
+
+        $scope.shareathonData = function () {
+            debugger;
+          
+        }
+
+
+
+        console.log($scope.selectedContentfeed);
+
         $scope.draftMsg = function () {
             $scope.draftbtn = false;
             var message = $('#composeMessage').val();

@@ -49,23 +49,13 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         }
         //end
         $scope.LoadTopFeeds = function () {
-            $scope.filters = false;
-            $scope.preloadmore = false;
-            $scope.lstFbFeeds = null;
-            $scope.filterrTxtt = 'All Posts';
-            $scope.SorttTxtt = 'Popular';
                 //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
                               .then(function (response) {
-                               
-                                  // $scope.lstProfiles = response.data;
                                   $scope.lstFbFeeds = response.data;
+                                  $scope.reloadFeeds();
                                   $scope.preloadmore = true;
                                   setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
-                                 // $('.collapsible').collapsible();
-                                  // $scope.feeddate(response.data);
-                                  //$scope.loaderclass = 'hide';
-                                  //console.log(response.data);
                                   if (response.data == null) {
                                       reachLast = true;
                                   }
@@ -80,6 +70,20 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             
         }
         $scope.LoadTopFeeds();
+
+        $scope.loadFeeds = function () {
+            $scope.filters = false;
+            $scope.preloadmore = false;
+            $scope.lstFbFeeds = null;
+            $scope.filterrTxtt = 'All Posts';
+            $scope.SorttTxtt = 'Popular';
+            $scope.LoadTopFeeds();
+        }
+
+        $scope.reloadFeeds = function () {
+            setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+        }
+
 
 
         $scope.feeddate = function (parm) {

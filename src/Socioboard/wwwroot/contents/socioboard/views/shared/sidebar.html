@@ -200,21 +200,21 @@
                     </div>
                 </li>
                 <!--content studio start-->
-                <!--<li class="bold">
+                <li class="bold">
                     <a class="collapsible-header waves-effect waves-orange">
                         <i class="icon-microphone"></i> Content Studio
                     </a>
                     <div class="collapsible-body">
-                        <ul>-->
+                        <ul>
                             <!--<li class="truncate">
                                 <a href="#/savedcontent.html">Saved Content</a>
                             </li>-->
-                            <!--<li class="truncate">
+                            <li class="truncate">
                                 <a href="#/mostshared.html">Most Shared</a>
                             </li>
                             <li class="truncate">
                                 <a href="#/trending_content.html">Trending Now</a>
-                            </li>-->
+                            </li>
                             <!--<li class="truncate">
                                 <a href="#/backlinks.html">Backlinks</a>
                             </li>-->
@@ -224,9 +224,9 @@
                             <li class="truncate">
                                 <a href="#/facebookanalyzer.html">Facebook Analyzer</a>
                             </li>-->
-                        <!--</ul>
+                        </ul>
                     </div>
-                </li>-->
+                </li>
                 <!--content studio end-->
                 <!--Discovery for paid User-->
                 <li class="bold" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 ||user.AccountType==6 || user.AccountType==7 " >
@@ -328,6 +328,30 @@
                         <i class="icon-share"></i> Shareathon
                     </a>
                 </li>
+                <!--Img Library-->
+                <li class="bold" ng-if="user.AccountType==6 ||user.AccountType==7">
+                    <a class="collapsible-header  waves-effect waves-orange">
+                        <i class="icon-picture"></i> Image Library
+                    </a>
+                    <div class="collapsible-body">
+                        <ul>
+                            <li class="truncate" ng-if="UserEmail == groupdetails[0].email">
+                                <a href="#/img_library">Private Library</a>
+                            </li>
+                            <li class="truncate">
+                                <a href="#/share_img_library">Public Library</a>
+                            </li>
+                        </ul>
+                     </div>
+                </li>
+
+                <!--unpaid Img Library-->
+                <li class="bold" ng-if="user.AccountType==0 ||user.AccountType==1 ||user.AccountType==2 ||user.AccountType==3 ||user.AccountType==4 ||user.AccountType==5 ">
+                    <a ng-click="message()" disable>
+                        <i class="icon-picture"></i> Image Library
+                    </a>
+                </li>
+
                 <!--reports for all-->
                 <li class="bold" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7 ">
                     <a class="collapsible-header waves-effect waves-orange">

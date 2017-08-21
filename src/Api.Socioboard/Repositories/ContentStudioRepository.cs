@@ -1,6 +1,7 @@
 ﻿using Api.Socioboard.Model;
 using Domain.Socioboard.Helpers;
 using Domain.Socioboard.Models.Mongo;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
@@ -17,14 +18,18 @@ namespace Api.Socioboard.Repositories
             MongoRepository _RssRepository = new MongoRepository("AdvanceSerachData", settings);
             //List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstyoutube = new List<Domain.Socioboard.Models.Mongo.AdvanceSerachData>();
             var builder = Builders<AdvanceSerachData>.Sort;
-            var sort = builder.Descending(t => t.totalShareCount);
+          //  var sort = builder.Descending(t => t.totalShareCount);
             //mongorepo.FindWithRange<MongoTwitterFeed>(t => t.profileId.Equals(profileId), sort, 0, 100);
-            var result = _RssRepository.FindWithRange<AdvanceSerachData>(t => t.networkType == networkType, sort, 0, 30);//UserId
-            var task = Task.Run(async () =>
-            {
+            var result = _RssRepository.FindAdvance<AdvanceSerachData>(t => t.networkType == networkType && t.totalShareCount !=0);//UserId
+            var task = Task.Run(async () =>{
                 return await result;
             });
-            IList<AdvanceSerachData> lstyoutube = task.Result.ToList();
+
+
+            // IList<AdvanceSerachData> lstyoutube = task.Result.ToList();
+            IList<AdvanceSerachData> lstyoutube = task.Result.ToList();//.Take(30).Skip(0).ToList();
+            lstyoutube = lstyoutube.OrderByDescending(kt => kt.postedTime).ToList();
+            lstyoutube = lstyoutube.OrderByDescending(gb => gb.totalShareCount).ToList().Take(30).Skip(0).ToList(); 
             if (lstyoutube != null)
             {
                 //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
@@ -36,10 +41,10 @@ namespace Api.Socioboard.Repositories
 
         public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> DailyMotionAdvanceRepository(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-           
+
             MongoRepository _RssRepository = new MongoRepository("AdvanceSerachData", settings);
             List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstDailymotion = new List<Domain.Socioboard.Models.Mongo.AdvanceSerachData>();
-          
+
             var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.networkType == networkType);//UserId
             var task = Task.Run(async () =>
             {
@@ -52,10 +57,10 @@ namespace Api.Socioboard.Repositories
 
         public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> TwitterAdvanceRepository(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-            
+
             MongoRepository _RssRepository = new MongoRepository("AdvanceSerachData", settings);
             List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitter = new List<Domain.Socioboard.Models.Mongo.AdvanceSerachData>();
-          
+
             var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.networkType == networkType);//UserId
             var task = Task.Run(async () =>
             {
@@ -68,13 +73,13 @@ namespace Api.Socioboard.Repositories
 
         public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> GetSortBy(string sortBy, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-            
+
             MongoRepository _RssRepository = new MongoRepository("AdvanceSerachData", settings);
 
             var builder = Builders<AdvanceSerachData>.Sort;
             var sort = builder.Descending(t => t.postedTime);
 
-            var result = _RssRepository.FindWithRange<AdvanceSerachData>(t=>t.totalShareCount!=0, sort, 0, 150);
+            var result = _RssRepository.FindWithRange<AdvanceSerachData>(t => t.totalShareCount != 0, sort, 0, 150);
             var task = Task.Run(async () =>
             {
                 return await result;
@@ -107,7 +112,7 @@ namespace Api.Socioboard.Repositories
             else if (sortBy == "Pininterest")
             {
                 return lsttwt.OrderByDescending(t => t.pinShareCount).ToList();
-            }           
+            }
             else if (sortBy == "LinkedIn")
             {
                 return lsttwt.OrderByDescending(t => t.linShareCount).ToList();
@@ -154,6 +159,49 @@ namespace Api.Socioboard.Repositories
                 return lstSearchDataSorted;
             }
         }
+
+        //public static string saveContentDataIdReposi(List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> shareathon, string fbPageId, int timeInterval, Helper.Cache _redisCache, Helper.AppSettings settings)
+        //{
+
+        //    MongoRepository mongorepo = new MongoRepository("ContentShareDataId", settings);
+
+        //    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ContentShareDataId>(t => t.postId == shareathon.FirstOrDefault().postId);
+        //    var task = Task.Run(async () =>
+        //    {
+        //        return await ret;
+        //    });
+        //    int count = task.Result.Count;
+        //    if (count > 0)
+        //    {
+        //        Domain.Socioboard.Models.Mongo.ContentShareDataId lstPostId = new Domain.Socioboard.Models.Mongo.ContentShareDataId();
+        //        lstPostId.Id = ObjectId.GenerateNewId();
+        //        lstPostId.strId = ObjectId.GenerateNewId().ToString();
+        //        lstPostId.postId = shareathon.FirstOrDefault().postId;
+        //        lstPostId.UserId = shareathon.FirstOrDefault().UserId;
+        //        lstPostId.FbPageId = fbPageId;
+        //        lstPostId.RequestForShare = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+        //        try
+        //        {
+        //            mongorepo.Add(lstPostId);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return "not added";
+        //        }
+
+
+        //        return "added successfully";
+
+        //    }
+        //    else
+        //    {
+        //        return "some problem while adding";
+        //    }
+
+
+        //}
+
+
 
         public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> QuickTopicRepository(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
         {

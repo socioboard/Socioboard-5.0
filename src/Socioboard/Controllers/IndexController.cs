@@ -449,7 +449,7 @@ namespace Socioboard.Controllers
             Parameters.Add(new KeyValuePair<string, string>("trasactionId", trasactionId));
             Parameters.Add(new KeyValuePair<string, string>("paymentId", paymentId));
             Parameters.Add(new KeyValuePair<string, string>("accType", plan));
-            Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date));
+            Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date.Replace("PDT","").Replace("PST", "")));
             Parameters.Add(new KeyValuePair<string, string>("payer_email", payer_email));
             Parameters.Add(new KeyValuePair<string, string>("Payername", Payername));
             Parameters.Add(new KeyValuePair<string, string>("payment_status", payment_status));
@@ -690,7 +690,7 @@ namespace Socioboard.Controllers
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("subscr_id", subscr_id));
                 Parameters.Add(new KeyValuePair<string, string>("txn_id", txn_id));
-                Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date));
+                Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date.Replace("PDT", "").Replace("PST","")));
                 Parameters.Add(new KeyValuePair<string, string>("payer_email", payer_email));
                 Parameters.Add(new KeyValuePair<string, string>("Payername", Payername));
                 Parameters.Add(new KeyValuePair<string, string>("payment_status", payment_status));

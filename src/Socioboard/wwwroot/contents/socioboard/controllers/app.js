@@ -7,15 +7,23 @@ Socioboard AngularJS App Main Script
 /* Socioboard App */
 var SocioboardApp = angular.module("SocioboardApp", [
     "ui.router",
+    "ngRoute",
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
     "lazy-scroll",
     "ngMaterial",
     "mdPickers",
+    //"ngAviary",
 ]);
 
-
+//SocioboardApp.config(function (ngAviaryProvider) {
+//    ngAviaryProvider.configure({
+//        apiKey: 'my-awesome-api-key',
+//        theme: 'light',
+//        tools: 'all'
+//    })
+//});
 
 SocioboardApp.constant("apiDomain", "http://localhost:6361");
 SocioboardApp.constant("domain", "http://localhost:9821");
@@ -305,6 +313,7 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
 SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $http, apiDomain, domain) {
     $scope.$on('$includeContentLoaded', function () {
         $scope.AccountType = $rootScope.user.AccountType;
+        $scope.UserEmail = $rootScope.user.EmailId;
         $scope.message = function () {
            $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
             swal($scope.abcd);
@@ -345,6 +354,17 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
             // end codes to logout from all session
         }
 
+        $scope.getadminDetails = function () {
+               $http.get(apiDomain + '/api/GroupMember/GetGroupAdmin?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
+                          .then(function (response) {
+                              $rootScope.groupdetails = response.data;
+                              }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            //}
+
+        }
+        $scope.getadminDetails();
         ////codes to load  social profiles start
         //$http.get(apiDomain + '/api/GroupProfiles/GetGroupProfiles?groupId=' + $rootScope.groupId)
         //              .then(function (response) {
@@ -2039,6 +2059,52 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                }]
            }
        })
+
+        // ImgLibrary Controller list
+
+        .state('img_library', {
+            url: "/img_library",
+            templateUrl: "../contents/socioboard/views/library/img_library.html",
+            data: { pageTitle: 'Private Img', pageSubTitle: 'updated' },
+            controller: "ImgLibraryController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            //'http://feather.aviary.com/imaging/v2/editor.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/controllers/imglibrarycontroller.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
+
+        .state('share_img_library', {
+            url: "/share_img_library",
+            templateUrl: "../contents/socioboard/views/library/share_img_library.html",
+            data: { pageTitle: 'Public Img', pageSubTitle: 'updated' },
+            controller: "ShareImgLibraryController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            //'http://feather.aviary.com/imaging/v2/editor.js',
+                            '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/controllers/shareimglibrarycontroller.js'
+
+                        ]
+                    });
+                }]
+            }
+        })
 
 }]).run(function ($rootScope, $state) {
     $rootScope.$on('$stateChangeStart', function (event, toState, $stateParams) {

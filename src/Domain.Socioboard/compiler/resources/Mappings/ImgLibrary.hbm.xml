@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="ImgLibrary" table="ImgLibrary" lazy="false">
+    <id name="Id" column="Id" />
+    <property name="UserId">
+      <column name="UserId" />
+    </property>
+    <property name="Imageuploadeddate">
+      <column name="Imageuploadeddate"  />
+    </property>
+    <property name="ImageName">
+      <column name="ImageName"  />
+    </property>
+    <property name="ImagePath">
+      <column name="ImagePath"  />
+    </property>
+    <property name="ImageSize">
+      <column name="ImageSize"  />
+    </property>
+    <property name="Tags">
+      <column name="Tags"  />
+    </property>
+    <property name="FolderType">
+      <column name="FolderType"  />
+    </property>
+    <property name="LocalImagePath">
+      <column name="LocalImagePath"  />
+    </property>
+  </class>
+</hibernate-mapping>

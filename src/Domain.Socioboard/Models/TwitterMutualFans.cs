@@ -10,5 +10,13 @@ namespace Domain.Socioboard.Models
         public string screen_name { get; set; }
         public string name { get; set; }
 
+        public string followers { get; set; }
+        public string following { get; set; }
+        public string location { get; set; }
+
+        public string profile_image_url { get; set; }
+        public string description { get; set; }
+       
+
     }
 }

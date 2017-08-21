@@ -40,17 +40,14 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             }
         }
         //end
-
         $scope.lstGpFeeds = [];
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
-            $scope.filters = false;
-            $scope.preloadmorefeeds = false;
-            $scope.lstGpFeeds = null;
             $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               if (response.data != "") {
                                   $scope.date(response.data);
+                                  $scope.reloadFeeds();
                                   $scope.preloadmorefeeds = true;
                                   $scope.dropCalled = true;
                                   setTimeout(function () {
@@ -63,24 +60,23 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                                   setTimeout(function () {
                                       $scope.callDropmenu();
                                   }, 1000);
-                                  //swal("No Post To Display");
                               }
-                             // $scope.date(response.data);comment by sweta
-                            //  $scope.lstGpFeeds = response.data;
-
-                              //if (response.data == null) { by me
-                              //    reachLast = true; by me
-                              //}
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
             // end codes to load  recent Feeds
         }
         $scope.LoadTopFeeds();
-
-
+        $scope.ReLoadingTopFeeds = function () {
+            $scope.filters = false;
+            $scope.preloadmorefeeds = false;
+            $scope.lstGpFeeds = null;
+            $scope.LoadTopFeeds();
+        }
+        $scope.reloadFeeds = function () {
+            setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+        }
         $scope.date = function (parm) {
-
             for (var i = 0; i < parm.length; i++) {
                 var date = moment(parm[i].PublishedDate);
                 var newdate = date.toString();
@@ -89,7 +85,6 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                 parm[i].PublishedDate = date;
             }
             $scope.lstGpFeeds = parm;
-
         }
 
         $scope.callDropmenu = function () {

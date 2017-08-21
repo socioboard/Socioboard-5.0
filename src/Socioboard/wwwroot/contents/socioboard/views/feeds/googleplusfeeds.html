@@ -13,7 +13,7 @@
                                     <!-- Dropdown Structure -->
                                     <div ng-if="dropCalled==true">
                                         <ul id='dropdownFilter' class='dropdown-content'>
-                                            <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">None</a></li>
+                                            <li><a href="javascript:void(0)" ng-click="ReLoadingTopFeeds()">None</a></li>
                                             <li><a href="javascript:void(0)" ng-click="filterSearch('photo')">Image</a></li>
                                             <li><a href="javascript:void(0)" ng-click="filterSearch('album')">Album</a></li>
                                             <li><a href="javascript:void(0)" ng-click="filterSearch('article')">Article</a></li>
@@ -27,7 +27,7 @@
                                           <span class="email-title">{{gplusfeed.fromUserName}}</span>
                                           <div class="row feeds_post z-depth-1 hoverable">
                                             <div class="col m8">
-                                              <p class="break_word ultra-small">{{gplusfeed.title}}</p>
+                                              <a class="break_word ultra-small black-text" href="{{gplusfeed.activityUrl}}" target="_blank">{{gplusfeed.title}}</a>
                                             </div>
                                             <div class="col m4 center" ng-if="gplusfeed.attachmentType=='photo'">
                                               <img src="{{gplusfeed.attachment}}" class="responsive-img ">
@@ -209,6 +209,7 @@
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input  onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                 </label>
@@ -216,6 +217,7 @@
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input  onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                 </label>
@@ -223,20 +225,23 @@
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();"  name="selector[]" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>

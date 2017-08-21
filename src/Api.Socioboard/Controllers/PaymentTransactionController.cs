@@ -232,8 +232,7 @@ namespace Api.Socioboard.Controllers
             }
             return Ok();
         }
-
-       
+        
 
     }
 }

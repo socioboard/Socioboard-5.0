@@ -43,7 +43,15 @@ namespace SocioboardDataServices.Model
             //}
             throw new NotImplementedException();
         }
+        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
 
+            var output = await collection.ToListAsync().ConfigureAwait(false);
+            return output;
+
+        }
         public void Delete<T>(FilterDefinition<T> filter) where T : class, new()
         {
             

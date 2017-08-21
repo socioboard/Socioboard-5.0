@@ -379,5 +379,14 @@ namespace Api.Socioboard.Controllers
             return Ok(lstRelationFriends);
         }
 
+        [HttpPost("ReportSpam")]
+        public IActionResult ReportSpam(string profileId, string spamScreenName, long userId)
+        {
+            string userSpam_Status = string.Empty;
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            userSpam_Status = Repositories.TwitterRepository.TwitterSpam_user(profileId, spamScreenName, userId, dbr, _logger, _redisCache, _appSettings);
+            return Ok(userSpam_Status);
+        }
+
     }
 }

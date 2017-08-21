@@ -21,18 +21,23 @@
         background: transparent !important;
     }
 </style>
-    <div data-ng-controller="MostSharedController">
+<div data-ng-controller="MostSharedController">
     <!-- Page name -->
     <div class="container">
-        <div class="col m12">
-            <h4>Most Shared</h4>
+        <div class="row">
+            <div class="col m9 s12">
+                <h4>Most Shared</h4>
+            </div>
+            <div class="col m3 s12 margin-top-10">
+                <a class="btn img_comp_btn" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
+            </div>
         </div>
     </div>
     <!-- START CONTENT -->
     <section id="content">
         <div class="row">
             <div class="col m4">
-                <input id="textSearch" type="text" placeholder="Search"/>
+                <input id="textSearch" type="text" placeholder="Search" />
             </div>
             <div class="col m2">
                 <a class="btn-floating waves-effect waves-light blue darken-4 center" ng-click="SearchData()"><i class="fa fa-search"></i></a>
@@ -51,18 +56,18 @@
                             <th>Twitter Shares</th>
                             <th>Pinterest Shares</th>
                             <th>Google+ Shares</th>
-                            <!--<th>Number of Links</th>-->
                             <th>Total Shares</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="lstData in lstAdvSearhDataaa">
+                            <td>
+                                <input name="selectedContentfeed[]" class="filled-in subcheckbox" id="{{lstData.postId}}" type="checkbox" ng-checked="selectedContentfeed.indexOf(lstData) > -1" ng-click="Toggle(lstData)" />
+                                <label for="{{lstData.postId}}">&nbsp;</label>
+                            </td>
                             <td class="">
                                 <a class="grey-text text-darken-3" target="_blank" href="{{lstData.postUrl}}">{{lstData.title}}</a>
                                 <br>
-                                <!--<a href="https://www.amazon.com/Better-Than-Takeout-Thai-Cookbook/dp/1623158613">amazon.com</a> | <a href="javascript:;" class="grey-text text-darken-1">More from domain</a>
-                                <br>
-                                <span>Jul 18, 2017</span>-->
                             </td>
                             <td class="center">
                                 <a class="btn-floating btn-large red modal-trigger center" ng-click="ComposeMessageModal(lstData)" href="javascript:void(0)">
@@ -84,9 +89,6 @@
                             <td class="center">
                                 <a class="btn-floating waves-effect waves-light red accent-4 center">{{lstData.gplusShareCount}}</a>
                             </td>
-                            <!--<td class="center">
-                                <a class="btn-floating waves-effect waves-light grey darken-3 center">999</a>
-                            </td>-->
                             <td class="center">
                                 <a class="btn-floating waves-effect waves-light grey darken-3 center">{{lstData.totalShareCount}}</a>
                             </td>
@@ -104,22 +106,16 @@
                 <div class="nav-wrapper">
                     <div class="left col s12 m5 l5">
                         <ul>
-                            <!--<li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                            </li>-->
                             <li><a href="#!" class="email-type">Compose</a></li>
 
                         </ul>
                     </div>
-                    <div ng-init="disbtncom= {{disbtncom}}"></div>
                     <div class="col s12 m7 l7 hide-on-med-and-down">
                         <ul class="right">
                             <li>
                                 <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
                                 <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
                             </li>
-                            <!--<li>
-                                <a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
-                            </li>-->
                         </ul>
                     </div>
 
@@ -136,14 +132,6 @@
                             </div>
                         </div>
                     </div>
-                    <!--<div class="row">
-                        <div class="col s12 m12 l12">
-                            <p>Add your hashtag</p>
-                        </div>
-                        <div class="input-field col s12">
-                            <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
-                        </div>
-                    </div>-->
                     <div class="row section">
                         <div class="col s12 m12 l12">
                             <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
@@ -155,16 +143,6 @@
 
                     </div>
                     <div class="row">
-                        <!--<div class="input-field col s12">
-                            <select multiple id="composeProfiles">
-                                <option value="" disabled selected>Choose your option</option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                            </select>
-                        </div>-->
                         <div>
                             <ul class="shinh" id="checkboxdatarss">
                                 <li style="padding:5px 0;">
@@ -176,43 +154,47 @@
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                     </label>
                                 </li>
                                 <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                     <label>
                                         <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                     </label>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="row">
-                        <div ng-init="draftbtn= {{draftbtn}}"></div>
                         <div>
                             <div ng-show="draftbtn" ng-click="draftMsg()" class="btn btn_style">Draft</div>
                             <div ng-show="!draftbtn"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
@@ -222,185 +204,41 @@
             </div>
         </div>
     </div>
-    <!--<div id="ComposePostModal" class="modal">
-      <div class="modal-content">
-        <nav class="red">
-          <div class="nav-wrapper">
-            <div class="left col s12 m5 l5">
-              <ul>
-                <li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                </li>
-                <li><a href="#!" class="email-type">Compose</a>
-                </li>
-              </ul>
-            </div>
-            <div class="col s12 m7 l7 hide-on-med-and-down">
-              <ul class="right">
-                <li>
-                    <a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </nav>
-      </div>
-      <div class="model-email-content">
-        <div class="row">
-          <form class="col s12">
+    <!-- ShareathonModal Structure -->
+    <div id="ShareathonModal" class="modal">
+        <div class="modal-content">
             <div class="row">
-              <div class="input-field col s12">
-                <div class="emoji-picker-container">
-                <textarea id="compose" class="materialize-textarea" length="500"  data-emojiable="true" placeholder="Type your msg"></textarea>
+                <div class="col s12">
+                    <h4>Shareathon Post</h4>
                 </div>
-              </div>
-            </div>
-            <div class="row">
-                <div class="col s12 m12 l12">
-                    <p>Add your hashtag</p>
-                </div>
-                <div class="input-field col s12">
-                    <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
-                </div>
-            </div>
-            <div class="row">
-              <div class="col s12 m12 l12">
-                 <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
-              </div>
-              <div class="col s12 m12 l12">
-                  <input type="file" id="input-file-now" class="dropify" data-default-file="" />
-              </div>
-            </div>
-            <div class="row">
-                <div class="input-field col s12">
-                    <select multiple style="position: absolute; top: 0px; left: 0px; opacity: 1; ">
-                      <option value="" disabled selected>Choose your profile</option>
-                      <option value="1"><i class="fa fa-facebook"></i>Chanchal</option>
-                      <option value="2" data-icon="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" class="circle">Profile_2</option>
-                      <option value="3"><img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg">Profile_3</option>
-                    </select>
-                    <label>Select Profiles</label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col l12 m12 s12">
-                    <div class="input-field margin-bottom-20">
-                        <input type="checkbox" name="" id="select_all_profiles">
-                        <label for="select_all_profiles">Select All</label>
+                <form class="col s12">
+                    <div class="input-field col s12">
+                        <select multiple id="shraeathonfacebookpage">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1} && filter:{profileType:0}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                        </select>
+                       
+                        <label>Selects An Account To Automate Post</label>
                     </div>
-                    <strong class="margin-bottom-20">OR</strong>
-                </div>
-                <div class="col s12 m2 l2 margin-bottom-10">
-                    <div class="card-panel card_panel_box grey lighten-5 z-depth-1 center">
-                      <div class="row no-space">
-                        <div class="col l6 m6 s6">
-                            <img src="../../images/fb_icon.png" class="responsive-img">
-                        </div>
-                        <div class="col l6 m6 s6">
-                            <span ng-click="deleteProfile('Deleted!!')" class=""><i class="fa fa-close red-text right"></i></span>
-                        </div>
-                        <div class="col s12 m12 l12">
-                            <img src="http://graph.facebook.com/1537307929855130/picture?type=small" alt="" class="profilePic circle">
-                            <br>
-                            <div class="input-field no-space">
-                                <input type="checkbox" name="" id="chanchal_check">
-                                <label for="chanchal_check" class="black-text truncate">Chanchal Santra</label>
-                            </div>
-                        </div>
-                      </div>
+                   
+                    <div class="input-field col s12">
+                        <select id="shraeathontimeinterval">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="20">20 min</option>
+                            <option value="30">30 min</option>
+                            <option value="60">1 hr</option>
+                        </select>
+                        <label>Set Your Time Interval</label>
                     </div>
-                </div>
-                <div class="col s12 m2 l2">
-                    <div class="card-panel card_panel_box grey lighten-5 z-depth-1 center">
-                      <div class="row no-space">
-                        <div class="col l6 m6 s6">
-                            <img src="../../images/link_icon.png" class="responsive-img">
-                        </div>
-                        <div class="col l6 m6 s6">
-                            <span ng-click="deleteProfile('Deleted!!')" class=""><i class="fa fa-close red-text right"></i></span>
-                        </div>
-                        <div class="col s12 m12 l12">
-                            <img src="https://media.licdn.com/mpr/mprx/0_Ct1VhZRDkZM6Zs8b5KbswZMDFyw6ZUpQXn5VLucDQmWbjIj9midNbyMD3dWbgeuIkk5qG0VSwf4FR0tFI396HuRTaf4QR0M6e39JiSauLaDoAdCsXK8B_JhgmsGnt0ac3Ct9k022LZx" alt="" class="profilePic circle">
-                            <br>
-                            <div class="input-field no-space">
-                                <input type="checkbox" name="" id="chanchal_check">
-                                <label for="chanchal_check" class="black-text truncate">Chanchal Santra</label>
-                            </div>
-                        </div>
-                      </div>
+                    <div ng-init="dispbtn= {{dispbtn}}"></div>
+                    <div class="col l12 center margin-top-50">
+                        <a ng-show="dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">post</a>
+                        <a ng-show="!dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">wait</a>
                     </div>
-                </div>
-                <div class="col s12 m2 l2">
-                    <div class="card-panel card_panel_box grey lighten-5 z-depth-1 center">
-                      <div class="row no-space">
-                        <div class="col l6 m6 s6">
-                            <img src="../../images/gplus.png" class="responsive-img">
-                        </div>
-                        <div class="col l6 m6 s6">
-                            <span ng-click="deleteProfile('Deleted!!')" class=""><i class="fa fa-close red-text right"></i></span>
-                        </div>
-                        <div class="col s12 m12 l12">
-                            <img src="https://lh3.googleusercontent.com/-6pL_7gzdv6A/AAAAAAAAAAI/AAAAAAAAABk/AYojltggNsw/photo.jpg?sz=50" alt="" class="circle responsive-img profilePic">
-                            <br>
-                            <div class="input-field no-space">
-                                <input type="checkbox" name="" id="chanchal_check">
-                                <label for="chanchal_check" class="black-text truncate">Chanchal Santra</label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="col s12 m2 l2">
-                    <div class="card-panel card_panel_box grey lighten-5 z-depth-1 center">
-                      <div class="row no-space">
-                        <div class="col l6 m6 s6">
-                            <img src="../../images/twticon.png" class="responsive-img">
-                        </div>
-                        <div class="col l6 m6 s6">
-                            <span ng-click="deleteProfile('Deleted!!')" class=""><i class="fa fa-close red-text right"></i></span>
-                        </div>
-                        <div class="col s12 m12 l12">
-                            <img src="https://pbs.twimg.com/profile_images/507048905217802240/MjAkkHK__normal.jpeg" alt="" class="circle profilePic">
-                            <br>
-                            <div class="input-field no-space">
-                                <input type="checkbox" name="" id="chanchal_check">
-                                <label for="chanchal_check" class="black-text truncate">Chanchal Santra</label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="col s12 m2 l2">
-                    <div class="card-panel card_panel_box grey lighten-5 z-depth-1 center">
-                      <div class="row no-space">
-                        <div class="col l6 m6 s6">
-                            <img src="../../images/instagram_icon.png" class="responsive-img">
-                        </div>
-                        <div class="col l6 m6 s6">
-                            <span ng-click="deleteProfile('Deleted!!')" class=""><i class="fa fa-close red-text right"></i></span>
-                        </div>
-                        <div class="col s12 m12 l12">
-                            <img src="https://scontent.cdninstagram.com/t51.2885-19/s150x150/13549558_192131467855844_360956836_a.jpg" alt="" class="circle  profilePic">
-                            <br>
-                            <div class="input-field no-space">
-                                <input type="checkbox" name="" id="chanchal_check">
-                                <label for="chanchal_check" class="black-text truncate">Chanchal Santra</label>
-                            </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
+                </form>
             </div>
-
-            <div class="row">
-                <div>
-                    <a href="javascript:void(0);" class="btn btn_style">Draft</a>
-                </div>
-            </div>
-
-          </form>
         </div>
-      </div>
-    </div>-->
+    </div>
 </div>
 
 <script>

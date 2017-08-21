@@ -9,7 +9,7 @@
                 <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                     <div class="card" id="feeds">
                         <h5 class="feeds_title blue darken-4 white-text">
-                            <i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="LoadTopFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>
+                            <i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="loadFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>
                             <a class='right white-text btn green accent-4' href="javascript:void(0)" ng-click="fbprofiles()" style="font-size: 14px !important;padding: 0px 5px 0px 5px !important;height: 28px;line-height: 15px;border-radius: 4px;">
                                 <span class="white-text text-darken-4"><i class="fa fa-refresh fa-fw"></i><strong>Reconnect</strong></span>&nbsp;&nbsp;&nbsp;
                             </a>
@@ -20,7 +20,7 @@
                         <div ng-if="dropCalled==true">
                             <ul id='dropdownFilter' class='dropdown-content'>
                                 <li><a href="javascript:void(0)"><strong style="color:black">Filter</strong></a></li>
-                                <li><a href="javascript:void(0)" ng-click="LoadTopFeeds()">All Posts</a></li>
+                                <li><a href="javascript:void(0)" ng-click="loadFeeds()">All Posts</a></li>
                                 <li><a href="javascript:void(0)" ng-click="filterSearch('socioboard','Socioboard')">Sent from Socioboard</a></li>
                                 <li><a href="javascript:void(0)" ng-click="filterSearch('photo','Image')">Image posts</a></li>
                                 <li><a href="javascript:void(0)" ng-click="filterSearch('video','Video')">Video posts</a></li>
@@ -44,8 +44,8 @@
                                 <img ng-src="https://graph.facebook.com/{{fbfeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
                                 <span class="email-title">{{fbfeed.fromName}}</span>
                                 <div class="row feeds_post">
-                                    <div class="col m8">
-                                        <p class="break_word ultra-small">{{fbfeed.feedDescription}}</p>
+                                    <div class="col m8 ">
+                                        <a class="break_word ultra-small black-text" href="https://www.facebook.com/{{fbfeed.feedId}}"target="_blank">{{fbfeed.feedDescription}}</a>
                                     </div>
                                     <!--<strong>{{fbfeed.postType}}-------{{fbfeed.postingFrom}}</strong>-->
                                     <div class="col m4 center">
@@ -298,27 +298,31 @@
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                 </label>
                             </li>
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
@@ -326,7 +330,8 @@
                             <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
                                 <label>
                                     <input onclick="profile();" name="selector[]" class="subcheckboxboard" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                     <span style="float:left;">{{profile.profileName}}</span>
                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                 </label>
                             </li>

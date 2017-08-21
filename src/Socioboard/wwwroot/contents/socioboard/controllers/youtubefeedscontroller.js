@@ -13,14 +13,11 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
 
         var currentVideoId = "";
         $scope.LoadVideos = function () {
-            $scope.preloadmorevideos = false;
-            $scope.lstYtFeeds = null;
-            $scope.SorttTxtt = 'Popular';
-
             //codes to load videos
             $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId + '&sortType=none')
                               .then(function (response) {
                                   $scope.lstYtFeeds = response.data;
+                                  $scope.reloadFeeds();
                                   $scope.preloadmorevideos = true;
                                   $scope.dropCalled = true;
                                   setTimeout(function () {
@@ -36,6 +33,17 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
 
         }
         $scope.LoadVideos();
+
+        $scope.ReLoadingTopFeeds = function () {
+            $scope.preloadmorevideos = false;
+            $scope.lstYtFeeds = null;
+            $scope.SorttTxtt = 'Popular';
+            $scope.LoadVideos();
+        }
+
+          $scope.reloadFeeds = function () {
+              setTimeout(function () { $scope.LoadVideos(); }, 10000);
+          }
 
         $scope.videomodal = function (vdoId) {
          
@@ -187,13 +195,12 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
                                     if (response.data == "Posted") {
                                         $('#ComposePostModal').closeModal();
                                         swal({
-                                            //title: title,
-                                            text: "Video will Upload Soon.",
-                                            // imageUrl: '../contents/socioboard/images/yt.png',
+                                            title: "Video will Upload Soon",
                                             imageUrl: 'http://img.fobito.com/applications/youtube-kids_android.png?w=128',
-                                            timer: 400000,
+                                            timer: 2000,
                                             showConfirmButton: false
                                         });
+                                        $('#ComposePostModal').closeModal();
                                         window.location.reload();
                                     }
                                     else {

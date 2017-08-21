@@ -87,6 +87,36 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        [HttpGet("GetUserImages")]
+        public IActionResult GetUserImages(string id)
+        {
+            MemoryStream ms = null;
+            //Limit access only to images folder at root level  
+            string filePath = _appEnv.WebRootPath + string.Concat("/upload/UserImages/", id);
+            string extension = Path.GetExtension(id);
+            if (System.IO.File.Exists(filePath))
+            {
+                if (!string.IsNullOrWhiteSpace(extension))
+                {
+                    extension = extension.Substring(extension.IndexOf(".") + 1);
+                }
+
+                //If requested file is an image than load file to memory  
+                if (GetImageFormat(extension) != null)
+                {
+                    return Ok(new FileStream(filePath, FileMode.Open));
+
+                    //ms = CopyFileToMemory(filePath);
+                }
+                if (extension.ToLower().Equals("mp4") || extension.ToLower().Equals("mov") || extension.ToLower().Equals("mpeg") || extension.ToLower().Equals("wmv") || extension.ToLower().Equals("avi") || extension.ToLower().Equals("flv") || extension.ToLower().Equals("3gp"))
+                {
+                    return Ok(new FileStream(filePath, FileMode.Open));
+                }
+            }
+
+
+            return BadRequest();
+        }
 
 
     }

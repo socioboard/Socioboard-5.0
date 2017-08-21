@@ -47,16 +47,12 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         $scope.lstTwtFeeds = [];
         $scope.lstUserTweets = [];
         $scope.LoadTopFeeds = function () {
-            $scope.filters = false;
-            $scope.preloadmorefeeds = false;
-            $scope.lstTwtFeeds = null;
-            $scope.filterrTxtt = 'All Posts';
-            $scope.SorttTxtt = 'Popular';
-            //codes to load  recent Feeds
+            //codes to load  recent FeedsS
             $http.get(apiDomain + '/api/Twitter/GetFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               $scope.lstTwtFeeds = response.data;
+                              $scope.reloadFeeds();
                               $scope.preloadmorefeeds = true;
                               if (response.data == null) {
                                   reachLast = true;
@@ -78,6 +74,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               $scope.lstUserTweets = response.data;
+                              $scope.reloadTweets();
                               $scope.preloadmoretweets = true;
                               if (response.data == null) {
                                   TweetsreachLast = true;
@@ -89,6 +86,26 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         }
           $scope.LoadTopFeeds();
           $scope.LoadTopTweets();
+
+          $scope.ReLoadingTopFeeds = function () {
+              $scope.filters = false;
+              $scope.preloadmorefeeds = false;
+              $scope.lstTwtFeeds = null;
+              $scope.filterrTxtt = 'All Posts';
+              $scope.SorttTxtt = 'Popular';
+              $scope.LoadTopFeeds();
+          }
+
+          $scope.reloadFeeds = function () {
+              setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+          }
+
+          $scope.reloadTweets = function () {
+              setTimeout(function () { $scope.LoadTopTweets(); }, 10000);
+          }
+
+
+
         // Code for Loading button twts ..
         $scope.listData = function () {
 
@@ -472,10 +489,39 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                             }, function (reason) {
                                 $scope.error = reason.data;
                             });
-
           }
-
         //end
+
+        //markSpam
+          $scope.markSpam = function (toScreenName, toProfileId) {
+              swal({
+                  title: "Are you sure?",
+                  text: "The profile @" + toScreenName + " will be reported as spam" + "!",
+                  type: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#DD6B55", confirmButtonText: "Report Spam!",
+                  cancelButtonText: "No, cancel pls!",
+                  closeOnConfirm: false,
+                  closeOnCancel: false
+              },
+                function (isConfirm) {
+                    if (isConfirm) {
+                        $http.post(apiDomain + '/api/Twitter/ReportSpam?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&spamScreenName=' + toScreenName)
+                            .then(function (response) {
+                                if (response.data != "") {
+                                    swal("Reported!", "Selected profile successfully reported as spam", "success");
+                                }
+                            }, function (reason) {
+                                $scope.error = reason.data;
+                            });
+                    } else {
+                        swal("Cancelled", "Selected profile is safe :)", "error");
+                    }
+
+                });
+          }
+              
+        //end markSpam
 
     });
 });

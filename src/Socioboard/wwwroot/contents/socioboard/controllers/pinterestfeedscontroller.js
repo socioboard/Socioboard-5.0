@@ -18,6 +18,7 @@ SocioboardApp.controller('PinterestFeedsController', function ($rootScope, $scop
             $http.get(apiDomain + '/api/Pinterest/GetTopUserPins?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&take=' + count)
                               .then(function (response) {
                                   $scope.lstpin = response.data;
+                                  $scope.reloadFeeds();
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -26,6 +27,9 @@ SocioboardApp.controller('PinterestFeedsController', function ($rootScope, $scop
         }
         $scope.LoadTopFeeds();
 
+        $scope.reloadFeeds = function () {
+            setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+        }
 
         $scope.CreatePin = function (pinterestUserId, boardid) {
             var web_url = $('#web_url').val();

@@ -21,11 +21,6 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
-            $scope.filters = false;
-            $scope.preloadmorefeeds = false;
-            $scope.lstinsFeeds = null;
-            $scope.filterrTxtt = 'All Posts';
-            $scope.SorttTxtt = 'Popular';
             $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
@@ -34,6 +29,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                                   reachLast = true;
                               }
                                $scope.date(response.data);
+                               $scope.reloadFeeds();
                                $scope.preloadmorefeeds = true;
                                $scope.dropCalled = true;
                                setTimeout(function () {
@@ -47,6 +43,20 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         }
 
         $scope.LoadTopFeeds();
+
+        $scope.ReLoadingTopFeeds = function () {
+            $scope.filters = false;
+            $scope.preloadmorefeeds = false;
+            $scope.lstinsFeeds = null;
+            $scope.filterrTxtt = 'All Posts';
+            $scope.SorttTxtt = 'Popular';
+            $scope.LoadTopFeeds();
+        }
+
+          $scope.reloadFeeds = function () {
+              setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+          }
+
 
         $scope.listData = function () {
 
