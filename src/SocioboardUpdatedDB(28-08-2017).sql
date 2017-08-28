@@ -107,6 +107,24 @@ CREATE TABLE IF NOT EXISTS `draft` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table socioboardlive.ewallet
+CREATE TABLE IF NOT EXISTS `ewallet` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) DEFAULT NULL,
+  `EmailId` text,
+  `Frommailid` text,
+  `Fromid` bigint(20) DEFAULT NULL,
+  `Amount` bigint(20) DEFAULT NULL,
+  `Transactiondate` datetime DEFAULT NULL,
+  `TransactionId` varchar(50) DEFAULT NULL,
+  `TransactionType` text,
+  `TransactionStatus` text,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table socioboardlive.ewalletwithdrawrequest
 CREATE TABLE IF NOT EXISTS `ewalletwithdrawrequest` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -157,6 +175,7 @@ CREATE TABLE IF NOT EXISTS `facebookaccounts` (
   `GroupShareathonUpdate` datetime DEFAULT NULL,
   `Is90DayDataUpdated` bit(1) DEFAULT NULL,
   `lastpagereportgenerated` datetime DEFAULT NULL,
+  `contenetShareathonUpdate` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `FbUserId` (`FbUserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -289,6 +308,23 @@ CREATE TABLE IF NOT EXISTS `groups` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table socioboardlive.imglibrary
+CREATE TABLE IF NOT EXISTS `imglibrary` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) NOT NULL,
+  `ImageName` text NOT NULL,
+  `ImagePath` text NOT NULL,
+  `ImageSize` bigint(20) NOT NULL,
+  `Imageuploadeddate` datetime NOT NULL,
+  `Tags` text,
+  `FolderType` tinytext,
+  `LocalImagePath` text,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table socioboardlive.instagramaccounts
 CREATE TABLE IF NOT EXISTS `instagramaccounts` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -399,6 +435,21 @@ CREATE TABLE IF NOT EXISTS `newsletter` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table socioboardlive.notifications
+CREATE TABLE IF NOT EXISTS `notifications` (
+  `Id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `UserId` bigint(20) DEFAULT NULL,
+  `notificationtime` datetime DEFAULT NULL,
+  `MsgId` bigint(20) DEFAULT NULL,
+  `MsgStatus` text,
+  `ReadOrUnread` text,
+  `NotificationType` text,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table socioboardlive.package
 CREATE TABLE IF NOT EXISTS `package` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -464,6 +515,7 @@ CREATE TABLE IF NOT EXISTS `rssfeedurl` (
   `rssurl` text,
   `LastUpdate` datetime DEFAULT NULL,
   `Keywords` text,
+  `ProfileId` varchar(100) NOT NULL,
   PRIMARY KEY (`rssFeedUrlId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -485,7 +537,7 @@ CREATE TABLE IF NOT EXISTS `scheduledmessage` (
   `socialprofileName` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
   `url` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
   `link` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
-  `localscheduletime` datetime DEFAULT NULL,
+  `localscheduletime` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `scheduleTime` (`scheduleTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
@@ -573,6 +625,8 @@ CREATE TABLE IF NOT EXISTS `user` (
   `PaymentStatus` tinyint(4) NOT NULL DEFAULT '0' COMMENT 'default value = unpaid',
   `ActivationStatus` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0 = InActive,1 = Active',
   `LastLoginTime` datetime DEFAULT NULL,
+  `Country` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `PhoneCode` varchar(9) COLLATE utf8_unicode_ci DEFAULT NULL,
   `PhoneNumber` varchar(50) COLLATE utf8_unicode_ci DEFAULT NULL,
   `LastName` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
   `FirstName` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -609,6 +663,9 @@ CREATE TABLE IF NOT EXISTS `user` (
   `SocialLoginEnableGo` tinyint(4) DEFAULT '1',
   `Adsstatus` bit(1) DEFAULT b'0',
   `urlShortnerStatus` tinyint(4) NOT NULL DEFAULT '0',
+  `RefrralCode` text COLLATE utf8_unicode_ci,
+  `ReferdBy` text COLLATE utf8_unicode_ci,
+  `ReferralStatus` text COLLATE utf8_unicode_ci,
   PRIMARY KEY (`Id`),
   UNIQUE KEY `EmailId` (`EmailId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;

@@ -4,7 +4,7 @@
         <div class="row">
             <div class="row">
                 <!--twitter feeds start-->
-                <div class="col s6 m6 l6">
+                <div class="col s12 m7 l7">
                     <div class="card" id="feeds">
                         <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Feeds<a class='dropdown-button right white-text btn_style black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">{{filterrTxtt}}</a><span class="right">&nbsp;</span>
                         <a class='dropdown-button right white-text btn_style black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">{{SorttTxtt}}</a><span class="right">&nbsp;</span>
@@ -50,14 +50,18 @@
                                             <i class="fa fa-retweet fa-fw"></i><span>{{twtfeed.retweetcount | thousandSuffix:1}}</span>
                                         </span>
                                     </div>
-                                    <div class="col l1 s2">
+                                    <div class="col l3 s2">
                                         <span ng-click="twitterfavorite(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                             <i class="fa fa-star fa-fw"></i><span>{{twtfeed.likecount | thousandSuffix:1}}</span>
                                         </span>
                                     </div>
-                                    <div class="col l3 s1">
-                                        <span>
-                                            <i class="fa fa-envelope fa-fw"></i> Email</span>
+                                    <div class="col l1 s1">
+                                        <span ng-click="email_Message(twtfeed)">
+                                            <i class="fa fa-envelope fa-fw"></i>
+                                        </span>
+                                        <!--<a class="modal-trigger" ng-href="#Email_modal">
+                        <i class="fa fa-envelope fa-fw"></i>
+                    </a>-->
                                     </div>
                                     <div class="col l1 s1">
                                         <span ng-click="markSpam(twtfeed.fromScreenName,twtfeed.profileId)">
@@ -80,11 +84,11 @@
                                         </a>
                                     </div>
                                 </div>
-                                <div> 
+                                <div>
                                     <!--<a class="waves-effect waves-light  modal-trigger" ng-click="twitterreply(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)"><i class="fa fa-share fa-fw"></i></a>-->
                                     <!--<span ng-click="twitterreply(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
-                                        <i class="fa fa-share fa-fw"></i>
-                                    </span>-->
+                    <i class="fa fa-share fa-fw"></i>
+                </span>-->
                                 </div>
                             </li>
 
@@ -151,7 +155,7 @@
                 <!--twitter feeds end-->
 
                 <!--twitter tweets start-->
-                <div class="col s6 m6 l6">
+                <div class="col s12 m5 l5">
                     <div class="card" id="feeds">
                         <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Tweets</h5>
                         <ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
@@ -502,6 +506,64 @@
                 </div>-->
 
             </form>
+        </div>
+    </div>
+</div>
+<div id="Email_modal" class="modal" style="width: 50%;">
+    <div class="modal-content">
+        <a href="javascript:void();" class="modal-action modal-close waves-effect waves-blue btn-flat right"><i class="icon-close"></i></a>
+        <h4>Email Message</h4>
+        <div class="row no-space">
+            <div class="col l2 s2">
+                <span>From</span>
+            </div>
+            <div class="col l10 s10">
+                <span>{{socioboardName}}</span>
+            </div>
+        </div>
+        <div class="row no-space">
+            <div class="col l2 s2">
+                <span>To</span>
+            </div>
+            <div class="col l10 s10">
+                <div class="input-field no-space">
+                    <input id="emailIds" type="email" class="validate">
+                    <label for="emailIds">Email</label>
+                </div>
+            </div>
+        </div>
+        <div class="row no-space">
+            <div class="col l2 s2">
+                <span>Subject</span>
+            </div>
+            <div class="col l10 s10">
+                <div class="input-field no-space">
+                    <input id="subEmail" type="text" class="validate">
+                    <label for="subEmail"></label>
+                </div>
+            </div>
+        </div>
+        <div class="row no-space">
+            <div class="col l2 s2">
+                <span>&nbsp;</span>
+            </div>
+            <div class="col l10 s10">
+                <div class="input-field no-space">
+                    <textarea id="composeEmail" class="materialize-textarea" length="1000"></textarea>
+                    <label for="composeEmail"></label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <div class="row no-space">
+            <div class="col m8 offset-m4 s6 offset-s6">
+                <!--<span>
+                    <input type="checkbox" class="filled-in" id="cc_myself" checked="checked" />
+                    <label for="cc_myself">CC myself</label>
+                </span>-->
+                <a ng-click="sendEmailMessage()" href="javascript:void(0)" class="no-space btn btn_style img_comp_btn modal-action modal-close waves-effect col s3">Send</a>
+            </div>
         </div>
     </div>
 </div>

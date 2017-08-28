@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using Socioboard.GoogleLib.Authentication;
 using Socioboard.GoogleLib.Youtube.Core;
+using SocioboardDataServices.Helper;
 using SocioboardDataServices.Model;
 using System;
 using System.Collections.Generic;
@@ -18,13 +19,12 @@ namespace SocioboardDataServices.Youtube
         public static void GetYtFeeds(string ChannelId, string AcessToken)
         {
 
-            oAuthTokenYoutube ObjoAuthTokenGPlus = new oAuthTokenYoutube(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
-            Activities _ObjYtActivities = new Activities(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
-            string apiKey = Helper.AppSettings.GoogleApiKey;
+            oAuthTokenYoutube ObjoAuthTokenGPlus = new oAuthTokenYoutube(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
+            Activities _ObjYtActivities = new Activities(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
+            string apiKey = AppSettings.GoogleApiKey;
 
             try
             {
-                
                 
                 MongoYoutubeFeeds _ObjMongoYtFeeds;
                 string _ChannelVideos = _ObjYtActivities.GetYtVideos(ChannelId,apiKey);
@@ -138,7 +138,7 @@ namespace SocioboardDataServices.Youtube
 
         public static void GetYtComments(string VideoId, string apiKey, string ChannelId)
         {
-            Video _Videos = new Video(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
+            Video _Videos = new Video(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
 
             try
             {

@@ -59,6 +59,8 @@ namespace Api.Socioboard.Controllers
             user.Password = SBHelper.MD5Hash(user.Password);
             user.UserName = "Socioboard";
             user.UserType = "User";
+            user.ReferralStatus = "InActive";
+            //user.RefrralCode = SBHelper.RandomString(20);
             user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
             user.LastLoginTime = DateTime.UtcNow;
             if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
@@ -85,6 +87,8 @@ namespace Api.Socioboard.Controllers
             User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
             if (SavedStatus == 1 && nuser != null)
             {
+                nuser.RefrralCode = "SOCIOBOARD_" + nuser.Id;
+                int SavedRefrral = dbr.Update<Domain.Socioboard.Models.User>(nuser);
                 Groups group = new Groups();
                 group.adminId = nuser.Id;
                 // group.id = nuser.Id;
@@ -184,11 +188,6 @@ namespace Api.Socioboard.Controllers
             }
             return Ok("Email verification mail sent successfully.");
         }
-
-
-
-
-
 
         [HttpPost("SocioboardAccountCreation")]
         public IActionResult SocioboardAccountCreation(User user)
@@ -290,7 +289,10 @@ namespace Api.Socioboard.Controllers
                     //{
                     //    return Ok(lstUser.First());
                     //}
-
+                    if (lstUser.First().RefrralCode == null)
+                    {
+                        lstUser.First().RefrralCode = "SOCIOBOARD_" + lstUser.First().Id;
+                    }
                     DateTime d1 = DateTime.UtcNow;
                     //User userTable = dbr.Single < User>(t => t.EmailId == user.UserName);
                     lstUser.First().LastLoginTime = d1;
@@ -1280,7 +1282,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
-            if(user.TwostepEnable == false)
+            if (user.TwostepEnable == false)
             {
                 user.SocialLoginEnableFb = checkEnable;
                 int res = dbr.Update<User>(user);
@@ -1307,7 +1309,7 @@ namespace Api.Socioboard.Controllers
             {
                 return BadRequest("Can't enable social signin because two steps login has already enabled.");
             }
-           
+
         }
 
 
@@ -1364,6 +1366,10 @@ namespace Api.Socioboard.Controllers
                         {
                             if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
                             {
+                                if (lstUser.First().RefrralCode == null)
+                                {
+                                    lstUser.First().RefrralCode = "SOCIOBOARD_" + lstUser.First().Id;
+                                }
                                 DateTime d1 = DateTime.UtcNow;
                                 //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
                                 //userTable.LastLoginTime = d1;
@@ -1661,9 +1667,9 @@ namespace Api.Socioboard.Controllers
         public IActionResult ChangePassword(long userId)
         {
             string currentPassword = Request.Form["currentPassword"];
-            string newPassword= Request.Form["newPassword"];
-            string conformPassword= Request.Form["conformPassword"];
-            string systemId= Request.Form["systemId"];
+            string newPassword = Request.Form["newPassword"];
+            string conformPassword = Request.Form["conformPassword"];
+            string systemId = Request.Form["systemId"];
             systemId = Utility.Base64Decode(systemId);
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
@@ -1887,7 +1893,7 @@ namespace Api.Socioboard.Controllers
         /// EmailId does not exist:when user emailid does not exist
         /// </returns>
         [HttpPost("ResetPasswordMail")]
-        public IActionResult ResetPasswordMail(string emailId, string changePassword, string token,string systemId)
+        public IActionResult ResetPasswordMail(string emailId, string changePassword, string token, string systemId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = null;
@@ -2360,6 +2366,124 @@ namespace Api.Socioboard.Controllers
             return "Ok";
         }
 
-    }
-}
+        [HttpPost("VerifyRefrralCode")]
+        public IActionResult VerifyRefrralCode(string promo_code)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User refrralcode = dbr.Single<User>(t => t.RefrralCode == promo_code);
+            if (refrralcode != null)
+            {
+                return Ok("Refrral Code Applied");
+            }
+            else
+            {
+                return BadRequest("Refrral Code Not Found");
+            }
 
+        }
+        [HttpPost("UpdateRefrralStatus")]
+        public IActionResult UpdateRefrralStatus(long userId)
+        {
+            try
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                User _user = dbr.Single<User>(t => t.Id == userId);
+                _user.ReferralStatus = "Active";
+                int result = dbr.Update<Domain.Socioboard.Models.User>(_user);
+                Domain.Socioboard.Models.Ewallet _ewallet = new Ewallet();
+                if (result == 1)
+                {
+                    User _refrreduser = dbr.Single<User>(t => t.RefrralCode == _user.ReferdBy);
+                    _ewallet.Fromid = _user.Id;
+                    _ewallet.Frommailid = _user.EmailId;
+                    _ewallet.EmailId = _refrreduser.EmailId;
+                    _ewallet.UserId = _refrreduser.Id;
+                    _ewallet.Transactiondate = DateTime.UtcNow;
+                    _ewallet.TransactionId = SBHelper.RandomString(20);
+                    _ewallet.TransactionStatus = "Money Added";
+                    _ewallet.TransactionType = "Refrral Program";
+                    if (_user.AccountType == Domain.Socioboard.Enum.SBAccountType.Standard || _user.AccountType == Domain.Socioboard.Enum.SBAccountType.Premium || _user.AccountType == Domain.Socioboard.Enum.SBAccountType.Deluxe || _user.AccountType == Domain.Socioboard.Enum.SBAccountType.Topaz || _user.AccountType == Domain.Socioboard.Enum.SBAccountType.Ruby || _user.AccountType == Domain.Socioboard.Enum.SBAccountType.Gold || _user.AccountType == Domain.Socioboard.Enum.SBAccountType.Platinum)
+                    {
+                        _ewallet.Amount = 50;
+                    }
+                    int ewalltstatus = dbr.Add<Domain.Socioboard.Models.Ewallet>(_ewallet);
+                    if (ewalltstatus == 1)
+                    {
+                        return Ok("Ewallte transaction saved");
+                    }
+                    else
+                    {
+                        return Ok("Ewallte transaction failed");
+                    }
+
+                }
+                else
+                {
+                    return Ok("User update Successfully");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok("Issue while updating record");
+            }
+
+
+        }
+        [HttpPost("AuthLogin")]
+        public IActionResult AuthLogin(AuthUser authUser)
+        {
+            if (string.IsNullOrEmpty(authUser.AuthCode))
+            {
+                authUser.AuthMessage = "Please enter valid authToken";
+                return BadRequest(authUser);
+            }
+            if (authUser.AuthCode.Contains("1974224400.2310fd1.699477d40ff64cd6babfb0b3a6cf60fa"))
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+                User _User = dbr.Single<User>(t => t.EmailId.Equals(authUser.email) && t.Password.Equals(SBHelper.MD5Hash(authUser.password)));
+                if (_User == null)
+                {
+                    authUser.AuthMessage = "Invalid EmailId and password";
+                    return BadRequest(authUser);
+                }
+                if (_User.ExpiryDate < DateTime.UtcNow)
+                {
+                    authUser.AuthMessage = "your account has been expired";
+                    return BadRequest(authUser);
+                }
+                else if (_User.ActivationStatus != Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                {
+                    authUser.AuthMessage = "your account is not active please contact to support";
+                    return BadRequest(authUser);
+                }
+                else if (_User.PaymentStatus != Domain.Socioboard.Enum.SBPaymentStatus.Paid)
+                {
+                    authUser.AuthMessage = "you are not paid user";
+                    return BadRequest(authUser);
+                }
+                else
+                {
+                    authUser.socioboard_id = _User.Id;
+                    authUser.Affiliate_id = _User.RefrralCode;
+                    authUser.AuthMessage = "login successfully";
+                    authUser.country = _User.Country;
+                    authUser.email = _User.EmailId;
+                    authUser.first_name = _User.FirstName;
+                    authUser.last_name = _User.LastName;
+                    authUser.password = authUser.password;
+                    authUser.phone = _User.PhoneCode + _User.PhoneNumber;
+                    authUser.profile_pic_url = _User.ProfilePicUrl;
+                    return Ok(authUser);
+                }
+            }
+            else
+            {
+                authUser.AuthMessage = "Invalid authToken";
+                return BadRequest(authUser);
+            }
+            return Ok();
+
+        }
+    }
+
+}

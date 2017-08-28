@@ -2534,6 +2534,57 @@ MostShared = function () {
 
 };
 
+// studio  shareathon Queue
+studio_shareathon_que = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+    Materialize.updateTextFields();
+
+    // Basic
+    $('.dropify').dropify();
+
+    $('#recent_followers_list').slimScroll({
+        color: '#424242',
+        size: '10px',
+        height: '400px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+};
+
+referral = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+
+};
+// E - wallet //
+// list
+ewalletlist = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    Materialize.updateTextFields();
+    //$('#EwalletList').DataTable();
+};
+
 //ImageLibrary
 
 ImgLibrary = function () {
@@ -2565,3 +2616,60 @@ ImgLibrary = function () {
 googleanalyticreport = function () {
     $('ul.tabs').tabs();
 };
+//all notifications
+notification_all = function () {
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+
+    $('.collapsible').collapsible({
+        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+
+    $('.notification_all').slimScroll({
+        color: '#3B5998',
+        size: '10px',
+        height: '600px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+}
+
+//Single notification
+notification = function () {
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+
+    $('.collapsible').collapsible({
+        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+
+    $('.notification_all').slimScroll({
+        color: '#3B5998',
+        size: '10px',
+        height: '600px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+}

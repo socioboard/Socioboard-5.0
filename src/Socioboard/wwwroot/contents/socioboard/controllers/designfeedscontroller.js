@@ -8,6 +8,8 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         var start = 0; // where to start data
         var ending = 0; // how much data need to add on each function call
         var reachLast = false; // to check the page ends last or not
+        $scope.query = {};
+        $scope.queryBy = '$';
         $scope.dispbtn = false;
         $scope.disbtncom = true;
         //$scope.loadmore = "/contents/socioboard/images/loader.gif";

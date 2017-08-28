@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
 using Socioboard.GoogleLib.App.Core;
 using Socioboard.GoogleLib.Authentication;
+using SocioboardDataServices.Helper;
 using SocioboardDataServices.Model;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,12 @@ namespace SocioboardDataServices.Gplus
     {
         public static void GetUserActivities(string ProfileId, string AcessToken)
         {
-            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
             try
             {
                 //Domain.Socioboard.Domain.GooglePlusActivities _GooglePlusActivities = null;
                 MongoGplusFeed _GooglePlusActivities;
-                string _Activities = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetActivitiesList.Replace("[ProfileId]", ProfileId) + "?key=" + Helper.AppSettings.GoogleApiKey, AcessToken);
+                string _Activities = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetActivitiesList.Replace("[ProfileId]", ProfileId) + "?key=" + AppSettings.GoogleApiKey, AcessToken);
                 JObject J_Activities = JObject.Parse(_Activities);
                 foreach (var item in J_Activities["items"])
                 {
@@ -162,12 +163,12 @@ namespace SocioboardDataServices.Gplus
         public static void GetGooglePlusComments(string feedId, string AccessToken, string profileId)
         {
             MongoRepository gplusCommentRepo = new MongoRepository("GoogleplusComments");
-            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
 
             MongoGoogleplusComments _GoogleplusComments = new MongoGoogleplusComments();
             try
             {
-                string _Comments = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetCommentListByActivityId.Replace("[ActivityId]", feedId) + "?key=" + Helper.AppSettings.GoogleApiKey, AccessToken);
+                string _Comments = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetCommentListByActivityId.Replace("[ActivityId]", feedId) + "?key=" + AppSettings.GoogleApiKey, AccessToken);
                 JObject J_Comments = JObject.Parse(_Comments);
                 List<MongoGoogleplusComments> lstGoogleplusComments = new List<MongoGoogleplusComments>();
                 foreach (var item in J_Comments["items"])

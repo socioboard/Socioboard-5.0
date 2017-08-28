@@ -244,6 +244,43 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                });
           }
 
+          var tempValue;
+          $scope.email_Message = function (value) {
+              tempValue = value;
+              $('#Email_modal').openModal();
+              $scope.emailSub = "Tweet forwarded by " + $rootScope.user.FirstName +" "+ $rootScope.user.LastName;
+              $('#subEmail').val($scope.emailSub);
+              $scope.emailMessage = "@" + value.fromName + " said: \n\n" + value.feed + "\n\n" + value.feedDate + "\n\n" + "https://twitter.com/" + value.fromScreenName + "/status/" + value.messageId + "\n\n--\n\nSent from Socioboard (//socioboard.com)";
+              $('#composeEmail').val($scope.emailMessage);
+              $scope.socioboardName = $rootScope.user.FirstName + " " + $rootScope.user.LastName;
+          }
+
+          $scope.sendEmailMessage = function () {
+              var toEmail = $('#emailIds').val();
+              var subjectEmail = $('#subEmail').val();
+              var messageEmail = $('#composeEmail').val();
+              var formData = new FormData();
+              formData.append('message', messageEmail);
+              formData.append('sub', subjectEmail);
+              $http({
+                  method: 'POST',
+                  url: apiDomain + '/api/Twitter/EmailMessage?userId=' + $rootScope.user.Id + '&socioTwitterId=' + $stateParams.profileId + '&profileIdFrom=' + tempValue.fromId + '&profileScnNameFrom=' + tempValue.fromScreenName + '&toMail=' + toEmail,
+                  data: formData,
+                  headers: {
+                      'Content-Type': undefined
+                  },
+                  transformRequest: angular.identity,
+              }).then(function (response) {
+                  if (response.data != "") {
+                      alertify.success('Email sent successfully');
+                  }
+                  else {
+                      alertify.error('Error while sending email');
+                  }
+              }, function (reason) {
+              });
+          }
+
           $scope.twitterreply = function (screenName,profileId, messageId) {
               $rootScope.profileId = profileId;
               $rootScope.messageId = messageId;
@@ -355,6 +392,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               }
 
               $('#ComposePostModal').openModal();
+              //$('#Email_modal').openModal();
               var composeImagedropify = $('#composeImage').parents('.dropify-wrapper');
               $(composeImagedropify).find('.dropify-render').html('<img src="' + contentFeed.mediaUrl + '">');
               $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');

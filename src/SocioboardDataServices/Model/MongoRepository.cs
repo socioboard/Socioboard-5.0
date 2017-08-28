@@ -23,9 +23,9 @@ namespace SocioboardDataServices.Model
         public MongoRepository(string CollectionName) 
         {
 
-            MongoClient client = new MongoClient(Helper.AppSettings.MongoDbConnectionString);
+            MongoClient client = new MongoClient(AppSettings.MongoDbConnectionString);
 
-            _db = client.GetDatabase(Helper.AppSettings.MongoDbName);
+            _db = client.GetDatabase(AppSettings.MongoDbName);
 
             this.collecionName = CollectionName;
             
@@ -35,7 +35,7 @@ namespace SocioboardDataServices.Model
         public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName).Count<T>(query);
+            var collection = _db.GetCollection<T>(collecionName, settings).Count<T>(query);
             try
             {
                 var output = collection;
@@ -43,15 +43,6 @@ namespace SocioboardDataServices.Model
             }
             catch (Exception ex) { return 0; }
 
-
-        }
-        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
-        {
-            // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
-
-            var output = await collection.ToListAsync().ConfigureAwait(false);
-            return output;
 
         }
         public void Delete<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
@@ -82,21 +73,47 @@ namespace SocioboardDataServices.Model
         public async Task<IList<T>> Find<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query);
-           
+            try
+            {
+                var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query);
+
                 var output = await collection.ToListAsync().ConfigureAwait(false);
                 return output;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
           
         }
         public async Task<IList<T>> FindWithRange<T>(Expression<Func<T, bool>> query, SortDefinition<T> sort, int skip, int take) where T : class, new()
         {
-            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Sort(sort).Limit(take).Skip(skip);
-            
+            try
+            {
+                var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Sort(sort).Limit(take).Skip(skip);
+
                 var output = await collection.ToListAsync().ConfigureAwait(false);
                 return output;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
            
         }
+        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
+            try
+            {
+                var output = await collection.ToListAsync().ConfigureAwait(false);
+                return output;
+            }
+            catch (Exception ex) { return null; }
 
+
+        }
 
         public T Single<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
      where T : class, new()

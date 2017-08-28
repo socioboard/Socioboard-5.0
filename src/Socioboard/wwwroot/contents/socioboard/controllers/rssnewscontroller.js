@@ -6,6 +6,8 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
         $scope.disbtncom = true;
         $scope.draftbtn = true;
+        $scope.query = {};
+        $scope.queryBy = '$';
         $rootScope.contentMessage = {};
         $rootScope.schedulemessage = {};
         $scope.buildbtn = true;
@@ -69,6 +71,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                     $scope.postedRssData = response.data;
                   
                     $scope.fetchdatacomplete = true;
+                    var keywords = $('#tags').val('');
                     //if ($rootScope.keyword != null) {
                     //    $scope.rssContentsData();
                     //}

@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true
@@ -17,7 +17,8 @@
     "Socioboard.Instagram": "1.0.0-*",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Microsoft.Extensions.Options": "1.0.0",
-    "Domain.Socioboard": "1.0.0-*"
+    "Domain.Socioboard": "1.0.0-*",
+    "Socioboard.Google": "1.0.0-*"
   },
   "frameworks": {
     "dnx451": {

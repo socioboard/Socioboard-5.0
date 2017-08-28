@@ -5,7 +5,13 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
            
        ImgLibrary();
        $scope.dispbtn = true;
+       $scope.query = {};
+       $scope.queryBy = '$';
        $scope.UserEmail = $rootScope.user.EmailId;
+       $scope.reachetotallength = function () {
+           $scope.reachedsize = "You can't upload more images as you already reached total library space";
+           swal($scope.reachedsize);
+       };
        $scope.opencomposemodel = function (img) {
            $('#ImgDesModal').closeModal();
            jQuery('input:checkbox').removeAttr('checked');
@@ -22,6 +28,12 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
            $('select').material_select();
        }
 
+       //open upload model
+       $scope.openuploadmodel = function (img) {
+           $scope.uploadbtn = true;
+           $('#ImgUploadModal2').openModal();
+           
+       }
        //open image model
        $scope.openimgmodel = function (img) {
            $('#ImgDesModal').openModal();
@@ -42,7 +54,9 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
 
        //Save Image In Public
        $scope.SaveImageForPublic = function () {
+           $scope.uploadbtn = false;
            var imgName = $('#img_name').val();
+           if (/\S/.test(imgName)) {
            //var imagelocalPath = $('#input-file-now').val();
            var formData = new FormData();
            formData.append('files', $("#input-file-now").get(0).files[0]);
@@ -65,6 +79,10 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
 
 
            });
+           }
+           else {
+               swal("Please enter image name");
+           }
        }
 
       //Load LoadImagesForPublic
@@ -84,8 +102,7 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
            $http.get(apiDomain + '/api/ImgLibrary/Totalimagesize?userid=' + $rootScope.user.Id)
            .then(function (response) {
                $scope.totalimagesize = response.data;
-
-           }, function (reason) {
+            }, function (reason) {
                $scope.error = reason.data;
            });
        }
@@ -176,11 +193,9 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
                             $scope.dispbtn = true;
                             $('#ComposePostModal').closeModal();
                             swal('Message composed successfully');
-                            window.location.reload();
-                        }
+                         }
 
                     }, function (reason) {
-                        console.log(reason);
                     });
                 }
                 else {

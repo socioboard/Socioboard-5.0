@@ -8,29 +8,9 @@ using System.Linq.Expressions;
 
 namespace SocioboardDataServices.Model
 {
-    public class DatabaseRepository : IDatabaseRepository
+    public class DatabaseRepository 
     {
-        public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
-        {
-            int PiadUser = 0;
-            try
-            {
-                using (NHibernate.ISession session = SessionFactory.GetNewSession())
-                {
-
-                    var futureCount = session.Query<T>().Where(query).Count();
-                    PiadUser = Convert.ToInt32(futureCount);
-                }
-            }
-            catch (Exception ex)
-            {
-                try
-                {
-                }
-                catch { }
-            }
-            return PiadUser;
-        }
+      
         public IList<T> Find<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             IList<T> result = null;
@@ -51,25 +31,6 @@ namespace SocioboardDataServices.Model
 
             return result;
         }
-
-        public IList<T> FindWithRange<T>(Expression<Func<T, bool>> query, int skip, int take) where T : class, new()
-        {
-            IList<T> result = null;
-            try
-            {
-                using (NHibernate.ISession session = SessionFactory.GetNewSession())
-                {
-                    result = session.Query<T>().Where(query).Skip(skip).Take(take).ToList();
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-
-            return result;
-
-        }
         public int GetCount<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             int PiadUser = 0;
@@ -87,7 +48,13 @@ namespace SocioboardDataServices.Model
             }
             catch (Exception ex)
             {
-                
+
+                try
+                {
+
+
+                }
+                catch { }
             }
             return PiadUser;
         }

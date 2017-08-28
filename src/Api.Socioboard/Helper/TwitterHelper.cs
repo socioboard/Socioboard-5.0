@@ -487,12 +487,12 @@ namespace Api.Socioboard.Helper
         }
 
 
-        public static List<Domain.Socioboard.Models.TwitterMutualFans> twitterfollowerslist(long groupId, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.TwitterMutualFans> twitterfollowerslist(string profileId, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
         {
-            string[] profileids = null;
+            string profileids = profileId;
             List<Domain.Socioboard.Models.TwitterMutualFans> lstfollowerlist = new List<Domain.Socioboard.Models.TwitterMutualFans>();
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
-            profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+            //List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
+            //profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
             List<Domain.Socioboard.Models.TwitterAccount> lstAccRepo = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => profileids.Contains(t.twitterUserId) && t.isActive).ToList();
             oAuthTwitter oaut = null;
             Users twtUser = new Users();

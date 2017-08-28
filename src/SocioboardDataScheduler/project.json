@@ -18,7 +18,8 @@
     "Socioboard.Instagram": "1.0.0-*",
     "Microsoft.Extensions.Options.ConfigurationExtensions": "1.0.0",
     "Microsoft.Extensions.Options": "1.0.0",
-    "TweetinviAPI": "1.3.0"
+    "TweetinviAPI": "1.3.0",
+    "Imgur.API": "4.0.1"
   },
 
   "frameworks": {

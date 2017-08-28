@@ -471,8 +471,29 @@ namespace Socioboard.Controllers
                             try
                             {
                                 Domain.Socioboard.Models.User _user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                                HttpContext.Session.SetObjectAsJson("User", _user);
-                                return RedirectToAction("Index", "Index");
+                                if(user.ReferralStatus == "InActive" && user.ReferdBy!=null)
+                                {
+                                    List<KeyValuePair<string, string>> ReffralParameters = new List<KeyValuePair<string, string>>();
+                                    ReffralParameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
+                                    HttpResponseMessage refrralresponse = await WebApiReq.PostReq("/api/User/UpdateRefrralStatus", Parameters, "", "", _appSettings.ApiDomain);
+                                    if (refrralresponse.IsSuccessStatusCode)
+                                    {
+                                        HttpContext.Session.SetObjectAsJson("User", _user);
+                                        return RedirectToAction("Index", "Index");
+                                    }
+                                    else
+                                    {
+                                        HttpContext.Session.SetObjectAsJson("User", _user);
+                                        return RedirectToAction("Index", "Index");
+                                    }
+                                   
+                                }
+                                else
+                                {
+                                    HttpContext.Session.SetObjectAsJson("User", _user);
+                                    return RedirectToAction("Index", "Index");
+                                }
+                               
                             }
                             catch { }
                         }

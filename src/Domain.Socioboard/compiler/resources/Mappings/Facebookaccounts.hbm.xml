@@ -86,5 +86,8 @@
     <property name="Is90DayDataUpdated">
       <column name="Is90DayDataUpdated"/>
     </property>
+   <property name="contenetShareathonUpdate">
+      <column name="contenetShareathonUpdate"/>
+    </property>
   </class>
 </hibernate-mapping>

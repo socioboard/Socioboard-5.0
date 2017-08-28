@@ -397,7 +397,7 @@
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
-                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdINcompanyaccount']['linkedinPageName']}}"</span>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdINcompanyaccount']['linkedinPageName']}}">{{data['linkdINcompanyaccount']['linkedinPageName']}}</span>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
                                             <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
                                         </div>
@@ -407,7 +407,7 @@
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
                                                 <i class="icon-info"></i>
                                             </a>
-                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdINcompanyaccount']['linkedinPageName']}}"</span>
+                                            <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdINcompanyaccount']['linkedinPageName']}}">{{data['linkdINcompanyaccount']['linkedinPageName']}}</span>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
                                             <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
                                         </div>
@@ -1247,8 +1247,12 @@
                             </select>
 
                         </div>-->
-                        <div style="max-height:250px; overflow-y:scroll;">
-                           
+                        <div style="max-height:250px; overflow-y:scroll;" class="row">
+                            <div class="input-field col s12">
+                                <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
+                                <label for="search_name">Search Profile</label>
+                            </div>
+                            <!--<div ng-repeat="profile in lstProfiles |filter:query" >-->
                             <ul class="shinh" id="checkboxdata">
                                 <li style="padding:5px 0;">
                                     <label>
@@ -1257,15 +1261,15 @@
                                         <span style="float:left;">Check All</span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                    <label >
-                                        <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}"  type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                    <label>
+                                        <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left;">{{profile.profileName}}</span>
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
@@ -1273,7 +1277,7 @@
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
                                     <label>
                                         <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
@@ -1281,15 +1285,15 @@
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
-                                        <input name="selector[]"  onclick="profile();"class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left;">{{profile.profileName}}</span>
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
                                     <label>
                                         <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <span style="float:left;">{{profile.profileName}}</span>
@@ -1297,8 +1301,9 @@
                                     </label>
                                 </li>
                             </ul>
-
                         </div>
+                                        
+                        <!--</div>-->
                     </div>
 
                     <div class="row">

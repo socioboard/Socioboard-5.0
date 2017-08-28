@@ -41,51 +41,12 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             return Ok(Repositories.ContentStudioRepository.GetAdvanceSearchdata(keywords, _redisCache, _appSettings));
         }
-
-
-        //[HttpPost("saveDataIdForShare")]
-        //public IActionResult saveDataIdForShare(HttpRequestMessage shareData, [FromBody] Domain.Socioboard.Models.Mongo.ContentFeedsShareathon getAll)//List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> shareData
-        //{
-        //    Object FacebookPageId = Request.Form["shareData"];
-        //    string s = JsonConvert.SerializeObject(FacebookPageId);
-        //    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-        //    //string  res = Repositories.ContentStudioRepository.saveContentDataIdReposi(shareData, fbuserIds, timeIntervals, _redisCache, _appSettings);
-        //    return Ok(true);
-        //}
-
-        //[HttpPost("saveDataIdForShare")]
-        //public IActionResult saveDataIdForShare(Domain.Socioboard.Models.Mongo.postdata objdata)
-        //{
-
-        //    //string s = JsonConvert.SerializeObject(FacebookPageId);
-        //    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-        //    //string  res = Repositories.ContentStudioRepository.saveContentDataIdReposi(shareData, fbuserIds, timeIntervals, _redisCache, _appSettings);
-        //    return Ok(true);
-        //}
-
-
-
-
-
-
-        [HttpPost("saveDataIdForShare")]
-        public IActionResult saveDataIdForShare(string fbuserIds, int timeIntervals)
-        {
-            //List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> shareData
-            var FacebookPageId = Request.Form["shareData"];
-            List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> lstshareData = JsonConvert.DeserializeObject<List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>>(FacebookPageId);
-            var fbuserIds1 = Request.Form["FacebookPageId"];
-             //string s = JsonConvert.SerializeObject(FacebookPageId);
-             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            //string  res = Repositories.ContentStudioRepository.saveContentDataIdReposi(shareData, fbuserIds, timeIntervals, _redisCache, _appSettings);
-            return Ok(true);
-        }
-
-
+   
         [HttpGet("GetYTAdvanceSearchData")]
         public IActionResult GetYTAdvanceSearchData(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            skip = 0;
             MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
             if (skip + count < 100)
             {
@@ -134,6 +95,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult QuickTopics(Domain.Socioboard.Enum.NetworkType networkType, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            skip = 0;
             MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
             if (skip + count < 100)
             {
@@ -154,5 +116,43 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        [HttpPost("saveDataIdForShare")]
+        public IActionResult saveDataIdForShare(long userId, string fbuserIds, int timeIntervals)
+        {
+            //List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> shareData
+            var FacebookPageId = Request.Form["shareData"];
+            List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> lstshareData = JsonConvert.DeserializeObject<List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>>(FacebookPageId);
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string res = Repositories.ContentStudioRepository.saveContentDataIdReposi(lstshareData, userId, fbuserIds, timeIntervals, _redisCache, _appSettings, dbr);
+            return Ok(res);
+        }
+
+        [HttpGet("ShareathonQueue")]
+        public IActionResult ShareathonQueue(long userId)
+        {
+            MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
+            IList<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> lstdata = Repositories.ContentStudioRepository.ShareathonQueueReposi(userId, _appSettings);
+            return Ok(lstdata);
+
+        }
+
+
+        [HttpPost("DeleteShareathon")]
+        public IActionResult DeleteShareathon(string PageShareathodId)
+        {
+            string pagedata = Repositories.ContentStudioRepository.Deleteshareathon(PageShareathodId, _appSettings);
+            return Ok(pagedata);
+        }
+
+
+        [HttpGet("UserpageShareathon")]
+        public IActionResult UserpageShareathon(long userId)
+        {
+            List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> lstPageShareathon = Repositories.ContentStudioRepository.updateShareathonByUserId(userId, _appSettings, _redisCache);
+            return Ok(lstPageShareathon);
+        }
+
+       
     }
 }

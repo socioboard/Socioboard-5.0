@@ -28,13 +28,12 @@ namespace SocioboardDataScheduler.Shareathon
         public static int pageMaxapiHitsCount = 20;
         public int noOfthread_pageshreathonRunning = 0;
         public int noOfthread_groupshreathonRunning = 0;
-
         public void ShareShateathons()
         {
 
             DatabaseRepository dbr = new DatabaseRepository();
             MongoRepository _ShareathonRepository = new MongoRepository("Shareathon");
-            var result = _ShareathonRepository.FindAll<Domain.Socioboard.Models.Mongo.PageShareathon>();
+            var result = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.FacebookStatus == 1);
             var task = Task.Run(async () =>
             {
                 return await result;
@@ -46,6 +45,9 @@ namespace SocioboardDataScheduler.Shareathon
             {
                 try
                 {
+                    //ThreadPool.QueueUserWorkItem(new WaitCallback(pageshreathon), new object[] { shareathon, dbr, _ShareathonRepository });
+                    //Thread.Sleep(20 * 1000);
+                    //pageshreathon(new object[] { shareathon, dbr, _ShareathonRepository });
                     noOfthread_pageshreathonRunning++;
                     Thread thread_pageshreathon = new Thread(() => pageshreathon(new object[] { shareathon, dbr, _ShareathonRepository }));
                     thread_pageshreathon.Start();
@@ -53,7 +55,7 @@ namespace SocioboardDataScheduler.Shareathon
                     {
                         Thread.Sleep(1 * 1000);
                     }
-                   
+                    //  pageshreathon(new object[] { shareathon, dbr, _ShareathonRepository });
                 }
                 catch (Exception)
                 {
@@ -62,7 +64,6 @@ namespace SocioboardDataScheduler.Shareathon
             }
 
         }
-
         public string ShareFeed(string fbAccesstoken, string FeedId, string pageId, string message, string fbUserId, string FbPageName)
         {
             string ret = "";
@@ -88,25 +89,26 @@ namespace SocioboardDataScheduler.Shareathon
 
                 try
                 {
-                   
-                        dynamic output = fb.Post("v2.1/" + fbUserId + "/feed", args);
-                        string feed_id = output["id"].ToString();
-                        if (!string.IsNullOrEmpty(feed_id))
-                        {
-                            pageapiHitsCount++;
-                        }
-                        if (count < 1)
-                        {
-                            objshrpost.Id = ObjectId.GenerateNewId();
-                            objshrpost.Facebookaccountid = fbUserId;
-                            objshrpost.Facebookpageid = pageId;
-                            objshrpost.PostId = FeedId;
-                            objshrpost.PostedTime = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-                            objshrpost.Facebookpagename = FbPageName;
-                            mongorepo.Add<Domain.Socioboard.Models.Mongo.SharethonPagePost>(objshrpost);
-                            ret = "success";
-                        }
-                  
+                    //if (pageapiHitsCount < pageMaxapiHitsCount)
+                    //{
+                    dynamic output = fb.Post("v2.1/" + fbUserId + "/feed", args);
+                    string feed_id = output["id"].ToString();
+                    if (!string.IsNullOrEmpty(feed_id))
+                    {
+                        pageapiHitsCount++;
+                    }
+                    if (count < 1)
+                    {
+                        objshrpost.Id = ObjectId.GenerateNewId();
+                        objshrpost.Facebookaccountid = fbUserId;
+                        objshrpost.Facebookpageid = pageId;
+                        objshrpost.PostId = FeedId;
+                        objshrpost.PostedTime = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                        objshrpost.Facebookpagename = FbPageName;
+                        mongorepo.Add<Domain.Socioboard.Models.Mongo.SharethonPagePost>(objshrpost);
+                        ret = "success";
+                    }
+                    // }
                 }
                 catch (Exception ex)
                 {
@@ -115,7 +117,7 @@ namespace SocioboardDataScheduler.Shareathon
                     return "";
                 }
 
-               
+                // }
 
             }
             catch (Exception ex)
@@ -124,13 +126,12 @@ namespace SocioboardDataScheduler.Shareathon
             }
             return ret;
         }
-
         public void ShareGroupShareathon()
         {
 
             DatabaseRepository dbr = new DatabaseRepository();
             MongoRepository _ShareathonRepository = new MongoRepository("GroupShareathon");
-            var result = _ShareathonRepository.FindAll<Domain.Socioboard.Models.Mongo.GroupShareathon>();
+            var result = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.GroupShareathon>(t => t.FacebookStatus == 1);
             var task = Task.Run(async () =>
             {
                 return await result;
@@ -142,7 +143,9 @@ namespace SocioboardDataScheduler.Shareathon
             {
                 try
                 {
-                    
+                    //ThreadPool.QueueUserWorkItem(new WaitCallback(groupshreathon), new object[] { shareathon, dbr, _ShareathonRepository });
+                    //Thread.Sleep(20 * 1000);
+                    //groupshreathon(new object[] { shareathon, dbr, _ShareathonRepository });
                     noOfthread_groupshreathonRunning++;
                     Thread thread_groupshreathon = new Thread(() => groupshreathon(new object[] { shareathon, dbr, _ShareathonRepository }));
                     thread_groupshreathon.Start();
@@ -160,7 +163,6 @@ namespace SocioboardDataScheduler.Shareathon
             }
 
         }
-
         public void ShareFeedonGroup(string fbAccesstoken, string FeedId, string pageId, string message, string fbgroupId, int time, string faceaccountId, double lastupdatetime, string Facebooknameid)
         {
 
@@ -197,48 +199,46 @@ namespace SocioboardDataScheduler.Shareathon
                         args["link"] = link;
                         try
                         {
-                          
+                            //if (groupapiHitsCount < groupMaxapiHitsCount)
+                            //{
 
-                                dynamic output = fb.Post("v2.7/" + grpdata[1] + "/feed", args);
-                                try
+                            dynamic output = fb.Post("v2.7/" + grpdata[1] + "/feed", args);
+                            try
+                            {
+                                string feed_id = output["id"].ToString();
+                                if (!string.IsNullOrEmpty(feed_id))
                                 {
-                                    string feed_id = output["id"].ToString();
-                                    if (!string.IsNullOrEmpty(feed_id))
-                                    {
-                                        groupapiHitsCount++;
-                                    }
+                                    groupapiHitsCount++;
+                                }
 
-                                }
-                                catch (Exception)
-                                {
-                                    groupapiHitsCount = groupMaxapiHitsCount;
-                                }
-                                if (count < 1)
-                                {
-                                    objshrgrp.Id = ObjectId.GenerateNewId();
-                                    objshrgrp.Facebookaccountid = faceaccountId;
-                                    objshrgrp.Facebookgroupid = grpdata[1];
-                                    objshrgrp.Facebookgroupname = grpdata[0];
-                                    objshrgrp.PostId = feedid[i];
-                                    objshrgrp.PostedTime = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-                                    mongorepo.Add<Domain.Socioboard.Models.Mongo.SharethonGroupPost>(objshrgrp);
-                                }
-                          
+                            }
+                            catch (Exception)
+                            {
+                                groupapiHitsCount = groupMaxapiHitsCount;
+                            }
+                            if (count < 1)
+                            {
+                                objshrgrp.Id = ObjectId.GenerateNewId();
+                                objshrgrp.Facebookaccountid = faceaccountId;
+                                objshrgrp.Facebookgroupid = grpdata[1];
+                                objshrgrp.Facebookgroupname = grpdata[0];
+                                objshrgrp.PostId = feedid[i];
+                                objshrgrp.PostedTime = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                                mongorepo.Add<Domain.Socioboard.Models.Mongo.SharethonGroupPost>(objshrgrp);
+                            }
+                            // }
                         }
                         catch (Exception ex)
                         {
                             groupapiHitsCount = groupMaxapiHitsCount;
                         }
-                      
+                        //}
                     }
                     Thread.Sleep(1000 * 50);
                 }
                 Thread.Sleep(1000 * 60 * time);
             }
         }
-
-
-       
         public void pageshreathon(object o)
         {
             try
@@ -283,13 +283,14 @@ namespace SocioboardDataScheduler.Shareathon
                                                 dt = dt.AddMinutes(shareathon.Timeintervalminutes);
                                                 if ((!shareathon.Lastpostid.Equals(feedId) && SBHelper.ConvertToUnixTimestamp(dt) <= SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow)))
                                                 {
-                                                   
-                                                        string ret = ShareFeed(fbAcc.AccessToken, feedId, facebookPage.FbUserId, "", fbAcc.FbUserId, facebookPage.FbUserName);
-                                                        if (!string.IsNullOrEmpty(ret))
-                                                        {
-                                                            Thread.Sleep(1000 * 60 * shareathon.Timeintervalminutes);
-                                                        }
-                                                  
+                                                    //if (pageapiHitsCount < pageMaxapiHitsCount)
+                                                    //{
+                                                    string ret = ShareFeed(fbAcc.AccessToken, feedId, facebookPage.FbUserId, "", fbAcc.FbUserId, facebookPage.FbUserName);
+                                                    if (!string.IsNullOrEmpty(ret))
+                                                    {
+                                                        Thread.Sleep(1000 * 60 * shareathon.Timeintervalminutes);
+                                                    }
+                                                    // }
                                                 }
                                             }
                                             catch
@@ -318,16 +319,80 @@ namespace SocioboardDataScheduler.Shareathon
 
                             }
                         }
-
-
-
-
                     }
 
                     catch
                     {
                         pageapiHitsCount = pageMaxapiHitsCount;
                     }
+                }
+                try
+                {
+                    if (!string.IsNullOrEmpty(shareathon.FacebookPageUrlId))
+                    {
+                        string[] urlsIds = shareathon.FacebookPageUrlId.Split(',');
+                        foreach (string id_url in urlsIds)
+                        {
+
+                            try
+                            {
+                                pageapiHitsCount = 0;
+                                Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == shareathon.Facebookaccountid);
+                                string pagename = Socioboard.Facebook.Data.Fbpages.getFbPageData(fbAcc.AccessToken, id_url);
+                                if (pageapiHitsCount < pageMaxapiHitsCount)
+                                {
+                                    string feeds = string.Empty;
+                                    feeds = Socioboard.Facebook.Data.Fbpages.getFacebookRecentPost(fbAcc.AccessToken, id_url);
+                                    string feedId = string.Empty;
+                                    if (!string.IsNullOrEmpty(feeds) && !feeds.Equals("[]"))
+                                    {
+                                        pageapiHitsCount++;
+                                        JObject fbpageNotes = JObject.Parse(feeds);
+                                        foreach (JObject obj in JArray.Parse(fbpageNotes["data"].ToString()))
+                                        {
+                                            try
+                                            {
+                                                feedId = obj["id"].ToString();
+                                                feedId = feedId.Split('_')[1];
+                                                DateTime dt = SBHelper.ConvertFromUnixTimestamp(shareathon.Lastsharetimestamp);
+                                                dt = dt.AddMinutes(shareathon.Timeintervalminutes);
+                                                if ((!shareathon.Lastpostid.Equals(feedId) && SBHelper.ConvertToUnixTimestamp(dt) <= SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow)))
+                                                {
+                                                    string ret = ShareFeed(fbAcc.AccessToken, feedId, id_url, "", fbAcc.FbUserId, pagename);
+                                                    if (!string.IsNullOrEmpty(ret))
+                                                    {
+                                                        Thread.Sleep(1000 * 60 * shareathon.Timeintervalminutes);
+                                                    }
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                pageapiHitsCount = pageMaxapiHitsCount;
+                                            }
+                                        }
+                                        fbAcc.PageShareathonUpdate = DateTime.UtcNow;
+                                        dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+                                    }
+                                    else
+                                    {
+
+                                        FilterDefinition<BsonDocument> filter = new BsonDocument("strId", shareathon.strId);
+                                        var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 1);
+                                        _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.PageShareathon>(update, filter);
+                                    }
+
+
+                                }
+                            }
+                            catch
+                            {
+                                pageapiHitsCount = pageMaxapiHitsCount;
+                            }
+                        } 
+                    }
+                }
+                catch (Exception)
+                {
                 }
             }
             catch (Exception e)
@@ -339,7 +404,6 @@ namespace SocioboardDataScheduler.Shareathon
                 noOfthread_pageshreathonRunning--;
             }
         }
-
         public void groupshreathon(object o)
         {
             try
@@ -388,9 +452,10 @@ namespace SocioboardDataScheduler.Shareathon
                                             dt = dt.AddMinutes(shareathon.Timeintervalminutes);
                                             if (shareathon.Lastpostid == null || (!shareathon.Lastpostid.Equals(feedId) && SBHelper.ConvertToUnixTimestamp(dt) <= SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow)))
                                             {
-                                                
-                                                    ShareFeedonGroup(fbAcc.AccessToken, feedId, id, "", shareathon.Facebookgroupid, shareathon.Timeintervalminutes, shareathon.Facebookaccountid, shareathon.Lastsharetimestamp, shareathon.Facebooknameid);
-                                                
+                                                //if (groupapiHitsCountNew < groupMaxapiHitsCount)
+                                                //{
+                                                ShareFeedonGroup(fbAcc.AccessToken, feedId, id, "", shareathon.Facebookgroupid, shareathon.Timeintervalminutes, shareathon.Facebookaccountid, shareathon.Lastsharetimestamp, shareathon.Facebooknameid);
+                                                //}
                                             }
                                             fbAcc.GroupShareathonUpdate = DateTime.UtcNow;
                                             dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
@@ -417,7 +482,8 @@ namespace SocioboardDataScheduler.Shareathon
                             }
                         }
 
-                       
+                        //fbAcc.SchedulerUpdate = DateTime.UtcNow;
+                        //dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
                     }
 
                     catch

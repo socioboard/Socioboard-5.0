@@ -44,6 +44,21 @@
           "lib/net40/Iesi.Collections.dll": {}
         }
       },
+      "Microsoft.AspNet.WebApi.Client/5.2.3": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "6.0.4"
+        },
+        "frameworkAssemblies": [
+          "System.Net.Http"
+        ],
+        "compile": {
+          "lib/net45/System.Net.Http.Formatting.dll": {}
+        },
+        "runtime": {
+          "lib/net45/System.Net.Http.Formatting.dll": {}
+        }
+      },
       "Microsoft.Extensions.Configuration/1.0.0": {
         "type": "package",
         "dependencies": {
@@ -722,6 +737,25 @@
           "net451/Socioboard.Facebook.dll": {}
         }
       },
+      "Socioboard.Google/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5.1",
+        "dependencies": {
+          "Microsoft.AspNet.WebApi.Client": "5.2.3",
+          "NETStandard.Library": "1.6.0"
+        },
+        "frameworkAssemblies": [
+          "System.Data",
+          "System.Xml",
+          "System.Xml.Linq"
+        ],
+        "compile": {
+          "net451/Socioboard.Google.dll": {}
+        },
+        "runtime": {
+          "net451/Socioboard.Google.dll": {}
+        }
+      },
       "Socioboard.Instagram/1.0.0": {
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1",
@@ -954,6 +988,19 @@
         "Iesi.Collections.nuspec",
         "lib/net40/Iesi.Collections.dll",
         "lib/net40/Iesi.Collections.xml"
+      ]
+    },
+    "Microsoft.AspNet.WebApi.Client/5.2.3": {
+      "sha512": "3kiI8peSXbXHDDrRuo+QaX0iCEVRe0nvn2dBDRw656uPX32UalbBlSIDUDlJxu05eau4tnuhsikiUuugvvoUoQ==",
+      "type": "package",
+      "path": "Microsoft.AspNet.WebApi.Client/5.2.3",
+      "files": [
+        "Microsoft.AspNet.WebApi.Client.5.2.3.nupkg.sha512",
+        "Microsoft.AspNet.WebApi.Client.nuspec",
+        "lib/net45/System.Net.Http.Formatting.dll",
+        "lib/net45/System.Net.Http.Formatting.xml",
+        "lib/portable-wp8+netcore45+net45+wp81+wpa81/System.Net.Http.Formatting.dll",
+        "lib/portable-wp8+netcore45+net45+wp81+wpa81/System.Net.Http.Formatting.xml"
       ]
     },
     "Microsoft.Extensions.Configuration/1.0.0": {
@@ -3420,6 +3467,11 @@
       "path": "../Socioboard.Facebook/project.json",
       "msbuildProject": "../Socioboard.Facebook/Socioboard.Facebook.xproj"
     },
+    "Socioboard.Google/1.0.0": {
+      "type": "project",
+      "path": "../Socioboard.Google/project.json",
+      "msbuildProject": "../Socioboard.Google/Socioboard.Google.xproj"
+    },
     "Socioboard.Instagram/1.0.0": {
       "type": "project",
       "path": "../Socioboard.Instagram/project.json",
@@ -3448,6 +3500,7 @@
       "NHibernate.Linq >= 1.0.0",
       "Newtonsoft.Json >= 9.0.1",
       "Socioboard.Facebook >= 1.0.0-*",
+      "Socioboard.Google >= 1.0.0-*",
       "Socioboard.Instagram >= 1.0.0-*",
       "Socioboard.LinkedIn >= 1.0.0-*",
       "Socioboard.Twitter >= 1.0.0-*"

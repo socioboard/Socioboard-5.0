@@ -1,0 +1,34 @@
+<div data-ng-controller="NotificationAllController">
+    <!-- START CONTENT -->
+    <section id="content">
+        <!--start container-->
+        <!--card widgets end-->
+        <div class="row">
+            <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                <div class="card" id="feeds">
+                    <h5 class="feeds_title blue darken-4 white-text">Your notifications</h5>
+                    <ul class="collection facebookfeeds">
+                        <li class="collection-item avatar" ng-repeat="notify in lstnotifications">
+                            <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
+                            <span class="email-title">{{notify.socialprofileName}}</span>
+                            <div class="row notify_post z-depth-1 hoverable">
+                                <div class="col m8">
+                                    <p class="break_word ultra-small">{{notify.shareMessage}}</p>
+                                    <h6 ng-if="notify.status==1" class="center success_box">Message Sent Successfully</h6>
+                                    <h6 ng-if="notify.status==0" class="center error_box">Message Not Sent</h6>
+                                </div>
+                                <!--<div class="col m4 center">
+                                    <img src="http://www.myfico.com/Images/sample_overlay.gif" class="responsive-img ">
+                                </div>-->
+                            </div>
+                            <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        <!--end container-->
+    </section>
+    <!-- END CONTENT -->
+</div>

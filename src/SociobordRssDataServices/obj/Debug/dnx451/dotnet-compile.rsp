@@ -19,6 +19,7 @@
 --reference:C:\Users\GLB-213\.nuget\packages\Facebook\7.0.10-beta\lib\net45\Facebook.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Iesi.Collections\4.0.0.4000\lib\net40\Iesi.Collections.dll
+--reference:C:\Users\GLB-213\.nuget\packages\Microsoft.AspNet.WebApi.Client\5.2.3\lib\net45\System.Net.Http.Formatting.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.Extensions.Configuration\1.0.0\lib\netstandard1.1\Microsoft.Extensions.Configuration.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.Extensions.Configuration.Abstractions\1.0.0\lib\netstandard1.0\Microsoft.Extensions.Configuration.Abstractions.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.Extensions.Configuration.Binder\1.0.0\lib\netstandard1.1\Microsoft.Extensions.Configuration.Binder.dll
@@ -70,6 +71,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll
+--reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Google\bin\Debug\net451\Socioboard.Google.dll
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.LinkedIn\bin\Debug\net451\Socioboard.LinkedIn.dll
 --reference:E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Socioboard.Twitter\bin\Debug\net451\Socioboard.Twitter.dll
@@ -81,6 +83,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.ComponentModel.DataAnnotations.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Security.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Data.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Web.Extensions.dll
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SociobordRssDataServices\Program.cs

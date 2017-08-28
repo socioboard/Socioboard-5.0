@@ -60,6 +60,7 @@
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Discovery.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Discovery.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Draft.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Draft.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DropboxAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DropboxAccount.hbm.xml
+--resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Ewallet.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Ewallet.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\EwalletWithdrawRequest.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.EwalletWithdrawRequest.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Facebookaccounts.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Facebookaccounts.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\FeedBack.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.FeedBack.hbm.xml
@@ -74,6 +75,7 @@
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\LinkedinCompanyPage.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.LinkedinCompanyPage.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\MongoBoards.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.MongoBoards.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\NewsLetter.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.NewsLetter.hbm.xml
+--resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Notifications.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Notifications.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Package.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Package.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\PaymentTransaction.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.PaymentTransaction.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\PinterestAccount.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.PinterestAccount.hbm.xml
@@ -138,6 +140,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Discovery.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Draft.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DropboxAccount.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Ewallet.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\EwalletWithdrawRequest.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Facebookaccounts.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Facebookpage.cs
@@ -155,6 +158,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\LinkedInData.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\MongoBoards.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\NewsLetter.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Notifications.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Package.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\PaymentTransaction.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\PinterestAccount.cs
@@ -178,6 +182,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ArticlesAndBlogs.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentFeedsShareathon.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentShareDataId.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentStudioShareathonIdData.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ElasticmailReport.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacaebookPageDailyReports.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPagePost.cs
@@ -233,6 +238,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TaskComments.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Tasks.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Trendingkeyword.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterFeedsEmailMessage.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterRecentDetails.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterUrlMentions.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\YoutubeReports.cs

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Hosting;
 using Socioboard.Twitter.Authentication;
 using Microsoft.AspNetCore.Cors;
 using System.Text.RegularExpressions;
+using Domain.Socioboard.Interfaces.Services;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -20,16 +21,18 @@ namespace Api.Socioboard.Controllers
     [Route("api/[controller]")]
     public class TwitterController : Controller
     {
-        public TwitterController(ILogger<FacebookController> logger, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment appEnv)
+        public TwitterController(ILogger<FacebookController> logger, IEmailSender email,  Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment appEnv)
         {
             _logger = logger;
             _appSettings = settings.Value;
             _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
             _appEnv = appEnv;
+            _emailSender = email;
         }
         private readonly ILogger _logger;
         private Helper.AppSettings _appSettings;
         private Helper.Cache _redisCache;
+        private readonly IEmailSender _emailSender;
         private readonly IHostingEnvironment _appEnv;
 
 
@@ -339,11 +342,11 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpGet("TwitterUserFollowers")]
-        public IActionResult TwitterUserFollowers(long groupId)
+        public IActionResult TwitterUserFollowers(string profileId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.TwitterMutualFans> lstTwitterUserfans = Helper.TwitterHelper.twitterfollowerslist(groupId, dbr, _appSettings);
-            return Ok(lstTwitterUserfans);
+            List<Domain.Socioboard.Models.TwitterMutualFans> lstfollowerlist = Helper.TwitterHelper.twitterfollowerslist(profileId, dbr, _appSettings);
+            return Ok(lstfollowerlist);
         }
 
         [HttpPost("BlocksUser")]
@@ -387,6 +390,39 @@ namespace Api.Socioboard.Controllers
             userSpam_Status = Repositories.TwitterRepository.TwitterSpam_user(profileId, spamScreenName, userId, dbr, _logger, _redisCache, _appSettings);
             return Ok(userSpam_Status);
         }
+
+        [HttpPost("EmailMessage")]
+        public IActionResult EmailMessage(string profileIdFrom, string socioTwitterId, long userId, string sub, string message, string toMail, string profileScnNameFrom)
+        {
+            string sendStatus = string.Empty;
+            message = message.Replace("\n", "<br />");
+            sendStatus = _emailSender.SendMailSendGrid(_appSettings.getInTouchToMail, "", toMail, "", "", sub, message, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+            Repositories.TwitterRepository.AddTwitterEmailmessage(userId, socioTwitterId, profileIdFrom, profileScnNameFrom, toMail, message, sub, _redisCache, _appSettings);
+            return Ok(sendStatus);
+        }
+
+        [HttpGet("UserMentions")]
+        public IActionResult UserMentions(string profileId, int skip, int count)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>();
+
+            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
+            var builder = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>.Sort;
+            var sort = builder.Descending(t => t.messageDate);
+            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId == profileId && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention), sort, skip, count);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwitterTweets = task.Result;
+            if (lstTwitterTweets != null)
+            {
+                lstTwtMessages.AddRange(lstTwitterTweets);
+            }
+            return Ok(lstTwtMessages.OrderByDescending(t => t.messageDate));
+        }
+
 
     }
 }

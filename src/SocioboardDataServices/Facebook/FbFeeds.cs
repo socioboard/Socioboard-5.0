@@ -457,7 +457,7 @@ namespace SocioboardDataServices.Facebook
 
         public static List<MongoFbPostComment> FbPostComments(string postid, string AccessToken)
         {
-
+            apiHitsCount++;
             List<MongoFbPostComment> lstFbPOstComment = new List<MongoFbPostComment>();
             string ret = string.Empty;
             try

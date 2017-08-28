@@ -1,5 +1,4 @@
-﻿
-using Domain.Socioboard.Models.Mongo;
+﻿using Domain.Socioboard.Models.Mongo;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
@@ -806,6 +805,14 @@ namespace SocioboardDataServices.Twitter
                         {
                             Console.WriteLine(ex.StackTrace);
                         }
+                        try
+                        {
+                            objTwitterFeed.mediaType = item["extended_entities"]["media"][0]["type"].ToString();
+                        }
+                        catch
+                        {
+                            objTwitterFeed.mediaType = "status";
+                        }
 
                         MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed");
                        
@@ -822,7 +829,7 @@ namespace SocioboardDataServices.Twitter
                         {
                             var builders = Builders<BsonDocument>.Filter;
                             FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterFeed.messageId);
-                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterFeed.fromProfileUrl);
+                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterFeed.fromProfileUrl).Set("mediaType", objTwitterFeed.mediaType).Set("Retweetcount", objTwitterFeed.Retweetcount).Set("Likecount", objTwitterFeed.Likecount);
                             mongorepo.Update<MongoTwitterFeed>(update, filter);
                         }
                     }

@@ -4,6 +4,8 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
     $scope.$on('$viewContentLoaded', function () {
         var preloadmore = false;
         $scope.dispbtn = true;
+        $scope.query = {};
+        $scope.queryBy = '$';
         $rootScope.boardComposeMessage = {};
         $scope.lstBoardFeeds = [];
       //  $scope.lstBoardFeeds.length = 1;

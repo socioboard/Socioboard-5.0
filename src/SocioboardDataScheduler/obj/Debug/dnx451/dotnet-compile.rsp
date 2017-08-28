@@ -20,6 +20,7 @@
 --reference:C:\Users\GLB-213\.nuget\packages\Facebook\7.0.10-beta\lib\net45\Facebook.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Iesi.Collections\4.0.0.4000\lib\net40\Iesi.Collections.dll
+--reference:C:\Users\GLB-213\.nuget\packages\Imgur.API\4.0.1\lib\net45\Imgur.API.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.Bcl.Async\1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.Bcl.Async\1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll
 --reference:C:\Users\GLB-213\.nuget\packages\Microsoft.Bcl.Async\1.0.168\lib\net40\Microsoft.Threading.Tasks.dll
@@ -92,9 +93,11 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Web.Extensions.dll
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\Program.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\ContentStudio\ContentTrendDataScheduler.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\Facebook\FacebookDataScheduler.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\Facebook\FacebookScheduler.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\Helper\AppSettings.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\Helper\FBPostContentFeeds.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\Helper\MongoRepository.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\Helper\SessionFactory.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\SocioboardDataScheduler\LinkedIn\LinkedInCompanyPageScheduler.cs

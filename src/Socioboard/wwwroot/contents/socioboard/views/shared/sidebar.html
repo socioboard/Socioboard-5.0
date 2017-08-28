@@ -215,9 +215,9 @@
                             <li class="truncate">
                                 <a href="#/trending_content.html">Trending Now</a>
                             </li>
-                            <!--<li class="truncate">
-                                <a href="#/backlinks.html">Backlinks</a>
-                            </li>-->
+                            <li class="truncate">
+                                <a href="#/studio_shareathon_que.html">Shareathon Queue</a>
+                            </li>
                             <!--<li class="truncate">
                                 <a href="#/contentanalysis.html">Content Analysis</a>
                             </li>
@@ -230,23 +230,92 @@
                 <!--content studio end-->
                 <!--Discovery for paid User-->
                 <li class="bold" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 ||user.AccountType==6 || user.AccountType==7 " >
-                    <a class="collapsible-header waves-effect waves-cyan">
+                    <a class="collapsible-header waves-effect waves-orange">
                         <i class="icon-globe-alt"></i> Discovery
                     </a>
                     <div class="collapsible-body">
-                        <ul>
+                        <ul class="collapsible collapsible-accordion">
                             <li class="truncate">
-                                <a href="#/discovery">Discovery</a>
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    Search
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="truncate">
+                                            <a href="#/discovery">Discovery</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="#/smartsearch">Smart Search</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
                             <li class="truncate">
-                                <a href="#/smartsearch">Smart Search</a>
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    Group Post
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li class="truncate">
+                                            <a href="#/facebookgrouppost">Facebook Group Post</a>
+                                        </li>
+                                        <li class="truncate">
+                                            <a href="#/linkedingrouppost">LinkedIn Group Post</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </li>
-                            <li class="truncate">
-                                <a href="#/facebookgrouppost">Facebook Group Post</a>
-                            </li>
-                            <li class="truncate">
-                                <a href="#/linkedingrouppost">LinkedIn Group Post</a>
-                            </li>
+                            <!--<li class="truncate">
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    Suggestions
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul class="collapsible collapsible-accordion">-->
+                                        <!--<li class="truncate">
+                                            <a class="collapsible-header waves-effect waves-orange">
+                                                Your Followers
+                                            </a>
+                                            <div class="collapsible-body">
+                                            <ul>
+                                                <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                                    <a href="#/your_followers/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        </li>-->
+                                        <!--<li class="truncate">
+                                            <a class="collapsible-header waves-effect waves-orange">
+                                                Conversed with
+                                            </a>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li class="truncate">
+                                                        <a href="#/.html">Chanchal Santra</a>
+                                                    </li>
+                                                    <li class="truncate">
+                                                        <a href="#/.html">Abhi</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>-->
+                                        <!--<li class="truncate">
+                                            <a class="collapsible-header waves-effect waves-orange">
+                                                Have mentioned with
+                                            </a>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li class="truncate">
+                                                        <a href="#/.html">Chanchal Santra</a>
+                                                    </li>
+                                                    <li class="truncate">
+                                                        <a href="#/.html">Abhi</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>-->
+                                    <!--</ul>
+                                </div>
+                            </li>-->
                         </ul>
                     </div>
                 </li>

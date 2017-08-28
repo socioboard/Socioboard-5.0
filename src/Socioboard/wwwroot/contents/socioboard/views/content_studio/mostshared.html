@@ -29,7 +29,7 @@
                 <h4>Most Shared</h4>
             </div>
             <div class="col m3 s12 margin-top-10">
-                <a class="btn img_comp_btn" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
+                <a class="btn btn_style img_comp_btn right" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
             </div>
         </div>
     </div>
@@ -49,6 +49,7 @@
                 <table id="MostShared" class="display responsive-table striped" cellspacing="0" width="100%">
                     <thead>
                         <tr>
+                            <th>Select</th>
                             <th>Articles</th>
                             <th>Action</th>
                             <th>Facebook Engagements</th>
@@ -66,31 +67,48 @@
                                 <label for="{{lstData.postId}}">&nbsp;</label>
                             </td>
                             <td class="">
-                                <a class="grey-text text-darken-3" target="_blank" href="{{lstData.postUrl}}">{{lstData.title}}</a>
-                                <br>
+                                <a class="grey-text text-darken-3" target="_blank" href="{{lstData.postUrl}}">{{lstData.title}} <br />By:{{lstData.userName}}</a>                                
                             </td>
                             <td class="center">
                                 <a class="btn-floating btn-large red modal-trigger center" ng-click="ComposeMessageModal(lstData)" href="javascript:void(0)">
                                     <i class="large icon-share"></i>
                                 </a>
                             </td>
-                            <td class="center">
+                            <td class="center" ng-if="lstData.fbengagementCount<1000">
                                 <a class="btn-floating waves-effect waves-light indigo darken-3 center">{{lstData.fbengagementCount}}</a>
                             </td>
-                            <td class="center">
+                            <td class="center" ng-if="lstData.fbengagementCount>1000">
+                                <a class="btn-floating waves-effect waves-light indigo darken-3 center">{{lstData.fbengagementCount/1000 |number:0}}k</a>
+                            </td>
+                            <td class="center" ng-if="lstData.linShareCount<1000">
                                 <a class="btn-floating waves-effect waves-light blue darken-4 center">{{lstData.linShareCount}}</a>
                             </td>
-                            <td class="center">
+                            <td class="center" ng-if="lstData.linShareCount>1000">
+                                <a class="btn-floating waves-effect waves-light blue darken-4 center">{{lstData.linShareCount/1000 |number:0}}k</a>
+                            </td>
+                            <td class="center" ng-if="lstData.twtShareCount<1000">
                                 <a class="btn-floating waves-effect waves-light light-blue accent-2 center">{{lstData.twtShareCount}}</a>
                             </td>
-                            <td class="center">
+                            <td class="center" ng-if="lstData.twtShareCount>1000">
+                                <a class="btn-floating waves-effect waves-light light-blue accent-2 center">{{lstData.twtShareCount/1000 |number:0}}k</a>
+                            </td>
+                            <td class="center" ng-if="lstData.pinShareCount<1000">
                                 <a class="btn-floating waves-effect waves-light red darken-4 center">{{lstData.pinShareCount}}</a>
                             </td>
-                            <td class="center">
+                            <td class="center" ng-if="lstData.pinShareCount>1000">
+                                <a class="btn-floating waves-effect waves-light red darken-4 center">{{lstData.pinShareCount/1000 |number:0}}k</a>
+                            </td>
+                            <td class="center" ng-if="lstData.gplusShareCount<1000">
                                 <a class="btn-floating waves-effect waves-light red accent-4 center">{{lstData.gplusShareCount}}</a>
                             </td>
-                            <td class="center">
+                            <td class="center" ng-if="lstData.gplusShareCount>1000">
+                                <a class="btn-floating waves-effect waves-light red accent-4 center">{{lstData.gplusShareCount/1000 |number:0}}k</a>
+                            </td>
+                            <td class="center" ng-if="lstData.totalShareCount<1000" >
                                 <a class="btn-floating waves-effect waves-light grey darken-3 center">{{lstData.totalShareCount}}</a>
+                            </td>
+                            <td class="center" ng-if="lstData.totalShareCount>1000">
+                                <a class="btn-floating waves-effect waves-light grey darken-3 center">{{lstData.totalShareCount/1000|number:0}}k</a>
                             </td>
                         </tr>
                     </tbody>
@@ -144,6 +162,10 @@
                     </div>
                     <div class="row">
                         <div>
+                            <div class="input-field col s12">
+                                <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
+                                <label for="search_name">Search Profile</label>
+                            </div>
                             <ul class="shinh" id="checkboxdatarss">
                                 <li style="padding:5px 0;">
                                     <label>
@@ -151,7 +173,7 @@
                                         <span style="float:left;">Check All</span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
@@ -159,7 +181,7 @@
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
@@ -167,7 +189,7 @@
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
@@ -175,7 +197,7 @@
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
@@ -183,7 +205,7 @@
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">
+                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
                                     <label>
                                         <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
@@ -218,7 +240,7 @@
                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1} && filter:{profileType:0}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                         </select>
                        
-                        <label>Selects An Account To Automate Post</label>
+                        <label>Select an Account to Automate post</label>
                     </div>
                    
                     <div class="input-field col s12">

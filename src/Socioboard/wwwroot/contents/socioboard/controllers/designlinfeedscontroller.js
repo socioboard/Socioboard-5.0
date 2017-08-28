@@ -11,6 +11,8 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         var reachLast = false; // to check the page ends last or not
         $scope.dispbtn = false;
         $scope.disbtncom = true;
+        $scope.query = {};
+        $scope.queryBy = '$';
         //  $scope.loadmore = "Loading More data..";
         //$scope.continue = true;
         //$scope.$watch('continue', function () {

@@ -18,11 +18,12 @@ namespace SociobordRssDataServices.Rss
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     MongoRepository _MongoRepository = new MongoRepository("Rss");
-                    List<Domain.Socioboard.Models.RssFeedUrl> lstRssFeedUrl = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl != null && t.Keywords == null).ToList();
-                    //lstRssFeedUrl = lstRssFeedUrl.Where(t => t.rssFeedUrlId.Equals(68)).ToList();
-                    foreach (var item in lstRssFeedUrl)
+                    List<Domain.Socioboard.Models.RssFeedUrl> lstRssdata = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t=>t.ProfileId!=null && t.Keywords==null).ToList();
+
+                    foreach (var item in lstRssdata)
                     {
-                        var ret = _MongoRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.RssFeedUrl == item.rssurl);
+                       // List<Domain.Socioboard.Models.RssFeedUrl> lstRssFeedUrl = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl == lstRssdata.FirstOrDefault().rssurl && t.Keywords == null && t.ProfileId == lstRssdata.FirstOrDefault().ProfileId).ToList();
+                        var ret = _MongoRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.RssFeedUrl == item.rssurl && t.ProfileId==item.ProfileId);
                         var task = Task.Run(async () =>
                         {
                             return await ret;

@@ -25,10 +25,10 @@
     <div class="container">
         <div class="row">
             <div class="col m6 s12">
-                <h5>Public Image Library</h5>                
-            </div>
+                <h5>Public Image Library</h5>   
+             </div>
             <div class="col m6 s12" ng-if="UserEmail == groupdetails[0].email">
-                <h5 class="right" ng-model="totalimgsize">Total Used Space - <span class="blue-text">{{totalimagesize}} / 20MB</span></h5>
+                <h5 class="right" ng-model="totalimgsize">Total Used Space - <span class="blue-text">{{totalimagesize[0].totalsize}} / 20MB</span></h5>
              </div>
         </div>
         
@@ -39,11 +39,16 @@
         <!--start container-->
         <div class="container">
             <div class="row">
-               <div class="col s12 m12 l12" ng-if="UserEmail == groupdetails[0].email">
-                   <a class="waves-effect waves-light btn btn_style grey darken-4 modal-trigger" href="#ImgUploadModal"><i class="icon-cloud-upload"></i> <span>Upload Image</span></a>
-                </div>
+                <div class="col s12 m12 l12" ng-if="UserEmail == groupdetails[0].email">
+                    <div ng-if="totalimagesize[0].totalinbytes >= totalimagesize[0].max">
+                        <a class="waves-effect waves-light btn btn_style grey darken-4" ng-click="reachetotallength()"><i class="icon-cloud-upload"></i> <span>Upload Image</span></a> 
+                    </div>
+                    <div ng-if="totalimagesize[0].totalinbytes < totalimagesize[0].max">
+                        <a class="waves-effect waves-light btn btn_style grey darken-4 modal-trigger" ng-click="openuploadmodel()"><i class="icon-cloud-upload"></i> <span>Upload Image</span></a>
+                    </div>
+                 </div>
                 <!-- Modal Structure -->
-                <div id="ImgUploadModal" class="modal">
+                <div id="ImgUploadModal2" class="modal">
                     <div class="modal-content">
                         <form class="col s12" ng-submit="SaveImageForPublic()">
                             <div class="row">
@@ -52,7 +57,7 @@
                             </div>
                             <div class="row">
                                 <div class="input-field col s12">
-                                  <input id="img_name" type="text" class="validate" required>
+                                  <input id="img_name" type="text" class="validate" required">
                                   <label for="img_name">Enter Name of Image</label>
                                 </div>
                             </div>
@@ -65,10 +70,14 @@
                               </div>
                             </div>
                             <div class="row margin-bottom-10 margin-top-10">
-                                <button class="btn blue white-text modal-action waves-effect waves-blue btn-flat right" type="submit" id="mail_btn">
+                                <button ng-if="uploadbtn==true" class="btn blue white-text modal-action waves-effect waves-blue btn-flat right" type="submit" id="mail_btn">
                                     Upload
                                     <i class="icon-cloud-upload"></i>
                                 </button>
+                                <a ng-if="uploadbtn==false" class="btn grey white-text modal-action waves-effect waves-blue btn-flat right" type="submit" id="mail_btn">
+                                    Uploading
+                                    <i class="icon-cloud-upload"></i>
+                                </a>
                             </div>
                         </form>
                     </div>
@@ -126,8 +135,14 @@
                     <form class="col s12">
                         <div class="row">
                             <div class="col s12 m6 l7">
+                                <div class="row no-space">
+                                    <div class="input-field col s12">
+                                        <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
+                                        <label for="search_name">Search Profile</label>
+                                    </div>
+                                </div>
                                 <p>Select Profiles</p>
-                                <div class="lst_scroll">
+                                <div class="lst_scroll row">
                                    <ul class="shinh" id="checkboxdataboard">
                                         <li style="padding:5px 0;">
                                             <label>
@@ -135,7 +150,7 @@
                                                 <span style="float:left;">Check All</span>
                                             </label>
                                         </li>
-                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                        <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                             
                                             <label>
                                                 <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />        
@@ -144,7 +159,7 @@
                                                 <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
                                             </label>
                                         </li>
-                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                        <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                             
                                             <label>
                                                 <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
@@ -153,7 +168,7 @@
                                                 <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                             </label>
                                         </li>
-                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:2}" style="padding:5px 0;">                                            
+                                        <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">                                            
                                             <label>
                                                 <input name="selector[]" class="subcheckboxboard" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                 <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
@@ -161,7 +176,7 @@
                                                 <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
                                             </label>
                                         </li>
-                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">                                            
+                                        <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">                                            
                                             <label>
                                                 <input name="selector[]" class="subcheckboxboard" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                 <img src="{{profile.profilePic}}"  style="width:20px;float:left;margin-right: 5px;"/>
@@ -169,7 +184,7 @@
                                                 <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
                                             </label>
                                         </li>
-                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:4}" style="padding:5px 0;">                                            
+                                        <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">                                            
                                             <label>
                                                 <input name="selector[]" class="subcheckboxboard" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                 <img src="{{profile.profilePic}}"  style="width:20px;float:left;margin-right: 5px;"/>
@@ -181,15 +196,14 @@
                                 </div>
                             </div>
                             <div class="col s12 m6 l5">
-                                <p>Select your file</p>
+                                <p>Image</p>
                                 <input type="hidden" id="imageUrl" value="{{composePostdata.image}}" />
                                 <input type="file" id="composeImage" class="dropify" disabled="disabled" after-render data-default-file="{{composePostdata.image}}" />
                             </div>
                         </div>
                         <div class="row no-space">
-                            <div class="input-field col s12">
-                                <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
-                                <label for="compose">Message</label>
+                            <div class="emoji-picker-container">
+                                <textarea id="composeMessage" class="materialize-textarea" length="5000" data-emojiable="true" placeholder="Type your message"></textarea>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -219,7 +233,7 @@
                                     <h5 class="blue-text no-space">Asset Details</h5>
                                     <hr />
                                     <h6 class="grey-text text-darken-1">Name : <span class="grey-text text-darken-4">{{imagedetail.imageName}}</span></h6>
-                                    <h6 class="grey-text text-darken-1">Uploaded : <span class="grey-text text-darken-4">{{imagedetail.imageuploadeddate | date:'medium'}}</span> </h6>
+                                    <h6 class="grey-text text-darken-1">Uploaded : <span class="grey-text text-darken-4">{{imagedetail.imageuploadeddate | date}}</span> </h6>
                                     <h6 class="grey-text text-darken-1">Tags : <span class="grey-text text-darken-4">{{imagedetail.tags}}</span> </h6>
                                     <h6 class="grey-text text-darken-1">Image Type : <span class="grey-text text-darken-4">{{imagedetail.folderType}}</span> </h6>
                                     <h6 class="grey-text text-darken-1">Image Size : <span class="grey-text text-darken-4">{{imglength}}</span> </h6>

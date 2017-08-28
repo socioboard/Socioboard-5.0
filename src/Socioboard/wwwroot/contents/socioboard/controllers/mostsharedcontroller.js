@@ -4,6 +4,8 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
         $scope.disbtncom = true;
         $scope.draftbtn = true;
         $scope.dispbtn = true;
+        $scope.query = {};
+        $scope.queryBy = '$';
         $scope.composePostdata = {};
         MostShared();
         $scope.deleteMsg = function(profileId){
@@ -58,50 +60,21 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
                  formData.append('FacebookPageId', pageId);
                 var shareData = $scope.datasharethon;
                 formData.append('shareData', x);
-                //var data = {
-                //    'fbuserIds': $('#shraeathonfacebookpage').val(),
-                //    'timeIntervals': $('#shraeathontimeinterval').val(),
-                   // 'shareData': $scope.datasharethon
-            //    }
-               // formData1.append('shareData', data);
-                //codes to add  page shreathon     long userId, string fbuserId, int timeInterval
-                //  $http.post(apiDomain + '/api/Shareathon/AddPageShareathon?userId=' + $rootScope.user.Id + '&FacebookPageId=' + pageId + '&Facebookaccountid=' + accountId + '&Timeintervalminutes=' + timeInterval)
-              //  $http.post(apiDomain + '/api/ContentStudio/saveDataIdForShare?shareData=' + datasharethon + '&fbuserIds=' + pageId + '&timeIntervals=' + timeInterval)
-                //$http.post(apiDomain + '/api/ContentStudio/saveDataIdForShare',{
-                //    params: {
-                //        fbuserIds:pageId,
-                //        timeIntervals: timeInterval, 
-                //        shareData:datasharethon
-                //    }
-                //})
-                //var shareData = JSON.stringify($scope.datasharethon);
-               // console.log(" --- > encodeURIComponent(datasharethon) : ", shareData);
+              
                 $http({
 
                     method: 'POST',
-                    url: apiDomain + '/api/ContentStudio/saveDataIdForShare?fbuserIds=' + pageId + '&timeIntervals=' + timeInterval,
+                    url: apiDomain + '/api/ContentStudio/saveDataIdForShare?userId=' + $rootScope.user.Id + '&fbuserIds=' + pageId + '&timeIntervals=' + timeInterval,
                     data: formData,
                     headers: {
                         'Content-Type': undefined
                     },                               
                     transformRequest: angular.identity,
-                })     
-                
-                //$http({
-                //    method: "POST",
-                  
-                //    url: apiDomain + '/api/ContentStudio/saveDataIdForShare',
-                //    data: sb,
-                //    headers: {
-                //        "Content-Type": "application/json"
-                //    },
-                //    transformRequest: angular.identity,
-                //})
-
-                    .then(function (response) {
+                }).then(function (response) {
                         $scope.lstAdvSearhDataaa = response.data;
                         $scope.dispbtn = true;
-                          swal(response.data);
+                        $('#ShareathonModal').closeModal();
+                          swal("successfully scheduled");
                       }, function (reason) {
                           $scope.error = reason.data;
                       });

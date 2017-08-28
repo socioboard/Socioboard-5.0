@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Socioboard.GoogleLib.Authentication;
 using Socioboard.GoogleLib.Youtube.Core;
+using SocioboardDataServices.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +22,10 @@ namespace SocioboardDataServices.Youtube
                     {
 
                         Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
-                        string apiKey = Helper.AppSettings.GoogleApiKey;
-                        oAuthTokenYoutube ObjoAuthTokenYtubes = new oAuthTokenYoutube(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
-                        oAuthToken objToken = new oAuthToken(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
-                        Video ObjVideo = new Video(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
+                        string apiKey = AppSettings.GoogleApiKey;
+                        oAuthTokenYoutube ObjoAuthTokenYtubes = new oAuthTokenYoutube(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
+                        oAuthToken objToken = new oAuthToken(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
+                        Video ObjVideo = new Video(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
 
                         JObject userinfo = new JObject();
                         List<Domain.Socioboard.Models.YoutubeChannel> lstYtChannels = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.IsActive).ToList();

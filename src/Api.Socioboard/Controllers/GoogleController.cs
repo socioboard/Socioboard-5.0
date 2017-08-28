@@ -125,6 +125,10 @@ namespace Api.Socioboard.Controllers
                 {
                     if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
                     {
+                        if (lstUser.First().RefrralCode == null)
+                        {
+                            lstUser.First().RefrralCode = "SOCIOBOARD_" + lstUser.First().Id;
+                        }
                         DateTime d1 = DateTime.UtcNow;
                         //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
                         //userTable.LastLoginTime = d1;

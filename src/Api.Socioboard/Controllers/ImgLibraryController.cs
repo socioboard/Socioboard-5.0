@@ -40,72 +40,92 @@ namespace Api.Socioboard.Controllers
         [HttpPost("SaveImageforPrivate")]
         public IActionResult SaveImageforPrivate(long userId,string imgName, IFormFile files)
         {
-            long imglength = 0;
-            var filename = "";
-            var apiimgPath = "";
-            var uploads = string.Empty;
-            string imgPath = string.Empty;
-            string imagePath= string.Empty;
-            if (files != null)
+            try
             {
-
-                if (files.Length > 0)
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                double imgsize = dbr.Find<Domain.Socioboard.Models.ImgLibrary>(t => t.UserId == userId).Sum(t => t.ImageSize);
+                if(imgsize <= 20971520)
                 {
-                    var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
-                    // await file.s(Path.Combine(uploads, fileName));
-                    filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
-                            .Parse(files.ContentDisposition)
-                            .FileName
-                            .Trim('"');
-                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
-                    filename = _env.WebRootPath + "\\upload\\UserImages" + $@"\{tempName}";
-                    imgPath = filename;
-                    uploads = _appSettings.ApiDomain + "/api/Media/getUserImages?id=" + $@"{tempName}";
-                    //imglength = new System.IO.FileInfo(filenameforlength).Length;
-                    // size += file.Length;
-                    try
+                    long imglength = 0;
+                    var filename = "";
+                    var apiimgPath = "";
+                    var uploads = string.Empty;
+                    string imgPath = string.Empty;
+                    string imagePath = string.Empty;
+                    string localpath = string.Empty;
+                    if (files != null)
                     {
-                        using (FileStream fs = System.IO.File.Create(filename))
-                        {
-                            files.CopyTo(fs);
-                            fs.Flush();
-                        }
-                         imglength = new System.IO.FileInfo(filename).Length;
-                        filename = uploads;
-                      // long imglength = new System.IO.FileInfo(imagelocalPath).Length;
-                    }
-                    catch (System.Exception ex)
-                    {
-                        if (!string.IsNullOrEmpty(imagePath))
-                        {
-                            uploads = imagePath;
-                        }
-                    }
 
+                        if (files.Length > 0)
+                        {
+                            var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+                            // await file.s(Path.Combine(uploads, fileName));
+                            filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                                    .Parse(files.ContentDisposition)
+                                    .FileName
+                                    .Trim('"');
+                            var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                            filename = _env.WebRootPath + "\\upload\\UserImages" + $@"\{tempName}";
+                            localpath = filename;
+                            imgPath = filename;
+                            uploads = _appSettings.ApiDomain + "/api/Media/getUserImages?id=" + $@"{tempName}";
+                            //imglength = new System.IO.FileInfo(filenameforlength).Length;
+                            // size += file.Length;
+                            try
+                            {
+                                using (FileStream fs = System.IO.File.Create(filename))
+                                {
+                                    files.CopyTo(fs);
+                                    fs.Flush();
+                                }
+                                imglength = new System.IO.FileInfo(filename).Length;
+                                filename = uploads;
+                                // long imglength = new System.IO.FileInfo(imagelocalPath).Length;
+                            }
+                            catch (System.Exception ex)
+                            {
+                                if (!string.IsNullOrEmpty(imagePath))
+                                {
+                                    uploads = imagePath;
+                                }
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                    }
+                    Domain.Socioboard.Models.ImgLibrary lstImglibrary = new ImgLibrary();
+                    //long len = (new System.IO.FileInfo(filename)).Length;
+                    lstImglibrary.UserId = userId;
+                    lstImglibrary.ImageName = imgName;
+                    lstImglibrary.ImagePath = filename;
+                    lstImglibrary.ImageSize = imglength;
+                    lstImglibrary.Imageuploadeddate = DateTime.UtcNow;
+                    lstImglibrary.Tags = "";
+                    lstImglibrary.FolderType = "Private";
+                    lstImglibrary.LocalImagePath = localpath;
+                    int SavedStatus = dbr.Add<Domain.Socioboard.Models.ImgLibrary>(lstImglibrary);
+                    if (SavedStatus == 1)
+                    {
+                        return Ok("Image saved successfully");
+                    }
+                    else
+                    {
+                        return BadRequest("Something went wrong");
+                    }
                 }
+                else
+                {
+                    return BadRequest("You have reached maximum library sapce");
+                }
+                
             }
-            else 
-            {
-            }
-            Domain.Socioboard.Models.ImgLibrary lstImglibrary = new ImgLibrary();
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            //long len = (new System.IO.FileInfo(filename)).Length;
-            lstImglibrary.UserId = userId;
-            lstImglibrary.ImageName = imgName;
-            lstImglibrary.ImagePath = filename;
-            lstImglibrary.ImageSize = imglength;
-            lstImglibrary.Imageuploadeddate = DateTime.UtcNow;
-            lstImglibrary.Tags = "";
-           lstImglibrary.FolderType = "Private";
-            int SavedStatus = dbr.Add<Domain.Socioboard.Models.ImgLibrary>(lstImglibrary);
-            if(SavedStatus==1)
-            {
-                return Ok("Image saved successfully");
-            }
-            else
+            catch(Exception ex)
             {
                 return BadRequest("Something went wrong");
             }
+           
 
 
             
@@ -114,76 +134,93 @@ namespace Api.Socioboard.Controllers
         [HttpPost("SaveImageForPublic")]
         public IActionResult SaveImageForPublic(long userId, string imgName, IFormFile files)
         {
-            long imglength = 0;
-            var filename = "";
-            var apiimgPath = "";
-            var uploads = string.Empty;
-            string imgPath = string.Empty;
-            string imagePath = string.Empty;
-            string localpath = string.Empty;
-            if (files != null)
+            try
             {
-
-                if (files.Length > 0)
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                double imgsize = dbr.Find<Domain.Socioboard.Models.ImgLibrary>(t => t.UserId == userId).Sum(t => t.ImageSize);
+                if(imgsize <= 20971520)
                 {
-                    var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
-                    // await file.s(Path.Combine(uploads, fileName));
-                    filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
-                            .Parse(files.ContentDisposition)
-                            .FileName
-                            .Trim('"');
-                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
-                    filename = _env.WebRootPath + "\\upload\\UserImages" + $@"\{tempName}";
-                    localpath = filename;
-                    imgPath = filename;
-                    uploads = _appSettings.ApiDomain + "/api/Media/getUserImages?id=" + $@"{tempName}";
-                    //imglength = new System.IO.FileInfo(filenameforlength).Length;
-                    // size += file.Length;
-                    try
+                    long imglength = 0;
+                    var filename = "";
+                    var apiimgPath = "";
+                    var uploads = string.Empty;
+                    string imgPath = string.Empty;
+                    string imagePath = string.Empty;
+                    string localpath = string.Empty;
+                    if (files != null)
                     {
-                        using (FileStream fs = System.IO.File.Create(filename))
-                        {
-                            files.CopyTo(fs);
-                            fs.Flush();
-                        }
-                        imglength = new System.IO.FileInfo(filename).Length;
-                        filename = uploads;
-                        // long imglength = new System.IO.FileInfo(imagelocalPath).Length;
-                    }
-                    catch (System.Exception ex)
-                    {
-                        if (!string.IsNullOrEmpty(imagePath))
-                        {
-                            uploads = imagePath;
-                        }
-                    }
 
+                        if (files.Length > 0)
+                        {
+                            var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+                            // await file.s(Path.Combine(uploads, fileName));
+                            filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                                    .Parse(files.ContentDisposition)
+                                    .FileName
+                                    .Trim('"');
+                            var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                            filename = _env.WebRootPath + "\\upload\\UserImages" + $@"\{tempName}";
+                            localpath = filename;
+                            imgPath = filename;
+                            uploads = _appSettings.ApiDomain + "/api/Media/getUserImages?id=" + $@"{tempName}";
+                            //imglength = new System.IO.FileInfo(filenameforlength).Length;
+                            // size += file.Length;
+                            try
+                            {
+                                using (FileStream fs = System.IO.File.Create(filename))
+                                {
+                                    files.CopyTo(fs);
+                                    fs.Flush();
+                                }
+                                imglength = new System.IO.FileInfo(filename).Length;
+                                filename = uploads;
+                                // long imglength = new System.IO.FileInfo(imagelocalPath).Length;
+                            }
+                            catch (System.Exception ex)
+                            {
+                                if (!string.IsNullOrEmpty(imagePath))
+                                {
+                                    uploads = imagePath;
+                                }
+                            }
+
+                        }
+                    }
+                    else
+                    {
+                    }
+                    Domain.Socioboard.Models.ImgLibrary lstImglibrary = new ImgLibrary();
+                    //DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                    //long len = (new System.IO.FileInfo(filename)).Length;
+                    lstImglibrary.UserId = userId;
+                    lstImglibrary.ImageName = imgName;
+                    lstImglibrary.ImagePath = filename;
+                    lstImglibrary.ImageSize = imglength;
+                    lstImglibrary.Imageuploadeddate = DateTime.UtcNow;
+                    lstImglibrary.Tags = "";
+                    lstImglibrary.FolderType = "Public";
+                    lstImglibrary.LocalImagePath = localpath;
+                    int SavedStatus = dbr.Add<Domain.Socioboard.Models.ImgLibrary>(lstImglibrary);
+                    if (SavedStatus == 1)
+                    {
+                        return Ok("Image saved successfully");
+                    }
+                    else
+                    {
+                        return BadRequest("Something went wrong");
+                    }
+                }
+               
+                else
+                {
+                    return BadRequest("You have reached maximum library sapce");
                 }
             }
-            else
-            {
-            }
-            Domain.Socioboard.Models.ImgLibrary lstImglibrary = new ImgLibrary();
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            //long len = (new System.IO.FileInfo(filename)).Length;
-            lstImglibrary.UserId = userId;
-            lstImglibrary.ImageName = imgName;
-            lstImglibrary.ImagePath = filename;
-            lstImglibrary.ImageSize = imglength;
-            lstImglibrary.Imageuploadeddate = DateTime.UtcNow;
-            lstImglibrary.Tags = "";
-            lstImglibrary.FolderType = "Public";
-            lstImglibrary.LocalImagePath = localpath;
-            int SavedStatus = dbr.Add<Domain.Socioboard.Models.ImgLibrary>(lstImglibrary);
-            if (SavedStatus == 1)
-            {
-                return Ok("Image saved successfully");
-            }
-            else
+            catch (Exception ex)
             {
                 return BadRequest("Something went wrong");
             }
-
+            
 
 
         }
@@ -211,52 +248,87 @@ namespace Api.Socioboard.Controllers
         [HttpGet("LoadImagesForPublic")]
         public IActionResult LoadImagesForPublic(long groupId, long userId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            Groupmembers grpadmin = dbr.Single<Groupmembers>(t => t.groupid == groupId && t.isAdmin == true);
-            List<ImgLibrary> lstImages = dbr.Find<ImgLibrary>(t => t.UserId == grpadmin.userId && t.FolderType == "Public").ToList();
-            if (lstImages != null)
+            try
             {
-                return Ok(lstImages);
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                Groupmembers grpadmin = dbr.Single<Groupmembers>(t => t.groupid == groupId && t.isAdmin == true);
+                List<ImgLibrary> lstImages = dbr.Find<ImgLibrary>(t => t.UserId == grpadmin.userId && t.FolderType == "Public").ToList();
+                if (lstImages != null)
+                {
+                    return Ok(lstImages);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch(Exception ex)
             {
                 return NotFound();
             }
+           
 
         }
 
         [HttpGet("LoadImagesForPrivate")]
         public IActionResult LoadImagesForPrivate(long userid)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            List<ImgLibrary> lstImages = dbr.Find<ImgLibrary>(t => t.UserId == userid && t.FolderType=="Private").ToList();
-            if (lstImages != null)
+            try
             {
-                return Ok(lstImages);
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                List<ImgLibrary> lstImages = dbr.Find<ImgLibrary>(t => t.UserId == userid && t.FolderType == "Private").ToList();
+                if (lstImages != null)
+                {
+                    return Ok(lstImages);
+                }
+                else
+                {
+                    return NotFound();
+                }
             }
-            else
+            catch(Exception ex)
             {
                 return NotFound();
             }
+            
 
         }
 
         [HttpGet("Totalimagesize")]
         public IActionResult Totalimagesize(long userid)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            double imgsize = dbr.Find<Domain.Socioboard.Models.ImgLibrary>(t => t.UserId==userid).Sum(t=>t.ImageSize)/1024;
-            if (imgsize < 1024)
+            try
             {
-                string totalimgSize = Convert.ToString(Math.Truncate(imgsize))+"KB";
-                return Ok(totalimgSize);
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                List<maxsize> _maxsize = new List<maxsize>();
+                double imgsize = dbr.Find<Domain.Socioboard.Models.ImgLibrary>(t => t.UserId == userid).Sum(t => t.ImageSize) / 1024;
+                if (imgsize < 1024)
+                {
+                    Domain.Socioboard.Models.maxsize _imgsize = new maxsize();
+                    string totalimgSize = Convert.ToString(Math.Round(imgsize, 2)) + "KB";
+                    _imgsize.max = 20971520;
+                    _imgsize.totalinbytes = imgsize;
+                    _imgsize.totalsize = totalimgSize;
+                    _maxsize.Add(_imgsize);
+                    return Ok(_maxsize);
+                }
+                else
+                {
+                    Domain.Socioboard.Models.maxsize _imgsize = new maxsize();
+                    double img = imgsize / 1024;
+                    string totalimgSize = Convert.ToString(Math.Round(img, 2)) + "MB";
+                    _imgsize.max = 20971520;
+                    _imgsize.totalinbytes = imgsize;
+                    _imgsize.totalsize = totalimgSize;
+                    _maxsize.Add(_imgsize);
+                    return Ok(_maxsize);
+                }
             }
-            else
+            catch(Exception ex)
             {
-               double img= imgsize / 1024;
-                string totalimgSize = Convert.ToString(Math.Truncate(img)) + "MB";
-                return Ok(totalimgSize);
+                return BadRequest();
             }
+            
            
 
         }

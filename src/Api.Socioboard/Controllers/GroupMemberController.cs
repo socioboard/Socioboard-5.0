@@ -105,7 +105,7 @@ namespace Api.Socioboard.Controllers
                     string html = System.IO.File.ReadAllText(path);
                     html = html.Replace("[FirstName]", member.firstName);
                     html = html.Replace("[JoinLink]", _appSettings.Domain + "/Home/GroupInvite?Token=" + member.memberCode + "&email=" + member.email);
-                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", member.email, "", "", "Socioboard Group Invitation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", member.email, "", "", "Socioboard Team Invitation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
                 }
 
             }

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+      xmlns="urn:nhibernate-mapping-2.2"
+      namespace="Domain.Socioboard.Models"
+      assembly="Domain.Socioboard">
+  <class name="Notifications" table="Notifications" lazy="false">
+    <id name="Id" column="Id" />
+    <property name="UserId">
+      <column name="UserId" />
+    </property>
+    <property name="notificationtime">
+      <column name="notificationtime"  />
+    </property>
+    <property name="MsgId">
+      <column name="MsgId"  />
+    </property>
+    <property name="MsgStatus">
+      <column name="MsgStatus"  />
+    </property>
+    <property name="ReadOrUnread">
+      <column name="ReadOrUnread"  />
+    </property>
+    <property name="NotificationType">
+      <column name="NotificationType"  />
+    </property>
+  </class>
+</hibernate-mapping>

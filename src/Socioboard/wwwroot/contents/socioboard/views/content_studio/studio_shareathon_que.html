@@ -1,0 +1,172 @@
+    
+<style>
+    ul.shinh li label {
+        font-size: 14px;
+        color: grey;
+        padding: 0 10px;
+        color: #ff4081;
+    }
+
+    ul.shinh li:hover {
+        background: #e5e5e5;
+        color: #ff4081;
+        cursor: pointer;
+        padding: 0 10px;
+    }
+
+    ul.shinh li label input {
+        margin-right: 10px;
+        height: 20px;
+        width: 20px;
+        background: transparent !important;
+    }
+</style>
+
+
+<div data-ng-controller="StudioShareathonQueueController">
+            <!-- Page name -->
+            <div class="container">
+                <div class="col m12">
+                  <h4>Studio Shareathon Queue</h4> 
+                </div>
+            </div>
+
+
+            <!-- START CONTENT -->
+            <section id="content">
+                <!-- Compose Email Structure -->
+                <div class="row">
+                    <div class="col s12 m12">
+                      <div class="card" id="feeds">
+                        <div class="row">
+                          <h5 class="feeds_title black darken-4 pink-text"><i class="icon-share"></i><spam><b>Content Shareathon List</b></spam></h5>
+                        </div>                        
+                        <div class="collection">
+                          <table class="responsive-table striped" >
+                              <thead>
+                                  <tr>
+                                      <th>S.No</th>
+                                      <th>Facebook Account</th>
+                                      <th>Feed Data</th>
+                                      <th>Time Interval</th>
+                                      <th>Status</th>
+                                      <th>Edit</th>
+                                      <th>Delete</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr ng-repeat="shareData in shareathonData">
+                                      <td>{{current + $index+1}}</td>
+                                      <td>{{shareData.facebookAccount}}</td>
+                                      <td>{{shareData.title}}<br /><a href="{{shareData.postUrl}}" target="_blank">{{shareData.postUrl}}</a></td>                                      
+                                      <td>{{shareData.timeintervalminutes}}</td>                                     
+                                      <td ng-if="shareData.status==false">pending</td> 
+                                      <td ng-if="shareData.status==true">posted</td>                                                                            
+                                      <td>
+                                          <a role="button" ng-click="editpageshareathon(shareData)" class="btn green"><i class="fa fa-eye fa-fw"></i></a>
+                                      </td>
+                                      <td>
+                                          <a role="button" class="btn red" ng-click="deleteshareathon(shareData.strId)"><i class="fa fa-times fa-fw"></i></a>
+                                      </td>
+                                  </tr>             
+                              </tbody>
+                          </table>   
+                        </div>                     
+                      </div>
+                    </div>
+                </div>
+            </section>
+            <!-- END CONTENT -->
+
+
+          <!-- Modal Structure -->
+          <div id="PageShareathonModal" class="modal">
+            <div class="modal-content" style="padding:10px;">
+              <a href="" class="modal-action modal-close right black-text"><i class="icon-close"></i></a>
+              <h5>Page Shareathon - </h5>
+              <div class="row">
+                  <div class="col s12 m12 l12">
+                      <p>Select Profiles</p>
+                      <div class="row no-space">
+                      <div class="input-field col s12">
+                          <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
+                          <label for="search_name">Search Profile</label>
+                      </div>
+                     </div>
+                      <div class="lst_scroll row no-space">
+                          <ul class="shinh" id="checkboxdataboard">
+                              <li style="padding:5px 0;">
+                                  <label>
+                                      <input id="checkAll" onclick="check();" type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" />
+                                      <span style="float:left;">Check All</span>
+                                  </label>
+                              </li>
+                              <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+
+                                  <label>
+                                      <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                      <span style="float:left;"> {{profile.profileName}}</span>
+                                      <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
+                                  </label>
+                              </li>
+                              <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+
+                                  <label>
+                                      <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                      <span style="float:left;"> {{profile.profileName}}</span>
+                                      <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                  </label>
+                              </li>
+                              <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:2}" style="padding:5px 0;">
+                                  <label>
+                                      <input name="selector[]" class="subcheckboxboard" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                      <span style="float:left;"> {{profile.profileName}}</span>
+                                      <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
+                                  </label>
+                              </li>
+                              <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                  <label>
+                                      <input name="selector[]" class="subcheckboxboard" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                      <span style="float:left;"> {{profile.profileName}}</span>
+                                      <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                  </label>
+                              </li>
+                              <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
+                                  <label>
+                                      <input name="selector[]" class="subcheckboxboard" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                      <span style="float:left;"> {{profile.profileName}}</span>
+                                      <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
+                                  </label>
+                              </li>
+                          </ul>
+                      </div>
+                  </div>
+                  <div class="input-field col s12">
+                      <textarea id="textarea1" class="materialize-textarea"></textarea>
+                      <label for="textarea1">Textarea</label>
+                  </div>
+                  <div class="input-field col s12">
+                      <select>
+                          <option value="" disabled selected>Choose your option</option>
+                          <option value="1">20 min</option>
+                          <option value="2">30 min</option>
+                          <option value="3">1 hour</option>
+                      </select>
+                      <label>Materialize Select</label>
+                  </div>
+              </div>
+
+                <!--<div class="row">
+                    <div class="btn right">post</div>
+                </div>-->
+            </div>
+              <div class="modal-footer">
+                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn grey">Post</a>
+              </div>
+          </div>               
+    </div>

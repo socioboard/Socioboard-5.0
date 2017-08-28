@@ -1910,5 +1910,26 @@ namespace Api.Socioboard.Repositories
                 return "api issue while spam account";
             }
         }
+        public static void AddTwitterEmailmessage(long userId, string socioTwitterId, string profileId, string profileScnName, string toMail, string message, string subject, Helper.Cache _redisCache, Helper.AppSettings settings)
+        {
+            string TwitterId = string.Empty;
+            Domain.Socioboard.Models.Mongo.TwitterFeedsEmailMessage insertData = new TwitterFeedsEmailMessage();
+            MongoRepository mongorepo = new MongoRepository("TwitterFeedsEmailMessage", settings);
+
+            insertData.Id = ObjectId.GenerateNewId();
+            insertData.strId = ObjectId.GenerateNewId().ToString();
+            insertData.dateLocal = DateTime.Now.ToString();
+            insertData.dateUtc = DateTime.UtcNow.ToString();
+            insertData.dateUnix = DateExtension.ToUnixTimestamp(DateTime.UtcNow);
+            insertData.socioTwitterId = socioTwitterId;
+            insertData.socioboardUserId = userId;
+            insertData.twitterUserIdFrom = profileId;
+            insertData.twitterScreenNameFrom = profileScnName;
+            insertData.mailTo = toMail;
+            insertData.messageText = message;
+            insertData.subjectText = subject;
+
+            mongorepo.Add<Domain.Socioboard.Models.Mongo.TwitterFeedsEmailMessage>(insertData);
+        }
     }
 }

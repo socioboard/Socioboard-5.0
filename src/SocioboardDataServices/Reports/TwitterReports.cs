@@ -72,7 +72,7 @@ namespace SocioboardDataServices.Reports
             todayReports.newFollowers = lstTwitterMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower);
             todayReports.timeStamp = SBHelper.ConvertToUnixTimestamp(date);
             todayReports.retweets = lstTwitterMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet);
-            //todayReports.newFollowing = lstTwitterMessages.Count(t=>t.type == Domain.Socioboard.Enum.TwitterMessageType.)
+            //todayReports.newFollowing = lstTwitterMessages.Count(t=>t.type == Domain.Socioboard.Enum.TwitterMessageType.tw)
             todayReports.directMessagesReceived = lstTwitterDirectMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived);
             todayReports.directMessagesSent = lstTwitterDirectMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent);
             todayReports.profileId = profileId;

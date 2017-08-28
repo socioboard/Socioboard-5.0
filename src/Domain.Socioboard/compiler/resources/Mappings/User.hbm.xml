@@ -170,5 +170,14 @@
     <property name="PhoneCode">
       <column name="PhoneCode" />
     </property>
+   <property name="RefrralCode">
+      <column name="RefrralCode" />
+    </property>
+   <property name="ReferdBy">
+      <column name="ReferdBy" />
+    </property>
+  <property name="ReferralStatus">
+      <column name="ReferralStatus" />
+    </property>
   </class>
 </hibernate-mapping>

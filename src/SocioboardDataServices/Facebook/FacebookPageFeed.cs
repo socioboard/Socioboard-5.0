@@ -92,7 +92,7 @@ namespace SocioboardDataServices.Facebook
         {
             dynamic feeds = FbUser.getFeeds(AccessToken);
 
-            if (feeds != null)
+            while (apiHitsCount < MaxapiHitsCount && feeds != null && feeds["data"] != null)
             {
                 apiHitsCount++;
                 foreach (var result in feeds["data"])
@@ -257,16 +257,11 @@ namespace SocioboardDataServices.Facebook
                 }
 
             }
-            else
-            {
-                apiHitsCount = MaxapiHitsCount;
-            }
-
         }
 
         public static List<MongoFbPostComment> FbPostComments(string postid, string AccessToken)
         {
-
+            apiHitsCount++;
             List<MongoFbPostComment> lstFbPOstComment = new List<MongoFbPostComment>();
             string ret = string.Empty;
             try

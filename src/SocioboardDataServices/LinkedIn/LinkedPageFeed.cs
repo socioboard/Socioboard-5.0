@@ -33,16 +33,14 @@ namespace SocioboardDataServices.LinkedIn
                         string NuberOfFollower = profile.num_followers.ToString();
                         linacc.NumFollowers = Convert.ToInt16(NuberOfFollower);
                     }
-                    catch
-                    {
+                    catch {
                         linacc.NumFollowers = linacc.NumFollowers;
                     }
                     try
                     {
                         linacc.CompanyType = profile.company_type.ToString();
                     }
-                    catch
-                    {
+                    catch {
                         linacc.CompanyType = linacc.CompanyType;
                     }
                     try
@@ -50,8 +48,7 @@ namespace SocioboardDataServices.LinkedIn
                         linacc.LogoUrl = profile.logo_url.ToString();
                         _grpProfile.Select(s => { s.profilePic = linacc.LogoUrl; return s; }).ToList();
                     }
-                    catch
-                    {
+                    catch {
                         linacc.LogoUrl = linacc.LogoUrl;
                         _grpProfile.Select(s => { s.profilePic = linacc.LogoUrl; return s; }).ToList();
                     }
@@ -59,24 +56,21 @@ namespace SocioboardDataServices.LinkedIn
                     {
                         linacc.SquareLogoUrl = profile.square_logo_url.ToString();
                     }
-                    catch
-                    {
+                    catch {
                         linacc.SquareLogoUrl = linacc.SquareLogoUrl;
                     }
                     try
                     {
                         linacc.BlogRssUrl = profile.blog_rss_url.ToString();
                     }
-                    catch
-                    {
+                    catch {
                         linacc.BlogRssUrl = linacc.BlogRssUrl;
                     }
                     try
                     {
                         linacc.UniversalName = profile.universal_name.ToString();
                     }
-                    catch
-                    {
+                    catch {
                         linacc.UniversalName = linacc.UniversalName;
                     }
                     dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(linacc);
@@ -132,7 +126,7 @@ namespace SocioboardDataServices.LinkedIn
                     {
                     }
                     linacc.lastUpdate = DateTime.UtcNow;
-
+                   
                     dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(linacc);
                 }
             }
@@ -150,7 +144,7 @@ namespace SocioboardDataServices.LinkedIn
             {
                 DatabaseRepository dbr = new DatabaseRepository();
                 List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(linacc.LinkedinUserId)).ToList();
-                if (_grpProfile != null)
+                if (_grpProfile!=null)
                 {
                     if (linacc.IsActive)
                     {
@@ -206,7 +200,7 @@ namespace SocioboardDataServices.LinkedIn
                         {
 
                         }
-                    }
+                    } 
                 }
             }
         }

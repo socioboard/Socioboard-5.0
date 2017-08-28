@@ -20,4 +20,10 @@ namespace Domain.Socioboard.Models
         public string FolderType { get; set; }
 
     }
+    public class maxsize
+    {
+        public string totalsize { get; set; }
+        public double max { get; set; }
+        public double totalinbytes { get; set; }
+    }
 }

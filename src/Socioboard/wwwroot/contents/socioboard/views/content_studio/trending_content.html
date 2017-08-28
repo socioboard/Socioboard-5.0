@@ -25,8 +25,13 @@
 <div data-ng-controller="TrendingContentController">
     <!-- Page name -->
     <div class="container">
-        <div class="col m12">
-            <h4>Today's Trending Content</h4>
+        <div class="row">
+            <div class="col m9 s12">
+                <h4>Trending Content</h4>
+            </div>
+            <!--<div class="col m3 s12 margin-top-10">
+                <a class="btn btn_style img_comp_btn" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
+            </div>-->
         </div>
         <div class="row">
             <div class="col m4">
@@ -92,31 +97,46 @@
                     <div class="card hoverable no-space">
                         <div class="row margin-top-10 no-bottom-space">
                             <div class="col s12 share_studio">
+                                <!--<div class="center">
+                                    <input name="selectedContentfeed[]" class="filled-in subcheckbox" id="{{feed.postId}}" type="checkbox" ng-checked="selectedContentfeed.indexOf(feed) > -1" ng-click="Toggle(feed)" />
+                                    <label for="{{feed.postId}}">&nbsp;</label>
+                                </div>-->
+                                
                                 <div class="center">
                                     <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
                                     <br>
-                                    <span>{{feed.totalShareCount}}</span>
+                                    <span>{{feed.fbengagementCount}}</span>
                                 </div>
-                                <div class="center">
+                                <div class="center"  ng-if="feed.twtShareCount<1000">
                                     <a class="btn-floating waves-effect waves-light light-blue accent-2"><i class="fa fa-twitter fa-fw"></i></a>
                                     <br>
                                     <span>{{feed.twtShareCount}}</span>
                                 </div>
-                                <div class="center">
+                                <div class="center"  ng-if="feed.twtShareCount>1000">
+                                    <a class="btn-floating waves-effect waves-light light-blue accent-2"><i class="fa fa-twitter fa-fw"></i></a>
+                                    <br>
+                                    <span>{{feed.twtShareCount/1000 |number:0}}k</span>
+                                </div>
+                                <div class="center" ng-if="feed.pinShareCount<1000">
                                     <a class="btn-floating waves-effect waves-light red darken-4"><i class="fa fa-pinterest fa-fw"></i></a>
                                     <br>
                                     <span>{{feed.pinShareCount}}</span>
                                 </div>
-                                <div class="center">
+                                <div class="center" ng-if="feed.pinShareCount>1000">
+                                    <a class="btn-floating waves-effect waves-light red darken-4"><i class="fa fa-pinterest fa-fw"></i></a>
+                                    <br>
+                                    <span>{{feed.pinShareCount/1000 |number:0}}k</span>
+                                </div>
+                                <div class="center" ng-if="feed.gplusShareCount<1000">
                                     <a class="btn-floating waves-effect waves-light red accent-4"><i class="fa fa-google-plus fa-fw"></i></a>
                                     <br>
                                     <span>{{feed.gplusShareCount}}</span>
-                                </div>
-                                <div class="center">
-                                    <a class="btn-floating waves-effect waves-light grey darken-4 animated pulse infinite modal-trigger" href="#ShareathonModal"><i class="fa fa-share-alt" aria-hidden="true"></i></a>
+                                </div> 
+                                <div class="center" ng-if="feed.gplusShareCount>1000">
+                                    <a class="btn-floating waves-effect waves-light red accent-4"><i class="fa fa-google-plus fa-fw"></i></a>
                                     <br>
-                                    <span>shareathon</span>
-                                </div>
+                                    <span>{{feed.gplusShareCount/1000|number:0}}k</span>
+                                </div>                                
                             </div>
                         </div>
                         <div class="card-image waves-effect waves-block waves-light">
@@ -124,9 +144,7 @@
                             <a href="{{feed.postUrl}}" target="_blank">
                                 <img src="{{feed.imageUrl}}">
                             </a>
-                            <!--<a href="{{feed.postUrl}}" target="_blank" ng-if="{{feed.imageUrl}}=='unknown'">
-                                <img src="../../images/YouTubeData.ico" />
-                            </a>-->
+                           
                         </div>
                         <div class="card-content">
                             <div class="row no-space">
@@ -144,13 +162,21 @@
                                     <span>| </span><span class="grey-text right truncate"></span>
                                 </div>
                                 <hr>
-                                <div class="col s12 m6 center">
+                                <div class="col s12 m6 center"  ng-if="feed.linShareCount<1000">
                                     <div class="grey-text text-darken-4">Link Share:</div>
                                     <div><strong>{{feed.linShareCount}}</strong></div>
                                 </div>
-                                <div class="col s12 m6 center">
+                                <div class="col s12 m6 center"  ng-if="feed.linShareCount>1000">
+                                    <div class="grey-text text-darken-4">Link Share:</div>
+                                    <div><strong>{{feed.linShareCount/1000 |number:0}}k</strong></div>
+                                </div>
+                                <div class="col s12 m6 center" ng-if="feed.totalShareCount<1000">
                                     <div class="grey-text text-darken-4">Total Shares:</div>
                                     <div><strong>{{feed.totalShareCount}}</strong></div>
+                                </div>
+                                <div class="col s12 m6 center" ng-if="feed.totalShareCount>1000">
+                                    <div class="grey-text text-darken-4">Total Shares:</div>
+                                    <div><strong>{{feed.totalShareCount/1000 |number:0}}k</strong></div>
                                 </div>
                             </div>
                         </div>
@@ -171,62 +197,27 @@
             </div>
             <form class="col s12">
                 <div class="input-field col s12">
-                    <select>
+                    <select multiple id="shraeathonfacebookpage">
                         <option value="" disabled selected>Choose your option</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
-                        <option value="1">Account 1</option>
-                        <option value="2">Account 2</option>
-                        <option value="3">Account 3</option>
+                        <option ng-repeat="profile in lstProfiles | filter:{profileType:1} && filter:{profileType:0}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                     </select>
+
                     <label>Selects An Account To Automate Post</label>
                 </div>
+
                 <div class="input-field col s12">
-                    <select multiple>
+                    <select id="shraeathontimeinterval">
                         <option value="" disabled selected>Choose your option</option>
-                        <option value="1">page 1</option>
-                        <option value="2">page 2</option>
-                        <option value="3">page 3</option>
-                    </select>
-                    <label>Selects Pages Whose Post's You Want To Automate</label>
-                </div>
-                <div class="input-field col s12">
-                    <select>
-                        <option value="" disabled selected>Choose your option</option>
-                        <option value="10">10 min</option>
                         <option value="20">20 min</option>
                         <option value="30">30 min</option>
                         <option value="60">1 hr</option>
                     </select>
                     <label>Set Your Time Interval</label>
                 </div>
+                <div ng-init="dispbtn= {{dispbtn}}"></div>
                 <div class="col l12 center margin-top-50">
-                    <a href="#" class="btn grey darken-4 waves-effect waves-light">post</a>
+                    <a ng-show="dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">post</a>
+                    <a ng-show="!dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">wait</a>
                 </div>
             </form>
         </div>

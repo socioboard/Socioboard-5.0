@@ -22,9 +22,14 @@ namespace SociobordRssDataServices.Model
         public MongoRepository(string CollectionName) 
         {
 
-            MongoClient client = new MongoClient("mongodb://localhost/admin");
 
-            _db = client.GetDatabase("Socioboard3");
+            MongoClient client = new MongoClient("mongodb://SB3LiveAdmin:SBLive%$#!12345@37.58.99.114:27017/Socioboard3Live");
+
+            _db = client.GetDatabase("Socioboard3Live");
+
+            //MongoClient client = new MongoClient("mongodb://Socioboard3user:sb8520R$lRo0@173.192.35.244:27017/Socioboard3");
+
+            //_db = client.GetDatabase("Socioboard3");
 
             this.collecionName = CollectionName;
             
@@ -34,7 +39,7 @@ namespace SociobordRssDataServices.Model
         public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName).Count<T>(query);
+            var collection = _db.GetCollection<T>(collecionName, settings).Count<T>(query);
             try
             {
                 var output = collection;
@@ -42,15 +47,6 @@ namespace SociobordRssDataServices.Model
             }
             catch (Exception ex) { return 0; }
 
-
-        }
-        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
-        {
-            // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
-
-            var output = await collection.ToListAsync().ConfigureAwait(false);
-            return output;
 
         }
         public void Delete<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
@@ -96,7 +92,19 @@ namespace SociobordRssDataServices.Model
            
         }
 
+        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
+            try
+            {
+                var output = await collection.ToListAsync().ConfigureAwait(false);
+                return output;
+            }
+            catch (Exception ex) { return null; }
 
+
+        }
         public T Single<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
      where T : class, new()
         {

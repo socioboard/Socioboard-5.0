@@ -1,7 +1,10 @@
-﻿using Facebook;
+﻿using Domain.Socioboard.Models.Mongo;
+using Facebook;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
+using Socioboard.Google.Custom;
+using Socioboard.Twitter.App.Core;
 using Socioboard.Twitter.Authentication;
 using Socioboard.Twitter.Twitter.Core.TweetMethods;
 using SociobordRssDataServices.Model;
@@ -394,7 +397,8 @@ namespace SociobordRssDataServices.Rss
         public static string TwitterComposeMessageRss(string message, string OAuthToken, string OAuthSecret, string profileid, string TwitterScreenName, string rssFeedId)
         {
             string ret = "";
-            oAuthTwitter OAuthTwt = new oAuthTwitter(Helper.AppSettings.twitterConsumerKey,Helper.AppSettings.twitterConsumerScreatKey,Helper.AppSettings.twitterRedirectionUrl);
+            oAuthTwitter OAuthTwt = new oAuthTwitter("h4FT0oJ46KBBMwbcifqZMw", "yfowGI2g21E2mQHjtHjUvGqkfbI7x26WDCvjiSZOjas", "https://www.socioboard.com/TwitterManager/Twitter");
+            // oAuthTwitter OAuthTwt = new oAuthTwitter("MbOQl85ZcvRGvp3kkOOJBlbFS", "GF0UIXnTAX28hFhN1ISNf3tURHARZdKWlZrsY4PlHm9A4llYjZ", "http://serv1.socioboard.com/TwitterManager/Twitter");
             OAuthTwt.AccessToken = OAuthToken;
             OAuthTwt.AccessTokenSecret = OAuthSecret;
             OAuthTwt.TwitterScreenName = TwitterScreenName;
@@ -427,7 +431,156 @@ namespace SociobordRssDataServices.Rss
         public static void updateRssContentFeeds(Domain.Socioboard.Models.Mongo.RssNewsContents _rssNews, string keywords)
         {
             ParseContentFeedUrl(_rssNews.RssFeedUrl, _rssNews.ProfileId, keywords);
+            addContentfeedsdata(keywords);
+            addGplusContentfeedsdata(keywords,_rssNews.ProfileId);
         }
+
+        public static void addContentfeedsdata(string keyword)
+        {
+            MongoRepository mongorepo = new MongoRepository("RssNewsContentsFeeds");
+            string timeline = TwitterHashTag.TwitterBoardHashTagSearch(keyword, null);
+            int i = 0;
+            if (!string.IsNullOrEmpty(timeline) && !timeline.Equals("[]"))
+            {
+                foreach (JObject obj in JArray.Parse(timeline))
+                {
+                    RssNewsContentsFeeds contentFeedsDet = new RssNewsContentsFeeds();
+                    contentFeedsDet.Id = ObjectId.GenerateNewId();
+                    i++;
+                    try
+                    {
+                        contentFeedsDet.Link = JArray.Parse(obj["entities"]["expanded_url"].ToString())[0]["url"].ToString();
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            contentFeedsDet.Link = JArray.Parse(obj["entities"]["urls"].ToString())[0]["expanded_url"].ToString();
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                    try
+                    {
+                        contentFeedsDet.Image = JArray.Parse(obj["extended_entities"]["media"].ToString())[0]["media_url"].ToString();
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            contentFeedsDet.Image = JArray.Parse(obj["entities"]["media"].ToString())[0]["media_url"].ToString();
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+
+                    try
+                    {
+                        contentFeedsDet.Title = obj["text"].ToString();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+
+                    try
+                    {
+                        string Const_TwitterDateTemplate = "ddd MMM dd HH:mm:ss +ffff yyyy";
+                        contentFeedsDet.PublishingDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact((string)obj["created_at"], Const_TwitterDateTemplate, new System.Globalization.CultureInfo("en-US"))).ToString();
+                    }
+                    catch (Exception e)
+                    {
+
+                    }
+                    contentFeedsDet.keywords = keyword;
+
+                    var ret = mongorepo.Find<RssNewsContentsFeeds>(t=>t.Image == contentFeedsDet.Image);
+                    var task = Task.Run(async () =>
+                    {
+                        return await ret;
+                    });
+                    int count = task.Result.Count;
+                    if (count < 1)
+                    {
+                        try
+                        {
+                            mongorepo.Add<RssNewsContentsFeeds>(contentFeedsDet);
+                        }
+                        catch (Exception e) { }
+
+                    }
+                    else
+                    {
+                    }
+                }
+            }
+        }
+
+        public static bool addGplusContentfeedsdata(string keywords, string userId)
+        {
+            MongoRepository mongorepo = new MongoRepository("RssNewsContentsFeeds");
+            bool output = false;
+            try
+            {
+                string searchResultObj = GplusTagSearch.GooglePlusgetUserRecentActivitiesByHashtag(keywords);
+                JObject GplusActivities = JObject.Parse(GplusTagSearch.GooglePlusgetUserRecentActivitiesByHashtag(keywords));
+
+                foreach (JObject obj in JArray.Parse(GplusActivities["items"].ToString()))
+                {
+                    RssNewsContentsFeeds contentGFeedsDet = new RssNewsContentsFeeds();
+                    contentGFeedsDet.Id = ObjectId.GenerateNewId();
+
+                    try
+                    {
+                        foreach (JObject att in JArray.Parse(obj["object"]["attachments"].ToString()))
+                        {
+                            contentGFeedsDet.Image = att["fullImage"]["url"].ToString();
+
+                            contentGFeedsDet.Link = att["url"].ToString();
+
+                            contentGFeedsDet.Title = att["displayName"].ToString();
+                        }
+                    }
+                    catch { }
+                    try
+                    {
+                        contentGFeedsDet.PublishingDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.Parse(obj["published"].ToString())).ToString();
+                    }
+                    catch { }
+
+
+                    contentGFeedsDet.UserId = userId;
+                    contentGFeedsDet.keywords = keywords;
+                    var ret = mongorepo.Find<RssNewsContentsFeeds>(t => t.Title == contentGFeedsDet.Title);
+                    var task = Task.Run(async () =>
+                    {
+                        return await ret;
+                    });
+                    int count = task.Result.Count;
+                    if (count < 1)
+                    {
+                        try
+                        {
+                            mongorepo.Add<RssNewsContentsFeeds>(contentGFeedsDet);
+                            output = true;
+                        }
+                        catch { }
+                    }
+
+
+                }
+                return output;
+            }
+            catch { }
+
+            return output;
+
+        }
+
 
         public static string ParseContentFeedUrl(string RssFeedUrl, string ProfileId, string keywords)
         {

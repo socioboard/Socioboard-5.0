@@ -34,9 +34,13 @@ namespace SocioboardDataScheduler.Helper
         public const string LinkedinCallBackURL = "http://localhost:9821/LinkedinManager/LinkedinRedirect";
         //End LinkedIn App Creds 
 
-        public const string frommail = "sendgridusername";
+        public const string frommail = "sendgriduserEmail";
         public const string apikey = "sendgridapi key";
+        public const string sendGridUserName = "sendgridusername";
+        public const string sendGridPassword = "sendgriduserpassword";
 
+        public const string imgurclietId = "";
+        public const string imgurclietSecret = "";
 
     }
 }

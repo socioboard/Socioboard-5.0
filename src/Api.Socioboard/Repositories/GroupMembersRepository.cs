@@ -74,8 +74,11 @@ namespace Api.Socioboard.Repositories
         public static List<Domain.Socioboard.Models.Groupmembers> getGroupadmin(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
            List<Domain.Socioboard.Models.Groupmembers> adminDetails = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.groupid == groupId && t.isAdmin).ToList();
-
-            return adminDetails;
+           long userID = adminDetails.First().userId;
+           List<Domain.Socioboard.Models.User> user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id == userID).ToList();
+           string Email = user.First().EmailId;
+           adminDetails.First().email = Email;
+           return adminDetails;
         }
 
         public static List<Domain.Socioboard.Models.Groupmembers> adminDelete(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)

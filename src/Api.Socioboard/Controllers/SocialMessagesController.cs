@@ -289,6 +289,7 @@ namespace Api.Socioboard.Controllers
             return Ok("Posted");
 
         }
+
         [HttpPost("ScheduleMessage")]
         public async Task<ActionResult> ScheduleMessage(string message, string profileId, long userId, string imagePath, string link, string scheduledatetime, string localscheduletime, IFormFile files, string messageText)
         {
@@ -495,6 +496,7 @@ namespace Api.Socioboard.Controllers
             }
             return Ok("scheduled");
         }
+
         [HttpPost("PluginComposemessage")]
         public IActionResult PluginComposemessage(string profile, string twitterText, string tweetId, string tweetUrl, string facebookText, string url, string imgUrl, long userId)
         {
@@ -606,6 +608,7 @@ namespace Api.Socioboard.Controllers
                         {
                             string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, twitterText, ids[0], userId, imgUrl, true, dbr, _logger);
                         }
+
                     }
                     else
                     {
@@ -619,6 +622,7 @@ namespace Api.Socioboard.Controllers
             }
             return Ok("successfully posted");
         }
+
         [HttpPost("PluginScheduleMessage")]
         public IActionResult PluginScheduleMessage(string profile, string twitterText, string tweetId, string tweetUrl, string facebookText, string url, string imgUrl, long userId, string scheduleTime, string localscheduleTime)
         {
@@ -724,6 +728,7 @@ namespace Api.Socioboard.Controllers
             }
             return Ok();
         }
+
         [HttpPost("UploadImageplugin")]
         public IActionResult UploadImageplugin(IFormFile files)
         {
@@ -830,6 +835,7 @@ namespace Api.Socioboard.Controllers
 
             return Ok("successfully added");
         }
+
         [HttpPost("DraftScheduleMessage")]
         public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId, string imagePath, IFormFile files)
         {
@@ -903,6 +909,7 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getUsreScheduleMessage(userId, groupId, _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage);
         }
+
         [HttpGet("DeleteSocialMessages")]
         public IActionResult DeleteSocialMessages(long socioqueueId, long userId, long GroupId)
         {
@@ -962,6 +969,7 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduleMessage = Repositories.ScheduledMessageRepository.EditScheduleMessage(socioqueueId, userId, GroupId, message, _redisCache, _appSettings, dbr);
             return Ok(lstScheduleMessage);
         }
+
         [HttpGet("GetAllSentMessages")]
         public IActionResult GetAllSentMessages(long userId, long groupId)
         {
@@ -969,6 +977,7 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.GetAllSentMessages(userId, groupId, _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
+
         [HttpGet("GetAllSentMessagesCount")]
         public IActionResult GetAllSentMessagesCount(long userId, long groupId)
         {
@@ -976,6 +985,7 @@ namespace Api.Socioboard.Controllers
             int GetAllSentMessagesCount = Repositories.ScheduledMessageRepository.GetAllSentMessagesCount(userId, groupId, dbr, _redisCache);
             return Ok(GetAllSentMessagesCount);
         }
+
         [HttpGet("getAllSentMessageDetailsforADay")]
         public IActionResult getAllSentMessageDetailsforADay(long userId, long groupId, string day)
         {
@@ -983,6 +993,7 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsforADay(userId, groupId, int.Parse(day), _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
+
         [HttpGet("getAllSentMessageDetailsByDays")]
         public IActionResult getAllSentMessageDetailsByDays(long userId, long groupId, string days)
         {
@@ -990,6 +1001,7 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsByDays(userId, groupId, int.Parse(days), _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
+
         [HttpGet("getAllSentMessageDetailsByMonth")]
         public IActionResult getAllSentMessageDetailsByMonth(long userId, long groupId, string month)
         {
@@ -997,6 +1009,7 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.getAllSentMessageDetailsByMonth(userId, groupId, int.Parse(month), _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
         }
+
         [HttpGet("GetAllScheduleMessageCalendar")]
         public IActionResult GetAllScheduleMessageCalendar(long userId, long groupId)
         {

@@ -9,6 +9,8 @@ namespace SocioboardDataScheduler.LinkedIn
 {
     public class LinkedInDataScheduler
     {
+        //public static Semaphore objSemaphoreacc = new Semaphore(5, 10);
+        //public static Semaphore objSemaphorepage = new Semaphore(5, 10);
         public void ScheduleLinkedInMessage()
         {
             while (true)
@@ -23,7 +25,8 @@ namespace SocioboardDataScheduler.LinkedIn
                     {
                         try
                         {
-                            Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = dbr.Single<Domain.Socioboard.Models.LinkedInAccount>(t => t.LinkedinUserId == items.Key && t.IsActive);
+                            Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.LinkedinUserId == items.Key && t.IsActive).FirstOrDefault();
+                            Domain.Socioboard.Models.User _user = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == _LinkedInAccount.UserId);
                             if (_LinkedInAccount!=null)
                             {
                                 foreach (var item in items)
@@ -31,7 +34,7 @@ namespace SocioboardDataScheduler.LinkedIn
                                     try
                                     {
                                         Console.WriteLine(item.socialprofileName + "Scheduling Started");
-                                        LinkedInScheduler.PostLinkedInMessage(item, _LinkedInAccount);
+                                        LinkedInScheduler.PostLinkedInMessage(item, _LinkedInAccount, _user);
                                         Console.WriteLine(item.socialprofileName + "Scheduling");
                                     }
                                     catch (Exception)
@@ -73,7 +76,8 @@ namespace SocioboardDataScheduler.LinkedIn
                         try
                         {
 
-                            Domain.Socioboard.Models.LinkedinCompanyPage _LinkedinCompanyPage = dbr.Single<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.LinkedinPageId == items.Key && t.IsActive);
+                            Domain.Socioboard.Models.LinkedinCompanyPage _LinkedinCompanyPage = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.LinkedinPageId == items.Key && t.IsActive).FirstOrDefault();
+                            Domain.Socioboard.Models.User _user = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == _LinkedinCompanyPage.UserId);
                             if (_LinkedinCompanyPage!=null)
                             {
                                 foreach (var item in lstScheduledMessage)
@@ -81,7 +85,7 @@ namespace SocioboardDataScheduler.LinkedIn
                                     try
                                     {
                                         Console.WriteLine(item.socialprofileName + "Scheduling Started");
-                                        LinkedInCompanyPageScheduler.PostLinkedInCompanyPageMessage(item, _LinkedinCompanyPage);
+                                        LinkedInCompanyPageScheduler.PostLinkedInCompanyPageMessage(item, _LinkedinCompanyPage, _user);
                                         Console.WriteLine(item.socialprofileName + "Scheduling");
                                     }
                                     catch (Exception)

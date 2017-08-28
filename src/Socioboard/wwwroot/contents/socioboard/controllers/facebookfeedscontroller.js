@@ -7,6 +7,8 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         var preloadmore = false;
         $scope.disbtncom = true;
         $scope.buildbtn = true;
+           $scope.query = {};
+        $scope.queryBy = '$';
         var endfeeds = false;
         $scope.filterrTxtt = 'All Posts';
         $scope.SorttTxtt = 'Popular';

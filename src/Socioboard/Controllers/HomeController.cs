@@ -88,13 +88,13 @@ namespace Socioboard.Controllers
         public async Task<IActionResult> Index()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            await SaveSessionData();
+           
             HttpContext.Session.SetObjectAsJson("twosteplogin", "false");
             if (user == null)
             {
                 return RedirectToAction("Index", "Index");
             }
-
+            await SaveSessionData();
 
             try
             {

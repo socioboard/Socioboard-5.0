@@ -5,6 +5,12 @@ SocioboardApp.controller('ImgLibraryController', function ($rootScope, $scope, $
            
        ImgLibrary();
        $scope.dispbtn = true;
+       $scope.query = {};
+       $scope.queryBy = '$';
+       $scope.reachetotallength = function () {
+           $scope.reachedsize = "You can't upload more images as you already reached total library space";
+           swal($scope.reachedsize);
+       };
        //open compose model
        $scope.opencomposemodel = function (img) {
            $('#ImgDesModal').closeModal();
@@ -41,32 +47,44 @@ SocioboardApp.controller('ImgLibraryController', function ($rootScope, $scope, $
            }
            //.imagePath
        }
+       //open upload model
+       $scope.openuploadmodel = function (img) {
+           $scope.uploadbtn = true;
+           $('#ImgUploadModal').openModal();
+
+       }
 
        //Save Image In Private
        $scope.SaveImageforPrivate = function () {
-            var imgName = $('#img_name').val();
-            //var imagelocalPath = $('#input-file-now').val();
-            var formData = new FormData();
-            formData.append('files', $("#input-file-now").get(0).files[0]);
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/ImgLibrary/SaveImageforPrivate?userId=' + $rootScope.user.Id + '&imgName=' + imgName,
-                data: formData,
-                headers: {
-                    'Content-Type': undefined
-                },
-                transformRequest: angular.identity,
-            })
-            .then(function (response) {
-                swal(response.data);
-                window.location.reload();
-                //window.location.reload();
-            }, function (reason) {
-                alertify.set({ delay: 5000 });
-                alertify.error(reason.data);
+           $scope.uploadbtn = false;
+           var imgName = $('#img_name').val();
+           if (/\S/.test(imgName)) {
+               //var imagelocalPath = $('#input-file-now').val();
+               var formData = new FormData();
+               formData.append('files', $("#input-file-now").get(0).files[0]);
+               $http({
+                   method: 'POST',
+                   url: apiDomain + '/api/ImgLibrary/SaveImageforPrivate?userId=' + $rootScope.user.Id + '&imgName=' + imgName,
+                   data: formData,
+                   headers: {
+                       'Content-Type': undefined
+                   },
+                   transformRequest: angular.identity,
+               })
+               .then(function (response) {
+                   swal(response.data);
+                   window.location.reload();
+                   //window.location.reload();
+               }, function (reason) {
+                   alertify.set({ delay: 5000 });
+                   alertify.error(reason.data);
 
 
-            });
+               });
+           }
+           else {
+               swal("Please enter image name");
+           }
         }
 
       //Load LoadImagesForPrivate
@@ -191,11 +209,9 @@ SocioboardApp.controller('ImgLibraryController', function ($rootScope, $scope, $
                             $scope.dispbtn = true;
                             $('#ComposePostModal').closeModal();
                             swal('Message composed successfully');
-                            window.location.reload();
-                        }
+                       }
 
                     }, function (reason) {
-                        console.log(reason);
                     });
                 }
                 else {
