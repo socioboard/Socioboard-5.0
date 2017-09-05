@@ -29,9 +29,9 @@
             <div class="col m9 s12">
                 <h4>Trending Content</h4>
             </div>
-            <!--<div class="col m3 s12 margin-top-10">
+            <div class="col m3 s12 margin-top-10">
                 <a class="btn btn_style img_comp_btn" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
-            </div>-->
+            </div>
         </div>
         <div class="row">
             <div class="col m4">
@@ -46,12 +46,12 @@
         <div class="row white-text grey darken-4">
             <div class="" style="height:55px;">
                 <div class="col m8 s12 margin-top-10">
-                    <a class="btn btn_style" ng-click="globeSearch('general')"><i class="fa fa-globe"></i></a>
-                    <a class="btn btn_style" ng-click="dailyMotion('dailymotion')"><i class="fa fa-facebook"></i></a>
-                    <a class="btn btn_style" ng-click="youtube('youtube')"><i class="fa fa-youtube"></i></a>
-                    <a class="btn btn_style" ng-click="twitter('twitter')"><i class="fa fa-twitter"></i></a>
-                    <a class="btn btn_style" ng-click="instagram('instagram')"><i class="fa fa-instagram"></i></a>
-                    <a class="btn btn_style" ng-click="flickr('flickr')"><i class="fa fa-flickr"></i></a>
+                    <a class="btn btn_style" title="Global search"  ng-click="globeSearch('general')"><i class="fa fa-globe"></i></a>
+                    <a class="btn btn_style" title="Dailymotion"  ng-click="dailyMotion('dailymotion')"><i class="fa" style=" text-transform: lowercase; font-family: inherit; font-size: x-large; font-weight: 600;">d</i></a>                  
+                    <a class="btn btn_style" title="Youtube" ng-click="youtube('youtube')"><i class="fa fa-youtube"></i></a>
+                    <a class="btn btn_style" title="Twitter" ng-click="twitter('twitter')"><i class="fa fa-twitter"></i></a>
+                    <a class="btn btn_style" title="Instagram" ng-click="instagram('instagram')"><i class="fa fa-instagram"></i></a>
+                    <a class="btn btn_style" title="Flickr" ng-click="flickr('flickr')"><i class="fa fa-flickr"></i></a>
                 </div>
                 <div class="col m4 s12">
                     <div class="input-field col s6">
@@ -97,15 +97,21 @@
                     <div class="card hoverable no-space">
                         <div class="row margin-top-10 no-bottom-space">
                             <div class="col s12 share_studio">
-                                <!--<div class="center">
-                                    <input name="selectedContentfeed[]" class="filled-in subcheckbox" id="{{feed.postId}}" type="checkbox" ng-checked="selectedContentfeed.indexOf(feed) > -1" ng-click="Toggle(feed)" />
-                                    <label for="{{feed.postId}}">&nbsp;</label>
-                                </div>-->
                                 
                                 <div class="center">
+                                    <input name="selectedContentfeed[]" class="filled-in subcheckbox" id="{{feed.strId}}" type="checkbox" ng-checked="selectedContentfeed.indexOf(feed) > -1" ng-click="Toggle(feed)" />
+                                    <label for="{{feed.strId}}">&nbsp;</label>
+                                </div>
+                                
+                                <div class="center" ng-if="feed.fbengagementCount<1000">
                                     <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
                                     <br>
                                     <span>{{feed.fbengagementCount}}</span>
+                                </div>
+                                <div class="center" ng-if="feed.fbengagementCount>1000">
+                                    <a class="btn-floating waves-effect waves-light indigo darken-3"><i class="fa fa-facebook fa-fw"></i></a>
+                                    <br>
+                                    <span>{{feed.fbengagementCount/1000 |number:0}}</span>
                                 </div>
                                 <div class="center"  ng-if="feed.twtShareCount<1000">
                                     <a class="btn-floating waves-effect waves-light light-blue accent-2"><i class="fa fa-twitter fa-fw"></i></a>
@@ -186,7 +192,36 @@
 
         </ul>
     </div>
+
+
+    <div ng-if="fetchdatacomplete!=true">
+        <br /><br /><br /><br /><br /><br />
+        <div class="center">
+            <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait while we are processing</h6>
+
+        </div>
+    </div>
+
+
+    <div class="center" ng-if="nofeeds==true">
+        <br /><br /><br /><br /><br /><br />
+        <h6 style="color:gray; font-size:20px; font-family:Calibri"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No content feeds to display<br /></h6>
+    </div>
 </div>
+
+
 <!--/ end items list -->
 <!-- ShareathonModal Structure -->
 <div id="ShareathonModal" class="modal">

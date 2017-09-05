@@ -1,0 +1,156 @@
+<div data-ng-controller="DaySocioQueueController">
+    <!-- Page name -->
+    <div class="container">
+        <div class="col m12">
+            <h4>Day Wise Socio Queue</h4>
+            <button type="submit" class="waves-effect waves-light btn red" ng-click="deleteMultipleMessages()" title="Delete selected"><i class="fa fa-trash"></i></button>
+        </div>
+    </div>
+
+
+    <!-- START CONTENT -->
+    <section id="content">
+        <!-- Compose Email Structure -->
+        <div class="row">
+            <div class="col s12 m12">
+                <table id="SocioQueue" class="display responsive-table striped" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th>
+                                <input class="filled-in" type="checkbox" ng-model="allSelected" ng-model-options="{getterSetter: true}" id="socio_all" />
+                                <label for="socio_all">Select all</label>
+                            </th>
+                            <th style="width: 10%;" class="center">Sent From</th>
+                            <th style="width: 30%;" class="center">Message</th>
+                            <th style="width: 20%;" class="center">Days</th>
+                            <th style="width: 10%;" class="center">Network</th>
+                            <th style="width: 10%;" class="center">Status</th>
+                            <th style="width: 20%;" class="center">Action</th>
+                        </tr>
+                    </thead>
+                    <!--<tfoot>
+                        <tr>
+                            <th>Sent From</th>
+                            <th>Message</th>
+                            <th>Network</th>
+                            <th>Status</th>
+                            <th>Delete</th>
+                            <th>Edit</th>
+                        </tr>
+                    </tfoot>-->
+                    <tbody>
+
+
+                        <tr ng-repeat="socioqueue in lstsocioqueuemessage">
+                            <td>
+                                <input name="selector[]" class="filled-in subcheckbox" id="{{socioqueue.id}}" type="checkbox" ng-model="socioqueue.selected" ng-change="optionToggled()" />
+                                <label for="{{socioqueue.id}}">{{$index +1}}</label>
+                            </td>
+                            <!--<td>{{$index +1}}</td>-->
+                            <td class="center">
+                                <div class="col s12" ng-if="socioqueue.profileType==0 || socioqueue.profileType==1 || socioqueue.profileType==2 || socioqueue.profileType==3 || socioqueue.profileType==4">
+                                    <img src="{{getProperURL(user.ProfilePicUrl)}}" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/sb.png" class="responsive-img msgiconPoss">
+                                </div>
+                                <div class="col s12">
+                                    <span>
+                                        {{user.UserName}}<br>
+                                        <a class="tooltipped" data-position="bottom" data-delay="50">{{socioqueue.scheduleTime}}</a>
+                                    </span>
+                                </div>
+                            </td>
+                            <td class="center">
+                                <span style="word-break : break-all">
+                                    {{socioqueue.shareMessage}}
+                                </span>
+                                <br>
+                                <img ng-if="socioqueue.url!='' && socioqueue.url != null" src="{{getProperURL(socioqueue.url)}}" class="responsive-img" style="width:200px">
+                            </td>
+                            <td class="center">
+                                <div class="col s12" ng-if="socioqueue.profileType==0">
+                                    <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/fb_icon.png" class="responsive-img msgiconPoss">
+                                </div>
+                                <div class="col s12" ng-if="socioqueue.profileType==1">
+                                    <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/Fb_page-icon.png" class="responsive-img msgiconPoss">
+                                </div>
+                                <div class="col s12" ng-if="socioqueue.profileType==2 ">
+                                    <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/twticon.png" class="responsive-img msgiconPoss">
+                                </div>
+                                <div class="col s12" ng-if="socioqueue.profileType==3 || socioqueue.profileType==4 ">
+                                    <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
+                                    <img src="/contents/socioboard/images/linkedin.png" class="responsive-img msgiconPoss">
+                                </div>
+                                <div class="col s12">
+                                    <span>{{socioqueue.socialprofileName}}</span>
+                                </div>
+                            </td>
+                            <td ng-if="socioqueue.status==0">Pending</td>
+                            <td ng-if="socioqueue.status==1">Compleated</td>
+                            <td class="center">
+                                <a href="#" class="btn btn_style img_comp_btn"><i class="fa fa fa-play"></i></a>
+                                <a href="#" class="btn btn_style img_comp_btn"><i class="fa fa-pause"></i></a>
+                                <a href="#" class="btn btn_style img_comp_btn" href="#EditModal"><i class="fa fa-pencil"></i></a>
+                                <a href="#" class="btn btn_style img_comp_btn" ng-click="deleteMsg('Deleted!!')"><i class="fa fa-times"></i></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <br /><br /><br /><br /><br /><br /><br /><br />
+            <div class="center">
+                <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No Schedule messages posted to display<br /></h6>
+            </div>
+            <br />
+            <div class="center" ng-if="lastreach!=true">
+                <div class="preloader-wrapper small active">
+                    <div class="spinner-layer spinner-green-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
+    <!-- END CONTENT -->
+    <!-- Modal Structure -->
+    <!--<script id="editschedulemessageModalContent.html" type="text/ng-template">-->
+    <div id="SocioqueueModal" class="modal">
+        <form class="col s12" name="editscheduleform">
+            <div class="modal-content">
+                <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
+                <h5>Edit Message</h5>
+                <div class="row center">
+                    <div class="input-field col s8">
+                        <div>
+                            <textarea id="editScheduleMsg" class="materialize-textarea" length="500" ng-model="editscdmessage" value=""></textarea>
+                            <!--<input type="text" id="editScheduleMsg" ng-model="editscdmessage" class="materialize-textarea" length="500"  />-->
+                            <!--<label for="editScheduleMsg">Edit Message Here</label>-->
+                        </div>
+
+                    </div>
+                    <!--<div class="col s4">
+                        <img src="../../images/SocioboardCore_logo.png" class="responsive-img">
+                    </div>-->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="savesocioqueueedit()">Save</a>
+            </div>
+        </form>
+
+        
+    </div>
+    <!--</script>-->
+
+</div>

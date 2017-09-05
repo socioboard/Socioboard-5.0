@@ -53,6 +53,7 @@ namespace Api.Socioboard.Controllers
                     string imgPath = string.Empty;
                     string imagePath = string.Empty;
                     string localpath = string.Empty;
+                    string extension = string.Empty;
                     if (files != null)
                     {
 
@@ -69,6 +70,11 @@ namespace Api.Socioboard.Controllers
                             localpath = filename;
                             imgPath = filename;
                             uploads = _appSettings.ApiDomain + "/api/Media/getUserImages?id=" + $@"{tempName}";
+                            extension = Path.GetExtension(fileName).ToUpper();
+                            if (extension != ".JFIF" && extension != ".JPG" && extension != ".JPEG" && extension != ".Exif" && extension != ".GIF" && extension != ".TIFF" && extension != ".PNG" && extension != ".PPM" && extension != ".BMP" && extension != ".PGM" && extension != ".PBM" && extension != ".PNM")
+                            {
+                                return BadRequest("Please select only image file");
+                            }
                             //imglength = new System.IO.FileInfo(filenameforlength).Length;
                             // size += file.Length;
                             try
@@ -79,6 +85,11 @@ namespace Api.Socioboard.Controllers
                                     fs.Flush();
                                 }
                                 imglength = new System.IO.FileInfo(filename).Length;
+                                double totallength = imgsize + imglength;
+                                if(totallength > 20971520)
+                                {
+                                    return BadRequest("You have reached maximum library sapce");
+                                }
                                 filename = uploads;
                                 // long imglength = new System.IO.FileInfo(imagelocalPath).Length;
                             }
@@ -105,6 +116,7 @@ namespace Api.Socioboard.Controllers
                     lstImglibrary.Tags = "";
                     lstImglibrary.FolderType = "Private";
                     lstImglibrary.LocalImagePath = localpath;
+                    lstImglibrary.Fileextension = extension;
                     int SavedStatus = dbr.Add<Domain.Socioboard.Models.ImgLibrary>(lstImglibrary);
                     if (SavedStatus == 1)
                     {
@@ -147,6 +159,7 @@ namespace Api.Socioboard.Controllers
                     string imgPath = string.Empty;
                     string imagePath = string.Empty;
                     string localpath = string.Empty;
+                    string extension= string.Empty;
                     if (files != null)
                     {
 
@@ -165,6 +178,11 @@ namespace Api.Socioboard.Controllers
                             uploads = _appSettings.ApiDomain + "/api/Media/getUserImages?id=" + $@"{tempName}";
                             //imglength = new System.IO.FileInfo(filenameforlength).Length;
                             // size += file.Length;
+                            extension = Path.GetExtension(fileName).ToUpper();
+                            if (extension != ".JFIF" && extension != ".JPG" && extension != ".JPEG" && extension != ".Exif" && extension != ".GIF" && extension != ".TIFF" && extension != ".PNG" && extension != ".PPM" && extension != ".BMP" && extension != ".PGM" && extension != ".PBM" && extension != ".PNM")
+                            {
+                                return BadRequest("Please select only image file");
+                            }
                             try
                             {
                                 using (FileStream fs = System.IO.File.Create(filename))
@@ -173,6 +191,11 @@ namespace Api.Socioboard.Controllers
                                     fs.Flush();
                                 }
                                 imglength = new System.IO.FileInfo(filename).Length;
+                                double totallength = imgsize + imglength;
+                                if (totallength > 20971520)
+                                {
+                                    return BadRequest("You have reached maximum library sapce");
+                                }
                                 filename = uploads;
                                 // long imglength = new System.IO.FileInfo(imagelocalPath).Length;
                             }
@@ -200,6 +223,7 @@ namespace Api.Socioboard.Controllers
                     lstImglibrary.Tags = "";
                     lstImglibrary.FolderType = "Public";
                     lstImglibrary.LocalImagePath = localpath;
+                    lstImglibrary.Fileextension = extension;
                     int SavedStatus = dbr.Add<Domain.Socioboard.Models.ImgLibrary>(lstImglibrary);
                     if (SavedStatus == 1)
                     {

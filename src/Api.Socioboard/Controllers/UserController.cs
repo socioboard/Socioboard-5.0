@@ -2373,11 +2373,11 @@ namespace Api.Socioboard.Controllers
             User refrralcode = dbr.Single<User>(t => t.RefrralCode == promo_code);
             if (refrralcode != null)
             {
-                return Ok("Refrral Code Applied");
+                return Ok("Referral Code Applied");
             }
             else
             {
-                return BadRequest("Refrral Code Not Found");
+                return BadRequest("Referral Code Not Found");
             }
 
         }
@@ -2484,6 +2484,7 @@ namespace Api.Socioboard.Controllers
             return Ok();
 
         }
+
     }
 
 }

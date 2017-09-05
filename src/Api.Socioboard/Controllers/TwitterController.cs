@@ -423,6 +423,14 @@ namespace Api.Socioboard.Controllers
             return Ok(lstTwtMessages.OrderByDescending(t => t.messageDate));
         }
 
+        [HttpGet("TwitterContactSearch")]
+        public IActionResult TwitterContactSearch(string profileId,string contact)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.TwitterContactSearch> lstfollowerlist = Helper.TwitterHelper.twitterConstactSearchlist(profileId,contact, dbr, _appSettings);
+            return Ok(lstfollowerlist);
+        }
+
 
     }
 }

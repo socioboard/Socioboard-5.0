@@ -529,7 +529,7 @@
                             <label for="countryCode" data-error="PhoneNumber" data-success="right"></label>
                         </div>
                         <div class="input-field col s10">
-                            <input id="PhoneNumber" name="PhoneNumber" type="number" class="validate" title="Please enter number only" required>
+                            <input id="PhoneNumber" name="PhoneNumber" type="tel" class="validate" title="Please enter number only" min="8" max="15"  pattern="[0-9]+" required>
                             <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
                         </div>
                     </div>
@@ -832,6 +832,7 @@ analytics" href="http://statcounter.com/shopify/"
 
             <script>
                 function myFunction() {
+                    debugger;
                     $('#ImgLoading').show();
                     $('#submitButton').hide();
                     var firstName = $('#FirstName').val();
@@ -841,6 +842,7 @@ analytics" href="http://statcounter.com/shopify/"
                     var phoneCode = $('#countryCode').val();
                     // var company = $('#req_Company').val();
                     var Phone = $('#PhoneNumber').val();
+                    var PhoneNo = phoneCode + Phone;
                     var password = $('#Password').val();
                     var cnfPassword = $('#CnfPassword').val();
                     var accountType = $('#AccountType').val();
@@ -859,7 +861,7 @@ analytics" href="http://statcounter.com/shopify/"
 
                         url: "@ViewBag.ApiDomain/api/user/Register",
 
-                        data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": Phone, "password": password, "AccountType": accountType, "PaymentType": PaymentType, "Country": country, "PhoneCode": phoneCode, "ReferdBy": promo_code },
+                        data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": PhoneNo, "password": password, "AccountType": accountType, "PaymentType": PaymentType, "Country": country, "PhoneCode": phoneCode, "ReferdBy": promo_code },
 
                         //contentType: "application/json; charset=utf-8",
 

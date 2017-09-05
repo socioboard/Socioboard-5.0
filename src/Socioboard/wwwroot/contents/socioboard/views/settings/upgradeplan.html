@@ -1,4 +1,43 @@
-    <!-- START MAIN -->
+<style>
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 1s;
+        }
+
+            .tooltip .tooltiptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+</style>
+<!-- START MAIN -->
 <div data-ng-controller="ProfileSettingController">
     <!-- START WRAPPER -->
     <div class="wrapper">
@@ -317,6 +356,18 @@
                             </tbody>
                             <tbody>
                                 <tr>
+                                    <th>Content Studio <i class="fa icon-question grey-text text-accent-4 tooltip"><span class="tooltiptext">You can use Content Studio as per plan</span></i></th>
+                                    <td class="center"><i class="fa fa-times-circle red-text" aria-hidden="true"></i></td>
+                                    <td class="center"><i class="fa fa-times-circle red-text" aria-hidden="true"></i></td>
+                                    <td class="center"><i class="fa fa-times-circle red-text" aria-hidden="true"></i></td>
+                                    <td class="center"><i class="fa fa-times-circle red-text" aria-hidden="true"></i></td>
+                                    <td class="center"><i class="fa fa-times-circle red-text" aria-hidden="true"></i></td>
+                                    <td class="center"><i class="fa fa-check-circle green-text text-accent-4 tooltip"><span class="tooltiptext">You can use Trending now</span></i></td>
+                                    <td class="center"><i class="fa fa-check-circle green-text text-accent-4 tooltip"><span class="tooltiptext">You can use Trending Now and Most Shared</span></i></td>
+                                    <td class="center"><i class="fa fa-check-circle green-text text-accent-4 tooltip"><span class="tooltiptext">You can use Trending Now,Most Shared and Shareathon</span></i></td> </tr>
+                            </tbody>
+                            <tbody>
+                                <tr>
                                     <th>Socioboard Team Report</th>
                                     <td class="center"><i class="fa fa-times-circle red-text" aria-hidden="true"></i></td>
                                     <td class="center"><i class="fa fa-times-circle red-text" aria-hidden="true"></i></td>
@@ -374,50 +425,43 @@
                                     <th>&nbsp;</th>
 
                                     <th class="center">
-                                        <a ng-if="accountType==0" class="btn pricing-cta">Current</a>
-                                        <a ng-if="accountType>0" ng-click="UpgradeAccount('Free')" class="btn pricing-cta">Downgrade</a>
+                                        <a ng-if="accountType==0" class="btn btn_style pricing-cta img_comp_btn">Current</a>
+                                        <a ng-if="accountType>0" ng-click="UpgradeAccount('Free')" class="btn btn_style pricing-cta img_comp_btn">Downgrade</a>
                                     </th>
                                     <th class="center">
-                                        <a ng-if="accountType==1" class="btn pricing-cta">Current</a>
-                                        <a ng-if="accountType>1" ng-click="UpgradeAccount('Standard')" class="btn pricing-cta">Downgrade</a>
-
-                                        <a ng-if="accountType<1" ng-click="UpgradeAccount('Standard')" class="btn pricing-cta">Upgrade</a>
+                                        <a ng-if="accountType==1" class="btn btn_style pricing-cta img_comp_btn">Current</a>
+                                        <a ng-if="accountType>1" ng-click="UpgradeAccount('Standard')" class="btn btn_style pricing-cta img_comp_btn">Downgrade</a>
+                                        <a ng-if="accountType<1" ng-click="UpgradeAccount('Standard')" class="btn btn_style pricing-cta img_comp_btn">Upgrade</a>
                                     </th>
                                     <th class="center">
-                                        <a ng-if="accountType==2" class="btn pricing-cta">Current</a>
-                                        <a ng-if="accountType>2" ng-click="UpgradeAccount('Premium')" class="btn pricing-cta">Downgrade</a>
-
-                                        <a ng-if="accountType<2" ng-click="UpgradeAccount('Premium')" class="btn pricing-cta">Upgrade</a>
+                                        <a ng-if="accountType==2" class="btn btn_style pricing-cta img_comp_btn">Current</a>
+                                        <a ng-if="accountType>2" ng-click="UpgradeAccount('Premium')" class="btn btn_style pricing-cta img_comp_btn">Downgrade</a>
+                                        <a ng-if="accountType<2" ng-click="UpgradeAccount('Premium')" class="btn btn_style pricing-cta img_comp_btn">Upgrade</a>
                                     </th>
                                     <th class="center">
-                                        <a ng-if="accountType==3" class="btn pricing-cta">Current</a>
-                                        <a ng-if="accountType>3" ng-click="UpgradeAccount('Deluxe')" class="btn pricing-cta">Downgrade</a>
-
-                                        <a ng-if="accountType<3" ng-click="UpgradeAccount('Deluxe')" class="btn pricing-cta">Upgrade</a>
+                                        <a ng-if="accountType==3" class="btn btn_style pricing-cta img_comp_btn">Current</a>
+                                        <a ng-if="accountType>3" ng-click="UpgradeAccount('Deluxe')" class="btn btn_style pricing-cta img_comp_btn">Downgrade</a>
+                                        <a ng-if="accountType<3" ng-click="UpgradeAccount('Deluxe')" class="btn btn_style pricing-cta img_comp_btn">Upgrade</a>
                                     </th>
                                     <th class="center">
-                                        <a ng-if="accountType==4" class="btn pricing-cta">Current</a>
-                                        <a ng-if="accountType>4" ng-click="UpgradeAccount('Topaz')" class="btn pricing-cta">Downgrade</a>
-
-                                        <a ng-if="accountType<4" ng-click="UpgradeAccount('Topaz')" class="btn pricing-cta">Upgrade</a>
+                                        <a ng-if="accountType==4" class="btn btn_style pricing-cta img_comp_btn">Current</a>
+                                        <a ng-if="accountType>4" ng-click="UpgradeAccount('Topaz')" class="btn btn_style pricing-cta img_comp_btn">Downgrade</a>
+                                        <a ng-if="accountType<4" ng-click="UpgradeAccount('Topaz')" class="btn btn_style pricing-cta img_comp_btn">Upgrade</a>
                                     </th>
                                     <th class="center">
-                                        <a ng-if="accountType==5" class="btn pricing-cta">Current</a>
-                                        <a ng-if="accountType>5" ng-click="UpgradeAccount('Ruby')" class="btn pricing-cta">Downgrade</a>
-
-                                        <a ng-if="accountType<5" ng-click="UpgradeAccount('Ruby')" class="btn pricing-cta">Upgrade</a>
+                                        <a ng-if="accountType==5" class="btn btn_style pricing-cta img_comp_btn">Current</a>
+                                        <a ng-if="accountType>5" ng-click="UpgradeAccount('Ruby')" class="btn btn_style pricing-cta img_comp_btn">Downgrade</a>
+                                        <a ng-if="accountType<5" ng-click="UpgradeAccount('Ruby')" class="btn btn_style pricing-cta img_comp_btn">Upgrade</a>
                                     </th>
                                     <th class="center">
-                                        <a ng-if="accountType==6" class="btn pricing-cta">Current</a>
-                                        <a ng-if="accountType>6" ng-click="UpgradeAccount('Gold')" class="btn pricing-cta">Downgrade</a>
-
-                                        <a ng-if="accountType<6" ng-click="UpgradeAccount('Gold')" class="btn pricing-cta">Upgrade</a>
+                                        <a ng-if="accountType==6" class="btn btn_style pricing-cta img_comp_btn">Current</a>
+                                        <a ng-if="accountType>6" ng-click="UpgradeAccount('Gold')" class="btn btn_style pricing-cta img_comp_btn">Downgrade</a>
+                                        <a ng-if="accountType<6" ng-click="UpgradeAccount('Gold')" class="btn btn_style pricing-cta img_comp_btn">Upgrade</a>
                                     </th>
                                     <th class="center">
-                                        <a ng-if="accountType==7" class="btn pricing-cta">Current</a>
-                                        <a ng-if="accountType>7" ng-click="UpgradeAccount('Platinum')" class="btn pricing-cta">Downgrade</a>
-
-                                        <a ng-if="accountType<7" ng-click="UpgradeAccount('Platinum')" class="btn pricing-cta">Upgrade</a>
+                                        <a ng-if="accountType==7" class="btn btn_style pricing-cta img_comp_btn">Current</a>
+                                        <a ng-if="accountType>7" ng-click="UpgradeAccount('Platinum')" class="btn btn_style pricing-cta img_comp_btn">Downgrade</a>
+                                        <a ng-if="accountType<7" ng-click="UpgradeAccount('Platinum')" class="btn btn_style pricing-cta img_comp_btn">Upgrade</a>
                                     </th>
                                 </tr>
                             </tfoot>

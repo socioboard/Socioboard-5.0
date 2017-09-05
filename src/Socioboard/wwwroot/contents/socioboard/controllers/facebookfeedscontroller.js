@@ -350,7 +350,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
             $scope.disbtncom = false;
             var profiles = new Array();
-            $("#checkboxdataboard .subcheckboxboard").each(function () {
+            $("#checkboxdata .subcheckbox").each(function () {
 
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {

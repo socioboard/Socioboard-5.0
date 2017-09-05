@@ -602,6 +602,28 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
              }
          })
 
+        // Day wise socialqueue message controller
+         .state('DaySocioQueue', {
+             url: "/day_socioqueue",
+             templateUrl: "../contents/socioboard/views/publishing/day_socioqueue.html",
+             data: { pageTitle: 'Day Wise SocioQueue', pageSubTitle: 'updated' },
+             controller: "DaySocioQueueController",
+
+             resolve: {
+                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                     return $ocLazyLoad.load({
+                         name: 'SocioboardApp',
+                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                         files: [
+                             '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/js/admin/moment.min.js',
+                             '../contents/socioboard/css/admin/custom.css',
+                             '../contents/socioboard/controllers/daysocioqueuecontroller.js'
+                         ]
+                     });
+                 }]
+             }
+         })
          // Discovery Suggestion
         // ur followers        
         .state('your_followers', {

@@ -204,8 +204,10 @@ namespace Api.Socioboard.Controllers
                     {
                         if (!string.IsNullOrEmpty(url))
                         {
-                            updatedtext = postmessage.Replace(url, "");
                             link = url;
+                            //updatedtext = postmessage.Replace(url, "");
+                            updatedtext = postmessage;
+
                         }
                         else
                         {
@@ -1021,13 +1023,13 @@ namespace Api.Socioboard.Controllers
                             {
                                 id = e.id,
                                 title = e.shareMessage,
-                                //  start = new DateTime(e.ScheduleTime.Year, e.ScheduleTime.Month, e.ScheduleTime.Day, e.ScheduleTime.Hour, e.ScheduleTime.Minute, e.ScheduleTime.Second).ToString("yyyy-MM-dd HH':'mm':'ss"),
+                                //start = new DateTime(e.scheduleTime.Year, e.scheduleTime.Month, e.scheduleTime.Day, e.scheduleTime.Hour, e.scheduleTime.Minute, e.scheduleTime.Second).ToString("yyyy-MM-dd HH':'mm':'ss"),
 
-                                // start = (DateTime.Parse(e.scheduleTime.ToString()).ToLocalTime()),
-                                // start= Convert.ToDateTime(TimeZoneInfo.ConvertTimeFromUtc(e.scheduleTime, TimeZoneInfo.Local)),
-                                //start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(), e.scheduleTime.ToString())),
+                                //start = (DateTime.Parse(e.scheduleTime.ToString()).ToLocalTime()),
+                                //start = Convert.ToDateTime(TimeZoneInfo.ConvertTimeFromUtc(e.scheduleTime, TimeZoneInfo.Local)),
+                                start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(), e.scheduleTime.ToString())),
                                 //url
-                                start = e.localscheduletime,
+                                //start = e.localscheduletime,
                                 allDay = false,
                                 description = e.shareMessage,
                                 profileId = e.profileId,
@@ -1039,8 +1041,57 @@ namespace Api.Socioboard.Controllers
             return Ok(rows);
         }
 
-       
-        
+
+        public static string CompareDateWithclient(string clientdate, string scheduletime)
+        {
+            try
+            {
+                var dt = DateTime.Parse(scheduletime);
+                var clientdt = DateTime.Parse(clientdate);
+                //  DateTime client = Convert.ToDateTime(clientdate);
+                DateTime client = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(clientdt, TimeZoneInfo.Local));
+                DateTime server = DateTime.UtcNow;
+                DateTime schedule = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
+                {
+                    var kind = schedule.Kind; // will equal DateTimeKind.Unspecified
+                    if (DateTime.Compare(client, server) > 0)
+                    {
+                        double minutes = (server - client).TotalMinutes;
+                        schedule = schedule.AddMinutes(minutes);
+                    }
+                    else if (DateTime.Compare(client, server) == 0)
+                    {
+                    }
+                    else if (DateTime.Compare(client, server) < 0)
+                    {
+                        double minutes = (server - client).TotalMinutes;
+                        schedule = schedule.AddMinutes(minutes);
+                    }
+                }
+                return TimeZoneInfo.ConvertTimeFromUtc(schedule, TimeZoneInfo.Local).ToString();
+                // return schedule.ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return "";
+            }
+        }
+
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
+            }
+        }
 
 
     }

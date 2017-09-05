@@ -15,18 +15,26 @@
                         <div class="col l2 m2 s2 center">
                             <img src="{{follower.profile_image_url}}" class="responsive-img circle margin-top-10">
                             <h6 class="grey-text text-darken-4">{{follower.name}}</h6>
+                            <h6 class="grey-text text-darken-2"> @{{follower.screen_name}}</h6>
                         </div>
-                        <div class="col l2 m3 s3">
-                            <h6 class="grey-text text-darken-2"> {{follower.screen_name}}</h6>
-                            <h6>Following  <strong class="blue-text text-darken-1 truncate">{{follower.following}}</strong></h6>
-                            <h6>Followers  <strong class="blue-text text-darken-1 truncate">{{follower.followers}}</strong></h6>                           
-                        </div>
-                        <div class="col l6 m5 s5">
-                            <h6><i class="fa fa-file-text-o" aria-hidden="true"></i>  <strong class="blue-text text-darken-1 truncate">{{follower.description}}</strong></h6>
-                            <h6><i class="fa fa-map-marker" aria-hidden="true"></i>   <strong class="blue-text text-darken-1 truncate">{{follower.location}}</strong></h6>                            
+                        <div class="col l8 m8 s8">
+                            <div class="row no-space">
+                                <div class="col m4">
+                                    <h5><i class="fa fa-map-marker" aria-hidden="true"></i><strong class="pink-text text-darken-1 truncate">{{follower.location}}</strong></h5>
+                                </div>
+                                <div class="col m4">
+                                    <h5>Following  <strong class="pink-text text-darken-1 truncate">{{follower.following}}</strong></h5>
+                                </div>
+                                <div class="col m4">
+                                    <h5>Followers  <strong class="pink-text text-darken-1 truncate">{{follower.followers}}</strong></h5>
+                                </div>
+                                <div class="col m12">
+                                    <h6><i class="fa fa-file-text-o" aria-hidden="true"></i>  <strong class="pink-text text-darken-1 truncate">{{follower.description}}</strong></h6>                         
+                                </div>
+                            </div>
                         </div>
                         <div class="col l2 m2 s2">
-                            <a class="btn btn_style blue_btn_style margin-top-20" href="https://twitter.com/{{follower.screen_name}}" target="_blank">View Profile</a>
+                            <a class="btn btn_style btn_gred_purple margin-top-30"   href="https://twitter.com/{{follower.screen_name}}" target="_blank">View Profile</a>
                         </div>
                     </div>
                 </div>

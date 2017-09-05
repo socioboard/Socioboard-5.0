@@ -18,10 +18,11 @@ namespace Api.Socioboard.Repositories
             MongoRepository _RssRepository = new MongoRepository("AdvanceSerachData", settings);
             //List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstyoutube = new List<Domain.Socioboard.Models.Mongo.AdvanceSerachData>();
             var builder = Builders<AdvanceSerachData>.Sort;
-          //  var sort = builder.Descending(t => t.totalShareCount);
-            //mongorepo.FindWithRange<MongoTwitterFeed>(t => t.profileId.Equals(profileId), sort, 0, 100);
-            var result = _RssRepository.FindAdvance<AdvanceSerachData>(t => t.networkType == networkType && t.totalShareCount !=0);//UserId
-            var task = Task.Run(async () =>{
+            var sort = builder.Descending(t => t.postedTime);
+            var result = _RssRepository.FindWithRange<AdvanceSerachData>(t => t.networkType == networkType && t.totalShareCount != 0, sort, 0, 100);
+            // var result = _RssRepository.FindAdvance<AdvanceSerachData>(t => t.networkType == networkType && t.totalShareCount != 0);//UserId
+            var task = Task.Run(async () =>
+            {
                 return await result;
             });
 
@@ -29,7 +30,7 @@ namespace Api.Socioboard.Repositories
             // IList<AdvanceSerachData> lstyoutube = task.Result.ToList();
             IList<AdvanceSerachData> lstyoutube = task.Result.ToList();//.Take(30).Skip(0).ToList();
             lstyoutube = lstyoutube.OrderByDescending(kt => kt.postedTime).ToList();
-            lstyoutube = lstyoutube.OrderByDescending(gb => gb.totalShareCount).ToList().Take(30).Skip(0).ToList(); 
+            lstyoutube = lstyoutube.OrderByDescending(gb => gb.totalShareCount).ToList().Take(30).Skip(0).ToList();
             if (lstyoutube != null)
             {
                 //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
@@ -80,7 +81,7 @@ namespace Api.Socioboard.Repositories
             var sort = builder.Descending(t => t.postedTime);
 
             //var result = _RssRepository.FindWithRange<AdvanceSerachData>(t => t.totalShareCount != 0, sort, 0, 150);
-            var result = _RssRepository.FindAdvance<AdvanceSerachData>(t=> t.totalShareCount != 0);
+            var result = _RssRepository.FindAdvance<AdvanceSerachData>(t => t.totalShareCount != 0);
             var task = Task.Run(async () =>
             {
                 return await result;
@@ -88,7 +89,7 @@ namespace Api.Socioboard.Repositories
             IList<AdvanceSerachData> lsttwt = task.Result.ToList();
 
             lsttwt = lsttwt.OrderByDescending(kt => kt.postedTime).ToList();
-           // lsttwt = lsttwt.OrderByDescending(gb => gb.totalShareCount).ToList().Take(30).Skip(0).ToList();
+            // lsttwt = lsttwt.OrderByDescending(gb => gb.totalShareCount).ToList().Take(30).Skip(0).ToList();
             //if (lsttwt != null)
             //{
             //    //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
@@ -193,7 +194,7 @@ namespace Api.Socioboard.Repositories
         }
 
 
-        public static string saveContentDataIdReposi(List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> shareathon,long userId ,string fbPageId, int timeInterval, Helper.Cache _redisCache, Helper.AppSettings settings, Model.DatabaseRepository dbr)
+        public static string saveContentDataIdReposi(List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> shareathon, long userId, string fbPageId, int timeInterval, Helper.Cache _redisCache, Helper.AppSettings settings, Model.DatabaseRepository dbr)
         {
 
             string[] lstProfileIds = null;
@@ -202,11 +203,11 @@ namespace Api.Socioboard.Repositories
                 lstProfileIds = fbPageId.Split(',');
                 fbPageId = lstProfileIds[0];
             }
-           
+
             MongoRepository mongorepo = new MongoRepository("ContentFeedsShareathon", settings);
             MongoRepository mongoreposhareId = new MongoRepository("ContentStudioShareathonIdData", settings);
 
-           
+
 
             int totalval = 0;
             foreach (var fbid in lstProfileIds)
@@ -216,7 +217,7 @@ namespace Api.Socioboard.Repositories
                 int countval = 0;
                 foreach (var item in shareathon)
                 {
-                    var retval = mongoreposhareId.Find<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(t => t.FbPageId.Contains(fbid) && t.postId ==item.postId);
+                    var retval = mongoreposhareId.Find<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(t => t.FbPageId.Contains(fbid) && t.postId == item.postId);
                     var taskval = Task.Run(async () =>
                     {
                         return await retval;
@@ -246,21 +247,35 @@ namespace Api.Socioboard.Repositories
 
                     }
                     int count = 0;
-                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.postId.Contains(item.postId) && t.FbPageId.Contains(fbid));
-                    var task = Task.Run(async () =>
+                    try
                     {
-                        return await ret;
-                    });
-                    count = task.Result.Count;
+                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.postId.Contains(item.postId) && t.FbPageId.Contains(fbid));
+                        var task = Task.Run(async () =>
+                        {
+                            return await ret;
+                        });
+                        count = task.Result.Count;
+                    }
+                    catch
+                    {
+                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.strId.Contains(item.strId) && t.FbPageId.Contains(fbid));
+                        var task = Task.Run(async () =>
+                        {
+                            return await ret;
+                        });
+                        count = task.Result.Count;
+
+                    }
+
 
                     if (count < 1)
-                    { 
+                    {
                         Domain.Socioboard.Models.Mongo.ContentFeedsShareathon lstforShareathon = new Domain.Socioboard.Models.Mongo.ContentFeedsShareathon();
 
                         lstforShareathon.Id = ObjectId.GenerateNewId();
                         lstforShareathon.strId = ObjectId.GenerateNewId().ToString();
                         lstforShareathon.FbPageId = fbid;
-                        lstforShareathon.postId = item.postId;                       
+                        lstforShareathon.postId = item.postId;
                         lstforShareathon.networkType = item.networkType;
                         lstforShareathon.title = item.title;
                         lstforShareathon.facebookAccount = listfb.FbUserName;

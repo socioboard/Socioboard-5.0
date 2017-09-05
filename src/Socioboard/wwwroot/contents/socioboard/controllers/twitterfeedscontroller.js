@@ -273,6 +273,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               }).then(function (response) {
                   if (response.data != "") {
                       alertify.success('Email sent successfully');
+                      $('#Email_modal').closeModal();
                   }
                   else {
                       alertify.error('Error while sending email');
@@ -560,6 +561,24 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
           }
               
         //end markSpam
+
+        //contact search
+          $scope.contactSearch = function () {
+              var contact = $('#contact').val();
+              $http.get(apiDomain + '/api/Twitter/TwitterContactSearch?profileId=' + $stateParams.profileId + '&contact=' + contact)
+                          .then(function (response) {
+                              $scope.lstUserTweets = response.data;
+                              $scope.reloadTweets();
+                              $scope.preloadmoretweets = true;
+                              if (response.data == null) {
+                                  TweetsreachLast = true;
+                              }
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+              // end codes to load  recent Tweets
+          }
+        //end contact search
 
     });
 });

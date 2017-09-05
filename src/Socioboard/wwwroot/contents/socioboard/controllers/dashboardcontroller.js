@@ -201,6 +201,10 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             $rootScope.lstYoutube = undefined;
             $rootScope.lstGanalytics = undefined;
         }
+        $scope.fbpagecloseModal = function () {
+            $rootScope.lstReconnFbPages = undefined;
+
+        }
 
       
 

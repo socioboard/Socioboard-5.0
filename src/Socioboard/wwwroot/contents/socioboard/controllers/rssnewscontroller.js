@@ -340,7 +340,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
           
             $scope.disbtncom = false;
             var profiles = new Array();
-            $("#checkboxdatarss .subcheckboxrss").each(function () {
+            $("#checkboxdata .subcheckbox").each(function () {
              
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {

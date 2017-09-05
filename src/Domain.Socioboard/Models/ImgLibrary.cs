@@ -18,6 +18,7 @@ namespace Domain.Socioboard.Models
         public Int64 ImageSize { get; set; }
         public string Tags { get; set; }
         public string FolderType { get; set; }
+        public string Fileextension { get; set; }
 
     }
     public class maxsize

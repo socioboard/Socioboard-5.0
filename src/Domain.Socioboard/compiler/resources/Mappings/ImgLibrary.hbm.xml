@@ -29,5 +29,8 @@
     <property name="LocalImagePath">
       <column name="LocalImagePath"  />
     </property>
+    <property name="Fileextension">
+      <column name="Fileextension"  />
+    </property>
   </class>
 </hibernate-mapping>

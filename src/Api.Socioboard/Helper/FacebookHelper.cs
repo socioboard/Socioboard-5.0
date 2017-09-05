@@ -79,6 +79,8 @@ namespace Api.Socioboard.Helper
                             var webClient = new WebClient();
                             byte[] img = webClient.DownloadData(imagePath);
                             media.SetValue(img);
+                            args["title"] = message;
+                            args["description"] = message;
                             args["source"] = media;
                             ret = fb.Post("v2.7/" + fbUserId + "/videos", args).ToString();//v2.1 
                         }

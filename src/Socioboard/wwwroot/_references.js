@@ -15,6 +15,7 @@
 /// <reference path="contents/socioboard/controllers/createlinkshareathoncontroller.js" />
 /// <reference path="contents/socioboard/controllers/createpageshareathoncontroller.js" />
 /// <reference path="contents/socioboard/controllers/dashboardcontroller.js" />
+/// <reference path="contents/socioboard/controllers/daysocioqueuecontroller.js" />
 /// <reference path="contents/socioboard/controllers/designfeedscontroller.js" />
 /// <reference path="contents/socioboard/controllers/designlinfeedscontroller.js" />
 /// <reference path="contents/socioboard/controllers/discoverycontroller.js" />

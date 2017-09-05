@@ -1,3 +1,8 @@
+<style>
+    .noti_feeds_img{
+        height:200px !important;
+    }
+</style>
 <div data-ng-controller="NotificationAllController">
     <!-- START CONTENT -->
     <section id="content">
@@ -17,9 +22,9 @@
                                     <h6 ng-if="notify.status==1" class="center success_box">Message Sent Successfully</h6>
                                     <h6 ng-if="notify.status==0" class="center error_box">Message Not Sent</h6>
                                 </div>
-                                <!--<div class="col m4 center">
-                                    <img src="http://www.myfico.com/Images/sample_overlay.gif" class="responsive-img ">
-                                </div>-->
+                                <div class="col m4 center">
+                                    <img src="{{notify.url}}" class="responsive-img noti_feeds_img">
+                                </div>
                             </div>
                             <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
                         </li>

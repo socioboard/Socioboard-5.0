@@ -51,7 +51,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         var y = parseInt(timeRepeat);
       
         $scope.schedulemsg = function (datess) {
-          
             $scope.repeat = false;
             var profiles = $('#scheduleprofiles').val();
             var message = $('#ScheduleMsg').val();

@@ -15,7 +15,7 @@ namespace Domain.Socioboard.Models
         public virtual string shareMessage { get; set; }
         public virtual DateTime clientTime { get; set; }
         public virtual DateTime scheduleTime { get; set; }
-        public virtual DateTime localscheduletime { get; set; }
+        public virtual string localscheduletime { get; set; }
         public virtual Enum.ScheduleStatus status { get; set; }
         public virtual long userId { get; set; }
         public virtual Enum.SocialProfileType profileType { get; set; }

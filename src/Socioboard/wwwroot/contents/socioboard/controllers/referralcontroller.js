@@ -32,9 +32,11 @@ SocioboardApp.controller('ReferralController', function ($rootScope, $scope, $ht
                 return getAllSelected();
             }
         }
+        //code for compose message start
         $scope.ComposeMessage = function () {
+
             var profiles = new Array();
-            $("#checkboxdataboard .subcheckboxboard").each(function () {
+            $("#checkboxdata .subcheckbox").each(function () {
 
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {
@@ -46,18 +48,28 @@ SocioboardApp.controller('ReferralController', function ($rootScope, $scope, $ht
                     profiles.push(attrId);
                 }
             });
+
+            $scope.dispbtn = false;
+            // var profiles = $('#composeProfiles').val();
             var message = $('#composeMessage').val();
             var updatedmessage = "";
+            var testmsg = message;
             message = encodeURIComponent(message);
-            if (profiles.length > 0 && message != '') {
+            //var postdata = message.split("\n");
+            //for (var i = 0; i < postdata.length; i++) {
+            //    updatedmessage = updatedmessage + "<br>" + postdata[i];
+            //}
+            // updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+
+
+            if (profiles.length != 0 && /\S/.test(testmsg)) {
                 $scope.checkfile();
                 if ($scope.check == true) {
                     var formData = new FormData();
-                    $scope.dispbtn = false;
                     formData.append('files', $("#composeImage").get(0).files[0]);
                     $http({
                         method: 'POST',
-                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus,
                         data: formData,
                         headers: {
                             'Content-Type': undefined
@@ -68,11 +80,10 @@ SocioboardApp.controller('ReferralController', function ($rootScope, $scope, $ht
                             $scope.dispbtn = true;
                             $('#ComposePostModal').closeModal();
                             swal('Message composed successfully');
-                            window.location.reload();
                         }
 
                     }, function (reason) {
-                        console.log(reason);
+
                     });
                 }
                 else {
@@ -84,22 +95,24 @@ SocioboardApp.controller('ReferralController', function ($rootScope, $scope, $ht
             else {
                 $scope.dispbtn = true;
                 if (profiles.length == 0) {
-                    swal('please select profile');
+                    swal('Please select a profile');
                 }
                 else {
-                    swal('Please enter text');
+                    swal('Please enter some text to compose this message');
                 }
             }
         }
+        //code for compose message end
+
+        //code for checking the file format start
         $scope.checkfile = function () {
-            var filesinput = $('#composeImage');
-            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var filesinput = $('#composeImage');//composeImage
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
             if (filesinput != undefined && filesinput[0].files[0] != null) {
                 if ($scope.hasExtension('#composeImage', fileExtension)) {
                     $scope.check = true;
                 }
                 else {
-
                     $scope.check = false;
                 }
             }
@@ -111,6 +124,7 @@ SocioboardApp.controller('ReferralController', function ($rootScope, $scope, $ht
             var fileName = $('#composeImage').val();
             return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }
+        //code for checking the file format end
   });
 
 });

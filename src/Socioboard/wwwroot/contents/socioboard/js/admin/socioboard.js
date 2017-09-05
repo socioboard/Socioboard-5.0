@@ -69,7 +69,7 @@ dashboard = function () {
         alwaysVisible: true
     });
 
-    $('#social_profilest').slimScroll({
+    $('#social_profile_list').slimScroll({
         color: '#424242',
         size: '10px',
         height: '400px',
@@ -999,29 +999,41 @@ socioqueue = function () {
     // Basic
     $('.dropify').dropify();
 
-    // Translated
-    $('.dropify-fr').dropify({
-        messages: {
-            default: 'Glissez-déposez un fichier ici ou cliquez',
-            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove: 'Supprimer',
-            error: 'Désolé, le fichier trop volumineux'
-        }
-    });
-
-    // Used events
-    var drEvent = $('.dropify-event').dropify();
-
-    drEvent.on('dropify.beforeClear', function (event, element) {
-        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
-    });
-
-    drEvent.on('dropify.afterClear', function (event, element) {
-        alert('File deleted');
-    });
 
     // $('#SocioQueue').DataTable();
 };
+daysocioqueue = function () {
+    // initialize core components
+    $('ul.tabs').tabs();
+    $('.modal-trigger').leanModal();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the right of button
+    }
+    );
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    Materialize.updateTextFields();
+
+    $('input#input_text, textarea#ScheduleMsg').characterCounter();
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    $('#DaySocioQueue').DataTable();
+};
+
 
 draft = function () {
     // initialize core components

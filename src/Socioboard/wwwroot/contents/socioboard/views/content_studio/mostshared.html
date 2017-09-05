@@ -29,7 +29,8 @@
                 <h4>Most Shared</h4>
             </div>
             <div class="col m3 s12 margin-top-10">
-                <a class="btn btn_style img_comp_btn right" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
+               <a class="btn btn_style img_comp_btn right" ng-if="user.AccountType==7" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
+                <a class="btn btn_style img_comp_btn right" ng-if="user.AccountType!=7" ng-click="message()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
             </div>
         </div>
     </div>
@@ -124,108 +125,103 @@
                 <div class="nav-wrapper">
                     <div class="left col s12 m5 l5">
                         <ul>
-                            <li><a href="#!" class="email-type">Compose</a></li>
-
-                        </ul>
-                    </div>
-                    <div class="col s12 m7 l7 hide-on-med-and-down">
-                        <ul class="right">
                             <li>
-                                <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
-                                <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                                <a href="#!" class="email-type">Compose</a>
                             </li>
                         </ul>
                     </div>
-
                 </div>
             </nav>
         </div>
         <div class="model-email-content">
-            <div class="row">
+            <div class="row no-space">
                 <form class="col s12">
-                    <div class="row">
-                        <div class="input-field col s12">
-                            <div class="emoji-picker-container">
-                                <textarea id="composeMessage" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg">{{composePostdata.title}}</textarea>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row section">
-                        <div class="col s12 m12 l12">
-                            <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
-                        </div>
-                        <input type="hidden" id="imageUrl" value="{{composePostdata.image}}" />
-                        <div class="col s12 m12 l12">
-                            <input type="file" id="composeImage" class="dropify" after-render data-default-file="{{composePostdata.image}}" />
-                        </div>
-
-                    </div>
-                    <div class="row">
-                        <div>
+                    <div class="row no-space">
+                        <div class="col s12 m6">
                             <div class="input-field col s12">
-                                <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
-                                <label for="search_name">Search Profile</label>
+                                <div class="emoji-picker-container">
+                                    <textarea id="composeMessage" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg">{{composePostdata.title}}</textarea>
+                                </div>
                             </div>
-                            <ul class="shinh" id="checkboxdatarss">
-                                <li style="padding:5px 0;">
-                                    <label>
-                                        <input id="checkAll" onclick="check();" type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" />
-                                        <span style="float:left;">Check All</span>
-                                    </label>
-                                </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                    <label>
-                                        <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
-                                    </label>
-                                </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                    <label>
-                                        <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
-                                    </label>
-                                </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
-                                    <label>
-                                        <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
-                                    </label>
-                                </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                    <label>
-                                        <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
-                                    </label>
-                                </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
-                                    <label>
-                                        <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                        <span style="float:left;">{{profile.profileName}}</span>
-                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
-                                    </label>
-                                </li>
-                            </ul>
+                            <div class="row no-space">
+                                <div class="col s12 m12 l12">
+                                    <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
+                                </div>
+                                <input type="hidden" id="imageUrl" value="{{composePostdata.image}}" />
+                                <div class="col s12 m12 l12">
+                                    <input type="file" id="composeImage" class="dropify" after-render data-default-file="{{composePostdata.image}}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col s12 m6">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
+                                    <label for="search_name">Search Profile</label>
+                                </div>
+                                <ul class="col s12 shinh" id="checkboxdata" style="max-height:250px; overflow-y:scroll;">
+                                    <li style="padding:5px 0;">
+                                        <label>
+                                            <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
+                                            <span style="float:left;">Check All</span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                        <label>
+                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                        <label>
+                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                        </label>
+                                    </li>
+                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
+                                        <label>
+                                            <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div>
-                            <div ng-show="draftbtn" ng-click="draftMsg()" class="btn btn_style">Draft</div>
-                            <div ng-show="!draftbtn"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
+                    <div class="row no-space">
+                        <!--<a href="" class="btn btn_style blue_btn_style left" ng-click="draftMsg()">Save as Draft</a>-->
+                        <div class="right btn btn_style blue_btn_style">
+                            <div ng-show="disbtncom" ng-click="ComposeMessage()">send</div>
+                            <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+
+ 
     <!-- ShareathonModal Structure -->
     <div id="ShareathonModal" class="modal">
         <div class="modal-content">
@@ -263,6 +259,33 @@
     </div>
 </div>
 
+<div ng-if="fetchdatacomplete!=true">
+    <br /><br /><br /><br /><br /><br />
+    <div class="center">
+        <div class="preloader-wrapper small active">
+            <div class="spinner-layer spinner-green-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div><div class="gap-patch">
+                    <div class="circle"></div>
+                </div><div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+        <br />
+        <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait while we are processing</h6>
+
+    </div>
+</div>
+
+
+<div class="center" ng-if="nofeeds==true">
+    <br /><br /><br /><br /><br /><br />
+    <h6 style="color:gray; font-size:20px; font-family:Calibri"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No content feeds to display<br /></h6>
+</div>
+</div>
+
 <script>
     $(function () {
         // Initializes and creates emoji set from sprite sheet
@@ -276,13 +299,13 @@
     function check() {
         debugger;
         var flag = $('#checkAll').is(":checked");
-        $('#checkboxdatarss input:checkbox').each(function () {
+        $('#checkboxdata input:checkbox').each(function () {
             $(this).prop('checked', flag);
         });
     }
     function profile() {
         var count = 0;
-        $("#checkboxdatarss  :checkbox").each(function () {
+        $("#checkboxdata  :checkbox").each(function () {
             if (this.id != 'checkAll') {
                 if (!($("#" + this.id).prop('checked'))) {
                     count++;

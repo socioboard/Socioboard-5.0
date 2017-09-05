@@ -1,6 +1,6 @@
 'use strict';
 SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $http, $timeout, apiDomain, domain) {
-    $scope.$on('$viewContentLoaded', function() {   
+    $scope.$on('$viewContentLoaded', function () {
         $scope.disbtncom = true;
         $scope.draftbtn = true;
         $scope.dispbtn = true;
@@ -8,6 +8,10 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
         $scope.queryBy = '$';
         $scope.composePostdata = {};
         MostShared();
+        $scope.message = function () {
+            $scope.abcd = "If You want to use this feature upgrade to higher business plan ";
+            swal($scope.abcd);
+        };
         $scope.deleteMsg = function(profileId){
         	swal({   
 	        title: "Are you sure?",   
@@ -96,6 +100,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
         $scope.sorttype = function () {
             $('#ShareathonModal').openModal();
         }
+
         $scope.ComposeMessageModal = function (lstData) {
             jQuery('input:checkbox').removeAttr('checked');
             if (lstData != null) {
@@ -115,7 +120,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
         $scope.ComposeMessage = function () {
             $scope.disbtncom = false;
             var profiles = new Array();
-            $("#checkboxdatarss .subcheckboxrss").each(function () {
+            $("#checkboxdata .subcheckbox").each(function () {
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {
                     var index = profiles.indexOf(attrId);
@@ -192,6 +197,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
             $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchData?keywords=' + key)
                            .then(function (response) {
                                $scope.lstAdvSearhDataaa = response.data;
+                               $scope.fetchdatacomplete = true;
                            }, function (reason) {
                                $scope.error = reason.data;
                            });
@@ -211,13 +217,6 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
                 $scope.selectedContentfeed.push(lstforshare);
             }         
         }
-
-        $scope.shareathonData = function () {
-            debugger;
-          
-        }
-
-
 
         console.log($scope.selectedContentfeed);
 
@@ -239,7 +238,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
                 if ($scope.check == true) {
                     var formData = new FormData();
                     formData.append('files', $("#composeImage").get(0).files[0]);
-                    //$scope.dispbtn = false;
+                   
                     $http({
                         method: 'POST',
                         url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + "" + '&groupId=' + $rootScope.groupId + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),

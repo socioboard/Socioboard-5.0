@@ -259,7 +259,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
 
         $scope.ComposeMessage = function () {
              var profiles = new Array();
-             $("#checkboxdataboard .subcheckboxboard").each(function () {
+             $("#checkboxdata .subcheckbox").each(function () {
                
                     var attrId = $(this).attr("id");
                     if (document.getElementById(attrId).checked == false) {

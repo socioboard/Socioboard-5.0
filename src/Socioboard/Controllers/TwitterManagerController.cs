@@ -258,7 +258,7 @@ namespace Socioboard.Controllers
                     ParameterHandling = OAuthParameterHandling.HttpAuthorizationHeader,
                     ConsumerKey = _appSettings.twitterConsumerKey,
                     ConsumerSecret = _appSettings.twitterConsumerScreatKey,
-                    CallbackUrl = "http://localhost:9821/TwitterManager/RecTwitter"
+                    CallbackUrl = "https://www.socioboard.com/TwitterManager/RecTwitter"
                 };
                 // Use Hammock to create a rest client
                 var client = new RestClient

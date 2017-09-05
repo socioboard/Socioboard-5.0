@@ -720,5 +720,43 @@ namespace Api.Socioboard.Helper
                 return null;
             }
         }
+
+        public static List<Domain.Socioboard.Models.TwitterContactSearch> twitterConstactSearchlist(string profileId,string contact, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        {
+            string profileids = profileId;
+            List<Domain.Socioboard.Models.TwitterContactSearch> lstContact = new List<Domain.Socioboard.Models.TwitterContactSearch>();
+            Domain.Socioboard.Models.TwitterAccount itemTwt = dbr.Single<Domain.Socioboard.Models.TwitterAccount>(t => profileids.Contains(t.twitterUserId));
+            oAuthTwitter oaut = null;
+            Users twtUser = new Users();
+                oaut = new oAuthTwitter();
+                oaut.AccessToken = itemTwt.oAuthToken;
+                oaut.AccessTokenSecret = itemTwt.oAuthSecret;
+                oaut.TwitterScreenName = itemTwt.twitterScreenName;
+                oaut.TwitterUserId = itemTwt.twitterUserId;
+                oaut.ConsumerKey = _appSettings.twitterConsumerKey;
+                oaut.ConsumerKeySecret = _appSettings.twitterConsumerScreatKey;
+                JArray jarresponse = twtUser.Get_Users_Search(oaut, contact,"20");
+                JArray user_data = JArray.Parse(jarresponse[0]["ids"].ToString());
+                foreach (var items in user_data)
+                {
+                    string userid = items.ToString();
+                    JArray userprofile = twtUser.Get_Users_LookUp(oaut, userid);
+                    foreach (var item in userprofile)
+                    {
+                        Domain.Socioboard.Models.TwitterContactSearch objTwitterContact = new Domain.Socioboard.Models.TwitterContactSearch();
+                        objTwitterContact.screen_name = item["screen_name"].ToString();
+                        objTwitterContact.name = item["name"].ToString();
+                        objTwitterContact.description = item["description"].ToString();
+                        objTwitterContact.followers = item["followers_count"].ToString();
+                        objTwitterContact.following = item["friends_count"].ToString();
+                        objTwitterContact.location = item["location"].ToString();
+                        objTwitterContact.profile_image_url = item["profile_image_url"].ToString();
+                        lstContact.Add(objTwitterContact);
+                    }
+
+                }
+           
+            return lstContact;
+        }
     }
 }

@@ -55,6 +55,13 @@
                 <!-- Compose Email Structure -->
                 <div class="row">
                     <div class="col s12 m12">
+                        <ul class="tabs">
+                            <li class="tab col s6"><a class="active" href="#sche_n">Scheduling</a></li>
+                            <!--<li class="tab col s6"><a href="#day_sche">Day wise scheduling</a></li>-->
+                        </ul>
+                    </div>
+                    <!-- Normal scheduling -->       
+                    <div id="sche_n" class="col s12">
                       <div class="card">
                         <div class="card-content">
                             <div class="row">
@@ -295,6 +302,205 @@
                        
                       </div>
                     </div>
+
+                    <!-- Day wise scheduling -->       
+                    <!--<div id="day_sche" class="col s12">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="row">
+                                    <form class="col s12" name="scheduleform">
+                                        <div class="row">
+                                            <div class="input-field col s12">
+                                                <select multiple id="scheduleprofiles">
+                                                    <option value="" disabled selected>Select Your Account</option>
+                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:0}  | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="fb_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" value="lin_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                                                </select>
+                                                <label>Select Profiles</label>
+                                            </div>
+                                        </div>
+                                      
+                                        <div class="row section" ng-if="user.TrailStatus!=2">
+                                            <div class="col s12 m12 l12">
+                                                <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
+                                            </div>
+                                            <div class="col s12 m12 l12">
+                                                <input type="hidden" id="imageUrl" value="{{schedulemessage.picUrl}}" />
+                                                <div ng-if="schedulemessage">
+                                                    <input type="file" id="input-file-now" class="dropify" after-render data-default-file="{{schedulemessage.picUrl}}" />
+                                                 </div>
+                                                <div ng-if="!schedulemessage">
+                                                    <input type="file" id="input-file-now" class="dropify" after-render data-default-file="" />
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="row">
+
+                                            <div class="input-field col s12">
+                                                <div ng-if="!schedulemessage">
+                                                    <textarea id="ScheduleMsg" class="materialize-textarea" ng-pattern="/^[a-z]+[@+!+#][a-z]*$/" ng-model="ScheduleMsg" required name="ScheduleMsgtxt" length="500"></textarea>
+                                                    <label for="ScheduleMsg">Type Your Message Here</label>
+                                                </div>
+                                                <div ng-if="schedulemessage">
+                                                    <textarea id="ScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage.shareMessage" ng-if="!grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.shareMessage}}</textarea>
+                                                    <textarea id="ScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500"></textarea>
+                                                    <label for="ScheduleMsg">Type Your Message Here</label>
+                                                </div>
+                                            </div>
+                                            <span class="error-message" ng-show="scheduleform.ScheduleMsgtxt.$dirty && scheduleform.ScheduleMsgtxt.$invalid">
+                                                <span style="color:red" ng-show="scheduleform.ScheduleMsgtxt.$error.required">Please enter Schedule Message</span>
+                                            </span>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="input-field col s12 m4 l4">
+                                                <input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="justChek(hasChecked)" />
+                                                <label for="repeat_post">Repeat post</label>
+                                            </div>
+                                            <div class="input-field col s12 m4 l4">
+                                                <input id="sche_day" type="number" min="0" ng-disabled="!hasChecked" class="validate">
+                                                <label for="sche_day">Schedule at [ Days ]</label>
+                                            </div>
+                                            <div class="input-field col s12 m4 l4" ng-disabled="!hasChecked">
+                                                <select id="timesRepeat">
+                                                    <option value="">Choose your time interval</option>
+                                                    <option value=1>1</option>
+                                                    <option value=2>2</option>
+                                                    <option value=3>3</option>
+                                                </select>
+                                                <label>interval to repeat time</label>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                            <div class="input-field col s12 m4 l4">
+                                        <input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="repetition()"/>
+                                        <input type="checkbox" class="filled-in" id="on_of" ng-model="weekChecked" ng-click="weekdayChek(weekChecked)" />
+                                <label for="on_of">week days schedule</label>
+                            </div>
+                            <div class="col l5 m12 s12">
+                                <div class="card-content" ng-disabled="!weekChecked" >
+
+                                    <div class="row no-space">
+                                        <div class="col l6 m6 s12 center">Monday</div>
+                                        <div class="col l6 m6 s12">
+                                            <div class="switch" ng-disabled="!weekChecked" >
+                                                <label>
+                                                    Off
+                                                    <input type="checkbox"  ng-model="SwitchedOn1" ng-if="numday < 0" ng-click="SwitchedOn(SwitchedOn1, 'Monday','0')">
+                                                    <span class="lever"></span>
+                                                    On
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-space">
+                                        <div class="col l6 m6 s12 center">Tuesday</div>
+                                        <div class="col l6 m6 s12">
+                                            <div class="switch">
+                                                <label>
+                                                    Off
+                                                    <input type="checkbox" id="tue_val" ng-if="numday < 1" ng-disabled="!weekChecked" ng-model="SwitchedOn2" ng-click="SwitchedOn(SwitchedOn2,'Tuesday','1')">
+                                                    <span class="lever"></span>
+                                                    On
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-space">
+                                        <div class="col l6 m6 s12 center">Wednesday</div>
+                                        <div class="col l6 m6 s12">
+                                            <div class="switch">
+                                                <label>
+                                                    Off
+                                                    <input type="checkbox" id="wed_val" ng-if="numday < 2" ng-disabled="!weekChecked" ng-model="SwitchedOn3" ng-click="SwitchedOn(SwitchedOn3,'Wednesday','2')">
+                                                    <span class="lever"></span>
+                                                    On
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-space">
+                                        <div class="col l6 m6 s12 center">Thursday</div>
+                                        <div class="col l6 m6 s12">
+                                            <div class="switch">
+                                                <label>
+                                                    Off
+                                                    <input type="checkbox" id="thus_val" ng-if="numday < 3" ng-disabled="!weekChecked" ng-model="SwitchedOn4" ng-click="SwitchedOn(SwitchedOn4,'Thursday','3')">
+                                                    <span class="lever"></span>
+                                                    On
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-space">
+                                        <div class="col l6 m6 s12 center">Friday</div>
+                                        <div class="col l6 m6 s12">
+                                            <div class="switch">
+                                                <label>
+                                                    Off
+                                                    <input type="checkbox" id="Fri_val" ng-if="numday < 4" ng-disabled="!weekChecked" ng-model="SwitchedOn5" ng-click="SwitchedOn(SwitchedOn5,'Friday','4')">
+                                                    <span class="lever"></span>
+                                                    On
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-space">
+                                        <div class="col l6 m6 s12 center">Saturday</div>
+                                        <div class="col l6 m6 s12">
+                                            <div class="switch">
+                                                <label>
+                                                    Off
+                                                    <input type="checkbox" id="sat_val" ng-if="numday < 5" ng-disabled="!weekChecked" ng-model="SwitchedOn6" ng-click="SwitchedOn(SwitchedOn6,'Saturday','5')">
+                                                    <span class="lever"></span>
+                                                    On
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row no-space">
+                                        <div class="col l6 m6 s12 center">Sunday</div>
+                                        <div class="col l6 m6 s12">
+                                            <div class="switch">
+                                                <label>
+                                                    Off
+                                                    <input type="checkbox" id="sun_val" ng-if="numday < 6" ng-disabled="!weekChecked" ng-model="SwitchedOn7" ng-click="SwitchedOn(SwitchedOn7,'Sunday','6')">
+                                                    <span class="lever"></span>
+                                                    On
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="col l7 m12 s12">
+                                <div class="card-content">
+                                    <p>Post these x times <strong>Every Day</strong> :</p>
+                                </div>
+                            </div>
+                        </div>
+                                        <div class="card-action" ng-if="!schedulemessage" ng-show="dispbtn">
+                                            <button ng-disabled="!((scheduleform.ScheduleMsgtxt.$dirty))" class="waves-effect waves-light btn grey darken-3" ng-click="schedulemsg()">Schedule</button>
+                                            <button ng-disabled="!((scheduleform.ScheduleMsgtxt.$dirty))" class="waves-effect waves-light btn grey darken-2" ng-click="draftmsg()">Save To Draft</button>
+                                        </div>
+                                        <div class="card-action" ng-if="schedulemessage" ng-show="dispbtn">
+                                            <button class="waves-effect waves-light btn grey darken-3" ng-model="schduledone" ng-click="schedulemsg()">Schedule</button>
+                                            <button class="waves-effect waves-light btn grey darken-2" ng-click="draftmsg()">Save To Draft</button>
+                                        </div>
+                                        <div class="card-action" ng-show="!dispbtn">
+                                            <a href="#" class="waves-effect waves-light btn grey darken-3">Wait</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>-->
                 </div>
             </section>
             <!-- END CONTENT -->               

@@ -84,6 +84,7 @@ SocioboardApp.controller('ImgLibraryController', function ($rootScope, $scope, $
            }
            else {
                swal("Please enter image name");
+               $scope.uploadbtn = true;
            }
         }
 
@@ -175,7 +176,7 @@ SocioboardApp.controller('ImgLibraryController', function ($rootScope, $scope, $
         }
         $scope.ComposeMessage = function () {
             var profiles = new Array();
-            $("#checkboxdataboard .subcheckboxboard").each(function () {
+            $("#checkboxdata .subcheckbox").each(function () {
 
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {

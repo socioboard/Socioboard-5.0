@@ -720,6 +720,29 @@ ul.side-nav.leftside-navigation li.active > a{
     filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#9ad0ff, endColorstr=#2d6ee6);
 }
 
+.btn_gred_purple{
+    border-radius: 20px !important;
+    margin-bottom: 8px;
+    border:1px solid #c51161; 
+    -webkit-border-radius: 3px; 
+    -moz-border-radius: 3px;
+    font-size:12px;
+    font-family:arial, helvetica, sans-serif; 
+    padding: 10px 10px 10px 10px; 
+    text-decoration:none; 
+    display:inline-block;
+    text-shadow: -1px -1px 0 rgba(0,0,0,0.3);
+    font-weight:bold; 
+    color: #FFFFFF;
+    background-color: #c51161; 
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#b11573), to(#c51161));
+    background-image: -webkit-linear-gradient(top, #b11573, #c51161);
+    background-image: -moz-linear-gradient(top, #b11573, #c51161);
+    background-image: -ms-linear-gradient(top, #b11573, #c51161);
+    background-image: -o-linear-gradient(top, #b11573, #c51161);
+    background-image: linear-gradient(to right,#b11573,#c51161);
+    filter:progid:DXImageTransform.Microsoft.gradient(GradientType=0,startColorstr=#b11573, endColorstr=#c51161);
+}
 
 /* notification*/
 .badge_notify{
