@@ -103,7 +103,7 @@ Socioboard is available on web, desktop and mobiles. We have Android and iOS app
 =========================
 
 
-To access the Socioboard Files visit : https://github.com/socioboard/Socioboard-Core-3.0
+To access the Socioboard Files visit : https://github.com/socioboard/Socioboard-Core-3.0/releases
 
 Step 1:Download the socioboard file from above mentioned path.
 
