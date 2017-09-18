@@ -24,14 +24,13 @@ Socioboard desktop applications are not completely restricted by the various API
 Socioboard desktop apps must be used with utmost care to make sure you remain within the social network usage limits and don’t over do something. It’s best to use them under trained guidance from experts.
  
 
-**inBoardPro (http://www.inboardpro.com/)** - inBoardPro is linkedin marketing on Steroids. Its a desktop application which helps you to automate everything you can do on linkedin. It helps you to manage multiple linkedin accounts, connect with new members in the linked community, post automated updates , manage all your linkedin groups and do a whole lot of things on linkedin. The open source version of inboardpro is hosted here - https://github.com/socioboard/inboard
+**inBoardPro (http://www.inboardpro.com/)** - inBoardPro is linkedin marketing on Steroids. Its a desktop application which helps you to automate everything you can do on linkedin. It helps you to manage multiple linkedin accounts, connect with new members in the linked community, post automated updates , manage all your linkedin groups and do a whole lot of things on linkedin. 
 
-**faceboardPro (http://faceboardpro.com/)** - faceBoardPro is an automated facebook marketing software. It helps you to automate your regular facebook tasks with few clicks. It helps to you manage multiple facebook accounts, manage your friends, groups, pages, apps etc. Basically it can automate all your day to day facebook management tasks and save a lot of your time. The open source version of faceboardpro is hosted here - https://github.com/socioboard/faceboard
+**faceboardPro (http://faceboardpro.com/)** - faceBoardPro is an automated facebook marketing software. It helps you to automate your regular facebook tasks with few clicks. It helps to you manage multiple facebook accounts, manage your friends, groups, pages, apps etc. Basically it can automate all your day to day facebook management tasks and save a lot of your time. 
 
-**gramBoardPro (http://gramboardpro.com/)** - gramBoardPro is an instagram automation power-house. It can manage all your instagram tasks , likes, comments etc. Very useful software for instagram marketers. The open source version is hosted here - https://github.com/socioboard/gramboard
+**gramBoardPro (http://gramboardpro.com/)** - gramBoardPro is an instagram automation power-house. It can manage all your instagram tasks , likes, comments etc. Very useful software for instagram marketers. 
 
-**twtBoardPro (http://twtboardpro.com/)**  - twtBoardPro is an twitter marketing platform. It helps you manage multiple twitter accounts and automate your tweets, re-tweets, favorites etc. You can do a whole lot of stuff on twitter and get ultra productive on twitter by using this software. The open source version of twtboardpro is hosted here - https://github.com/socioboard/twtboard
-
+**twtBoardPro (http://twtboardpro.com/)**  - twtBoardPro is an twitter marketing platform. It helps you manage multiple twitter accounts and automate your tweets, re-tweets, favorites etc. You can do a whole lot of stuff on twitter and get ultra productive on twitter by using this software. 
 
 **Socioboard Mobile Apps for Social Media Marketers** -
 =======================================================
