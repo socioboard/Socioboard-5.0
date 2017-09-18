@@ -55,8 +55,14 @@ namespace Api.Socioboard.Controllers
             OAuth.AccessTokenSecret = requestVerifier;
             OAuth.AccessTokenGet(requestToken, requestVerifier);
             string output = Repositories.TwitterRepository.AddTwitterAccount(userId, groupId,follow, dbr, OAuth, _logger, _redisCache, _appSettings);
-          
-            return Ok(output);
+            if (output.Contains("Twitter account already added by you") || output.Contains("This Account is added by other user") || output.Contains("Issue while fetching twitter userId") || output.Contains("Your Twitter profile is not Authorized to add") || output.Contains("Error while Adding Account"))
+            { 
+                return BadRequest(output);
+            }
+            else
+            {
+                return Ok(output);
+            }
         }
 
         [HttpPost("ReconnectTwtAcc")]

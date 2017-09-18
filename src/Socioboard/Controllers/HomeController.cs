@@ -875,7 +875,7 @@ namespace Socioboard.Controllers
                 res = await response.Content.ReadAsStringAsync();
                 if (res.Equals("updated"))
                 {
-                    TempData["Success"] = "Added Successfully to group.";
+                    TempData["Success"] = "Added Successfully to team";
                     return RedirectToAction("index", "Home");
                 }
                 else

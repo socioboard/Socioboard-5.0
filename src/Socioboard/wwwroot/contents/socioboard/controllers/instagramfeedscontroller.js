@@ -29,7 +29,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                                   reachLast = true;
                               }
                                $scope.date(response.data);
-                               $scope.reloadFeeds();
+                               //$scope.reloadFeeds();
                                $scope.preloadmorefeeds = true;
                                $scope.dropCalled = true;
                                setTimeout(function () {
@@ -53,9 +53,9 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             $scope.LoadTopFeeds();
         }
 
-          $scope.reloadFeeds = function () {
-              setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
-          }
+          //$scope.reloadFeeds = function () {
+          //    setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+          //}
 
 
         $scope.listData = function () {

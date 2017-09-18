@@ -9,14 +9,20 @@ SocioboardApp.controller('YourFollowerController', function ($rootScope, $scope,
 
         $scope.twtfollower = function () {
             debugger;
-            $http.get(apiDomain + '/api/Twitter/TwitterUserFollowers?profileId=' + $stateParams.profileId)
+            $http.get(apiDomain + '/api/Twitter/TwitterUserFollowers?profileId=' + $stateParams.profileId + '&skip=0&count=20')
                            .then(function (response) {
-                             $scope.twtfollowerdata = response.data;
-                             $scope.lastreach = true;
-                             $scope.nomessages = true;
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
+                               debugger;
+                               if (response.data == "")
+                               {
+                                   swal("Sorry You have No follower")
+                               }
+                                   $scope.twtfollowerdata = response.data;
+                                   $scope.lastreach = true;
+                                   $scope.nomessages = true;
+                               }, function (reason) {
+                                   $scope.error = reason.data;
+                               });
+                           
         }
         $scope.twtfollower();
 

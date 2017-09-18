@@ -1,183 +1,266 @@
-<div data-ng-controller="FacebookFeedsController">
+<div data-ng-controller="FacebookFeedsController" id="upLink">
     <!-- Page name -->
     <!-- START CONTENT -->
     <section id="content">
         <!--start container-->
         <div class="container">
-            <!--card widgets end-->
-            <div class="row">
-                <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
-                    <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-4 white-text">
-                            <i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="loadFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>
-                            <a class='right white-text btn green accent-4' href="javascript:void(0)" ng-click="fbprofiles()" style="font-size: 14px !important;padding: 0px 5px 0px 5px !important;height: 28px;line-height: 15px;border-radius: 4px;">
-                                <span class="white-text text-darken-4"><i class="fa fa-refresh fa-fw"></i><strong>Reconnect</strong></span>&nbsp;&nbsp;&nbsp;
-                            </a>
-                        </h5>                            
-                        <!-- Dropdown Trigger -->
-                        
-                        <!-- Dropdown Structure -->
-                        <div ng-if="dropCalled==true">
-                            <ul id='dropdownFilter' class='dropdown-content'>
-                                <li><a href="javascript:void(0)"><strong style="color:black">Filter</strong></a></li>
-                                <li><a href="javascript:void(0)" ng-click="loadFeeds()">All Posts</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('socioboard','Socioboard')">Sent from Socioboard</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('photo','Image')">Image posts</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('video','Video')">Video posts</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('link','Link')">Link posts</a></li>
-                                <li><a href="javascript:void(0)" ng-click="filterSearch('status','Status')">Status posts</a></li>
-                            </ul>
-                        </div>
-
-                        <div ng-if="dropCalled==true">
-                            <ul id='dropdownSort' class='dropdown-content'>
-                                <li><a href="javascript:void(0)"><strong style="color:black">Popular</strong></a></li>
-                                <li><a href="javascript:void(0)" ng-click="SortSearch('maxlikes','Most likes')">Most Likes</a></li>
-                                <li><a href="javascript:void(0)" ng-click="SortSearch('maxcomment','Most comments')">Most Comments</a></li>
-                                <li><a href="javascript:void(0)" ng-click="SortSearch('leastlikes','Least likes')">Least Likes</a></li>
-                                <li><a href="javascript:void(0)" ng-click="SortSearch('leastcomment','Least comments')">Least Comments</a></li>
-                            </ul>
-                        </div>
-
-                        <ul class="collection" id="facebookfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
-                            <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
-                                <img ng-src="https://graph.facebook.com/{{fbfeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
-                                <span class="email-title">{{fbfeed.fromName}}</span>
-                                <div class="row feeds_post">
-                                    <div class="col m8 ">
-                                        <a class="break_word ultra-small black-text" href="https://www.facebook.com/{{fbfeed.feedId}}"target="_blank">{{fbfeed.feedDescription}}</a>
-                                    </div>
-                                    <!--<strong>{{fbfeed.postType}}-------{{fbfeed.postingFrom}}</strong>-->
-                                    <div class="col m4 center">
-                                        <img ng-src="{{getHttpsURL(fbfeed.picture)}} " ng-if="fbfeed.picture!= ''" class="responsive-img">
-                                    </div>
-                                    
-                                    <div class="col m12">
-                                        <ul class="collapsible" data-collapsible="accordion">
-                                            <li>
-                                                <div class="collapsible-header"><i class="icon-speech"></i>Comments <span class="blue-text"> {{fbfeed.commentcount}} </span></div>
-                                                <div class="collapsible-body">
-                                                    <ul class="collection facebookfeeds">
-                                                        <li class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive>
-                                                            <img ng-src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
-                                                            <span class="email-title">{{fbcomments.fromName}}</span>
-                                                            <div class="row dashboard_feeds z-depth-1 hoverable">
-                                                                <div class="col m8">
-                                                                    <p class="break_word ultra-small">{{fbcomments.comment}}</p>
-                                                                </div>
-                                                                <a class="tooltipped secondary-content" data-position="left" data-delay="50" data-tooltip="">{{fbcomments.commentdate}}</a>
-
-                                                            </div>
-                                                        </li>
-
-                                                        <li class="collection-item" ng-if="user.TrailStatus!=2">
-                                                            <div class="row">
-                                                                <form class="col s10">
-                                                                    <div class="row">
-                                                                        <div class="input-field col s12">
-                                                                            <i class="icon-pencil prefix"></i>
-                                                                            <textarea type="text" id="postcomment_{{fbfeed.feedId}}" class="materialize-textarea" />
-                                                                            <label for="icon_prefix2">Type your comment here...</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                                <span class="col s12 center">
-                                                                    <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed.feedId,fbfeed.profileId)"><i ng-if="sendingcomment==true" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-if="sendicon!=true" class="icon-cursor"></i></a>
-                                                                </span>
-                                                            </div>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col l8 s8">
-                                        <a class="">
-                                            <i class="icon-like fa-fw"></i><span> {{fbfeed.likecount}}</span>
-                                        </a>
-                                    </div>
-                                    <div class="col l2 s2">
-                                        <div class="right">
-                                            <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
-                                                <i class="icon-pin"></i> Task
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div class="col l2 s2">
-                                        <div class="center">
-                                            <a ng-click="openComposeMessage(fbfeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
-                                        </div>                                       
-                                    </div>
-                                </div>
-                                <a class="tooltipped secondary-content" data-position="left">{{fbfeed.feedDate}}</a>
-                            </li>
-                        </ul>
-                        <br />
-                        <h5 style="margin-left:38%; color:lightgray; font-family:Calibri" ng-if="endfeeds==true && filters!=true">No More Feeds to Load</h5>
-                        <div class="center" id="gif" ng-class="loaderclass" hidden>
-                            <div class="preloader-wrapper small active">
-                                <div class="spinner-layer spinner-blue">
-                                    <div class="circle-clipper left">
-                                        <div class="circle"></div>
-                                    </div><div class="gap-patch">
-                                        <div class="circle"></div>
-                                    </div><div class="circle-clipper right">
-                                        <div class="circle"></div>
-                                    </div>
-                                </div>
-
-                                <div class="spinner-layer spinner-red">
-                                    <div class="circle-clipper left">
-                                        <div class="circle"></div>
-                                    </div><div class="gap-patch">
-                                        <div class="circle"></div>
-                                    </div><div class="circle-clipper right">
-                                        <div class="circle"></div>
-                                    </div>
-                                </div>
-
-                                <div class="spinner-layer spinner-yellow">
-                                    <div class="circle-clipper left">
-                                        <div class="circle"></div>
-                                    </div><div class="gap-patch">
-                                        <div class="circle"></div>
-                                    </div><div class="circle-clipper right">
-                                        <div class="circle"></div>
-                                    </div>
-                                </div>
-
-                                <div class="spinner-layer spinner-green">
-                                    <div class="circle-clipper left">
-                                        <div class="circle"></div>
-                                    </div><div class="gap-patch">
-                                        <div class="circle"></div>
-                                    </div><div class="circle-clipper right">
-                                        <div class="circle"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <a href="" ng-click="listData()" style="margin-left:44%" onClick = "this.style.visibility = 'hidden'; chng_btn_val();" ng-if="preloadmore==true && filters!=true"><img ng-src="http://i.imgur.com/Y9I2fvH.png" /></a>
-                        
-                        <div class="cssload-container" ng-if="preloadmore!=true"> 
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <br />
-                        </div>
-                        <br />
-
+            <div class="row ltst-feed-notify" ng-if="latestfeedcount>0" id="downLink" ng-click="moveTop()">
+                <div class="col s12">
+                    <div class="notify-box blue darken-3 pulse z-depth-3">
+                        <p><strong>Info!</strong> You got new feeds.</p>
+                    </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!--end container-->
+                    <!--card widgets end-->
+                    <div class="row">
+                        <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                            <div class="card" id="feeds">
+                                <h5 class="feeds_title blue darken-4 white-text">
+                                    <i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="loadFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>
+                                    <a class='right white-text btn green accent-4' href="javascript:void(0)" ng-click="fbprofiles()" style="font-size: 14px !important;padding: 0px 5px 0px 5px !important;height: 28px;line-height: 15px;border-radius: 4px;">
+                                        <span class="white-text text-darken-4"><i class="fa fa-refresh fa-fw"></i><strong>Reconnect</strong></span>&nbsp;&nbsp;&nbsp;
+                                    </a>
+                                </h5>
+                                <!-- Dropdown Trigger -->
+                                <!-- Dropdown Structure -->
+                                <div ng-if="dropCalled==true">
+                                    <ul id='dropdownFilter' class='dropdown-content'>
+                                        <li><a href="javascript:void(0)"><strong style="color:black">Filter</strong></a></li>
+                                        <li><a href="javascript:void(0)" ng-click="loadFeeds()">All Posts</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('socioboard','Socioboard')">Sent from Socioboard</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('photo','Image')">Image posts</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('video','Video')">Video posts</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('link','Link')">Link posts</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="filterSearch('status','Status')">Status posts</a></li>
+                                    </ul>
+                                </div>
 
-    </section>
+                                <div ng-if="dropCalled==true">
+                                    <ul id='dropdownSort' class='dropdown-content'>
+                                        <li><a href="javascript:void(0)"><strong style="color:black">Popular</strong></a></li>
+                                        <li><a href="javascript:void(0)" ng-click="SortSearch('maxlikes','Most likes')">Most Likes</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="SortSearch('maxcomment','Most comments')">Most Comments</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="SortSearch('leastlikes','Least likes')">Least Likes</a></li>
+                                        <li><a href="javascript:void(0)" ng-click="SortSearch('leastcomment','Least comments')">Least Comments</a></li>
+                                    </ul>
+                                </div>
+
+                                <ul class="collection" id="facebookfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+                                    <!--Latest Feeds-->
+                                    <li ng-if="latestfeedcount>0" class="collection-item avatar" ng-repeat="fbfeed in lstlatestFbFeeds" myRepeatTabDirective>
+                                        <img ng-src="https://graph.facebook.com/{{fbfeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
+                                        <span class="email-title">{{fbfeed.fromName}}</span>
+                                        <div class="row feeds_post">
+                                            <div class="col m8 ">
+                                                <a class="break_word ultra-small black-text" href="https://www.facebook.com/{{fbfeed.feedId}}" target="_blank">{{fbfeed.feedDescription}}</a>
+                                            </div>
+                                            <!--<strong>{{fbfeed.postType}}-------{{fbfeed.postingFrom}}</strong>-->
+                                            <div class="col m4 center">
+                                                <img ng-src="{{getHttpsURL(fbfeed.picture)}} " ng-if="fbfeed.picture!= ''" class="responsive-img">
+                                            </div>
+
+                                            <div class="col m12">
+                                                <ul class="collapsible" data-collapsible="accordion">
+                                                    <li>
+                                                        <div class="collapsible-header"><i class="icon-speech"></i>Comments <span class="blue-text"> {{fbfeed.commentcount}} </span></div>
+                                                        <div class="collapsible-body">
+                                                            <ul class="collection facebookfeeds">
+                                                                <li class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive>
+                                                                    <img ng-src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
+                                                                    <span class="email-title">{{fbcomments.fromName}}</span>
+                                                                    <div class="row dashboard_feeds z-depth-1 hoverable">
+                                                                        <div class="col m8">
+                                                                            <p class="break_word ultra-small">{{fbcomments.comment}}</p>
+                                                                        </div>
+                                                                        <a class="tooltipped secondary-content" data-position="left" data-delay="50" data-tooltip="">{{fbcomments.commentdate}}</a>
+
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="collection-item" ng-if="user.TrailStatus!=2">
+                                                                    <div class="row">
+                                                                        <form class="col s10">
+                                                                            <div class="row">
+                                                                                <div class="input-field col s12">
+                                                                                    <i class="icon-pencil prefix"></i>
+                                                                                    <textarea type="text" id="postcomment_{{fbfeed.feedId}}" class="materialize-textarea" />
+                                                                                    <label for="icon_prefix2">Type your comment here...</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                        <span class="col s12 center">
+                                                                            <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed.feedId,fbfeed.profileId)"><i ng-if="sendingcomment==true" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-if="sendicon!=true" class="icon-cursor"></i></a>
+                                                                        </span>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col l8 s8">
+                                                <a class="">
+                                                    <i class="icon-like fa-fw"></i><span> {{fbfeed.likecount}}</span>
+                                                </a>
+                                            </div>
+                                            <div class="col l2 s2">
+                                                <div class="right">
+                                                    <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
+                                                        <i class="icon-pin"></i> Task
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col l2 s2">
+                                                <div class="center">
+                                                    <a ng-click="openComposeMessage(fbfeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="tooltipped secondary-content" data-position="left">{{fbfeed.feedDate}}</a>
+                                    </li>
+                                    <!--End latest Feeds-->
+                                    <!--Feeds-->
+                                    <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
+                                        <img ng-src="https://graph.facebook.com/{{fbfeed.fromId}}/picture?type=small" alt="{{fbfeed.fromName}}" class="circle">
+                                        <span class="email-title">{{fbfeed.fromName}}</span>
+                                        <div class="row feeds_post">
+                                            <div class="col m8 ">
+                                                <a class="break_word ultra-small black-text" href="https://www.facebook.com/{{fbfeed.feedId}}" target="_blank">{{fbfeed.feedDescription}}</a>
+                                            </div>
+                                            <!--<strong>{{fbfeed.postType}}-------{{fbfeed.postingFrom}}</strong>-->
+                                            <div class="col m4 center">
+                                                <img ng-src="{{getHttpsURL(fbfeed.picture)}} " ng-if="fbfeed.picture!= ''" class="responsive-img">
+                                            </div>
+
+                                            <div class="col m12">
+                                                <ul class="collapsible" data-collapsible="accordion">
+                                                    <li>
+                                                        <div class="collapsible-header"><i class="icon-speech"></i>Comments <span class="blue-text"> {{fbfeed.commentcount}} </span></div>
+                                                        <div class="collapsible-body">
+                                                            <ul class="collection facebookfeeds">
+                                                                <li class="collection-item avatar" ng-repeat="fbcomments in fbfeed._facebookComment" my-repeat-facebook-feed-timeout-directive>
+                                                                    <img ng-src="https://graph.facebook.com/{{fbcomments.fromId}}/picture?type=small" alt="" class="circle">
+                                                                    <span class="email-title">{{fbcomments.fromName}}</span>
+                                                                    <div class="row dashboard_feeds z-depth-1 hoverable">
+                                                                        <div class="col m8">
+                                                                            <p class="break_word ultra-small">{{fbcomments.comment}}</p>
+                                                                        </div>
+                                                                        <a class="tooltipped secondary-content" data-position="left" data-delay="50" data-tooltip="">{{fbcomments.commentdate}}</a>
+
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="collection-item" ng-if="user.TrailStatus!=2">
+                                                                    <div class="row">
+                                                                        <form class="col s10">
+                                                                            <div class="row">
+                                                                                <div class="input-field col s12">
+                                                                                    <i class="icon-pencil prefix"></i>
+                                                                                    <textarea type="text" id="postcomment_{{fbfeed.feedId}}" class="materialize-textarea" />
+                                                                                    <label for="icon_prefix2">Type your comment here...</label>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                        <span class="col s12 center">
+                                                                            <a class="waves-effect waves-light btn" ng-click="PostFacebookComment(fbfeed.feedId,fbfeed.profileId)"><i ng-if="sendingcomment==true" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-if="sendicon!=true" class="icon-cursor"></i></a>
+                                                                        </span>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col l8 s8">
+                                                <a class="">
+                                                    <i class="icon-like fa-fw"></i><span> {{fbfeed.likecount}}</span>
+                                                </a>
+                                            </div>
+                                            <div class="col l2 s2">
+                                                <div class="right">
+                                                    <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
+                                                        <i class="icon-pin"></i> Task
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="col l2 s2">
+                                                <div class="center">
+                                                    <a ng-click="openComposeMessage(fbfeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <a class="tooltipped secondary-content" data-position="left">{{fbfeed.feedDate}}</a>
+                                    </li>
+                                    <!--End Feeds-->
+                                </ul>
+                                <br />
+                                <h5 style="margin-left:38%; color:lightgray; font-family:Calibri" ng-if="endfeeds==true && filters!=true">No More Feeds to Load</h5>
+                                <div class="center" id="gif" ng-class="loaderclass" hidden>
+                                    <div class="preloader-wrapper small active">
+                                        <div class="spinner-layer spinner-blue">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-red">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-yellow">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="spinner-layer spinner-green">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <a href="" ng-click="listData()" style="margin-left:44%" onClick="this.style.visibility = 'hidden'; chng_btn_val();" ng-if="preloadmore==true && filters!=true"><img ng-src="http://i.imgur.com/Y9I2fvH.png" /></a>
+
+                                <div class="cssload-container" ng-if="preloadmore!=true">
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <div></div>
+                                    <br />
+                                </div>
+                                <br />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end container-->
+
+</section>
     <!-- END CONTENT -->
 
     <!--Task Modal-->
@@ -223,7 +306,7 @@
                 <div class="left col s12 m5 l5">
                     <ul>
                         <li>
-                            <a href="#!" class="email-type">Compose</a>
+                            <a href="#!" class="email-type">Re-Socio</a>
                         </li>
                     </ul>
                 </div>
@@ -505,4 +588,10 @@
     }
 </style>
 
+<script>
+    $("a[href='#top']").click(function () {
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+        return false;
+    });
+</script>
 <!-- //////////////////////////////////////// End Style CSS for Pre Loader //////////////////////////////////////// -->

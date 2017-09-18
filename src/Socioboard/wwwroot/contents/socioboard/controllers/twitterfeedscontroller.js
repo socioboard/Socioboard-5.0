@@ -52,7 +52,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               $scope.lstTwtFeeds = response.data;
-                              $scope.reloadFeeds();
+                              //$scope.reloadFeeds();
                               $scope.preloadmorefeeds = true;
                               if (response.data == null) {
                                   reachLast = true;
@@ -74,7 +74,7 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               $http.get(apiDomain + '/api/Twitter/GetUserTweets?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               $scope.lstUserTweets = response.data;
-                              $scope.reloadTweets();
+                              //$scope.reloadTweets();
                               $scope.preloadmoretweets = true;
                               if (response.data == null) {
                                   TweetsreachLast = true;
@@ -96,13 +96,13 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               $scope.LoadTopFeeds();
           }
 
-          $scope.reloadFeeds = function () {
-              setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
-          }
+          //$scope.reloadFeeds = function () {
+          //    setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+          //}
 
-          $scope.reloadTweets = function () {
-              setTimeout(function () { $scope.LoadTopTweets(); }, 10000);
-          }
+          //$scope.reloadTweets = function () {
+          //    setTimeout(function () { $scope.LoadTopTweets(); }, 10000);
+          //}
 
 
 
@@ -255,32 +255,47 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               $scope.socioboardName = $rootScope.user.FirstName + " " + $rootScope.user.LastName;
           }
 
+
           $scope.sendEmailMessage = function () {
+
               var toEmail = $('#emailIds').val();
-              var subjectEmail = $('#subEmail').val();
-              var messageEmail = $('#composeEmail').val();
-              var formData = new FormData();
-              formData.append('message', messageEmail);
-              formData.append('sub', subjectEmail);
-              $http({
-                  method: 'POST',
-                  url: apiDomain + '/api/Twitter/EmailMessage?userId=' + $rootScope.user.Id + '&socioTwitterId=' + $stateParams.profileId + '&profileIdFrom=' + tempValue.fromId + '&profileScnNameFrom=' + tempValue.fromScreenName + '&toMail=' + toEmail,
-                  data: formData,
-                  headers: {
-                      'Content-Type': undefined
-                  },
-                  transformRequest: angular.identity,
-              }).then(function (response) {
-                  if (response.data != "") {
-                      alertify.success('Email sent successfully');
-                      $('#Email_modal').closeModal();
-                  }
-                  else {
-                      alertify.error('Error while sending email');
-                  }
-              }, function (reason) {
-              });
+              var tempValidate = $scope.emailvalidate(toEmail);
+              if (tempValidate == true) {
+                  var subjectEmail = $('#subEmail').val();
+                  var messageEmail = $('#composeEmail').val();
+                  var formData = new FormData();
+                  formData.append('message', messageEmail);
+                  formData.append('sub', subjectEmail);
+                  $http({
+                      method: 'POST',
+                      url: apiDomain + '/api/Twitter/EmailMessage?userId=' + $rootScope.user.Id + '&socioTwitterId=' + $stateParams.profileId + '&profileIdFrom=' + tempValue.fromId + '&profileScnNameFrom=' + tempValue.fromScreenName + '&toMail=' + toEmail,
+                      data: formData,
+                      headers: {
+                          'Content-Type': undefined
+                      },
+                      transformRequest: angular.identity,
+                  }).then(function (response) {
+                      if (response.data != "") {
+                          alertify.success('Email sent successfully');
+                          $('#Email_modal').closeModal();
+                      }
+                      else {
+                          alertify.error('Error while sending email');
+                      }
+                  }, function (reason) {
+                  });
+              }
+              else {
+                  alertify.error("Please enter email as correct format");
+              }
           }
+
+          $scope.emailvalidate=function(email)
+          {
+              var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+              return re.test(email);
+          }
+
 
           $scope.twitterreply = function (screenName,profileId, messageId) {
               $rootScope.profileId = profileId;

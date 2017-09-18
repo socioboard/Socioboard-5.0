@@ -41,6 +41,7 @@ namespace Domain.Socioboard.Models
         public virtual DateTime lastpagereportgenerated { get; set; }
         public virtual bool Is90DayDataUpdated { get; set; }
         public virtual DateTime contenetShareathonUpdate { get; set; }
-        
+        public virtual bool SocailSignInEnable { get; set; }
+
     }
 }

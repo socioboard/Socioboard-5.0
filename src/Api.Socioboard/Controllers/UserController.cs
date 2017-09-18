@@ -2099,11 +2099,11 @@ namespace Api.Socioboard.Controllers
             }
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            IList<DemoRequest> lstUser = dbr.Find<DemoRequest>(t => t.emailId.Equals(demoRequest.emailId));
-            if (lstUser != null && lstUser.Count() > 0)
-            {
-                return BadRequest("EmailId Exist");
-            }
+            //IList<DemoRequest> lstUser = dbr.Find<DemoRequest>(t => t.emailId.Equals(demoRequest.emailId));
+            //if (lstUser != null && lstUser.Count() > 0)
+            //{
+            //    return BadRequest("EmailId Exist");
+            //}
             int SavedStatus = dbr.Add<Domain.Socioboard.Models.DemoRequest>(demoRequest);
 
             if (SavedStatus == 1 && demoRequest != null)

@@ -153,7 +153,7 @@ namespace Api.Socioboard.Repositories
             return isSaved;
         }
 
-        public static int AddLinkedInCompantPage(oAuthLinkedIn _oauth, dynamic profile, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, string accesstoken, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger)
+        public static string AddLinkedInCompantPage(oAuthLinkedIn _oauth, dynamic profile, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, string accesstoken, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger)
         {
             int isSaved = 0;
             Domain.Socioboard.Models.LinkedinCompanyPage _LinkedInAccount = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(profile.Pageid.ToString(), _redisCache, dbr);
@@ -198,7 +198,7 @@ namespace Api.Socioboard.Repositories
                 catch { }
                 isSaved = dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(_LinkedInAccount);
             }
-            else
+            else if (_LinkedInAccount == null)
             {
                 _LinkedInAccount = new Domain.Socioboard.Models.LinkedinCompanyPage();
                 _LinkedInAccount.LinkedinPageId = profile.Pageid.ToString();
@@ -317,7 +317,15 @@ namespace Api.Socioboard.Repositories
                 }
 
             }
-            return isSaved;
+
+            else if(_LinkedInAccount != null && _LinkedInAccount.IsActive == true)
+            {
+                if (_LinkedInAccount.UserId != userId)
+                {
+                    return "added by other";
+                }
+            }
+            return isSaved.ToString();
         }
 
         public static void SaveLinkedInCompanyPageFeed(oAuthLinkedIn _oauth, string PageId, long UserId, Helper.AppSettings _appSettings)

@@ -328,33 +328,40 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         }
 
         $scope.SendInvitations = function (groupId) {
-            var mem ='';
-            for (var i = 0; i < $scope.lstInviteTeamMembers.length ; i++)
-            {
-                mem = mem + $scope.lstInviteTeamMembers[i].firstName + ':' + $scope.lstInviteTeamMembers[i].lastName + ':' + $scope.lstInviteTeamMembers[i].email + ';'
-            }
+            var fir_name=$('#first_name').val();
+            var sec_name=$('#first_name').val();
+            var email_s=$('#first_name').val();
+            if (fir_name == "" && sec_name == "" && email_s == "") {
+                var mem = '';
+                for (var i = 0; i < $scope.lstInviteTeamMembers.length ; i++) {
+                    mem = mem + $scope.lstInviteTeamMembers[i].firstName + ':' + $scope.lstInviteTeamMembers[i].lastName + ':' + $scope.lstInviteTeamMembers[i].email + ';'
+                }
 
-           
-            if (mem != "") {
-                $http({
-                    method: 'POST',
-                    url: apiDomain + '/api/GroupMember/InviteGroupMembers?groupId=' + $scope.inviGrpId + '&members=' + mem,
-                    //  params: { 'mem':  $scope.lstInviteTeamMembers },
-                    //headers: {
-                    //    'Content-Type': 'application/json'
-                    //},
-                    //transformRequest: angular.identity,
-                }).then(function (response) {
-                    $('#InviteMembersModal').closeModal();
-                    swal('Email sent successfully');
-                    window.location.reload();
 
-                }, function (reason) {
-                  
-                });
+                if (mem != "") {
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/GroupMember/InviteGroupMembers?groupId=' + $scope.inviGrpId + '&members=' + mem,
+                        //  params: { 'mem':  $scope.lstInviteTeamMembers },
+                        //headers: {
+                        //    'Content-Type': 'application/json'
+                        //},
+                        //transformRequest: angular.identity,
+                    }).then(function (response) {
+                        $('#InviteMembersModal').closeModal();
+                        swal('Email sent successfully');
+                        window.location.reload();
+
+                    }, function (reason) {
+
+                    });
+                }
+                else {
+                    swal("Please click on add button in order add the team members to the folder");
+                }
             }
             else {
-                swal("Please click on add button in order add the group members to the folder");
+                swal("Please click on add button in order add the team members to the folder");
             }
         }
 

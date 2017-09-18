@@ -42,4 +42,32 @@ namespace Domain.Socioboard.Models.Mongo
         public MongoFacebookFeed _facebookFeed { get; set; }
         public List<MongoFbPostComment> _facebookComment { get; set; }
     }
+
+
+    public class LatestFacebookFeed
+    {
+        [JsonConverter(typeof(ObjectIdConverter))]
+        public ObjectId Id { get; set; }
+        public string FeedDescription { get; set; }
+        public string FeedDate { get; set; }
+        public DateTime EntryDate { get; set; }
+        public string ProfileId { get; set; }
+        public string FromId { get; set; }
+        public string FromName { get; set; }
+        public string FromProfileUrl { get; set; }
+        public string Type { get; set; }
+        public string FbComment { get; set; }
+        public string FbLike { get; set; }
+        public string FeedId { get; set; }
+        public int ReadStatus { get; set; }
+        public string Picture { get; set; }
+        public double Positive { get; set; }
+        public double Negative { get; set; }
+        public string Commentcount { get; set; }
+        public string Likecount { get; set; }
+        public string postType { get; set; }
+        public string postingFrom { get; set; }
+        public List<MongoFbPostComment> _facebookComment { get; set; }
+
+    }
 }

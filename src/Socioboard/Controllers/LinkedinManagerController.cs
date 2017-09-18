@@ -170,6 +170,7 @@ namespace Socioboard.Controllers
 
         public async Task<ActionResult> AddLinAcc(string code)
         {
+            string res = string.Empty;
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
             List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
@@ -179,12 +180,12 @@ namespace Socioboard.Controllers
             HttpResponseMessage response = await WebApiReq.PostReq("/api/LinkedIn/AddLinkedInAccount", Parameters, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
-                TempData["Success"] = await response.Content.ReadAsStringAsync();
-                return RedirectToAction("Index", "Home");
+                 TempData["Success"] = await response.Content.ReadAsStringAsync();
+                 return RedirectToAction("Index", "Home");
             }
             else
             {
-                TempData["Error"] = "Error while hitting api.";
+                TempData["Error"] = await response.Content.ReadAsStringAsync();
                 return RedirectToAction("Index", "Home");
             }
         }

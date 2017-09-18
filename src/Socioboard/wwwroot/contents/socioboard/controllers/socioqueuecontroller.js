@@ -3,7 +3,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
     $scope.$on('$viewContentLoaded', function () {
         var lastreach = false;
         var nomessages = false;
-        
+
         socioqueue();
         $scope.deleteMsg = function (socioqueueId) {
             swal({
@@ -39,7 +39,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                               } else {
                                   $scope.lastreach = true;
                                   $scope.nomessages = true;
-                                 
+
                                   $('#socio_all').attr('disabled', true);
                                   //document.getElementById("deleteAll").disabled = true;
                               }
@@ -51,7 +51,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
         $scope.fetchsocioqueuemessage();
 
         $scope.getProperURL = function (obj) {
-           
+
             if (obj.includes("wwwroot\\")) {
                 var img = obj.split("wwwroot\\upload\\")[1];
                 return apiDomain + "/api/Media/Get?id=" + img;
@@ -61,8 +61,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
             }
         };
 
-        $scope.editscheulemessage = function (sharemessage, socioqueueId)
-        {
+        $scope.editscheulemessage = function (sharemessage, socioqueueId) {
             $rootScope.editscdmessage = sharemessage;
             $rootScope.socioqueueId = socioqueueId;
             $('#SocioqueueModal').openModal();
@@ -74,14 +73,14 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
         }
 
         $scope.date = function (parm) {
-                for (var i = 0; i < parm.length; i++) {
-                    var date = moment(parm[i].scheduleTime);
-                    var newdate = date.toString();
-                    var splitdate = newdate.split(" ");
-                    date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
-                    parm[i].scheduleTime = date;
-                }
-                $scope.lstsocioqueuemessage = parm;
+            for (var i = 0; i < parm.length; i++) {
+                var date = moment(parm[i].scheduleTime);
+                var newdate = date.toString();
+                var splitdate = newdate.split(" ");
+                date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
+                parm[i].scheduleTime = date;
+            }
+            $scope.lstsocioqueuemessage = parm;
         }
         $scope.closeModal = function () {
             $scope.modalinstance.dismiss('cancel');
@@ -108,19 +107,19 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                                           //$scope.modalinstance.dismiss('cancel');
                                           //$rootScope.lstdraftmessage = response.data;
                                           $scope.date(response.data);
+                                          $('#editScheduleMsg').val('');
                                       }, function (reason) {
                                           $scope.error = reason.data;
                                       });
             }
-            else
-            {
+            else {
                 swal("Please enter a text");
             }
 
         }
 
 
-        
+
         var getAllSelected = function () {
             var selectedItems = $scope.lstsocioqueuemessage.filter(function (profile) {
                 return $scope.temp;
@@ -130,14 +129,14 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
         }
 
         var setAllSelected = function (value) {
-            
+
             angular.forEach($scope.lstsocioqueuemessage, function (profile) {
                 $scope.temp = value;
             });
         }
 
         $scope.allSelected = function (value) {
-            
+
             if (value !== undefined) {
                 $scope.toggleAll(value);
                 return setAllSelected(value);
@@ -146,28 +145,27 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                 return getAllSelected();
             }
         }
-             
+
         $scope.toggleAll = function (value) {
             var toggleStatus = value;
-            angular.forEach($scope.lstsocioqueuemessage, function (itm) { itm.selected = toggleStatus;
-        });
+            angular.forEach($scope.lstsocioqueuemessage, function (itm) {
+                itm.selected = toggleStatus;
+            });
 
         }
 
         $scope.optionToggled = function () {
             $scope.isAllSelected = $scope.lstsocioqueuemessage.every(function (itm) { return itm.selected; })
-            if($scope.isAllSelected==true)
-            {
+            if ($scope.isAllSelected == true) {
                 return setAllSelected($scope.isAllSelected);
             }
-            else
-            {
+            else {
                 return setAllSelected($scope.isAllSelected);
             }
         }
 
         $scope.deleteMultipleMessages = function () {
-            
+
             var messages = new Array();
             $("#SocioQueue .subcheckbox").each(function () {
 
@@ -181,7 +179,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                     messages.push(attrId);
                 }
             });
-           
+
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to recover this scheduled messages!",
@@ -203,8 +201,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
                                       $scope.date(response.data);
                                       //$scope.allSelected = false;
                                   }
-                                  else
-                                  {
+                                  else {
                                       swal("Deleted!", "Your selected scheduled messages has been deleted.", "success");
                                       $scope.date(response.data);
                                       $('#socio_all').attr('disabled', true);
@@ -219,7 +216,12 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
             });
 
         }
-
-
     });
+
+})
+
+.filter('Url', function ($sce) {
+    return function (Url) {
+        return $sce.trustAsResourceUrl(Url);
+    };
 });

@@ -54,6 +54,82 @@
             visibility: visible;
             opacity: 1;
         }
+           .premium_polular{
+            padding-bottom: 0px;
+    background: darkslategrey;
+    border-bottom: 3px solid #eb593c;
+    font-size: 20px;
+    color: #f85c37;
+          }
+          .premium_polular_box{
+            border-right: 3px solid #fff;
+    margin-left: 42px;
+    position: absolute;
+    overflow: hidden;
+    height: 55px;
+    width: 55px;
+    text-align: center;
+    z-index: 0;
+    margin-top: -22px;
+          }
+          .premium_polular_text{
+            font-size: 8px;
+    color: #444;
+    background: #ffd400;
+    text-transform: uppercase;
+    padding: 41px 20px 0px 0px;
+    width: 258px;
+    text-align: center;
+    display: block;
+    position: absolute;
+    left: -71px;
+    top: -20px;
+    -moz-transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    -webkit-transform: rotate(-44deg);
+    -ms-transform: rotate(-44deg);
+    transform: rotate(40deg);
+    box-shadow: 3px -4px 13px 3px rgba(0,0,0,0.75);
+          }
+           .deluxe_polular{
+            padding-left: 10px;
+    padding-bottom: 0px;
+    background: darkslategrey;
+    border-bottom: 3px solid #eb593c;
+    font-size: 20px;
+    color: #f85c37;
+          }
+          .deluxe_polular_box{
+            margin-left: 38px;
+    position: absolute;
+    overflow: hidden;
+    height: 55px;
+    width: 55px;
+    text-align: center;
+    z-index: 0;
+    margin-top: -19px;
+          }
+          .deluxe_polular_text{
+            font-size: 8px;
+    color: #444;
+    background: #ffd400;
+    text-transform: uppercase;
+    padding: 41px 20px 0px 0px;
+    width: 258px;
+    text-align: center;
+    display: block;
+    position: absolute;
+    left: -71px;
+    top: -20px;
+    -moz-transition: all 0.5s ease;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+    -webkit-transform: rotate(-44deg);
+    -ms-transform: rotate(-44deg);
+    transform: rotate(40deg);
+    box-shadow: 3px -4px 13px 3px rgba(0,0,0,0.75);
+          }
 </style>
         <div class="container">
             <section class="pricing margin-top-50">
@@ -66,13 +142,39 @@
                     <div class="row">
                         <div class="col l12 s12">
                             <table class="responsive-table">
+                                <thead style="border-bottom: 0px solid #d0d0d0;">
+                                    <tr>
+                                        <th class="center no-padding">&nbsp;</th>
+                                        <th class="center no-padding">&nbsp;</th>
+                                        <th class="center no-padding">&nbsp;</th>
+                                        <th class="center no-padding" colspan="2" style="text-transform: uppercase; color: #fff; background-color: #d83f1a;">Popular</th>
+                                        <th class="center no-padding">&nbsp;</th>
+                                        <th class="center no-padding">&nbsp;</th>
+                                        <th class="center no-padding">&nbsp;</th>
+                                        <th class="center no-padding">&nbsp;</th>
+                                    </tr>
+                                </thead>
                                 <thead>
                                     <tr>
                                         <th>&nbsp;</th>
                                         <th class="center">Basic Plan</th>
                                         <th class="center">Standard</th>
-                                        <th class="center">Premium</th>
-                                        <th class="center">Deluxe</th>
+                                        <th class="center premium_polular">
+                                            @*<div class="premium_polular_box">
+                                                <span class="premium_polular_text">
+                                                    popular
+                                                </span>
+                                            </div>*@
+                                            Premium
+                                        </th>
+                                        <th class="center deluxe_polular">
+                                            @*<div class="deluxe_polular_box">
+                                                <span class="deluxe_polular_text">
+                                                    popular
+                                                </span>
+                                            </div>*@
+                                            Deluxe
+                                        </th>
                                         <th class="center">Topaz</th>
                                         <th class="center">Ruby</th>
                                         <th class="center">Gold</th>
@@ -85,8 +187,8 @@
                                         <th>Monthly price</th>
                                         <td class="center">Free</td>
                                         <td class="center">$4.99</td>
-                                        <td class="center">$9.99</td>
-                                        <td class="center">$19.99</td>
+                                        <td class="center" style="font-size: 20px; font-weight: 900; color: #f85c37;">$9.99</td>
+                                        <td class="center" style="font-size: 20px; font-weight: 900; color: #d83f1a;">$19.99</td>
                                         <td class="center">$29.99</td>
                                         <td class="center">$49.99</td>
                                         <td class="center">$79.99</td>

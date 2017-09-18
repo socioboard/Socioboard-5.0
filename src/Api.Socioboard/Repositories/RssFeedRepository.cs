@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -256,7 +257,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.Rss> GetRssDataByUser(long userId, long groupId, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
+        public static List<Domain.Socioboard.Models.Mongo.Rss> GetRssDataByUser(long userId, long groupId, Helper.AppSettings _appSettings, DatabaseRepository dbr)
         {
             string[] profileids = null;
             MongoRepository _RssRepository = new MongoRepository("Rss", _appSettings);
@@ -278,12 +279,15 @@ namespace Api.Socioboard.Repositories
             List<Domain.Socioboard.Models.Mongo.RssFeed> lstRss = new List<Domain.Socioboard.Models.Mongo.RssFeed>();
             List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-            var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => profileids.Contains(t.ProfileId));
+            var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => profileids.Contains(t.ProfileId) && t.Status == true);
             var task = Task.Run(async () =>
             {
                 return await ret;
             });
-            return lstRss = task.Result.ToList();
+             lstRss = task.Result.ToList();
+            lstRss.OrderByDescending(t => t.PublishingDate);
+                return lstRss.ToList();
+
         }
 
         public static string PostRssfeed(string profileId, string Url, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, Helper.Cache _redisCache)
@@ -322,6 +326,7 @@ namespace Api.Socioboard.Repositories
                         {
                             return "";
                         }
+                        Thread.Sleep(600000);
                     }
                     else if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
                     {
@@ -358,6 +363,7 @@ namespace Api.Socioboard.Repositories
                         {
                             return "";
                         }
+                        Thread.Sleep(600000);
                     }
 
 

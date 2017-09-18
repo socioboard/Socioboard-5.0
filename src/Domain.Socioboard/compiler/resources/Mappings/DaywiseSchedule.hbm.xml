@@ -3,7 +3,7 @@
       xmlns="urn:nhibernate-mapping-2.2"
       namespace="Domain.Socioboard.Models"
       assembly="Domain.Socioboard">
-  <class name="ScheduledMessage" table="ScheduledMessage" lazy="false">
+  <class name="DaywiseSchedule" table="DaywiseSchedule" lazy="false">
     <id name="id" column="id" />
     <property name="shareMessage">
       <column name="shareMessage" />
@@ -44,11 +44,11 @@
     <property name="link">
       <column name="link"  />
     </property>
-    <property name="calendertime">
-      <column name="calendertime"  />
+    <property name="weekdays">
+      <column name="weekdays"  />
     </property>
-    <property name="mediaType">
-      <column name="mediaType"  />
+    <property name="postedTime">
+      <column name="postedTime"  />
     </property>
   </class>
 </hibernate-mapping>

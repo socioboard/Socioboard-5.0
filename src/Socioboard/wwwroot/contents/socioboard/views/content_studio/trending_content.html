@@ -33,14 +33,14 @@
                 <a class="btn btn_style img_comp_btn" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
             </div>
         </div>
-        <div class="row">
+        <form class="row">
             <div class="col m4">
                 <input id="textSearch" type="text" placeholder="Search" />
             </div>
             <div class="col m2">
-                <a class="btn-floating waves-effect waves-light blue darken-4 center" ng-click="SearchData()"><i class="fa fa-search"></i></a>
+                <button type="submit" class="btn-floating waves-effect waves-light blue darken-4 center" ng-click="SearchData()"><i class="fa fa-search"></i></button>
             </div>
-        </div>
+        </form>
         <div class="container">
         </div>
         <div class="row white-text grey darken-4">
@@ -237,7 +237,7 @@
                         <option ng-repeat="profile in lstProfiles | filter:{profileType:1} && filter:{profileType:0}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                     </select>
 
-                    <label>Selects An Account To Automate Post</label>
+                    <label>Select An Account To Automate Post</label>
                 </div>
 
                 <div class="input-field col s12">

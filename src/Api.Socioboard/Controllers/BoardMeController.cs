@@ -261,14 +261,21 @@ namespace Api.Socioboard.Controllers
                 var builder = Builders<MongoBoardTwtFeeds>.Sort;
                 var sort = builder.Descending(t => t.Publishedtime);
                 //var result = boardrepo.FindWithRange<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag),sort,skip,count).ConfigureAwait(false); ;
-                 var result = boardrepo.BoardFind<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag)).ConfigureAwait(false);
+                // var result = boardrepo.BoardFind<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag)).ConfigureAwait(false);
+                //var task = Task.Run(async () =>
+                //{
+                //    return await result;
+                //});
+                //IList<MongoBoardTwtFeeds> objTwitterPagelist = task.Result;
+                //List<MongoBoardTwtFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
+                var result = boardrepo.FindWithRange<MongoBoardTwtFeeds>(t => t.Twitterprofileid.Equals(board.twitterHashTag), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
                     return await result;
                 });
                 IList<MongoBoardTwtFeeds> objTwitterPagelist = task.Result;
-                List<MongoBoardTwtFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
-                return Ok(objBoardGplusPagefeeds);
+                //return Ok(objBoardGplusPagefeeds);
+                return Ok(objTwitterPagelist);
 
             }
             catch (Exception ex)
@@ -292,14 +299,21 @@ namespace Api.Socioboard.Controllers
                 var builder = Builders<MongoBoardInstagramFeeds>.Sort;
                 var sort = builder.Descending(t => t.Publishedtime);
                 //var result = boardrepo.FindWithRange<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag),sort,skip, count).ConfigureAwait(false);
-                var result = boardrepo.BoardFind<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag)).ConfigureAwait(false);
+                //var result = boardrepo.BoardFind<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag)).ConfigureAwait(false);
+                //var task = Task.Run(async () =>
+                //{
+                //    return await result;
+                //});
+                //IList<MongoBoardInstagramFeeds> objTwitterPagelist = task.Result;
+                //List<MongoBoardInstagramFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
+                var result = boardrepo.FindWithRange<MongoBoardInstagramFeeds>(t => t.Instagramaccountid.Equals(board.instagramHashTag), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
                     return await result;
                 });
                 IList<MongoBoardInstagramFeeds> objTwitterPagelist = task.Result;
-                List<MongoBoardInstagramFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
-                return Ok(objBoardGplusPagefeeds);
+                return Ok(objTwitterPagelist);
+                //return Ok(objBoardGplusPagefeeds);
 
             }
             catch (Exception ex)
@@ -312,7 +326,7 @@ namespace Api.Socioboard.Controllers
 
 
         [HttpGet("getGplusfeeds")]
-        public IActionResult getGplusfeeds(long boardId, string skip, string count)
+        public IActionResult getGplusfeeds(long boardId, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             Domain.Socioboard.Models.MongoBoards board = BoardMeRepository.getBoard(boardId, _redisCache, _appSettings, _logger, dbr);
@@ -323,14 +337,21 @@ namespace Api.Socioboard.Controllers
                 var builder = Builders<MongoBoardGplusFeeds>.Sort;
                 var sort = builder.Descending(t => t.Publishedtime);
                 //var result = boardrepo.FindWithRange<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag),sort,Convert.ToInt32(skip),Convert.ToInt32(count)).ConfigureAwait(false);
-                var result = boardrepo.BoardFind<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag)).ConfigureAwait(false);
+                //var result = boardrepo.BoardFind<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag)).ConfigureAwait(false);
+                //var task = Task.Run(async () =>
+                //{
+                //    return await result;
+                //});
+                //IList<MongoBoardGplusFeeds> objTwitterPagelist = task.Result;
+                //List<MongoBoardGplusFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
+                var result = boardrepo.FindWithRange<MongoBoardGplusFeeds>(t => t.Gplusboardaccprofileid.Equals(board.gplusHashTag), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
                     return await result;
                 });
                 IList<MongoBoardGplusFeeds> objTwitterPagelist = task.Result;
-                List<MongoBoardGplusFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.Publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
-                return Ok(objBoardGplusPagefeeds);
+                return Ok(objTwitterPagelist);
+                //return Ok(objBoardGplusPagefeeds);
             }
             catch (Exception ex)
             {
@@ -349,14 +370,23 @@ namespace Api.Socioboard.Controllers
             MongoRepository boardrepo = new MongoRepository("MongoBoardFbTrendingFeeds", _appSettings);
             try
             {
-                var result = boardrepo.Find<MongoBoardFbTrendingFeeds>(t => t.facebookprofileid.Equals(board.facebookHashTag));
+                //var result = boardrepo.Find<MongoBoardFbTrendingFeeds>(t => t.facebookprofileid.Equals(board.facebookHashTag));
+                //var task = Task.Run(async () =>
+                //{
+                //    return await result;
+                //});
+                //IList<MongoBoardFbTrendingFeeds> objTwitterPagelist = task.Result;
+                //List<MongoBoardFbTrendingFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
+                //return Ok(objBoardGplusPagefeeds);
+                var builder = Builders<MongoBoardFbTrendingFeeds>.Sort;
+                var sort = builder.Descending(t => t.publishedtime);
+                var result = boardrepo.FindWithRange<MongoBoardFbTrendingFeeds>(t => t.facebookprofileid.Equals(board.facebookHashTag), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
                     return await result;
                 });
                 IList<MongoBoardFbTrendingFeeds> objTwitterPagelist = task.Result;
-                List<MongoBoardFbTrendingFeeds> objBoardGplusPagefeeds = objTwitterPagelist.OrderByDescending(t => t.publishedtime).Skip(Convert.ToInt32(skip)).Take(Convert.ToInt32(count)).ToList();
-                return Ok(objBoardGplusPagefeeds);
+                return Ok(objTwitterPagelist);
 
             }
             catch (Exception ex)

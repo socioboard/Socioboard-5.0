@@ -51,8 +51,10 @@
                                     {{draft.shareMessage}}
                                 </span>
                                 <br>
-                                <img ng-if="draft.picUrl!='' && draft.picUrl != null" src="{{getProperURL(draft.picUrl)}}" class="responsive-img" style="width:200px">
-                               <!-- <img ng-if="draft.picUrl!=''" src="{{draft.picUrl}}" class="responsive-img">-->
+                                <img ng-if="draft.mediaType==1" src="{{getProperURL(draft.picUrl)}}" class="responsive-img" style="width:200px">
+                                <video ng-if="draft.mediaType==2" style="width:200px" controls>
+                                    <source src="{{getProperURL(draft.picUrl) | Url}}" type="video/mp4">
+                                </video>
                             </td>
                             <td>
                                 <a class="waves-effect waves-light btn modal-trigger yellow" ng-click="editdraft(draft.shareMessage,draft.id)"><i class="fa fa-pencil"></i></a>
@@ -82,7 +84,7 @@
                 <h5>Edit Message</h5>
                 <div class="row center">
                     <div class="input-field col s8">
-                        <textarea id="editdraftScheduleMsg" class="materialize-textarea" length="500" value="">{{draftmessgae}}</textarea>
+                        <textarea id="editdraftScheduleMsg" class="materialize-textarea" length="500" value=""></textarea>
                         <!--<label for="ScheduleMsg">Edit Message Here</label>-->
                     </div>
                 </div>

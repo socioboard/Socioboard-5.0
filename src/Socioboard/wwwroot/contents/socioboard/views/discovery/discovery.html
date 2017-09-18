@@ -25,12 +25,12 @@
                     </div>
                     <div ng-init="dispbtn= {{dispbtn}}"></div>
                     <div class="col s2">
-                        <a ng-show="dispbtn" ng-click="discovery()" class="btn">
+                        <button type="submit" ng-show="dispbtn" ng-click="discovery()" class="btn">
                             <i class="fa fa-search"></i>
-                        </a>
-                        <a ng-show="!dispbtn"  class="btn">
+                        </button>
+                        <button ng-show="!dispbtn"  class="btn">
                             <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
-                        </a>
+                        </button>
                     </div>
                 </div>
                 
@@ -99,7 +99,7 @@
                     <h5 class="feeds_title blue darken-2 white-text"><i class="icon-layers"></i>Search History</h5>
                     <div class="section section_filter">
                         <div>
-                            <button id="submitButton" type="submit" class="col s12 btn waves-effect waves-light margin-top-10" ng-click="discovery(history.searchKeyword)" ng-repeat="history in DiscoveryHistory">{{history.searchKeyword}}</button>
+                            <button id="submitButton" type="submit" class="col s12 btn waves-effect waves-light margin-top-10" style="text-transform: inherit;" ng-click="discovery(history.searchKeyword)" ng-repeat="history in DiscoveryHistory">{{history.searchKeyword}}</button>
                             <!--<a ng-click="discovery(history.searchKeyword)" class="collection-item active" ng-repeat="history in DiscoveryHistory">{{history.searchKeyword}}</a>-->
                         </div>
                     </div>

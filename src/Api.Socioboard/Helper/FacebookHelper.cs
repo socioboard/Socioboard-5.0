@@ -20,7 +20,7 @@ namespace Api.Socioboard.Helper
     public static class FacebookHelper
     {
         
-        public static string ComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, DatabaseRepository dbr, ILogger _logger)
+        public static string ComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Enum.MediaType mediaType, string profileName, DatabaseRepository dbr, ILogger _logger)
         {
           
             string ret = "";
@@ -108,12 +108,21 @@ namespace Api.Socioboard.Helper
                 scheduledMessage.createTime = DateTime.UtcNow;
                 scheduledMessage.picUrl = "https://graph.facebook.com/" + fbUserId + "/picture?type=small";//imagePath;
                 scheduledMessage.profileId = profileId;
-                scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.Facebook;
+                if (profiletype == Domain.Socioboard.Enum.FbProfileType.FacebookProfile)
+                {
+                    scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.Facebook;
+                }
+                else
+                {
+                    scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage;
+                }
                 scheduledMessage.scheduleTime = DateTime.UtcNow;
                 scheduledMessage.shareMessage = message;
                 scheduledMessage.userId = userId;
                 scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                 scheduledMessage.url = imagePath;//"https://graph.facebook.com/"+ fbUserId + "/picture?type=small";
+                scheduledMessage.mediaType = mediaType;
+                scheduledMessage.socialprofileName = profileName;
                 dbr.Add<ScheduledMessage>(scheduledMessage);
 
             }

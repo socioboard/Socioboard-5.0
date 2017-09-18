@@ -78,7 +78,7 @@ namespace Api.Socioboard.Controllers
                 }
                 if (extension.ToLower().Equals("mp4") || extension.ToLower().Equals("mov") || extension.ToLower().Equals("mpeg") || extension.ToLower().Equals("wmv") || extension.ToLower().Equals("avi") || extension.ToLower().Equals("flv") || extension.ToLower().Equals("3gp"))
                 {
-                    return Ok(new FileStream(filePath, FileMode.Open));
+                    return Ok(new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                 }
             }
 

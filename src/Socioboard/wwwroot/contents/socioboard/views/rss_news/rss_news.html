@@ -119,9 +119,9 @@
                                     <div class="col s12 m12 l12">
                                         <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
                                     </div>
-                                    <input type="hidden" id="imageUrl" value="{{contentMessage.image}}" />
+                                    <input type="hidden" id="imageUrl"  />
                                     <div class="col s12 m12 l12">
-                                        <input type="file" id="composeImage" class="dropify" after-render data-default-file="{{contentMessage.image}}" />
+                                        <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
                                     </div>
                                     <div class="col s12 m12 l12" ng-if="!contentMessage">
                                         <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
@@ -197,15 +197,15 @@
         </div>
 
 
-        <div id="ComposePostModal" class="modal">
+        <!--<div id="ComposePostModal" class="modal">
             <div class="modal-content">
                 <nav class="red">
                     <div class="nav-wrapper">
                         <div class="left col s12 m5 l5">
-                            <ul>
+                            <ul>-->
                                 <!--<li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
                                 </li>-->
-                                <li><a href="#!" class="email-type">Compose</a></li>
+                                <!--<li><a href="#!" class="email-type">Compose</a></li>
 
                             </ul>
                         </div>
@@ -215,11 +215,11 @@
                                 <li>
                                     <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
                                     <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
-                                </li>
+                                </li>-->
                                 <!--<li>
                                     <a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
                                 </li>-->
-                            </ul>
+                            <!--</ul>
                         </div>
 
                     </div>
@@ -234,7 +234,7 @@
                                     <textarea id="composeMessage" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg">{{contentMessage.title}}  {{contentMessage.link}}</textarea>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <!--<div class="row">
                             <div class="col s12 m12 l12">
                                 <p>Add your hashtag</p>
@@ -243,7 +243,7 @@
                                 <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
                             </div>
                         </div>-->
-                        <div class="row section">
+                        <!--<div class="row section">
                             <div class="col s12 m12 l12">
                                 <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
                             </div>
@@ -255,8 +255,8 @@
                                 <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
                             </div>
 
-                        </div>
-                        <div class="row">
+                        </div>-->
+                        <!--<div class="row">-->
                             <!--<div class="input-field col s12">
                                 <select multiple id="composeProfiles">
                                     <option value="" disabled selected>Choose your option</option>
@@ -267,7 +267,7 @@
                                     <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                 </select>
                             </div>-->
-                            <div style="max-height:250px; overflow-y:scroll;" class="row">
+                            <!--<div style="max-height:250px; overflow-y:scroll;" class="row">
                                 <div class="input-field col s12">
                                     <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
                                     <label for="search_name">Search Profile</label>
@@ -328,7 +328,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+        </div>-->
    
     <!-- END CONTENT -->
 

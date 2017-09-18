@@ -10,7 +10,7 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
         $scope.getprofiledata = function (profileOwnerId) {
        
             //codes to load  instgarm  profiles start
-            $http.get(apiDomain + '/api/InstagramReports/GetInstagramProfilesData?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/InstagramReports/GetInstagramProfilesData?groupId=' + $rootScope.groupId)
                           .then(function (response) {
                             
                               $scope.getprofiledatawithdate = [];
@@ -46,10 +46,10 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
         $scope.getprofilelist = [];
 
         
-        $scope.GetInstafollowfollowingGraph = function (profileOwnerId) {
+        $scope.GetInstafollowfollowingGraph = function () {
          
             //codes to load  instgarm  profiles start
-            $http.get(apiDomain + '/api/InstagramReports/GetInstafollowfollowingGraph?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/InstagramReports/GetInstafollowfollowingGraph?groupId=' + $rootScope.groupId)
                           .then(function (response) {
                             
                               $scope.GetInstafollowfollowingGraph = response.data;
@@ -63,10 +63,10 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
 
         }
 
-        $scope.getfollowerfollowingCount = function (profileOwnerId) {
+        $scope.getfollowerfollowingCount = function () {
            
             //codes to load  instgarm  profiles start
-            $http.get(apiDomain + '/api/Instagram/GetAllInstagramProfiles?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/Instagram/GetAllInstagramProfiles?groupId=' + $rootScope.groupId)
                           .then(function (response) {
                             
                               $scope.getfollowerfollowingCount = response.data;
@@ -77,10 +77,10 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
             // end codes to load instgarm profiles
 
         }
-        $scope.getfeedsdata = function (profileOwnerId) {
+        $scope.getfeedsdata = function () {
           
             //codes to load  instgarm  profiles start
-            $http.get(apiDomain + '/api/InstagramReports/GetInstagramFeedsdata?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/InstagramReports/GetInstagramFeedsdata?groupId=' + $rootScope.groupId)
                           .then(function (response) {
                             
                               $scope.getfeedsdata = response.data;
@@ -415,15 +415,16 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
 
         $scope.getOnPageLoadReports = function () {
             var canContinue = true;
-            var count = 0;
-            angular.forEach($rootScope.lstProfiles, function (value, key) {
-             if (count == 0) {
-                  $scope.GetInstafollowfollowingGraph(value.profileOwnerId);
-                    $scope.getprofiledata(value.profileOwnerId)
+            //var count = 0;
+            $scope.GetInstafollowfollowingGraph();
+                    $scope.getprofiledata();
+            //angular.forEach($rootScope.lstProfiles, function (value, key) {
+            // if (count == 0) {
+                  
                     
-                    count = count + 1;
-                }
-            });
+            //        count = count + 1;
+            //    }
+            //});
         }
 
         $scope.getOnPageLoadReports();

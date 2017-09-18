@@ -56,6 +56,7 @@
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AgencyUser.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AgencyUser.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\AssestLibrary.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.AssestLibrary.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Coupons.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Coupons.hbm.xml
+--resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DaywiseSchedule.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DaywiseSchedule.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\DemoRequest.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.DemoRequest.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Discovery.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Discovery.hbm.xml
 --resource:"E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\compiler\resources\Mappings\Draft.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.Draft.hbm.xml
@@ -100,6 +101,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\FeedTableType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\GPlusProfileType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\GroupMemberStatus.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\MediaType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\NetworkType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PaymentType.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PayPalAccountStatus.cs
@@ -136,6 +138,7 @@ E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Sociobo
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AgencyUser.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\AssestLibrary.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Coupons.cs
+E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DaywiseSchedule.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\DemoRequest.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Discovery.cs
 E:\D DRIVE\socioboardgithub\githubUpdated\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Draft.cs

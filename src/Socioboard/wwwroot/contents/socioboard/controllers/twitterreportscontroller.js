@@ -17,7 +17,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
         
         $scope.GettwtfollowfollowingGraph = function (profileOwnerId) {
             //codes to load  instgarm  profiles start
-              $http.get(apiDomain + '/api/TwitterReports/GettwtfollowfollowingGraph?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/TwitterReports/GettwtfollowfollowingGraph?groupId=' + $rootScope.groupId)
                           .then(function (response) {
                             $scope.GettwtfollowfollowingGraph = response.data;
                               $scope.generatefollowfollowingGraphs();
@@ -28,12 +28,12 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
 
         }
 
-        $scope.getprofiledata = function (profileOwnerId) {
+        $scope.getprofiledata = function () {
             //codes to load  instgarm  profiles start
-            $http.get(apiDomain + '/api/TwitterReports/GetTwitterProfilesData?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/TwitterReports/GetTwitterProfilesData?groupId=' + $rootScope.groupId)
                           .then(function (response) {
-                              $scope.getfollowerfollowingcount(profileOwnerId);
-                              $scope.getfeedsdata(profileOwnerId);
+                              $scope.getfollowerfollowingcount();
+                              $scope.getfeedsdata();
                               $scope.getprofiledatawithdate = [];
                               $scope.getprofilelist = response.data;
                               angular.forEach($scope.getprofilelist, function (value, key) {
@@ -64,9 +64,9 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
 
         }
 
-        $scope.getfollowerfollowingcount = function (profileOwnerId) {
+        $scope.getfollowerfollowingcount = function () {
             //codes to load  instgarm  profiles start
-            $http.get(apiDomain + '/api/Twitter/GetAllTwitterProfiles?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/Twitter/GetAllTwitterProfiles?groupId=' + $rootScope.groupId)
                           .then(function (response) {
                               $scope.getfollowerfollowingcount = response.data;
 
@@ -77,9 +77,9 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
 
         }
 
-        $scope.getfeedsdata = function (profileOwnerId) {
+        $scope.getfeedsdata = function () {
             //codes to load  instgarm  profiles start
-            $http.get(apiDomain + '/api/TwitterReports/GetTwitterFeedsdata?groupId=' + profileOwnerId)
+            $http.get(apiDomain + '/api/TwitterReports/GetTwitterFeedsdata?groupId=' + $rootScope.groupId)
                           .then(function (response) {
                               $scope.getfeedsdata = response.data;
 
@@ -413,13 +413,15 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
         $scope.getOnPageLoadReports = function () {
             var canContinue = true;
             var count = 0;
-            angular.forEach($rootScope.lstProfiles, function (value, key) {
-               if (count == 0) {
-                    $scope.GettwtfollowfollowingGraph(value.profileOwnerId);
-                    $scope.getprofiledata(value.profileOwnerId)
-                    count = count + 1;
-                }
-            });
+            $scope.GettwtfollowfollowingGraph();
+            $scope.getprofiledata();
+            //angular.forEach($rootScope.lstProfiles, function (value, key) {
+            //   if (count == 0) {
+            //        $scope.GettwtfollowfollowingGraph(value.profileOwnerId);
+            //        $scope.getprofiledata(value.profileOwnerId)
+            //        count = count + 1;
+            //    }
+            //});
         }
         $scope.getOnPageLoadReports();
         

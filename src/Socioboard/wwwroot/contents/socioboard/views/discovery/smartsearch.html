@@ -2,87 +2,88 @@
             <!-- START CONTENT -->
             <section id="content">
                 <!--start container-->
-                
-                <div class="row">
-                  <div class="col l12">
-                    <h4>Smart Search allows you to find new customers by searching with keywords around your business.</h4>
-                  </div>
-                </div>
-                <div class="row">
-                    <div class="input-field col s10">
-                        <i class="material-icons icon-note prefix"></i>
-                        <input id="txtsearch" type="text" class="">
-                        <label class="active" for="icon_prefix">Type your Keyword here...</label>
-                    </div>
-                </div>
-                <!--card widgets end-->
-                <div class="row">
-                    <div class="col s12 m9 l9">
-
-                      <!-- twitter -->
-                      <div class="card" id="feeds">
-                        <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-magnifier"></i>Smart Search</h5>
-                          <ul class="collection smartsearchfeeds">
-                              <li class="collection-item avatar" ng-repeat="twtfeed in lstDiscoveryGeoLocation">
-                                <img src="{{twtfeed.profile_image_url}}" alt="{{twtfeed.screan_name}}" class="circle">
-                                <span class="email-title">{{twtfeed.screan_name}}</span>
-                                <div class="row feeds_post z-depth-1 hoverable">
-                                  <div class="col m8">
-                                    <p class="break_word ultra-small">{{twtfeed.text}}.</p>
-                                  </div>
-                                  <!--<div class="col l12">
-                                    <a href="#taskModal" class="tooltipped modal-trigger" data-position="top" data-delay="50" data-tooltip="Task">
-                                        <i class="icon-pin fa-fw"></i>
-                                    </a>
-                                  </div>-->
-
-                                </div>                                         
-                                <a class="tooltipped secondary-content" data-position="left">{{twtfeed.createdTime}}</a>
-                              </li>
-                          </ul>
-                      </div>
-                    </div>  
-                    <div class="col s12 m3 l3">
-                      <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-2 white-text"><i class="icon-pointer"></i>Discovery</h5>
-                        <div class="section section_filter">                        
-                          <div class="row">
-                            <div class="input-field col s12">
-                              <input id="search_location" type="text" class="validate">
-                              <label for="location">Enter Location [ Near this place ]</label>
-                            </div>
-                              <div class="input-field col s12">
-                                <select id="radius-select">
-                                  <option value="" disabled selected>Choose your option</option>
-                                  <option value="5">Within 5</option>
-                                  <option value="10">Within 10</option>
-                                  <option value="25">Within 25</option>
-                                  <option value="50">Within 50</option>
-                                  <option value="100">Within 100</option>
-                                  <option value="250">Within 250</option>
-                                  <option value="500">Within 500</option>
-                                  <option value="1000">Within 1000</option>
-                                </select>
-                              </div>
-                              <div class="input-field col s12">
-                                <select id="type-select">
-                                  <option value="" disabled selected>Choose your option</option>
-                                  <option value="1">Miles</option>
-                                  <option value="2">Kilometers</option>
-                                </select>
-                              </div>
-                              <div ng-init="dispbtn= {{dispbtnsmart}}"></div>
-                              <div class="col l12 center">
-                                  <a ng-show="dispbtn" ng-click="DiscoverySmartSearch()" class="btn waves-effect waves-light">Search</a>
-                                  <a ng-show="!dispbtn" class="btn">
-                                      <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
-                                  </a>
-                              </div>
-                          </div>
+                <form>
+                    <div class="row">
+                        <div class="col l12">
+                            <h5>Smart Search allows you to find new customers by searching with keywords around your business.</h5>
                         </div>
-                      </div>
-                    </div>                                
-                </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s10">
+                            <i class="material-icons icon-note prefix"></i>
+                            <input id="txtsearch" type="text" class="" placeholder="keywords">
+                            <label class="active" for="icon_prefix">Type your Keyword here...</label>
+                        </div>
+                    </div>
+                    <!--card widgets end-->
+                    <div class="row">
+                        <div class="col s12 m9 l9">
+
+                            <!-- twitter -->
+                            <div class="card" id="feeds">
+                                <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-magnifier"></i>Smart Search</h5>
+                                <ul class="collection smartsearchfeeds">
+                                    <li class="collection-item avatar" ng-repeat="twtfeed in lstDiscoveryGeoLocation">
+                                        <img src="{{twtfeed.profile_image_url}}" alt="{{twtfeed.screan_name}}" class="circle">
+                                        <span class="email-title">{{twtfeed.screan_name}}</span>
+                                        <div class="row feeds_post z-depth-1 hoverable">
+                                            <div class="col m8">
+                                                <p class="break_word ultra-small">{{twtfeed.text}}.</p>
+                                            </div>
+                                            <!--<div class="col l12">
+                                  <a href="#taskModal" class="tooltipped modal-trigger" data-position="top" data-delay="50" data-tooltip="Task">
+                                      <i class="icon-pin fa-fw"></i>
+                                  </a>
+                                </div>-->
+
+                                        </div>
+                                        <a class="tooltipped secondary-content" data-position="left">{{twtfeed.createdTime}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col s12 m3 l3">
+                            <div class="card" id="feeds">
+                                <h5 class="feeds_title blue darken-2 white-text"><i class="icon-pointer"></i>Discovery</h5>
+                                <div class="section section_filter">
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <input id="search_location" type="text" class="validate" placeholder="ex: California">
+                                            <label class="active" for="location">Enter Location</label>
+                                        </div>
+                                        <div class="input-field col s12">
+                                            <select id="radius-select">
+                                                <option value="" disabled selected>Choose your option</option>
+                                                <option value="5">Within 5</option>
+                                                <option value="10">Within 10</option>
+                                                <option value="25">Within 25</option>
+                                                <option value="50">Within 50</option>
+                                                <option value="100">Within 100</option>
+                                                <option value="250">Within 250</option>
+                                                <option value="500">Within 500</option>
+                                                <option value="1000">Within 1000</option>
+                                            </select>
+                                        </div>
+                                        <div class="input-field col s12">
+                                            <select id="type-select">
+                                                <option value="" disabled selected>Choose your option</option>
+                                                <option value="1">Miles</option>
+                                                <option value="2">Kilometers</option>
+                                            </select>
+                                        </div>
+                                        <div ng-init="dispbtn= {{dispbtnsmart}}"></div>
+                                        <div class="col l12 center">
+                                            <button type="submit" ng-show="dispbtn" ng-click="DiscoverySmartSearch()" class="btn waves-effect waves-light">Search</button>
+                                            <button ng-show="!dispbtn" class="btn">
+                                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
                 <!--end container-->
 
                 <!-- Compose Email Trigger -->

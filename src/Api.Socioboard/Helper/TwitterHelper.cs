@@ -23,7 +23,7 @@ namespace Api.Socioboard.Helper
     public static class TwitterHelper
     {
 
-        public static string PostTwitterMessage(AppSettings _AppSettings, Cache _redisCache, string message, string profileid, long userid, string url, bool isScheduled, DatabaseRepository dbr, ILogger _logger, string sscheduledmsgguid = "")
+        public static string PostTwitterMessage(AppSettings _AppSettings, Cache _redisCache, string message, string profileid, long userid, string url, bool isScheduled, Domain.Socioboard.Enum.MediaType mediaType, string profileName, DatabaseRepository dbr, ILogger _logger, string sscheduledmsgguid = "")
         {
             bool rt = false;
             string ret = "";
@@ -88,6 +88,8 @@ namespace Api.Socioboard.Helper
                 scheduledMessage.userId = userid;
                 scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                 scheduledMessage.url = url;
+                scheduledMessage.mediaType = mediaType;
+                scheduledMessage.socialprofileName = profileName;
                 dbr.Add<ScheduledMessage>(scheduledMessage);
 
 

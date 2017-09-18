@@ -12,6 +12,7 @@ using MongoDB.Driver;
 using Microsoft.AspNetCore.Hosting;
 using Socioboard.Facebook.Data;
 using Microsoft.AspNetCore.Cors;
+using Domain.Socioboard.Models.Mongo;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -310,6 +311,29 @@ namespace Api.Socioboard.Controllers
             // return Ok();
         }
 
+        [HttpGet("GetLatestFeeds")]
+        public IActionResult GetLatestFeeds(string profileId, long userId, int skip, int count,string date)
+        {
+                DateTime lastfeeddate =Convert.ToDateTime(date);
+                DateTime currentdate = DateTime.UtcNow;
+                //Int32 unixTimestamp= Convert.ToInt32(date);
+                List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
+                MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
+                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
+                var sort = builder.Descending(t => t.FeedDate);
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+               List<Domain.Socioboard.Models.Mongo.LatestFacebookFeed> lstlatestfeed = new List<Domain.Socioboard.Models.Mongo.LatestFacebookFeed>();
+               lstlatestfeed = lstFbFeeds.Select(x => new LatestFacebookFeed() { EntryDate = Convert.ToDateTime(x.EntryDate), FeedDescription = x.FeedDescription, FeedDate=x.FeedDate, ProfileId=x.ProfileId, FromId=x.FromId, FromName=x.FromName, FromProfileUrl=x.FromProfileUrl, Type=x.Type, FbComment=x.FbComment, FbLike=x.FbLike, FeedId=x.FeedId, ReadStatus=x.ReadStatus, Picture=x.Picture, Positive=x.Positive, Negative=x.Negative, Commentcount=x.Commentcount, Likecount=x.Likecount, postType=x.postType, postingFrom=x.postingFrom, _facebookComment=x._facebookComment }).ToList();
+               lstlatestfeed=lstlatestfeed.FindAll(t => t.EntryDate > lastfeeddate && t.EntryDate <= currentdate).ToList();
+               return Ok(lstlatestfeed.ToList());
+            
+        }
+
         [HttpGet("GetTopFilterFeeds")]
         public IActionResult GetTopFilterFeeds(string profileId, long userId, int skip, int count, string typeFilter)
         {
@@ -404,7 +428,7 @@ namespace Api.Socioboard.Controllers
             foreach (var item in accesstoken)
             {
                 dynamic profile = Fbpages.getFbPageData(item); 
-               // string subscribed_apps = Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));                
+               string subscribed_apps = Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));                
                 try
                 {
                     string x = Convert.ToString(profile);
@@ -494,7 +518,7 @@ namespace Api.Socioboard.Controllers
 
             int invalidaccessToken = 0;
             dynamic profile = Fbpages.getFbPageData(accessToken);
-                          
+            string subscribed_apps = Fbpages.subscribed_apps(accessToken, Convert.ToString(profile["id"]));
             try
             {
                 string x = Convert.ToString(profile);
@@ -555,10 +579,10 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("PostFacebookComment")]
-        public IActionResult PostFacebookComment(string postId, string profileId, string message)
+        public IActionResult PostFacebookComment(string postId, string profileId, string message,string timezoneOffset)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            string postcomment = Repositories.FacebookRepository.PostFacebookComment(dbr, message, profileId, postId, _redisCache, _appSettings, _logger);
+            string postcomment = Repositories.FacebookRepository.PostFacebookComment(dbr, message, profileId, postId, timezoneOffset, _redisCache, _appSettings, _logger);
             if (postcomment.Contains("Invalid Access Token"))
             {
                 return Ok("Invalid Access Token");

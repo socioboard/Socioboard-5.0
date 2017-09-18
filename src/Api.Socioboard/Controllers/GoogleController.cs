@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using System.Threading;
 using System.Text.RegularExpressions;
+using System.Collections.Specialized;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -539,7 +540,7 @@ namespace Api.Socioboard.Controllers
                 _logger.LogInformation(ex.Message);
                 _logger.LogError(ex.StackTrace);
                 ret = "Access Token Not Found";
-                return Ok(ret);
+                return BadRequest(ret);
             }
             Domain.Socioboard.Models.Googleplusaccounts gplusAcc = Api.Socioboard.Repositories.GplusRepository.getGPlusAccount(Convert.ToString(userinfo["id"]), _redisCache, dbr);
            
@@ -549,7 +550,7 @@ namespace Api.Socioboard.Controllers
                 {
                     return BadRequest("GPlus account already added by you.");
                 }
-                return BadRequest("GPlus account added by other user.");
+                return BadRequest ("GPlus account added by other user.");
             }
             Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
             if (ngrp == null)
@@ -724,14 +725,39 @@ namespace Api.Socioboard.Controllers
             string data = Request.Form["profileaccesstoken"];
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string[] profiledata = null;
-            
+
+            int lstAddedAccounts = 0;
+            int lstNotAddedAccounts = 0;
+            ListDictionary listStatus = new ListDictionary();
+            string i = "0";
+
+
             profiledata = data.Split(',');
             foreach (var item in profiledata)
             {
-                int j = Repositories.GplusRepository.AddGaSites(item, userId, groupId, _redisCache, _appSettings, dbr,_appEnv);
+                i = Repositories.GplusRepository.AddGaSites(item, userId, groupId, _redisCache, _appSettings, dbr,_appEnv);
+
+                if (i == "added by other")
+                {
+                    lstNotAddedAccounts++;
+                }
+                else
+                {
+                    lstAddedAccounts++;
+                }
             }
-          
-            return Ok("Added Successfully");
+
+            listStatus.Add("added", lstAddedAccounts);
+            listStatus.Add("notadded", lstNotAddedAccounts);
+
+            if (lstAddedAccounts != 0 && lstNotAddedAccounts == 0)
+            {
+                return Ok("Google Analytics Company Page Added Successfully");
+            }
+            else
+            {
+                return Ok(listStatus);
+            }
         }
 
         [HttpGet("GetGAProfiles")]
@@ -841,12 +867,24 @@ namespace Api.Socioboard.Controllers
             string[] profiledata = null;
 
             profiledata = data.Split(',');
+            string savedStatus = "";
             foreach (var item in profiledata)
             {
-                int j = Repositories.GplusRepository.AddYoutubeChannels(item, userId, groupId, _redisCache, _appSettings, dbr, _appEnv);
+                savedStatus = Repositories.GplusRepository.AddYoutubeChannels(item, userId, groupId, _redisCache, _appSettings, dbr, _appEnv);
             }
 
-            return Ok("Added Successfully");
+            if (savedStatus == "Youtube already added by you")
+            {
+                return BadRequest("Youtube channel is already added by you");
+            }
+            else if (savedStatus == "Youtube added by any other")
+            {
+                return BadRequest("Youtube channel is already added by someone else");
+            }
+            else
+            {
+                return Ok("Added Successfully");
+            }
         }
 
         [HttpGet("GetYTChannelsSB")]

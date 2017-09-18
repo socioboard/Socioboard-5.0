@@ -1,8 +1,15 @@
 ﻿'use strict';
 
-SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope, $http, $timeout, $stateParams, apiDomain, domain, grouptask) {
+SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope, $http, $timeout, $stateParams, apiDomain, domain, grouptask,$location,$anchorScroll) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
+
+        $scope.moveTop = function () {
+            $location.hash('upLink');
+            $anchorScroll();
+            $('#downLink').css("display", "none");
+        }
+        
         // initialize core components
         var preloadmore = false;
         $scope.disbtncom = true;
@@ -51,11 +58,14 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         }
         //end
         $scope.LoadTopFeeds = function () {
-                //codes to load  recent Feeds
+            //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
                               .then(function (response) {
                                   $scope.lstFbFeeds = response.data;
-                                  $scope.reloadFeeds();
+                                  $rootScope.firstFeedDate = $scope.lstFbFeeds[0].entryDate;
+                                  //var date = (new Date($rootScope.firstFeedDate).getTime() / 1000);
+                                  //$scope.reloadFeeds();
+                                  $scope.LoadLatestFeeds();
                                   $scope.preloadmore = true;
                                   setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
                                   if (response.data == null) {
@@ -73,6 +83,35 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         }
         $scope.LoadTopFeeds();
 
+        //Latest Feeds loading
+        $scope.LoadLatestFeeds = function () {
+            $http.get(apiDomain + '/api/Facebook/GetLatestFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count + '&date=' + $rootScope.firstFeedDate)
+                              .then(function (response) {
+                                  $scope.lstlatestFbFeeds = response.data;
+                                  $scope.latestfeedcount = $scope.lstlatestFbFeeds.length;
+                                  if ($scope.latestfeedcount>0)
+                                  {
+                                      $rootScope.firstFeedDate = $scope.lstlatestFbFeeds[0].entryDate;
+                                  }
+                                  $scope.reloadFeeds();
+                                  $scope.preloadmore = true;
+                                  setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
+                                  if (response.data == null) {
+                                      reachLast = true;
+                                  }
+                                  $scope.dropCalled = true;
+                                  setTimeout(function () {
+                                      $scope.callDropmenu();
+                                  }, 1000);
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+        }
+        $scope.reloadFeeds = function () {
+            setTimeout(function () { $scope.LoadLatestFeeds(); }, 10000);
+        }
+
+        //End Latest feeds loading
         $scope.loadFeeds = function () {
             $scope.filters = false;
             $scope.preloadmore = false;
@@ -82,9 +121,9 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             $scope.LoadTopFeeds();
         }
 
-        $scope.reloadFeeds = function () {
-            setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
-        }
+        //$scope.reloadFeeds = function () {
+        //    setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
+        //}
 
 
 
@@ -137,9 +176,10 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                              else {
                                  $scope.lstFbFeeds = $scope.lstFbFeeds.concat(response.data);
                                  //console.log($scope.lstFbFeeds);
-                                 ending = ending + 10;
+                                 ending = ending + 30;
                                  $scope.listData();
                              }
+                             //$scope.LoadLatestFeeds();
                          }, function (reason) {
                              $scope.error = reason.data;
                          });
@@ -281,7 +321,8 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             if (/\S/.test(postcomment)) {
                 $scope.sendingcomment = true;
                 $scope.sendicon = true;
-                $http.post(apiDomain + '/api/Facebook/PostFacebookComment?postId=' + feedId + '&profileId=' + ProfileId + '&message=' + encodeURIComponent(postcomment))
+                var timezoneOffset = new Date().toLocaleString();
+                $http.post(apiDomain + '/api/Facebook/PostFacebookComment?postId=' + feedId + '&profileId=' + ProfileId + '&message=' + encodeURIComponent(postcomment) + '&timezoneOffset=' + timezoneOffset)
                                      .then(function (response) {
                                          $scope.sendingcomment = false;
                                          swal(response.data);

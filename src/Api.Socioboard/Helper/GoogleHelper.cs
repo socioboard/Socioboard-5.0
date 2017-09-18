@@ -138,20 +138,20 @@ namespace Api.Socioboard.Helper
                         string channeldescrip = item["snippet"]["description"].ToString();
 
                         #region Update Access and refresh token after authentication for every time
-                        try
-                        {
-                            List<Domain.Socioboard.Models.YoutubeChannel> lstYTChannel = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(channelid)).ToList();
-                            if (lstYTChannel != null && lstYTChannel.Count() > 0)
-                            {
-                                lstYTChannel.First().AccessToken = access_token;
-                                lstYTChannel.First().RefreshToken = refresh_token;
-                                dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(lstYTChannel.First());
-                            }
-                        }
-                        catch(Exception ex)
-                        {
+                        //try
+                        //{
+                        //    List<Domain.Socioboard.Models.YoutubeChannel> lstYTChannel = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(channelid)).ToList();
+                        //    if (lstYTChannel != null && lstYTChannel.Count() > 0)
+                        //    {
+                        //        lstYTChannel.First().AccessToken = access_token;
+                        //        lstYTChannel.First().RefreshToken = refresh_token;
+                        //        dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(lstYTChannel.First());
+                        //    }
+                        //}
+                        //catch(Exception ex)
+                        //{
 
-                        }
+                        //}
                         #endregion
 
 

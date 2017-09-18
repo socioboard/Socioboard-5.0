@@ -249,7 +249,6 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         //code for compose message start
         $scope.ComposeMessage = function () {
-
             var profiles = new Array();
             $("#checkboxdata .subcheckbox").each(function () {
 
@@ -276,7 +275,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             //}
             // updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
 
-
+            $scope.findExtension();
             if (profiles.length != 0 && /\S/.test(testmsg)) {
                 $scope.checkfile();
                 if ($scope.check == true) {
@@ -284,7 +283,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     formData.append('files', $("#composeImage").get(0).files[0]);
                     $http({
                         method: 'POST',
-                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus,
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus + '&mediaType=' + $scope.fileExtensionName,
                         data: formData,
                         headers: {
                             'Content-Type': undefined
@@ -295,6 +294,8 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                             $scope.dispbtn = true;
                             $('#ComposePostModal').closeModal();
                             swal('Message composed successfully');
+                            $('.emoji-wysiwyg-editor').html("");
+                            $(".dropify-clear").click();
                         }
 
                     }, function (reason) {
@@ -340,7 +341,20 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }
         //code for checking the file format end
-
+        $scope.findExtension = function () {
+            var fileName = $('#composeImage');
+            var fileExtensionImage = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var fileExtensionVideo = ['mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
+            if ($scope.hasExtension('#composeImage', fileExtensionImage)) {
+                $scope.fileExtensionName = 1;
+            }
+            else if ($scope.hasExtension('#composeImage', fileExtensionVideo)) {
+                $scope.fileExtensionName = 2;
+            }
+            else {
+                $scope.fileExtensionName = 0;
+            }
+        }
         // codes to draft message start
         $scope.draftMsg = function () {
             $scope.draftbtn = false;
@@ -355,7 +369,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             updatedmessage = updatedmessage.replace("+", 'ppp');
             updatedmessage = updatedmessage.replace("-+", 'jjj');
             message = updatedmessage;
-
+            $scope.findExtension();
             if (message != "" && message != undefined) {
                 $scope.checkfile();
                 if ($scope.check == true) {
@@ -364,7 +378,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     //$scope.dispbtn = false;
                     $http({
                         method: 'POST',
-                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + "" + '&groupId=' + $rootScope.groupId,
+                        url: apiDomain + '/api/SocialMessages/DraftScheduleMessage?userId=' + $rootScope.user.Id + '&message=' + message + '&scheduledatetime=' + "" + '&groupId=' + $rootScope.groupId + '&mediaType=' + $scope.fileExtensionName,
                         data: formData,
                         headers: {
                             'Content-Type': undefined
@@ -607,9 +621,14 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     transformRequest: angular.identity,
 
                 }).then(function (response) {
-                    if (response.status == 200) {
+                    if (response.data == "LinkedIn Company Page Added Successfully") {
                         window.location.reload();
                         swal(response.data);
+                    }
+                    else
+                    {
+                        var listStatus = response.data;
+                        swal(listStatus.notadded + " pages added by other users");
                     }
                 }, function (reason) {
                     swal("Error!");
@@ -704,7 +723,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         //code to add Ga Sites
         $scope.toggleGAeProfileSelection = function (AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl, internalWebPropertyId) {
-            var idx = $scope.selectedGAPageProfiles.indexOf(AccessToken, RefreshToken, AccountId, AccountName, EmailId, ProfileId, ProfileName, WebPropertyId, WebsiteUrl, internalWebPropertyId);
+            var idx = $scope.selectedGAPageProfiles.indexOf(AccessToken + '<:>' + RefreshToken + '<:>' + AccountId + '<:>' + AccountName + '<:>' + EmailId + '<:>' + ProfileId + '<:>' + ProfileName + '<:>' + WebPropertyId + '<:>' + WebsiteUrl + '<:>' + internalWebPropertyId);
             var data = "";
             // is currently selected
             if (idx > -1) {
@@ -744,9 +763,13 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     transformRequest: angular.identity,
 
                 }).then(function (response) {
-                    if (response.status == 200) {
+                    if (response.data == "Google Analytics Company Page Added Successfully") {
                         window.location.reload();
                         swal(response.data);
+                    }
+                    else {
+                        var listStatus = response.data;
+                        swal(listStatus.notadded + " pages added by other users");
                     }
                 }, function (reason) {
                     swal("Error!");
@@ -817,7 +840,16 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         $scope.addinitialfeeds(access, chaid);
                     }
                 }, function (reason) {
-                    swal("Error!");
+
+                    if (reason.data == "Youtube channel is already added by someone else")
+                    {
+                        alertify.error("Youtube channel is already added by someone else");
+                    }
+                    else
+                    {
+                        swal("Error");
+                    }
+
                 });
             }
             else if ($scope.selecteYTChannels.length > 0) {

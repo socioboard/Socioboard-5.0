@@ -26,9 +26,9 @@
     <div class="container">
         <div class="row">
             <div class="col m9 s12">
-                <h4>Most Shared</h4>
+                <h5>Most Shared</h5>
             </div>
-            <div class="col m3 s12 margin-top-10">
+            <div class="col m3 s12 margin-top-20">
                <a class="btn btn_style img_comp_btn right" ng-if="user.AccountType==7" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
                 <a class="btn btn_style img_comp_btn right" ng-if="user.AccountType!=7" ng-click="message()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
             </div>
@@ -36,14 +36,14 @@
     </div>
     <!-- START CONTENT -->
     <section id="content">
-        <div class="row">
+        <form class="row">
             <div class="col m4">
                 <input id="textSearch" type="text" placeholder="Search" />
             </div>
             <div class="col m2">
-                <a class="btn-floating waves-effect waves-light blue darken-4 center" ng-click="SearchData()"><i class="fa fa-search"></i></a>
+                <button type="submit" class="btn-floating waves-effect waves-light blue darken-4 center" ng-click="SearchData()"><i class="fa fa-search"></i></button>
             </div>
-        </div>
+        </form>
         <!-- Compose Email Structure -->
         <div class="row">
             <div class="col s12 m12">

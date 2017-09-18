@@ -306,6 +306,24 @@ namespace Socioboard.Controllers
             }
         }
 
+        //[HttpGet]
+        //public ActionResult SocioBoardAuthRedirectionUrl()
+        //{
+        //    string clinetId = "caed803890f2b4360b49f4ff5f9ea05f";
+        //    string clinetsecret = "f4f31b95aea538c9d218e803da6ff1bf";
+        //    string callbackUrl = "http://localhost:9821/Index/SocioBoardAuth";
+        //    string baseOuthUrl = "https://app.socioboard.com/";
+        //    string authorizeUrl = baseOuthUrl + "/oauth/authorize";
+        //    string accessTokenUrl = baseOuthUrl + "/oauth/access_token";
+        //    return Content("");
+        //}
+
+        //[HttpGet]
+        //public ActionResult SocioBoardAuth(string Code)
+        //{
+        //    return Content("");
+        //}
+
         [HttpPost]
         public async Task<IActionResult> AjaxPluginLogin()
         {

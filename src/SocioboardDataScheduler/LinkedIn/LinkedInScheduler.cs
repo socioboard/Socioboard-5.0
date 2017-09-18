@@ -47,10 +47,11 @@ namespace SocioboardDataScheduler.LinkedIn
             var img = "";
             Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = _objLinkedInAccount;
             oAuthLinkedIn _oauth = new oAuthLinkedIn();
-            _oauth.ConsumerKey = AppSettings.LinkedinApiKey;
-            _oauth.ConsumerSecret = AppSettings.LinkedinSecretKey;
+            _oauth.ConsumerKey = AppSettings.LinkedinConsumerKey;
+            _oauth.ConsumerSecret = AppSettings.LinkedinConsumerSecret;
             _oauth.Token = _LinkedInAccount.OAuthToken;
             string PostUrl = "https://api.linkedin.com/v1/people/~/shares?format=json";
+
             
             if (string.IsNullOrEmpty(ImageUrl))
             {
@@ -58,23 +59,14 @@ namespace SocioboardDataScheduler.LinkedIn
             }
             else
             {
-                var client = new ImgurClient(AppSettings.imgurclietId,AppSettings.imgurclietSecret);
-                var endpoint = new ImageEndpoint(client);
-                IImage image;
-                using (var fs = new FileStream(imagepath, FileMode.Open))
-                {
-                    image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
-                }
-
-                var imgs = image.Link;
-                json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, imgs);
+                json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, ImageUrl);
             }
 
             if (!string.IsNullOrEmpty(json))
             {
                 apiHitsCount++;
                 schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                schmessage.url = json;
+                //schmessage.url = json;
                 dbr.Update<ScheduledMessage>(schmessage);
                 Domain.Socioboard.Models.Notifications notify = new Notifications();
                 Notifications lstnotifications = dbr.Single<Notifications>(t => t.MsgId == schmessage.id);
@@ -89,7 +81,7 @@ namespace SocioboardDataScheduler.LinkedIn
                     dbr.Add<Notifications>(notify);
                     if (_user.scheduleSuccessUpdates)
                     {
-                        string sucResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                     return "posted";
                 }
@@ -97,7 +89,7 @@ namespace SocioboardDataScheduler.LinkedIn
                 {
                     if (_user.scheduleSuccessUpdates)
                     {
-                        string sucResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                     return "posted";
                 }
@@ -122,7 +114,7 @@ namespace SocioboardDataScheduler.LinkedIn
                     dbr.Add<Notifications>(notify);
                     if (_user.scheduleFailureUpdates)
                     {
-                        string falResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                     return json;
                 }
@@ -130,7 +122,7 @@ namespace SocioboardDataScheduler.LinkedIn
                 {
                     if (_user.scheduleFailureUpdates)
                     {
-                        string falResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                     return json;
                 }

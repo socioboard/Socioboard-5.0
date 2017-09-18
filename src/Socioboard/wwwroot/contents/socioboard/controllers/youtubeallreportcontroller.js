@@ -479,7 +479,7 @@ SocioboardApp.controller('YoutubeallreportController', function ($rootScope, $sc
 
         //subscriber start
         $scope.getTSubscriberData = function () {
-            $http.get(apiDomain + '/api/YoutubeReport/GetYtTotalsubscriber?userId=' + $rootScope.user.Id)
+            $http.get(apiDomain + '/api/YoutubeReport/GetYtTotalsubscriber?groupId=' + $rootScope.groupId)
                                      .then(function (response) {
                                          $scope.lstSubData = response.data;
                                          $scope.generateSubscriberGraphs();

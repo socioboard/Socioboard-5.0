@@ -11,12 +11,14 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
         $scope.getfacebookgroup = function (tested) {
             $('select').material_select();
             $scope.lstfacebookgroup = '123';
+            $scope.editgroup = false;
             var profileId = tested;
             //codes to get facebook group
             $http.get(apiDomain + '/api/Facebook/GetFacebookGroup?profileId=' + profileId)
                               .then(function (response) {
                                   if (response.data.length>0) {
                                       $scope.lstfacebookgroup = response.data;
+                                      $scope.editgroup = true;
                                   } else {
                                       $scope.lstfacebookgroup = '';
                                   }

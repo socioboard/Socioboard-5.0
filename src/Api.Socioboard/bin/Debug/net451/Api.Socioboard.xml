@@ -225,7 +225,7 @@
             <param name="FacebookGroupId">FacebookGroup id of user facebook profile</param>
             <returns></returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.SocialMessagesController.ComposeMessage(System.String,System.String,System.Int64,System.String,System.String,Domain.Socioboard.Enum.UrlShortener,Microsoft.AspNetCore.Http.IFormFile)">
+        <member name="M:Api.Socioboard.Controllers.SocialMessagesController.ComposeMessage(System.String,System.String,System.Int64,System.String,System.String,Domain.Socioboard.Enum.UrlShortener,Domain.Socioboard.Enum.MediaType,Microsoft.AspNetCore.Http.IFormFile)">
             <summary>
             To compose message
             </summary>

@@ -249,43 +249,46 @@ namespace Api.Socioboard.Repositories
         }
 
         //total subscriber 
-        public static List<Domain.Socioboard.Models.TotalYoutubesubscriber> GetYtTotalsubscriber(string userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
+        public static List<Domain.Socioboard.Models.TotalYoutubesubscriber> GetYtTotalsubscriber(string[] channelid, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
-            int tmmp = Convert.ToInt32(userId);
-            IList<Domain.Socioboard.Models.YoutubeChannel> subscriberC = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.UserId.Equals(tmmp));
-
-            var x = subscriberC;
-            List<string> subscriberlist = new List<string>();
-            foreach (var item in x)
-            {
-                subscriberlist.Add(item.YtubeChannelId);
-            }
-
-            MongoRepository mongorepo = new MongoRepository("YoutubeReportsData", _appSettings);
             List<Domain.Socioboard.Models.TotalYoutubesubscriber> lstSub = new List<Domain.Socioboard.Models.TotalYoutubesubscriber>();
-
-            foreach (var itemss in subscriberC)
+            foreach (var items in channelid)
             {
-                var Result = mongorepo.Find<Domain.Socioboard.Models.Mongo.YoutubeReports>(t => t.datetime_unix < UnixTimeNows(DateTime.UtcNow) && t.datetime_unix >= UnixTimeNows(DateTime.UtcNow.AddDays(-90)) && t.channelId.Equals(itemss.YtubeChannelId));
-                var task = Task.Run(async () =>
+                IList<Domain.Socioboard.Models.YoutubeChannel> subscriberC = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.YtubeChannelId.Equals(items));
+
+                var x = subscriberC;
+                List<string> subscriberlist = new List<string>();
+                foreach (var item in x)
                 {
-                    return await Result;
-                });
-                IList<Domain.Socioboard.Models.Mongo.YoutubeReports> totallistT = task.Result;
-                var random = new Random();
-                var randomColor = String.Format("#{0:X6}", random.Next(0x1000000));
-                Domain.Socioboard.Models.TotalYoutubesubscriber repoSub = new Domain.Socioboard.Models.TotalYoutubesubscriber();
-                int countSub = totallistT.ToList().Sum(t => t.SubscribersGained);
-                int countsublost = totallistT.ToList().Sum(t => t.subscribersLost);
-                int totalsub = countSub - countsublost;
-                repoSub.ChannelId = itemss.YtubeChannelId;
-                repoSub.Channelpic = itemss.ChannelpicUrl;
-                repoSub.colors = Convert.ToString(randomColor);
-                repoSub.ChannelName = itemss.YtubeChannelName;
-                repoSub.startdate = DateTime.UtcNow;
-                repoSub.endtdate = DateTime.UtcNow;
-                repoSub.SubscribersCounts = totalsub;
-                lstSub.Add(repoSub);
+                    subscriberlist.Add(item.YtubeChannelId);
+                }
+
+                MongoRepository mongorepo = new MongoRepository("YoutubeReportsData", _appSettings);
+               
+
+                foreach (var itemss in subscriberC)
+                {
+                    var Result = mongorepo.Find<Domain.Socioboard.Models.Mongo.YoutubeReports>(t => t.datetime_unix < UnixTimeNows(DateTime.UtcNow) && t.datetime_unix >= UnixTimeNows(DateTime.UtcNow.AddDays(-90)) && t.channelId.Equals(itemss.YtubeChannelId));
+                    var task = Task.Run(async () =>
+                    {
+                        return await Result;
+                    });
+                    IList<Domain.Socioboard.Models.Mongo.YoutubeReports> totallistT = task.Result;
+                    var random = new Random();
+                    var randomColor = String.Format("#{0:X6}", random.Next(0x1000000));
+                    Domain.Socioboard.Models.TotalYoutubesubscriber repoSub = new Domain.Socioboard.Models.TotalYoutubesubscriber();
+                    int countSub = totallistT.ToList().Sum(t => t.SubscribersGained);
+                    int countsublost = totallistT.ToList().Sum(t => t.subscribersLost);
+                    int totalsub = countSub - countsublost;
+                    repoSub.ChannelId = itemss.YtubeChannelId;
+                    repoSub.Channelpic = itemss.ChannelpicUrl;
+                    repoSub.colors = Convert.ToString(randomColor);
+                    repoSub.ChannelName = itemss.YtubeChannelName;
+                    repoSub.startdate = DateTime.UtcNow;
+                    repoSub.endtdate = DateTime.UtcNow;
+                    repoSub.SubscribersCounts = totalsub;
+                    lstSub.Add(repoSub);
+                }
             }
             return lstSub;
         }

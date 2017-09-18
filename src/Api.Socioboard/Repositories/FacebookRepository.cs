@@ -100,7 +100,8 @@ namespace Api.Socioboard.Repositories
                 catch { }
                 try
                 {
-                    fbAcc.ProfileUrl = (Convert.ToString(profile["link"]));
+                    fbAcc.ProfileUrl = (Convert.ToString(profile["picture"]["data"]["url"]));
+                   // fbAcc.ProfileUrl = "http://graph.facebook.com/" + profile["from"]["id"] + "/picture?type=small";
                 }
                 catch { }
                 try
@@ -320,6 +321,7 @@ namespace Api.Socioboard.Repositories
                 }
                 fbAcc.FbProfileType = fbProfileType;
                 fbAcc.AccessToken = accessToken;
+                fbAcc.FbPageSubscription = Domain.Socioboard.Enum.FbPageSubscription.Subscribed;
                 fbAcc.FbUserId = (Convert.ToString(profile["id"]));
                 fbAcc.FbUserName = (Convert.ToString(profile["name"]));
                 try
@@ -1906,7 +1908,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static string PostFacebookComment(Model.DatabaseRepository dbr, string message, string profileId, string postId, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        public static string PostFacebookComment(Model.DatabaseRepository dbr, string message, string profileId, string postId,string timezoneOffset, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
         {
             Domain.Socioboard.Models.Facebookaccounts lstFbAcc = new Domain.Socioboard.Models.Facebookaccounts();
             Domain.Socioboard.Models.Facebookaccounts inMemFbAcc = _redisCache.Get<Domain.Socioboard.Models.Facebookaccounts>(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + profileId);
@@ -1930,10 +1932,11 @@ namespace Api.Socioboard.Repositories
             }
             if (!string.IsNullOrEmpty(commentId))
             {
+                //DateTime clienttime = Convert.ToDateTime(timezoneOffset);
                 MongoFbPostComment fbPostComment = new MongoFbPostComment();
                 fbPostComment.Id = MongoDB.Bson.ObjectId.GenerateNewId();
                 fbPostComment.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                fbPostComment.Commentdate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                fbPostComment.Commentdate = timezoneOffset;
                 fbPostComment.PostId = postId;
                 fbPostComment.Likes = 0;
                 fbPostComment.UserLikes = 0;
@@ -2172,7 +2175,41 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-
+        public static string CompareDateWithclient(string clientdate, string scheduletime)
+        {
+            try
+            {
+                var dt = DateTime.Parse(scheduletime);
+                var clientdt = DateTime.Parse(clientdate);
+                //  DateTime client = Convert.ToDateTime(clientdate);
+                DateTime client = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(clientdt, TimeZoneInfo.Local));
+                DateTime server = DateTime.UtcNow;
+                DateTime schedule = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt, TimeZoneInfo.Local));
+                {
+                    var kind = schedule.Kind; // will equal DateTimeKind.Unspecified
+                    if (DateTime.Compare(client, server) > 0)
+                    {
+                        double minutes = (server - client).TotalMinutes;
+                        schedule = schedule.AddMinutes(minutes);
+                    }
+                    else if (DateTime.Compare(client, server) == 0)
+                    {
+                    }
+                    else if (DateTime.Compare(client, server) < 0)
+                    {
+                        double minutes = (server - client).TotalMinutes;
+                        schedule = schedule.AddMinutes(minutes);
+                    }
+                }
+                return TimeZoneInfo.ConvertTimeFromUtc(schedule, TimeZoneInfo.Local).ToString();
+                // return schedule.ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return "";
+            }
+        }
 
     }
 }

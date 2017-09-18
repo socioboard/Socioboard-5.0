@@ -160,6 +160,11 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
 
 
     });
+})
+.filter('Url', function ($sce) {
+    return function (Url) {
+        return $sce.trustAsResourceUrl(Url);
+    };
 });
 
 

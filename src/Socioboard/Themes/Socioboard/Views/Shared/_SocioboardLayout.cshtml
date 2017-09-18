@@ -131,6 +131,17 @@
             @*<li><a href="https://chrome.google.com/webstore/detail/socioboard/dlapikocbmncdoiekdacodlgjcdcachc?utm_source=chrome-app-launcher-info-dialog">Download Chrome Plugin</a></li>*@
         </ul>
 
+        <ul id="Help" class="dropdown-content">
+            <li><a href="~/Index/Careers">Careers</a></li>
+            <li><a href="~/Index/Training">Training</a></li>
+            <li><a href="~/Index/FAQ">FAQs</a></li>
+        </ul>
+        <ul id="Help_mob" class="dropdown-content">
+            <li><a href="~/Index/Careers">Careers</a></li>
+            <li><a href="~/Index/Training">Training</a></li>
+            <li><a href="~/Index/FAQ">FAQs</a></li>
+        </ul>
+
 
         <nav class="white" role="navigation">
             <div class="nav-wrapper">
@@ -141,9 +152,7 @@
                     <li><a class="dropdown-button" href="#!" data-activates="Versions">Versions<i class="material-icons right">arrow_drop_down</i></a></li>
                     <li><a href="~/Index/Plans">Pricing</a></li>
                     <li><a class="dropdown-button" href="#!" data-activates="Insights">Insights<i class="material-icons right">arrow_drop_down</i></a></li>
-                    <li><a href="~/Index/Careers">Careers</a></li>
-                    <li><a href="~/Index/Training">Training</a></li>
-                    <li><a href="~/Index/FAQ">FAQs</a></li>
+                    <li><a class="dropdown-button" href="#!" data-activates="Help">Help<i class="material-icons right">arrow_drop_down</i></a></li>
                     <li><a class="modal-trigger" href="#SignUpModal" onclick="SetUser(); mobLocate()">Signup</a></li>
                     <li><a class="waves-effect waves-light btn modal-trigger  grey darken-4 " href="../Index/SingIn">SignIn</a></li>
                 </ul>
@@ -154,9 +163,7 @@
                     <li><a class="dropdown-button" href="#!" data-activates="Versions_mob">Versions<i class="material-icons right">arrow_drop_down</i></a></li>
                     <li><a href="~/Index/Plans">Pricing</a></li>
                     <li><a class="dropdown-button" href="#!" data-activates="Insights_mob">Insights<i class="material-icons right">arrow_drop_down</i></a></li>
-                    <li><a href="~/Index/Careers">Careers</a></li>
-                    <li><a href="~/Index/training">Training</a></li>
-                    <li><a href="~/Index/FAQ">FAQs</a></li>
+                    <li><a class="dropdown-button" href="#!" data-activates="Help_mob">Help<i class="material-icons right">arrow_drop_down</i></a></li>
                     <li><a class="modal-trigger" href="#SignUpModal">Signup</a></li>
                     <li><a class="waves-effect waves-light btn modal-trigger grey darken-4" href="../Index/SingIn">SignIn</a></li>
                 </ul>
@@ -930,7 +937,7 @@ analytics" href="http://statcounter.com/shopify/"
             var promo_code = $('#promo_code').val();
             if (promo_code == "")
             {
-             alertify.error("Please Enter Refrral code");
+                alertify.error("Please Enter Referral code");
             }
             else
             {

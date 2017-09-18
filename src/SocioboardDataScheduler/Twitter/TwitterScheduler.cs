@@ -27,12 +27,14 @@ namespace SocioboardDataScheduler.Twitter
             try
             {
                 DatabaseRepository dbr = new DatabaseRepository();
-               
+                //if (_TwitterAccount.SchedulerUpdate.AddMinutes(15) <= DateTime.UtcNow)
+                //{
                 if (_TwitterAccount != null)
                 {
                     if (_TwitterAccount.isActive)
                     {
-                     
+                        //if (apiHitsCount < MaxapiHitsCount)
+                        //{
                         if (schmessage.scheduleTime <= DateTime.UtcNow)
                         {
                             string twitterdata = ComposeTwitterMessage(schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.url, false, dbr, _TwitterAccount, schmessage, _user);
@@ -46,12 +48,20 @@ namespace SocioboardDataScheduler.Twitter
                                 dbr.Update<TwitterAccount>(_TwitterAccount);
                             }
                         }
-                         }
+                        //}
+                        //_TwitterAccount.lastUpdate = DateTime.UtcNow;
+                        //dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
+                    }
                     else
                     {
-                       
+                        // apiHitsCount = MaxapiHitsCount;
                     }
                 }
+                //}
+                //else
+                //{
+                //    apiHitsCount = 0;
+                //}
             }
             catch (Exception ex)
             {
@@ -107,7 +117,7 @@ namespace SocioboardDataScheduler.Twitter
             {
 
                 schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                schmessage.url = ret;
+                //schmessage.url = ret;
                 dbr.Update<ScheduledMessage>(schmessage);
                 Domain.Socioboard.Models.Notifications notify = new Notifications();
                 Notifications lstnotifications = dbr.Single<Notifications>(t => t.MsgId == schmessage.id);
@@ -122,14 +132,14 @@ namespace SocioboardDataScheduler.Twitter
                     dbr.Add<Notifications>(notify);
                     if (_user.scheduleSuccessUpdates)
                     {
-                        string sucResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                 }
                 else
                 {
                     if (_user.scheduleSuccessUpdates)
                     {
-                        string sucResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                 }
                 
@@ -144,21 +154,21 @@ namespace SocioboardDataScheduler.Twitter
                 {
                     notify.MsgId = schmessage.id;
                     notify.MsgStatus = "Failed";
-                    notify.notificationtime = schmessage.localscheduletime.ToString();
+                    notify.notificationtime = schmessage.localscheduletime;
                     notify.NotificationType = "Schedule Failed";
                     notify.ReadOrUnread = "Unread";
                     notify.UserId = userid;
                     dbr.Add<Notifications>(notify);
                     if (_user.scheduleFailureUpdates)
                     {
-                        string falResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                 }
                 else
                 {
                     if (_user.scheduleFailureUpdates)
                     {
-                        string falResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                 }
                

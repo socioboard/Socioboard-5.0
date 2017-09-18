@@ -42,7 +42,8 @@ namespace Api.Socioboard.Controllers
         public IActionResult CreateGroup(Domain.Socioboard.Models.Groups group)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).Count > 0)
+            //if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).Count > 0)
+            if (dbr.Find<Domain.Socioboard.Models.Groups>(t =>t.groupName.Equals(group.groupName)).Count > 0)
             {
                 return Ok("Team Name Already Exist");
             }

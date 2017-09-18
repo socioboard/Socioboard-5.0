@@ -45,7 +45,15 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string instagram = Repositories.InstagramRepository.AddInstagramAccount(_appSettings.InstagramClientKey,_appSettings.InstagramClientSec,_appSettings.InstagramCallBackURL,code,userId,groupId,dbr,_logger,_redisCache,_appSettings);
-            return Ok(instagram);
+            //return Ok(instagram);
+            if (instagram.Contains("This Account is added by somebody else")|| instagram.Contains("instagram account already added by you."))
+            {
+                return BadRequest(instagram);
+            }
+            else
+            {
+                return Ok (instagram);
+            }
         }
 
         [HttpGet("GetInstagramProfiles")]

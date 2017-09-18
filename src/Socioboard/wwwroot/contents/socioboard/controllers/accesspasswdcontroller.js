@@ -1,16 +1,16 @@
 'use strict';
 
-SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope, $http, $timeout, $mdpDatePicker, $mdpTimePicker, apiDomain, domain) {
+SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope, $http, $stateParams, $timeout, $mdpDatePicker, $mdpTimePicker, apiDomain, domain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
 
-        $scope.hasEnableF = false;
-        $scope.hasEnableG = false;
-        $scope.access_passwd = function () {
-            $scope.hasEnableF = $rootScope.user.SocialLoginEnableFb;
-            $scope.hasEnableG = $rootScope.user.SocialLoginEnableGo;
+        //$scope.hasEnableF = false;
+        //$scope.hasEnableG = false;
+        //$scope.access_passwd = function () {
+        //   $scope.hasEnableF = $rootScope.user.SocialLoginEnableFb;
+        //   $scope.hasEnableG = $rootScope.user.SocialLoginEnableGo;
 
-        }
+        //}
         //$scope.FBloginmessage = function (Fblogin) {
         //    $scope.Fblogin = "You singup with Social network,So you can't use 2 step login ";
         //    swal(Fblogin);
@@ -24,7 +24,7 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
             swal($scope.twostepsociallogin);
         };
         $scope.password = $rootScope.user.Password;
-        $scope.access_passwd();
+      //  $scope.access_passwd();
         //Initialization
         $scope.updatePassword = {};
 
@@ -99,7 +99,7 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
             $http.get(apiDomain + '/api/Facebook/GetFacebookProfilesOnly?groupId=' + $rootScope.groupId)
                               .then(function (response) {
                                   if (response.data != "") {
-                                      $scope.fbprofiles = response.data;
+                                      $scope.fbprofiles = response.data;                                    
                                       console.log($scope.fbprofiles);
                                   }
 
@@ -126,26 +126,30 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
         }
         //code for google end
 
-        //for message when no pass and id start
-        $scope.passNull = function (temp) {
-            if (temp == false) {
-                $scope.hasEnableF = true;
-            }
-            alertify.set({ delay: 9000 });
-            alertify.error("You can't disable it because you dont have Id & Password to login!");
-            $scope.hasEnableF = true;
 
-        }
+
+        //for message when no pass and id start
+        //$scope.passNull = function (temp) {
+        //    if (temp == false) {
+        //        $scope.hasEnableF = true;
+        //    }
+        //    alertify.set({ delay: 9000 });
+        //    alertify.error("You can't disable it because you dont have Id & Password to login!");
+        //    $scope.hasEnableF = true;
+
+        //}
         //for message when no pass and id end
 
         //Enable disable fcebook social sign fb start
-        $scope.socialLoginFB = function (hasEnableF) {
+        $scope.socialLoginFB = function (hasEnable,fbid) {
 
-            $scope.onoff = hasEnableF;
+            console.log(hasEnable);
+            console.log($scope.userdata);
+            $scope.onoff = hasEnable;
             if ($scope.onoff) {
                 $http({
                     method: 'POST',
-                    url: apiDomain + '/api/User/EnableDisableSocialLogin?userId=' + $rootScope.user.Id + '&checkEnable=' + true,
+                    url: apiDomain + '/api/User/EnableDisableSocialLogin?userId=' + $rootScope.user.Id + '&facebookid=' + fbid + '&checkEnable=' + true,
                     crossDomain: true,
                     //data: ,
                 }).then(function (response) {
@@ -161,7 +165,7 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
             else {
                 $http({
                     method: 'POST',
-                    url: apiDomain + '/api/User/EnableDisableSocialLogin?userId=' + $rootScope.user.Id + '&checkEnable=' + false,
+                    url: apiDomain + '/api/User/EnableDisableSocialLogin?userId=' + $rootScope.user.Id + '&facebookid=' + fbid + '&checkEnable=' + false,
                     crossDomain: true,
                     //data: ,
                 }).then(function (response) {
@@ -323,7 +327,8 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
                                 $scope.error = reason.data;
                             });
         }
-
+      
+        
 
         $scope.sessionTimedifference = function (parm) {
 

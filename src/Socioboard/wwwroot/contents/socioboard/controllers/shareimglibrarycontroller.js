@@ -174,8 +174,9 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
             });
             var message = $('#composeMessage').val();
             var updatedmessage = "";
+            var testmsg = message;
             message = encodeURIComponent(message);
-             if (profiles.length > 0 && message != '') {
+            if (profiles.length > 0 && /\S/.test(testmsg)) {
                 $scope.checkfile();
                 if ($scope.check == true) {
                     var formData = new FormData();

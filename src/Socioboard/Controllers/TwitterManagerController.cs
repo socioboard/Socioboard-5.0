@@ -208,7 +208,7 @@ namespace Socioboard.Controllers
                 }
                 else
                 {
-                    TempData["Error"] = "Error while hitting api.";
+                    TempData["Error"] = await response.Content.ReadAsStringAsync();
                     return RedirectToAction("Index", "Home");
                 }
             }

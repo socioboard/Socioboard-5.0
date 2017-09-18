@@ -634,7 +634,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static int AddGaSites(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, IHostingEnvironment _appEnv)
+        public static string AddGaSites(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, IHostingEnvironment _appEnv)
         {
             int isSaved = 0;
             Analytics _Analytics = new Analytics(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
@@ -685,7 +685,7 @@ namespace Api.Socioboard.Repositories
                 }
                 dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(_GoogleAnalyticsAccount);
             }
-            else
+            else if (_GoogleAnalyticsAccount == null)
             {
                 try
                 {
@@ -730,6 +730,15 @@ namespace Api.Socioboard.Repositories
                 isSaved = dbr.Add<Domain.Socioboard.Models.GoogleAnalyticsAccount>(_GoogleAnalyticsAccount);
             }
 
+            else if (_GoogleAnalyticsAccount != null && _GoogleAnalyticsAccount.IsActive == true)
+            {
+                if (_GoogleAnalyticsAccount.UserId != userId)
+                {
+                    return "added by other";
+                }
+            }
+
+
             if (isSaved == 1)
             {
                 List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstgaAcc = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.GaProfileId.Equals(_GoogleAnalyticsAccount.GaProfileId)).ToList();
@@ -744,7 +753,9 @@ namespace Api.Socioboard.Repositories
                 }
 
             }
-            return isSaved;
+
+
+            return isSaved.ToString();
         }
 
 
@@ -972,7 +983,7 @@ namespace Api.Socioboard.Repositories
         }
 
 
-        public static int AddYoutubeChannels(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, IHostingEnvironment _appEnv)
+        public static string AddYoutubeChannels(string profiledata, long userId, long groupId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr, IHostingEnvironment _appEnv)
         {
             int isSaved = 0;
             Channels _Channels = new Channels(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
@@ -995,32 +1006,47 @@ namespace Api.Socioboard.Repositories
 
             if (_YoutubeChannel != null)
             {
-                try
+                if (_YoutubeChannel != null && _YoutubeChannel.IsActive == true)
+                {
+                    if (_YoutubeChannel.UserId == userId)
+                    {
+                        return "Youtube already added by you";
+                    }
+                    else if (_YoutubeChannel.UserId != userId)
+                    {
+                        return "Youtube added by any other";
+                    }
+                }
+                else
                 {
 
-                    _YoutubeChannel.UserId = userId;
-                    _YoutubeChannel.YtubeChannelId = YTdata[2];
-                    _YoutubeChannel.YtubeChannelName = YTdata[3];
-                    _YoutubeChannel.ChannelpicUrl = YTdata[9];
-                    _YoutubeChannel.WebsiteUrl = "https://www.youtube.com/channel/" + YTdata[2];
-                    _YoutubeChannel.EntryDate = DateTime.UtcNow;
-                    _YoutubeChannel.YtubeChannelDescription = YTdata[4];
-                    _YoutubeChannel.IsActive = true;
-                    _YoutubeChannel.AccessToken = YTdata[0];
-                    _YoutubeChannel.RefreshToken = YTdata[1];
-                    _YoutubeChannel.PublishingDate = Convert.ToDateTime(YTdata[5]);
-                    _YoutubeChannel.VideosCount = Convert.ToDouble(YTdata[8]);
-                    _YoutubeChannel.CommentsCount = Convert.ToDouble(YTdata[7]);
-                    _YoutubeChannel.SubscribersCount = Convert.ToDouble(YTdata[10]);
-                    _YoutubeChannel.ViewsCount = Convert.ToDouble(YTdata[6]);
-                    _YoutubeChannel.Channel_EmailId = channel_email;
-                    _YoutubeChannel.Days90Update = false;
-                }
-                catch (Exception ex)
-                {
+                    try
+                    {
 
+                        _YoutubeChannel.UserId = userId;
+                        _YoutubeChannel.YtubeChannelId = YTdata[2];
+                        _YoutubeChannel.YtubeChannelName = YTdata[3];
+                        _YoutubeChannel.ChannelpicUrl = YTdata[9];
+                        _YoutubeChannel.WebsiteUrl = "https://www.youtube.com/channel/" + YTdata[2];
+                        _YoutubeChannel.EntryDate = DateTime.UtcNow;
+                        _YoutubeChannel.YtubeChannelDescription = YTdata[4];
+                        _YoutubeChannel.IsActive = true;
+                        _YoutubeChannel.AccessToken = YTdata[0];
+                        _YoutubeChannel.RefreshToken = YTdata[1];
+                        _YoutubeChannel.PublishingDate = Convert.ToDateTime(YTdata[5]);
+                        _YoutubeChannel.VideosCount = Convert.ToDouble(YTdata[8]);
+                        _YoutubeChannel.CommentsCount = Convert.ToDouble(YTdata[7]);
+                        _YoutubeChannel.SubscribersCount = Convert.ToDouble(YTdata[10]);
+                        _YoutubeChannel.ViewsCount = Convert.ToDouble(YTdata[6]);
+                        _YoutubeChannel.Channel_EmailId = channel_email;
+                        _YoutubeChannel.Days90Update = false;
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    isSaved = dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(_YoutubeChannel);
                 }
-                isSaved = dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(_YoutubeChannel);
             }
             else
             {
@@ -1066,7 +1092,7 @@ namespace Api.Socioboard.Repositories
                 }
 
             }
-            return isSaved;
+            return isSaved.ToString();
         }
 
 

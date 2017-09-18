@@ -93,5 +93,90 @@ namespace SocioboardDataScheduler.Facebook
                 Console.WriteLine(Thread.CurrentThread.Name + " Is Released");
             }
         }
+
+        public void dayscheduleFBMessage()
+        {
+            while (true)
+            {
+                try
+                {
+                    DatabaseRepository dbr = new DatabaseRepository();
+                    List<Domain.Socioboard.Models.DaywiseSchedule> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.DaywiseSchedule>(t => (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)&& t.scheduleTime <= DateTime.Now).ToList();
+                    //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("127471161024815")).ToList();
+                   var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
+
+                    foreach (var items in newlstScheduledMessage)
+                    {
+
+                        if (items.First().scheduleTime.AddHours(24) <=DateTime.Now)
+                        {
+                            objSemaphore.WaitOne();
+                            noOfthreadRunning++;
+                            Thread thread_pageshreathon = new Thread(() => daywiseSchedulemessages(new object[] { dbr, items }));
+                            thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
+                            thread_pageshreathon.Start();
+                            Thread.Sleep(10 * 1000);
+                        }
+                       
+                     
+                    }
+                    Thread.Sleep(TimeSpan.FromMinutes(1));
+
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                    Thread.Sleep(TimeSpan.FromMinutes(1));
+                }
+            }
+        }
+
+
+        private static void daywiseSchedulemessages(object o)
+        {
+            try
+            {
+                Console.WriteLine(Thread.CurrentThread.Name + " Is Entered in Method");
+                object[] arr = o as object[];
+                Model.DatabaseRepository dbr = (Model.DatabaseRepository)arr[0];
+                IGrouping<string, Domain.Socioboard.Models.DaywiseSchedule> items = (IGrouping<string, Domain.Socioboard.Models.DaywiseSchedule>)arr[1];
+                Domain.Socioboard.Models.Facebookaccounts _facebook = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == items.Key && t.IsActive).FirstOrDefault();
+                Domain.Socioboard.Models.User _user = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == _facebook.UserId);
+                if (_facebook != null)
+                {
+                    foreach (var item in items)
+                    {
+                        try
+                        {
+                            Console.WriteLine(item.socialprofileName + "Scheduling Started");
+                            FacebookScheduler.PostDaywiseFacebookMessage(item, _facebook, _user);
+                            Console.WriteLine(item.socialprofileName + "Scheduling");
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+
+                        item.scheduleTime = DateTime.UtcNow;
+                        dbr.Update<Domain.Socioboard.Models.DaywiseSchedule>(item);
+                    }
+                    //_facebook.SchedulerUpdate = DateTime.UtcNow;
+
+                    //dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(_facebook);
+                    
+                }
+            }
+            catch (Exception ex)
+            {
+                //  Thread.Sleep(60000);
+            }
+            finally
+            {
+                noOfthreadRunning--;
+                objSemaphore.Release();
+                Console.WriteLine(Thread.CurrentThread.Name + " Is Released");
+            }
+        }
+
     }
 }

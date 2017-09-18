@@ -124,6 +124,10 @@ namespace Api.Socioboard.Repositories
                     Instagramaccounts = Api.Socioboard.Repositories.InstagramRepository.getInstagramAccount(objInstagramAccount.InstagramId, _redisCache, dbr);
                     if (Instagramaccounts != null && Instagramaccounts.IsActive == true)
                     {
+                        if(Instagramaccounts.UserId == userId)
+                        {
+                            return "instagram account already added by you.";
+                        }
                         return "This Account is added by somebody else.";
                     }
                 }
@@ -146,10 +150,23 @@ namespace Api.Socioboard.Repositories
                                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
                                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
 
-                                GetInstagramSelfFeeds(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
-                                GetInstagramUserDetails(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _redisCache, dbr);
-                                GetInstagramFollowing(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken,1, _appSettings);
-                                GetInstagramFollower(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
+                                new Thread(delegate ()
+                                {
+                                    GetInstagramSelfFeeds(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
+                                }).Start();
+                                new Thread(delegate ()
+                                {
+                                    GetInstagramUserDetails(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _redisCache, dbr);
+                                }).Start();
+                                new Thread(delegate ()
+                                {
+                                    GetInstagramFollowing(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
+                                }).Start();
+                            
+                                new Thread(delegate ()
+                                {
+                                    GetInstagramFollower(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
+                                }).Start();
                                 new Thread(delegate ()
                                 {
                                     GetInstagramPostLikes(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
@@ -179,21 +196,29 @@ namespace Api.Socioboard.Repositories
 
 
                                 //todo : codes to update feeds 
-                                GetInstagramSelfFeeds(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
-                                GetInstagramUserDetails(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _redisCache, dbr);
-                                GetInstagramFollowing(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
-                                GetInstagramFollower(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
+                                new Thread(delegate ()
+                                {
+                                    GetInstagramSelfFeeds(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
+                                }).Start();
+                                new Thread(delegate ()
+                                {
+                                    GetInstagramUserDetails(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _redisCache, dbr);
+                                }).Start();
+                                new Thread(delegate ()
+                                {
+                                    GetInstagramFollowing(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
+                                }).Start();
+                                new Thread(delegate ()
+                                {
+                                    GetInstagramFollower(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
+                                }).Start();
                                 new Thread(delegate ()
                                 {
                                     GetInstagramPostLikes(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, 1, _appSettings);
-                                   // GetInstagramPostComments(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
                                 }).Start();
-
-
-
+                                    // GetInstagramPostComments(objInstagramAccount.InstagramId, objInstagramAccount.AccessToken, _appSettings);
                                 return "Added_Successfully";
                             }
-
                         }
                     }
                 }

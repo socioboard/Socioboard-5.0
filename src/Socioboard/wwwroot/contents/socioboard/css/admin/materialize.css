@@ -2813,6 +2813,7 @@ th {
 }
 
 html {
+    height: auto !important;
   box-sizing: border-box;
 }
 

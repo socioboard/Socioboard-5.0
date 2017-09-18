@@ -41,6 +41,27 @@ namespace SocioboardDataScheduler.Facebook
             }
         }
 
+        public static void PostDaywiseFacebookMessage(Domain.Socioboard.Models.DaywiseSchedule schmessage, Domain.Socioboard.Models.Facebookaccounts _facebook, Domain.Socioboard.Models.User _user)
+        {
+            try
+            {
+                if (_facebook != null)
+                {
+                    if (_facebook.IsActive)
+                    {
+                        if (schmessage.scheduleTime.AddHours(24) <= DateTime.Now)
+                        {
+                            string data = DaywiseComposeMessage(_facebook.FbProfileType, _facebook.AccessToken, _facebook.FbUserId, schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.url, schmessage.link, schmessage, _user);                            
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
 
         public static string ComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Models.ScheduledMessage schmessage, Domain.Socioboard.Models.User _user)
         {
@@ -191,19 +212,16 @@ namespace SocioboardDataScheduler.Facebook
                     dbr.Add<Notifications>(notify);
                     if (_user.scheduleSuccessUpdates)
                     {
-                        string sucResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                 }
                 else
                 {
                     if (_user.scheduleSuccessUpdates)
                     {
-                        string sucResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
-                }
-               
-                
-
+                }               
             }
             catch (Exception ex)
             {
@@ -221,20 +239,213 @@ namespace SocioboardDataScheduler.Facebook
                     dbr.Add<Notifications>(notify);
                     if (_user.scheduleFailureUpdates)
                     {
-                        string falResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                 }
                 else
                 {
                     if (_user.scheduleFailureUpdates)
                     {
-                        string falResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
-                }
-              
+                }           
             }
             return ret;
         }
+
+        public static string DaywiseComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Models.DaywiseSchedule schmessage, Domain.Socioboard.Models.User _user)
+        {
+            string ret = "";
+            DatabaseRepository dbr = new DatabaseRepository();
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
+
+
+            var args = new Dictionary<string, object>();
+
+
+            if (profiletype == Domain.Socioboard.Enum.FbProfileType.FacebookProfile)
+            {
+                args["privacy"] = FbUser.SetPrivacy("Public", fb, profileId);
+            }
+            try
+            {
+                if (string.IsNullOrEmpty(link))
+                {
+
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        if (!string.IsNullOrEmpty(message))
+                        {
+                            args["message"] = message;
+                        }
+
+                        if (!imagePath.Contains("mp4") && !imagePath.Contains("mov") && !imagePath.Contains("mpeg") && !imagePath.Contains("wmv") && !imagePath.Contains("avi") && !imagePath.Contains("flv") && !imagePath.Contains("3gp"))
+                        {
+                            Uri u = new Uri(imagePath);
+                            string filename = string.Empty;
+                            string extension = string.Empty;
+                            extension = System.IO.Path.GetExtension(u.AbsolutePath).Replace(".", "");
+                            var media = new FacebookMediaObject
+                            {
+                                FileName = "filename",
+                                ContentType = "image/" + extension
+                            };
+                            var webClient = new WebClient();
+                            byte[] img = webClient.DownloadData(imagePath);
+                            media.SetValue(img);
+                            args["source"] = media;
+                            ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();
+                        }
+                        else
+                        {
+                            Uri u = new Uri(imagePath);
+                            string filename = string.Empty;
+                            string extension = string.Empty;
+                            filename = imagePath.Substring(imagePath.IndexOf("get?id=") + 7);
+                            if (!string.IsNullOrWhiteSpace(filename))
+                            {
+                                extension = filename.Substring(filename.IndexOf(".") + 1);
+                            }
+                            var media = new FacebookMediaObject
+                            {
+                                FileName = filename,
+                                ContentType = "video/" + extension
+                            };
+                            //byte[] img = System.IO.File.ReadAllBytes(imagepath);
+                            var webClient = new WebClient();
+                            byte[] img = webClient.DownloadData(imagePath);
+                            media.SetValue(img);
+                            args["title"] = message;
+                            args["description"] = message;
+                            args["source"] = media;
+                            ret = fb.Post("v2.7/" + fbUserId + "/videos", args).ToString();//v2.1 
+                        }
+                    }
+                    else
+                    {
+                        args["message"] = message;
+                        ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(link))
+                    {
+                        if (message.Contains("https://") || message.Contains("http://"))
+                        {
+                            link = message;
+                            if (link.Contains("https://"))
+                            {
+                                string links = getBetween(link + "###", "https", "###");
+                                links = "https" + links;
+                                try
+                                {
+                                    link = links.Split(' ')[0].ToString();
+                                }
+                                catch (Exception)
+                                {
+                                    link = links;
+                                }
+                            }
+                            if (link.Contains("http://"))
+                            {
+                                string links = getBetween(link + "###", "http", "###");
+                                links = "http" + links;
+                                try
+                                {
+                                    link = links.Split(' ')[0].ToString();
+                                }
+                                catch (Exception)
+                                {
+                                    link = links;
+                                }
+                            }
+                            message = message.Replace(link, "");
+                            args["message"] = message;
+                        }
+                        else
+                        {
+                            args["message"] = message;
+                        }
+                    }
+                    else
+                    {
+                        args["message"] = message;
+                    }
+                    if (!string.IsNullOrEmpty(link))
+                    {
+                        args["link"] = link;
+                    }
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        args["picture"] = imagePath.Replace("&amp;", "&");
+                    }
+                    ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();
+
+                }
+
+                schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
+                //schmessage.url = ret;
+                dbr.Update<DaywiseSchedule>(schmessage);
+                Domain.Socioboard.Models.Notifications notify = new Notifications();
+                Notifications lstnotifications = dbr.Single<Notifications>(t => t.MsgId == schmessage.id);
+                if (lstnotifications == null)
+                {
+                    notify.MsgId = schmessage.id;
+                    notify.MsgStatus = "Scheduled";
+                    notify.notificationtime = schmessage.localscheduletime;
+                    notify.NotificationType = "Schedule Successfully";
+                    notify.ReadOrUnread = "Unread";
+                    notify.UserId = userId;
+                    dbr.Add<Notifications>(notify);
+                    if (_user.scheduleSuccessUpdates)
+                    {
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    }
+                }
+                else
+                {
+                    if (_user.scheduleSuccessUpdates)
+                    {
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    }
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                apiHitsCount = MaxapiHitsCount;
+                Domain.Socioboard.Models.Notifications notify = new Notifications();
+                Notifications lstnotifications = dbr.Single<Notifications>(t => t.MsgId == schmessage.id);
+                if (lstnotifications == null)
+                {
+                    notify.MsgId = schmessage.id;
+                    notify.MsgStatus = "Failed";
+                    notify.notificationtime = schmessage.localscheduletime;
+                    notify.NotificationType = "Schedule Failed";
+                    notify.ReadOrUnread = "Unread";
+                    notify.UserId = userId;
+                    dbr.Add<Notifications>(notify);
+                    if (_user.scheduleFailureUpdates)
+                    {
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    }
+                }
+                else
+                {
+                    if (_user.scheduleFailureUpdates)
+                    {
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    }
+                }
+            }
+            return ret;
+        }
+
 
         public static string SendMailbySendGrid(string from, string passsword, string to, string bcc, string cc, string subject, string body, string Name, string time, bool schStatus, string UserName, string Password)
         {

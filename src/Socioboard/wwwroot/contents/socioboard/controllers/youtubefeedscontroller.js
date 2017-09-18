@@ -17,7 +17,7 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
             $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId + '&sortType=none')
                               .then(function (response) {
                                   $scope.lstYtFeeds = response.data;
-                                  $scope.reloadFeeds();
+                                  //$scope.reloadFeeds();
                                   $scope.preloadmorevideos = true;
                                   $scope.dropCalled = true;
                                   setTimeout(function () {
@@ -41,9 +41,9 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
             $scope.LoadVideos();
         }
 
-          $scope.reloadFeeds = function () {
-              setTimeout(function () { $scope.LoadVideos(); }, 10000);
-          }
+          //$scope.reloadFeeds = function () {
+          //    setTimeout(function () { $scope.LoadVideos(); }, 10000);
+          //}
 
         $scope.videomodal = function (vdoId) {
          

@@ -2085,10 +2085,11 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
-                             '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
-                             '../contents/socioboard/global/plugins/moment.js',
+                            '../contents/socioboard/global/plugins/waterfall_grid/newWaterfall.js',
+                             //'../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                             //'../contents/socioboard/global/plugins/moment.js',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                            //'../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
                              '../contents/socioboard/controllers/boardcontroller.js'
                         ]
                     });

@@ -26,7 +26,7 @@
                                     <h5><strong>Access &amp; Password</strong></h5>
                                     <p>Use your password to sign in to Socioboard on the web and mobile apps. Make it nice and secure! </p>
                                     <a href="javascript:void(0);" ng-click="changepasswordModel()" class="btn btn_style modal-trigger" ng-if="password !=null">Change My Password</a>
-                                    <a class="btn btn_style modal-trigger" ng-if="password ==null">You can't cahnge password</a>
+                                    <a class="btn btn_style modal-trigger" ng-if="password ==null">You can't change password</a>
                                 </div>
                             </div>
                         </div>
@@ -74,11 +74,11 @@
                                                 <span>Facebook</span>
                                             </div>
                                             <div class="secondary-content margin-top-10">
-                                                <div class="switch">
+                                                <div class="switch" ng-init="hasEnableF=profilesDet.socailSignInEnable">
                                                     <!--ng-if="user.password !=null"-->
-                                                    <label>
+                                                    <label >
                                                         Off
-                                                        <input type="checkbox" ng-model="hasEnableF" ng-click="socialLoginFB(hasEnableF)">
+                                                        <input type="checkbox" ng-model="hasEnableF"  ng-click="socialLoginFB(hasEnableF,profilesDet.fbUserId)">
                                                         <span class="lever"></span>
                                                         On
                                                     </label>
@@ -100,10 +100,10 @@
                                                 <span>Google</span>
                                             </div>
                                             <div class="secondary-content margin-top-10">
-                                                <div class="switch">
+                                                <div class="switch" ng-init="hasEnableF={{userdata.socialLoginEnableGo}}">
                                                     <label>
                                                         Off
-                                                        <input type="checkbox" ng-model="hasEnableG" ng-click="socialLoginGoogle(hasEnableG)">
+                                                        <input type="checkbox" ng-model="hasEnableF" ng-click="socialLoginGoogle(hasEnableF)">
                                                         <span class="lever"></span>
                                                         On
                                                     </label>

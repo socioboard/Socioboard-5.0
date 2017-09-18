@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="col s12">
                                     <span>
-                                        {{user.UserName}}<br>
+                                        {{user.FirstName}} {{user.LastName}}<br>
                                         <a class="tooltipped" data-position="bottom" data-delay="50">{{socioqueue.scheduleTime}}</a>
                                     </span>
                                 </div>
@@ -64,7 +64,11 @@
                                     {{socioqueue.shareMessage}}
                                 </span>
                                 <br>
-                                <img ng-if="socioqueue.url!='' && socioqueue.url != null" src="{{getProperURL(socioqueue.url)}}" class="responsive-img" style="width:200px">
+                                <img ng-if="socioqueue.mediaType==1" src="{{getProperURL(socioqueue.url)}}" class="responsive-img" style="width:200px">
+                                <video ng-if="socioqueue.mediaType==2" style="width:200px" controls>
+                                    <source src="{{getProperURL(socioqueue.url) | Url}}" type="video/mp4">
+                                </video>
+                                <!--<video ng-if="socioqueue.mediaType==2" src="{{getProperURL(socioqueue.url) | Url}}" class="responsive-img" style="width:200px"></video>-->
                             </td>
                             <td class="center">
                                 <div class="col s12" ng-if="socioqueue.profileType==0">

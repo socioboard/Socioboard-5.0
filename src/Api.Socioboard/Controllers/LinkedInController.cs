@@ -11,6 +11,7 @@ using Domain.Socioboard.Models;
 using Socioboard.LinkedIn.Authentication;
 using System.Text.RegularExpressions;
 using MongoDB.Driver;
+using System.Collections.Specialized;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -59,9 +60,12 @@ namespace Api.Socioboard.Controllers
                 {
                     if (linaccount.UserId == userId)
                     {
-                        return BadRequest("LinkedIn account already added by you.");
+                      
+                      
+                        return Ok("LinkedIn account already added by you.");
+                       
                     }
-                    return BadRequest("LinkedIn account added by other user.");
+                    return Ok("LinkedIn account added by other user.");
                 }
                 else
                 {
@@ -164,7 +168,7 @@ namespace Api.Socioboard.Controllers
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<Domain.Socioboard.Models.AddlinkedinCompanyPage> lstcompanypages = Helper.LinkedInHelper.GetLinkedinCompanyPage(Code, _appSettings);
-                List<Domain.Socioboard.Models.Groupprofiles> lstgroupprofile = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+                List<Domain.Socioboard.Models.Groupprofiles> lstgroupprofile = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
                 lstgroupprofile = lstgroupprofile.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage).ToList();
                 string[] lstStr = lstgroupprofile.Select(t => t.profileId).ToArray();
                 if (lstStr.Length > 0)
@@ -188,7 +192,10 @@ namespace Api.Socioboard.Controllers
             string data = Request.Form["profileaccesstoken"];
             DatabaseRepository dbr = new DatabaseRepository(_logger,_env);
             string[] profiledata = null;
-            int i = 0;
+            int lstAddedAccounts = 0;
+            int lstNotAddedAccounts = 0;
+            ListDictionary listStatus = new ListDictionary();
+            string i = "0";
             profiledata = data.Split(',');
             foreach (var item in profiledata)
             {
@@ -201,6 +208,15 @@ namespace Api.Socioboard.Controllers
                 {
                     dynamic profile = Helper.LinkedInHelper.GetCompanyPageData(_oauth, lindata[0]);
                     i = Repositories.LinkedInAccountRepository.AddLinkedInCompantPage(_oauth, profile, dbr, userId, groupId, lindata[1], _redisCache, _appSettings, _logger);
+
+                    if(i== "added by other")
+                    {
+                        lstNotAddedAccounts++;
+                    }
+                    else
+                    {
+                        lstAddedAccounts++;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -208,15 +224,17 @@ namespace Api.Socioboard.Controllers
                 }
                   
             }
-            if (i == 1)
+            listStatus.Add("added", lstAddedAccounts);
+            listStatus.Add("notadded", lstNotAddedAccounts);
+
+            if (lstAddedAccounts != 0 && lstNotAddedAccounts == 0)
             {
                 return Ok("LinkedIn Company Page Added Successfully");
             }
             else
             {
-                return Ok("Issue In Fetching Access Token");
+                return Ok(listStatus);
             }
-           
         }
 
 

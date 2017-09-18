@@ -55,7 +55,7 @@ namespace Api.Socioboard.Controllers
         /// <param name="files"></param>
         /// <returns></returns>
         [HttpPost("ComposeMessage")]
-        public async Task<IActionResult> ComposeMessage(string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Enum.UrlShortener shortnerStatus, IFormFile files)
+        public async Task<IActionResult> ComposeMessage(string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Enum.UrlShortener shortnerStatus, Domain.Socioboard.Enum.MediaType mediaType, IFormFile files)
         {
             var filename = "";
             var apiimgPath = "";
@@ -133,8 +133,21 @@ namespace Api.Socioboard.Controllers
 
             foreach (var item in lstProfileIds)
             {
+                string temp_item_profileId="";
+                string temp_item_profileName="";
+                string[] profileSingle = new string[2];
+                if (item.Contains("`"))
+                {
+                    profileSingle = item.Split('`');
+                    temp_item_profileId = profileSingle[0];
+                    temp_item_profileName = profileSingle[1];
+                }
+                else
+                {
+                    temp_item_profileId = item;
+                }
 
-                if (item.StartsWith("fb"))
+                if (temp_item_profileId.StartsWith("fb"))
                 {
                     string updatedtext = "";
                     string postmessage = "";
@@ -204,7 +217,7 @@ namespace Api.Socioboard.Controllers
                     {
                         if (!string.IsNullOrEmpty(url))
                         {
-                            link = url;
+                           // link = url;
                             //updatedtext = postmessage.Replace(url, "");
                             updatedtext = postmessage;
 
@@ -224,9 +237,9 @@ namespace Api.Socioboard.Controllers
                     {
                         new Thread(delegate ()
                         {
-                            string prId = item.Substring(3, item.Length - 3);
+                            string prId = temp_item_profileId.Substring(3, temp_item_profileId.Length - 3);
                             Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, dbr, _logger);
+                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, temp_item_profileName, dbr, _logger);
 
                         }).Start();
                     }
@@ -237,15 +250,15 @@ namespace Api.Socioboard.Controllers
                 }
 
 
-                if (item.StartsWith("tw"))
+                if (temp_item_profileId.StartsWith("tw"))
                 {
                     try
                     {
 
                         new Thread(delegate ()
                         {
-                            string prId = item.Substring(3, item.Length - 3);
-                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, tempmsg, prId, userId, uploads, true, dbr, _logger);
+                            string prId = temp_item_profileId.Substring(3, temp_item_profileId.Length - 3);
+                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, tempmsg, prId, userId, uploads, true, mediaType, temp_item_profileName, dbr, _logger);
                         }).Start();
 
                     }
@@ -254,14 +267,14 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
-                if (item.StartsWith("lin"))
+                if (temp_item_profileId.StartsWith("lin"))
                 {
                     try
                     {
                         new Thread(delegate ()
                         {
-                            string prId = item.Substring(4, item.Length - 4);
-                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, tempmsg, prId, imgPath, _redisCache, _appSettings, dbr);
+                            string prId = temp_item_profileId.Substring(4, temp_item_profileId.Length - 4);
+                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, tempmsg, prId, imgPath, mediaType, temp_item_profileName, _redisCache, _appSettings, dbr);
 
                         }).Start();
                     }
@@ -270,14 +283,14 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
-                if (item.StartsWith("Cmpylinpage"))
+                if (temp_item_profileId.StartsWith("Cmpylinpage"))
                 {
                     try
                     {
                         new Thread(delegate ()
                         {
-                            string prId = item.Substring(12, item.Length - 12);
-                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, imgPath, userId, tempmsg, prId, _redisCache, dbr, _appSettings);
+                            string prId = temp_item_profileId.Substring(12, temp_item_profileId.Length - 12);
+                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, imgPath, userId, tempmsg, prId, mediaType, temp_item_profileName, _redisCache, dbr, _appSettings);
                         }).Start();
 
                     }
@@ -293,7 +306,217 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("ScheduleMessage")]
-        public async Task<ActionResult> ScheduleMessage(string message, string profileId, long userId, string imagePath, string link, string scheduledatetime, string localscheduletime, IFormFile files, string messageText)
+        public async Task<ActionResult> ScheduleMessage(string message, string profileId, long userId, string imagePath, string link, string scheduledatetime, string localscheduletime, IFormFile files, string messageText, Domain.Socioboard.Enum.MediaType mediaType)
+        {
+            message = messageText;
+            var filename = "";
+            string postmessage = "";
+            string tempfilepath = "";
+            string img = "";
+            var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\" + profileId;
+            if (files != null)
+            {
+
+                if (files.Length > 0)
+                {
+                    var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+                    // await file.s(Path.Combine(uploads, fileName));
+                    filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                            .Parse(files.ContentDisposition)
+                            .FileName
+                            .Trim('"');
+                    //apiimgPath = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1]}";
+                    var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                    filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+                    tempfilepath = filename;
+
+
+                    uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+
+                    // size += file.Length;
+                    using (FileStream fs = System.IO.File.Create(filename))
+                    {
+                        files.CopyTo(fs);
+                        fs.Flush();
+                    }
+                    filename = uploads;
+                }
+            }
+            else if (!string.IsNullOrEmpty(imagePath))
+            {
+                filename = imagePath;
+                tempfilepath = filename;
+            }
+            try
+            {
+                var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                var endpoint = new ImageEndpoint(client);
+                IImage image;
+                using (var fs = new FileStream(tempfilepath, FileMode.Open))
+                {
+                    image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                }
+                img = image.Link;
+            }
+            catch (Exception)
+            {
+                img = tempfilepath;
+            }
+
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("https://") || item.Contains("http://"))
+                    {
+                        try
+                        {
+                            link = "http" + Utility.getBetween(item, "http", " ");
+                            try
+                            {
+                                link = link.Split(' ')[0].ToString();
+                            }
+                            catch (Exception)
+                            {
+
+                                link = "http" + Utility.getBetween(item, "http", " ");
+                            }
+                        }
+                        catch
+                        {
+                            string temp_item = item + "###";
+                            link = "http" + Utility.getBetween(temp_item, "http", "###");
+                            try
+                            {
+                                link = link.Split(' ')[0].ToString();
+                            }
+                            catch (Exception)
+                            {
+
+                                link = "http" + Utility.getBetween(temp_item, "http", "###");
+                            }
+                        }
+                    }
+                    if (item.Contains("hhh") || item.Contains("nnn"))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                        }
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            try
+            {
+                 link = "";
+                //updatedtext = postmessage.Replace(url, "");
+               // updatedtext = postmessage;
+                message = postmessage;
+            }
+            catch (Exception ex)
+            {
+                message = postmessage;
+            }
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string[] lstProfileIds = null;
+            if (profileId != null)
+            {
+                lstProfileIds = profileId.Split(',');
+                profileId = lstProfileIds[0];
+            }
+            else
+            {
+                return Ok("profileId required");
+            }
+
+            string retunMsg = string.Empty;
+
+            foreach (var item in lstProfileIds)
+            {
+                if (item.StartsWith("fb"))
+                {
+                    try
+                    {
+                        string prId = item.Substring(3, item.Length - 3);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                        //return Ok("Issue With Facebook schedulers");
+                    }
+                }
+                if (item.StartsWith("page"))
+                {
+                    try
+                    {
+                        string prId = item.Substring(5, item.Length - 5);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                        // return Ok("Issue With Facebook Page schedulers");
+                    }
+                }
+                if (item.StartsWith("tw"))
+                {
+                    try
+                    {
+                        string prId = item.Substring(3, item.Length - 3);
+                        Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objTwitterAccount.twitterScreenName, message, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, "", filename, objTwitterAccount.profileImageUrl, scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                    }
+                }
+                if (item.StartsWith("lin"))
+                {
+                    try
+                    {
+                        string prId = item.Substring(4, item.Length - 4);
+                        Domain.Socioboard.Models.LinkedInAccount objLinkedInAccount = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedInAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, "", img, objLinkedInAccount.ProfileImageUrl, scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                        // return Ok("Issue With Linkedin schedulers");
+                    }
+                }
+                if (item.StartsWith("Cmpylinpage"))
+                {
+                    try
+                    {
+                        string prId = item.Substring(12, item.Length - 12);
+                        Domain.Socioboard.Models.LinkedinCompanyPage objLinkedinCompanyPage = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId, "", img, objLinkedinCompanyPage.LogoUrl, scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+
+                        // return Ok("Issue With Linkedin Page schedulers");
+                    }
+                }
+
+            }
+            return Ok("scheduled");
+        }
+
+        [HttpPost("DaywiseScheduleMessage")]
+        public async Task<ActionResult> DaywiseScheduleMessage(string message, string profileId, string weekdays, string localscheduletime, long userId, string imagePath, string link, IFormFile files, string messageText)
         {
             message = messageText;
             var filename = "";
@@ -418,85 +641,117 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("profileId required");
             }
+            List<string> days = new List<string>();
+            List<string> weekval = null;
+            if (weekdays != null)
+            {
+
+                weekval = weekdays.Split(',').ToList();
+                foreach (var day in weekval)
+                {
+                    if (day != "")
+                    {
+                        try
+                        {
+                            days.Add(day);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+
+                    }
+                }
+
+                weekdays = weekval[0];
+            }
+            else
+            {
+                return Ok("profileId required");
+            }
 
             string retunMsg = string.Empty;
 
             foreach (var item in lstProfileIds)
             {
-                if (item.StartsWith("fb"))
+                foreach (var week in days)
                 {
-                    try
+                    if (item.StartsWith("fb"))
                     {
-                        string prId = item.Substring(3, item.Length - 3);
-                        Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        try
+                        {
+                            string prId = item.Substring(3, item.Length - 3);
+                            Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                            Helper.ScheduleMessageHelper.DaywiseScheduleMessage(prId, objFacebookaccounts.FbUserName, week, message, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            _logger.LogError(ex.StackTrace);
+                            return Ok("Issue With Facebook schedulers");
+                        }
                     }
-                    catch (System.Exception ex)
+                    if (item.StartsWith("page"))
                     {
-                        _logger.LogError(ex.StackTrace);
-                        //return Ok("Issue With Facebook schedulers");
+                        try
+                        {
+                            string prId = item.Substring(5, item.Length - 5);
+                            Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                            Helper.ScheduleMessageHelper.DaywiseScheduleMessage(prId, objFacebookaccounts.FbUserName, week, message, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            _logger.LogError(ex.StackTrace);
+                            return Ok("Issue With Facebook Page schedulers");
+                        }
                     }
-                }
-                if (item.StartsWith("page"))
-                {
-                    try
+                    if (item.StartsWith("tw"))
                     {
-                        string prId = item.Substring(5, item.Length - 5);
-                        Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, message, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        try
+                        {
+                            string prId = item.Substring(3, item.Length - 3);
+                            Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
+                            Helper.ScheduleMessageHelper.DaywiseScheduleMessage(prId, objTwitterAccount.twitterScreenName, week, message, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, "", filename, objTwitterAccount.profileImageUrl, localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            _logger.LogError(ex.StackTrace);
+                            return Ok("Issue With twitter schedulers");
+                        }
                     }
-                    catch (System.Exception ex)
+                    if (item.StartsWith("lin"))
                     {
-                        _logger.LogError(ex.StackTrace);
-                        // return Ok("Issue With Facebook Page schedulers");
-                    }
-                }
-                if (item.StartsWith("tw"))
-                {
-                    try
-                    {
-                        string prId = item.Substring(3, item.Length - 3);
-                        Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objTwitterAccount.twitterScreenName, message, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, "", filename, objTwitterAccount.profileImageUrl, scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        _logger.LogError(ex.StackTrace);
-                    }
-                }
-                if (item.StartsWith("lin"))
-                {
-                    try
-                    {
-                        string prId = item.Substring(4, item.Length - 4);
-                        Domain.Socioboard.Models.LinkedInAccount objLinkedInAccount = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedInAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, "", img, objLinkedInAccount.ProfileImageUrl, scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        _logger.LogError(ex.StackTrace);
+                        try
+                        {
+                            string prId = item.Substring(4, item.Length - 4);
+                            Domain.Socioboard.Models.LinkedInAccount objLinkedInAccount = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedInAccount(prId, _redisCache, dbr);
+                            Helper.ScheduleMessageHelper.DaywiseScheduleMessage(prId, objLinkedInAccount.LinkedinUserName, week, message, Domain.Socioboard.Enum.SocialProfileType.LinkedIn, userId, "", img, objLinkedInAccount.ProfileImageUrl, localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            _logger.LogError(ex.StackTrace);
 
-                        // return Ok("Issue With Linkedin schedulers");
+                            return Ok("Issue With Linkedin schedulers");
+                        }
+                    }
+                    if (item.StartsWith("Cmpylinpage"))
+                    {
+                        try
+                        {
+                            string prId = item.Substring(12, item.Length - 12);
+                            Domain.Socioboard.Models.LinkedinCompanyPage objLinkedinCompanyPage = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(prId, _redisCache, dbr);
+                            Helper.ScheduleMessageHelper.DaywiseScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, week, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId, "", img, objLinkedinCompanyPage.LogoUrl, localscheduletime, _appSettings, _redisCache, dbr, _logger);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            _logger.LogError(ex.StackTrace);
+                            return Ok("Issue With Linkedin Page schedulers");
+                        }
                     }
                 }
-                if (item.StartsWith("Cmpylinpage"))
-                {
-                    try
-                    {
-                        string prId = item.Substring(12, item.Length - 12);
-                        Domain.Socioboard.Models.LinkedinCompanyPage objLinkedinCompanyPage = Api.Socioboard.Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objLinkedinCompanyPage.LinkedinPageName, message, Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage, userId, "", img, objLinkedinCompanyPage.LogoUrl, scheduledatetime, localscheduletime, _appSettings, _redisCache, dbr, _logger);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        _logger.LogError(ex.StackTrace);
 
-                        // return Ok("Issue With Linkedin Page schedulers");
-                    }
-                }
 
             }
-            return Ok("scheduled");
+            return Ok("Message scheduled successfully");
         }
 
         [HttpPost("PluginComposemessage")]
@@ -591,7 +846,7 @@ namespace Api.Socioboard.Controllers
                     else
                     {
 
-                        string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, ids[0], userId, imgUrl, url, dbr, _logger);
+                        string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, ids[0], userId, imgUrl, url, 0, "", dbr, _logger);
                     }
 
                 }
@@ -608,7 +863,7 @@ namespace Api.Socioboard.Controllers
                         }
                         else
                         {
-                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, twitterText, ids[0], userId, imgUrl, true, dbr, _logger);
+                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, twitterText, ids[0], userId, imgUrl, true, 0, "", dbr, _logger);
                         }
 
                     }
@@ -626,7 +881,7 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("PluginScheduleMessage")]
-        public IActionResult PluginScheduleMessage(string profile, string twitterText, string tweetId, string tweetUrl, string facebookText, string url, string imgUrl, long userId, string scheduleTime, string localscheduleTime)
+        public IActionResult PluginScheduleMessage(string profile, string twitterText, string tweetId, string tweetUrl, string facebookText, string url, string imgUrl, long userId, string scheduleTime, string localscheduleTime, Domain.Socioboard.Enum.MediaType mediaType)
         {
             string[] profiles = profile.Split(',');
             foreach (var item in profiles)
@@ -700,7 +955,7 @@ namespace Api.Socioboard.Controllers
                         updatedtext = postmessage.Replace("ppp", "+");
                         DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(ids[0], _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objFacebookAccount.FbUserName, updatedtext.ToString(), Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, url, imgUrl, "https://graph.facebook.com/" + ids[0] + "/picture?type=small", scheduleTime, localscheduleTime, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objFacebookAccount.FbUserName, updatedtext.ToString(), Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, url, imgUrl, "https://graph.facebook.com/" + ids[0] + "/picture?type=small", scheduleTime, localscheduleTime, mediaType, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (Exception ex)
                     {
@@ -715,7 +970,7 @@ namespace Api.Socioboard.Controllers
                         {
                             twitterText = twitterText + " " + tweetUrl;
                             Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(ids[0], _redisCache, dbr);
-                            Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objTwitterAccount.twitterScreenName, twitterText, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, "", imgUrl, objTwitterAccount.profileImageUrl, scheduleTime, localscheduleTime, _appSettings, _redisCache, dbr, _logger);
+                            Helper.ScheduleMessageHelper.ScheduleMessage(ids[0], objTwitterAccount.twitterScreenName, twitterText, Domain.Socioboard.Enum.SocialProfileType.Twitter, userId, "", imgUrl, objTwitterAccount.profileImageUrl, scheduleTime, localscheduleTime, mediaType, _appSettings, _redisCache, dbr, _logger);
                         }
                         else
                         {
@@ -839,7 +1094,7 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("DraftScheduleMessage")]
-        public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId, string imagePath, IFormFile files)
+        public async Task<ActionResult> DraftScheduleMessage(string message, long userId, string scheduledatetime, long groupId, string imagePath, Domain.Socioboard.Enum.MediaType mediaType, IFormFile files)
         {
             var uploads = _appEnv.WebRootPath + "\\wwwwroot\\upload\\";
             var filename = "";
@@ -901,7 +1156,7 @@ namespace Api.Socioboard.Controllers
 
             message = postmessage;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            Helper.ScheduleMessageHelper.DraftScheduleMessage(message, userId, groupId, filename, scheduledatetime, _appSettings, _redisCache, dbr, _logger);
+            Helper.ScheduleMessageHelper.DraftScheduleMessage(message, userId, groupId, filename, scheduledatetime, mediaType, _appSettings, _redisCache, dbr, _logger);
             return Ok();
         }
         [HttpGet("GetAllScheduleMessage")]
@@ -1027,9 +1282,9 @@ namespace Api.Socioboard.Controllers
 
                                 //start = (DateTime.Parse(e.scheduleTime.ToString()).ToLocalTime()),
                                 //start = Convert.ToDateTime(TimeZoneInfo.ConvertTimeFromUtc(e.scheduleTime, TimeZoneInfo.Local)),
-                                start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(), e.scheduleTime.ToString())),
+                               // start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(), e.scheduleTime.ToString())),
                                 //url
-                                //start = e.localscheduletime,
+                                start = e.calendertime,
                                 allDay = false,
                                 description = e.shareMessage,
                                 profileId = e.profileId,

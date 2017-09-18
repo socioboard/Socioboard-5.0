@@ -89,5 +89,8 @@
    <property name="contenetShareathonUpdate">
       <column name="contenetShareathonUpdate"/>
     </property>
+   <property name="SocailSignInEnable">
+      <column name="SocailSignInEnable"/>
+   </property>
   </class>
 </hibernate-mapping>

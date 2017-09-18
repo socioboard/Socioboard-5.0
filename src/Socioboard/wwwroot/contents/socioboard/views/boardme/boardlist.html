@@ -2,8 +2,8 @@
             <!-- Page name -->
             <div class="container">
                 <div class="col m12">
-                  <span class="right"><a href="#/createboard" class="btn">Create a Board</a></span>
-                  <h4>BoardMe</h4> 
+                  <span class="right"><a href="#/createboard" class="btn btn_style col s12 img_comp_btn">Create a Board</a></span>
+                  <h5 class="grey-text text-darken-3" >BoardMe</h5> 
                 </div>
             </div>
             <!-- START CONTENT -->
@@ -27,13 +27,13 @@
                                     <td>{{$index +1}}</td>
                                     <td>{{board.bname}}</td>
                                     <td>
-                                        <a class="btn green" href="#/board/{{board.id}}/{{board.boardName}}"  ><i class="fa fa-eye fa-fw"></i>VIEW</a>
+                                        <a class="btn btn_style btn_green_round" href="#/board/{{board.id}}/{{board.boardName}}"  ><i class="fa fa-eye fa-fw"></i>VIEW</a>
                                     </td>
                                     <td>
-                                        <a class="btn" href="#/boardanalytics/{{board.boardName}}"><i class="fa fa-bar-chart fa-fw"></i>ANALYTICS</a>
+                                        <a class="btn btn_style img_comp_btn" href="#/boardanalytics/{{board.boardName}}"><i class="fa fa-bar-chart fa-fw"></i>ANALYTICS</a>
                                     </td>
                                      <td>
-                                        <a class="btn red" ng-click="deleteBoard(board.id)"><i class="fa fa-times fa-fw"></i>Delete</a>
+                                        <a class="btn btn_style btn_red_round" ng-click="deleteBoard(board.id)"><i class="fa fa-times fa-fw"></i>Delete</a>
                                     </td>
                                 </tr>      
                               </tbody>

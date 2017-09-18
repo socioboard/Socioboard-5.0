@@ -23,5 +23,8 @@
     <property name="GroupId">
       <column name="GroupId" />
     </property>
+    <property name="mediaType">
+      <column name="mediaType" />
+    </property>
   </class>
 </hibernate-mapping>

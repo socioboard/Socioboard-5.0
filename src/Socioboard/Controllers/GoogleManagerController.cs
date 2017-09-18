@@ -257,6 +257,7 @@ namespace Socioboard.Controllers
         [HttpGet]
         public async Task<ActionResult> AddGoogleAcc(string code)
         {
+            string res = string.Empty;
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
             List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
@@ -272,7 +273,7 @@ namespace Socioboard.Controllers
             }
             else
             {
-                TempData["Error"] = "Error while hitting api.";
+                TempData["Error"] = await response.Content.ReadAsStringAsync();
                 return RedirectToAction("Index", "Home");
             }
         }

@@ -14,6 +14,8 @@ namespace Domain.Socioboard.Models
         public virtual string picUrl { get; set; }
         public virtual long userId { get; set; }
         public virtual Int64 GroupId { get; set; }
+        public virtual Enum.MediaType mediaType { get; set; }
+
 
     }
 }

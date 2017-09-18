@@ -17,6 +17,7 @@ using SocioboardDataScheduler.Helper;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models;
+
 namespace SocioboardDataScheduler.LinkedIn
 {
     public class LinkedInCompanyPageScheduler
@@ -29,20 +30,27 @@ namespace SocioboardDataScheduler.LinkedIn
             {
                 DatabaseRepository dbr = new DatabaseRepository();
                
-               
+                //if (_LinkedinCompanyPage.SchedulerUpdate.AddHours(1) <= DateTime.UtcNow)
+                //{
                     if (_LinkedinCompanyPage != null)
                     {
                         if (_LinkedinCompanyPage.IsActive)
                         {
-
-                        if (schmessage.scheduleTime <= DateTime.UtcNow)
-                        {
-                            string linkedindata = ComposeLinkedInCompanyPagePost(schmessage.url, schmessage.userId, schmessage.shareMessage, _LinkedinCompanyPage.LinkedinPageId, dbr, _LinkedinCompanyPage, schmessage, _user);
-                            if (!string.IsNullOrEmpty(linkedindata))
-                            {
-                                apiHitsCount++;
-                            }
-                        }
+                            //if (apiHitsCount < MaxapiHitsCount)
+                            //{
+                                if (schmessage.scheduleTime <= DateTime.UtcNow)
+                                {
+                                    string linkedindata = ComposeLinkedInCompanyPagePost(schmessage.url, schmessage.userId, schmessage.shareMessage, _LinkedinCompanyPage.LinkedinPageId, dbr, _LinkedinCompanyPage, schmessage, _user);
+                                    if (!string.IsNullOrEmpty(linkedindata))
+                                    {
+                                        apiHitsCount++;
+                                    }
+                                }
+                            //}
+                            //else
+                            //{
+                            //    apiHitsCount = 0;
+                            //}
                            
                         }
                         else
@@ -50,7 +58,11 @@ namespace SocioboardDataScheduler.LinkedIn
                             apiHitsCount = 0;
                         }
                     }
-                
+                //}
+                //else
+                //{
+                //    apiHitsCount = 0;
+                //}
             }
             catch (Exception exs)
             {
@@ -63,8 +75,8 @@ namespace SocioboardDataScheduler.LinkedIn
             string json = "";
             Domain.Socioboard.Models.LinkedinCompanyPage objlicompanypage = objLinkedinCompanyPage;
             oAuthLinkedIn Linkedin_oauth = new oAuthLinkedIn();
-            Linkedin_oauth.ConsumerKey = AppSettings.LinkedinApiKey;
-            Linkedin_oauth.ConsumerSecret = AppSettings.LinkedinSecretKey;
+            Linkedin_oauth.ConsumerKey = AppSettings.LinkedinConsumerKey;
+            Linkedin_oauth.ConsumerSecret = AppSettings.LinkedinConsumerSecret;
             Linkedin_oauth.Verifier = objlicompanypage.OAuthVerifier;
             Linkedin_oauth.TokenSecret = objlicompanypage.OAuthSecret;
             Linkedin_oauth.Token = objlicompanypage.OAuthToken;
@@ -78,22 +90,13 @@ namespace SocioboardDataScheduler.LinkedIn
             }
             else
             {
-                var client = new ImgurClient(AppSettings.imgurclietId, AppSettings.imgurclietSecret);
-                var endpoint = new ImageEndpoint(client);
-                IImage image;
-                using (var fs = new FileStream(ImageUrl, FileMode.Open))
-                {
-                    image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
-                }
-
-                var imgs = image.Link;
-                json = company.SetPostOnPageWithImage(Linkedin_oauth, objlicompanypage.LinkedinPageId, imgs, comment);
+                json = company.SetPostOnPageWithImage(Linkedin_oauth, objlicompanypage.LinkedinPageId, ImageUrl, comment);
             }
             if (!string.IsNullOrEmpty(json))
             {
                 apiHitsCount++;
                 schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                schmessage.url = json;
+                //schmessage.url = json;
                 dbr.Update<ScheduledMessage>(schmessage);
                 Domain.Socioboard.Models.Notifications notify = new Notifications();
                 Notifications lstnotifications = dbr.Single<Notifications>(t => t.MsgId == schmessage.id);
@@ -108,7 +111,7 @@ namespace SocioboardDataScheduler.LinkedIn
                     dbr.Add<Notifications>(notify);
                     if (_user.scheduleSuccessUpdates)
                     {
-                        string sucResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                     return "posted";
                 }
@@ -116,7 +119,7 @@ namespace SocioboardDataScheduler.LinkedIn
                 {
                     if (_user.scheduleSuccessUpdates)
                     {
-                        string sucResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                     return "posted";
                 }
@@ -139,7 +142,7 @@ namespace SocioboardDataScheduler.LinkedIn
                     dbr.Add<Notifications>(notify);
                     if (_user.scheduleFailureUpdates)
                     {
-                        string falResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                     return json;
                 }
@@ -147,7 +150,7 @@ namespace SocioboardDataScheduler.LinkedIn
                 {
                     if (_user.scheduleFailureUpdates)
                     {
-                        string falResponse = SendMailbySendGrid(AppSettings.frommail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
                     }
                     return json;
                 }

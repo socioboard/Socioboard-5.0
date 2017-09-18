@@ -84,10 +84,15 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpGet("GetYtTotalsubscriber")]
-        public IActionResult GetYtTotalsubscriber(string userId)
+        public IActionResult GetYtTotalsubscriber(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            return Ok(Repositories.YoutubeReportsRepository.GetYtTotalsubscriber(userId, _redisCache, _appSettings, dbr));
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
+            string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
+            List<Domain.Socioboard.Models.TotalYoutubesubscriber> lstYtreport = new List<Domain.Socioboard.Models.TotalYoutubesubscriber>();
+            lstYtreport = Repositories.YoutubeReportsRepository.GetYtTotalsubscriber(lstStr, _redisCache, _appSettings, dbr);
+            return Ok(lstYtreport);
 
         }
 
