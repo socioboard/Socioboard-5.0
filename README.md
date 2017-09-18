@@ -107,7 +107,7 @@ To access the Socioboard Files visit : https://github.com/socioboard/Socioboard-
 
 Step 1:Download the socioboard file from above mentioned path.
 
-![](http://i.imgur.com/eSGCUdT.png)
+![](https://i.imgur.com/4CLJpNN.png)
 
 Step 2: Now after downloading it, you can see zip file named “socioboard-master.zip”  in your download folder.
 Unzip it and select the file named socioboard.sln and click over it to open either in visual studio 2013/2015 .
