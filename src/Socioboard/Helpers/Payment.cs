@@ -17,8 +17,9 @@ namespace Socioboard.Helpers
             string redirecturl = "";
             try
             {
-              
+
                 //Mention URL to redirect content to paypal site
+                //cmd=_xclick-subscriptions for subscription.
                 redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +
                                      paypalemail;
                 //First name 
@@ -131,6 +132,7 @@ namespace Socioboard.Helpers
 
 
                 //Mention URL to redirect content to paypal site
+                //cmd=_xclick-subscriptions for subscription.
                 redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +
                                      paypalemail;
 
@@ -237,6 +239,7 @@ namespace Socioboard.Helpers
             {
 
                 //Mention URL to redirect content to paypal site
+                //cmd=_xclick for one time payment.
                 redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick&business=" +
                                      paypalemail;
 
