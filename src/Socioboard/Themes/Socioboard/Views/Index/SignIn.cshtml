@@ -1,0 +1,387 @@
+﻿@{
+    string path = "Socioboard";
+    Layout = "~/Themes/" + path + "/Views/Shared/_SocioboardLayout.cshtml";
+}
+
+<!--Import jQuery before materialize.js-->
+@*<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>*@
+@*
+    <script type="text/javascript" src="~/contents/socioboard/global/plugins/materialize/js/materialize.min.js"></script>*@
+@*<script type="text/javascript" src="~/contents/socioboard/js/frontend/init.js"></script>*@
+
+
+<div class="container">
+    <div class="row center-align">
+        submitlogin
+
+        <div class="margin-top-50">
+            <div class="col-md-12" id="fb-gp-login" style="display:none;">
+                <div class="alert">
+                    <strong style="font-weight:600">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Please wait for your login</strong>
+                    <img src="~/contents/socioboard/images/login_loader.gif" style="height:20px" />
+                </div>
+            </div>
+            <form onsubmit="Login(); return false;" method="POST">
+                <div class="col m6 l6 s12" style="border-right:  1px solid rgba(0, 0, 0, 0.34);">
+                    <div class="row">
+                        <div class="col s12">
+                            <label for="logUserName" class="left">Email</label>
+                        </div>
+                        <div class="input-field col s12 box1 no-margin">
+                            <input id="logUserName" autofocus="autofocus" name="logUserName" type="email" placeholder="Enter Your Email Id" class="validate box_input" required onblur="retpwd();" style="cursor:auto">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+                            <label for="logPassword" class="left">Password</label>
+                        </div>
+                        <div class="input-field col s12 box1 no-margin">
+                            <input id="logPassword" name="logPassword" placeholder="*********" type="password" data-rule-minlength="6" required class="validate box_input" style="cursor:auto">
+                        </div>
+                    </div>
+                    <p class="md-checkbox">
+                        <input type="checkbox" id="RememberMe" class="filled-in" />
+                        <label for="RememberMe" class="grey-text">Remember me</label>
+                    </p>
+                    <p class="grey-text">Forgot Password? <a class="light-blue-text text-darken-4 modal-trigger" href="#ForgotPasswdModal">Click here to restore</a></p>
+                    <div id="btnlogin">
+                        @*<input type="submit" onclick="" id="submitlogin" class="modal-action waves-effect waves-green btn" value="Submit" />*@
+                        <button id="submitlogin" type="submit" class="modal-action waves-effect waves-green btn">Submit</button>
+                    </div>
+                </div>
+                <div class="col s12 m6">
+                    <p class="center"><strong>You can also Register with your Social Account</strong></p>
+                    <div class="input-group">
+                        <a id="fb_account" href="#" onclick="googleLogin();">
+                            <img src="~/contents/socioboard/images/gplus_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                        </a><br>
+                        <a id="fb_account" href="#" onclick="facebookLogin();">
+                            <img src="~/contents/socioboard/images/fb_signin_button.png" class="responsive-img" alt="" data-pin-nopin="true">
+                        </a>
+                        <p>Not yet registered? &nbsp; <a class="modal-action modal-close modal-trigger" href="#SignUpModal">Register now</a></p>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+
+        function Login() {
+            $('#logLoading').show();
+            $('input[type="submit"]').attr('disabled', true);
+            $('#submitButton').hide();
+            $("#fb-gp-login").css("display", "block");
+            var userName = $('#logUserName').val();
+            var password = $('#logPassword').val();
+
+
+            $.ajax({
+
+                type: "POST",
+
+                url: "@ViewBag.Domain/Index/Login",
+
+                data: { "UserName": userName, "Password": password },
+
+                //contentType: "application/json; charset=utf-8",
+
+                dataType: "html",
+
+                success: function (msg) {
+
+                    $("#fb-gp-login").css("display", "none");
+                    //Savesessiondata();
+                    //sleep(30000);
+                    if (msg == "SuperAdmin") {
+                        window.top.location = '../AdminHome/Dashboard';
+                    }
+                    if (msg == "TwoStepLogin") {
+                        window.top.location = '/Index/TwoStepOtp';
+                    }
+                    if (msg == "UpgradePlans") {
+                        alertify.alert("your account has been expired.Please upgrade it.");
+                        setTimeout(function () {
+                            window.top.location = '/Index/UpgradePlans'
+                        }, 3000);
+                    }
+                    else if (msg == "1") {
+                        $('input[type="submit"]').attr('disabled', false);
+                        if ($("#RememberMe").is(':checked')) {
+
+                            checkCookie(userName, password);
+
+                        }
+                        window.top.location = '/home/index'
+                    } else if (msg == "Trail Expire") {
+                        alertify.error("your trial has beed expired.so you can't use paid features");
+                        setTimeout(function () {
+                            window.top.location = '/home/index';
+                        }, 3000);
+                    }
+                    else if (msg == "2") {
+                        alertify.error("Payment details is not submitted.Please submit paypal detail.");
+                        $.ajax({
+
+                            type: "GET",
+
+                            url: "@ViewBag.Domain/Home/PayPalAccount",
+
+                            data: { "emailId": userName, "IsLogin": false },
+
+                            dataType: "html",
+                            success: function (msg) {
+                                window.top.location = msg;
+                            },
+                            error: function (msg) {
+
+                                return false;
+                            }
+                        });
+
+                    }
+                    else {
+                        alertify.set({ delay: 5000 });
+                        alertify.error(msg);
+                    }
+                },
+                error: function (msg) {
+                    $("#fb-gp-login").css("display", "none");
+                    alertify.error("It seems like your connectivity to the internet is impaired");
+                    $('#logLoading').hide();
+                    $('#submitButton').show();
+                    return false;
+                }
+
+            });
+            $('#logLoading').hide();
+            $('#submitButton').show();
+            return false;
+        }
+
+        function sleep(milliseconds) {
+            var start = new Date().getTime();
+            for (var i = 0; i < 1e7; i++) {
+                if ((new Date().getTime() - start) > milliseconds) {
+                    break;
+                }
+            }
+        }
+        /*set cookies for login user*/
+        function setCookie(cemail, password, exdays) {
+            var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+            cpwd = password;
+            var encodedString = Base64.encode(cpwd);
+
+            var d = new Date();
+
+            d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+
+            var expires = "expires=" + d.toUTCString();
+
+            document.cookie = "logininfo" + cemail + "=" + encodedString + ";" + expires;
+
+        }
+
+        function GetAllCookies() {
+
+            var clist = [];
+
+            var j = 0;
+
+
+
+            var Cookies = document.cookie.split(';');
+
+            for (var i = 0; i < Cookies.length; i++) {
+
+                var currentcooki = Cookies[i];
+
+                if (currentcooki.indexOf("logininfo") > -1) {
+
+                    clist[j] = currentcooki;
+
+                    j++;
+
+                }
+
+            }
+
+            return clist[0].replace("logininfo", "");
+
+        }
+
+        function getCookie(cemail) {
+
+
+
+            var name = cemail + "=";
+
+            var ca = document.cookie.split(';');
+
+            for (var i = 0; i < ca.length; i++) {
+
+                var c = ca[i];
+
+                while (c.charAt(0) == ' ') c = c.substring(1);
+
+                if (c.indexOf(name) != -1) {
+
+                    return c.substring(name.length, c.length);
+
+                }
+
+            }
+
+            return "";
+
+        }
+
+        function checkCookie(username, password) {
+
+
+
+            var check = getCookie("logininfo" + username);
+            if (check != "") {
+
+
+            } else {
+
+                if (username != "" && username != null && password != "" && password != null) {
+
+                    setCookie(username, password, 90);
+
+                }
+
+            }
+
+        }
+
+        function retpwd() {
+            var Base64 = { _keyStr: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=", encode: function (e) { var t = ""; var n, r, i, s, o, u, a; var f = 0; e = Base64._utf8_encode(e); while (f < e.length) { n = e.charCodeAt(f++); r = e.charCodeAt(f++); i = e.charCodeAt(f++); s = n >> 2; o = (n & 3) << 4 | r >> 4; u = (r & 15) << 2 | i >> 6; a = i & 63; if (isNaN(r)) { u = a = 64 } else if (isNaN(i)) { a = 64 } t = t + this._keyStr.charAt(s) + this._keyStr.charAt(o) + this._keyStr.charAt(u) + this._keyStr.charAt(a) } return t }, decode: function (e) { var t = ""; var n, r, i; var s, o, u, a; var f = 0; e = e.replace(/[^A-Za-z0-9+/=]/g, ""); while (f < e.length) { s = this._keyStr.indexOf(e.charAt(f++)); o = this._keyStr.indexOf(e.charAt(f++)); u = this._keyStr.indexOf(e.charAt(f++)); a = this._keyStr.indexOf(e.charAt(f++)); n = s << 2 | o >> 4; r = (o & 15) << 4 | u >> 2; i = (u & 3) << 6 | a; t = t + String.fromCharCode(n); if (u != 64) { t = t + String.fromCharCode(r) } if (a != 64) { t = t + String.fromCharCode(i) } } t = Base64._utf8_decode(t); return t }, _utf8_encode: function (e) { e = e.replace(/rn/g, "n"); var t = ""; for (var n = 0; n < e.length; n++) { var r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r) } else if (r > 127 && r < 2048) { t += String.fromCharCode(r >> 6 | 192); t += String.fromCharCode(r & 63 | 128) } else { t += String.fromCharCode(r >> 12 | 224); t += String.fromCharCode(r >> 6 & 63 | 128); t += String.fromCharCode(r & 63 | 128) } } return t }, _utf8_decode: function (e) { var t = ""; var n = 0; var r = c1 = c2 = 0; while (n < e.length) { r = e.charCodeAt(n); if (r < 128) { t += String.fromCharCode(r); n++ } else if (r > 191 && r < 224) { c2 = e.charCodeAt(n + 1); t += String.fromCharCode((r & 31) << 6 | c2 & 63); n += 2 } else { c2 = e.charCodeAt(n + 1); c3 = e.charCodeAt(n + 2); t += String.fromCharCode((r & 15) << 12 | (c2 & 63) << 6 | c3 & 63); n += 3 } } return t } }
+
+            var email = $("#logUserName").val();
+            var pwd = getCookie("logininfo" + email.trim());
+            var decodedString = Base64.decode(pwd);
+            @*cpwd=pwd;
+            pwd=@Uri.EscapeDataString(cpwd);
+            alert(pwd);*@
+            if (email != "" && pwd != "") {
+                $("#RememberMe").prop('checked', true);
+                //var pwd = getCookie("logininfo"+email.trim());
+                document.getElementById("logPassword").value = decodedString;
+            }
+        }
+
+        function SetUser() {
+
+            var currentcookie = GetAllCookies().split('=');
+            var email = currentcookie[0].trim();
+            var pass = currentcookie[1].trim();
+            if (email != "") {
+                $("#RememberMe").attr('checked', 'checked');
+                document.getElementById("logUserName").value = email;
+                document.getElementById("logPassword").value = pass;
+            }
+        }
+        /*end of cookies code*/
+
+
+        function Savesessiondata() {
+
+            var Ip = '';
+            $.getJSON('//ip-api.com/json?callback=?', function (data) {
+                Ip = data.query;
+
+                var objappVersion = navigator.appVersion; var objAgent = navigator.userAgent; var objbrowserName = navigator.appName; var objfullVersion = '' + parseFloat(navigator.appVersion); var objBrMajorVersion = parseInt(navigator.appVersion, 10); var objOffsetName, objOffsetVersion, ix;
+                if ((objOffsetVersion = objAgent.indexOf("Chrome")) != -1) {
+                    objbrowserName = "Chrome"; objfullVersion = objAgent.substring(objOffsetVersion + 7);
+                }
+                else if ((objOffsetVersion = objAgent.indexOf("MSIE")) != -1) {
+                    objbrowserName = "Microsoft Internet Explorer"; objfullVersion = objAgent.substring(objOffsetVersion + 5);
+                }
+                else if ((objOffsetVersion = objAgent.indexOf("Firefox")) != -1) {
+                    objbrowserName = "Firefox";
+                }
+                else if ((objOffsetVersion = objAgent.indexOf("Safari")) != -1) {
+                    objbrowserName = "Safari"; objfullVersion = objAgent.substring(objOffsetVersion + 7); if ((objOffsetVersion = objAgent.indexOf("Version")) != -1) objfullVersion = objAgent.substring(objOffsetVersion + 8);
+                }
+                else if ((objOffsetName = objAgent.lastIndexOf(' ') + 1) < (objOffsetVersion = objAgent.lastIndexOf('/'))) {
+                    objbrowserName = objAgent.substring(objOffsetName, objOffsetVersion); objfullVersion = objAgent.substring(objOffsetVersion + 1); if (objbrowserName.toLowerCase() == objbrowserName.toUpperCase()) { objbrowserName = navigator.appName; }
+                }
+                if ((ix = objfullVersion.indexOf(";")) != -1) objfullVersion = objfullVersion.substring(0, ix); if ((ix = objfullVersion.indexOf(" ")) != -1) objfullVersion = objfullVersion.substring(0, ix); objBrMajorVersion = parseInt('' + objfullVersion, 10); if (isNaN(objBrMajorVersion)) { objfullVersion = '' + parseFloat(navigator.appVersion); objBrMajorVersion = parseInt(navigator.appVersion, 10); }
+                $.ajax({
+                    type: "POST",
+                    url: "@ViewBag.Domain/Index/SaveSessiondata",
+                    data: { "ip": Ip, "browserName": objbrowserName, "userAgent": navigator.userAgent },
+                    dataType: "html",
+                    success: function (msg) {
+                        setCookie("sociorevtoken", msg, "90");
+                    },
+                    error: function (msg) {
+                    }
+
+                });
+            });
+
+        }
+</script>
+
+
+
+@*Facebook Login JS Start*@
+<script>
+        function facebookLogin() {
+            $("#fb-gp-login").css("display", "block");
+            $.ajax({
+
+                type: "GET",
+
+                url: "../FacebookManager/getFbLoginUrl?plan=" + $('#AccountType').val(),
+
+                dataType: "html",
+
+                success: function (msg) {
+
+                    window.location = msg;
+
+                }
+
+            });
+
+
+
+        }
+</script>
+@*Facebook Login JS End*@
+
+
+@*Google Login JS Start*@
+<script>
+        function googleLogin() {
+            $("#fb-gp-login").css("display", "block");
+
+            $.ajax({
+
+                type: "GET",
+
+                url: "../GoogleManager/getGoogleLoginUrl?plan=" + $('#AccountType').val(),
+
+                dataType: "html",
+
+                success: function (msg) {
+
+                    window.location = msg;
+
+                }
+
+            });
+
+
+
+        }
+</script>
+@*Google Login JS End*@
+
+

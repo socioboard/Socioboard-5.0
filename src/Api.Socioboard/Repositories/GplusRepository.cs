@@ -266,18 +266,26 @@ namespace Api.Socioboard.Repositories
                 }
                 try
                 {
-                    gplusAcc.EmailId = Convert.ToString(profile["emails"][0]["value"]);
+                    gplusAcc.EmailId = Convert.ToString(profile["email"][0]["value"]);                  
+
                 }
                 catch
                 {
-                    try {
-                        try
-                        {
-                            gplusAcc.EmailId = Convert.ToString(profile["email"]);
-                        }
-                        catch { }
-                    } catch { }
-                    gplusAcc.EmailId = "";
+                   try{
+                            try
+                            {
+                                gplusAcc.EmailId = Convert.ToString(profile["email"]);
+                            }
+                            catch(Exception ex)
+                            {
+                                gplusAcc.EmailId = "";
+                            }
+                     }
+                    catch(Exception ex)
+                    {
+                        gplusAcc.EmailId = "";
+                    }
+                    //gplusAcc.EmailId = "";
                 }
                 try
                 {

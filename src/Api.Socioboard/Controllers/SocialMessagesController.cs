@@ -107,7 +107,7 @@ namespace Api.Socioboard.Controllers
                             uploads = imagePath;
                         }
                     }
-                  
+
                 }
             }
             else if (!string.IsNullOrEmpty(imagePath))
@@ -133,8 +133,8 @@ namespace Api.Socioboard.Controllers
 
             foreach (var item in lstProfileIds)
             {
-                string temp_item_profileId="";
-                string temp_item_profileName="";
+                string temp_item_profileId = "";
+                string temp_item_profileName = "";
                 string[] profileSingle = new string[2];
                 if (item.Contains("`"))
                 {
@@ -171,10 +171,12 @@ namespace Api.Socioboard.Controllers
                                             try
                                             {
                                                 url = links.Split(' ')[0].ToString();
+                                                link = url;
                                             }
                                             catch (Exception)
                                             {
                                                 url = links;
+                                                link = url;
                                             }
                                         }
                                         if (items.Contains("http://"))
@@ -184,10 +186,12 @@ namespace Api.Socioboard.Controllers
                                             try
                                             {
                                                 url = links.Split(' ')[0].ToString();
+                                                link = url;
                                             }
                                             catch (Exception)
                                             {
                                                 url = links;
+                                                link = url;
                                             }
                                         }
 
@@ -217,7 +221,7 @@ namespace Api.Socioboard.Controllers
                     {
                         if (!string.IsNullOrEmpty(url))
                         {
-                           // link = url;
+                            // link = url;
                             //updatedtext = postmessage.Replace(url, "");
                             updatedtext = postmessage;
 
@@ -413,9 +417,9 @@ namespace Api.Socioboard.Controllers
             }
             try
             {
-                 link = "";
+                link = "";
                 //updatedtext = postmessage.Replace(url, "");
-               // updatedtext = postmessage;
+                // updatedtext = postmessage;
                 message = postmessage;
             }
             catch (Exception ex)
@@ -1167,11 +1171,27 @@ namespace Api.Socioboard.Controllers
             return Ok(lstScheduledMessage);
         }
 
+        [HttpGet("GetAllDaywiseScheduleMessage")]
+        public IActionResult GetAllDaywiseScheduleMessage(long userId, long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.DaywiseSchedule> lstScheduledMessage = Repositories.ScheduledMessageRepository.getUsreDaywiseScheduleMessage(userId, groupId, _redisCache, _appSettings, dbr);
+            return Ok(lstScheduledMessage);
+        }
+
         [HttpGet("DeleteSocialMessages")]
         public IActionResult DeleteSocialMessages(long socioqueueId, long userId, long GroupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.DeleteSocialMessages(socioqueueId, userId, GroupId, _redisCache, _appSettings, dbr);
+            return Ok(lstScheduledMessage);
+        }
+
+        [HttpGet("DeleteDaywiseSocialMessages")]
+        public IActionResult DeleteDaywiseSocialMessages(long socioqueueId, long userId, long GroupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.DaywiseSchedule> lstScheduledMessage = Repositories.ScheduledMessageRepository.DeleteDaywiseSocialMessages(socioqueueId, userId, GroupId, _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage);
         }
 
@@ -1182,6 +1202,16 @@ namespace Api.Socioboard.Controllers
             string[] lstSocioqueIdstr = socioqueueId.Split(',');
             List<long> lstSocioqueIds = (Array.ConvertAll(lstSocioqueIdstr, Convert.ToInt64)).ToList();
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.DeleteMultiSocialMessages(lstSocioqueIds, userId, GroupId, _redisCache, _appSettings, dbr);
+            return Ok(lstScheduledMessage);
+        }
+
+        [HttpGet("DeleteMultiDaywiseSocialMessages")]
+        public IActionResult DeleteMultiDaywiseSocialMessages(string socioqueueId, long userId, long GroupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string[] lstSocioqueIdstr = socioqueueId.Split(',');
+            List<long> lstSocioqueIds = (Array.ConvertAll(lstSocioqueIdstr, Convert.ToInt64)).ToList();
+            List<Domain.Socioboard.Models.DaywiseSchedule> lstScheduledMessage = Repositories.ScheduledMessageRepository.DeleteMultiDaywiseSocialMessages(lstSocioqueIds, userId, GroupId, _redisCache, _appSettings, dbr);
             return Ok(lstScheduledMessage);
         }
 
@@ -1226,6 +1256,49 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduleMessage = Repositories.ScheduledMessageRepository.EditScheduleMessage(socioqueueId, userId, GroupId, message, _redisCache, _appSettings, dbr);
             return Ok(lstScheduleMessage);
         }
+
+        [HttpGet("EditDaywiseScheduleMessage")]
+        public IActionResult EditDaywiseScheduleMessage(long socioqueueId, long userId, long GroupId, string message)
+        {
+            string postmessage = "";
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("hhh") || item.Contains("nnn"))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + item.Replace("hhh", "#");
+                        }
+                        if (item.Contains("nnn"))
+                        {
+                            postmessage = postmessage.Replace("nnn", "&");
+                        }
+                        if (item.Contains("ppp"))
+                        {
+                            postmessage = postmessage.Replace("ppp", "+");
+                        }
+                        if (item.Contains("jjj"))
+                        {
+                            postmessage = postmessage.Replace("jjj", "-+");
+                        }
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            message = postmessage;
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.DaywiseSchedule> lstScheduleMessage = Repositories.ScheduledMessageRepository.EditDaywiseScheduleMessage(socioqueueId, userId, GroupId, message, _redisCache, _appSettings, dbr);
+            return Ok(lstScheduleMessage);
+        }
+
 
         [HttpGet("GetAllSentMessages")]
         public IActionResult GetAllSentMessages(long userId, long groupId)
@@ -1282,7 +1355,7 @@ namespace Api.Socioboard.Controllers
 
                                 //start = (DateTime.Parse(e.scheduleTime.ToString()).ToLocalTime()),
                                 //start = Convert.ToDateTime(TimeZoneInfo.ConvertTimeFromUtc(e.scheduleTime, TimeZoneInfo.Local)),
-                               // start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(), e.scheduleTime.ToString())),
+                                // start = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(), e.scheduleTime.ToString())),
                                 //url
                                 start = e.calendertime,
                                 allDay = false,

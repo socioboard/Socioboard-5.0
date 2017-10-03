@@ -442,6 +442,7 @@ ul.side-nav.leftside-navigation li.active > a{
 .dropdown-content-small li > a, .dropdown-content-small li > span{
     padding: 0px 16px !important;
     color: #325981 !important;
+    line-height:30px !important;
 }
 
 /*pinterest*/
@@ -612,9 +613,11 @@ ul.side-nav.leftside-navigation li.active > a{
     padding: 4px 0px;
 }
 .studio_card .card .card-content .card-title{
-  font-size: 1.1rem;
-  line-height: 1.6rem;
-  font-weight: 400;
+  font-family: 'Source Sans Pro',sans-serif;
+    color: #64717c;
+    font-size: 14px;
+    line-height: 1.42857143;
+    font-weight: 400;
 }
  
 .studio_card {
@@ -626,7 +629,7 @@ ul.side-nav.leftside-navigation li.active > a{
 }
 
 .my-dropdown{ 
-    top:40px !important;
+    top:30px !important;
 }
 .my-dropdown:before{
     position: absolute;
@@ -642,6 +645,7 @@ ul.side-nav.leftside-navigation li.active > a{
 .my-dropdown li > a, .my-dropdown li > span{
     padding: 0px 16px !important;
     color: #325981 !important;
+    line-height: 30px !important;
 }
  
 .share_studio{

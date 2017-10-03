@@ -36,5 +36,6 @@ namespace Domain.Socioboard.Models
         public virtual string bio { get; set; }
         public virtual string about { get; set; }
         public virtual string workCompany { get; set; }
+        public virtual bool socialSignInEnable { get; set; }
     }
 }

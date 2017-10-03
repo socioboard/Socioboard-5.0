@@ -74,5 +74,8 @@
     <property name="workCompany">
       <column name="workCompany"/>
     </property>
+    <property name="socialSignInEnable">
+      <column name="socialSignInEnable"/>
+    </property>
   </class>
 </hibernate-mapping>

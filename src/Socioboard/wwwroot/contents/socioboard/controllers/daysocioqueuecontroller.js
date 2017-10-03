@@ -4,7 +4,7 @@ SocioboardApp.controller('DaySocioQueueController', function ($rootScope, $scope
         var lastreach = false;
         var nomessages = false;
         
-        daysocioqueue();
+        //daysocioqueue();
         $scope.deleteMsg = function (socioqueueId) {
             swal({
                 title: "Are you sure?",
@@ -17,7 +17,7 @@ SocioboardApp.controller('DaySocioQueueController', function ($rootScope, $scope
 	        function () {
 	            //todo: code to delete profile
 	            //codes to delete  draft messages start
-	            $http.get(apiDomain + '/api/SocialMessages/DeleteSocialMessages?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + socioqueueId)
+	            $http.get(apiDomain + '/api/SocialMessages/DeleteDaywiseSocialMessages?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + socioqueueId)
                               .then(function (response) {
                                   closeOnConfirm: false
                                   swal("Deleted");
@@ -29,9 +29,10 @@ SocioboardApp.controller('DaySocioQueueController', function ($rootScope, $scope
 	        });
         }
 
-        $scope.fetchsocioqueuemessage = function () {
+        $scope.fetchdaywise = function () {
+           
             //codes to load  socioqueue messages start
-            $http.get(apiDomain + '/api/SocialMessages/GetAllScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
+            $http.get(apiDomain + '/api/SocialMessages/GetAllDaywiseScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
                               if (response.data != "") {
                                   $scope.date(response.data);
@@ -48,7 +49,7 @@ SocioboardApp.controller('DaySocioQueueController', function ($rootScope, $scope
                           });
             // end codes to load socioqueue messages
         }
-        $scope.fetchsocioqueuemessage();
+        $scope.fetchdaywise();
 
         $scope.getProperURL = function (obj) {
            
@@ -101,9 +102,7 @@ SocioboardApp.controller('DaySocioQueueController', function ($rootScope, $scope
                 updatedmessage = updatedmessage.replace("+", 'ppp');
                 updatedmessage = updatedmessage.replace("-+", 'jjj');
                 message = updatedmessage;
-                //End
-
-                $http.get(apiDomain + '/api/SocialMessages/EditScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + $rootScope.socioqueueId + '&message=' + message)
+                $http.get(apiDomain + '/api/SocialMessages/EditDaywiseScheduleMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + $rootScope.socioqueueId + '&message=' + message)
                                       .then(function (response) {
                                           //$scope.modalinstance.dismiss('cancel');
                                           //$rootScope.lstdraftmessage = response.data;
@@ -195,7 +194,7 @@ SocioboardApp.controller('DaySocioQueueController', function ($rootScope, $scope
             function (isConfirm) {
                 if (isConfirm) {
 
-                    $http.get(apiDomain + '/api/SocialMessages/DeleteMultiSocialMessages?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + messages)
+                    $http.get(apiDomain + '/api/SocialMessages/DeleteMultiDaywiseSocialMessages?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&socioqueueId=' + messages)
                               .then(function (response) {
                                   closeOnConfirm: false
                                   if (response.data != "") {
@@ -219,6 +218,11 @@ SocioboardApp.controller('DaySocioQueueController', function ($rootScope, $scope
             });
 
         }
+
+        $(document).ready(function () {
+            $('.modal-trigger').leanModal();
+        });
+
 
 
     });

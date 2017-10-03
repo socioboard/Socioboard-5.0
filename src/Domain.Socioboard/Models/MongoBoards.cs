@@ -14,6 +14,7 @@ namespace Domain.Socioboard.Models
     {
         public long id { get; set; }
         public string boardName { get; set; }
+        public string TempboardName { get; set; }
         public long userId { get; set; }
         public string boardId { get; set; }
         public Domain.Socioboard.Enum.TrendingType trendingtype { get; set; }

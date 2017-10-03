@@ -77,15 +77,6 @@ namespace AdvanceSerachData.Model
                 return output;
           
         }
-        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
-        {
-            // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
-
-            var output = await collection.ToListAsync().ConfigureAwait(false);
-            return output;
-
-        }
         public async Task<IList<T>> FindWithRange<T>(Expression<Func<T, bool>> query, SortDefinition<T> sort, int skip, int take) where T : class, new()
         {
             var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Sort(sort).Limit(take).Skip(skip);
@@ -95,7 +86,19 @@ namespace AdvanceSerachData.Model
            
         }
 
+        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
+            try
+            {
+                var output = await collection.ToListAsync().ConfigureAwait(false);
+                return output;
+            }
+            catch (Exception ex) { return null; }
 
+
+        }
         public T Single<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
      where T : class, new()
         {

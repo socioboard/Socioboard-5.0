@@ -41,35 +41,6 @@ namespace Socioboard.Controllers
                 string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
                 if (respo != "false")
                 {
-                    //if (user != null)
-                    //{
-                    //    SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-                    //    strdic.Add("UserName", user.EmailId);
-                    //    if (string.IsNullOrEmpty(user.Password))
-                    //    {
-                    //        strdic.Add("Password", "sociallogin");
-                    //    }
-                    //    else
-                    //    {
-                    //        strdic.Add("Password", user.Password);
-                    //    }
-
-
-                    //    string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
-
-                    //    if (!string.IsNullOrEmpty(response))
-                    //    {
-                    //        Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
-                    //        HttpContext.Session.SetObjectAsJson("User", _user);
-                    //    }
-                    //    else
-                    //    {
-                    //        HttpContext.Session.Remove("User");
-                    //        HttpContext.Session.Remove("selectedGroupId");
-                    //        HttpContext.Session.Clear();
-                    //        HttpContext.Session.Remove("revokedata");
-                    //    }
-                    //}
                 }
                 else
                 {
@@ -80,6 +51,43 @@ namespace Socioboard.Controllers
                 }
 
             }
+            if (user == null)
+            {
+                string EmailId = string.Empty;
+                string password = string.Empty;
+                if (Request.Cookies["socioboardemailId"] != null)
+                {
+                    EmailId = Request.Cookies["socioboardemailId"].ToString();
+                    EmailId = PluginHelper.Base64Decode(EmailId);
+                }
+                if (Request.Cookies["socioboardToken"] != null)
+                {
+                    password = Request.Cookies["socioboardToken"].ToString();
+                    password = PluginHelper.Base64Decode(password);
+                }
+                if (!string.IsNullOrEmpty(EmailId))
+                {
+                    SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+                    strdic.Add("UserName", EmailId);
+                    if (string.IsNullOrEmpty(password))
+                    {
+                        strdic.Add("Password", "sociallogin");
+                    }
+                    else
+                    {
+                        strdic.Add("Password", password);
+                    }
+
+
+                    string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+
+                    if (!string.IsNullOrEmpty(response))
+                    {
+                        Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                        HttpContext.Session.SetObjectAsJson("User", _user);
+                    } 
+                }
+            }
             base.OnActionExecuting(filterContext);
         }
 
@@ -88,7 +96,7 @@ namespace Socioboard.Controllers
         public async Task<IActionResult> Index()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-           
+
             HttpContext.Session.SetObjectAsJson("twosteplogin", "false");
             if (user == null)
             {
@@ -612,28 +620,7 @@ namespace Socioboard.Controllers
 
 
 
-        [ResponseCache(Duration = 100)]
-        [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
-            HttpContext.Session.Remove("User");
-            HttpContext.Session.Remove("selectedGroupId");
-            // await Task.Run(() =>
-            // {
-            //     logoutsessiondata();
-            // }
-            //);
-            // Task.Run(logoutsessiondata);
-            await logoutsessiondata();
-            //await logoutsessiondata();
-            HttpContext.Session.Clear();
-            ViewBag.user = null;
-            ViewBag.selectedGroupId = null;
-            ViewBag.groupProfiles = null;
-
-            return Ok();
-            // return RedirectToAction("Index", "Index");
-        }
+    
 
         private async Task logoutsessiondata()
         {
@@ -710,7 +697,7 @@ namespace Socioboard.Controllers
                     }
                     else if (user.TwostepEnable == true)
                     {
-                       // HttpContext.Session.SetObjectAsJson("twosteplogin", "true");
+                        // HttpContext.Session.SetObjectAsJson("twosteplogin", "true");
                         return Content("TwoStepLogin");
                     }
                 }

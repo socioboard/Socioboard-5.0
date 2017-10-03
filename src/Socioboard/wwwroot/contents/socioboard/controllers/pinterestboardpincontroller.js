@@ -39,6 +39,7 @@ SocioboardApp.controller('PinterestBoardPinsController', function ($rootScope, $
                 $scope.checkfile();
                 if ($scope.check == false) {
                     alertify.set({ delay: 3000 });
+                    $('#composePinImage').val('');
                     alertify.error("File extension is not valid. Please upload an image file");
                 } else {
                 }

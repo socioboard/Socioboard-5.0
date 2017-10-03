@@ -17,9 +17,9 @@ namespace Socioboard.Helpers
             string redirecturl = "";
             try
             {
+              
 
                 //Mention URL to redirect content to paypal site
-                //cmd=_xclick-subscriptions for subscription.
                 redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +
                                      paypalemail;
                 //First name 
@@ -132,7 +132,6 @@ namespace Socioboard.Helpers
 
 
                 //Mention URL to redirect content to paypal site
-                //cmd=_xclick-subscriptions for subscription.
                 redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +
                                      paypalemail;
 
@@ -181,6 +180,8 @@ namespace Socioboard.Helpers
                              cancelurl;
                 //NOtify return page url
                 redirecturl += "&notify_url=" + notifyurl;
+
+                redirecturl += "&custom=" + custom;
 
 
 
@@ -238,8 +239,7 @@ namespace Socioboard.Helpers
             try
             {
 
-                //Mention URL to redirect content to paypal site
-                //cmd=_xclick for one time payment.
+
                 redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick&business=" +
                                      paypalemail;
 
@@ -284,6 +284,9 @@ namespace Socioboard.Helpers
                 //Failed return page url
                 redirecturl += "&cancel_return=" +
                              cancelurl;
+
+                redirecturl += "&custom=" + custom;
+
 
                 //Subscription Params   
                 //    a3 - amount to be invoiced each recurrence

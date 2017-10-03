@@ -62,9 +62,10 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
         };
 
         $scope.editscheulemessage = function (sharemessage, socioqueueId) {
-            $rootScope.editscdmessage = sharemessage;
+            $rootScope.editscdmessage = sharemessage;           
             $rootScope.socioqueueId = socioqueueId;
             $('#SocioqueueModal').openModal();
+            
             //$scope.modalinstance = $modal.open({
             //    templateUrl: 'editschedulemessageModalContent.html',
             //    controller: 'SocioqueueController',
@@ -72,6 +73,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
             //});
         }
 
+       
         $scope.date = function (parm) {
             for (var i = 0; i < parm.length; i++) {
                 var date = moment(parm[i].scheduleTime);

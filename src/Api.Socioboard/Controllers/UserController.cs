@@ -1278,16 +1278,22 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("EnableDisableSocialLogin")]
-        public IActionResult EnableDisableSocialLogin(long userId, bool checkEnable)
+        public IActionResult EnableDisableSocialLogin(long userId,string facebookid, bool checkEnable)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
+           IList<Facebookaccounts> lstFbacc = dbr.Find<Facebookaccounts>(t => t.FbUserId.Equals(facebookid));
+
             if (user.TwostepEnable == false)
             {
-                user.SocialLoginEnableFb = checkEnable;
-                int res = dbr.Update<User>(user);
+               // user.SocialLoginEnableFb = checkEnable;
+                lstFbacc.First().SocailSignInEnable = checkEnable;
 
-                if (res == 1)
+
+                //int res = dbr.Update<User>(user);
+                int resfb = dbr.Update<Facebookaccounts>(lstFbacc.First());
+
+                if (resfb == 1)
                 {
                     if (checkEnable)
                     {
@@ -1303,6 +1309,51 @@ namespace Api.Socioboard.Controllers
                 {
                     return BadRequest("Error while enabling Social Signin, pls try after some time.");
                 }
+
+            }
+            else
+            {
+                return BadRequest("Can't enable social signin because two steps login has already enabled.");
+            }
+
+        }
+
+
+        [HttpPost("EnDisablePrimaryAccLogin")]
+        public IActionResult EnDisablePrimaryAccLogin(long userId, bool checkEnable)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userId);
+           
+
+            if (user.TwostepEnable == false)
+            {
+                if (user.Password != "(NULL)")
+                {
+                    user.SocialLoginEnableFb = checkEnable;
+                    int res = dbr.Update<User>(user);
+                    if (res == 1)
+                    {
+                        if (checkEnable)
+                        {
+                            return Ok("You have successfully enabled Social Signin for primary account enjoy login without id and pass");
+                        }
+                        else
+                        {
+                            return Ok("You have successfully disabled Social signin for primary account");
+                        }
+
+                    }
+                    else
+                    {
+                        return BadRequest("Error while enabling Social Signin, pls try after some time.");
+                    }
+                }
+                else
+                {
+                    return Ok("Can't disable it because you have choose login option from facebook or google");
+                }
+               
 
             }
             else
@@ -1504,6 +1555,7 @@ namespace Api.Socioboard.Controllers
                     user.UserName = "Socioboard";
                     user.UserType = "User";
                     user.EmailValidateToken = "Facebook";
+                    user.SocialLoginEnableFb = true;
                     user.LastLoginTime = DateTime.UtcNow;
                     try
                     {
@@ -1544,6 +1596,14 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpGet("GetPrimaryUserDeatils")]
+        public IActionResult GetPrimaryUserDeatils(long userId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            User user = dbr.Single<User>(t => t.Id == userId && (t.EmailValidateToken == "Facebook" ||t.EmailValidateToken=="Google"));
+            return Ok(user);
+            
+        }
 
         /// <summary>
         /// To count the user profiles .

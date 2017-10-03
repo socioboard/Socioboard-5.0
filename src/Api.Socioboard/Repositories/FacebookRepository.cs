@@ -180,16 +180,12 @@ namespace Api.Socioboard.Repositories
                             FacebookRepository.SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                             UpdatePageShareathon(fbAcc, userId, settings);
                             UpdateGroupShareathon(fbAcc, userId, settings);
-                        }).Start();
-
-                       
-
+                        }).Start();                       
                     }
                 }
 
             }
             return isSaved;
-
         }
 
         public static int ReFacebookAccount(dynamic profile, Int64 friends, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, Domain.Socioboard.Enum.FbProfileType fbProfileType, string accessToken, string reconnect, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
@@ -215,7 +211,8 @@ namespace Api.Socioboard.Repositories
                 catch { }
                 try
                 {
-                    fbAcc.ProfileUrl = (Convert.ToString(profile["link"]));
+                    //fbAcc.ProfileUrl = (Convert.ToString(profile["link"]));
+                    fbAcc.ProfileUrl = (Convert.ToString(profile["picture"]["data"]["url"]));
                 }
                 catch { }
                 try
@@ -1656,9 +1653,9 @@ namespace Api.Socioboard.Repositories
 
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> GetTopFacebookFeed(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count)
+        public static List<Domain.Socioboard.Models.Mongo.facebookfeed> GetTopFacebookFeed(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count)
         {
-            //List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
+            List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
             var builder = Builders<MongoFacebookFeed>.Sort;
             var sort = builder.Descending(t => t.FeedDate);
@@ -1669,24 +1666,29 @@ namespace Api.Socioboard.Repositories
             });
             IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
 
-            //foreach (var item in lstFbFeeds.ToList())
-            //{
-            //    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
-            //    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
-            //    var buildecommentr = Builders<Domain.Socioboard.Models.Mongo.MongoFbPostComment>.Sort;
-            //    var sortcomment = buildecommentr.Descending(t => t.Likes);
-            //    var resultcomment = mongorepocomment.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId, sortcomment, skip, 5);
-            //    var taskcomment = Task.Run(async () =>
-            //    {
-            //        return await resultcomment;
-            //    });
-            //    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
-            //    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
-            //    _intafeed._facebookFeed = item;
-            //    _intafeed._facebookComment = lstFbPostComment.ToList();
-            //    lstfacebookfeed.Add(_intafeed);
-            //}
-            return lstFbFeeds.ToList();
+            foreach (var item in lstFbFeeds.ToList())
+            {
+                Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
+                var buildecommentr = Builders<Domain.Socioboard.Models.Mongo.MongoFbPostComment>.Sort;
+                var sortcomment = buildecommentr.Descending(t => t.Likes);
+                var resultcomment = mongorepocomment.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId && (!t.CommentId.Contains("{")), sortcomment, skip, 50);
+                var taskcomment = Task.Run(async () =>
+                {
+                    return await resultcomment;
+                });
+                IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                item.Commentcount = lstFbPostComment.Count.ToString();
+                foreach(var commentItems in lstFbPostComment)
+                {
+                    commentItems.Commentdate = Convert.ToDateTime(commentItems.Commentdate).AddMinutes(330).ToString();
+                }
+                _intafeed._facebookFeed = item;
+                _intafeed._facebookComment = lstFbPostComment.ToList();
+                lstfacebookfeed.Add(_intafeed);
+            }
+            return lstfacebookfeed;
         }
         public static List<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> GetFacebookSort(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, int skip, int count, string typeShort)
         {
@@ -1926,6 +1928,7 @@ namespace Api.Socioboard.Repositories
                 lstFbAcc = inMemFbAcc;
             }
             string commentId = FbUser.postComments(lstFbAcc.AccessToken, postId, message);
+            JObject tempCommentId = JObject.Parse(commentId);
             if (commentId.Contains("Invalid Access Token"))
             {
                 return "Invalid Access Token";
@@ -1935,15 +1938,15 @@ namespace Api.Socioboard.Repositories
                 //DateTime clienttime = Convert.ToDateTime(timezoneOffset);
                 MongoFbPostComment fbPostComment = new MongoFbPostComment();
                 fbPostComment.Id = MongoDB.Bson.ObjectId.GenerateNewId();
-                fbPostComment.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                fbPostComment.Commentdate = timezoneOffset;
+                fbPostComment.EntryDate = timezoneOffset;
+                fbPostComment.Commentdate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                 fbPostComment.PostId = postId;
                 fbPostComment.Likes = 0;
                 fbPostComment.UserLikes = 0;
                 fbPostComment.PictureUrl = message;
                 fbPostComment.FromName = lstFbAcc.FbUserName;
                 fbPostComment.FromId = lstFbAcc.FbUserId;
-                fbPostComment.CommentId = commentId;
+                fbPostComment.CommentId = tempCommentId["id"].ToString();
                 fbPostComment.Comment = message;
                 try
                 {

@@ -46,16 +46,18 @@
                                                     </div>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="input-field col s6">
+                                                    <!--<div class="input-field col s6">
                                                         <input placeholder="User Name" id="userName" ng-model="updateUser.userName" type="text" required class="validate">
                                                         <label for="email">User Name</label>
-                                                    </div>
-                                                    <div class="row">
+                                                    </div>-->
                                                         <div class="input-field col s6">
                                                             <input placeholder="Phone Number"  type="tel" title="Enter 10 digit phone number" required class="validate" maxlength="10" pattern="[0-9]{10}" ng-model="updateUser.phoneNumber">
                                                             <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
                                                         </div>
-                                                    </div>
+                                                        <div class="input-field col s6">
+                                                            <input type="date" ng-model="updateUser.dob" class="datepicker">
+                                                            <label class="active" for="dob">DOB</label>
+                                                        </div>
                                                     <!--<ng-form name="row">
                                                         <div class="input-field col s6">
                                                             <input placeholder="Phone Number" id="" type="tel" title="Please Enter 10 digit Phone Number" ng-pattern="phoneNumbr"  maxlength="10" name="phone" ng-model="updateUser.phoneNumber" required  oninvalid="setCustomValidity('Please Enter 10 digit Phone Number ')" pattern="[0-9]{10}">
@@ -67,12 +69,7 @@
                                                         </div>
                                                     </ng-form>-->
                                                 </div>
-                                                <div class="row">
-                                                   <div class="input-field col s6">
-                                                        <input type="date" ng-model="updateUser.dob" class="datepicker">
-                                                        <label class="active" for="dob">DOB</label>
-                                                    </div>
-                                                </div>
+                                                
 
                                                 <!--<div class="row">
                                                     <div class="input-field col s12">
@@ -97,30 +94,27 @@
                                                 </div>-->
 
                                                 <div class="row">
-                                                    <div class="file-field input-field col s12">
+                                                    <div class="file-field input-field col s12 m6">
                                                         <input type="file" id="profileImage" onchange="angular.element(this).scope().checkfile(this)" class="dropify" data-default-file="" />
                                                     </div>
-                                                </div>
-                                                <br />
-                                                <div class="row">
-                                                    <div class="input-field col s12">
+                                                    <div class="input-field col s12 m6">
                                                         <textarea placeholder="Type here..." id="message5" ng-model="updateUser.aboutMe" class="materialize-textarea" length="120"></textarea>
                                                         <label for="message">About Me</label>
                                                     </div>
+                                                </div>
                                                     <div class="row">
                                                         <div class="input-field col s12 l6">
-                                                            <a class="btn btn_style red waves-effect waves-light left modal-trigger" href="#deleteAccountModal">
+                                                            <a class="btn btn_style red btn_round waves-effect waves-light left modal-trigger" href="#deleteAccountModal">
                                                                 Delete Account
                                                             </a>
                                                         </div>
                                                         <div class="input-field col s12 l6">                                                           
-                                                            <button class="btn btn_style cyan waves-effect waves-light right" name="action" type="submit">
+                                                            <button class="btn btn_style btn_round cyan waves-effect waves-light right" name="action" type="submit">
                                                                 Submit
                                                                 <i class="mdi-content-send right"></i>
                                                             </button>                                                           
                                                         </div>
                                                     </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

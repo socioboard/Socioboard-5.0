@@ -170,6 +170,60 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpGet("getBoardFeedsByName")]
+        public IActionResult getBoardFeedsByName(string boardName)
+        {
+            //boardName = boardName.Replace("SB", "/");
+            try
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                List<Domain.Socioboard.Models.MongoBoards> lstboard = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.TempboardName == boardName).ToList();
+                if (lstboard.Count > 1)
+                {
+                    foreach (Domain.Socioboard.Models.MongoBoards brd in lstboard)
+                    {
+                        if (brd.facebookHashTag != null)
+                        {
+                            return Ok(BoardMeRepository.getBoardFeedsByName(brd.boardId, _redisCache, _appSettings, _logger, dbr));
+                        }
+                    }
+                    return Ok();
+                }
+                else if(lstboard.Count ==1)
+                {
+                    return Ok(BoardMeRepository.getBoardByName(lstboard.First().boardName, _redisCache, _appSettings, _logger, dbr));
+                }
+                else
+                {
+                    return Ok();
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return BadRequest("Something Went Wrong");
+            }
+
+            //try
+            //{
+            //    Domain.Socioboard.Models.MongoBoards board = dbr.Single<Domain.Socioboard.Models.MongoBoards>(t => t.TempboardName == boardName);
+            //    if(board!=null)
+            //    {
+            //        return Ok(BoardMeRepository.getBoardByName(board.boardName, _redisCache, _appSettings, _logger, dbr));
+            //    }
+            //    else
+            //    {
+            //        return Ok();
+            //    }
+
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.StackTrace);
+            //    return BadRequest("Something Went Wrong");
+            //}
+        }
+
         [HttpGet("getAnalytics")]
         public IActionResult getAnalytics(string boardId)
         {
@@ -404,6 +458,50 @@ namespace Api.Socioboard.Controllers
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 return Ok(BoardMeRepository.getTopTrending(_redisCache, _appSettings, _logger, dbr));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return BadRequest("Something Went Wrong");
+            }
+        }
+        [HttpGet("getWeeklyTrending")]
+        public IActionResult getWeeklyTrending()
+        {
+            try
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                return Ok(BoardMeRepository.getweeklyTrending(_redisCache, _appSettings, _logger, dbr));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return BadRequest("Something Went Wrong");
+            }
+        }
+
+        [HttpGet("getmonthlyTrending")]
+        public IActionResult getmonthlyTrending()
+        {
+            try
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                return Ok(BoardMeRepository.getMonthlyTrending(_redisCache, _appSettings, _logger, dbr));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.StackTrace);
+                return BadRequest("Something Went Wrong");
+            }
+        }
+
+        [HttpGet("getyearlyTrending")]
+        public IActionResult getyearlyTrending()
+        {
+            try
+            {
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                return Ok(BoardMeRepository.getyearlyTrending(_redisCache, _appSettings, _logger, dbr));
             }
             catch (Exception ex)
             {

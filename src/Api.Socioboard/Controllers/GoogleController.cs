@@ -122,7 +122,7 @@ namespace Api.Socioboard.Controllers
             IList<User> userTable = dbr.Find<User>(t => t.Id == lstgacc.First().UserId);
             if (lstUser != null && lstUser.Count() > 0)
             {
-                if (lstUser.FirstOrDefault().SocialLoginEnableGo == true)
+                if (lstUser!=null && lstUser.FirstOrDefault().EmailValidateToken == "Google")
                 {
                     if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
                     {
@@ -149,7 +149,15 @@ namespace Api.Socioboard.Controllers
                 }
                 else
                 {
-                    return Ok(" Oh! it's look like social signin with google has disabled");
+                    if(lstUser.FirstOrDefault().EmailValidateToken =="Facebook")
+                    {
+                        return Ok("You are using this emailid with facebook login");
+                    }
+                    else
+                    {
+                        return Ok("EmailId already available please use userId and pass for login ");
+                    }
+                    
                 }
             }
             else if (lstgacc != null && lstgacc.Count() > 0 && lstUser.Count() == 0 )
@@ -175,7 +183,6 @@ namespace Api.Socioboard.Controllers
                 {
                     return Ok("Google account added by other user");
                 }
-               
             }
             else
             {
@@ -235,6 +242,7 @@ namespace Api.Socioboard.Controllers
                 user.EmailValidateToken = "Google";
                 user.UserType = "User";
                 user.LastLoginTime = DateTime.UtcNow;
+                user.SocialLoginEnableGo = true;
                 user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
                 try
                 {
@@ -269,29 +277,77 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("EnableDisableGoogleSignIn")]
-        public IActionResult EnableDisableGoogleSignIn(long userId, bool checkEnable)
+        public IActionResult EnableDisableGoogleSignIn(long userId,string GplusId, bool checkEnable)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
-            user.SocialLoginEnableGo = checkEnable;
-            int res = dbr.Update<User>(user);
+            IList<Googleplusaccounts> lstGplusacc = dbr.Find<Googleplusaccounts>(t => t.GpUserId.Equals(GplusId));
 
-            if (res == 1)
+            
+            if (user.TwostepEnable == false)
             {
-                if (checkEnable)
+                //user.SocialLoginEnableGo = checkEnable;
+                //int res = dbr.Update<User>(user);
+                lstGplusacc.First().socialSignInEnable = checkEnable;
+                int resgp = dbr.Update<Googleplusaccounts>(lstGplusacc.First());
+                if (resgp == 1)
                 {
-                    return Ok("Cool! Social SignIn has Enable for your Google Account ");
+                    if (checkEnable)
+                    {
+                        return Ok("Cool! Social SignIn has Enable for Google Account ");
+                    }
+                    else
+                    {
+                        return Ok("You have Successfully Disabled Social SignIn for Google Account");
+                    }
+
                 }
                 else
                 {
-                    return Ok("You have Successfully Disabled Social SignIn for Your Google Account");
+                    return BadRequest("Error while enabling Social Signin, pls try after some time.");
                 }
-
             }
             else
             {
-                return BadRequest("Error while enabling Social Signin, pls try after some time.");
+                return BadRequest("Can't enable social signin because two steps login has already enabled.");
             }
+        }
+
+        [HttpGet("GetPrimaryGoogleAcc")]
+        public IActionResult GetPrimaryGoogleAcc(long userId, long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            Domain.Socioboard.Models.Googleplusaccounts userGplusAcc = new Domain.Socioboard.Models.Googleplusaccounts();
+            lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus).ToList();
+            foreach (var item in lstGrpProfiles)
+            {
+                Domain.Socioboard.Models.Googleplusaccounts gPlusAcc = Repositories.GplusRepository.getGPlusAccount(item.profileId, _redisCache, dbr);
+                Domain.Socioboard.Models.User userdata = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == gPlusAcc.UserId);
+                if (gPlusAcc != null && userdata.EmailId==gPlusAcc.EmailId)
+                {
+                    userGplusAcc = gPlusAcc;
+                }
+            }
+            return Ok(userGplusAcc);
+        }
+
+        [HttpGet("GetGplusProfilesOnly")]
+        public IActionResult GetGplusProfilesOnly(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Googleplusaccounts> lstGplusAcc = new List<Googleplusaccounts>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus))
+            {
+                Domain.Socioboard.Models.Googleplusaccounts gPlusAcc = Repositories.GplusRepository.getGPlusAccount(item.profileId, _redisCache, dbr);
+                Domain.Socioboard.Models.User userdata = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == gPlusAcc.UserId);
+                if (gPlusAcc != null && userdata.EmailId != gPlusAcc.EmailId)
+                {
+                    lstGplusAcc.Add(gPlusAcc);
+                }
+            }           
+            return Ok(lstGplusAcc);
         }
 
         [HttpPost("GoogleLoginPhone")]
@@ -417,6 +473,7 @@ namespace Api.Socioboard.Controllers
                 user.UserType = "User";
                 user.LastLoginTime = DateTime.UtcNow;
                 user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
+                user.SocialLoginEnableGo = true;
                 try
                 {
                     user.FirstName = (Convert.ToString(userinfo["name"]));

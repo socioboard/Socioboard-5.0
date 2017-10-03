@@ -21,6 +21,15 @@
             box-shadow: 0 10px 15px rgba(154, 187, 221, 0.4);
             transition: all 0.3s;
         }
+        .share_studio .btn-floating{
+                width: 20px;
+    height: 20px;
+    line-height: 20px;
+        }
+            .share_studio .btn-floating i {
+                font-size: 13px;
+    line-height: 10px;
+            }
 </style>
 <div data-ng-controller="TrendingContentController">
     <!-- Page name -->
@@ -30,11 +39,11 @@
                 <h4>Trending Content</h4>
             </div>
             <div class="col m3 s12 margin-top-10">
-                <a class="btn btn_style img_comp_btn" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
+                <a class="btn btn_style btn_round img_comp_btn" ng-click="sorttype()"><i class="fa fa-share-alt" aria-hidden="true"></i> Shareathon</a>
             </div>
         </div>
         <form class="row">
-            <div class="col m4">
+            <div class="col m6">
                 <input id="textSearch" type="text" placeholder="Search" />
             </div>
             <div class="col m2">
@@ -55,7 +64,7 @@
                 </div>
                 <div class="col m4 s12">
                     <div class="input-field col s6">
-                        <a class="dropdown-button right white-text btn btn_style col s11 " href='javascript:void(0)' data-activates='quk_drop' style="font-size: medium ;line-height:35px;border-radius: 78px">Quick Topics</a>
+                        <a class="dropdown-button right white-text btn btn_style btn_round col s11 " href='javascript:void(0)' data-activates='quk_drop' style="font-size: medium ;line-height:35px;">Quick Topics</a>
                         <ul class="dropdown-content my-dropdown" id="quk_drop">
                             <li>  <a href='javascript:void(0)' <strong style="color:black">Quick Topics</strong></a></li>
                             <li> <a href='javascript:void(0)' ng-click="topic('technology')">Technology</a></li>
@@ -69,7 +78,7 @@
                         </ul>
                     </div>
                     <div class="input-field col s6">
-                        <a class="dropdown-button right white-text btn btn_style col s11" href='javascript:void(0)' data-activates='quk_short' style="font-size: medium ;line-height:35px;border-radius: 78px">Sort By</a>
+                        <a class="dropdown-button right white-text btn btn_style btn_round col s11" href='javascript:void(0)' data-activates='quk_short' style="font-size: medium ;line-height:35px;border-radius: 78px">Sort By</a>
                         <ul class="dropdown-content my-dropdown" id="quk_short">
                             <li><a href='javascript:void(0)' <strong style="color:black">Sort By</strong></a></li>
                             <li><a ng-click="sortBy('trending')">Trending</a></li>
@@ -155,18 +164,18 @@
                         <div class="card-content">
                             <div class="row no-space">
                                 <div class="col s12">
-                                    <p class="card-title grey-text text-darken-4">
-                                        <a href="{{feed.postUrl}}" target="_blank" class="grey-text text-darken-4">
+                                    <p class="card-title ">
+                                        <a href="{{feed.postUrl}}" target="_blank" class="grey-text text-darken-2">
                                             {{feed.title}}
                                         </a>
                                     </p>
                                 </div>
-                                <div class="col s12 m6">
-                                    <a href="{{feed.postUrl}}" target="_blank" class="truncate">{{feed.postUrl}}</a>
+                                <div class="col s12 m12">
+                                    <a href="{{feed.postUrl}}" target="_blank" class="truncate" title="{{feed.postUrl}}">{{feed.postUrl}}</a>
                                 </div>
-                                <div class="col s12 m6 ">
+                                <!--<div class="col s12 m6 ">
                                     <span>| </span><span class="grey-text right truncate"></span>
-                                </div>
+                                </div>-->
                                 <hr>
                                 <div class="col s12 m6 center"  ng-if="feed.linShareCount<1000">
                                     <div class="grey-text text-darken-4">Link Share:</div>

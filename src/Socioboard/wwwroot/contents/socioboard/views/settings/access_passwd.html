@@ -67,66 +67,106 @@
                                     <p>You can sign in to Socioboard quickly and easily using your social networks. If you share access to a social network with someone else then make sure to switch this off so that they can't sign in to your account.</p>
                                     <ul class="collection" style="border: 0px solid #e0e0e0;">
                                         <li class="grey-text text-darken-4"><i class="fa fa-dot-circle-o fa-fw" aria-hidden="true"></i>Primary Account</li>
+                                        <li class="collection-item avatar" >
+                                            <div class="col s12" ng-if="userdetail.emailValidateToken!='Facebook' || userdetail.emailValidateToken!='Google'">
+                                                <div class="left">
+                                                    <img src="{{userdetail.profilePicUrl}}" class="responsive-img profilePic">
+                                                    <!--<img ng-if="userdetail.emailValidateToken=='Facebook'" class="responsive-img msgiconPoss" src="/contents/socioboard/images/fb_icon.png">-->
+                                                </div>
+                                                <div style="display: inline-block; margin-left:20px;">
+                                                    <span>User login emailid</span><br />
+                                                    <span>{{userdetail.emailId}}</span>
+                                                </div>
+                                            </div>
+                                            <div class="col s12" ng-if="userdetail.emailValidateToken=='Facebook' && userFBPrimaryAcc.emailId!=null">
+                                                <div class="left">
+                                                    <img src="{{userOwnFBAcc}}" class="responsive-img profilePic">
+                                                    <img ng-if="userdetail.emailValidateToken=='Facebook'" class="responsive-img msgiconPoss" src="/contents/socioboard/images/fb_icon.png">
+                                                </div>
+                                                <div style="display: inline-block; margin-left:20px;">
+                                                    <span ng-if="userdetail.emailValidateToken=='Facebook'">Facebook</span><br />
+                                                    <span>{{userdetail.emailId}}</span>
+                                                </div>                       
+                                            </div>
+                                            <div class="col s12" ng-if="userdetail.emailValidateToken=='Google' && userGooglePrimaryAcc.emailId!=null">
+                                                <div class="left">
+                                                    <img src="{{userOwnGoogleAcc}}" class="responsive-img profilePic">
+                                                    <img ng-if="userdetail.emailValidateToken=='Google'" class="responsive-img msgiconPoss" src="/contents/socioboard/images/gplus-icon.png">   
+                                                </div>                                                
+                                                <div style="display: inline-block; margin-left:20px;">
+                                                    <span ng-if="userdetail.emailValidateToken=='Google'">Google</span><br />
+                                                    <span>{{userdetail.emailId}}</span> 
+                                                </div>              
+                                            </div>
+                                            <!--<div class="secondary-content margin-top-10">
+                                                <div class="switch" ng-if="userdetail.emailValidateToken=='Facebook'">
+                                                    <label  >
+                                                        Off
+                                                        <input type="checkbox"   ng-disabled="false" ng-model="socailValfb"  ng-click="socialLoginPrimaryUser(socailVal)">
+                                                        <span class="lever"></span>
+                                                        On
+                                                    </label>                                                   
+                                                </div>
+                                                <div class="switch" ng-if="userdetail.emailValidateToken=='Google'">
+                                                    <label >
+                                                        Off
+                                                        <input type="checkbox"  ng-model="socailValGo" ng-click="socialLoginPrimaryUser(socailVal)">
+                                                        <span class="lever"></span>
+                                                        On
+                                                    </label>                                                  
+                                                </div>                                                      
+                                            </div>-->
+                                        </li>
+                                    </ul>
+                                    <ul class="collection" style="border: 0px solid #e0e0e0;">
+                                        <li class="grey-text text-darken-4"><i class="fa fa-dot-circle-o fa-fw" aria-hidden="true"></i>Secondary Account</li>
                                         <li class="collection-item avatar" ng-repeat="profilesDet in fbprofiles">
                                             <div class="col s12">
-                                                <img src="{{profilesDet.profileUrl}}" class="responsive-img profilePic">
-                                                <img class="responsive-img msgiconPoss" src="/contents/socioboard/images/fb_icon.png">
-                                                <span>Facebook</span>
+                                                <div class="left">
+                                                    <img src="{{profilesDet.profileUrl}}" class="responsive-img profilePic">
+                                                    <img class="responsive-img msgiconPoss" src="/contents/socioboard/images/fb_icon.png">
+                                                </div>                                                
+                                                <div class="" style="display: inline-block; margin-left:20px;">
+                                                    <span>Facebook</span><br />
+                                                    <span>{{profilesDet.emailId}}</span>
+                                                </div>
                                             </div>
                                             <div class="secondary-content margin-top-10">
                                                 <div class="switch" ng-init="hasEnableF=profilesDet.socailSignInEnable">
                                                     <!--ng-if="user.password !=null"-->
-                                                    <label >
+                                                    <label>
                                                         Off
-                                                        <input type="checkbox" ng-model="hasEnableF"  ng-click="socialLoginFB(hasEnableF,profilesDet.fbUserId)">
+                                                        <input type="checkbox" ng-model="hasEnableF" ng-click="socialLoginFB(hasEnableF,profilesDet.fbUserId)">
                                                         <span class="lever"></span>
                                                         On
                                                     </label>
                                                 </div>
-                                                <!--<div class="switch" ng-if="user.password ==null">
-                                                  <label>
-                                                    Off
-                                                     <input type="checkbox" ng-model=true ng-click="passNull(hasEnableF)">
-                                                     <span class="lever"></span>
-                                                    On
-                                                    </label>
-                                                </div>-->
                                             </div>
                                         </li>
                                         <li class="collection-item avatar" ng-repeat="Gplusprofile in lstGplusProfiles">
                                             <div class="col s12">
-                                                <img src="{{Gplusprofile.gpProfileImage}}" class="responsive-img profilePic">
-                                                <img class="responsive-img msgiconPoss" src="/contents/socioboard/images/gplus-icon.png">
-                                                <span>Google</span>
+                                                <div class="left">
+                                                    <img src="{{Gplusprofile.gpProfileImage}}" class="responsive-img profilePic">
+                                                    <img class="responsive-img msgiconPoss" src="/contents/socioboard/images/gplus-icon.png">
+                                                </div>
+                                                <div class="" style="display: inline-block; margin-left:20px;">
+                                                    <span>Google</span><br />
+                                                    <span>{{Gplusprofile.emailId}}</span>
+                                                </div>                                                                                                
                                             </div>
                                             <div class="secondary-content margin-top-10">
-                                                <div class="switch" ng-init="hasEnableF={{userdata.socialLoginEnableGo}}">
+                                                <div class="switch" ng-init="hasEnableGo=Gplusprofile.socialSignInEnable">
                                                     <label>
                                                         Off
-                                                        <input type="checkbox" ng-model="hasEnableF" ng-click="socialLoginGoogle(hasEnableF)">
+                                                        <input type="checkbox" ng-model="hasEnableGo" ng-click="socialLoginGoogle(hasEnableGo,Gplusprofile.gpUserId)">
                                                         <span class="lever"></span>
                                                         On
                                                     </label>
                                                 </div>
-
                                             </div>
                                         </li>
                                     </ul>
-                                    <hr />
-                                    <!--<ul>
-                                        <li class="grey-text text-darken-4"><i class="fa fa-dot-circle-o fa-fw" aria-hidden="true"></i>Secondary Account</li>
-                                        <li class="row">
-                                            <div class="input-field col s6">
-                                                <input placeholder="{{user.EmailId}}" id="user_id" type="text" class="validate">
-                                                <label for="user_id">User Id</label>
-                                            </div>
-                                            <div class="input-field col s6">
-                                                <input id="passwd" type="password" class="validate">
-                                                <label for="passwd">Password</label>
-                                            </div>
-                                            <button type="button">Submit</button>
-                                        </li>
-                                    </ul>-->
+                                    <hr />                                   
                                 </div>
                             </div>
                         </div>

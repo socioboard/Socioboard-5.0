@@ -1,0 +1,370 @@
+﻿<div data-ng-controller="TwitterInboxController">
+    <!-- START CONTENT -->
+    <section id="content">
+        <!--start container-->
+        <!--card widgets end-->
+        <div class="row">
+            <div class="col s12 m8 l8">
+                <div class="card" id="feeds">
+                    <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Twitter Inbox</h5>
+                    <ul class="collection inboxmessage_slider">
+                        <li class="collection-item avatar" ng-repeat="message in lstMessages | notificationbyprofilesfileter  : selectedProfiles">
+                            <img src="{{message.senderProfileUrl}}" alt="{{message.senderScreenName}}" class="circle">
+                            <span class="email-title">{{message.senderScreenName}}</span>
+                            <div class="row feeds_post z-depth-1 hoverable">
+                                <div class="col m8">
+                                    <p class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{message.message}}</p>
+                                </div>
+                                <div class="col m4 center" ng-if="message.image">
+                                    <img src="{{message.image}}" class="responsive-img ">
+                                </div>
+                                <div class="col l12 smartinbox_action_icon">
+                                    <!-- <a data-tooltip="Task" data-delay="50" data-position="top" href="javascript:void(0);" class="tooltipped modal-trigger" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" ng-click="taskModel(message)">
+                                        <i class="icon-pin"></i>
+                                    </a>-->
+
+                                    <a class="tooltipped modal-trigger" ng-click="GetConversation(message.senderId,message.recipientId,message.profileId ,message.recipientProfileUrl, message.recipientScreenName, message.senderScreenName,message.senderProfileUrl)" data-position="top" data-delay="50" data-tooltip="Chat">
+                                        <i class="icon-bubbles"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <!--<a class="tooltipped secondary-content" data-position="left"  data-tooltip="{{message.createdDate}}">{{message.createdDate}}</a>-->
+                            <label class="secondary-content">{{message.createdDate}}</label>
+                        </li>
+                        <div ng-if="lastreached!=true">
+                            <br /><br /><br /><br /><br /><br /><br />
+                            <div class="center">
+                                <div class="preloader-wrapper small active">
+                                    <div class="spinner-layer spinner-blue">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="spinner-layer spinner-red">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="spinner-layer spinner-yellow">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+
+                                    <div class="spinner-layer spinner-green">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ul>
+
+                </div>
+            </div>
+            <div class="col s12 m4 l4">
+                <div class="card" id="feeds">
+                    <h5 class="feeds_title blue darken-2 white-text"><i class="icon-folder"></i>Filter</h5>
+                    <div class="section section_filter" lazy-scroll="LoadMessages()">
+                        <h6>PROFILES</h6>
+                        <div class="inboxmsg_filter_slider">
+                            <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                <div class="row valign-wrapper">
+                                    <div class="col s2">
+                                        <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
+                                    </div>
+                                    <div class="col s8">
+                                        <span class="black-text">
+                                            {{profile.profileName}}
+                                        </span>
+                                    </div>
+                                    <div class="col s2">
+                                        <p>
+                                            <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
+                                            <label for="test_{{profile.profileId}}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--<div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}">
+                                <div class="row valign-wrapper">
+                                    <div class="col s2">
+                                        <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
+                                    </div>
+                                    <div class="col s8">
+                                        <span class="black-text">
+                                            {{profile.profileName}}
+                                        </span>
+                                    </div>
+                                    <div class="col s2">
+                                        <p>
+                                            <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
+                                            <label for="test_{{profile.profileId}}"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end container-->
+        <!-- add profile -->
+        <div id="addprofile" class="modal">
+            <div class="modal-content">
+                <h4>Adding Profiles</h4>
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs tab-demo z-depth-1">
+                            <li class="tab col s1"><a class="active" href="#twitter"><i class="fa fa-twitter fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#facebook"><i class="fa fa-facebook fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
+                            <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
+                        </ul>
+                    </div>
+                    <div id="twitter" class="col s12">
+                        <div class="center-align">
+                            <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
+                            <p>
+                                <input type="checkbox" id="Follow1" />
+                                <label for="Follow1">Follow Socioboard on twitter for update &amp; announcements</label>
+                            </p>
+                        </div>
+                    </div>
+                    <div id="facebook" class="col s12">
+                        <div class="center-align">
+                            <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand’s Facebook page.</p>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
+                        </div>
+                    </div>
+                    <div id="google" class="col s12">
+                        <div class="center-align">
+                            <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
+                        </div>
+                    </div>
+                    <div id="linkedin" class="col s12">
+                        <div class="center-align">
+                            <p>Grant access to your profile to share updates and view your feed.</p>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
+                        </div>
+                    </div>
+                    <div id="instagram" class="col s12">
+                        <div class="center-align">
+                            <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
+                        </div>
+                    </div>
+                    <div id="tumblr" class="col s12">
+                        <div class="center-align">
+                            <p>To allow Socioboard access to your Tumblr account, you must first give authorization from the Tumblr website</p>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add a tumblr Profile</a>
+                        </div>
+                    </div>
+                    <div id="youtube" class="col s12">
+                        <div class="center-align">
+                            <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-youtube fa-fw"></i>Connect your personal youtube</a>
+                        </div>
+                    </div>
+                    <div id="ganalytics" class="col s12">
+                        <div class="center-align">
+                            <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
+                            <a class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal GoogleAnalytics</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Email Message Modal -->
+        <div id="EmailMessageModal" class="modal modal-fixed-footer">
+            <div class="modal-content">
+                <h4>Email Message</h4>
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input disabled value="Chanchal Santra" id="first_name" type="text" class="validate">
+                                <label for="first_name">From</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="icon-pencil prefix"></i>
+                                <input id="emailid" type="text" class="validate">
+                                <label for="emailid">To</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="icon-globe prefix"></i>
+                                <textarea id="LeaveComment" class="materialize-textarea"></textarea>
+                                <label for="LeaveComment">Subject<span style="margin-left:10px;" class="grey-text text-darken-4">New Follower Alert forwarded by chanchal santra</span></label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action waves-effect waves-green btn-flat">Save</a>
+                <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
+        </div>
+
+        <!-- Reply Modal -->
+        <div id="ReplyModal" class="modal">
+            <div class="modal-content">
+                <h4>Public Reply</h4>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <i class="icon-pencil prefix"></i>
+                        <textarea id="reply" class="materialize-textarea" placeholder="ur text"></textarea>
+                        <label for="reply">Reply</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#!" class="modal-action waves-effect waves-green btn-flat">Reply</a>
+            </div>
+        </div>
+
+        <!--Chat Modal-->
+
+        <div id="ChatModal" class="modal">
+
+            <div class="modal-content">
+                <div>
+                    <img src="{{senderProfileUrl}}" alt="vikash_glb" class="circle"> <b>{{senderScreenName}}</b>
+                    <img src="https://cdn2.iconfinder.com/data/icons/bisicons-office-pack/512/Message-512.png" style="width: 7%; margin: 0px 3%;">
+                    <img src="{{recipientProfileUrl}}" class="circle"> <b>{{recipientScreenName}}</b>
+                </div>
+
+                <p></p>
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <ul class="collection">
+                                <li class="collection-item avatar" ng-repeat="dmmessage in lstGetConversation" my-Chat-Modal-Directive>
+                                    <img src="{{dmmessage.senderProfileUrl}}" alt="{{dmmessage.senderScreenName}}" class="circle">
+                                    <span class="email-title">{{dmmessage.senderScreenName}}</span>
+                                    <div class="row feeds_post z-depth-1 hoverable">
+                                        <div class="col m12">
+                                            <p class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{dmmessage.message}}</p>
+                                        </div>
+                                        <a data-tooltip="Task" data-delay="50" data-position="top" href="javascript:void(0);" class="tooltipped modal-trigger" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" ng-click="taskInboxModel(dmmessage)">
+                                            <i class="icon-pin"></i>
+                                        </a>
+                                    </div>
+
+                                    <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{dmmessage.createdDate}}">{{dmmessage.createdDate}}</a>
+                                </li>
+
+                            </ul>
+                            <div class="center" ng-if="msgload!=true">
+                                <br /><br /><br />
+                                <div class="preloader-wrapper small active">
+                                    <div class="spinner-layer spinner-green-only">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <h6 style="color:gray; font-size:18px; font-family:Calibri">Connecting...</h6>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <form class="col s10 ng-pristine ng-valid">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <i class="icon-pencil prefix"></i>
+                                <!--<textarea id="dmmessagecomment" class="materialize-textarea modal-fixed-footer"></textarea>-->
+                                <input type="text" id="dmmessagecomment" />
+                                <label for="icon_prefix2">Type your Message here...</label>
+                            </div>
+                        </div>
+                    </form>
+                    <span class="col s2 margin-top-30">
+                        <a class="waves-effect waves-light btn" ng-click="postdirrectmessage()"><i ng-class="sendingloader" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-class="sendicon" class="icon-cursor"></i></a>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+
+
+    </section>
+    <!-- END CONTENT -->
+
+    <div id="InboxTaskModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
+            <h4>Create Task</h4>
+            <p></p>
+            <div class="row">
+                <form class="col s12">
+                    <div class="row">
+                        <div class="input-field col s8">
+                            <i class="icon-pencil prefix"></i>
+                            <textarea id="taskComment" class="materialize-textarea" placeholder="Your comment (viewable only to team members)"></textarea>
+                            <label for="LeaveComment">LEAVE A COMMENT</label>
+                        </div>
+                        <div class="col s4">
+                            <span>ASSIGN TASK TO</span><br />
+                            <div class="smartinbox_filter_slider">
+                                <p class="grey lighten-5 z-depth-1" ng-repeat="member in groups[groupIndex].members |filter:{memberStatus:1} ">
+                                    <input name="member" type="radio" id="{{member.userId}}" value="{{member.userId}}" class="with-gap task-user-member" />
+                                    <label for="{{member.userId}}">{{ member.firstName}}</label>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a href="javascript:void(0);" class="modal-action waves-effect waves-green btn-flat" ng-click="addTask('MongoTwitterDirectMessages')">Save</a>
+            <a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="closeModal()">Close</a>
+        </div>
+    </div>
+</div>
+

@@ -498,7 +498,7 @@
                         </div>
                         <div class="row">
                             <div class="col l12 m12 s12">
-                                <a href="#profiles" class="btn btn_style red right">See More >></a>
+                                <a href="#profiles" class="btn btn_style red btn_style btn_round right">See More >></a>
                             </div>
                         </div>
                     </div>
@@ -1079,7 +1079,7 @@
                                                         </div>
                                                     </a>
                                                     <div class="col l2 m2 s2 margin-top-10">
-                                                        <span ng-click="deleteChannel(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
+                                                        <span ng-click="deleteBoard(profile.profileId)" class=""><i class="fa fa-close red-text"></i></span>
                                                     </div>
                                                 </div>
                                             </li>
@@ -1230,7 +1230,7 @@
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}`{{profile.profileName}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                         </label>
                                     </li>
@@ -1238,7 +1238,7 @@
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}`{{profile.profileName}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                         </label>
                                     </li>
@@ -1246,7 +1246,7 @@
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}`{{profile.profileName}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                         </label>
                                     </li>
@@ -1254,7 +1254,7 @@
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}`{{profile.profileName}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
                                     </li>
@@ -1262,7 +1262,7 @@
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}`{{profile.profileName}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
                                     </li>
@@ -1305,9 +1305,9 @@
 
 
             <div class="row no-space">
-                <a href="" class="btn btn_style blue_btn_style left" ng-click="draftMsg()">Save as Draft</a>
+                <a href="" class="btn btn_style blue_btn_style left" ng-click="draftMsg()" style="width:90px;">Save as Draft</a>
                 <div class="right btn btn_style blue_btn_style">
-                    <div ng-show="dispbtn" ng-click="ComposeMessage()">send</div>
+                    <div ng-show="dispbtn" ng-click="ComposeMessage()" style="width:90px;">send</div>
                     <div ng-show="!dispbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
                 </div>
             </div>
@@ -1496,7 +1496,7 @@
 
     <div class="modal" id="ReconnFanpage_Modal">
         <div class="modal-content">
-            <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
+            <h4>CHOOSE FACEBOOK PAGES TO RECONNECT</h4>
 
             <ul class="collection">
                 <li class="collection-item avatar" ng-repeat="fbpages in lstReconnFbPages" ng-if="fbpages.connected==0">

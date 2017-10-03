@@ -32,6 +32,14 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 board.userId = userId;
                 board.trendingtype = Domain.Socioboard.Enum.TrendingType.user;
                 board.boardId = Guid.NewGuid().ToString();
+                if (board.boardName.ToLower().Contains(" "))
+                {
+                    board.TempboardName = board.boardName.Replace(" ", "_");
+                }
+                else
+                {
+                    board.TempboardName= boardName.ToLower();
+                }
                 if (!string.IsNullOrEmpty(twitterHashTag) && twitterHashTag != "undefined")
                 {
                     TwitterRepository tr = new TwitterRepository();
@@ -106,6 +114,29 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 return null;
             }
         }
+        public static Domain.Socioboard.Models.MongoBoards getBoardFeedsByName(string boardName, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger, DatabaseRepository dbr)
+        {
+            MongoRepository boardrepo = new MongoRepository("MongoBoards", _appSettings);
+            try
+            {
+                Domain.Socioboard.Models.MongoBoards inMemboard = _redisCache.Get<Domain.Socioboard.Models.MongoBoards>(Domain.Socioboard.Consatants.SocioboardConsts.CacheBoard + boardName);
+                if (inMemboard != null)
+                {
+                    return inMemboard;
+                }
+                else
+                {
+                    Domain.Socioboard.Models.MongoBoards board = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.boardId.Equals(boardName)).First();
+                    return board;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                return null;
+            }
+        }
 
         public static List<Domain.Socioboard.Models.MongoBoards> getTopTrending(Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger,DatabaseRepository dbr)
         {
@@ -113,7 +144,24 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
             {
                 DateTime fromTime = DateTime.UtcNow.AddMinutes(-DateTime.UtcNow.Minute);
                 DateTime toTime = DateTime.UtcNow.AddMinutes(-DateTime.UtcNow.Minute).AddHours(-24);
-                List<MongoBoards> lstmongo = dbr.Find<MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date).ToList();
+                List<MongoBoards> lstmongo = dbr.Find<MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId==0).ToList();
+                lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
+                return lstmongo;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                return null;
+            }
+        }
+        public static List<Domain.Socioboard.Models.MongoBoards> getweeklyTrending(Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger, DatabaseRepository dbr)
+        {
+            try
+            {
+                DateTime fromTime = DateTime.UtcNow.AddDays(-1);
+                DateTime toTime = DateTime.UtcNow.AddDays(-7);
+                List<MongoBoards> lstmongo = dbr.Find<MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId == 0).ToList();
                 lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
                 return lstmongo;
 
@@ -125,6 +173,41 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
             }
         }
 
+        public static List<Domain.Socioboard.Models.MongoBoards> getMonthlyTrending(Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger, DatabaseRepository dbr)
+        {
+            try
+            {
+                DateTime fromTime = DateTime.UtcNow.AddDays(-1);
+                DateTime toTime = DateTime.UtcNow.AddDays(-30);
+                List<MongoBoards> lstmongo = dbr.Find<MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId == 0).ToList();
+                lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
+                return lstmongo;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                return null;
+            }
+        }
+
+        public static List<Domain.Socioboard.Models.MongoBoards> getyearlyTrending(Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger, DatabaseRepository dbr)
+        {
+            try
+            {
+                DateTime fromTime = DateTime.UtcNow.AddDays(-1);
+                DateTime toTime = DateTime.UtcNow.AddDays(-365);
+                List<MongoBoards> lstmongo = dbr.Find<MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId == 0).ToList();
+                lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
+                return lstmongo;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.StackTrace);
+                return null;
+            }
+        }
 
     }
 }

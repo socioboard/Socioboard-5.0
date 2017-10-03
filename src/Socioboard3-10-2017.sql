@@ -57,6 +57,30 @@ CREATE TABLE IF NOT EXISTS `coupons` (
 -- Data exporting was unselected.
 
 
+-- Dumping structure for table socioboardlive.daywiseschedule
+CREATE TABLE IF NOT EXISTS `daywiseschedule` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `shareMessage` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `weekdays` varchar(500) NOT NULL,
+  `clientTime` datetime DEFAULT NULL,
+  `scheduleTime` datetime DEFAULT NULL,
+  `createTime` datetime DEFAULT NULL,
+  `postedTime` datetime DEFAULT NULL,
+  `status` tinyint(4) DEFAULT NULL,
+  `userId` bigint(20) NOT NULL,
+  `profileType` tinyint(4) NOT NULL,
+  `profileId` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `picUrl` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `socialprofileName` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `url` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `localscheduletime` datetime DEFAULT NULL,
+  `link` varchar(5000) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Data exporting was unselected.
+
+
 -- Dumping structure for table socioboardlive.demorequest
 CREATE TABLE IF NOT EXISTS `demorequest` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
@@ -101,6 +125,7 @@ CREATE TABLE IF NOT EXISTS `draft` (
   `userId` bigint(20) NOT NULL,
   `picUrl` varchar(5000) DEFAULT NULL,
   `GroupId` bigint(20) NOT NULL DEFAULT '0',
+  `mediaType` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -176,6 +201,7 @@ CREATE TABLE IF NOT EXISTS `facebookaccounts` (
   `Is90DayDataUpdated` bit(1) DEFAULT NULL,
   `lastpagereportgenerated` datetime DEFAULT NULL,
   `contenetShareathonUpdate` datetime DEFAULT NULL,
+  `SocailSignInEnable` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`Id`),
   UNIQUE KEY `FbUserId` (`FbUserId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -254,6 +280,7 @@ CREATE TABLE IF NOT EXISTS `googleplusaccounts` (
   `EntryDate` datetime DEFAULT NULL,
   `LastUpdate` datetime DEFAULT NULL,
   `IsAccessTokenActive` bit(1) NOT NULL DEFAULT b'1',
+  `socialSignInEnable` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -319,6 +346,7 @@ CREATE TABLE IF NOT EXISTS `imglibrary` (
   `Tags` text,
   `FolderType` tinytext,
   `LocalImagePath` text,
+  `Fileextension` text,
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -408,6 +436,7 @@ CREATE TABLE IF NOT EXISTS `linkedincompanypage` (
 CREATE TABLE IF NOT EXISTS `mongoboards` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `boardName` varchar(50) NOT NULL,
+  `TempboardName` varchar(50) NOT NULL,
   `boardId` varchar(50) NOT NULL,
   `userId` varchar(50) NOT NULL,
   `trendingtype` tinyint(4) NOT NULL,
@@ -439,7 +468,7 @@ CREATE TABLE IF NOT EXISTS `newsletter` (
 CREATE TABLE IF NOT EXISTS `notifications` (
   `Id` bigint(20) NOT NULL AUTO_INCREMENT,
   `UserId` bigint(20) DEFAULT NULL,
-  `notificationtime` datetime DEFAULT NULL,
+  `notificationtime` varchar(50) DEFAULT NULL,
   `MsgId` bigint(20) DEFAULT NULL,
   `MsgStatus` text,
   `ReadOrUnread` text,
@@ -525,7 +554,7 @@ CREATE TABLE IF NOT EXISTS `rssfeedurl` (
 -- Dumping structure for table socioboardlive.scheduledmessage
 CREATE TABLE IF NOT EXISTS `scheduledmessage` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `shareMessage` mediumtext COLLATE utf8mb4_bin,
+  `shareMessage` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `clientTime` datetime DEFAULT NULL,
   `scheduleTime` datetime DEFAULT NULL,
   `createTime` datetime DEFAULT NULL,
@@ -537,7 +566,9 @@ CREATE TABLE IF NOT EXISTS `scheduledmessage` (
   `socialprofileName` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
   `url` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
   `link` varchar(5000) COLLATE utf8mb4_bin DEFAULT NULL,
-  `localscheduletime` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+  `localscheduletime` text COLLATE utf8mb4_bin,
+  `calendertime` datetime DEFAULT NULL,
+  `mediaType` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `scheduleTime` (`scheduleTime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;

@@ -236,7 +236,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                 date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
                 parm[i].DateTimeOfPost = date;
             }
-            $scope.lstDiscoverySearchFacebook = parm;
+            $rootScope.lstDiscoverySearchFacebook = parm;
 
         }
 
@@ -342,8 +342,12 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         }
 
         $scope.GetCategories();
-        $('#searchcatagory').openModal();
-
+        if ($rootScope.lstDiscoverySearchFacebook == undefined) {
+            $('#searchcatagory').openModal();
+        }
+        $scope.discoveryPopUp = function () {
+            $('#searchcatagory').openModal();
+        }
         // vanilla JS
         // init with element
         var grid = document.querySelector('.grid');

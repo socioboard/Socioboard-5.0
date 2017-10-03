@@ -32,8 +32,13 @@
 <div data-ng-controller="DesignFeedsController" scroll id="page" ng-class="{min:boolChangeClass}" style="height:100%;">
     <!-- Page name -->
     <div class="container">
-        <div class="col m12">
+        <div class="col m6">
             <h4>Monitor</h4>
+        </div>
+        <div class="col m6" style="margin-top: -45px;float: right;">
+            <a ng-click="discoveryPopUp()" class="btn">
+                <i class="fa fa-search"></i>
+            </a>
         </div>
     </div>
 
@@ -112,130 +117,10 @@
 
         </div>
     </div>
+    </div>
 
     <!-- END CONTENT -->
-    <!-- add profile -->
-    <!--<div id="addprofile" class="modal">
-        <div class="modal-content">
-          <h4>Adding Profiles</h4>
-            <div class="row">
-                <div class="col s12">
-                  <ul class="tabs tab-demo z-depth-1">
-                    <li class="tab col s1"><a class="active" href="#twitter"><i class="fa fa-twitter fa-fw fa-2x"></i></a></li>
-                    <li class="tab col s1"><a href="#facebook"><i class="fa fa-facebook fa-fw fa-2x"></i></a></li>
-                    <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
-                    <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
-                    <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
-                    <li class="tab col s1"><a href="#tumblr"><i class="fa fa-tumblr fa-fw fa-2x"></i></a></li>
-                    <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
-                    <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
-                  </ul>
-                </div>
-                <div id="twitter" class="col s12">
-                    <div class="center-align">
-                        <p>Please make sure you are logged in with the proper account when you authorize Socioboard.</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-twitter fa-fw"></i>Add a Twitter Profile</a>
-                        <p>
-                          <input type="checkbox" id="Follow1" />
-                          <label for="Follow1">Follow Socioboard on twitter for update &amp; announcements</label>
-                        </p>
-                    </div>
-                </div>
-                <div id="facebook" class="col s12">
-                    <div class="center-align">
-                        <p>Socioboard needs permission to access and publish content to Facebook on your behalf. To grant permission, you must be an admin for your brand’s Facebook page.</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Profile</a>
-                        <a class="waves-effect waves-light btn modal-trigger" href="#FbFanpageModal"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Fanpage</a>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-facebook fa-fw"></i>Add a Facebook Fanpage Analytics</a>
-                    </div>
-                </div>
-                <div id="google" class="col s12">
-                    <div class="center-align">
-                        <p>Allow Socioboard access to your Google+ account, you must first give authorization from the Google website</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-google-plus fa-fw"></i>Add a Google+ Profile</a>
-                    </div>
-                </div>
-                <div id="linkedin" class="col s12">
-                    <div class="center-align">
-                        <p>Grant access to your profile to share updates and view your feed.</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Profile</a>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-linkedin fa-fw"></i>Add Linkedin Company Page</a>
-                    </div>
-                </div>
-                <div id="instagram" class="col s12">
-                    <div class="center-align">
-                        <p>To allow Socioboard access to your Instagram account, you must first give authorization from the Instagram website</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
-                    </div>
-                </div>
-                <div id="tumblr" class="col s12">
-                    <div class="center-align">
-                        <p>To allow Socioboard access to your Tumblr account, you must first give authorization from the Tumblr website</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add a tumblr Profile</a>
-                    </div>
-                </div>
-                <div id="youtube" class="col s12">
-                    <div class="center-align">
-                        <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-youtube fa-fw"></i>Connect your personal youtube</a>
-                    </div>
-                </div>
-                <div id="ganalytics" class="col s12">
-                    <div class="center-align">
-                        <p>Add your Google Analytics Account to see how your website traffic correlates with your social media activity.</p>
-                        <a class="waves-effect waves-light btn"><i class="fa fa-line-chart fa-fw"></i>Connect your personal GoogleAnalytics</a>
-                    </div>
-                </div>
-          </div>
-        </div>
-    </div>-->
-    <!-- add profile -->
-    <!-- Fb Fanpage Modal  -->
-    <!--<div id="FbFanpageModal" class="modal">
-        <div class="modal-content">
-            <h4>CHOOSE FACEBOOK PAGES TO CONNECT</h4>
-            <ul class="collection">
-                <li class="collection-item avatar">
-                    <div class="left">
-                        <img src="https://graph.facebook.com/938022872953726/picture?type=small" alt="Socioboard" class="circle">
-                        <span class="title">Socioboard</span>
-                        <p>Connected</p>
-                    </div>
-                    <p class="right">
-                      <input type="checkbox" id="Socioboard" />
-                      <label for="Socioboard"></label>
-                    </p>
-                </li>
-                <li class="collection-item avatar">
-                    <div class="left">
-                        <img src="https://graph.facebook.com/284030164045/picture?type=small" alt="Globussoft" class="circle">
-                        <span class="title">Globussoft</span>
-                        <p>Connected</p>
-                    </div>
-                    <p class="right">
-                      <input type="checkbox" id="Globussoft" />
-                      <label for="Globussoft"></label>
-                    </p>
-                </li>
-                <li class="collection-item avatar">
-                    <div class="left">
-                        <img src="https://graph.facebook.com/1872928502931573/picture?type=small" alt="DailyOfficeCocktail" class="circle">
-                        <span class="title">DailyOfficeCocktail</span>
-                        <p>Connected</p>
-                    </div>
-                    <p class="right">
-                      <input type="checkbox" id="DailyOfficeCocktail" />
-                      <label for="DailyOfficeCocktail"></label>
-                    </p>
-                </li>
-            </ul>
-        </div>
-        <div class="modal-footer">
-          <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-          <a href="#!" class=" modal-action waves-effect waves-green btn-flat">Connect</a>
-        </div>
-    </div>-->
-    <!-- Fb Fanpage Modal  -->
+  
     <!-- Modal Structure -->
     <div id="searchcatagory" class="modal">
         <div class="modal-content">
@@ -270,19 +155,7 @@
             </span>
         </div>
     </div>
-    <!-- Modal Structure -->
-    <!-- Compose Email Trigger -->
-    <!--<div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select()" style="bottom: 45px; right: 24px;">
-        <div class="btn-floating btn-large red modal-trigger" href="#searchcatagory">
-            <i class="large mdi-action-search"></i>
-        </div>
-    </div>
-    <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-        <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
-            <i class="large mdi-editor-mode-edit"></i>
-        </a>
-    </div>-->
-
+   
 
     <!--Compose model-->
     <div id="ComposePostModal" class="modal">
@@ -340,7 +213,7 @@
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                         </label>
                                     </li>
@@ -348,7 +221,7 @@
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                         </label>
                                     </li>
@@ -356,7 +229,7 @@
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                         </label>
                                     </li>
@@ -364,14 +237,15 @@
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
                                     </li>
@@ -390,6 +264,7 @@
             </div>
         </div>
     </div>
+    
 
     
     <script>

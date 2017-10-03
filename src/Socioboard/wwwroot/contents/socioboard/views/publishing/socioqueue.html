@@ -94,10 +94,10 @@
                             <td ng-if="socioqueue.status==0">Pending</td>
                             <td ng-if="socioqueue.status==1">Compleated</td>
                             <td>
-                                <a class="waves-effect waves-light btn" ng-click="deleteMsg(socioqueue.id)"><i class="fa fa-times"></i></a>
+                                <a class="waves-effect waves-light btn red darken-4 btn_style btn_round" ng-click="deleteMsg(socioqueue.id)"><i class="fa fa-times"></i></a>
                             </td>
                             <td>
-                                <a class="waves-effect waves-light btn modal-trigger" ng-click="editscheulemessage(socioqueue.shareMessage,socioqueue.id)"><i class="fa fa-pencil"></i></a>
+                                <a class="waves-effect waves-light btn green btn_style btn_round modal-trigger" ng-click="editscheulemessage(socioqueue.shareMessage,socioqueue.id)"><i class="fa fa-pencil"></i></a>
                             </td>
                         </tr>
                     </tbody>
@@ -128,7 +128,6 @@
     </section>
     <!-- END CONTENT -->
     <!-- Modal Structure -->
-    <!--<script id="editschedulemessageModalContent.html" type="text/ng-template">-->
     <div id="SocioqueueModal" class="modal">
         <form class="col s12" name="editscheduleform">
             <div class="modal-content">
@@ -137,15 +136,10 @@
                 <div class="row center">
                     <div class="input-field col s8">
                         <div>
-                            <textarea id="editScheduleMsg" class="materialize-textarea" length="500" ng-model="editscdmessage" value=""></textarea>
-                            <!--<input type="text" id="editScheduleMsg" ng-model="editscdmessage" class="materialize-textarea" length="500"  />-->
-                            <!--<label for="editScheduleMsg">Edit Message Here</label>-->
+                            <textarea id="editScheduleMsg" class="materialize-textarea" length="500" ng-model="editscdmessage" value="{{editscdmessage}}"></textarea>
                         </div>
 
                     </div>
-                    <!--<div class="col s4">
-                        <img src="../../images/SocioboardCore_logo.png" class="responsive-img">
-                    </div>-->
                 </div>
             </div>
             <div class="modal-footer">

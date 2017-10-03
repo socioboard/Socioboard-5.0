@@ -109,7 +109,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
           
            // if ($rootScope.groups[index].profiles == undefined) {
                 //codes to load  fb profiles start
-                $http.get(apiDomain + '/api/GroupProfiles/GetGroupProfiles?groupId=' + groupId)
+            $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfiles?groupId=' + groupId)
                               .then(function (response) {
                                   $rootScope.groups[index].profiles = response.data;
                                  

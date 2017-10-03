@@ -7,6 +7,10 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         $scope.dispbtn = true;
         $scope.repeat = false;
 
+        if($rootScope.schedulemessage)
+        {
+            $('#ScheduleMsg').focus();
+        }
 
         $scope.currentDate = new Date();
         $scope.showDatePicker = function (ev) {
@@ -53,7 +57,22 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         $scope.schedulemsg = function (datess) {
             $scope.repeat = false;
-            var profiles = $('#scheduleprofiles').val();
+
+            var profilesnames = new Array();
+            $("#checkboxdata .subcheckbox").each(function () {
+
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profilesnames.indexOf(attrId);
+                    if (index > -1) {
+                        profilesnames.splice(index, 1);
+                    }
+                } else {
+                    profilesnames.push(attrId);
+                }
+            });
+
+            var profiles = $('#checkboxdata').val();
             var message = $('#ScheduleMsg').val();
             var timeRepeat = $('#timesRepeat').val();
 
@@ -132,7 +151,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
 
             if (message != "") {
-                if (profiles.length > 0) {
+                if (profilesnames.length > 0) {
                     if (scheduletime != "") {
                         // if (date_value != "") {
                         $scope.checkfile();
@@ -144,7 +163,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + 'none' + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&mediaType=' + $scope.fileExtensionName + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profilesnames + '&userId=' + $rootScope.user.Id + '&message=' + 'none' + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&mediaType=' + $scope.fileExtensionName + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -171,6 +190,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                         $scope.rep = true;
                                         $rootScope.draftDelete = "true";
                                         swal("Message scheduled successfully");
+                                        closeModel();
+                                        $(".dropify-clear").click();
                                     }
                                 }
                                 else {
@@ -189,7 +210,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + 'none' + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                                url: apiDomain + '/api/SocialMessages/ScheduleMessage?profileId=' + profilesnames + '&userId=' + $rootScope.user.Id + '&message=' + 'none' + '&scheduledatetime=' + newdate1 + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -208,6 +229,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                     $scope.dispbtn = true;
                                     $rootScope.draftDelete = "true";
                                     swal("Message scheduled successfully");
+                                    closeModel();
+                                    $(".dropify-clear").click();
                                 }
                             }, function (reason) {
 

@@ -102,6 +102,7 @@ namespace Socioboard.Controllers
                     {
                         user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
                         HttpContext.Session.SetObjectAsJson("User", user);
+                        HttpContext.Session.SetObjectAsJson("googlepluslogin", null);
                         if (user.ExpiryDate < DateTime.UtcNow && user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
                         {
                             return RedirectToAction("Index", "Home");
@@ -234,7 +235,7 @@ namespace Socioboard.Controllers
                 if (string.IsNullOrEmpty(Op))
                 {
                     HttpContext.Session.SetObjectAsJson("Google", "Gplus_Account");
-                    string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write+https://www.googleapis.com/auth/plus.stream.read+https://www.googleapis.com/auth/plus.circles.read+https://www.googleapis.com/auth/plus.circles.write&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
+                    string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write+https://www.googleapis.com/auth/plus.stream.read+https://www.googleapis.com/auth/plus.circles.read&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
                     return Redirect(googleurl); 
                 }
                 else if (Op == "page")

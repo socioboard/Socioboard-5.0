@@ -76,6 +76,26 @@ SocioboardApp.controller('PinterestFeedsController', function ($rootScope, $scop
             }
         }
 
+        $scope.CheckStatus = function () {
+            var web_url = $('#web_url').val();
+            if (web_url != "") {
+                if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(web_url)) {
+
+                } else {
+                    swal('please upload any valid image url for pin');
+                    return false;
+                }
+            } else {
+                $scope.checkfile();
+                if ($scope.check == false) {
+                    alertify.set({ delay: 3000 });
+                    $('#composePinImage').val('');
+                    alertify.error("File extension is not valid. Please upload an image file");
+                } else {
+                }
+            }
+
+        }
 
         //code for checking the file format start
         $scope.checkfile = function () {

@@ -62,10 +62,10 @@ namespace Api.Socioboard.Controllers
                     {
                       
                       
-                        return Ok("LinkedIn account already added by you.");
+                        return BadRequest("LinkedIn account already added by you.");
                        
                     }
-                    return Ok("LinkedIn account added by other user.");
+                    return BadRequest("LinkedIn account added by other user.");
                 }
                 else
                 {

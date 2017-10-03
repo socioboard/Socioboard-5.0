@@ -199,7 +199,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
                 $scope.DiscoverySearchGplus();
                 $scope.DiscoverySearchTwitter();
                  $scope.DiscoverySearchinstagram();
-                 $('#discoverytext').val('');
+                 //$('#discoverytext').val('');
                  $scope.DiscoveryHistory();
                  
             }

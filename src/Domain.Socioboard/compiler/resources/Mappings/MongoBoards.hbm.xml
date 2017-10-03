@@ -8,6 +8,9 @@
     <property name="boardName">
       <column name="boardName" />
     </property>
+    <property name="TempboardName">
+      <column name="TempboardName" />
+    </property>
     <property name="boardId">
       <column name="boardId" />
     </property>

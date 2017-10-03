@@ -28,16 +28,6 @@
                             <th style="width: 20%;" class="center">Action</th>
                         </tr>
                     </thead>
-                    <!--<tfoot>
-                        <tr>
-                            <th>Sent From</th>
-                            <th>Message</th>
-                            <th>Network</th>
-                            <th>Status</th>
-                            <th>Delete</th>
-                            <th>Edit</th>
-                        </tr>
-                    </tfoot>-->
                     <tbody>
 
 
@@ -45,8 +35,7 @@
                             <td>
                                 <input name="selector[]" class="filled-in subcheckbox" id="{{socioqueue.id}}" type="checkbox" ng-model="socioqueue.selected" ng-change="optionToggled()" />
                                 <label for="{{socioqueue.id}}">{{$index +1}}</label>
-                            </td>
-                            <!--<td>{{$index +1}}</td>-->
+                            </td>                           
                             <td class="center">
                                 <div class="col s12" ng-if="socioqueue.profileType==0 || socioqueue.profileType==1 || socioqueue.profileType==2 || socioqueue.profileType==3 || socioqueue.profileType==4">
                                     <img src="{{getProperURL(user.ProfilePicUrl)}}" class="responsive-img profilePic">
@@ -66,6 +55,14 @@
                                 <br>
                                 <img ng-if="socioqueue.url!='' && socioqueue.url != null" src="{{getProperURL(socioqueue.url)}}" class="responsive-img" style="width:200px">
                             </td>
+                            <td class="center">
+                                <span>
+                                    {{socioqueue.weekdays}}
+                                </span>
+                            </td>
+
+
+
                             <td class="center">
                                 <div class="col s12" ng-if="socioqueue.profileType==0">
                                     <img src="{{socioqueue.picUrl}}" class="responsive-img profilePic">
@@ -87,13 +84,13 @@
                                     <span>{{socioqueue.socialprofileName}}</span>
                                 </div>
                             </td>
-                            <td ng-if="socioqueue.status==0">Pending</td>
-                            <td ng-if="socioqueue.status==1">Compleated</td>
+                            <td ng-if="socioqueue.status==0" class="center">Pending</td>
+                            <td ng-if="socioqueue.status==1" class="center">Completed</td>
                             <td class="center">
-                                <a href="#" class="btn btn_style img_comp_btn"><i class="fa fa fa-play"></i></a>
-                                <a href="#" class="btn btn_style img_comp_btn"><i class="fa fa-pause"></i></a>
-                                <a href="#" class="btn btn_style img_comp_btn" href="#EditModal"><i class="fa fa-pencil"></i></a>
-                                <a href="#" class="btn btn_style img_comp_btn" ng-click="deleteMsg('Deleted!!')"><i class="fa fa-times"></i></a>
+                                <!--<a href="#" class="btn btn_style img_comp_btn"><i class="fa fa fa-play"></i></a>-->
+                                <!--<a href="#" class="btn btn_style img_comp_btn"><i class="fa fa-pause"></i></a>-->
+                                <a  class="btn green darken-3 btn_style btn_round img_comp_btn modal-trigger" ng-click="editscheulemessage(socioqueue.shareMessage,socioqueue.id)"><i class="fa fa-pencil"></i></a>
+                                <a class="btn btn_style btn_round img_comp_btn red darken-4  modal-trigger" ng-click="deleteMsg(socioqueue.id)"><i class="fa fa-times"></i></a>
                             </td>
                         </tr>
                     </tbody>
@@ -152,5 +149,12 @@
         
     </div>
     <!--</script>-->
+    <!--<script>
+    $(document).ready(function(){
+    $('.modal-trigger').leanModal();
+    });
+    </script>-->
+ 
+
 
 </div>

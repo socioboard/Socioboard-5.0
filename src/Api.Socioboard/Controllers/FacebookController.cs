@@ -117,35 +117,43 @@ namespace Api.Socioboard.Controllers
             Domain.Socioboard.Models.Facebookaccounts fbaccw = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(profileId, _redisCache, dbr);
             //fbacc = fbacc.Where(t => t.FbUserId.Contains("127471161024815")).ToList();
 
-
-            if (fbacc.FbUserId == profileId)
+           try
             {
-                if (fbacc != null && fbacc.IsActive == true)
+                if (fbacc.FbUserId == profileId)
                 {
-                    if (fbacc.UserId == userId)
+                    if (fbacc != null && fbacc.IsActive == true)
                     {
-                        Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
-                        if (ngrp == null)
+                        if (fbacc.UserId == userId)
                         {
-                            return Ok("Wrong Group Id");
+                            Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
+                            if (ngrp == null)
+                            {
+                                return Ok("Wrong Group Id");
+                            }
+                            int res = Api.Socioboard.Repositories.FacebookRepository.ReFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, reconnect, _redisCache, _appSettings, _logger);
+                            if (res == 1)
+                            {
+                                return Ok("Facebook account Reconnect Successfully");
+                            }
+                            else
+                            {
+                                return Ok("Error while Reconnecting Account");
+                            }
                         }
-                        int res = Api.Socioboard.Repositories.FacebookRepository.ReFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, reconnect, _redisCache, _appSettings, _logger);
-                        if (res == 1)
-                        {
-                            return Ok("Facebook account Reconnect Successfully");
-                        }
-                        else
-                        {
-                            return Ok("Error while Reconnecting Account");
-                        }
-                    }
 
+                    }
+                }
+                else
+                {
+                    return Ok("Oops! login information is wrong , login the profile which has to be reconnected");
                 }
             }
-            else
+            catch (Exception ex)
             {
                 return Ok("Oops! login information is wrong , login the profile which has to be reconnected");
             }
+           
+            
 
             return Ok();
 
@@ -288,24 +296,24 @@ namespace Api.Socioboard.Controllers
                 });
                 IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
 
-                //foreach (var item in lstFbFeeds.ToList())
-                //{
-                //    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
-                //    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", _appSettings);
-                //    var buildecommentr = Builders<Domain.Socioboard.Models.Mongo.MongoFbPostComment>.Sort;
-                //    var sortcomment = buildecommentr.Descending(t => t.Likes);
-                //    var resultcomment = mongorepocomment.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId, sortcomment, skip,5);
-                //    var taskcomment = Task.Run(async () =>
-                //    {
-                //        return await resultcomment;
-                //    });
-                //    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
-                //    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
-                //    _intafeed._facebookFeed = item;
-                //    _intafeed._facebookComment = lstFbPostComment.ToList();
-                //    lstfacebookfeed.Add(_intafeed);
-                //}
-                return Ok(lstFbFeeds.ToList());
+                foreach (var item in lstFbFeeds.ToList())
+                {
+                    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", _appSettings);
+                    var buildecommentr = Builders<Domain.Socioboard.Models.Mongo.MongoFbPostComment>.Sort;
+                    var sortcomment = buildecommentr.Descending(t => t.Likes);
+                    var resultcomment = mongorepocomment.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId, sortcomment, skip, 5);
+                    var taskcomment = Task.Run(async () =>
+                    {
+                        return await resultcomment;
+                    });
+                    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                    _intafeed._facebookFeed = item;
+                    _intafeed._facebookComment = lstFbPostComment.ToList();
+                    lstfacebookfeed.Add(_intafeed);
+                }
+                return Ok(lstfacebookfeed.ToList());
 
             }
             // return Ok();
@@ -376,6 +384,24 @@ namespace Api.Socioboard.Controllers
             return Ok(lstFbAcc);
         }
 
+        [HttpGet("GetFacebookProfilesOnlyforReconn")]
+        public IActionResult GetFacebookProfilesOnlyforReconn(long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = new List<Facebookaccounts>();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook))
+            {
+                Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(item.profileId, _redisCache, dbr);
+                Domain.Socioboard.Models.User userdata = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == fbAcc.UserId);
+                if (fbAcc != null)
+                {
+                    lstFbAcc.Add(fbAcc);
+                }
+            }
+            return Ok(lstFbAcc);
+        }
+
         [HttpGet("GetFacebookProfilesOnly")]
         public IActionResult GetFacebookProfilesOnly(long groupId)
         {
@@ -385,12 +411,32 @@ namespace Api.Socioboard.Controllers
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook))
             {
                 Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(item.profileId, _redisCache, dbr);
-                if (fbAcc != null)
+                Domain.Socioboard.Models.User userdata = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == fbAcc.UserId);
+                if (fbAcc != null && userdata.EmailId != fbAcc.EmailId)
                 {
                     lstFbAcc.Add(fbAcc);
                 }
             }
             return Ok(lstFbAcc);
+        }
+
+        [HttpGet("GetPrimaryFacebookAcc")]
+        public IActionResult GetPrimaryFacebookAcc(long userId, long groupId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            //List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = new List<Facebookaccounts>();
+            Domain.Socioboard.Models.Facebookaccounts UserFbAccDetail = new Facebookaccounts();
+            foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook))
+            {
+                Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(item.profileId, _redisCache, dbr);
+                Domain.Socioboard.Models.User userdata = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == fbAcc.UserId);
+                if (fbAcc != null && userdata.EmailId == fbAcc.EmailId)
+                {
+                    UserFbAccDetail = fbAcc;
+                }
+            }
+            return Ok(UserFbAccDetail);
         }
 
         [HttpPost("GetFacebookPages")]

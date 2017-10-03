@@ -1,0 +1,117 @@
+﻿<style>
+    button:focus {
+        outline: 2px solid #000;
+        outline-offset: 1px;
+    }
+</style>
+<div data-ng-controller="HistoryController">
+    <!-- START CONTENT -->
+    <div class="container">
+        <div class="col m12">
+            <h4>History</h4>
+        </div>
+    </div>
+
+    <section id="content">
+        <!--start container-->
+        <!--card widgets end-->
+        <div class="row">
+            <div class="col s12 l12">
+                <!-- Dropdown Trigger -->
+                <a class='dropdown-button btn btn_style blue_btn_style right' href='#' data-activates='filter' style="width:180px"><i id="filterDrop" class="fa fa-filter" style="color:darkred"></i>  {{filterName}}</a>
+
+                <!-- Dropdown Structure -->
+                <ul id='filter' class='dropdown-content'>
+                    <li style="font-weight:600;"><a href="JavaScript:Void(0)" class="black-text text-lighten-2">Filter</a></li>
+                    <li ng-click="filterProfiles(-1, 'Filter')"><a href="JavaScript:Void(0)"><i class="fa fa-filter red-text text-darken-4"></i>&nbsp&nbspDisable filter</a></li>
+                    <li ng-click="filterProfiles(0,'Facebook')"><a href="JavaScript:Void(0)"><i class="fa fa-facebook-official blue-text text-darken-4"></i>&nbsp&nbspFacebook</a></li>
+                    <li ng-click="filterProfiles(1, 'F-Page')"><a href="JavaScript:Void(0)"><i class="fa fa-flag orange-text"></i>&nbsp&nbspF-Page</a></li>
+                    <li ng-click="filterProfiles(2, 'Twitter')"><a href="JavaScript:Void(0)"><i class="fa fa-twitter cyan-text"></i>&nbsp&nbspTwitter</a></li>
+                    <li ng-click="filterProfilesLink('Linkedin')"><a href="JavaScript:Void(0)"><i class="fa fa-linkedin blue-text text-darken-4"></i>&nbsp&nbspLinkedin</a></li>
+                </ul>
+            </div>
+            <div class="col s12 m12">
+                <table id="SocioQueue" class="display responsive-table striped" cellspacing="0" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="center">#</th>
+                            <th class="center">Sent From</th>
+                            <th class="center">Message</th>
+                            <th class="center">Network</th>
+                            <th class="center">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="historyMessage in lstsentessage">
+                                <td>{{$index +1}}</td>
+                                <td class="center">
+                                    <div class="col s12">
+                                        <img src="{{getProperURL(user.ProfilePicUrl)}}" class="responsive-img profilePic circle">
+                                        <img class="responsive-img msgiconPoss" src="../../images/twticon.png">
+                                    </div>
+                                    <div class="col s12">
+                                        <span>
+                                            {{user.FirstName}} {{user.LastName}}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="center">
+                                    <img ng-if="historyMessage.mediaType==1" src="{{getProperURL(historyMessage.url)}}" class="responsive-img" style="width:200px">
+                                    <video ng-if="historyMessage.mediaType==2" style="width:200px" controls>
+                                        <source src="{{getProperURL(historyMessage.url) | Url}}" type="video/mp4">
+                                    </video>
+                                    <br />
+                                    <span>
+                                        {{historyMessage.shareMessage}}
+                                    </span>
+                                </td>
+                                <td class="center">
+                                    <div class="col s12" ng-if="historyMessage.profileType==0">
+                                        <img src="{{historyMessage.picUrl}}" class="responsive-img profilePic circle">
+                                        <img src="/contents/socioboard/images/fb_icon.png" class="responsive-img msgiconPoss">
+                                    </div>
+                                    <div class="col s12" ng-if="historyMessage.profileType==1">
+                                        <img src="{{historyMessage.picUrl}}" class="responsive-img profilePic circle">
+                                        <img src="/contents/socioboard/images/Fb_page-icon.png" class="responsive-img msgiconPoss">
+                                    </div>
+                                    <div class="col s12" ng-if="historyMessage.profileType==2 ">
+                                        <img src="{{historyMessage.picUrl}}" class="responsive-img profilePic circle">
+                                        <img src="/contents/socioboard/images/twticon.png" class="responsive-img msgiconPoss">
+                                    </div>
+                                    <div class="col s12" ng-if="historyMessage.profileType==3 || socioqueue.profileType==4 ">
+                                        <img src="{{historyMessage.picUrl}}" class="responsive-img profilePic circle">
+                                        <img src="/contents/socioboard/images/linkedin.png" class="responsive-img msgiconPoss">
+                                    </div>
+                                    <div class="col s12">
+                                        <span>{{historyMessage.socialprofileName}}</span>
+                                    </div>
+                                </td>
+                                <td>{{historyMessage.scheduleTime}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <br /><br /><br /><br /><br /><br /><br />
+        <div class="center">
+            <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No History<br /></h6>
+        </div>
+        <br />
+        <div class="center" ng-if="lastreach!=true">
+            <div class="preloader-wrapper small active">
+                <div class="spinner-layer spinner-green-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end container-->
+
+    </section>
+    <!-- END CONTENT -->
+</div>

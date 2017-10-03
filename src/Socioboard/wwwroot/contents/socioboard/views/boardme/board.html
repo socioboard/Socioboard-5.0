@@ -1,4 +1,8 @@
 ﻿<style>
+    .profile_s_pic {
+    max-height: 50px;
+    max-width: 50px;
+}
     ul.shinh li label {
         font-size: 15px;
         color: #333;
@@ -65,7 +69,7 @@
                             <div class="card-content">
                                 <div class="row">
                                     <div class="col l12 m12 s12 margin-top-10 center">
-                                        <img class="responsive-img circle " src="{{feed.fromPicUrl}}">
+                                        <img class="responsive-img circle profile_s_pic " src="{{feed.fromPicUrl}}">
                                     </div>
                                     <div class="col l12 s12 m12 center">
                                         <span class="card-title">{{feed.fromName}}</span>
@@ -206,61 +210,63 @@
                 </div>
             </div>
         </div>-->
-        <div ng-if="lstBoardFeeds.length==null">
-            <span>
-                No Post availabe for this keyword
-            </span>
-        </div>
+       
 
-        <div ng-if="lastreach!=true">
-            <br /><br /><br /><br /><br /><br /><br /><br />
-            <div class="center">
-                <div>
-                    <div class="preloader-wrapper small active">
-                        <div class="spinner-layer spinner-blue">
-                            <div class="circle-clipper left">
-                                <div class="circle"></div>
-                            </div><div class="gap-patch">
-                                <div class="circle"></div>
-                            </div><div class="circle-clipper right">
-                                <div class="circle"></div>
-                            </div>
+    </div>
+
+    <div ng-if="lstBoardFeeds.length==null">
+        <span>
+            No Post availabe for this keyword
+        </span>
+    </div>
+
+    <div ng-if="lastreach!=true">
+        
+        <div class="center">
+            <div>
+                <div class="preloader-wrapper small active">
+                    <div class="spinner-layer spinner-blue">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
                         </div>
+                    </div>
 
-                        <div class="spinner-layer spinner-red">
-                            <div class="circle-clipper left">
-                                <div class="circle"></div>
-                            </div><div class="gap-patch">
-                                <div class="circle"></div>
-                            </div><div class="circle-clipper right">
-                                <div class="circle"></div>
-                            </div>
+                    <div class="spinner-layer spinner-red">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
                         </div>
+                    </div>
 
-                        <div class="spinner-layer spinner-yellow">
-                            <div class="circle-clipper left">
-                                <div class="circle"></div>
-                            </div><div class="gap-patch">
-                                <div class="circle"></div>
-                            </div><div class="circle-clipper right">
-                                <div class="circle"></div>
-                            </div>
+                    <div class="spinner-layer spinner-yellow">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
                         </div>
+                    </div>
 
-                        <div class="spinner-layer spinner-green">
-                            <div class="circle-clipper left">
-                                <div class="circle"></div>
-                            </div><div class="gap-patch">
-                                <div class="circle"></div>
-                            </div><div class="circle-clipper right">
-                                <div class="circle"></div>
-                            </div>
+                    <div class="spinner-layer spinner-green">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
     <!--/ end items list -->
     <!-- Modal Structure -->
@@ -360,7 +366,7 @@
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                         </label>
                                     </li>
@@ -368,7 +374,7 @@
                                         <label>
                                             <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                         </label>
                                     </li>
@@ -376,7 +382,7 @@
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                         </label>
                                     </li>
@@ -384,14 +390,15 @@
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
                                     </li>
                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                            <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>
                                     </li>

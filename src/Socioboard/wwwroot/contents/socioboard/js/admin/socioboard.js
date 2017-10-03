@@ -385,7 +385,7 @@ access_passwd = function () {
 
 }
 
-smartinbox = function () {
+twitteranalytics = function () {
     // initialize core components
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
@@ -449,7 +449,7 @@ smartinbox = function () {
     });
 }
 
-inboxmessage = function () {
+twitterinbox = function () {
     // initialize core components
     $('.modal-trigger').leanModal();
     $('ul.tabs').tabs();
@@ -590,12 +590,11 @@ mytask = function () {
     });
 }
 
-sentmessages = function () {
+history = function () {
+    debugger;
     // initialize core components
     $('.modal-trigger').leanModal();
-    $('ul.tabs').tabs();
     $('select').material_select();
-    $('.tooltipped').tooltip({ delay: 50 });
     $('.dropdown-button').dropdown({
         inDuration: 300,
         outDuration: 225,
@@ -605,37 +604,11 @@ sentmessages = function () {
         belowOrigin: false, // Displays dropdown below the button
         alignment: 'left' // Displays dropdown with edge aligned to the left of button
     });
-    $('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 15 // Creates a dropdown of 15 years to control year
-    });
     Materialize.updateTextFields();
 
 
     // Basic
     $('.dropify').dropify();
-
-    // Translated
-    $('.dropify-fr').dropify({
-        messages: {
-            default: 'Glissez-déposez un fichier ici ou cliquez',
-            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
-            remove: 'Supprimer',
-            error: 'Désolé, le fichier trop volumineux'
-        }
-    });
-
-    // Used events
-    var drEvent = $('.dropify-event').dropify();
-
-    drEvent.on('dropify.beforeClear', function (event, element) {
-        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
-    });
-
-    drEvent.on('dropify.afterClear', function (event, element) {
-        alert('File deleted');
-    });
-
 
     $('.smartinbox_slider').slimScroll({
         color: '#1976D2',

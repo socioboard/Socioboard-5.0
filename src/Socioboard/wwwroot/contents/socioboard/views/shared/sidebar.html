@@ -9,11 +9,11 @@
 
 <aside id="left-sidebar-nav">
     <ul id="slide-out" class="side-nav fixed leftside-navigation">
-        <li class="user-details cyan darken-2">
+        <!--<li class="user-details cyan darken-2">
             <div class="row center">
 
                 <div class="col col s12 m12 l12">
-                    <!--<ul id="profile-dropdown" class="dropdown-content">
+                    <ul id="profile-dropdown" class="dropdown-content">
                         <li>
                             <a href="#profilesettings"><i class="mdi-action-settings"></i> Settings</a>
                         </li>
@@ -22,7 +22,7 @@
                         <li>
                             <a ng-click="logout()"><i class="mdi-hardware-keyboard-tab"></i> Logout</a>
                         </li>
-                    </ul>-->
+                    </ul>
                     <img src="/contents/socioboard/images/photo.png" ng-show="user.ProfilePicUrl == null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image">
                     <img src="{{user.ProfilePicUrl}}" ng-show="user.ProfilePicUrl != null" alt="{{user.UserName}}" class="circle responsive-img valign profile-image" style="width:101.25px">
 
@@ -31,9 +31,9 @@
                     <p class="user-roal" data-position="top" data-delay="50">{{user.EmailId}}</p>
                 </div>
             </div>
-        </li>
+        </li>-->
         <li class="bold">
-            <a href="#dashboard" class="waves-effect waves-cyan">
+            <a href="#dashboard" class="waves-effect waves-cyan" title="You can add your social profile, compose the message and Automate RSS Feeds">
                 <i class="icon-home"></i> Dashboard
             </a>
         </li>
@@ -42,23 +42,23 @@
             <ul class="collapsible collapsible-accordion">
                   <!--Message for paid start-->
                 <li class="bold" ng-if="user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
-                    <a class="collapsible-header waves-effect waves-cyan">
-                        <i class="icon-envelope-letter"></i> Message
+                    <a class="collapsible-header waves-effect waves-cyan" title="You can see and perform activities for twitter accounts">
+                        <i class="icon-envelope-letter"></i> Twitter Engagement
                     </a>
                     <div class="collapsible-body">
                         <ul>
                             <li>
-                                <a href="#/smartinbox">Smart Inbox</a>
+                                <a href="#/twitteranalytics" title="Here you can see the Twitter account Message of Mention, Retweet, and New followers. You can perform additionally Task and Filter according to your Message type">Twitter Analytics</a>
                             </li>
                             <li>
-                                <a href="#/inboxmessage">Inbox Message</a>
+                                <a href="#/twitterinbox" title="You can send messages and also see your Twitter account Direct Messages. You are also allowed to add a task">Twitter Inbox</a>
                             </li>
                             <li>
-                                <a href="#/mytask">My Task</a>
+                                <a href="#/mytask" title="You can see all the tasks which are assigned by you and your team members. You can perform additionally Reply, Delete and complete the Task">My Task</a>
                             </li>
-                            <li>
-                                <a href="#/sentmessages">Sent Message</a>
-                            </li>
+                            <!--<li>
+                                <a href="#/sentmessages" title="You can see all your sent messages which are done through socioboard like (Compose, Schedule, Re-socio). In addition, you can Filter these Messages">Sent Message</a>
+                            </li>-->
                         </ul>
                     </div>
                 </li>
@@ -66,13 +66,13 @@
                 <!--Message for Unpaid start-->
                 <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3">
                     <a class="waves-effect waves-cyan"  ng-click="message()" disable>
-                        <i class="icon-envelope-letter"></i> Message
+                        <i class="icon-envelope-letter"></i> Twitter Engagement
                     </a>
                 </li>
                 <!--Message for Unpaid END-->
                 <!--Feeds -->
                 <li class="bold">
-                    <a class="collapsible-header  waves-effect waves-cyan">
+                    <a class="collapsible-header  waves-effect waves-cyan" title="You can see all posts of the respective profiles">
                         <i class="icon-feed"></i> My Feeds
                     </a>
                     <div class="collapsible-body">
@@ -80,7 +80,7 @@
                             <li class="no-padding">
                                 <ul class="collapsible collapsible-accordion">
                                     <li class="bold">
-                                        <a class="collapsible-header waves-effect waves-cyan">
+                                        <a class="collapsible-header waves-effect waves-cyan" title="Facebook Live Feeds is constantly updating the list of stories in the middle of your homepage. Live Feeds includes status updates, photos, videos, and links activity">
                                             <i class="fa fa-facebook"></i> Facebook
                                         </a>
                                         <div class="collapsible-body">
@@ -95,7 +95,7 @@
                                         </div>
                                     </li>
                                     <li class="bold">
-                                        <a class="collapsible-header waves-effect waves-cyan">
+                                        <a class="collapsible-header waves-effect waves-cyan" title="You can see your followers and following tweets. In addition, you can perform Re-tweet, Make Favorite, Sent Message, Spam, Reply, Task, Re-socio, and Reconnect">
                                             <i class="fa fa-twitter"></i> Twitter
                                         </a>
                                         <div class="collapsible-body">
@@ -108,7 +108,7 @@
                                         </div>
                                     </li>
                                     <li class="bold">
-                                        <a class="collapsible-header waves-effect waves-cyan">
+                                        <a class="collapsible-header waves-effect waves-cyan" title="Instagram Feed page displays all the live activities been performed in Instagram like images, videos. In addition, you can Like, Comment, and create Task for the team members">
                                             <i class="fa fa-instagram"></i> Instagram
                                         </a>
                                         <div class="collapsible-body">
@@ -121,7 +121,7 @@
                                         </div>
                                     </li>
                                     <li class="bold">
-                                        <a class="collapsible-header waves-effect waves-cyan">
+                                        <a class="collapsible-header waves-effect waves-cyan" title="you can see your YouTube channel and watch or upload videos. Additional tasks like adding a comment, sort and Upload a new video">
                                             <i class="fa fa-youtube"></i> Youtube
                                         </a>
                                         <div class="collapsible-body">
@@ -133,7 +133,7 @@
                                         </div>
                                     </li>
                                     <li class="bold">
-                                        <a class="collapsible-header waves-effect waves-cyan">
+                                        <a class="collapsible-header waves-effect waves-cyan" title="You can find the page posts in LinkedIn page which is done through socioboard and LinkedIn page. In addition, you can add Comments and assign task to your team members">
                                             <i class="fa fa-linkedin"></i> LinkedIn 
                                         </a>
                                         <div class="collapsible-body">
@@ -146,7 +146,7 @@
                                         </div>
                                     </li>
                                     <li class="bold">
-                                        <a class="collapsible-header waves-effect waves-cyan">
+                                        <a class="collapsible-header waves-effect waves-cyan" title="You can see your Google Plus account live feeds and the Number of comment, like and share. You can also perform Reconnect, filter, and Re-socio">
                                             <i class="fa fa-google-plus"></i> Google Plus
                                         </a>
                                         <div class="collapsible-body">
@@ -159,7 +159,7 @@
                                         </div>
                                     </li>
                                     <li class="bold">
-                                        <a class="collapsible-header waves-effect waves-orange">
+                                        <a class="collapsible-header waves-effect waves-orange" title="You can see the Profile and Profile details">
                                             <i class="fa fa-pinterest-square" aria-hidden="true"></i> Pinterest
                                         </a>
                                         <div class="collapsible-body">
@@ -176,35 +176,38 @@
                     </div>
                 </li>
                 <li class="bold">
-                    <a class="collapsible-header waves-effect waves-cyan">
+                    <a class="collapsible-header waves-effect waves-cyan" title="Using Socioboard publishing tool, a user can 'Schedule Messages', save them to 'Drafts', maintain 'SocioQueue' where they can edit or delete their Scheduled Messages and can check 'Calendar view' where they can see the detailed list of posts scheduled with date and time">
                         <i class="icon-share-alt"></i> Publishing
                     </a>
                     <div class="collapsible-body">
                         <ul>
                             <li>
-                                <a href="#/schedulemessage">Schedule Messages</a>
+                                <a href="#/schedulemessage" title="Users Can Schedule Messages here by 'Selecting Profiles' which they need to post">Schedule Messages</a>
                             </li>
                             <li>
-                                <a href="#/socioqueue">SocioQueue</a>
+                                <a href="#/socioqueue" title="The 'Scheduled Messages' will appear here in the Queue until the time of publishing, Providing Options to users like Edit or Delete the Schedules">SocioQueue</a>
                             </li>
-                            <!--<li class="truncate">
-                                <a href="#/day_socioqueue">Day Wise SocioQueue</a>
-                            </li>-->
+                            <li class="truncate">
+                                <a href="#/day_socioqueue" title="Users Can Schedule Messages on day basis here by 'Selecting Profiles' which they need to post">Day Wise SocioQueue</a>
+                            </li>
                             <li>
-                                <a href="#/draft">Drafts</a>
+                                <a href="#/draft" title="The Posts which are Saved to 'Drafts' will appear here, providing user options to Edit, Delete or Schedule the Stored Drafts">Drafts</a>
                             </li>
                             <li ng-if="user.AccountType!=0">
-                                <a href="#/calendar">Calendar View</a>
+                                <a href="#/calendar" title="Users can view details of their posts made through their 'Socioboard' account, it provides a detailed description of Posts, Date and Time of Schedules done">Calendar View</a>
                             </li>
                             <li ng-if="user.AccountType==0">
-                                <a  ng-click="message()" disable>Calendar View</a>
+                                <a ng-click="message()" disable>Calendar View</a>
+                            </li>
+                            <li>
+                                <a href="#/history" title="You can see all your history for sent messages which are done through socioboard like (Compose, Schedule, Re-socio). In addition, you can Filter these Messages">History</a>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <!--content studio start-->
                 <li class="bold" ng-if="user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
-                    <a class="collapsible-header waves-effect waves-orange">
+                    <a class="collapsible-header waves-effect waves-orange" title="You will get details about 'Most Shared' Content and 'Trending Now' Topics">
                         <i class="icon-microphone"></i> Content Studio
                     </a>
                     <div class="collapsible-body">
@@ -213,22 +216,22 @@
                                 <a href="#/savedcontent.html">Saved Content</a>
                             </li>-->
                             <li class="truncate" ng-if="user.AccountType==6 || user.AccountType==7">
-                                <a href="#/mostshared.html">Most Shared</a>
+                                <a href="#/mostshared.html" title="You will get details about 'Most shared' Feeds from Facebook, Linkedin, Twitter, Pinterest and Google Plus Networks">Most Shared</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 ||user.AccountType==4 ||user.AccountType==5">
-                                <a ng-click="message()">Most Shared</a>
+                                <a ng-click="message()" title="You will get details about 'Most shared' Feeds from Facebook, Linkedin, Twitter, Pinterest and Google Plus Networks">Most Shared</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
-                                <a href="#/trending_content.html">Trending Now</a>
+                                <a href="#/trending_content.html" title="The Trending data from Social Networks will be shown here, and users can also search topics by giving keyword there">Trending Now</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 ||user.AccountType==4">
-                                <a ng-click="message()">Trending Now</a>
+                                <a ng-click="message()" title="The Trending data from Social Networks will be shown here, and users can also search topics by giving keyword there">Trending Now</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==7">
-                                <a href="#/studio_shareathon_que.html">Shareathon Queue</a>
+                                <a href="#/studio_shareathon_que.html" title="You can see the list of all posts in the queue which are shared via shareathon From 'Most shared' and 'Trending Now' Features, and have a choice to Edit or Delete the selected Feed">Shareathon Queue</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 ||user.AccountType==4 ||user.AccountType==5 ||user.AccountType==6">
-                                <a ng-click="message()">Shareathon Queue</a>
+                                <a ng-click="message()" title="You can see the list of all posts in the queue which are shared via shareathon From 'Most shared' and 'Trending Now' Features, and have a choice to Edit or Delete the selected Feed">Shareathon Queue</a>
                             </li>
                             <!--<li class="truncate">
                                 <a href="#/contentanalysis.html">Content Analysis</a>
@@ -248,22 +251,22 @@
                 <!--content studio end-->
                 <!--Discovery for paid User-->
                 <li class="bold" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 ||user.AccountType==6 || user.AccountType==7 " >
-                    <a class="collapsible-header waves-effect waves-orange">
+                    <a class="collapsible-header waves-effect waves-orange" title="You can 'Search' by giving Keywords, and can find 'Group Post' of similar interests and can see the 'Suggestions' where a user can find Followers and Following list in all the social media profiles">
                         <i class="icon-globe-alt"></i> Discovery
                     </a>
                     <div class="collapsible-body">
                         <ul class="collapsible collapsible-accordion">
                             <li class="">
-                                <a class="collapsible-header waves-effect waves-orange">
+                                <a class="collapsible-header waves-effect waves-orange" title="You can find people or interests from different Networks by providing a keyword">
                                     Search
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li class="truncate">
-                                            <a href="#/discovery" style="color:#444444">Discovery</a>
+                                            <a href="#/discovery" style="color:#444444" title="By Searching a Keyword here, the user can get details about that keyword from Twitter, Google Plus, and Instagram Networks">Discovery</a>
                                         </li>
                                         <li class="truncate">
-                                            <a href="#/smartsearch" style="color:#444444">Smart Search</a>
+                                            <a href="#/smartsearch" style="color:#444444" title="Here the user can Enter a Keyword of interest and can also choose feeds from an area or place of their interest">Smart Search</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -274,10 +277,10 @@
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li class="truncate">
+                                        <li class="truncate" title="Here users can enter a keyword they can get the posts of their interest from a Facebook network which are posted through socioboard and can Schedule or Compose them to their profiles by 1-Click">
                                             <a href="#/facebookgrouppost" style="color:#444444">Facebook Group Post</a>
                                         </li>
-                                        <li class="truncate">
+                                        <li class="truncate" title="Here users by entering a keyword they can get the posts of their interest from Linkedin Network which is posted through Socioboard and can schedule or Compose them to their profiles by 1-Click">
                                             <a href="#/linkedingrouppost" style="color:#444444">LinkedIn Group Post</a>
                                         </li>
                                     </ul>
@@ -290,7 +293,7 @@
                                 <div class="collapsible-body">
                                     <ul class="collapsible collapsible-accordion">
                                         <li class="truncate">
-                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Followers and their profile details">
                                                 Your Followers
                                             </a>
                                             <div class="collapsible-body">
@@ -365,19 +368,19 @@
                     <div class="collapsible-body">
                         <ul>
                             <li class="bold">
-                                <a href="#/rss_news.html">Content Feeds</a> 
+                                <a href="#/rss_news.html" title="In this module, we have all the latest topics and trending keywords based on which we can schedule or compose in the content feed">Content Feeds</a> 
                             </li>
                             <li class="truncate">
-                                <a href="#/automate_rss_feeds.html">Automate Rss Feeds</a>
+                                <a href="#/automate_rss_feeds.html" title="In this module, you can Automate the RSS feeds with respective profiles. Here you need to select profile's, add RSS Feeds URL based on what you want to automate next. Click on schedule and it will post respective data in chosen profiles">Automate Rss Feeds</a>
                             </li>
                             <!--<li class="truncate">
                                 <a href="#/rss_feeds.html">Custom Rss Feeds</a>
                             </li>-->
                             <li class="truncate">
-                                <a href="#/posted_rss_feeds.html">Posted Rss Feeds</a>
+                                <a href="#/posted_rss_feeds.html" title="You can verify the schedule RSS feeds that in which profiles the RSS feeds is posted and what message is posted and RSS Feeds URL w.r.t the profiles">Posted Rss Feeds</a>
                             </li>
                             <li class="truncate">
-                                <a href="#/rss_queue.html">Rss Queue</a>
+                                <a href="#/rss_queue.html" title="When you schedule RSS feeds in AutoMate RSS Feeds sub-module, it comes to RSS Queue">Rss Queue</a>
                             </li>
                         </ul>
                     </div>
@@ -391,19 +394,19 @@
                 </li>
                 <!--Sharethon for paid user-->
                 <li class="bold" ng-if="user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
-                    <a class="collapsible-header  waves-effect waves-orange">
+                    <a class="collapsible-header  waves-effect waves-orange" title="This is the feature which allows users to Automate FB Page Posts, FB Groups, Pages, and Timeline of our FB profiles Connected with Socioboard">
                         <i class="icon-share"></i> Shareathon
                     </a>
                     <div class="collapsible-body">
                         <ul>
                             <li class="truncate">
-                                <a href="#/group_shareathon.html">Group Shareathon</a>
+                                <a href="#/group_shareathon.html" title="It automates Feeds from Selected FB pages to FB Groups which we are admin of">Group Shareathon</a>
                             </li>
                             <li class="truncate">
-                                <a href="#/page_shareathon.html">Page Shareathon</a>
+                                <a href="#/page_shareathon.html" title="It Automates feeds from Selected page to the FB Account Timeline that is Connected with Socioboard">Page Shareathon</a>
                             </li>
                             <li class="truncate">
-                                <a href="#/link_shareathon.html">Link Shareathon</a>
+                                <a href="#/link_shareathon.html" title="It automates feeds from Selected Fan pages to user admin Pages">Link Shareathon</a>
                             </li>
 
                         </ul>
@@ -417,16 +420,16 @@
                 </li>
                 <!--Img Library-->
                 <li class="bold" ng-if="user.AccountType==6 ||user.AccountType==7">
-                    <a class="collapsible-header  waves-effect waves-orange">
+                    <a class="collapsible-header  waves-effect waves-orange" title="Here you can upload the image and GIF files">
                         <i class="icon-picture"></i> Image Library
                     </a>
                     <div class="collapsible-body">
                         <ul>
                             <li class="truncate" ng-if="UserEmail == groupdetails[0].email">
-                                <a href="#/img_library">Private Library</a>
+                                <a href="#/img_library" title="Here you can upload the image and GIF files by clicking upload Image which is not accessible to your team members">Private Library</a>
                             </li>
                             <li class="truncate">
-                                <a href="#/share_img_library">Public Library</a>
+                                <a href="#/share_img_library" title="Here you can upload the image and GIF files by clicking upload Image which is accessible to your team members">Public Library</a>
                             </li>
                         </ul>
                      </div>
@@ -447,24 +450,25 @@
                     <div class="collapsible-body">
                         <ul class="collapsible collapsible-accordion">
                             <li class="truncate" ng-if="user.AccountType==6 || user.AccountType==7">
-                                <a href="#/groupreport.html">Socioboard Team Report</a>
+                                <a href="#/groupreport.html" title="You can get reports (Team Stats, Twitter Stats, and Facebook Statistics ) of a Selected team from a list of Teams">Socioboard Team Report</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5">
-                                <a  ng-click="message()" disable>Socioboard Team Report</a>
+                                <a  ng-click="message()" disable title="You can get reports (Team Stats, Twitter Stats, and Facebook Statistics ) of a Selected team from a list of Teams">Socioboard Team Report</a>
                             </li>
                             <li class="">
-                                <a class="collapsible-header waves-effect waves-orange">
+                                <a class="collapsible-header waves-effect waves-orange" title="You can check all Twitter report status.">
                                     Twitter
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li class="truncate">
-                                            <a href="#/twitterreports" style="color:#444444">
+                                            <a href="#/twitterreports" style="color:#444444" title="You can get details about Followers, Followings, Retweets, Mentions and Post Details from Followers and Followings from our Connected Twitter accounts.
+">
                                                 Twitter Report
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==7">
-                                            <a href="#/twittercustomreports" style="color:#444444">
+                                            <a href="#/twittercustomreports" style="color:#444444" title="You can check reports of individual Twitter account that is connected in their socioboard account">
                                                 Twitter Custom Report
                                             </a>
                                         </li>
@@ -477,23 +481,23 @@
                                 </div>
                             </li>
                             <li class="">
-                                <a class="collapsible-header waves-effect waves-orange">
+                                <a class="collapsible-header waves-effect waves-orange" title="You can get all reports related to Facebook">
                                     Facebook
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li class="truncate">
-                                            <a href="#/facebookpagedetreport.html" style="color:#444444">
+                                            <a href="#/facebookpagedetreport.html" style="color:#444444" title="You can get all reports about facebook pages connected to their Socioboard">
                                                 FB Page Report
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==7">
-                                            <a href="#/facebookreport.html" style="color:#444444">
+                                            <a href="#/facebookreport.html" style="color:#444444" title="You can see the reports of selected pages ( Page Impressions Impressions by age and Gender and Posted Content (Feeds posted to our Fb page through Socioboard)">
                                                 FB Page Custom Report
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
-                                            <a  ng-click="message()" disable>
+                                            <a  ng-click="message()" disable title="You can see the reports of selected pages ( Page Impressions Impressions by age and Gender and Posted Content (Feeds posted to our Fb page through Socioboard)">
                                                 FB Page Custom Report
                                             </a>
                                         </li>
@@ -501,23 +505,23 @@
                                 </div>
                             </li>
                             <li class="">
-                                <a class="collapsible-header waves-effect waves-orange">
+                                <a class="collapsible-header waves-effect waves-orange" title="You can get all the reports for your Instagram accounts">
                                     Instagram
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li class="truncate">
-                                            <a href="#/instagramreport.html" style="color:#444444">
+                                            <a href="#/instagramreport.html" style="color:#444444" title="You can see Followers,Followings,POST-COMMENTS,POST-LIKES,MEDIA,Profiles Detail and Posts Detail of  the Last 90 Days of All Instagram profiles which you added in Socioboard">
                                                 Instagram Report
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==7">
-                                            <a href="#/instagramcustomreport.html" style="color:#444444">
+                                            <a href="#/instagramcustomreport.html" style="color:#444444" title="You can see Followers,Followings,POST-COMMENTS,POST-LIKES,MEDIA,INSTAGRAM DASHBOARD  and PROFILE DESCRIPTION   Last 15 days to 90 days of Individual Instagram Account which you added in Socioboard">
                                                 Instagram Custom Report
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
-                                            <a  ng-click="message()" disable>
+                                            <a  ng-click="message()" disable title="You can see Followers,Followings,POST-COMMENTS,POST-LIKES,MEDIA,INSTAGRAM DASHBOARD  and PROFILE DESCRIPTION   Last 15 days to 90 days of Individual Instagram Account which you added in Socioboard">
                                                 Instagram Custom Report
                                             </a>
                                         </li>
@@ -525,23 +529,23 @@
                                 </div>
                             </li>
                             <li class="">
-                                <a class="collapsible-header waves-effect waves-orange">
+                                <a class="collapsible-header waves-effect waves-orange" title="You can see all the reports data related to your youtube channel">
                                     Youtube
                                 </a>
                                 <div class="collapsible-body">
                                     <ul>
                                         <li class="truncate">
-                                            <a href="#/youtubeallreport.html" style="color:#444444">
+                                            <a href="#/youtubeallreport.html" style="color:#444444" title="You can see the Total No of Subscribers,Views,Likes,Comments,Channels,Videos For 90 Days of all YouTube Channel’s  which You Added in Socioboard">
                                                 Youtube Report
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==7">
-                                            <a href="#/youtubereport.html" style="color:#444444">
+                                            <a href="#/youtubereport.html" style="color:#444444" title="You can see the Subscribers,Views ,Likes ,Comments,Video statistics Last 15 days to 90 days of Individual Youtube Channel which you added in Socioboard">
                                                 Youtube Custom Report
                                             </a>
                                         </li>
                                         <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6">
-                                            <a  ng-click="message()" disable>
+                                            <a  ng-click="message()" disable title="You can see the Subscribers,Views ,Likes ,Comments,Video statistics Last 15 days to 90 days of Individual Youtube Channel which you added in Socioboard">
                                                 Youtube Custom Report
                                             </a>
                                         </li>
@@ -549,10 +553,10 @@
                                 </div>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
-                                <a href="#/googleanalyticsreport">Google Analytics</a>
+                                <a href="#/googleanalyticsreport" title="You can see your Website Traffic,Twitter Mentions,Articles & Blog of Google Analytics profile">Google Analytics</a>
                             </li>
                             <li class="truncate" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2">
-                            <a  ng-click="message()" disable>
+                            <a  ng-click="message()" disable title="You can see your Website Traffic,Twitter Mentions,Articles & Blog of Google Analytics profile">
                                 Google Analytics</a>
                             </li>
                         </ul>
@@ -635,14 +639,14 @@
         </li>  -->
         <!--Board for All plan -->
         <li class="bold" ng-if="user.AccountType==6 ||user.AccountType==7">
-            <a href="#/boardlist" class="waves-effect waves-cyan">
+            <a href="#/boardlist" class="waves-effect waves-cyan" title="You can save the keyword that will fetch data from Twitter, Instagram and G-Plus">
                 <i class="icon-briefcase"></i> Board Me
             </a>
         </li>
 
         <!--Board for free plan -->
         <li class="bold" ng-if="user.AccountType==0 || user.AccountType==1 || user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5">
-            <a  ng-click="message()" disable class="waves-effect waves-cyan">
+            <a  ng-click="message()" disable class="waves-effect waves-cyan" title="You can save the keyword that will fetch data from Twitter, Instagram and G-Plus">
                 <i class="icon-briefcase"></i> Board Me
             </a>
         </li>

@@ -169,7 +169,7 @@
                                                 <label>
                                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                     <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                    <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                                 </label>
                                             </li>
@@ -177,7 +177,7 @@
                                                 <label>
                                                     <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                     <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                    <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
                                                 </label>
                                             </li>
@@ -185,7 +185,7 @@
                                                 <label>
                                                     <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                     <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                    <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
                                                 </label>
                                             </li>
@@ -193,14 +193,15 @@
                                                 <label>
                                                     <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                     <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                    <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                                 </label>
                                             </li>
                                             <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
                                                 <label>
                                                     <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                    <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                                     <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                                 </label>
                                             </li>

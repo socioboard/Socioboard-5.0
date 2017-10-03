@@ -128,7 +128,7 @@
                           <div class="row">
                                 <div class="col l12 s12"><h5 class="no-space">Upload a Pin</h5></div>                                
                                 <div class="input-field col s12">
-                                    <input type="file" id="composePinImage" class="dropify" data-default-file="" />             
+                                    <input type="file" id="composePinImage"  onchange="angular.element(this).scope().CheckStatus()" class="dropify" data-default-file="" />             
                                 </div>
                                 <div class="input-field col l12 s12">
                                     <a href="#SavePinModal" class="modal-trigger btn btn_style right modal-action modal-close">Next</a>

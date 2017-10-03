@@ -16,6 +16,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         $scope.dispbtn = true;
         $scope.loadmore = "Click to Load More..";
         $scope.lstFbComments = [];
+        $scope.lstinFeeds = null;
 
         $scope.lstFbFeeds = [];
 
@@ -27,8 +28,9 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                               //$scope.lstinsFeeds = response.data;
                                if (response.data == null) {
                                   reachLast = true;
-                              }
-                               $scope.date(response.data);
+                               }
+                               $scope.lstinsFeeds = response.data;
+                               //$scope.date($scope.lstinFeeds);
                                //$scope.reloadFeeds();
                                $scope.preloadmorefeeds = true;
                                $scope.dropCalled = true;
@@ -63,7 +65,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             if (reachLast) {
                 return false;
             }
-            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=90')
+            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=10')
                          .then(function (response) {                          
                              // $scope.lstProfiles = response.data;
                              if (response.data == null || response.data == "") {
@@ -73,8 +75,8 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                                  $scope.endfeeds = true;
                              }
                              else {
-                                 $scope.lstFbFeeds = $scope.lstFbFeeds.concat(response.data);
-                             
+                                 $scope.lstinsFeeds = $scope.lstinsFeeds.concat(response.data);
+                                 //$scope.date($scope.lstinFeeds);
                                  ending = ending + 10;
                                  $scope.listData();
                              }

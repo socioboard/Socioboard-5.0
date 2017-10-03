@@ -62,7 +62,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
                               .then(function (response) {
                                   $scope.lstFbFeeds = response.data;
-                                  $rootScope.firstFeedDate = $scope.lstFbFeeds[0].entryDate;
+                                  $rootScope.firstFeedDate = $scope.lstFbFeeds[0]._facebookFeed.entryDate;
                                   //var date = (new Date($rootScope.firstFeedDate).getTime() / 1000);
                                   //$scope.reloadFeeds();
                                   $scope.LoadLatestFeeds();
@@ -203,7 +203,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
         $scope.fbprofiles = function () {
          
-            $http.get(apiDomain + '/api/Facebook/GetFacebookProfilesOnly?groupId=' + $rootScope.groupId)
+            $http.get(apiDomain + '/api/Facebook/GetFacebookProfilesOnlyforReconn?groupId=' + $rootScope.groupId)
             .then(function (response) {
                 console.log(response.data)
                 if (response.data != null) {

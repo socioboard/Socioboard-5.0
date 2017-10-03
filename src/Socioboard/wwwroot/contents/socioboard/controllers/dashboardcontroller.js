@@ -577,6 +577,33 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             });
         }
 
+        $scope.deleteBoard = function (profileId) {
+
+            swal({
+                title: "Are you sure?",
+                text: "You will not be able to send create any boards or pins via this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete it!",
+                closeOnConfirm: false
+            },
+            function () {
+
+
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                }).then(function (response) {
+                    if (response.data == "Deleted") {
+                        swal("Deleted!", "Account is deleted", "success");
+                    }
+                    window.location.reload();
+                });
+               
+            });
+        }
+
 
         //codes to add linkedin pages
         $scope.toggleLinkedinProfileSelection = function (profileid, token, name) {

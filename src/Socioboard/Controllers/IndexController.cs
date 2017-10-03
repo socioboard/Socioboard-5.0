@@ -18,6 +18,7 @@ using Socioboard.Helper;
 using System.Linq;
 using Domain.Socioboard.Interfaces.Services;
 using System.Threading;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 
 
@@ -39,10 +40,69 @@ namespace Socioboard.Controllers
 
         }
 
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+            if (session != null)
+            {
+                SortedDictionary<string, string> strdi = new SortedDictionary<string, string>();
+                strdi.Add("systemId", session.systemId);
+                string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
+                if (respo != "false")
+                {
+                }
+                else
+                {
+                    HttpContext.Session.Remove("User");
+                    HttpContext.Session.Remove("selectedGroupId");
+                    HttpContext.Session.Clear();
+                    HttpContext.Session.Remove("revokedata");
+                }
 
+            }
+            if (user == null)
+            {
+                string EmailId = string.Empty;
+                string password = string.Empty;
+                if (Request.Cookies["socioboardemailId"] != null)
+                {
+                    EmailId = Request.Cookies["socioboardemailId"].ToString();
+                    EmailId = PluginHelper.Base64Decode(EmailId);
+                }
+                if (Request.Cookies["socioboardToken"] != null)
+                {
+                    password = Request.Cookies["socioboardToken"].ToString();
+                    password = PluginHelper.Base64Decode(password);
+                }
+                if (!string.IsNullOrEmpty(EmailId))
+                {
+                    SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+                    strdic.Add("UserName", EmailId);
+                    if (string.IsNullOrEmpty(password))
+                    {
+                        strdic.Add("Password", "sociallogin");
+                    }
+                    else
+                    {
+                        strdic.Add("Password", password);
+                    }
+
+
+                    string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+
+                    if (!string.IsNullOrEmpty(response))
+                    {
+                        Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                        HttpContext.Session.SetObjectAsJson("User", _user);
+                    }
+                }
+            }
+            base.OnActionExecuting(filterContext);
+        }
         // GET: /<controller>/
         // [ResponseCache(Duration = 604800)]
-       [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
        // [ResponseCache(Duration = 100)]
         public async Task<IActionResult> Index()
         {
@@ -263,7 +323,7 @@ namespace Socioboard.Controllers
         }
 
         [HttpGet]
-        public ActionResult SingIn()
+        public ActionResult SignIn()
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             string twostep = HttpContext.Session.GetObjectFromJson<string>("twosteplogin");
@@ -305,24 +365,6 @@ namespace Socioboard.Controllers
                 //return View();
             }
         }
-
-        //[HttpGet]
-        //public ActionResult SocioBoardAuthRedirectionUrl()
-        //{
-        //    string clinetId = "caed803890f2b4360b49f4ff5f9ea05f";
-        //    string clinetsecret = "f4f31b95aea538c9d218e803da6ff1bf";
-        //    string callbackUrl = "http://localhost:9821/Index/SocioBoardAuth";
-        //    string baseOuthUrl = "https://app.socioboard.com/";
-        //    string authorizeUrl = baseOuthUrl + "/oauth/authorize";
-        //    string accessTokenUrl = baseOuthUrl + "/oauth/access_token";
-        //    return Content("");
-        //}
-
-        //[HttpGet]
-        //public ActionResult SocioBoardAuth(string Code)
-        //{
-        //    return Content("");
-        //}
 
         [HttpPost]
         public async Task<IActionResult> AjaxPluginLogin()
