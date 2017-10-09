@@ -32,52 +32,52 @@ namespace Api.Socioboard.Controllers
 
 
 
-        [HttpGet("GetYTAdvanceSearchData")]
-        public IActionResult GetYTAdvanceSearchData(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
-        {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);          
-            if (skip + count < 100)
-            {
-                return Ok(Repositories.ContentStudioRepository.YuTubeAdvanceSerachData(network, _redisCache, _appSettings).Skip(skip).Take(count));
-            }
-            else
-            {               
-                var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSerachData>.Sort;
-                var sort = builder.Descending(t => t.totalShareCount);
-                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.networkType.Equals(network), sort, skip, count);
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-                IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitterFeeds = task.Result;
-                return Ok(lstTwitterFeeds);
-            }
-        }
+        //[HttpGet("GetYTAdvanceSearchData")]
+        //public IActionResult GetYTAdvanceSearchData(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
+        //{
+        //    DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+        //    MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);          
+        //    if (skip + count < 100)
+        //    {
+        //        return Ok(Repositories.ContentStudioRepository.YuTubeAdvanceSerachData(network, _redisCache, _appSettings).Skip(skip).Take(count));
+        //    }
+        //    else
+        //    {               
+        //        var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSerachData>.Sort;
+        //        var sort = builder.Descending(t => t.totalShareCount);
+        //        var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.networkType.Equals(network), sort, skip, count);
+        //        var task = Task.Run(async () =>
+        //        {
+        //            return await result;
+        //        });
+        //        IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitterFeeds = task.Result;
+        //        return Ok(lstTwitterFeeds);
+        //    }
+        //}
 
 
-        [HttpGet("GetSortByData")]
-        public IActionResult GetSortByData(string sortType, int skip, int count)
-        {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
-            if (skip + count < 200)
-            {
-                return Ok(Repositories.ContentStudioRepository.GetSortBy(sortType, _redisCache, _appSettings).Skip(skip).Take(count));
-            }
-            else
-            {
-                var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSerachData>.Sort;
-                var sort = builder.Descending(t => t.totalShareCount);
-                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.twtShareCount != 0, sort, skip, count);
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-                IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitterFeeds = task.Result;
-                return Ok(lstTwitterFeeds);
-            }
-        }
+        //[HttpGet("GetSortByData")]
+        //public IActionResult GetSortByData(string sortType, int skip, int count)
+        //{
+        //    DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+        //    MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
+        //    if (skip + count < 200)
+        //    {
+        //        return Ok(Repositories.ContentStudioRepository.GetSortBy(sortType, _redisCache, _appSettings).Skip(skip).Take(count));
+        //    }
+        //    else
+        //    {
+        //        var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSerachData>.Sort;
+        //        var sort = builder.Descending(t => t.totalShareCount);
+        //        var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.twtShareCount != 0, sort, skip, count);
+        //        var task = Task.Run(async () =>
+        //        {
+        //            return await result;
+        //        });
+        //        IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitterFeeds = task.Result;
+        //        return Ok(lstTwitterFeeds);
+        //    }
+        //}
 
 
         [HttpGet("QuickTopics")]

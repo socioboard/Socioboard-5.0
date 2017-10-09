@@ -107,12 +107,19 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
             updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
             if (profiles.length > 0 && message != '') {
                 $scope.checkfile();
+                var imagepath = $("#imageUrl").val();
+                if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(imagepath)) {
+
+                } else
+                {
+                    imagepath = "";
+                }
                 if ($scope.check == true) {
                     var formData = new FormData();
                     formData.append('files', $("#composeImage").get(0).files[0]);
                     $http({
                         method: 'POST',
-                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage + '&imagePath=' + imagepath,
                         data: formData,
                         headers: {
                             'Content-Type': undefined

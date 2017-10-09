@@ -92,9 +92,38 @@ SocioboardApp.controller('PinterestFeedsController', function ($rootScope, $scop
                     $('#composePinImage').val('');
                     alertify.error("File extension is not valid. Please upload an image file");
                 } else {
+                   
                 }
             }
 
+        }
+
+        $scope.CheckNextStatus = function () {
+            var web_url = $('#web_url').val();
+            if (web_url != "") {
+                if ((/\.(gif|jpg|jpeg|tiff|png)$/i).test(web_url)) {
+                    $('#CreatePinModal').closeModal();
+                    $('#SavePinModal').openModal();
+                } else {
+                    swal('please upload any valid image url for pin');
+                    
+                }
+            } else {
+                swal('please upload any valid image url for pin');
+            }
+        }
+
+        $scope.CheckNextStatusBrowse=function()
+        {
+            $scope.checkfile();
+            if ($scope.check == false) {
+                alertify.set({ delay: 3000 });
+                $('#composePinImage').val('');
+                alertify.error("File extension is not valid. Please upload an image file");
+            } else {
+                $('#CreatePinModal').closeModal();
+                $('#SavePinModal').openModal();
+            }
         }
 
         //code for checking the file format start
@@ -110,7 +139,7 @@ SocioboardApp.controller('PinterestFeedsController', function ($rootScope, $scop
                 }
             }
             else {
-                $scope.check = true;
+                $scope.check = false;
             }
         }
         $scope.hasExtension = function (inputID, exts) {

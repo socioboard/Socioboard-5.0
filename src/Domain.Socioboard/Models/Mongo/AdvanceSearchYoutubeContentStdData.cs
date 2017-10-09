@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 namespace Domain.Socioboard.Models.Mongo
 {
     [BsonIgnoreExtraElements]
-    public class AdvanceSerachData
+    public class AdvanceSearchYoutubeContentStdData
     {
         [BsonId]
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
         public string strId { get; set; }
-        public string postdescription { get; set; }
+        public string postDescription { get; set; }
         public AdvanceSearchpostType postType { get; set; }
         public NetworkType networkType { get; set; }
         public string postId { get; set; }
@@ -25,12 +25,10 @@ namespace Domain.Socioboard.Models.Mongo
         public string title { get; set; }
         public string userName { get; set; }
         public string videourl { get; set; }
-        public double postedTime { get; set; }
-        public string publishDate { get; set; }
+        public string postedTime { get; set; }
         public string ImageUrl { get; set; }
         public string postUrl { get; set; }
         public long fbengagementCount { get; set; }
-        public long fbengCounttwt { get; set; }
         public long twtShareCount { get; set; }
         public long linShareCount { get; set; }
         public long gplusShareCount { get; set; }
@@ -42,10 +40,12 @@ namespace Domain.Socioboard.Models.Mongo
         public long ytview { get; set; }
         public long ytlikeCount { get; set; }
         public long ytcommentCnt { get; set; }
-
+        public string boardNameKeyword { get; set; }
         public long repliesCount { get; set; }
         public string linkedindescription { get; set; }
         public string linkedinprofileurl { get; set; }
-         
+
+
+
     }
 }

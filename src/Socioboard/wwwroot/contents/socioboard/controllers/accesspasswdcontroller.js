@@ -3,7 +3,7 @@
 SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope, $http, $stateParams, $timeout, $mdpDatePicker, $mdpTimePicker, apiDomain, domain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
-
+        
         //$scope.hasEnableF = false;
         //$scope.hasEnableG = false;
         //$scope.access_passwd = function () {
@@ -241,8 +241,6 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
         //Enable disable GoogleSignIn start
         $scope.socialLoginGoogle = function (hasEnableGoogle,gpId) {
 
-            console.log("abcd");
-            console.log($rootScope.user.Password);
             $scope.onoff = hasEnableGoogle;
             if ($scope.onoff) {
                 $http({

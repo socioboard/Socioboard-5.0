@@ -8,10 +8,10 @@ SocioboardApp.controller('YourFollowerController', function ($rootScope, $scope,
 
 
         $scope.twtfollower = function () {
-            debugger;
+          
             $http.get(apiDomain + '/api/Twitter/TwitterUserFollowers?profileId=' + $stateParams.profileId + '&skip=0&count=20')
                            .then(function (response) {
-                               debugger;
+                              
                                if (response.data == "")
                                {
                                    swal("Sorry You have No follower")

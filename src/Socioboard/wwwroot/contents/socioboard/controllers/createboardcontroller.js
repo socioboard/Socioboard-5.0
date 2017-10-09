@@ -34,6 +34,11 @@ SocioboardApp.controller('CreateBoardController', function ($rootScope, $scope,$
                     alertify.set({ delay: 5000 });
                     alertify.error(response.data);
                 }
+                else if (response.data == 'You cannot create board with special characters') {
+                    $scope.dispbtn = true;
+                    alertify.set({ delay: 5000 });
+                    alertify.error(response.data);
+                }
                 else if (response.data == 'successfulyy added.') {
                     $scope.dispbtn = true;
                     $state.go('boardlist');

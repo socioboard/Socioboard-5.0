@@ -42,15 +42,15 @@ namespace Api.Socioboard.Controllers
             return Ok(Repositories.ContentStudioRepository.GetAdvanceSearchdata(keywords, _redisCache, _appSettings));
         }
    
-        [HttpGet("GetYTAdvanceSearchData")]
-        public IActionResult GetYTAdvanceSearchData(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
+        [HttpGet("GetAdvanceSearchDataTrending")]
+        public IActionResult GetAdvanceSearchDataTrending(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             skip = 0;
             MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
             if (skip + count < 100)
             {
-                return Ok(Repositories.ContentStudioRepository.YuTubeAdvanceSerachData(network, _redisCache, _appSettings).Skip(skip).Take(count));
+                return Ok(Repositories.ContentStudioRepository.AdvanceSerachData(network, _redisCache, _appSettings).Skip(skip).Take(count));
             }
             else
             {
@@ -66,6 +66,29 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpGet("GetYTAdvanceSearchData")]
+        public IActionResult GetYTAdvanceSearchData(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            skip = 0;
+            MongoRepository mongorepo = new MongoRepository("AdvanceSearchYoutubeContentStdData", _appSettings);
+            if (skip + count < 100)
+            {
+                return Ok(Repositories.ContentStudioRepository.YtAdvanceSerachData(network, _redisCache, _appSettings).Skip(skip).Take(count));
+            }
+            else
+            {
+                var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSearchYoutubeContentStdData>.Sort;
+                var sort = builder.Descending(t => t.totalShareCount);
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSearchYoutubeContentStdData>(t => t.networkType.Equals(network), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.AdvanceSearchYoutubeContentStdData> lstYoutbe = task.Result;
+                return Ok(lstYoutbe);
+            }
+        }
 
         [HttpGet("GetSortByData")]
         public IActionResult GetSortByData(string sortType, int skip, int count)

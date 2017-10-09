@@ -41,6 +41,43 @@ namespace Socioboard.Controllers
                 string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
                 if (respo != "false")
                 {
+                    if (user == null)
+                    {
+                        string EmailId = string.Empty;
+                        string password = string.Empty;
+                        if (Request.Cookies["socioboardemailId"] != null)
+                        {
+                            EmailId = Request.Cookies["socioboardemailId"].ToString();
+                            EmailId = PluginHelper.Base64Decode(EmailId);
+                        }
+                        if (Request.Cookies["socioboardToken"] != null)
+                        {
+                            password = Request.Cookies["socioboardToken"].ToString();
+                            password = PluginHelper.Base64Decode(password);
+                        }
+                        if (!string.IsNullOrEmpty(EmailId))
+                        {
+                            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+                            strdic.Add("UserName", EmailId);
+                            if (string.IsNullOrEmpty(password))
+                            {
+                                strdic.Add("Password", "sociallogin");
+                            }
+                            else
+                            {
+                                strdic.Add("Password", password);
+                            }
+
+
+                            string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+
+                            if (!string.IsNullOrEmpty(response))
+                            {
+                                Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                                HttpContext.Session.SetObjectAsJson("User", _user);
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -48,46 +85,63 @@ namespace Socioboard.Controllers
                     HttpContext.Session.Remove("selectedGroupId");
                     HttpContext.Session.Clear();
                     HttpContext.Session.Remove("revokedata");
+                    user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
                 }
 
             }
-            if (user == null)
+            else
             {
-                string EmailId = string.Empty;
-                string password = string.Empty;
-                if (Request.Cookies["socioboardemailId"] != null)
+                string sociorevtoken = string.Empty;
+                if (Request.Cookies["sociorevtoken"] != null)
                 {
-                    EmailId = Request.Cookies["socioboardemailId"].ToString();
-                    EmailId = PluginHelper.Base64Decode(EmailId);
-                }
-                if (Request.Cookies["socioboardToken"] != null)
-                {
-                    password = Request.Cookies["socioboardToken"].ToString();
-                    password = PluginHelper.Base64Decode(password);
-                }
-                if (!string.IsNullOrEmpty(EmailId))
-                {
-                    SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-                    strdic.Add("UserName", EmailId);
-                    if (string.IsNullOrEmpty(password))
+                    sociorevtoken = Request.Cookies["sociorevtoken"].ToString();
+                    sociorevtoken = PluginHelper.Base64Decode(sociorevtoken);
+                    SortedDictionary<string, string> strdi = new SortedDictionary<string, string>();
+                    strdi.Add("systemId", sociorevtoken);
+                    string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
+                    if (respo != "false")
                     {
-                        strdic.Add("Password", "sociallogin");
+                        if (user == null)
+                        {
+                            string EmailId = string.Empty;
+                            string password = string.Empty;
+                            if (Request.Cookies["socioboardemailId"] != null)
+                            {
+                                EmailId = Request.Cookies["socioboardemailId"].ToString();
+                                EmailId = PluginHelper.Base64Decode(EmailId);
+                            }
+                            if (Request.Cookies["socioboardToken"] != null)
+                            {
+                                password = Request.Cookies["socioboardToken"].ToString();
+                                password = PluginHelper.Base64Decode(password);
+                            }
+                            if (!string.IsNullOrEmpty(EmailId))
+                            {
+                                SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
+                                strdic.Add("UserName", EmailId);
+                                if (string.IsNullOrEmpty(password))
+                                {
+                                    strdic.Add("Password", "sociallogin");
+                                }
+                                else
+                                {
+                                    strdic.Add("Password", password);
+                                }
+
+
+                                string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
+
+                                if (!string.IsNullOrEmpty(response))
+                                {
+                                    Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
+                                    HttpContext.Session.SetObjectAsJson("User", _user);
+                                }
+                            }
+                        }
                     }
-                    else
-                    {
-                        strdic.Add("Password", password);
-                    }
-
-
-                    string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
-
-                    if (!string.IsNullOrEmpty(response))
-                    {
-                        Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
-                        HttpContext.Session.SetObjectAsJson("User", _user);
-                    } 
                 }
             }
+           
             base.OnActionExecuting(filterContext);
         }
 

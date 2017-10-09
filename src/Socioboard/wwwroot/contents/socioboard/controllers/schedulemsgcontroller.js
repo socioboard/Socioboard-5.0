@@ -268,7 +268,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         }
 
         $scope.hasExtension = function (inputID, exts) {
-            debugger;
             var fileName = $('#input-file-now').val();
             return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }

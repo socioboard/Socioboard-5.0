@@ -12,7 +12,7 @@ namespace Api.Socioboard.Repositories
 {
     public class ContentStudioRepository
     {
-        public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> YuTubeAdvanceSerachData(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
+        public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> AdvanceSerachData(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
 
             MongoRepository _RssRepository = new MongoRepository("AdvanceSerachData", settings);
@@ -31,6 +31,32 @@ namespace Api.Socioboard.Repositories
             IList<AdvanceSerachData> lstyoutube = task.Result.ToList();//.Take(30).Skip(0).ToList();
             lstyoutube = lstyoutube.OrderByDescending(kt => kt.postedTime).ToList();
             lstyoutube = lstyoutube.OrderByDescending(gb => gb.totalShareCount).ToList().Take(30).Skip(0).ToList();
+            if (lstyoutube != null)
+            {
+                //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
+
+                return lstyoutube.ToList();
+            }
+            return null;
+        }
+
+        public static List<Domain.Socioboard.Models.Mongo.AdvanceSearchYoutubeContentStdData> YtAdvanceSerachData(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
+        {
+
+            MongoRepository _RssRepository = new MongoRepository("AdvanceSearchYoutubeContentStdData", settings);
+            //List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstyoutube = new List<Domain.Socioboard.Models.Mongo.AdvanceSerachData>();
+            var builder = Builders<AdvanceSearchYoutubeContentStdData>.Sort;
+            var sort = builder.Descending(t => t.postedTime);
+            var result = _RssRepository.FindWithRange<AdvanceSearchYoutubeContentStdData>(t => t.networkType == networkType && t.ytview != 0, sort, 0, 200);
+            // var result = _RssRepository.FindAdvance<AdvanceSerachData>(t => t.networkType == networkType && t.totalShareCount != 0);//UserId
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+         
+            IList<AdvanceSearchYoutubeContentStdData> lstyoutube = task.Result.ToList();//.Take(30).Skip(0).ToList();
+            lstyoutube = lstyoutube.OrderByDescending(kt => kt.postedTime).ToList();
+            lstyoutube = lstyoutube.OrderByDescending(gb => gb.ytview).ToList().Take(30).Skip(0).ToList();
             if (lstyoutube != null)
             {
                 //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
@@ -193,7 +219,6 @@ namespace Api.Socioboard.Repositories
             return null;
         }
 
-
         public static string saveContentDataIdReposi(List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> shareathon, long userId, string fbPageId, int timeInterval, Helper.Cache _redisCache, Helper.AppSettings settings, Model.DatabaseRepository dbr)
         {
 
@@ -332,7 +357,6 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-
         public static List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> ShareathonQueueReposi(long userId, Helper.AppSettings settings)
         {
             MongoRepository mongorepo = new MongoRepository("ContentFeedsShareathon", settings);
@@ -346,8 +370,6 @@ namespace Api.Socioboard.Repositories
 
 
         }
-
-
 
         public static List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> updateShareathonByUserId(long userId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
         {

@@ -5,7 +5,7 @@ SocioboardApp.controller('EwalletlistController', function ($rootScope, $scope, 
     $scope.$on('$viewContentLoaded', function () {
         ewalletlist();
         $scope.getEwalletTransactions = function () {
-            debugger;
+            
             $http.get(apiDomain + '/api/Ewallet/GetEwalletTransactions?userid=' + $rootScope.user.Id)
            .then(function (response) {
                $scope.ewalletTransactions = response.data;

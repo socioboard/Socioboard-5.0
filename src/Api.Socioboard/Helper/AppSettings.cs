@@ -24,6 +24,7 @@ namespace Api.Socioboard.Helper
 
         public string ccmail { get; set; }
         public string sitemapPath { get; set; }
+        public string sitemapPathIndex { get; set; }
         public string sitefilePath { get; set; }
 
         //Start facebook App Creds

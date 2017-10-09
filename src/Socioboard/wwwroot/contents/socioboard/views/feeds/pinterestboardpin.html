@@ -109,7 +109,8 @@
                                              <label for="web_url">Enter url</label>
                                          </div>
                                          <div class="col l2 s2 center">
-                                             <a href="#SavePinModal" class="modal-trigger btn btn_style modal-action modal-close">Next</a>
+                                             <!--<a href="#SavePinModal" class="modal-trigger btn btn_style modal-action modal-close">Next</a>-->
+                                             <a class="pin_save_btn" ng-click="CheckNextStatus();">Next</a>
                                          </div>
                                      </div>
                                  </div>
@@ -126,7 +127,8 @@
                                              <input type="file" id="composePinImage"  onchange="angular.element(this).scope().CheckStatus()" class="dropify" data-default-file="" />
                                          </div>
                                          <div class="input-field col l12 s12">
-                                             <a  href="#SavePinModal" class="modal-trigger btn btn_style right modal-action modal-close">Next</a>
+                                             <!--<a  href="#SavePinModal" class="modal-trigger btn btn_style right modal-action modal-close">Next</a>-->
+                                             <a class="pin_save_btn" ng-click="CheckNextStatusBrowse();">Next</a>
                                          </div>
                                      </div>
                                  </div>

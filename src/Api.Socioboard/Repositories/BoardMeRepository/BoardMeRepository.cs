@@ -13,56 +13,63 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
     {
         public async Task<string> CreateBoard(string boardName, string twitterHashTag, string instagramHashTag, string gplusHashTag, long userId, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger, DatabaseRepository dbr)
         {
-
-            IList<Domain.Socioboard.Models.MongoBoards> boards = new List<Domain.Socioboard.Models.MongoBoards>();
-            try
+            if(boardName.Contains("~") || boardName.Contains("@") || boardName.Contains("$") || boardName.Contains("%") || boardName.Contains("^") || boardName.Contains("*") || boardName.Contains("(") || boardName.Contains(")") || boardName.Contains("'") || boardName.Contains("?") || boardName.Contains("+") || boardName.Contains("'\'")|| boardName.Contains("| ")|| boardName.Contains("/"))
             {
-                boards = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.boardName.Equals(boardName.ToLower()));
-            }
-            catch (Exception e)
-            {
-            }
-            if (boards == null || boards.Count() == 0)
-            {
-                Domain.Socioboard.Models.MongoBoards board = new Domain.Socioboard.Models.MongoBoards();
-                //companyprofiles.UserId = UserId;
-                board.isActive =  Domain.Socioboard.Enum.boardStatus.active;
-                board.boardName = boardName.ToLower();
-                board.createDate = DateTime.UtcNow;
-                board.userId = userId;
-                board.trendingtype = Domain.Socioboard.Enum.TrendingType.user;
-                board.boardId = Guid.NewGuid().ToString();
-                if (board.boardName.ToLower().Contains(" "))
-                {
-                    board.TempboardName = board.boardName.Replace(" ", "_");
-                }
-                else
-                {
-                    board.TempboardName= boardName.ToLower();
-                }
-                if (!string.IsNullOrEmpty(twitterHashTag) && twitterHashTag != "undefined")
-                {
-                    TwitterRepository tr = new TwitterRepository();
-                    board.twitterHashTag = await tr.AddTwitterHashTag(twitterHashTag, board.boardId, _redisCache, settings, _logger);
-                }
-                if (!string.IsNullOrEmpty(instagramHashTag) && instagramHashTag != "undefined")
-                {
-                    InstagramRepository instRepo = new InstagramRepository();
-                    board.instagramHashTag = await instRepo.AddInstagramHashTag(instagramHashTag, board.boardId, _redisCache, settings, _logger);
-                }
-                if (!string.IsNullOrEmpty(gplusHashTag) && gplusHashTag != "undefined")
-                {
-                    GplusRepository gplusRepo = new GplusRepository();
-                    board.gplusHashTag = await gplusRepo.AddGplusHashTag(gplusHashTag, board.boardId, _redisCache, settings, _logger);
-                }
-
-                dbr.Add<Domain.Socioboard.Models.MongoBoards>(board);
-                return "successfulyy added.";
+                return "You cannot create board with special characters";
             }
             else
             {
-                return "board Exist";
+                IList<Domain.Socioboard.Models.MongoBoards> boards = new List<Domain.Socioboard.Models.MongoBoards>();
+                try
+                {
+                    boards = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => t.boardName.Equals(boardName.ToLower()));
+                }
+                catch (Exception e)
+                {
+                }
+                if (boards == null || boards.Count() == 0)
+                {
+                    Domain.Socioboard.Models.MongoBoards board = new Domain.Socioboard.Models.MongoBoards();
+                    //companyprofiles.UserId = UserId;
+                    board.isActive = Domain.Socioboard.Enum.boardStatus.active;
+                    board.boardName = boardName.ToLower();
+                    board.createDate = DateTime.UtcNow;
+                    board.userId = userId;
+                    board.trendingtype = Domain.Socioboard.Enum.TrendingType.user;
+                    board.boardId = Guid.NewGuid().ToString();
+                    if (board.boardName.ToLower().Contains(" "))
+                    {
+                        board.TempboardName = board.boardName.Replace(" ", "_");
+                    }
+                    else
+                    {
+                        board.TempboardName = boardName.ToLower();
+                    }
+                    if (!string.IsNullOrEmpty(twitterHashTag) && twitterHashTag != "undefined")
+                    {
+                        TwitterRepository tr = new TwitterRepository();
+                        board.twitterHashTag = await tr.AddTwitterHashTag(twitterHashTag, board.boardId, _redisCache, settings, _logger);
+                    }
+                    if (!string.IsNullOrEmpty(instagramHashTag) && instagramHashTag != "undefined")
+                    {
+                        InstagramRepository instRepo = new InstagramRepository();
+                        board.instagramHashTag = await instRepo.AddInstagramHashTag(instagramHashTag, board.boardId, _redisCache, settings, _logger);
+                    }
+                    if (!string.IsNullOrEmpty(gplusHashTag) && gplusHashTag != "undefined")
+                    {
+                        GplusRepository gplusRepo = new GplusRepository();
+                        board.gplusHashTag = await gplusRepo.AddGplusHashTag(gplusHashTag, board.boardId, _redisCache, settings, _logger);
+                    }
+
+                    dbr.Add<Domain.Socioboard.Models.MongoBoards>(board);
+                    return "successfulyy added.";
+                }
+                else
+                {
+                    return "board Exist";
+                }
             }
+            
         }
 
         public static Domain.Socioboard.Models.MongoBoards getBoard(long boardId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger, DatabaseRepository dbr)

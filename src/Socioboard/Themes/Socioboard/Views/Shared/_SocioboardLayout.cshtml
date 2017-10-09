@@ -839,7 +839,6 @@ analytics" href="http://statcounter.com/shopify/"
 
             <script>
                 function myFunction() {
-                    debugger;
                     $('#ImgLoading').show();
                     $('#submitButton').hide();
                     var firstName = $('#FirstName').val();
@@ -933,7 +932,6 @@ analytics" href="http://statcounter.com/shopify/"
 
     <script>
         function Verifypromocode() {
-            debugger;
             var promo_code = $('#promo_code').val();
             if (promo_code == "")
             {
@@ -1182,7 +1180,6 @@ analytics" href="http://statcounter.com/shopify/"
                 function mobLocate() {
 
                     $.get("https://ipinfo.io", function (response) {
-                        debugger;
                         $("#countryName").val(response.country);
                         change_country(response.country);
                         $("#CountrySelect").val(response.country);

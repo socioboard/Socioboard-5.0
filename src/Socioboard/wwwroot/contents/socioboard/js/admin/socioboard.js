@@ -591,7 +591,6 @@ mytask = function () {
 }
 
 history = function () {
-    debugger;
     // initialize core components
     $('.modal-trigger').leanModal();
     $('select').material_select();
@@ -2128,7 +2127,7 @@ groupreport = function () {
 
 // facebook report
 facebookreport = function () {
-    debugger;
+ 
     // initialize core components
     $('ul.tabs').tabs();
     $('.modal-trigger').leanModal();

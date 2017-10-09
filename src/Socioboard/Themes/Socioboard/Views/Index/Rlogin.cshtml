@@ -192,7 +192,7 @@
     <script type="text/javascript">
 
         $(document).ready(function () {
-            debugger;
+            
             //var cookies = getCookie("socioboardplugin");
             //var locatrion = document.location.href + "&EmailId=" + cookies;
             //if (cookies != "") {
@@ -205,7 +205,7 @@
             });
 
         function getParameterByName(name) {
-            debugger;
+            
             var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
             return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
         }
@@ -291,7 +291,7 @@
             document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         }
         function getCookie(cname) {
-            debugger;
+           
             var name = cname + "=";
             var decodedCookie = decodeURIComponent(document.cookie);
             var ca = decodedCookie.split(';');
@@ -340,7 +340,7 @@
                     disable();
                 },
                 success: function (data) {
-                    debugger;
+                   
                     windowObjectReference = window.open(data, "Socioboard - facebook login", strWindowFeatures);
                     var timerinetr = setInterval(function () {
                         windowObjectReference.close();
@@ -453,7 +453,7 @@
 
         $('#sb-register').submit(function (e) {
             e.preventDefault();
-            debugger;
+         
             $('#register-error').text('');
             var password = $('#pass').val();
             var cpassword = $('#cpassword').val();
@@ -482,7 +482,7 @@
             }
         });
         function disable() {
-            debugger;
+          
             $('#signup').attr('disabled', 'disabled');
             $('#login').attr('disabled', 'disabled');
             $('#twitter-login').attr('disabled', 'disabled');

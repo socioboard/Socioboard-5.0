@@ -50,7 +50,7 @@ namespace Api.Socioboard.Controllers
         {
             Repositories.BoardMeRepository.BoardMeRepository brRepository = new Repositories.BoardMeRepository.BoardMeRepository();
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            AddTOSiteMap(boardName);
+           // AddTOSiteMap(boardName);
             return Ok(await brRepository.CreateBoard(boardName, twitterHashTag, instagramHashTag, gplusHashTag, userId, _redisCache, _appSettings, _logger, dbr));
         }
 
@@ -173,7 +173,7 @@ namespace Api.Socioboard.Controllers
         [HttpGet("getBoardFeedsByName")]
         public IActionResult getBoardFeedsByName(string boardName)
         {
-            //boardName = boardName.Replace("SB", "/");
+            boardName = boardName.Replace("SB", "/");
             try
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
@@ -517,27 +517,7 @@ namespace Api.Socioboard.Controllers
             try
             {
                 string appendNode = "<url><loc>https://boards.socioboard.com/" + boardName + "</loc><lastmod>" + DateTime.UtcNow.ToString("yyyy-MM-dd") + "</lastmod><changefreq>Hourly</changefreq><priority>0.6</priority></url>";
-                //XmlTextWriter writer = new XmlTextWriter("site.xml", System.Text.Encoding.UTF8);
-                //writer.WriteStartDocument();
-                //writer.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
-
-                //writer.WriteStartElement("url");
-
-                //writer.WriteElementString("loc", boardName);
-                //writer.WriteElementString("priority", "0.5");
-                //writer.WriteEndElement();
-
-                ////Now we loop for creating the XML node for all products
-
-                //int i = 0;
-                ////Creating the  element
-                //writer.WriteStartElement("url");
-                //writer.WriteElementString("loc", "teste");
-                //writer.WriteElementString("priority", "0.5");
-                //writer.WriteEndElement();
-                //writer.WriteEndDocument();
-                //writer.Close();
-                XmlDocument doc = new XmlDocument();
+               XmlDocument doc = new XmlDocument();
                 doc.Load(_appSettings.sitemapPath);
                 var abc = doc.DocumentElement.GetElementsByTagName("url");
                 if (abc.Count >=500)
@@ -548,16 +528,6 @@ namespace Api.Socioboard.Controllers
                     if (Files.Count()>0)
                     {
                         XmlTextWriter writer = new XmlTextWriter(_appSettings.sitemapPath.Replace("sitemap", "sitemap" + Files.Count().ToString()), System.Text.Encoding.UTF8);
-                        //writer.WriteStartDocument();
-                        //writer.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
-                        //int i = 0;
-                        //writer.WriteStartElement("url");
-                        //writer.WriteElementString("loc", "https://boards.socioboard.com/" + boardName);
-                        //writer.WriteElementString("priority", "0.6");
-                        //writer.WriteElementString("changefreq", "Hourly");
-                        //writer.WriteElementString("lastmod", DateTime.UtcNow.ToString("yyyy-MM-dd"));
-                        //writer.WriteEndElement();
-                        //writer.WriteEndDocument();
                         writer.Close();
                         XmlTextWriter writer1 = new XmlTextWriter(_appSettings.sitemapPath, System.Text.Encoding.UTF8);
                         writer1.WriteStartDocument();
@@ -571,6 +541,39 @@ namespace Api.Socioboard.Controllers
                         writer1.WriteEndDocument();
                         writer1.Close();
                         doc.Save(_appSettings.sitemapPath.Replace("sitemap", "sitemap" + Files.Count().ToString()));
+
+                        int length1 = d.GetFiles("*.xml").Length;
+                        int filelength = length1 - 1;
+                        string location = "https://boards.socioboard.com/contents/socioboard/boardSitemap/sitemap" + filelength+".xml";
+                        string lastmode = DateTime.UtcNow.ToString("yyyy-MM-dd");
+                        string priority = "0.6";
+
+                        XmlDocument xdoc1 = new XmlDocument();
+                        xdoc1.Load(_appSettings.sitemapPathIndex);
+                        XmlNode url = xdoc1.CreateElement("Url");
+                        XmlNode loc = xdoc1.CreateElement("loc");
+                        url.InnerText = location;
+                        url.AppendChild(loc);
+
+                        XmlNode lastmod = xdoc1.CreateElement("lastmod");
+                        lastmod.InnerText = lastmode;
+                        url.AppendChild(lastmod);
+
+                        XmlNode prioritys = xdoc1.CreateElement("priority");
+                        prioritys.InnerText = priority;
+                        url.AppendChild(prioritys);
+
+                        xdoc1.DocumentElement.AppendChild(url);
+                        xdoc1.Save(_appSettings.sitemapPathIndex);
+
+
+                        //XmlDocument docIndex = new XmlDocument();
+                        //docIndex.Load(_appSettings.sitemapPathIndex);
+                        //docIndex.LoadXml(appendNodeIndex);
+                        //XmlNode newNodeIndex = docIndex.DocumentElement;
+                        //var attributename = newNodeIndex.Attributes;
+                        //docIndex.DocumentElement.AppendChild(docIndex.ImportNode(newNodeIndex, true));
+                        //docIndex.Save(_appSettings.sitemapPathIndex);
                     }
                     else
                     {

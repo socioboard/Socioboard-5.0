@@ -115,7 +115,7 @@ SocioboardApp.controller('ImgLibraryController', function ($rootScope, $scope, $
 
        //Count Size
        $scope.Totalimagesize = function () {
-           debugger;
+           
            $http.get(apiDomain + '/api/ImgLibrary/Totalimagesize?userid=' + $rootScope.user.Id)
            .then(function (response) {
                $scope.totalimagesize = response.data;

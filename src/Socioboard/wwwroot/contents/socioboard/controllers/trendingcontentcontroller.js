@@ -51,7 +51,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                // var abc = "twitter";
             var abcd = 0;
-                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=' + startData + '&count=30')
                               .then(function (response) {
                                   $scope.lstData = response.data;
                                   $scope.fetchdatacomplete = true;
@@ -83,7 +83,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                     
@@ -109,9 +109,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
                 var abcd = 0;
                 $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
-                                      $scope.lstData = response.data;
-                                     
-                                      console.log($scope.lstData);
+                                      $scope.lstDatayoutube = response.data;                                                                       
                                       $scope.fetchdatacomplete = true;
                                       startData = response.data.length;
                                       $scope.lastreach = true;
@@ -133,7 +131,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                       $scope.fetchdatacomplete = true;
@@ -158,7 +156,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                      
@@ -183,7 +181,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                     
                                       $scope.lstData = response.data;
@@ -209,7 +207,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/ContentStudio/GetYTAdvanceSearchData?network=' + abc + '&skip=' + startData + '&count=10')
+                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=' + startData + '&count=10')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                      
@@ -232,7 +230,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
 
         $scope.Loaddata = function (key) {
             //codes to load Data
-            $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchData?keywords=' + key)
+            $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?keywords=' + key)
                               .then(function (response) {
                                   $scope.lstData = response.data;
                                   //$scope.fetchdatacomplete = true;

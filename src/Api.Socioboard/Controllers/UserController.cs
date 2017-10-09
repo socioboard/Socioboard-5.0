@@ -1410,8 +1410,8 @@ namespace Api.Socioboard.Controllers
                 IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
                 IList<User> userDet = dbr.Find<User>(t => t.Id == lstFbacc.First().UserId);
                 if (lstUser != null && lstUser.Count() > 0)
-                {
-                    if (lstFbacc.First().UserId == lstUser.First().Id)
+                {                   
+                    if ( lstFbacc !=null && lstFbacc.Count()>0  && lstUser.FirstOrDefault().Id == lstFbacc.FirstOrDefault().UserId)
                     {
                         if (lstUser.FirstOrDefault().SocialLoginEnableFb == true)
                         {
@@ -1422,10 +1422,17 @@ namespace Api.Socioboard.Controllers
                                     lstUser.First().RefrralCode = "SOCIOBOARD_" + lstUser.First().Id;
                                 }
                                 DateTime d1 = DateTime.UtcNow;
-                                //User userTable = dbr.Single<User>(t => t.EmailId == EmailId);
-                                //userTable.LastLoginTime = d1;
+                                                                       
+                                try
+                                {
+
+                                    lstFbacc.First().ProfileUrl = (Convert.ToString(profile["picture"]["data"]["url"]));
+                                }
+                                catch (Exception ex)
+                                { }
                                 lstUser.First().LastLoginTime = d1;
                                 dbr.Update<User>(lstUser.First());
+                                dbr.Update<Facebookaccounts>(lstFbacc.First());
                                 _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
                                 return Ok(lstUser.First());
                             }
@@ -1445,32 +1452,35 @@ namespace Api.Socioboard.Controllers
                     }
                     else
                     {
-                        if (lstFbacc.First().IsActive == true)//&& userDet.First().SocialLoginEnableFb == true)
+                        if (lstFbacc !=null && lstFbacc.Count>0)
                         {
-                            if (userDet.First().SocialLoginEnableFb == true)
+                            if (lstFbacc.First().IsActive == true)//&& userDet.First().SocialLoginEnableFb == true)
                             {
-                                long id = lstFbacc.First().UserId;
-                                //IList<User> userDet = dbr.Find<User>(t => t.Id == id);
-                                DateTime d1 = DateTime.UtcNow;
-                                userDet.First().LastLoginTime = d1;
-                                dbr.Update<User>(userDet.First());
-                                _redisCache.Set<User>(userDet.First().EmailId, userDet.First());
-                                return Ok(userDet.First());
+                                if (userDet.First().SocialLoginEnableFb == true)
+                                {
+                                    long id = lstFbacc.First().UserId;
+                                    //IList<User> userDet = dbr.Find<User>(t => t.Id == id);
+                                    DateTime d1 = DateTime.UtcNow;
+                                    userDet.First().LastLoginTime = d1;
+                                    dbr.Update<User>(userDet.First());
+                                    _redisCache.Set<User>(userDet.First().EmailId, userDet.First());
+                                    return Ok(userDet.First());
+                                }
+                                else
+                                {
+                                    return Ok("it's look like you have disable your social signin for facebook account");
+                                }
                             }
                             else
                             {
-                                return Ok("it's look like you have disable your social signin for facebook account");
+                                return Ok("facebook account added by other user");
                             }
-
                         }
                         else
                         {
-                            return Ok("facebook account added by other user");
+                            return Ok("EmailId already exist");
                         }
                     }
-
-
-
                 }
                 else if (lstFbacc != null && lstFbacc.Count() > 0 && lstUser.Count() == 0)
                 {
@@ -2330,10 +2340,11 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetUserSessions(long userId)
         {
             DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            List<SessionHistory> lstsessions = dbr.Find<SessionHistory>(t => t.userId == userId).OrderByDescending(t => t.firstloginTime).ToList();
+            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-14).Year, DateTime.UtcNow.AddDays(-14).Month, DateTime.UtcNow.AddDays(-14).Day, 0, 0, 0, DateTimeKind.Utc);
+            DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
+            List<SessionHistory> lstsessions = dbr.Find<SessionHistory>(t => t.userId == userId && t.lastAccessedTime > dayStart && t.lastAccessedTime < dayEnd).OrderByDescending(t => t.firstloginTime).ToList();
             return Ok(lstsessions);
         }
-
         [HttpPost("SaveSessiondata")]
         public IActionResult SaveSessiondata(string ip, string brwdata, string userId)
         {

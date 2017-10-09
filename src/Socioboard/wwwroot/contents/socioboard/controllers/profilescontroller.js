@@ -40,7 +40,7 @@ SocioboardApp.controller('ProfilesController', function ($rootScope, $scope, $ht
 
         //codes to load  TotalIncommingMessages
         $scope.GetIncommingMessage = function () {
-            debugger;
+           
             $http.get(apiDomain + '/api/Twitter/GetIncommingMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
                               $scope.TotaltIncommingMessage = response.data;

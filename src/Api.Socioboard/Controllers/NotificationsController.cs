@@ -73,17 +73,21 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpGet("FindAllNotifications")]
-        public IActionResult FindAllNotifications(long userId)
+        public IActionResult FindAllNotifications(long userId, int skip, int count)
         {
             try
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<ScheduledMessage> lstschedulemsg = new List<ScheduledMessage>();
-                List<Notifications> lstnotifications = dbr.Find<Notifications>(t => t.UserId == userId).ToList();
+                List<Notifications> lstnotifications = dbr.FindWithRange<Notifications>(t => t.UserId == userId, skip, count).ToList();
                 foreach (Notifications notify in lstnotifications)
                 {
                     ScheduledMessage schedulemsg = dbr.Single<ScheduledMessage>(t => t.id == notify.MsgId && t.userId==userId);
-                    lstschedulemsg.Add(schedulemsg);
+                    if(schedulemsg !=null)
+                    {
+                        lstschedulemsg.Add(schedulemsg);
+                    }
+                   
                 }
                 if (lstschedulemsg != null)
                 {

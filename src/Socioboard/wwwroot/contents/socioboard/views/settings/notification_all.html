@@ -2,6 +2,16 @@
     .noti_feeds_img{
         height:200px !important;
     }
+     .load_more{
+            text-align: center;
+    border: 1px solid #fff;
+    border-radius: 13px;
+    margin-bottom: 7px;
+    background: palevioletred;
+    }
+    .load_more a{
+        color:#fff !important
+    }
 </style>
 <div data-ng-controller="NotificationAllController">
     <!-- START CONTENT -->
@@ -32,7 +42,29 @@
                             <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
                         </li>
                     </ul>
-
+                    <ul class="collection facebookfeeds">
+                        <li class="collection-item avatar" ng-repeat="notify in loadlstnotifications">
+                            <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
+                            <span class="email-title">{{notify.socialprofileName}}</span>
+                            <div class="row notify_post z-depth-1 hoverable">
+                                <div class="col m8">
+                                    <p class="break_word ultra-small">{{notify.shareMessage}}</p>
+                                    <h6 ng-if="notify.status==1" class="center success_box">Message Sent Successfully</h6>
+                                    <h6 ng-if="notify.status==0" class="center error_box">Message Not Sent</h6>
+                                </div>
+                                <div class="col m4 center">
+                                    <img src="{{notify.url}}" class="responsive-img noti_feeds_img">
+                                </div>
+                                <!--<div class="col m4 center video-container">
+                    <iframe width="20" height="20" src="{{notify.url}}" frameborder="0" allowfullscreen></iframe>
+                </div>-->
+                            </div>
+                            <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
+                        </li>
+                    </ul>
+                    <div class="load_more" ng-if="notifycount !=0" id="load_more_toggle">
+                        <a class="center" ng-click="loadmore()">Load More</a>
+                    </div>
                 </div>
             </div>
         </div>

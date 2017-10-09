@@ -310,7 +310,7 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
 
         //Get User detail start
         $scope.GetUserdetail = function () {
-            debugger;
+            
             $http.get(apiDomain + '/api/User/GetUser?Id=' + $rootScope.user.Id)
                           .then(function (response) {
                               $scope.userdetails = response.data;

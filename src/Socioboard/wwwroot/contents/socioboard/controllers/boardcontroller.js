@@ -116,7 +116,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                 //codes to load  recent Feeds
                 $http.get(apiDomain + '/api/BoardMe/getInstagramFeeds?boardId=' + $stateParams.boardId + '&userId=' + $rootScope.user.Id + '&skip=' + startInstagram + '&count=30')
                               .then(function (response) {
-                                  debugger;
+                                  
                                   response.data.forEach(function (feed) {
                                       $scope.lstBoardFeeds.push(feed);
                                   });

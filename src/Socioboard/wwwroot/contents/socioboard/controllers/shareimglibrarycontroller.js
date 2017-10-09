@@ -88,7 +88,7 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
 
       //Load LoadImagesForPublic
        $scope.LoadImagesForPublic = function () {
-            debugger;
+           
            $http.get(apiDomain + '/api/ImgLibrary/LoadImagesForPublic?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
            .then(function (response) {
                $scope.imgdetails = response.data;
@@ -99,7 +99,7 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
 
        //Count Size
        $scope.Totalimagesize = function () {
-           debugger;
+          
            $http.get(apiDomain + '/api/ImgLibrary/Totalimagesize?userid=' + $rootScope.user.Id)
            .then(function (response) {
                $scope.totalimagesize = response.data;
@@ -110,7 +110,7 @@ SocioboardApp.controller('ShareImgLibraryController', function ($rootScope, $sco
 
         //Delete Images
         $scope.deleteImages = function (imgid) {
-            debugger;
+            
             swal({
                 title: "Are you sure?",
                 text: "You want to delete this image!",

@@ -731,8 +731,7 @@
 
 
         $(document).ready(function () {
-            debugger;
-
+          
             if ('@emailId' != "") {
                 setCookie("socioboardpluginemailId", '@emailId', "90");
                 if ('@password' != "") {
@@ -890,7 +889,6 @@
 
 
         function AddImageScheduleMessage() {
-            debugger;
             var filesinput = $('#upload');
             var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
             if (filesinput != undefined && filesinput[0].files[0] != null) {
@@ -936,7 +934,6 @@
         }
 
         function countChar() {
-            debugger;
             var tweetUriLength = '@tweetUrlLength';
             var val = document.getElementById('txt-twt-message').value;
             var len = +val.length + +tweetUriLength;
@@ -952,7 +949,6 @@
         }
 
         function postData() {
-            debugger;
             var arrId = [];
             $('.selected').each(function () {
                 arrId.push(this.id);
@@ -1042,7 +1038,6 @@
 
 
         function sharenow() {
-            debugger;
             var post = postData();
             if (post != null) {
                 $.ajax({
@@ -1091,7 +1086,6 @@
 
         }
         function schedulenow() {
-            debugger;
             var curdate = new Date();
             var dd = curdate.getDate();
             if (dd < 10) {
@@ -1241,7 +1235,6 @@
             }
         }
         function getParameterByName(name) {
-            debugger;
             var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
             return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
         }

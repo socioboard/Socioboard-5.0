@@ -152,7 +152,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 
             $http.get(apiDomain + '/api/GroupMember/DeleteGroup?groupId=' + groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
-                              debugger;
+                            
                               $scope.success = response.data;
                               swal("Team is deleted");
                               window.location.reload();
@@ -164,7 +164,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 
             $http.get(apiDomain + '/api/GroupMember/LeaveGroup?groupId=' + groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
-                              debugger;
+                             
                               $scope.success = response.data;
                               swal("successfully Leave");
                               window.location.reload();
@@ -254,7 +254,7 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         //retain group
         $scope.retainGrpMember = function (max, current) {
             var tempMembers = current - max;
-            debugger;
+            
             if ($scope.selectedMembersrestrict.length >= tempMembers) {
                 $http({
                     method: 'POST',

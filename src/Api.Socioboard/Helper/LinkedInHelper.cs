@@ -142,7 +142,7 @@ namespace Api.Socioboard.Helper
 
         }
 
-        public static string PostLinkedInCompanyPagePost(string upload,string ImageUrl, long userid, string comment, string LinkedinPageId, Domain.Socioboard.Enum.MediaType mediaType, string profileType, Helper.Cache _redisCache,Model.DatabaseRepository dbr,Helper.AppSettings _appSettings)
+        public static string PostLinkedInCompanyPagePost(string upload,string ImageUrl, long userid, string comment, string LinkedinPageId, Domain.Socioboard.Enum.MediaType mediaType, string profileName, Helper.Cache _redisCache,Model.DatabaseRepository dbr,Helper.AppSettings _appSettings)
         {
            try
             {
@@ -189,6 +189,7 @@ namespace Api.Socioboard.Helper
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                         scheduledMessage.url = upload;
                         scheduledMessage.mediaType = mediaType;
+                        scheduledMessage.socialprofileName = profileName;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";
@@ -242,6 +243,7 @@ namespace Api.Socioboard.Helper
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                         scheduledMessage.url = upload;
                         scheduledMessage.mediaType = mediaType;
+                        scheduledMessage.socialprofileName = profileName;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";
