@@ -49,9 +49,14 @@ namespace SocioboardDataScheduler.Facebook
                 {
                     if (_facebook.IsActive)
                     {
-                        if (schmessage.scheduleTime.AddHours(24) <= DateTime.Now)
+                        string day = DateTime.Now.DayOfWeek.ToString();
+                        TimeSpan time = DateTime.Now.TimeOfDay;
+                        //TimeSpan tv = TimeSpan.Parse(schmessage.localscheduletime);
+                        //TimeSpan.Compare(time, tv);
+                        TimeSpan dbtimeval = Convert.ToDateTime(schmessage.localscheduletime).TimeOfDay;//schmessage.localscheduletime
+                        if (schmessage.scheduleTime <= DateTime.Now && dbtimeval <= time && schmessage.weekdays == day)
                         {
-                            string data = DaywiseComposeMessage(_facebook.FbProfileType, _facebook.AccessToken, _facebook.FbUserId, schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.url, schmessage.link, schmessage, _user);                            
+                            string data = DaywiseComposeMessage(_facebook.FbProfileType, _facebook.AccessToken, _facebook.FbUserId, schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.url, schmessage.link, schmessage, _user);
                         }
                     }
                 }
@@ -61,7 +66,6 @@ namespace SocioboardDataScheduler.Facebook
 
             }
         }
-
 
         public static string ComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Models.ScheduledMessage schmessage, Domain.Socioboard.Models.User _user)
         {
@@ -217,10 +221,10 @@ namespace SocioboardDataScheduler.Facebook
                 }
                 else
                 {
-                    if (_user.scheduleSuccessUpdates)
-                    {
-                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
-                    }
+                    //if (_user.scheduleSuccessUpdates)
+                    //{
+                    //    string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    //}
                 }               
             }
             catch (Exception ex)
@@ -244,10 +248,10 @@ namespace SocioboardDataScheduler.Facebook
                 }
                 else
                 {
-                    if (_user.scheduleFailureUpdates)
-                    {
-                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
-                    }
+                    //if (_user.scheduleFailureUpdates)
+                    //{
+                    //    string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    //}
                 }           
             }
             return ret;
@@ -407,10 +411,10 @@ namespace SocioboardDataScheduler.Facebook
                 }
                 else
                 {
-                    if (_user.scheduleSuccessUpdates)
-                    {
-                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
-                    }
+                    //if (_user.scheduleSuccessUpdates)
+                    //{
+                    //    string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    //}
                 }
 
 
@@ -437,15 +441,14 @@ namespace SocioboardDataScheduler.Facebook
                 }
                 else
                 {
-                    if (_user.scheduleFailureUpdates)
-                    {
-                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
-                    }
+                    //if (_user.scheduleFailureUpdates)
+                    //{
+                    //    string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    //}
                 }
             }
             return ret;
         }
-
 
         public static string SendMailbySendGrid(string from, string passsword, string to, string bcc, string cc, string subject, string body, string Name, string time, bool schStatus, string UserName, string Password)
         {

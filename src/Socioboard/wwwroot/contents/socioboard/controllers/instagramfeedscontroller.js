@@ -19,10 +19,11 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         $scope.lstinFeeds = null;
 
         $scope.lstFbFeeds = [];
+          
 
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
-            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
+            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=12')
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               //$scope.lstinsFeeds = response.data;
@@ -43,7 +44,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                           });
             // end codes to load  recent Feeds
         }
-
+       
         $scope.LoadTopFeeds();
 
         $scope.ReLoadingTopFeeds = function () {
@@ -65,7 +66,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             if (reachLast) {
                 return false;
             }
-            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=10')
+            $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=9')
                          .then(function (response) {                          
                              // $scope.lstProfiles = response.data;
                              if (response.data == null || response.data == "") {
@@ -77,7 +78,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                              else {
                                  $scope.lstinsFeeds = $scope.lstinsFeeds.concat(response.data);
                                  //$scope.date($scope.lstinFeeds);
-                                 ending = ending + 10;
+                                 ending = ending + 9;
                                  $scope.listData();
                              }
                          }, function (reason) {
@@ -164,11 +165,12 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                           });
             // end codes to like Feeds
         }
-
+       
         $scope.AddInstagramComment = function (FeedId, InstagramId)
+
         {
-           
-            var text = $('#postcomment' + FeedId).val();
+            debugger;
+            var text = $('#postcomment').val();
             var updatetitle = "";
 
             var postdata = text.split("\n");//newComment
@@ -186,11 +188,11 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                 //codes to post comments
                 $http.post(apiDomain + '/api/Instagram/AddInstagramComment?FeedId=' + FeedId + '&InstagramId=' + InstagramId +'&Text='+text)
                               .then(function (response) {
+                                  debugger;
                                   $scope.dispbtn = true;
                                   $('#postcomment' + FeedId).val('');
                                   $scope.LoadTopFeeds();
-                                 
-                                  
+                                  swal('Posted');
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -206,6 +208,13 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             $rootScope.insfeednotification = insfeednotification;
             $('#TaskModal').openModal();
 
+        }
+
+        $scope.viewPostModal = function (tempo) {
+            debugger;
+            $scope.feeds = tempo;
+            $scope.comment = tempo._InstagramComment
+            $('#viewPostModal').openModal();
         }
 
         $scope.callDropmenu = function () {
@@ -236,6 +245,30 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
             }
         }
+
+        $(document).ready(function () {
+            $('#waterfall').NewWaterfall();
+        });
+
+        // waterfall
+        function random(min, max) {
+            return min + Math.floor(Math.random() * (max - min + 1))
+        }
+        var loading = false;
+        var dist = 300;
+        var num = 1;
+
+        setInterval(function () {
+            if ($(window).scrollTop() >= $(document).height() - $(window).height() - dist && !loading) {
+                loading = true;
+                $("#test").clone().appendTo('#waterfall');
+                // $("#waterfall").append("<li><div style='height:" + random(50,500) +  "px'>" + num + "</div></li>");
+                num++;
+
+                loading = false;
+            }
+        }, 60);
+
 
     });
 });

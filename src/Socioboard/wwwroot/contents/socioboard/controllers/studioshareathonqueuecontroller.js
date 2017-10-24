@@ -12,7 +12,7 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
         $scope.deleteshareathon = function (profileId) {
             swal({
                 title: "Are you sure?",
-                text: "You will not be able to send any message via this account!",
+                text: "you want to delete this feed!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -48,9 +48,14 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
   
 
 
-        $scope.editpageshareathon = function () {
-            $('#PageShareathonModal').openModal();
-        }
+        //$scope.editpageshareathon = function (sharemessage, socioqueueId) {
+        //    $rootScope.editscdmessage = sharemessage;
+        //    $rootScope.socioqueueId = socioqueueId;
+        //    $('#StudioModal').openModal();
+        //}
+
+
+      
 
 
         $scope.shareathonQueue = function () {
@@ -64,6 +69,13 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
                                $scope.error = reason.data;
                      });
         }
+
+
+        //$scope.editscheulemessage = function (sharemessage, socioqueueId) {
+        //    $rootScope.editscdmessage = sharemessage;
+        //    $rootScope.socioqueueId = socioqueueId;
+        //    $('#SocioqueueModal').openModal();           
+        //}
 
         $scope.shareathonQueue();
 

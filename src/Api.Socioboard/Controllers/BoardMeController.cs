@@ -16,6 +16,9 @@ using Api.Socioboard.Repositories.BoardMeRepository;
 using System.Xml;
 using System.IO;
 using System.Xml.Linq;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
+using System.Text.RegularExpressions;
 
 namespace Api.Socioboard.Controllers
 {
@@ -258,7 +261,7 @@ namespace Api.Socioboard.Controllers
                 ganalytics.TotalPageViews = x1.Rows[0][2];
                 ganalytics.TotalSessions = x1.Rows[0][1];
             }
-            catch
+            catch(Exception ex)
             {
                 ganalytics.TotalPageViews = "0";
             }
@@ -404,6 +407,16 @@ namespace Api.Socioboard.Controllers
                     return await result;
                 });
                 IList<MongoBoardGplusFeeds> objTwitterPagelist = task.Result;
+
+                List<MongoBoardGplusFeeds> lstBGFeeds = objTwitterPagelist.ToList();
+                foreach (var items_lstBGFeed in lstBGFeeds)
+                {
+                    if (items_lstBGFeed.FromName.Any(c => char.IsSymbol(c)))
+                    {
+                        objTwitterPagelist.Remove(items_lstBGFeed);
+                    }
+                }
+
                 return Ok(objTwitterPagelist);
                 //return Ok(objBoardGplusPagefeeds);
             }
@@ -624,6 +637,36 @@ namespace Api.Socioboard.Controllers
                 result = false;
             }
             return Ok(result);
+        }
+
+
+        [HttpPost("createBoardFBPlugin")]
+        public async Task<IActionResult> createBoardFBPlugin(string boardName)
+        {
+            //string fbHashTag
+            string twitterHashTag = boardName;
+            string instagramHashTag = boardName;
+            string gplusHashTag = boardName;
+            long userId = 0;
+            Repositories.BoardMeRepository.BoardMeRepository brRepository = new Repositories.BoardMeRepository.BoardMeRepository();
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            // AddTOSiteMap(boardName);
+            return Ok(await brRepository.FBPlugingCreateBoard(boardName, twitterHashTag, instagramHashTag, gplusHashTag, userId, _redisCache, _appSettings, _logger, dbr));
+        }
+
+
+        [HttpPost("BoardFBPlugin")]
+        //public async Task<IActionResult> BoardFBPlugin(string FromPicUrl, string FromName, string Text, string Title, string Isvisible, string PostImageurl, string publishedtime, string posturl, string boardName)
+        public async Task<IActionResult> BoardFBPlugin(string [] jsonObj)
+        {
+            long userId = 0;
+            Repositories.BoardMeRepository.BoardMeRepository brRepository = new Repositories.BoardMeRepository.BoardMeRepository();
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            brRepository.FBPlugingSaveFbFeeds(jsonObj, _redisCache, _appSettings, _logger, dbr);
+            // return Ok(await brRepository.CreateBoard(boardName, jsonObj, userId, _redisCache, _appSettings, _logger, dbr));
+
+            return Ok();
+
         }
 
     }

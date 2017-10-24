@@ -180,23 +180,26 @@ namespace Api.Socioboard.Repositories
                                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
                                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
 
-                                //new Thread(delegate ()
-                                //{
-                                //todo : codes to update feeds 
-                                SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveUserTweets(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveTwitterFeeds(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
-                                Savetwitterrecentdetails(profile, _redisCache, _appSettings);
-                                // }).Start();
+                                new Thread(delegate ()
+                                {
+                                    //todo: codes to update feeds
+                                    SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                    SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                    SaveUserTweets(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                    SaveTwitterFeeds(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                    SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                    SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                    SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
+                                    Savetwitterrecentdetails(profile, _redisCache, _appSettings);
+                                }).Start();
 
 
                                 if (follow)
                                 {
-                                    Helper.TwitterHelper.FollowAccount(OAuth, "Socioboard", "");
+                                    new Thread(delegate ()
+                                    {
+                                        Helper.TwitterHelper.FollowAccount(OAuth, "Socioboard", "");
+                                    }).Start();
                                 }
 
                                 return "Added_Successfully";
@@ -292,18 +295,18 @@ namespace Api.Socioboard.Repositories
                             {
                                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
                                 _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                                //new Thread(delegate ()
-                                //{
-                                //todo : codes to update feeds 
-                                SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveUserTweets(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveTwitterFeeds(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
-                                SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
-                                SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
-                                Savetwitterrecentdetails(profile, _redisCache, _appSettings);
-                                // }).Start();
+                                new Thread(delegate ()
+                                {
+                                    //todo : codes to update feeds 
+                                    SaveTwitterMessages(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                    SaveUserRetweets(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                    SaveUserTweets(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                    SaveTwitterFeeds(twitterAccount.twitterUserId, twitterAccount.twitterScreenName, OAuth, _logger, _appSettings);
+                                    SaveTwitterDirectMessageSent(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                    SaveTwittwrDirectMessageRecieved(twitterAccount.twitterUserId, OAuth, _logger, _appSettings);
+                                    SaveUserFollowers(OAuth, twitterAccount.twitterScreenName, twitterAccount.twitterUserId, _logger, _appSettings);
+                                    Savetwitterrecentdetails(profile, _redisCache, _appSettings);
+                                }).Start();
 
                                 return "Added_Successfully";
                             }

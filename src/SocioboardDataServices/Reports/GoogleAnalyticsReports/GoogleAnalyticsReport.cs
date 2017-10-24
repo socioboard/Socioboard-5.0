@@ -64,7 +64,7 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
             {
                 day = 90;
             }
-            oAuthTokenGa objToken = new oAuthTokenGa(Helper.AppSettings.GoogleConsumerKey, Helper.AppSettings.GoogleConsumerSecret, Helper.AppSettings.GoogleRedirectUri);
+            oAuthTokenGa objToken = new oAuthTokenGa(Helper.AppSettings.googleClientId, Helper.AppSettings.googleClientSecret, Helper.AppSettings.googleRedirectionUrl);
             string finaltoken = objToken.GetAccessToken(AccessToken);
 
             try

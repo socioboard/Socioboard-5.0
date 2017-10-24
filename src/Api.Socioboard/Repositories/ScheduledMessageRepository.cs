@@ -294,8 +294,9 @@ namespace Api.Socioboard.Repositories
                 List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => profileids.Contains(t.profileId) && t.status == Domain.Socioboard.Enum.ScheduleStatus.Compleated).ToList();
                 if (lstScheduledMessage != null && lstScheduledMessage.Count > 0)
                 {
-                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessages + groupId, lstScheduledMessage);
-                    return lstScheduledMessage;
+                    var ListSrted = lstScheduledMessage.OrderByDescending(t => t.scheduleTime).Take(200);
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheSentMessages + groupId, ListSrted.ToList());
+                    return ListSrted.ToList();
                 }
                 else
                 {

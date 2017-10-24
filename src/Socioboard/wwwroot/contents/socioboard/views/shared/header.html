@@ -66,11 +66,11 @@
                             <!--<a href="javascript:void(0)" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
                                 <i class="icon-settings grey-text text-darken-4" title="Account Settings"></i>
                             </a>-->
-                           <a ng-if="user.ProfilePicUrl != ''" href="javascript:void(0)" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
+                           <a ng-if="profilePicExist == 1" href="javascript:void(0)" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
                                <img src="{{user.ProfilePicUrl}}" alt="{{user.UserName}}" title="{{user.FirstName}}" class="circle profile-nav-pic "><i class="fa fa-sort-desc grey-text text-darken-4" aria-hidden="true"></i>
                            </a>
-                           <a ng-if="user.ProfilePicUrl == ''" href="javascript:void(0)" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
-                               <img src="https://i.imgur.com/zqN47Qp.png" alt="{{user.UserName}}" title="{{user.FirstName}}" class="circle profile-nav-pic "><i class="fa fa-sort-desc grey-text text-darken-4" aria-hidden="true"></i>
+                           <a ng-if="profilePicExist == 0" href="javascript:void(0)" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
+                               <img src="{{user.ProfilePicUrl}}" alt="{{user.UserName}}" title="{{user.FirstName}}" class="circle profile-nav-pic "><i class="fa fa-sort-desc grey-text text-darken-4" aria-hidden="true"></i>
                            </a>
                         </li>
                     </ul>

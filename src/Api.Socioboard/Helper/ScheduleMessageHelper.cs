@@ -68,7 +68,7 @@ namespace Api.Socioboard.Helper
             }
         }
 
-        public static string DaywiseScheduleMessage(string profileId, string socialprofileName, string weekdays,string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId, string link, string url, string picUrl, string localscheduletime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
+        public static string DaywiseScheduleMessage(string profileId, string socialprofileName, string weekdays, string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId, string link, string url, string picUrl, string localscheduletime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
         {
 
 
@@ -78,9 +78,9 @@ namespace Api.Socioboard.Helper
             string userlocalscheduletime = localscheduletime;
             try
             {
-               // _logger.LogError("ScheduleMessageHelperscheduleTime>>>>" + scheduleTime);
-               // var dt = DateTime.Parse(scheduleTime);
-               // scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt));
+                // _logger.LogError("ScheduleMessageHelperscheduleTime>>>>" + scheduleTime);
+                // var dt = DateTime.Parse(scheduleTime);
+                // scheduledMessage.scheduleTime = Convert.ToDateTime(TimeZoneInfo.ConvertTimeToUtc(dt));
                 //scheduledMessage.scheduleTime = Convert.ToDateTime(scheduleTime) ;
                 // scheduledMessage.scheduleTime = Convert.ToDateTime(CompareDateWithclient(DateTime.UtcNow.ToString(),scheduleTime));
             }
@@ -112,8 +112,11 @@ namespace Api.Socioboard.Helper
             scheduledMessage.picUrl = picUrl;
             scheduledMessage.createTime = DateTime.UtcNow;
             scheduledMessage.clientTime = DateTime.Now;
-            scheduledMessage.scheduleTime =Convert.ToDateTime(userlocalscheduletime);
-           // scheduledMessage.localscheduletime = userlocalscheduletime;
+            scheduledMessage.scheduleTime = Convert.ToDateTime(userlocalscheduletime);
+            scheduledMessage.localscheduletime = userlocalscheduletime;
+
+
+            // scheduledMessage.localscheduletime = userlocalscheduletime;
             scheduledMessage.socialprofileName = socialprofileName;
             int ret = dbr.Add<DaywiseSchedule>(scheduledMessage);
             if (ret == 1)
@@ -126,7 +129,6 @@ namespace Api.Socioboard.Helper
             }
 
         }
-
 
 
         public static void DraftScheduleMessage(string shareMessage, long userId, long groupId, string picUrl, string scheduleTime, Domain.Socioboard.Enum.MediaType mediaType, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)

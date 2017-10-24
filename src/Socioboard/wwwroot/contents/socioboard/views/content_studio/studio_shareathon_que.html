@@ -50,7 +50,7 @@
                                       <th>Feed Data</th>
                                       <th>Time Interval</th>
                                       <th>Status</th>
-                                      <th>Edit</th>
+                                      <!--<th>Edit</th>-->
                                       <th>Delete</th>
                                   </tr>
                               </thead>
@@ -62,11 +62,11 @@
                                       <td>{{shareData.timeintervalminutes}}</td>                                     
                                       <td ng-if="shareData.status==false">pending</td> 
                                       <td ng-if="shareData.status==true">posted</td>                                                                            
+                                      <!--<td>
+                                          <a role="button" ng-click="editpageshareathon(shareData.title,shareData.id)" class="btn green btn_style btn_round modal-trigger"><i class="fa fa-pencil fa-fw"></i></a>
+                                      </td>-->
                                       <td>
-                                          <a role="button" ng-click="editpageshareathon(shareData)" class="btn green"><i class="fa fa-eye fa-fw"></i></a>
-                                      </td>
-                                      <td>
-                                          <a role="button" class="btn red" ng-click="deleteshareathon(shareData.strId)"><i class="fa fa-times fa-fw"></i></a>
+                                          <a role="button" class="btn red darken-4 btn_style btn_round" ng-click="deleteshareathon(shareData.strId)"><i class="fa fa-times fa-fw"></i></a>
                                       </td>
                                   </tr>             
                               </tbody>
@@ -80,93 +80,21 @@
 
 
           <!-- Modal Structure -->
-          <div id="PageShareathonModal" class="modal">
-            <div class="modal-content" style="padding:10px;">
-              <a href="" class="modal-action modal-close right black-text"><i class="icon-close"></i></a>
-              <h5>Shareathon Queue - </h5>
-              <div class="row">
-                  <div class="col s12 m12 l12">
-                      <p>Select Profiles</p>
-                      <div class="row no-space">
-                      <div class="input-field col s12">
-                          <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
-                          <label for="search_name">Search Profile</label>
+          <!--<div id="StudioModal" class="modal">
+              <div class="modal-content">
+                  <span class="modal-action modal-close right" ng-click="closeModal()" role="button" tabindex="0"><i class="fa fa-times fa-2x"></i></span>
+                  <h5>Edit Message</h5>
+                  <div class="row center">
+                      <div class="input-field col s8">
+                          <div>
+                              <textarea id="editScheduleMsg" class="materialize-textarea ng-pristine ng-untouched ng-valid ng-not-empty" length="500" ng-model="editscdmessage" value="fdsgfdsfg"
+                                aria-multiline="true" aria-invalid="false" style=""></textarea>
+                          </div>
                       </div>
-                     </div>
-                      <div class="lst_scroll row no-space">
-                          <ul class="shinh" id="checkboxdataboard">
-                              <li style="padding:5px 0;">
-                                  <label>
-                                      <input id="checkAll" onclick="check();" type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" />
-                                      <span style="float:left;">Check All</span>
-                                  </label>
-                              </li>
-                              <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
-
-                                  <label>
-                                      <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                      <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                      <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
-                                  </label>
-                              </li>
-                              <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
-
-                                  <label>
-                                      <input name="selector[]" class="subcheckboxboard" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                      <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                      <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
-                                  </label>
-                              </li>
-                              <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:2}" style="padding:5px 0;">
-                                  <label>
-                                      <input name="selector[]" class="subcheckboxboard" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                      <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                      <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
-                                  </label>
-                              </li>
-                              <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                  <label>
-                                      <input name="selector[]" class="subcheckboxboard" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                      <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                      <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
-                                  </label>
-                              </li>
-                              <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
-                                  <label>
-                                      <input name="selector[]" class="subcheckboxboard" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                      <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
-                                      <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
-                                      <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
-                                  </label>
-                              </li>
-                          </ul>
-                      </div>
-                  </div>
-                  <div class="input-field col s12">
-                      <textarea id="textarea1" class="materialize-textarea"></textarea>
-                      <label for="textarea1">Textarea</label>
-                  </div>
-                  <div class="input-field col s12">
-                      <select>
-                          <option value="" disabled selected>Choose your option</option>
-                          <option value="1">20 min</option>
-                          <option value="2">30 min</option>
-                          <option value="3">1 hour</option>
-                      </select>
-                      <label>Materialize Select</label>
                   </div>
               </div>
-
-                <!--<div class="row">
-                    <div class="btn right">post</div>
-                </div>-->
-            </div>
               <div class="modal-footer">
-                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn grey">Post</a>
+                  <a href="#!" class="modal-action modal-close waves-effect waves-green btn grey" ng-click="savesocioqueueedit()">Save</a>
               </div>
-          </div>               
+          </div>-->               
     </div>

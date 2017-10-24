@@ -179,7 +179,7 @@ SocioboardApp.directive('myChatModalDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-                $('#ChatModal').scrollTop($('#ChatModal')[0].scrollHeight);
+                $('#innerModal').scrollTop($('#innerModal')[0].scrollHeight);
 
             });
         }

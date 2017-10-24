@@ -123,5 +123,116 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
 
             return output;
         }
+        public async Task<string> AddInstagramHashTagFBPlugin(string hashTag, string boardId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, ILogger _logger)
+        {
+            MongoBoardInstagramHashTag binstacc = new MongoBoardInstagramHashTag { Id = ObjectId.GenerateNewId(), strId = ObjectId.GenerateNewId().ToString(), Bio = "tag", Boardid = boardId, Entrydate = DateTime.UtcNow.ToString(), Followedbycount = string.Empty, Followscount = string.Empty, Media = string.Empty, Profileid = hashTag, Profilepicurl = string.Empty, Username = hashTag.ToLower() };
+            MongoRepository boardrepo = new MongoRepository("MongoBoardInstagramHashTag", _appSettings);
+            try
+            {
+                var ret = boardrepo.Find<MongoBoardInstagramHashTag>(t => t.Username.Equals(hashTag.ToLower()) && t.Bio.Equals("tag"));
+                var task = Task.Run(async () =>
+                {
+                    return await ret;
+                });
+                IList<MongoBoardInstagramHashTag> objInstagramPagelist = task.Result.ToList();
+                if (objInstagramPagelist.Count() > 0)
+                {
+                    return objInstagramPagelist.First().strId.ToString();
+                }
+                boardrepo.Add<MongoBoardInstagramHashTag>(binstacc);
+                new Thread(delegate ()
+                {
+                    AddBoardInstagramTagFeeds(hashTag, binstacc.strId.ToString(), _appSettings);
+                }).Start();
+                return binstacc.strId.ToString();
+            }
+            catch (Exception)
+            {
+                boardrepo.Add<MongoBoardInstagramHashTag>(binstacc);
+                new Thread(delegate ()
+                {
+                    AddBoardInstagramTagFeeds(hashTag, binstacc.strId.ToString(), _appSettings);
+                }).Start();
+                return binstacc.strId.ToString();
+            }
+        }
+        public bool AddBoardInstagramTagFeeds(string hashTag, string boardInstagramTagId, Helper.AppSettings _appSettings)
+        {
+            MongoRepository boardrepo = new MongoRepository("MongoBoardInstagramFeeds", _appSettings);
+            bool output = false;
+            try
+            {
+                JObject recentactivities = JObject.Parse(TagSearch.InstagramTagSearch(hashTag, "1974224400.2310fd1.699477d40ff64cd6babfb0b3a6cf60fa"));
+                foreach (JObject obj in JArray.Parse(recentactivities["data"].ToString()))
+                {
+                    MongoBoardInstagramFeeds binstfeed = new MongoBoardInstagramFeeds();
+                    binstfeed.Id = ObjectId.GenerateNewId();
+                    binstfeed.Instagramaccountid = boardInstagramTagId;
+                    binstfeed.Isvisible = true;
+                    try
+                    {
+                        binstfeed.Imageurl = obj["images"]["standard_resolution"]["url"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        binstfeed.Link = obj["link"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        foreach (JValue tag in JArray.Parse(obj["tags"].ToString()))
+                        {
+                            try
+                            {
+                                binstfeed.Tags = tag.ToString() + ",";
+                            }
+                            catch { }
+                        }
+                    }
+                    catch { }
+                    try
+                    {
+                        binstfeed.Publishedtime = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(new DateTime(1970, 1, 1).AddSeconds(Convert.ToInt64(obj["created_time"].ToString())));
+                    }
+                    catch
+                    {
+                        //binstfeed.Createdtime = DateTime.UtcNow;
+                    }
+                    try
+                    {
+                        binstfeed.Feedid = obj["id"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        binstfeed.FromId = obj["user"]["username"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        binstfeed.FromName = obj["user"]["full_name"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        binstfeed.FromPicUrl = obj["user"]["profile_picture"].ToString();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        boardrepo.Add<MongoBoardInstagramFeeds>(binstfeed);
+
+                    }
+                    catch (Exception e) { }
+
+
+                }
+            }
+            catch { }
+
+            return output;
+        }
     }
 }

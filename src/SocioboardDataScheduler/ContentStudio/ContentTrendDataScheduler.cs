@@ -4,6 +4,7 @@ using Facebook;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
+using SocioboardDataScheduler.Facebook;
 using SocioboardDataScheduler.Helper;
 using SocioboardDataScheduler.Model;
 using System;
@@ -29,30 +30,26 @@ namespace SocioboardDataScheduler.ContentStudio
                     MongoRepository _lstcontent = new MongoRepository("ContentFeedsShareathon");
                     MongoRepository _lstcontentid = new MongoRepository("ContentStudioShareathonIdData");
 
-                    var result = _lstcontentid.Find<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(t => t.Status ==false);
-                    //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("187231345114052")).ToList();
-                    // var result = _lstScheduledMessage.Find<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.status == 0);
-                    // = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
+                    var result = _lstcontentid.Find<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(t => t.Status == false);                   
                     var task = Task.Run(async () =>
                     {
                         return await result;
                     });
-
                     IList<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData> lstPageShareathon = task.Result.ToList();
+                    lstPageShareathon = lstPageShareathon.Where(t => t.FbPageId.Equals("1452799044811364")).ToList();
+                    lstPageShareathon.GroupBy(t => t.FbPageId).ToList();
                     noOfthread_pageshreathon = 0;
                     foreach (ContentStudioShareathonIdData shareathon in lstPageShareathon)
                     {
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(ShceduleConetentStudioFeeds), new object[] { shareathon, dbr, _lstcontent });
-                        Thread.Sleep(20 * 1000);
+                  
+                       
+
+
                         noOfthread_pageshreathon++;
                         Thread thread_pageshreathon = new Thread(() => ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent }));
-                        ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
+                      
                         thread_pageshreathon.Start();
-                        while (noOfthread_pageshreathon > 5)
-                        {
-                            Thread.Sleep(1 * 1000);
-                        }
-                        ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
+                        Thread.Sleep(10 * 1000);
 
                     }
                     Thread.Sleep(TimeSpan.FromMinutes(1));
@@ -81,9 +78,6 @@ namespace SocioboardDataScheduler.ContentStudio
                 {
                     pageapiHitsCount = 0;
                     //  List<ContentFeedsShareathon> lstcontent = new List<ContentFeedsShareathon>();
-
-                    
-                 
                     Domain.Socioboard.Models.Facebookaccounts lstFbAcc = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == id);
                     Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.UserId == lstFbAcc.UserId);
                     Domain.Socioboard.Models.Facebookaccounts facebookPage = null;
@@ -101,7 +95,7 @@ namespace SocioboardDataScheduler.ContentStudio
                         if (pageapiHitsCount < pageMaxapiHitsCount)
                         {
                             //  var lstcontent = mongorepo.Find<ContentFeedsShareathon>(t => t.FbPageId == id && t.UserId == fbAcc.UserId && t.status == 0);
-                            var resultshare = mongorepo.Find<ContentFeedsShareathon>(t => t.FbPageId == shareathon.FbPageId && t.Status==false);
+                            var resultshare = mongorepo.Find<ContentFeedsShareathon>(t => t.FbPageId == shareathon.FbPageId && t.Status == false);
                             var task = Task.Run(async () =>
                             {
                                 return await resultshare;
@@ -109,69 +103,63 @@ namespace SocioboardDataScheduler.ContentStudio
                             int count = task.Result.Count;
                             var feedsData = task.Result.ToList();
 
-                            if (facebookPage.contenetShareathonUpdate.AddHours(1) <= DateTime.UtcNow)
+                            //if (facebookPage.contenetShareathonUpdate.AddHours(1) <= DateTime.UtcNow)
+                            //{
+
+                            if (count != 0)
                             {
-
-                                if (count != 0)
+                                pageapiHitsCount++;
+                                //!shareathon.FbPageId.Equals(obj.FbPageId) && !shareathon.postId.Equals(obj.postId)
+                                foreach (var obj in feedsData)
                                 {
-                                    pageapiHitsCount++;
-                                    //!shareathon.FbPageId.Equals(obj.FbPageId) && !shareathon.postId.Equals(obj.postId)
-                                    foreach (var obj in feedsData)
+                                    try
                                     {
-                                        try
+                                        DateTime dt = SBHelper.ConvertFromUnixTimestamp(obj.lastsharestamp);
+                                        dt = dt.AddMinutes(obj.Timeintervalminutes);
+                                        if ((obj.Status == false && SBHelper.ConvertToUnixTimestamp(dt) <= SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow)))
                                         {
-                                            DateTime dt = SBHelper.ConvertFromUnixTimestamp(obj.lastsharestamp);
-                                            dt = dt.AddMinutes(obj.Timeintervalminutes);
-                                            if (( obj.Status==false && SBHelper.ConvertToUnixTimestamp(dt) <= SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow)))
+
+                                            string ret = Helper.FBPostContentFeeds.FacebookComposeMessageRss(obj.title, facebookPage.AccessToken, facebookPage.FbUserId, "", obj.postUrl, obj.postId);
+                                            if (ret == "Messages Posted Successfully")
                                             {
-
-                                                string ret = Helper.FBPostContentFeeds.FacebookComposeMessageRss(obj.title, facebookPage.AccessToken, facebookPage.FbUserId, "", obj.postUrl, obj.postId);
-                                                if(ret == "Messages Posted Successfully")
-                                                {
-                                                    obj.Status = true;
-                                                    shareathon.Status = true;
+                                                obj.Status = true;
+                                                shareathon.Status = true;
 
 
-                                                    FilterDefinition<BsonDocument> filter = new BsonDocument("strId", obj.strId);
-                                                    var update = Builders<BsonDocument>.Update.Set("Status", true);
-                                                    mongorepo.Update<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(update, filter);
+                                                FilterDefinition<BsonDocument> filter = new BsonDocument("strId", obj.strId);
+                                                var update = Builders<BsonDocument>.Update.Set("Status", true);
+                                                mongorepo.Update<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(update, filter);
 
-                                                    FilterDefinition<BsonDocument> filterId = new BsonDocument("strId", shareathon.strId);
-                                                    var updateId = Builders<BsonDocument>.Update.Set("Status", true);
-                                                    mongorepo.Update<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(updateId, filterId);
-
-                                                }
-                                               
-                                                if (!string.IsNullOrEmpty(ret))
-                                                {
-                                                    Thread.Sleep(1000 * 60 * shareathon.Timeintervalminutes);
-
-                                                }
+                                                FilterDefinition<BsonDocument> filterId = new BsonDocument("strId", shareathon.strId);
+                                                var updateId = Builders<BsonDocument>.Update.Set("Status", true);
+                                                mongorepo.Update<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(updateId, filterId);
 
                                             }
-                                        }
-                                        catch
-                                        {
-                                            pageapiHitsCount = pageMaxapiHitsCount;
+
+                                            
+
                                         }
                                     }
-                                    fbAcc.contenetShareathonUpdate = DateTime.UtcNow;
-                                    facebookPage.contenetShareathonUpdate = DateTime.UtcNow;
-                                    dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
-                                    dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(facebookPage);
+                                    catch
+                                    {
+                                        pageapiHitsCount = pageMaxapiHitsCount;
+                                    }
                                 }
-                                else
-                                {
-
-                                    FilterDefinition<BsonDocument> filter = new BsonDocument("strId", shareathon.strId);
-                                    var update = Builders<BsonDocument>.Update.Set("Status", false);
-                                    _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(update, filter);
-                                }
+                                fbAcc.contenetShareathonUpdate = DateTime.UtcNow;
+                                facebookPage.contenetShareathonUpdate = DateTime.UtcNow;
+                                dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+                                dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(facebookPage);
                             }
                             else
                             {
-                                pageapiHitsCount = 0;
+
+                                FilterDefinition<BsonDocument> filter = new BsonDocument("strId", shareathon.strId);
+                                var update = Builders<BsonDocument>.Update.Set("Status", false);
+                                _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(update, filter);
                             }
+                           
+                            pageapiHitsCount = 0;
+                        
 
                         }
                     }
@@ -181,13 +169,7 @@ namespace SocioboardDataScheduler.ContentStudio
                     pageapiHitsCount = pageMaxapiHitsCount;
                 }
             }
-
         }
-
-
-
-
-
     }
 }
 

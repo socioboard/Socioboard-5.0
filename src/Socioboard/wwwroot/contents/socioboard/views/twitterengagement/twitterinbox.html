@@ -259,20 +259,18 @@
 
         <!--Chat Modal-->
 
-        <div id="ChatModal" class="modal">
+        <div id="ChatModal" class="modal"  style="max-width: 935px; width: 100%;">
 
-            <div class="modal-content">
-                <div>
+            <div class="modal-content" style="padding: 0px;">
+                <div class="center">
                     <img src="{{senderProfileUrl}}" alt="vikash_glb" class="circle"> <b>{{senderScreenName}}</b>
                     <img src="https://cdn2.iconfinder.com/data/icons/bisicons-office-pack/512/Message-512.png" style="width: 7%; margin: 0px 3%;">
                     <img src="{{recipientProfileUrl}}" class="circle"> <b>{{recipientScreenName}}</b>
                 </div>
-
-                <p></p>
-                <div class="row">
+                <div class="row no-space">
                     <form class="col s12">
-                        <div class="row">
-                            <ul class="collection">
+                        <div class="row no-space" >
+                            <ul class="collection" id="innerModal" style="height:280px; overflow-y:scroll;">
                                 <li class="collection-item avatar" ng-repeat="dmmessage in lstGetConversation" my-Chat-Modal-Directive>
                                     <img src="{{dmmessage.senderProfileUrl}}" alt="{{dmmessage.senderScreenName}}" class="circle">
                                     <span class="email-title">{{dmmessage.senderScreenName}}</span>
@@ -280,40 +278,39 @@
                                         <div class="col m12">
                                             <p class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{dmmessage.message}}</p>
                                         </div>
-                                        <a data-tooltip="Task" data-delay="50" data-position="top" href="javascript:void(0);" class="tooltipped modal-trigger" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" ng-click="taskInboxModel(dmmessage)">
+                                        <a title="Task" href="javascript:void(0);" class="tooltipped modal-trigger" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" ng-click="taskInboxModel(dmmessage)">
                                             <i class="icon-pin"></i>
                                         </a>
                                     </div>
 
-                                    <a class="tooltipped secondary-content" data-position="left" data-tooltip="{{dmmessage.createdDate}}">{{dmmessage.createdDate}}</a>
+                                    <label class="tooltipped secondary-content">{{dmmessage.createdDate}}</label>
                                 </li>
-
-                            </ul>
-                            <div class="center" ng-if="msgload!=true">
-                                <br /><br /><br />
-                                <div class="preloader-wrapper small active">
-                                    <div class="spinner-layer spinner-green-only">
-                                        <div class="circle-clipper left">
-                                            <div class="circle"></div>
-                                        </div><div class="gap-patch">
-                                            <div class="circle"></div>
-                                        </div><div class="circle-clipper right">
-                                            <div class="circle"></div>
+                                <div class="center" ng-if="msgload!=true">
+                                    <br /><br /><br /><br />
+                                    <div class="preloader-wrapper small active">
+                                        <div class="spinner-layer spinner-green-only">
+                                            <div class="circle-clipper left">
+                                                <div class="circle"></div>
+                                            </div><div class="gap-patch">
+                                                <div class="circle"></div>
+                                            </div><div class="circle-clipper right">
+                                                <div class="circle"></div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <br />
+                                    <h6 style="color:gray; font-size:18px; font-family:Calibri">Connecting...</h6>
                                 </div>
-                                <br />
-                                <h6 style="color:gray; font-size:18px; font-family:Calibri">Connecting...</h6>
-                            </div>
+                            </ul>
+                            
 
                         </div>
                     </form>
                 </div>
             </div>
-            <div class="modal-footer">
-                <div class="row">
-                    <form class="col s10 ng-pristine ng-valid">
-                        <div class="row">
+            <div class="modal-footer modal-fixed-footer">
+                    <form class="row no-space ng-pristine ng-valid">
+                        <div class="col s10">
                             <div class="input-field col s12">
                                 <i class="icon-pencil prefix"></i>
                                 <!--<textarea id="dmmessagecomment" class="materialize-textarea modal-fixed-footer"></textarea>-->
@@ -321,11 +318,10 @@
                                 <label for="icon_prefix2">Type your Message here...</label>
                             </div>
                         </div>
+                        <span class="col s2 margin-top-30">
+                            <button type="submit" class="waves-effect waves-light btn" ng-click="postdirrectmessage()"><i ng-class="sendingloader" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-class="sendicon" class="icon-cursor"></i></button>
+                        </span>
                     </form>
-                    <span class="col s2 margin-top-30">
-                        <a class="waves-effect waves-light btn" ng-click="postdirrectmessage()"><i ng-class="sendingloader" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><i ng-class="sendicon" class="icon-cursor"></i></a>
-                    </span>
-                </div>
             </div>
         </div>
 
@@ -368,3 +364,12 @@
     </div>
 </div>
 
+<script type="text/javascript">
+  $('.instfeeds').slimScroll({
+        color: '#FAB51C',
+        size: '10px',
+        height: '300px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+</script>

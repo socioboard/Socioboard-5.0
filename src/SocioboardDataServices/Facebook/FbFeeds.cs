@@ -47,7 +47,8 @@ namespace SocioboardDataServices.Facebook
                         }
                         catch
                         {
-                            fbAcc.ProfileUrl = fbAcc.ProfileUrl;
+                            fbAcc.ProfileUrl = (Convert.ToString(profile["picture"]["data"]["url"]));
+
                         }
                         try
                         {
@@ -279,7 +280,7 @@ namespace SocioboardDataServices.Facebook
                                             try
                                             {
                                                 FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objFacebookFeed.FeedId);
-                                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom).Set("Likecount", objFacebookFeed.Likecount).Set("Commentcount", objFacebookFeed.Commentcount);
+                                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom).Set("Likecount", objFacebookFeed.Likecount).Set("Commentcount", objFacebookFeed.Commentcount).Set("_facebookComment", objFacebookFeed._facebookComment);
                                                 mongorepo.Update<MongoFacebookFeed>(update, filter);
                                             }
                                             catch { }
@@ -457,7 +458,7 @@ namespace SocioboardDataServices.Facebook
 
         public static List<MongoFbPostComment> FbPostComments(string postid, string AccessToken)
         {
-            apiHitsCount++;
+
             List<MongoFbPostComment> lstFbPOstComment = new List<MongoFbPostComment>();
             string ret = string.Empty;
             try

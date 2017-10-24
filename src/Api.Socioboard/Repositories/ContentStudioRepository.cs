@@ -19,7 +19,7 @@ namespace Api.Socioboard.Repositories
             //List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstyoutube = new List<Domain.Socioboard.Models.Mongo.AdvanceSerachData>();
             var builder = Builders<AdvanceSerachData>.Sort;
             var sort = builder.Descending(t => t.postedTime);
-            var result = _RssRepository.FindWithRange<AdvanceSerachData>(t => t.networkType == networkType && t.totalShareCount != 0, sort, 0, 100);
+            var result = _RssRepository.FindWithRange<AdvanceSerachData>(t => t.networkType == networkType && t.totalShareCount != 0, sort, 0, 200);
             // var result = _RssRepository.FindAdvance<AdvanceSerachData>(t => t.networkType == networkType && t.totalShareCount != 0);//UserId
             var task = Task.Run(async () =>
             {
@@ -30,7 +30,7 @@ namespace Api.Socioboard.Repositories
             // IList<AdvanceSerachData> lstyoutube = task.Result.ToList();
             IList<AdvanceSerachData> lstyoutube = task.Result.ToList();//.Take(30).Skip(0).ToList();
             lstyoutube = lstyoutube.OrderByDescending(kt => kt.postedTime).ToList();
-            lstyoutube = lstyoutube.OrderByDescending(gb => gb.totalShareCount).ToList().Take(30).Skip(0).ToList();
+            lstyoutube = lstyoutube.OrderByDescending(gb => gb.totalShareCount).ToList();//Take(30).Skip(0).ToList();
             if (lstyoutube != null)
             {
                 //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
@@ -65,6 +65,31 @@ namespace Api.Socioboard.Repositories
             }
             return null;
         }
+
+        public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> FlickerAdvanceSerachData(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
+        {
+
+            MongoRepository _RssRepository = new MongoRepository("AdvanceSerachData", settings);           
+            var builder = Builders<AdvanceSerachData>.Sort;
+            var sort = builder.Descending(t => t.postedTime);
+            var result = _RssRepository.FindWithRange<AdvanceSerachData>(t => t.networkType == networkType , sort, 0, 200);           
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+          
+            IList<AdvanceSerachData> lstflicker = task.Result.ToList();
+            lstflicker = lstflicker.OrderByDescending(kt => kt.postedTime).ToList();
+        
+            if (lstflicker != null)
+            {
+                //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
+
+                return lstflicker.ToList();
+            }
+            return null;
+        }
+
 
         public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> DailyMotionAdvanceRepository(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
@@ -195,7 +220,7 @@ namespace Api.Socioboard.Repositories
                 });
                 IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstSearchData = task.Result;
                 List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstSearchDataSorted = lstSearchData.OrderByDescending(t => t.totalShareCount).Take(100).ToList();
-                return lstSearchDataSorted;
+                return lstSearchDataSorted.ToList();
             }
         }
 
@@ -360,7 +385,7 @@ namespace Api.Socioboard.Repositories
         public static List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> ShareathonQueueReposi(long userId, Helper.AppSettings settings)
         {
             MongoRepository mongorepo = new MongoRepository("ContentFeedsShareathon", settings);
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.UserId.Equals(userId));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.UserId.Equals(userId)&& t.Status == false);
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -390,7 +415,7 @@ namespace Api.Socioboard.Repositories
                 return task.Result.ToList();
             }
         }
-
+      
 
     }
 }

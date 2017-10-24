@@ -89,7 +89,6 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
         }
         $scope.savesocioqueueedit = function () {
             var message = $('#editScheduleMsg').val();
-
             if (/\S/.test(message)) {
                 //For taking special character start
                 var updatedmessage = "";
@@ -117,7 +116,6 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
             else {
                 swal("Please enter a text");
             }
-
         }
 
 

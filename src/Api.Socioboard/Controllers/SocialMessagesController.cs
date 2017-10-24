@@ -1305,7 +1305,14 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = Repositories.ScheduledMessageRepository.GetAllSentMessages(userId, groupId, _redisCache, _appSettings, dbr);
-            return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
+            if (lstScheduledMessage != null)
+            {
+                return Ok(lstScheduledMessage.OrderByDescending(t => t.scheduleTime));
+            }
+            else
+            {
+                return Ok(null);
+            }
         }
 
         [HttpGet("GetAllSentMessagesCount")]

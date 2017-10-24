@@ -25,8 +25,10 @@ namespace SocioboardDataServices.LinkedIn
                         try
                         {
                             oAuthLinkedIn _oauth = new oAuthLinkedIn();
-                            _oauth.ConsumerKey =     AppSettings.LinkedinApiKey;
-                            _oauth.ConsumerSecret = AppSettings.LinkedinSecretKey;
+                            //_oauth.ConsumerKey = "81k55eukagnqfa";
+                            //_oauth.ConsumerSecret = "d9rqHEf7ewdSbsF1";
+                            _oauth.ConsumerKey = AppSettings.LinkedinConsumerKey;
+                            _oauth.ConsumerSecret = AppSettings.LinkedinConsumerSecret;
                             _oauth.Token = item.OAuthToken;
                             Console.WriteLine(item.LinkedinPageName + "Updating Started");
                             LinkedPageFeed.UpdateLinkedInComanyPageFeed(item, _oauth);
@@ -64,8 +66,10 @@ namespace SocioboardDataServices.LinkedIn
                         try
                         {
                             oAuthLinkedIn _oauth = new oAuthLinkedIn();
-                            _oauth.ConsumerKey =    AppSettings.LinkedinApiKey;
-                            _oauth.ConsumerSecret = AppSettings.LinkedinSecretKey;
+                            //_oauth.ConsumerKey = "81k55eukagnqfa";
+                            //_oauth.ConsumerSecret = "d9rqHEf7ewdSbsF1";
+                            _oauth.ConsumerKey = AppSettings.LinkedinConsumerKey;
+                            _oauth.ConsumerSecret = AppSettings.LinkedinConsumerSecret;
                             _oauth.Token = item.OAuthToken;
                             Console.WriteLine(item.LinkedinUserName + "Updating Started");
                             LinkedPageFeed.UpdateLinkedIn(item, _oauth);

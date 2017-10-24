@@ -12,6 +12,7 @@ using Socioboard.Twitter.Authentication;
 using Microsoft.AspNetCore.Cors;
 using System.Text.RegularExpressions;
 using Domain.Socioboard.Interfaces.Services;
+using System.Threading;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -402,9 +403,13 @@ namespace Api.Socioboard.Controllers
         {
             string sendStatus = string.Empty;
             message = message.Replace("\n", "<br />");
-            sendStatus = _emailSender.SendMailSendGrid(_appSettings.getInTouchToMail, "", toMail, "", "", sub, message, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+            new Thread(delegate ()
+            {
+                _emailSender.SendMailSendGrid(_appSettings.getInTouchToMail, "", toMail, "", "", sub, message, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+            }).Start();
+
             Repositories.TwitterRepository.AddTwitterEmailmessage(userId, socioTwitterId, profileIdFrom, profileScnNameFrom, toMail, message, sub, _redisCache, _appSettings);
-            return Ok(sendStatus);
+            return Ok("SucCess");
         }
 
         [HttpGet("UserMentions")]

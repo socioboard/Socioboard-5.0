@@ -47,7 +47,10 @@ namespace Api.Socioboard.Controllers
                     foreach (Notifications notify in lstnotifications)
                     {
                         ScheduledMessage schedulemsg = dbr.Single<ScheduledMessage>(t => t.id == notify.MsgId && t.userId==userId);
-                        lstschedulemsg.Add(schedulemsg);
+                        if (schedulemsg != null)
+                        {
+                            lstschedulemsg.Add(schedulemsg);
+                        }
                     }
                     if (lstschedulemsg != null)
                     {

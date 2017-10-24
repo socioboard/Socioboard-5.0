@@ -6,7 +6,7 @@ SocioboardApp.controller('HistoryController', function ($rootScope, $scope, $htt
         //history();
         var count = 30; // where to start data
         $scope.messagesEnding = 0; // how much data need to add on each function call
-        var lastreach = false;
+        $scope.lastreach = false;
         $scope.messagesReachLast = false; // to check the page ends last or not
         $scope.atvFilter = false;
         $scope.filterVal = 1;
@@ -17,7 +17,7 @@ SocioboardApp.controller('HistoryController', function ($rootScope, $scope, $htt
             $http.get(apiDomain + '/api/SocialMessages/GetAllSentMessages?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
                               if (response.data == null || (response.data != null && response.data.length == 0)) {
-                                  $scope.messagesReachLast = true;
+                                  $scope.lastreach = true;
                                   $scope.nomessages = true;
                               }
                               else {
@@ -134,7 +134,18 @@ SocioboardApp.controller('HistoryController', function ($rootScope, $scope, $htt
             $scope.filterName = nameoffilter;
             var filtered = [];
             angular.forEach($scope.dataAll, function (item) {
-                if (item.profileType == 3 || item.profileType == 4) {
+                if (item.profileType == 3) {
+                    filtered.push(item);
+                }
+            })
+            $scope.date(filtered);
+        }
+        $scope.filterProfilesLinkPage = function (nameoffilter) {
+            document.getElementById('filterDrop').style.color = 'darkgreen';
+            $scope.filterName = nameoffilter;
+            var filtered = [];
+            angular.forEach($scope.dataAll, function (item) {
+                if (item.profileType == 4) {
                     filtered.push(item);
                 }
             })

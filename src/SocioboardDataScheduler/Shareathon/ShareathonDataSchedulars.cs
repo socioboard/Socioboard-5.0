@@ -91,14 +91,15 @@ namespace SocioboardDataScheduler.Shareathon
                 {
                     //if (pageapiHitsCount < pageMaxapiHitsCount)
                     //{
-                    dynamic output = fb.Post("v2.1/" + fbUserId + "/feed", args);
-                    string feed_id = output["id"].ToString();
-                    if (!string.IsNullOrEmpty(feed_id))
-                    {
-                        pageapiHitsCount++;
-                    }
+                   
                     if (count < 1)
                     {
+                        dynamic output = fb.Post("v2.1/" + fbUserId + "/feed", args);
+                        string feed_id = output["id"].ToString();
+                        if (!string.IsNullOrEmpty(feed_id))
+                        {
+                            pageapiHitsCount++;
+                        }
                         objshrpost.Id = ObjectId.GenerateNewId();
                         objshrpost.Facebookaccountid = fbUserId;
                         objshrpost.Facebookpageid = pageId;
@@ -202,22 +203,23 @@ namespace SocioboardDataScheduler.Shareathon
                             //if (groupapiHitsCount < groupMaxapiHitsCount)
                             //{
 
-                            dynamic output = fb.Post("v2.7/" + grpdata[1] + "/feed", args);
-                            try
-                            {
-                                string feed_id = output["id"].ToString();
-                                if (!string.IsNullOrEmpty(feed_id))
-                                {
-                                    groupapiHitsCount++;
-                                }
-
-                            }
-                            catch (Exception)
-                            {
-                                groupapiHitsCount = groupMaxapiHitsCount;
-                            }
+                           
                             if (count < 1)
                             {
+                                dynamic output = fb.Post("v2.7/" + grpdata[1] + "/feed", args);
+                                try
+                                {
+                                    string feed_id = output["id"].ToString();
+                                    if (!string.IsNullOrEmpty(feed_id))
+                                    {
+                                        groupapiHitsCount++;
+                                    }
+
+                                }
+                                catch (Exception)
+                                {
+                                    groupapiHitsCount = groupMaxapiHitsCount;
+                                }
                                 objshrgrp.Id = ObjectId.GenerateNewId();
                                 objshrgrp.Facebookaccountid = faceaccountId;
                                 objshrgrp.Facebookgroupid = grpdata[1];

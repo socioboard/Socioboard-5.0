@@ -137,10 +137,10 @@ namespace SocioboardDataScheduler.Twitter
                 }
                 else
                 {
-                    if (_user.scheduleSuccessUpdates)
-                    {
-                        string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
-                    }
+                    //if (_user.scheduleSuccessUpdates)
+                    //{
+                    //    string sucResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, true, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    //}
                 }
                 
 
@@ -166,10 +166,10 @@ namespace SocioboardDataScheduler.Twitter
                 }
                 else
                 {
-                    if (_user.scheduleFailureUpdates)
-                    {
-                        string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
-                    }
+                    //if (_user.scheduleFailureUpdates)
+                    //{
+                    //    string falResponse = SendMailbySendGrid(AppSettings.from_mail, "", _user.EmailId, "", "", "", "", _user.FirstName, schmessage.localscheduletime, false, AppSettings.sendGridUserName, AppSettings.sendGridPassword);
+                    //}
                 }
                
             }

@@ -370,7 +370,7 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.Googleplusaccounts gplusAcc = GplusRepository.getGPlusAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
             oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
 
-            if (gplusAcc != null && gplusAcc.IsActive == false)
+            if (gplusAcc != null )//&& gplusAcc.IsActive == false)
             {
                 gplusAcc.IsActive = true;
                 gplusAcc.UserId = userId;

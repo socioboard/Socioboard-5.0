@@ -34,6 +34,7 @@ namespace SocioboardDataServices.Instagram
                 if(insAcc.IsActive)
                 {
 
+                  //  Domain.Socioboard.Models.Instagramaccounts Instagramaccounts = new Domain.Socioboard.Models.Instagramaccounts();
                     Domain.Socioboard.Models.Instagramaccounts objInstagramAccount;
                     UserController objusercontroller = new UserController();
                     ConfigurationIns configi = new ConfigurationIns(Helper.AppSettings.instaAuthUrl, Helper.AppSettings.instaClientId, Helper.AppSettings.instaClientSecret, Helper.AppSettings.instaReturnUrl, Helper.AppSettings.instaTokenRetrivelUrl, Helper.AppSettings.instaApiBaseUrl, "");
@@ -41,6 +42,7 @@ namespace SocioboardDataServices.Instagram
                     _api = oAuthInstagram.GetInstance(configi);
                     InstagramResponse<User> objuser = objusercontroller.GetUserDetails(insAcc.InstagramId,insAcc.AccessToken);
 
+                  //  objInstagramAccount = new Domain.Socioboard.Models.Instagramaccounts();
 
 
                     if (objuser!=null)

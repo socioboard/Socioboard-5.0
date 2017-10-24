@@ -35,8 +35,8 @@
                                 <li><a href="javascript:void(0)" ng-click="ShortSearch('leastretweet', 'Least Retweet')">Least Retweet</a></li>
                             </ul>
                         </div>
-
-                        <ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+                        <!--<ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">-->
+                        <ul class="collection" style="overflow-y:scroll; height:576px" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <li class="collection-item avatar" ng-repeat="twtfeed in lstTwtFeeds">
                                 <img src="{{twtfeed.fromProfileUrl}}" alt="{{twtfeed.fromName}}" class="circle">
                                 <span class="email-title">{{twtfeed.fromName}}</span>
@@ -163,7 +163,7 @@
                 <div class="col s12 m5 l5">
                     <div class="card" id="feeds">
                         <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Tweets</h5>
-                        <ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+                        <ul class="collection" style="overflow-y:scroll; height:576px" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <li class="collection-item avatar" ng-repeat="tweet in lstUserTweets">
                                 <img src="{{tweet.fromProfileUrl}}" alt="{{tweet.fromName}}" class="circle">
                                 <span class="email-title">{{tweet.fromName}}</span>

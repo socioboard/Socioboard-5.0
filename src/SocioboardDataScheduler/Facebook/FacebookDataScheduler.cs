@@ -101,26 +101,27 @@ namespace SocioboardDataScheduler.Facebook
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.DaywiseSchedule> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.DaywiseSchedule>(t => (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)&& t.scheduleTime <= DateTime.Now).ToList();
-                    //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("127471161024815")).ToList();
-                   var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
+                    List<Domain.Socioboard.Models.DaywiseSchedule> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.DaywiseSchedule>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && t.scheduleTime <= DateTime.Now).ToList();
+                   // lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("1452799044811364")).ToList();
+                    var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
 
                     foreach (var items in newlstScheduledMessage)
                     {
 
-                        if (items.First().scheduleTime.AddHours(24) <=DateTime.Now)
-                        {
-                            objSemaphore.WaitOne();
-                            noOfthreadRunning++;
-                            Thread thread_pageshreathon = new Thread(() => daywiseSchedulemessages(new object[] { dbr, items }));
-                            thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
-                            thread_pageshreathon.Start();
-                            Thread.Sleep(10 * 1000);
-                        }
-                       
-                     
+                        //if (items.First().scheduleTime.AddHours(24) <=DateTime.Now)
+                        //{
+                        objSemaphore.WaitOne();
+                        noOfthreadRunning++;
+                        daywiseSchedulemessages(new object[] { dbr, items });
+                        //Thread thread_pageshreathon = new Thread(() => daywiseSchedulemessages(new object[] { dbr, items }));
+                        //thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
+                        //thread_pageshreathon.Start();
+                        //Thread.Sleep(10 * 1000);
+                        // }
+
+
                     }
-                    Thread.Sleep(TimeSpan.FromMinutes(1));
+                    //Thread.Sleep(TimeSpan.FromMinutes(1));
 
                 }
                 catch (Exception ex)
@@ -130,7 +131,6 @@ namespace SocioboardDataScheduler.Facebook
                 }
             }
         }
-
 
         private static void daywiseSchedulemessages(object o)
         {
@@ -163,7 +163,7 @@ namespace SocioboardDataScheduler.Facebook
                     //_facebook.SchedulerUpdate = DateTime.UtcNow;
 
                     //dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(_facebook);
-                    
+
                 }
             }
             catch (Exception ex)

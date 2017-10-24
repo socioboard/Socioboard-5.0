@@ -51,7 +51,7 @@
                                                         <label for="email">User Name</label>
                                                     </div>-->
                                                         <div class="input-field col s6">
-                                                            <input placeholder="Phone Number"  type="tel" title="Enter 10 digit phone number" required class="validate" maxlength="10" pattern="[0-9]{10}" ng-model="updateUser.phoneNumber">
+                                                            <input placeholder="Phone Number"  type="text" title="Enter numbers only" required class="validate" pattern="[0-9+]+" ng-model="updateUser.phoneNumber">
                                                             <label for="PhoneNumber" data-error="PhoneNumber" data-success="right">Mobile</label>
                                                         </div>
                                                         <div class="input-field col s6">

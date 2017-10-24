@@ -2,6 +2,7 @@
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json;
+using SocioboardDataScheduler.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,10 +23,13 @@ namespace SocioboardDataServices.Model
         public MongoRepository(string CollectionName) 
         {
 
-            MongoClient client = new MongoClient("mongodb://localhost/admin");
+            MongoClient client = new MongoClient(AppSettings.LiveMongoDbConnectionString);
 
-            _db = client.GetDatabase("Socioboard3");
-            
+            _db = client.GetDatabase(AppSettings.LiveMongoDbName);
+
+            //MongoClient client = new MongoClient(AppSettings.ServMongoDbConnectionString);
+
+            //_db = client.GetDatabase(AppSettings.ServMongoDbName);
 
             this.collecionName = CollectionName;
             
@@ -43,34 +47,14 @@ namespace SocioboardDataServices.Model
             //}
             throw new NotImplementedException();
         }
-        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
-        {
-            // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
 
-            var output = await collection.ToListAsync().ConfigureAwait(false);
-            return output;
-
-        }
         public void Delete<T>(FilterDefinition<T> filter) where T : class, new()
         {
             
                 _db.GetCollection<T>(collecionName, settings).DeleteOneAsync(filter);
             
         }
-        public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
-        {
-            // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName).Count<T>(query);
-            try
-            {
-                var output = collection;
-                return Convert.ToInt32(output);
-            }
-            catch (Exception ex) { return 0; }
 
-
-        }
         public void DeleteAll<T>() where T : class, new()
         {
            
@@ -96,7 +80,19 @@ namespace SocioboardDataServices.Model
            
         }
 
+        public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(1000);
+            try
+            {
+                var output = await collection.ToListAsync().ConfigureAwait(false);
+                return output;
+            }
+            catch (Exception ex) { return null; }
 
+
+        }
         public T Single<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
      where T : class, new()
         {
@@ -167,6 +163,23 @@ namespace SocioboardDataServices.Model
             return collection.InsertManyAsync(lstbson);
 
         }
+        public int Counts<T>(Expression<Func<T, bool >>query) where T : class, new()
+        {
+            // Return the enumerable of the collection
+            var collection = _db.GetCollection < T>(collecionName, settings).Count < T>(query);
+            try
+            {
+                var output = collection;
+                return Convert.ToInt32(output);
+            }
+            catch (Exception ex) { return 0; }
+
+
+        }
+
+      
+
+
         public void Dispose()
         {
             // _db.Dispose();

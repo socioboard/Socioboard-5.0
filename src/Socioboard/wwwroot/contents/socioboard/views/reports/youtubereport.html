@@ -123,40 +123,41 @@
                                     </blockquote> 
                                     <label>Show entries</label> 
                                     <input style="width:100px;text-align:center" type="number" min="0" step="10" ng-model="rowLimit"/>                             
-                                    <table id="channeldetailss" class="display responsive-table" cellspacing="0" width="100%">
-                                        <thead>
-                                            <tr>
-                                                <th width="1%">S.No</th>
-                                                <th width="50%">Videos</th>
-                                                <th width="20%">Channel Name</th>
-                                                <th width="10%">Likes</th>
-                                                <th width="10%">Comments</th>
-                                                <th width="10%">Views</th>
-                                            </tr>
-                                        </thead>
-                                        <!--<tfoot>
-                                            <tr>
-                                                <th width="50%">Videos</th>
-                                                <th width="20%">Channel Name</th>
-                                                <th width="10%">Likes</th>
-                                                <th width="10%">Comments</th>
-                                                <th width="10%">Views</th>
-                                            </tr>
-                                        </tfoot>-->
-                                        <tbody ng-repeat="channelss in tableData" my-repeat-video-tab-directive>                                            
+                                    <table class="display responsive-table" cellspacing="0" width="100%">
+                                <!--<table id="channeldetailss" class="display responsive-table" cellspacing="0" width="100%">-->
+                                            <thead>
+                                                <tr>
+                                                    <th width="1%">S.No</th>
+                                                    <th width="50%">Videos</th>
+                                                    <th width="20%">Channel Name</th>
+                                                    <th width="10%">Likes</th>
+                                                    <th width="10%">Comments</th>
+                                                    <th width="10%">Views</th>
+                                                </tr>
+                                            </thead>
+                                            <!--<tfoot>
+                <tr>
+                    <th width="50%">Videos</th>
+                    <th width="20%">Channel Name</th>
+                    <th width="10%">Likes</th>
+                    <th width="10%">Comments</th>
+                    <th width="10%">Views</th>
+                </tr>
+            </tfoot>-->
+                                            <tbody ng-repeat="channelss in tableData" my-repeat-video-tab-directive>
                                                 <tr ng-repeat="videos in channelss._YoutubeVideoss | limitTo:rowLimit">
                                                     <td style="width: 1%;">{{$index+1}}</td>
                                                     <td>
                                                         <div class="row">
                                                             <!--<a href="{{videos.watchUrl}}" target="_blank">-->
-                                                                <div class="col m2 l1">
-                                                                    <img src="{{videos.vdoImageUrl}}" class="responsive-img" style="margin-top:8px">
-                                                                </div>
-                                                                <div class="col m10 l11">
-                                                                    <h6 class="grey-text text-darken-4">{{videos.title}}</h6>
-                                                                    <!--<span class="grey-text text-darken-1 truncate">{{videos.description}}</span>-->
-                                                                    <!--<h6 class="grey-text text-darken-4">Raj Dotnet</h6>-->
-                                                                </div>
+                                                            <div class="col m2 l1">
+                                                                <img src="{{videos.vdoImageUrl}}" class="responsive-img" style="margin-top:8px">
+                                                            </div>
+                                                            <div class="col m10 l11">
+                                                                <h6 class="grey-text text-darken-4">{{videos.title}}</h6>
+                                                                <!--<span class="grey-text text-darken-1 truncate">{{videos.description}}</span>-->
+                                                                <!--<h6 class="grey-text text-darken-4">Raj Dotnet</h6>-->
+                                                            </div>
                                                             <!--</a>-->
                                                         </div>
                                                     </td>
@@ -166,46 +167,46 @@
                                                     <td>{{videos.viewCount}}</td>
                                                 </tr>
 
-                                            <!--<tr>
-                                                <td>
-                                                    <div class="row">
-                                                        <div class="col m2 l1">
-                                                            <img src="http://graph.facebook.com/226587747673015/picture?type=small" class="responsive-img" >
-                                                        </div>
-                                                        <div class="col m10 l11">
-                                                            <a href="javascript:;">
-                                                                <h6 class="grey-text text-darken-4">Heading</h6>
-                                                                <h6 class="grey-text text-darken-1">Desc</h6>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="row">
-                                                        <div class="col m2 l1">
-                                                            <img src="http://graph.facebook.com/226587747673015/picture?type=small" class="responsive-img" >
-                                                        </div>
-                                                        <div class="col m10 l11">
-                                                            <a href="javascript:;">
-                                                                <h6 class="grey-text text-darken-4">Heading</h6>
-                                                                <h6 class="grey-text text-darken-1">Desc</h6>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                                <td>0</td>
-                                            </tr>-->
-                                        </tbody>
-                                      
-                                    </table>
-                                </div>
+                                                <!--<tr>
+                    <td>
+                        <div class="row">
+                            <div class="col m2 l1">
+                                <img src="http://graph.facebook.com/226587747673015/picture?type=small" class="responsive-img" >
+                            </div>
+                            <div class="col m10 l11">
+                                <a href="javascript:;">
+                                    <h6 class="grey-text text-darken-4">Heading</h6>
+                                    <h6 class="grey-text text-darken-1">Desc</h6>
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="row">
+                            <div class="col m2 l1">
+                                <img src="http://graph.facebook.com/226587747673015/picture?type=small" class="responsive-img" >
+                            </div>
+                            <div class="col m10 l11">
+                                <a href="javascript:;">
+                                    <h6 class="grey-text text-darken-4">Heading</h6>
+                                    <h6 class="grey-text text-darken-1">Desc</h6>
+                                </a>
+                            </div>
+                        </div>
+                    </td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                </tr>-->
+                                            </tbody>
+
+                                        </table>
+</div>
 
                             </div>
                             

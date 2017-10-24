@@ -65,7 +65,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                                   $rootScope.firstFeedDate = $scope.lstFbFeeds[0]._facebookFeed.entryDate;
                                   //var date = (new Date($rootScope.firstFeedDate).getTime() / 1000);
                                   //$scope.reloadFeeds();
-                                  $scope.LoadLatestFeeds();
+                                  //$scope.LoadLatestFeeds();
                                   $scope.preloadmore = true;
                                   setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
                                   if (response.data == null) {

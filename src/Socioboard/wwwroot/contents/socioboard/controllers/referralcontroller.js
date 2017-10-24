@@ -63,10 +63,10 @@ SocioboardApp.controller('ReferralController', function ($rootScope, $scope, $ht
 
 
             if (profiles.length != 0 && /\S/.test(testmsg)) {
-                $scope.checkfile();
-                if ($scope.check == true) {
+                //$scope.checkfile();
+                //if ($scope.check == true) {
                     var formData = new FormData();
-                    formData.append('files', $("#composeImage").get(0).files[0]);
+                    //formData.append('files', $("#composeImage").get(0).files[0]);
                     $http({
                         method: 'POST',
                         url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus,
@@ -85,12 +85,7 @@ SocioboardApp.controller('ReferralController', function ($rootScope, $scope, $ht
                     }, function (reason) {
 
                     });
-                }
-                else {
-                    alertify.set({ delay: 3000 });
-                    alertify.error("File extension is not valid. Please upload an image file");
-                    $('#input-file-now').val('');
-                }
+                //}
             }
             else {
                 $scope.dispbtn = true;

@@ -542,7 +542,7 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="Password" name="Password" type="password" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" required class="validate" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$&+,:;=?@@#|'<>.^*()%!-_]).{8,}">
+                            <input id="Password" name="Password" type="password" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" required class="validate" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@@$!%*?&])[A-Za-z\d$@@$!%*?&]{8,}">
                             <label for="Password">Password</label>
                         </div>
                     </div>
@@ -875,7 +875,7 @@ analytics" href="http://statcounter.com/shopify/"
 
                         success: function (msg) {
                             alertify.set({ delay: 5000 });
-                            alertify.success("Email verification mail sent successfully.");
+                            alertify.success("Verification mail sent successfully.");
                             $('#FirstName').val("");
                             $('#LastName').val("");
                             $('#EmailId').val("");

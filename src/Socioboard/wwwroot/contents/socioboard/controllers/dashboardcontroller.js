@@ -738,7 +738,9 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                  if (response.status == 200) {
                      //  window.location.reload();
                      $('#ReconnFanpage_Modal').closeModal();
+                    
                      swal(response.data);
+                     window.location.reload();
                  }
              }, function (reason) {
                  swal("Error!");

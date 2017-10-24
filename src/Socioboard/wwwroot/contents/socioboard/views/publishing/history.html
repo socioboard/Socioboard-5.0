@@ -28,6 +28,7 @@
                     <li ng-click="filterProfiles(1, 'F-Page')"><a href="JavaScript:Void(0)"><i class="fa fa-flag orange-text"></i>&nbsp&nbspF-Page</a></li>
                     <li ng-click="filterProfiles(2, 'Twitter')"><a href="JavaScript:Void(0)"><i class="fa fa-twitter cyan-text"></i>&nbsp&nbspTwitter</a></li>
                     <li ng-click="filterProfilesLink('Linkedin')"><a href="JavaScript:Void(0)"><i class="fa fa-linkedin blue-text text-darken-4"></i>&nbsp&nbspLinkedin</a></li>
+                    <li ng-click="filterProfilesLinkPage('L-Page')"><a href="JavaScript:Void(0)"><i class="fa fa-linkedin blue-text text-darken-4"></i>&nbsp&nbspL-Page</a></li>
                 </ul>
             </div>
             <div class="col s12 m12">
@@ -47,7 +48,7 @@
                                 <td class="center">
                                     <div class="col s12">
                                         <img src="{{getProperURL(user.ProfilePicUrl)}}" class="responsive-img profilePic circle">
-                                        <img class="responsive-img msgiconPoss" src="../../images/twticon.png">
+                                        <img class="responsive-img msgiconPoss" src="/contents/socioboard/images/sb.png">
                                     </div>
                                     <div class="col s12">
                                         <span>
@@ -56,7 +57,7 @@
                                     </div>
                                 </td>
                                 <td class="center">
-                                    <img ng-if="historyMessage.mediaType==1" src="{{getProperURL(historyMessage.url)}}" class="responsive-img" style="width:200px">
+                                    <img ng-if="historyMessage.mediaType==1 || historyMessage.mediaType==0" src="{{getProperURL(historyMessage.url)}}" class="responsive-img" style="width:200px">
                                     <video ng-if="historyMessage.mediaType==2" style="width:200px" controls>
                                         <source src="{{getProperURL(historyMessage.url) | Url}}" type="video/mp4">
                                     </video>
@@ -78,7 +79,7 @@
                                         <img src="{{historyMessage.picUrl}}" class="responsive-img profilePic circle">
                                         <img src="/contents/socioboard/images/twticon.png" class="responsive-img msgiconPoss">
                                     </div>
-                                    <div class="col s12" ng-if="historyMessage.profileType==3 || socioqueue.profileType==4 ">
+                                    <div class="col s12" ng-if="historyMessage.profileType==3 || historyMessage.profileType==4 ">
                                         <img src="{{historyMessage.picUrl}}" class="responsive-img profilePic circle">
                                         <img src="/contents/socioboard/images/linkedin.png" class="responsive-img msgiconPoss">
                                     </div>
@@ -94,7 +95,7 @@
         </div>
         <br /><br /><br /><br /><br /><br /><br />
         <div class="center">
-            <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No History<br /></h6>
+            <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No History found<br /></h6>
         </div>
         <br />
         <div class="center" ng-if="lastreach!=true">

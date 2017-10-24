@@ -1,189 +1,512 @@
-    <div data-ng-controller="InstagramFeedsController">
-            <!-- START CONTENT -->
-            <section id="content">
-                <!--start container-->
-                        <!--card widgets end-->
-                        <div class="row">
-                            <div class="col offset-s1 s10 offset-m2 m8 offset-l2 l6">
-                                <div class="card" id="feeds">
-                                    <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Live feeds<a class='dropdown-button right white-text btn_style black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn_style black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn_style black' ng-click="ReLoadingTopFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a><span class="right">&nbsp;</span>
-                                    </h5>
-                                    <!-- Dropdown Structure -->
-                                    <div ng-if="dropCalled==true">
-                                        <ul id='dropdownFilter' class='dropdown-content'>
-                                            <li><a href="javascript:void(0)" style="color:black"><strong>Filter</strong></a></li>
-                                            <li><a href="javascript:void(0)" ng-click="filterSearch('image', 'Image')">Image posts</a></li>
-                                            <li><a href="javascript:void(0)" ng-click="filterSearch('video', 'Video')">Video posts</a></li>
-                                        </ul>
-                                    </div>
+<style type="text/css">
+    #waterfall li.show {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.3s, top 1s;
+    }
 
-                                    <div ng-if="dropCalled==true">
-                                        <ul id='dropdownSort' class='dropdown-content'>
-                                            <li><a href="javascript:void(0)" style="color:black"><strong>Popular</strong></a></li>
-                                            <li><a href="javascript:void(0)" ng-click="sortSearch('mLikes','Most likes')">Most Likes</a></li>
-                                            <li><a href="javascript:void(0)" ng-click="sortSearch('mComments', 'Most comments')">Most Comments</a></li>
-                                            <li><a href="javascript:void(0)" ng-click="sortSearch('lLikes', 'Least likes')">Least Likes</a></li>
-                                            <li><a href="javascript:void(0)" ng-click="sortSearch('lComments', 'Least comments')">Least Comments</a></li>
-                                        </ul>
-                                    </div>
+    #waterfall li > div {
+        color: rgba(0,0,0,0.6);
+        border-radius: 3px;
+        margin: 10px;
+        padding: 0px;
+        background: rgb(255,255,255);
+        border: 1px solid rgba(038, 191, 64, 0);
+        transition: all 0.5s;
+    }
 
-                                    <ul class="collection instagramfeeds">
-                                        <li class="collection-item" ng-repeat="insfeed in lstinsFeeds "myRepeatTabDirective>
-                                          <div class="card">
-                                             
-                                              <!--<div class="card-image waves-effect waves-block waves-light" ng-if="insfeed._InstagramFeed.type=='image'">-->
-                                              <div class="card-image waves-effect waves-block waves-light">
-                                                  <img class="activator" ng-src="{{insfeed.feedImageUrl}}" alt="imgs">
-                                              </div>
-                                              <div class="card-content">
-                                                <span class="card-title activator grey-text text-darken-4">{{insfeed.adminUser}}<i class="mdi-navigation-more-vert right"></i></span>
-                                                  <a class="card-title grey-text text-darken-4" href="{{insfeed.feedUrl}}" target="_blank"><i class="icon-paper-plane right margin-top-10"></i></a>
-                                                     <p>
-                                                      <a ng-if="insfeed.isLike==0" ng-click="InstagramLikeUnLike(insfeed.likeCount,insfeed.isLike,insfeed.feedId,insfeed.instagramId)"><i class="icon-heart red-text"></i>{{insfeed.likeCount}} likes</a>
-                                                      <a ng-if="insfeed.isLike==1" ng-click="InstagramLikeUnLike(insfeed.likeCount,insfeed.isLike,insfeed.feedId,insfeed.instagramId)"><i class="fa fa-heart red-text"></i>{{insfeed.likeCount}} likes</a>
-                                                      {{insfeed.commentCount}} Comments
+        #waterfall li > div:hover {
+            transform: translateY(-10px);
+            border: 1px solid #3b5998;
+            box-shadow: 0 10px 15px rgba(154, 187, 221, 0.4);
+            transition: all 0.3s;
+        }
+/* loader css */
+.windows8 {
+	position: relative;
+	width: 78px;
+	height:78px;
+	margin: 20% auto auto auto;
+}
 
-                                                  </p>
-                                                  <a ng-click="TaskModal(insfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
-                                                      <i class="icon-pin"></i>
-                                                  </a>
-                                              </div>
-                                              <div class="card-reveal">
-                                                <span class="card-title grey-text text-darken-4">{{insfeed.adminUser}}<i class="mdi-navigation-close right"></i></span>
-                                                <p ng-if="insfeed.feed!=null">{{insfeed.feed}}</p>
-                                                <div>
-                                                  <ul class="collection instagramcommand">
-                                                    <li class="collection-item avatar" ng-repeat="inscomment in insfeed._InstagramComment">
-                                                      <img ng-src="{{inscomment.fromProfilePic}}" alt="Chanchal Santra" class="circle">
-                                                      <span class="email-title">{{inscomment.fromName}}</span>
-                                                      <div class="feeds_post z-depth-1 hoverable">
-                                                          <p class="break_word ultra-small">{{inscomment.comment}}</p>
-                                                      </div>                                         
-                                                     <!-- <a class="tooltipped secondary-content" data-position="left">{{inscomment.commentDate}}</a>-->
-                                                    </li>
-                                                    
-                                                  </ul>
-                                                    <div class="row">
-                                                      <form class="col s12">
-                                                        <div class="row">
-                                                          <div class="input-field col s10">
-                                                            <textarea id="postcomment{{insfeed.feedId}}" class="materialize-textarea"></textarea>
-                                                            <label for="icon_prefix2">Add a comment…</label>
-                                                          </div>
-                                                            <!--<div ng-init="dispbtn= {{dispbtn}}"></div>-->
-                                                          <div ng-show="dispbtn" class="col s2" ng-click="AddInstagramComment(insfeed.feedId,insfeed.instagramId)">
-                                                            <i class="icon-cursor instagram_text_color"></i>
-                                                          </div>
-                                                            <div ng-show="!dispbtn" class="col s2">
-                                                                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
-                                                            </div>
-                                                        </div>
-                                                      </form>
-                                                    </div>
-                                                </div>
-                                              </div>
-                                          </div>
-                                        </li>
+.windows8 .wBall {
+	position: absolute;
+	width: 74px;
+	height: 74px;
+	opacity: 0;
+	transform: rotate(225deg);
+		-o-transform: rotate(225deg);
+		-ms-transform: rotate(225deg);
+		-webkit-transform: rotate(225deg);
+		-moz-transform: rotate(225deg);
+	animation: orbit 5.4425s infinite;
+		-o-animation: orbit 5.4425s infinite;
+		-ms-animation: orbit 5.4425s infinite;
+		-webkit-animation: orbit 5.4425s infinite;
+		-moz-animation: orbit 5.4425s infinite;
+}
 
-                                        <h6 style="margin-left:31%; color:lightgray; font-size:20px" ng-if="endfeeds==true && filters!=true">No more Feeds to load</h6>
+.windows8 .wBall .wInnerBall{
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background: rgb(0,0,0);
+	left:0px;
+	top:0px;
+	border-radius: 10px;
+}
 
-                                        <div class="center" id="load_circle_insta" ng-class="loadmorefeeds" hidden>
-                                          <div class="preloader-wrapper small active">
-                                            <div class="spinner-layer spinner-blue">
-                                              <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                              </div><div class="gap-patch">
-                                                <div class="circle"></div>
-                                              </div><div class="circle-clipper right">
-                                                <div class="circle"></div>
-                                              </div>
-                                            </div>
+.windows8 #wBall_1 {
+	animation-delay: 1.186s;
+		-o-animation-delay: 1.186s;
+		-ms-animation-delay: 1.186s;
+		-webkit-animation-delay: 1.186s;
+		-moz-animation-delay: 1.186s;
+}
 
-                                            <div class="spinner-layer spinner-red">
-                                              <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                              </div><div class="gap-patch">
-                                                <div class="circle"></div>
-                                              </div><div class="circle-clipper right">
-                                                <div class="circle"></div>
-                                              </div>
-                                            </div>
+.windows8 #wBall_2 {
+	animation-delay: 0.233s;
+		-o-animation-delay: 0.233s;
+		-ms-animation-delay: 0.233s;
+		-webkit-animation-delay: 0.233s;
+		-moz-animation-delay: 0.233s;
+}
 
-                                            <div class="spinner-layer spinner-yellow">
-                                              <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                              </div><div class="gap-patch">
-                                                <div class="circle"></div>
-                                              </div><div class="circle-clipper right">
-                                                <div class="circle"></div>
-                                              </div>
-                                            </div>
+.windows8 #wBall_3 {
+	animation-delay: 0.4765s;
+		-o-animation-delay: 0.4765s;
+		-ms-animation-delay: 0.4765s;
+		-webkit-animation-delay: 0.4765s;
+		-moz-animation-delay: 0.4765s;
+}
 
-                                            <div class="spinner-layer spinner-green">
-                                              <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                              </div><div class="gap-patch">
-                                                <div class="circle"></div>
-                                              </div><div class="circle-clipper right">
-                                                <div class="circle"></div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>
+.windows8 #wBall_4 {
+	animation-delay: 0.7095s;
+		-o-animation-delay: 0.7095s;
+		-ms-animation-delay: 0.7095s;
+		-webkit-animation-delay: 0.7095s;
+		-moz-animation-delay: 0.7095s;
+}
 
-                                        <a href="" ng-click="listData()" style="margin-left:41%" onClick="this.style.visibility = 'hidden'; loadmore_feeds();" ng-if="preloadmorefeeds==true && filters!=true"><img ng-src="http://i.imgur.com/qJdCRuG.png" /></a>
-                                        
-                                        <br />
-                                        
-                                        <div class="cssload-container" ng-if="preloadmorefeeds!=true">
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                            <div></div>
-                                        </div>
-                                    </ul>
-                                </div>
-                            </div>                                  
-                        </div>
-                <!--end container-->
+.windows8 #wBall_5 {
+	animation-delay: 0.953s;
+		-o-animation-delay: 0.953s;
+		-ms-animation-delay: 0.953s;
+		-webkit-animation-delay: 0.953s;
+		-moz-animation-delay: 0.953s;
+}
 
 
-                <div id="TaskModal" class="modal">
-                    <div class="modal-content">
-                        <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
-                        <h4>Create Task</h4>
-                        <p></p>
-                        <div class="row">
-                            <form class="col s12">
-                                <div class="row">
-                                    <div class="input-field col s8">
-                                        <i class="icon-pencil prefix"></i>
-                                        <textarea id="InstagramFeedComment" class="materialize-textarea" placeholder="Your comment (viewable only to team members)"></textarea>
-                                        <label for="LeaveComment" class="active">LEAVE A COMMENT</label>
-                                    </div>
-                                    <div class="col s4">
-                                        <span>ASSIGN TASK TO</span><br />
-                                        <div class="smartinbox_filter_slider">
-                                            <p class="grey lighten-5 z-depth-1" ng-repeat="member in groups[groupIndex].members |filter:{memberStatus:1} ">
-                                                <input name="member" type="radio" id="{{member.userId}}" value="{{member.userId}}" class="with-gap task-user-member" />
-                                                <label for="{{member.userId}}">{{ member.firstName}}</label>
-                                            </p>
 
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="javascript:void(0);" class="modal-action waves-effect waves-green btn-flat" ng-click="addTask('InstagramFeed')">Save</a>
-                        <a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="closeModal()">Close</a>
+@keyframes orbit {
+	0% {
+		opacity: 1;
+		z-index:99;
+		transform: rotate(180deg);
+		animation-timing-function: ease-out;
+	}
+
+	7% {
+		opacity: 1;
+		transform: rotate(300deg);
+		animation-timing-function: linear;
+		origin:0%;
+	}
+
+	30% {
+		opacity: 1;
+		transform:rotate(410deg);
+		animation-timing-function: ease-in-out;
+		origin:7%;
+	}
+
+	39% {
+		opacity: 1;
+		transform: rotate(645deg);
+		animation-timing-function: linear;
+		origin:30%;
+	}
+
+	70% {
+		opacity: 1;
+		transform: rotate(770deg);
+		animation-timing-function: ease-out;
+		origin:39%;
+	}
+
+	75% {
+		opacity: 1;
+		transform: rotate(900deg);
+		animation-timing-function: ease-out;
+		origin:70%;
+	}
+
+	76% {
+	opacity: 0;
+		transform:rotate(900deg);
+	}
+
+	100% {
+	opacity: 0;
+		transform: rotate(900deg);
+	}
+}
+
+@-o-keyframes orbit {
+	0% {
+		opacity: 1;
+		z-index:99;
+		-o-transform: rotate(180deg);
+		-o-animation-timing-function: ease-out;
+	}
+
+	7% {
+		opacity: 1;
+		-o-transform: rotate(300deg);
+		-o-animation-timing-function: linear;
+		-o-origin:0%;
+	}
+
+	30% {
+		opacity: 1;
+		-o-transform:rotate(410deg);
+		-o-animation-timing-function: ease-in-out;
+		-o-origin:7%;
+	}
+
+	39% {
+		opacity: 1;
+		-o-transform: rotate(645deg);
+		-o-animation-timing-function: linear;
+		-o-origin:30%;
+	}
+
+	70% {
+		opacity: 1;
+		-o-transform: rotate(770deg);
+		-o-animation-timing-function: ease-out;
+		-o-origin:39%;
+	}
+
+	75% {
+		opacity: 1;
+		-o-transform: rotate(900deg);
+		-o-animation-timing-function: ease-out;
+		-o-origin:70%;
+	}
+
+	76% {
+	opacity: 0;
+		-o-transform:rotate(900deg);
+	}
+
+	100% {
+	opacity: 0;
+		-o-transform: rotate(900deg);
+	}
+}
+
+@-ms-keyframes orbit {
+	0% {
+		opacity: 1;
+		z-index:99;
+		-ms-transform: rotate(180deg);
+		-ms-animation-timing-function: ease-out;
+	}
+
+	7% {
+		opacity: 1;
+		-ms-transform: rotate(300deg);
+		-ms-animation-timing-function: linear;
+		-ms-origin:0%;
+	}
+
+	30% {
+		opacity: 1;
+		-ms-transform:rotate(410deg);
+		-ms-animation-timing-function: ease-in-out;
+		-ms-origin:7%;
+	}
+
+	39% {
+		opacity: 1;
+		-ms-transform: rotate(645deg);
+		-ms-animation-timing-function: linear;
+		-ms-origin:30%;
+	}
+
+	70% {
+		opacity: 1;
+		-ms-transform: rotate(770deg);
+		-ms-animation-timing-function: ease-out;
+		-ms-origin:39%;
+	}
+
+	75% {
+		opacity: 1;
+		-ms-transform: rotate(900deg);
+		-ms-animation-timing-function: ease-out;
+		-ms-origin:70%;
+	}
+
+	76% {
+	opacity: 0;
+		-ms-transform:rotate(900deg);
+	}
+
+	100% {
+	opacity: 0;
+		-ms-transform: rotate(900deg);
+	}
+}
+
+@-webkit-keyframes orbit {
+	0% {
+		opacity: 1;
+		z-index:99;
+		-webkit-transform: rotate(180deg);
+		-webkit-animation-timing-function: ease-out;
+	}
+
+	7% {
+		opacity: 1;
+		-webkit-transform: rotate(300deg);
+		-webkit-animation-timing-function: linear;
+		-webkit-origin:0%;
+	}
+
+	30% {
+		opacity: 1;
+		-webkit-transform:rotate(410deg);
+		-webkit-animation-timing-function: ease-in-out;
+		-webkit-origin:7%;
+	}
+
+	39% {
+		opacity: 1;
+		-webkit-transform: rotate(645deg);
+		-webkit-animation-timing-function: linear;
+		-webkit-origin:30%;
+	}
+
+	70% {
+		opacity: 1;
+		-webkit-transform: rotate(770deg);
+		-webkit-animation-timing-function: ease-out;
+		-webkit-origin:39%;
+	}
+
+	75% {
+		opacity: 1;
+		-webkit-transform: rotate(900deg);
+		-webkit-animation-timing-function: ease-out;
+		-webkit-origin:70%;
+	}
+
+	76% {
+	opacity: 0;
+		-webkit-transform:rotate(900deg);
+	}
+
+	100% {
+	opacity: 0;
+		-webkit-transform: rotate(900deg);
+	}
+}
+
+@-moz-keyframes orbit {
+	0% {
+		opacity: 1;
+		z-index:99;
+		-moz-transform: rotate(180deg);
+		-moz-animation-timing-function: ease-out;
+	}
+
+	7% {
+		opacity: 1;
+		-moz-transform: rotate(300deg);
+		-moz-animation-timing-function: linear;
+		-moz-origin:0%;
+	}
+
+	30% {
+		opacity: 1;
+		-moz-transform:rotate(410deg);
+		-moz-animation-timing-function: ease-in-out;
+		-moz-origin:7%;
+	}
+
+	39% {
+		opacity: 1;
+		-moz-transform: rotate(645deg);
+		-moz-animation-timing-function: linear;
+		-moz-origin:30%;
+	}
+
+	70% {
+		opacity: 1;
+		-moz-transform: rotate(770deg);
+		-moz-animation-timing-function: ease-out;
+		-moz-origin:39%;
+	}
+
+	75% {
+		opacity: 1;
+		-moz-transform: rotate(900deg);
+		-moz-animation-timing-function: ease-out;
+		-moz-origin:70%;
+	}
+
+	76% {
+	opacity: 0;
+		-moz-transform:rotate(900deg);
+	}
+
+	100% {
+	opacity: 0;
+		-moz-transform: rotate(900deg);
+	}
+}
+</style>
+<div data-ng-controller="InstagramFeedsController">
+    <!-- START CONTENT -->
+    <section id="content">
+        <!--start container-->
+        <div class="container">
+            <div class="row">
+                <!--<div class="col l2 m2 s12 center">
+                    <img src="https://instagram.fblr2-1.fna.fbcdn.net/t51.2885-19/s150x150/21819559_926472614176639_3169016111542829056_n.jpg" class="responsive-img circle margin-top-10">
+                </div>
+                <div class="col l5 m5 s12">
+                    <h5 class="grey-text text-darken-4">Chanchal Santra</h5>
+                    <h6>posts : <strong class="grey-text text-darken-1">99</strong></h6>
+                    <h6>followers : <strong class="grey-text text-darken-1">99</strong></h6>
+                    <h6>following : <strong class="grey-text text-darken-1">99</strong></h6>
+                    <h6>Chanchal Santra Design is a FUNNY word. 🙄 www.behance.net/chanchalsantra</h6>
+                </div>-->
+                <div class="col s12 margin-top-10 ">
+                    <div class="right">
+                        <a class="dropdown-button btn white-text btn_style black ng-binding" href="javascript:void(0)" data-activates="dropdownFilter" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">All Posts</a>
+                        <ul id="dropdownFilter" class="dropdown-content" style="white-space: nowrap; position: absolute; top: 20px; left: 678.484px; opacity: 1; display: none;">
+                            <li><a href="javascript:void(0)" style="color:black"><strong>Filter</strong></a></li>
+                            <li><a href="javascript:void(0)" ng-click="filterSearch('image', 'Image')">Image posts</a></li>
+                            <li><a href="javascript:void(0)" ng-click="filterSearch('video', 'Video')">Video posts</a></li>
+                        </ul>
+
+                        <a class="dropdown-button white-text btn btn_style black ng-binding" href="javascript:void(0)" data-activates="dropdownSort" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Popular</a>
+                        <ul id="dropdownSort" class="dropdown-content" style="white-space: nowrap; position: absolute; top: 20px; left: 587.438px; opacity: 1; display: none;">
+                            <li><a href="javascript:void(0)" style="color:black"><strong>Popular</strong></a></li>
+                            <li><a href="javascript:void(0)" ng-click="sortSearch('mLikes','Most likes')">Most Likes</a></li>
+                            <li><a href="javascript:void(0)" ng-click="sortSearch('mComments', 'Most comments')">Most Comments</a></li>
+                            <li><a href="javascript:void(0)" ng-click="sortSearch('lLikes', 'Least likes')">Least Likes</a></li>
+                            <li><a href="javascript:void(0)" ng-click="sortSearch('lComments', 'Least comments')">Least Comments</a></li>
+                        </ul>
+                        <a class="white-text btn btn_style black" ng-click="ReLoadingTopFeeds()" title="Recent feeds" href="javascript:void(0)" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a>
+                        <span class="right">&nbsp;</span>
                     </div>
                 </div>
-            </section>
-            <!-- END CONTENT -->   
-    </div>
+            </div>
+            <div class="row" >
+                <!-- loader -->
+                <div class="windows8" ng-if="preloadmorefeeds!=true">
+                    <div class="wBall" id="wBall_1">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_2">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_3">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_4">
+                        <div class="wInnerBall"></div>
+                    </div>
+                    <div class="wBall" id="wBall_5">
+                        <div class="wInnerBall"></div>
+                    </div>
+                </div>
 
+                <div id="center">
+                    <ul id="waterfall">
+                        <li class="collection-item" ng-repeat="insfeed in lstinsFeeds " myRepeatTabDirective>
+                            <div class="studio_card">
+                                <a class="card hoverable no-space modal-trigger" ng-click="viewPostModal(insfeed)">
+                                    <div class="card-image waves-effect waves-block waves-light">
+                                        <img class="activator" ng-src="{{insfeed.feedImageUrl}}" alt="imgs">
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="row no-space">
+                                            <div class="col s12 m6 center">
+                                                <div class="grey-text text-darken-4">Likes</div>
+                                                    <a ng-if="insfeed.isLike==0" ng-click="InstagramLikeUnLike(insfeed.likeCount,insfeed.isLike,insfeed.feedId,insfeed.instagramId)">{{insfeed.likeCount}} </a>
+                                                    <a ng-if="insfeed.isLike==1" ng-click="InstagramLikeUnLike(insfeed.likeCount,insfeed.isLike,insfeed.feedId,insfeed.instagramId)">{{insfeed.likeCount}} </a>     
+                                            </div>
+                                            <div class="col s12 m6 center">
+                                                <div class="grey-text text-darken-4">Comments</div>
+                                                {{insfeed.commentCount}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col s12 center">
+                    <a class="btn btn_style blue_btn_style" ng-click="listData()" onClick="this.style.visibility = 'hidden';  loadmore_feeds();"  ng-if="preloadmorefeeds==true && filters!=true">Load More</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Compose Email Structure -->
+        <div id="viewPostModal" class="modal" style="max-width: 850px; width: 100%;">
+            <div class="modal-content">
+                <div class="row no-space">
+                    <div class="col l8 m8 s8">
+                        <img class="responsive-img" ng-src="{{feeds.feedImageUrl}}" alt="imgs">
+                    </div>
+                    <div class="col l4 m4 s4">
+                        <span class="card-title grey-text text-darken-4">{{feeds.adminUser}}</span>
+                        <p> {{feeds.feed}}</p>
+                        <div class="row no-space" >
+                            <ul class="col s12 instfeeds" >
+                                <li class="collection-item avatar" ng-repeat="inscomment in feeds._InstagramComment">
+                                    <!--{{insfeed._InstagramComment}}-->
+                                    <!--<img ng-src="{{inscomment.fromProfilePic}}"  class="circle">-->
+                                    <span class="email-title"><b>{{inscomment.fromName}} :</b> {{inscomment.comment}}</span>                                   
+                                    <!-- <a class="tooltipped secondary-content" data-position="left">{{inscomment.commentDate}}</a>-->
+                                </li>
+                            </ul>
+                            <div class="input-field col s10">
+                                <input id="postcomment" placeholder="Add a comment.." class="" type="text">
+                                <!--<label for="postcomment" class="active">Add a comment..</label>-->
+
+                            </div>
+                            <div ng-show="dispbtn" class="input-field col s1" >
+                                <a class="btn btn_style btn_round" ng-click="AddInstagramComment(feeds.feedId,feeds.instagramId)">send</a>
+                            </div>
+                            <div ng-show="!dispbtn" class="input-field col s1">
+                                <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+    <!-- END CONTENT -->
+</div>
+
+<script type="text/javascript">
+  $('.instfeeds').slimScroll({
+        color: '#FAB51C',
+        size: '10px',
+        height: '350px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+</script>
 <!-- //////////////////////////////////////// Script Code //////////////////////////////////////////// -->
 
 <script>
@@ -193,105 +516,108 @@
 </script>
 
 <!-- //////////////////////////////////////// End Script Code //////////////////////////////////////// -->
-
 <!-- //////////////////////////////////////// Style CSS for Pre Loader //////////////////////////////////////// -->
 
 <style>
-    .cssload-container{
-		background:rgb(255,255,255);
-	}
-	
-	.cssload-container div {
-	width: 27px;
-	height: 27px;
-	position: absolute;
-	background-color: rgb(204,204,204);
-	top: 5%;
-	border-radius: 50%;
-}
+    .cssload-container {
+        background: rgb(255,255,255);
+    }
 
-.cssload-container div:nth-child(1) {
-	background-color: rgb(190,3,156);
-	animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-o-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-ms-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-webkit-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-moz-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-}
+        .cssload-container div {
+            width: 27px;
+            height: 27px;
+            position: absolute;
+            background-color: rgb(204,204,204);
+            top: 5%;
+            border-radius: 50%;
+        }
 
-.cssload-container div:nth-child(2) {
-	background-color: rgb(239,9,21);
-	animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-o-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-ms-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-webkit-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-moz-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-}
+            .cssload-container div:nth-child(1) {
+                background-color: rgb(190,3,156);
+                animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -o-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -ms-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -webkit-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -moz-animation: cssload-move 2.6s infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+            }
 
-.cssload-container div:nth-child(3) {
-	background-color: rgb(255,60,0);
-	animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-o-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-ms-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-webkit-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-moz-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-}
+            .cssload-container div:nth-child(2) {
+                background-color: rgb(239,9,21);
+                animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -o-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -ms-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -webkit-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -moz-animation: cssload-move 2.6s 195ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+            }
 
-.cssload-container div:nth-child(4) {
-	background-color: rgb(250,181,28);
-	animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-o-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-ms-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-webkit-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-		-moz-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
-}
+            .cssload-container div:nth-child(3) {
+                background-color: rgb(255,60,0);
+                animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -o-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -ms-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -webkit-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -moz-animation: cssload-move 2.6s 390ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+            }
+
+            .cssload-container div:nth-child(4) {
+                background-color: rgb(250,181,28);
+                animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -o-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -ms-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -webkit-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+                -moz-animation: cssload-move 2.6s 585ms infinite cubic-bezier(0.2, 0.64, 0.81, 0.23);
+            }
 
 
 
-@keyframes cssload-move {
-	0% {
-		left: 0%;
-	}
-	100% {
-		left: 100%;
-	}
-}
+    @keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
 
-@-o-keyframes cssload-move {
-	0% {
-		left: 0%;
-	}
-	100% {
-		left: 100%;
-	}
-}
+        100% {
+            left: 100%;
+        }
+    }
 
-@-ms-keyframes cssload-move {
-	0% {
-		left: 0%;
-	}
-	100% {
-		left: 100%;
-	}
-}
+    @-o-keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
 
-@-webkit-keyframes cssload-move {
-	0% {
-		left: 0%;
-	}
-	100% {
-		left: 100%;
-	}
-}
+        100% {
+            left: 100%;
+        }
+    }
 
-@-moz-keyframes cssload-move {
-	0% {
-		left: 0%;
-	}
-	100% {
-		left: 100%;
-	}
-}
+    @-ms-keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @-webkit-keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
+
+    @-moz-keyframes cssload-move {
+        0% {
+            left: 0%;
+        }
+
+        100% {
+            left: 100%;
+        }
+    }
 </style>
-
- <!--//////////////////////////////////////// End Style CSS for Pre Loader ////////////////////////////////////////--> 
+<!--//////////////////////////////////////// End Style CSS for Pre Loader ////////////////////////////////////////--> 

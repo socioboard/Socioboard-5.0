@@ -129,5 +129,112 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
 
             return output;
         }
+        public async Task<string> AddGplusHashTagFBPlugin(string hashTag, string boardId, Helper.Cache _redisCache ,Helper.AppSettings _appSettings, ILogger _logger)
+        {
+            MongoBoardGplusHashTag bgpacc = new MongoBoardGplusHashTag { Id = ObjectId.GenerateNewId(), strId = ObjectId.GenerateNewId().ToString(), Aboutme = string.Empty, Boardid = boardId, Circledbycount = string.Empty, Coverphotourl = string.Empty, Displayname = hashTag.ToLower(), Entrydate = DateTime.UtcNow.ToString(), Nickname = hashTag, Pageid = "tag", Pageurl = string.Empty, Plusonecount = string.Empty, Profileimageurl = string.Empty, Tagline = string.Empty };
+            MongoRepository boardrepo = new MongoRepository("MongoBoardGplusHashTag", _appSettings);
+            try
+            {
+                var ret = boardrepo.Find<MongoBoardGplusHashTag>(t => t.Displayname.Equals(hashTag.ToLower()) && t.Pageid.Equals("tag"));
+                var task = Task.Run(async () =>
+                {
+                    return await ret;
+                });
+                IList<MongoBoardGplusHashTag> objgplusPagelist = task.Result.ToList();
+                if (objgplusPagelist.Count() > 0)
+                {
+                    return objgplusPagelist.First().strId.ToString();
+                }
+                boardrepo.Add<MongoBoardGplusHashTag>(bgpacc);
+                new Thread(delegate ()
+                {
+                    AddBoardGplusTagFeeds(hashTag, bgpacc.strId.ToString(), _appSettings);
+                }).Start();
+                return bgpacc.strId.ToString();
+            }
+            catch (Exception)
+            {
+                boardrepo.Add<MongoBoardGplusHashTag>(bgpacc);
+                new Thread(delegate ()
+                {
+                    AddBoardGplusTagFeeds(hashTag, bgpacc.strId.ToString(), _appSettings);
+                }).Start();
+                return bgpacc.strId.ToString();
+            }
+        }
+        public bool AddBoardGplusTagFeeds(string GplusTagId, string BoardId, Helper.AppSettings _appSettings)
+        {
+            MongoRepository boardrepo = new MongoRepository("MongoBoardGplusFeeds", _appSettings);
+            bool output = false;
+            try
+            {
+                JObject RecentActivities = JObject.Parse(GplusTagSearch.GooglePlusgetUserRecentActivitiesByHashtag(GplusTagId));
+                foreach (JObject obj in RecentActivities["items"])
+                {
+                    MongoBoardGplusFeeds bgpfeed = new MongoBoardGplusFeeds();
+                    bgpfeed.Id = ObjectId.GenerateNewId();
+                    bgpfeed.Gplusboardaccprofileid = BoardId;
+                    try
+                    {
+                        bgpfeed.Feedlink = obj["url"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        foreach (JObject att in JArray.Parse(obj["object"]["attachments"].ToString()))
+                        {
+                            if (att["objectType"].ToString().Equals("photo"))
+                            {
+
+                                bgpfeed.Imageurl = att["fullImage"]["url"].ToString() + ",";
+                            }
+                        }
+                    }
+                    catch { }
+                    try
+                    {
+                        bgpfeed.Publishedtime = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.Parse(obj["published"].ToString()));
+                    }
+                    catch { }
+                    try
+                    {
+                        bgpfeed.Title = obj["title"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        bgpfeed.Feedid = obj["id"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        bgpfeed.FromId = obj["actor"]["id"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        bgpfeed.FromName = obj["actor"]["displayName"].ToString();
+                    }
+                    catch { }
+                    try
+                    {
+                        bgpfeed.FromPicUrl = obj["actor"]["image"]["url"].ToString();
+                    }
+                    catch { }
+
+                    try
+                    {
+                        boardrepo.Add<MongoBoardGplusFeeds>(bgpfeed);
+                    }
+                    catch { }
+
+                }
+            }
+            catch { }
+
+
+
+            return output;
+        }
     }
 }

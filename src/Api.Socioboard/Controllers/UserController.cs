@@ -1610,7 +1610,8 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetPrimaryUserDeatils(long userId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            User user = dbr.Single<User>(t => t.Id == userId && (t.EmailValidateToken == "Facebook" ||t.EmailValidateToken=="Google"));
+            User user = dbr.Single<User>(t => t.Id == userId);//&& (t.EmailValidateToken == "Facebook" ||t.EmailValidateToken=="Google" || t.EmailValidateToken ==));
+
             return Ok(user);
             
         }

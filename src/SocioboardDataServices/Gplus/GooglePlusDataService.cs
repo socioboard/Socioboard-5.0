@@ -22,8 +22,8 @@ namespace SocioboardDataServices.Gplus
                 {
 
                     Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
-                    oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
-                    oAuthToken objToken = new oAuthToken(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
+                    oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+                    oAuthToken objToken = new oAuthToken(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
                     JObject userinfo = new JObject();
                     List<Domain.Socioboard.Models.Googleplusaccounts> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.IsActive).ToList();
                  // lstTwtAccounts = lstTwtAccounts.Where(t => t.GpUserName.Contains("Avinash Verma")).ToList();
@@ -135,7 +135,7 @@ namespace SocioboardDataServices.Gplus
                                         #region Get_InYourCircles
                                         try
                                         {
-                                            string _InyourCircles = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetPeopleList.Replace("[userId]", item.GpUserId).Replace("[collection]", "visible") + "?key=" + AppSettings.GoogleApiKey, item.AccessToken);
+                                            string _InyourCircles = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetPeopleList.Replace("[userId]", item.GpUserId).Replace("[collection]", "visible") + "?key=" + AppSettings.googleApiKey, item.AccessToken);
                                             JObject J_InyourCircles = JObject.Parse(_InyourCircles);
                                             item.InYourCircles = Convert.ToInt32(J_InyourCircles["totalItems"].ToString());
                                         }
@@ -148,7 +148,7 @@ namespace SocioboardDataServices.Gplus
                                         #region Get_HaveYouInCircles
                                         try
                                         {
-                                            string _HaveYouInCircles = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetPeopleProfile + item.GpUserId + "?key=" + AppSettings.GoogleApiKey, item.AccessToken);
+                                            string _HaveYouInCircles = ObjoAuthTokenGPlus.APIWebRequestToGetUserInfo(Globals.strGetPeopleProfile + item.GpUserId + "?key=" + AppSettings.googleApiKey, item.AccessToken);
                                             JObject J_HaveYouInCircles = JObject.Parse(_HaveYouInCircles);
                                             item.HaveYouInCircles = Convert.ToInt32(J_HaveYouInCircles["circledByCount"].ToString());
                                         }
@@ -200,8 +200,8 @@ namespace SocioboardDataServices.Gplus
                 try
                 {
                     Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
-                    oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
-                    Analytics _Analytics = new Analytics(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
+                    oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+                    Analytics _Analytics = new Analytics(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
                     List<Domain.Socioboard.Models.GoogleAnalyticsAccount> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.GoogleAnalyticsAccount>(t => t.IsActive).ToList();
                   
                     foreach (var item in lstTwtAccounts)

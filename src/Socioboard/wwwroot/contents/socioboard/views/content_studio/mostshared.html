@@ -57,7 +57,7 @@
                             <th>Linkedin Shares</th>
                             <th>Twitter Shares</th>
                             <th>Pinterest Shares</th>
-                            <th>Google+ Shares</th>
+                            <!--<th>Google+ Shares</th>-->
                             <th>Total Shares</th>
                         </tr>
                     </thead>
@@ -76,40 +76,40 @@
                                 </a>
                             </td>
                             <td class="center" ng-if="lstData.fbengagementCount<1000">
-                                <a class="btn-floating waves-effect waves-light indigo darken-3 center">{{lstData.fbengagementCount}}</a>
+                                <a class="btn-floating waves-effect waves-light btn-large indigo darken-3 center">{{lstData.fbengagementCount}}</a>
                             </td>
                             <td class="center" ng-if="lstData.fbengagementCount>1000">
-                                <a class="btn-floating waves-effect waves-light indigo darken-3 center">{{lstData.fbengagementCount/1000 |number:0}}k</a>
+                                <a class="btn-floating waves-effect waves-light btn-large indigo darken-3 center">{{lstData.fbengagementCount/1000 |number:0}}k</a>
                             </td>
                             <td class="center" ng-if="lstData.linShareCount<1000">
-                                <a class="btn-floating waves-effect waves-light blue darken-4 center">{{lstData.linShareCount}}</a>
+                                <a class="btn-floating waves-effect waves-light btn-large blue darken-4 center">{{lstData.linShareCount}}</a>
                             </td>
                             <td class="center" ng-if="lstData.linShareCount>1000">
-                                <a class="btn-floating waves-effect waves-light blue darken-4 center">{{lstData.linShareCount/1000 |number:0}}k</a>
+                                <a class="btn-floating waves-effect waves-light btn-large blue darken-4 center">{{lstData.linShareCount/1000 |number:0}}k</a>
                             </td>
                             <td class="center" ng-if="lstData.twtShareCount<1000">
-                                <a class="btn-floating waves-effect waves-light light-blue accent-2 center">{{lstData.twtShareCount}}</a>
+                                <a class="btn-floating waves-effect waves-light btn-large light-blue accent-2 center">{{lstData.twtShareCount}}</a>
                             </td>
                             <td class="center" ng-if="lstData.twtShareCount>1000">
-                                <a class="btn-floating waves-effect waves-light light-blue accent-2 center">{{lstData.twtShareCount/1000 |number:0}}k</a>
+                                <a class="btn-floating waves-effect waves-light btn-large light-blue accent-2 center">{{lstData.twtShareCount/1000 |number:0}}k</a>
                             </td>
                             <td class="center" ng-if="lstData.pinShareCount<1000">
-                                <a class="btn-floating waves-effect waves-light red darken-4 center">{{lstData.pinShareCount}}</a>
+                                <a class="btn-floating waves-effect waves-light btn-large red darken-4 center">{{lstData.pinShareCount}}</a>
                             </td>
                             <td class="center" ng-if="lstData.pinShareCount>1000">
-                                <a class="btn-floating waves-effect waves-light red darken-4 center">{{lstData.pinShareCount/1000 |number:0}}k</a>
+                                <a class="btn-floating waves-effect waves-light btn-large red darken-4 center">{{lstData.pinShareCount/1000 |number:0}}k</a>
                             </td>
-                            <td class="center" ng-if="lstData.gplusShareCount<1000">
-                                <a class="btn-floating waves-effect waves-light red accent-4 center">{{lstData.gplusShareCount}}</a>
+                            <!--<td class="center" ng-if="lstData.gplusShareCount<1000">
+                                <a class="btn-floating waves-effect waves-light btn-large red accent-4 center">{{lstData.gplusShareCount}}</a>
                             </td>
                             <td class="center" ng-if="lstData.gplusShareCount>1000">
-                                <a class="btn-floating waves-effect waves-light red accent-4 center">{{lstData.gplusShareCount/1000 |number:0}}k</a>
-                            </td>
+                                <a class="btn-floating waves-effect waves-light btn-large red accent-4 center">{{lstData.gplusShareCount/1000 |number:0}}k</a>
+                            </td>-->
                             <td class="center" ng-if="lstData.totalShareCount<1000" >
-                                <a class="btn-floating waves-effect waves-light grey darken-3 center">{{lstData.totalShareCount}}</a>
+                                <a class="btn-floating waves-effect waves-light btn-large grey darken-3 center">{{lstData.totalShareCount}}</a>
                             </td>
                             <td class="center" ng-if="lstData.totalShareCount>1000">
-                                <a class="btn-floating waves-effect waves-light grey darken-3 center">{{lstData.totalShareCount/1000|number:0}}k</a>
+                                <a class="btn-floating waves-effect waves-light btn-large grey darken-3 center">{{lstData.totalShareCount/1000|number:0}}k</a>
                             </td>
                         </tr>
                     </tbody>
@@ -234,7 +234,9 @@
                     <div class="input-field col s12">
                         <select multiple id="shraeathonfacebookpage">
                             <option value="" disabled selected>Choose your option</option>
-                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1} && filter:{profileType:0}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                            <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:1} && filter:{profileType:0}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>-->
+                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                        
                         </select>
                        
                         <label>Select an Account to Automate post</label>
@@ -243,8 +245,10 @@
                     <div class="input-field col s12">
                         <select id="shraeathontimeinterval">
                             <option value="" disabled selected>Choose your option</option>
-                            <option value="20">20 min</option>
+                            <option value="10">10 min</option>
+                            <option value="15">15 min</option>
                             <option value="30">30 min</option>
+                            <option value="45">45 min</option>
                             <option value="60">1 hr</option>
                         </select>
                         <label>Set Your Time Interval</label>
@@ -260,7 +264,7 @@
     </div>
 </div>
 
-<div ng-if="fetchdatacomplete!=true">
+<div ng-if="ldoff!=true">
     <br /><br /><br /><br /><br /><br />
     <div class="center">
         <div class="preloader-wrapper small active">

@@ -7,7 +7,7 @@
 	{
 		// 参数
 		var defaults = {
-			width: $(this).parent().width() / 4.3,
+			width: $(this).parent().width() / 3.1,
 			delay: 60,
 			repeatShow: false
 		};

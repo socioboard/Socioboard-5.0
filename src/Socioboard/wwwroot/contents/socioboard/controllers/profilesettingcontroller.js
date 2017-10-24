@@ -138,9 +138,10 @@ SocioboardApp.controller('ProfileSettingController', function ($rootScope, $scop
             else {
                 var formData = new FormData();
                 formData.append('files', $("#profileImage").get(0).files[0]);
+                formData.append('phoneNumber', updateUser.phoneNumber);
                 $http({
                     method: 'POST',
-                    url: apiDomain + '/api/User/UpdateUser?firstName=' + updateUser.firstName + '&lastName=' + updateUser.lastName + '&userName=' + updateUser.userName + '&phoneNumber=' + updateUser.phoneNumber + '&dob=' + picker.get() + '&aboutMe=' + updateUser.aboutMe + '&userId=' + $rootScope.user.Id,
+                    url: apiDomain + '/api/User/UpdateUser?firstName=' + updateUser.firstName + '&lastName=' + updateUser.lastName + '&userName=' + updateUser.userName + '&dob=' + picker.get() + '&aboutMe=' + updateUser.aboutMe + '&userId=' + $rootScope.user.Id,
                     data: formData,
                     headers: {
                         'Content-Type': undefined

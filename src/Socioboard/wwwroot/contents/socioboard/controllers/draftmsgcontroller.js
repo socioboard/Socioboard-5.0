@@ -55,12 +55,14 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
             $http.get(apiDomain + '/api/DraftMessage/GetAllUserDraftMessages?groupId=' + $rootScope.groupId+'&userId='+$rootScope.user.Id)
                           .then(function (response) {
                               // $rootScope.lstdraftmessage = response.data;
-                                 if (response.data != "") {
-                                     $scope.date(response.data);                                     
-
-                                    
+                              if (response.data != "") {
+                                  $scope.lastreach = true;
+                                  $scope.date(response.data);
                               } else {
-                                     swal("No draft is saved to the display");
+                                  $scope.lastreach = true;
+                                  $scope.nomessages = true;
+                                  $rootScope.lstdraftmessage = "";
+
                               }
                           }, function (reason) {
                               $scope.error = reason.data;

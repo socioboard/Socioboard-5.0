@@ -61,7 +61,6 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-      
         void videosInsertRequest_ProgressChanged(Google.Apis.Upload.IUploadProgress progress)
         {
             switch (progress.Status)

@@ -92,7 +92,7 @@ namespace SocioboardDataServices.Facebook
         {
             dynamic feeds = FbUser.getFeeds(AccessToken);
 
-            while (apiHitsCount < MaxapiHitsCount && feeds != null && feeds["data"] != null)
+            if (feeds != null)
             {
                 apiHitsCount++;
                 foreach (var result in feeds["data"])
@@ -239,7 +239,7 @@ namespace SocioboardDataServices.Facebook
                             try
                             {
                                 FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", objFacebookFeed.FeedId);
-                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom).Set("Likecount", objFacebookFeed.Likecount).Set("Commentcount", objFacebookFeed.Commentcount);
+                                var update = Builders<BsonDocument>.Update.Set("postType", objFacebookFeed.postType).Set("postingFrom", objFacebookFeed.postingFrom).Set("Likecount", objFacebookFeed.Likecount).Set("Commentcount", objFacebookFeed.Commentcount).Set("_facebookComment", objFacebookFeed._facebookComment);
                                 mongorepo.Update<MongoFacebookFeed>(update, filter);
                             }
                             catch { }
@@ -257,11 +257,16 @@ namespace SocioboardDataServices.Facebook
                 }
 
             }
+            else
+            {
+                apiHitsCount = MaxapiHitsCount;
+            }
+
         }
 
         public static List<MongoFbPostComment> FbPostComments(string postid, string AccessToken)
         {
-            apiHitsCount++;
+
             List<MongoFbPostComment> lstFbPOstComment = new List<MongoFbPostComment>();
             string ret = string.Empty;
             try

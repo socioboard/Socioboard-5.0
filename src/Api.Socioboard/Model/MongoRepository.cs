@@ -85,6 +85,8 @@ namespace Api.Socioboard.Model
                 return output;
             }
             catch (Exception ex) { return null; }
+
+
         }
 
         //public async Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new()

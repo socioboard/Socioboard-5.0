@@ -79,7 +79,6 @@ namespace Socioboard.Controllers
         //}
 
 
-
         [HttpGet]
         public async Task<IActionResult> AddTwitterAccount(bool follow)
         {

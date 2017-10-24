@@ -19,9 +19,9 @@ namespace SocioboardDataServices.Youtube
         public static void GetYtFeeds(string ChannelId, string AcessToken)
         {
 
-            oAuthTokenYoutube ObjoAuthTokenGPlus = new oAuthTokenYoutube(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
-            Activities _ObjYtActivities = new Activities(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
-            string apiKey = AppSettings.GoogleApiKey;
+            oAuthTokenYoutube ObjoAuthTokenGPlus = new oAuthTokenYoutube(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+            Activities _ObjYtActivities = new Activities(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+            string apiKey = AppSettings.googleApiKey;
 
             try
             {
@@ -138,7 +138,7 @@ namespace SocioboardDataServices.Youtube
 
         public static void GetYtComments(string VideoId, string apiKey, string ChannelId)
         {
-            Video _Videos = new Video(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
+            Video _Videos = new Video(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
 
             try
             {

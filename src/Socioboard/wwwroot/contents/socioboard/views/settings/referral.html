@@ -111,11 +111,6 @@
                         <div class="input-field">
                             <textarea id="composeMessage" class="materialize-textarea" length="5000" data-emojiable="true" disabled>You can use my {{refrralcode}} referral code for singup on https://www.socioboard.com </textarea>
                         </div>
-                        <div class="row no-space">
-                            <div class="col s12 m12 l12">
-                                <input type="file" id="composeImage" class="dropify" data-default-file="" disabled />
-                            </div>
-                        </div>
                     </div>
                     <div id="selection" class="col s12 m6">
                         <div class="row">
@@ -166,6 +161,7 @@
                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
                                         <label>
                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                             <span style="float:left;">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
                                         </label>

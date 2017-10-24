@@ -22,10 +22,10 @@ namespace SocioboardDataServices.Youtube
                     {
 
                         Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
-                        string apiKey = AppSettings.GoogleApiKey;
-                        oAuthTokenYoutube ObjoAuthTokenYtubes = new oAuthTokenYoutube(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
-                        oAuthToken objToken = new oAuthToken(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
-                        Video ObjVideo = new Video(AppSettings.GoogleConsumerKey, AppSettings.GoogleConsumerSecret, AppSettings.GoogleRedirectUri);
+                        string apiKey = AppSettings.googleApiKey;
+                        oAuthTokenYoutube ObjoAuthTokenYtubes = new oAuthTokenYoutube(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+                        oAuthToken objToken = new oAuthToken(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+                        Video ObjVideo = new Video(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
 
                         JObject userinfo = new JObject();
                         List<Domain.Socioboard.Models.YoutubeChannel> lstYtChannels = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.IsActive).ToList();

@@ -4,6 +4,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
         $scope.disbtncom = true;
         $scope.draftbtn = true;
         $scope.dispbtn = true;
+        $scope.ldoff = false;
         $scope.query = {};
         $scope.queryBy = '$';
         $scope.composePostdata = {};
@@ -31,6 +32,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
             //codes to load Data
             $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchData?keywords=' + key)
                               .then(function (response) {
+                                  $scope.ldoff = true;
                                   $scope.lstAdvSearhDataaa = response.data;
                               }, function (reason) {
                                   $scope.error = reason.data;

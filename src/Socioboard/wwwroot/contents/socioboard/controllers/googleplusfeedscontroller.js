@@ -47,7 +47,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                           .then(function (response) {
                               if (response.data != "") {
                                   $scope.date(response.data);
-                                  $scope.reloadFeeds();
+                                  //$scope.reloadFeeds();
                                   $scope.preloadmorefeeds = true;
                                   $scope.dropCalled = true;
                                   setTimeout(function () {
