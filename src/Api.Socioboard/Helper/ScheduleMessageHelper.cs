@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Domain.Socioboard.Models;
+using System.Globalization;
 
 namespace Api.Socioboard.Helper
 {
@@ -15,8 +16,8 @@ namespace Api.Socioboard.Helper
         {
 
 
-            ScheduledMessage scheduledMessage = new ScheduledMessage();
-            scheduledMessage.calendertime =Convert.ToDateTime(localscheduletime);
+            ScheduledMessage scheduledMessage = new ScheduledMessage();            
+            scheduledMessage.calendertime = Convert.ToDateTime(localscheduletime);      
             scheduledMessage.shareMessage = shareMessage;
             string userlocalscheduletime = localscheduletime;
             try

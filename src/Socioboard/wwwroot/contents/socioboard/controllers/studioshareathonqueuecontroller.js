@@ -65,6 +65,7 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
 
                                console.log($scope.shareathonData);
 
+
                            }, function (reason) {
                                $scope.error = reason.data;
                      });
@@ -78,6 +79,22 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
         //}
 
         $scope.shareathonQueue();
+
+        $scope.updatecontentDb = function () {
+            $http.get(apiDomain + '/api/ContentStudio/updatecontentDb?userId=' + $rootScope.user.Id)
+                           .then(function (response) {
+                             //  $scope.shareathonData = response.data;
+
+                            //   console.log($scope.shareathonData);
+
+
+                           }, function (reason) {
+                               $scope.error = reason.data;
+                           });
+        }
+
+        $scope.updatecontentDb();
+
 
   });
 

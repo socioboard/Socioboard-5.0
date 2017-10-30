@@ -11,6 +11,7 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
             $http.get(apiDomain + '/api/Twitter/GetNotifications?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&skip=0&count=20')
                           .then(function (response) {
                               $scope.lstNotifications = response.data;
+                              $scope.temp = $scope.lstNotifications;
                               $scope.x = true;
                               //$scope.loaderclass = 'hide';
                               if (response.data == null) {
@@ -39,6 +40,41 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
             }
 
         };
+
+        $scope.clearSearch = function () {
+            var searchname = $('#name_search').val("");
+            var searchkey = $('#key_search').val("");
+            $scope.keysearch = false;
+            $scope.changeSearch("");
+        }
+        $scope.changeSearch = function (name_search) {
+            var searchname = $('#name_search').val();
+            var searchkey = $('#key_search').val();
+            if (searchname != "" || searchkey != "") {
+                $scope.keysearch = true;
+            }
+            else
+            {
+                $scope.keysearch = false;
+            }
+            if (name_search != "socioboard_key_search") {
+                var filtered = [];
+                angular.forEach($scope.temp, function (item) {
+                    try {
+                        if (item.fromScreenName.includes(name_search)) {
+                            filtered.push(item);
+                        }
+                    }
+                    catch (es) {
+                        if (item.fromName.includes(name_search)) {
+                            filtered.push(item);
+                        }
+                    }
+                })
+                $scope.lstNotifications = filtered;
+            }
+        }
+
 
         // toggle selection for a given fruit by name
         $scope.toggleProfileSelection = function toggleProfileSelection(option) {

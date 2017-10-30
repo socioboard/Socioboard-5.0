@@ -23,10 +23,11 @@
         }
 /* loader css */
 .windows8 {
-	position: relative;
-	width: 78px;
-	height:78px;
-	margin: 20% auto auto auto;
+    z-index: initial;
+    vertical-align: middle;
+    display: table;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .windows8 .wBall {
@@ -405,6 +406,11 @@
                         <span class="right">&nbsp;</span>
                     </div>
                 </div>
+                <br /><br />
+                <div class="center">
+                    <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No post to display<br /></h6>
+                </div>
+                <br />
             </div>
             <div class="row" >
                 <!-- loader -->
@@ -469,7 +475,7 @@
                         <span class="card-title grey-text text-darken-4">{{feeds.adminUser}}</span>
                         <p> {{feeds.feed}}</p>
                         <div class="row no-space" >
-                            <ul class="col s12 instfeeds" >
+                            <ul class="col s12 instfeeds" style="padding-bottom: 20px;" >
                                 <li class="collection-item avatar" ng-repeat="inscomment in feeds._InstagramComment">
                                     <!--{{insfeed._InstagramComment}}-->
                                     <!--<img ng-src="{{inscomment.fromProfilePic}}"  class="circle">-->

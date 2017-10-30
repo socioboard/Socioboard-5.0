@@ -42,7 +42,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
         $scope.Loaddata('none');
 
         $scope.saveshreathondata = function () {
-           
+          
             var pageId = $('#shraeathonfacebookpage').val();
             var timeInterval = $('#shraeathontimeinterval').val();
             if (pageId == "") {
@@ -63,7 +63,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
                 $scope.dispbtn = false;
                
 
-                 formData.append('FacebookPageId', pageId);
+                formData.append('FacebookPageId', pageId);
                 var shareData = $scope.datasharethon;
                 formData.append('shareData', x);
               
@@ -80,6 +80,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
                         $scope.lstAdvSearhDataaa = response.data;
                         $scope.dispbtn = true;
                         $('#ShareathonModal').closeModal();
+                        closeModel();
                           swal("successfully scheduled");
                       }, function (reason) {
                           $scope.error = reason.data;

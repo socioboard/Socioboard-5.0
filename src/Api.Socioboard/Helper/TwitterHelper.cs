@@ -17,6 +17,7 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using Socioboard.Twitter.Twitter.Core.UserMethods;
 using Socioboard.Twitter.Twitter.Core.FollowersMethods;
+using Socioboard.Twitter.Twitter.Core.TimeLineMethods;
 
 namespace Api.Socioboard.Helper
 {
@@ -89,7 +90,7 @@ namespace Api.Socioboard.Helper
                 scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                 scheduledMessage.url = url;
                 scheduledMessage.mediaType = mediaType;
-                scheduledMessage.socialprofileName = profileName;
+                //scheduledMessage.socialprofileName = profileName;
                 dbr.Add<ScheduledMessage>(scheduledMessage);
 
 
@@ -760,5 +761,121 @@ namespace Api.Socioboard.Helper
            
             return lstContact;
         }
+
+        public static List<Domain.Socioboard.Models.TwitterMutualFans> twitterUnfollowerslist(string profileId, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        {
+            string profileids = profileId;
+            List<Domain.Socioboard.Models.TwitterMutualFans> UnfollowBackID = new List<Domain.Socioboard.Models.TwitterMutualFans>();
+           // List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
+          //profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
+            List<Domain.Socioboard.Models.TwitterAccount> lstAccRepo = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => profileids.Contains(t.twitterUserId) && t.isActive).ToList();
+            oAuthTwitter oaut = null;
+            Users twtUser = new Users();
+            foreach (Domain.Socioboard.Models.TwitterAccount itemTwt in lstAccRepo)
+            {
+
+                oaut = new oAuthTwitter();
+                oaut.AccessToken = itemTwt.oAuthToken;
+                oaut.AccessTokenSecret = itemTwt.oAuthSecret;
+                oaut.TwitterScreenName = itemTwt.twitterScreenName;
+                oaut.TwitterUserId = itemTwt.twitterUserId;
+                oaut.ConsumerKey = _appSettings.twitterConsumerKey;
+                oaut.ConsumerKeySecret = _appSettings.twitterConsumerScreatKey;
+                JArray jarresponse = twtUser.Get_Followers_ById(oaut, itemTwt.twitterUserId);
+                JArray user_data = JArray.Parse(jarresponse[0]["ids"].ToString());
+
+                JArray jarrespons = twtUser.Get_Friends_ById(oaut, itemTwt.twitterUserId);
+                JArray user_data_2 = JArray.Parse(jarrespons[0]["ids"].ToString());
+
+
+                var items = user_data.Intersect(user_data_2).ToArray();
+                var hgh = user_data_2.Intersect(items).ToArray();
+                // Array itema = user_data.Intersect(items);
+                Array UnfollowBack_id= user_data_2.Union(items).Except(hgh).ToArray();
+                foreach (var ite in UnfollowBack_id)
+                {
+                    string userid = ite.ToString();
+                    JArray userprofile = twtUser.Get_Users_LookUp(oaut, userid);
+                    foreach (var item in userprofile)
+                    {
+                        Domain.Socioboard.Models.TwitterMutualFans objTwitterRecent = new Domain.Socioboard.Models.TwitterMutualFans();
+                        objTwitterRecent.screen_name = item["screen_name"].ToString();
+                        objTwitterRecent.name = item["name"].ToString();
+                        objTwitterRecent.description = item["description"].ToString();
+                        objTwitterRecent.followers = item["followers_count"].ToString();
+                        objTwitterRecent.following = item["friends_count"].ToString();
+                        objTwitterRecent.location = item["location"].ToString();
+                        objTwitterRecent.profile_image_url = item["profile_image_url"].ToString();
+                        UnfollowBackID.Add(objTwitterRecent);
+                    }
+
+                }
+            }
+            return UnfollowBackID;
+        }
+
+        public static List<Domain.Socioboard.Models.TwitterMentionSugg> TwitterMentionBased(string profileId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            List<Domain.Socioboard.Models.TwitterMentionSugg> lstMentionsUsers = new List<TwitterMentionSugg>();
+            Domain.Socioboard.Models.TwitterAccount twtacc = new Domain.Socioboard.Models.TwitterAccount();
+            Domain.Socioboard.Models.TwitterAccount imtwtacc = _redisCache.Get<Domain.Socioboard.Models.TwitterAccount>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterAccount + profileId);
+            if (imtwtacc == null)
+            {
+                twtacc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(profileId)).FirstOrDefault();
+                if (twtacc != null)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterAccount + profileId, twtacc);
+                }
+            }
+            else
+            {
+                twtacc = imtwtacc;
+            }
+            oAuthTwitter oAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
+            oAuth.AccessToken = twtacc.oAuthToken;
+            oAuth.AccessTokenSecret = twtacc.oAuthSecret;
+            oAuth.TwitterScreenName = twtacc.twitterScreenName;
+            oAuth.TwitterUserId = twtacc.twitterUserId;
+            TimeLine timeline_obj = new TimeLine();
+            try
+            {
+                JArray jMentionResp = timeline_obj.Get_Statuses_Mentions_Timeline(oAuth);
+                if (jMentionResp == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    foreach (var items in jMentionResp)
+                    {
+                        Domain.Socioboard.Models.TwitterMentionSugg _objLstData = new Domain.Socioboard.Models.TwitterMentionSugg();
+
+                        _objLstData.postId = items["id_str"].ToString();
+                        _objLstData.textMsg = items["text"].ToString();
+                        _objLstData.fromName = items["user"]["name"].ToString();
+                        _objLstData.fromScreenName = items["user"]["screen_name"].ToString();
+                        _objLstData.fromLocation = items["user"]["location"].ToString();
+                        if(_objLstData.fromLocation=="")
+                        {
+                            _objLstData.fromLocation = "NA";
+                        }
+                        _objLstData.fromFollowers = items["user"]["followers_count"].ToString();
+                        _objLstData.fromFollowing = items["user"]["friends_count"].ToString();
+                        _objLstData.fromProfilePic = items["user"]["profile_image_url_https"].ToString();
+                        _objLstData.fromProfileLinkUrl = "https://twitter.com/" + _objLstData.fromScreenName;
+                        _objLstData.postLinkUrl = "https://twitter.com/SB/status/" + _objLstData.postId;
+                        lstMentionsUsers.Add(_objLstData);
+                    }
+                }
+                return lstMentionsUsers.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("error finding friendship relation" + ex.StackTrace);
+                _logger.LogError("error finding friendship relation" + ex.Message);
+                return null;
+            }
+        }
+
     }
 }

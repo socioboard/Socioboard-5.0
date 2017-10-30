@@ -96,13 +96,13 @@
                                            <div class="col s12">
 
                                                <ul class="col s12 shinh" id="checkboxdata" style="max-height:250px; overflow-y:scroll;">
-                                                   <!--<li style="padding:5px 0;">
+                                                   <li style="padding:5px 0;">
                                                        <label>
-                                                   --------------<input  type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />-----------
+                                                   <!----------------<input  type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />------------->
                                                            <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
                                                            <span style="float:left;">Check All</span>
                                                        </label>
-                                                   </li>-->
+                                                   </li>
                                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
                                                        <label>
                                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
@@ -365,10 +365,13 @@
                                 <div class="card-action" ng-if="!schedulemessage"  ng-show="dispbtn">
                                     <button ng-disabled="!((scheduleform.ScheduleMsgtxt.$dirty))" class="waves-effect waves-light btn grey darken-3" ng-click="schedulemsg()">Schedule</button>
                                     <button ng-disabled="!((scheduleform.ScheduleMsgtxt.$dirty))" class="waves-effect waves-light btn grey darken-2" ng-click="draftmsg()">Save To Draft</button>
+
+                                    <button ng-disabled="!((scheduleform.ScheduleMsgtxt.$dirty))" class="waves-effect waves-light btn grey darken-2" ng-click="ComposeMessage()">Post Now</button>
                                 </div>
                                    <div class="card-action" ng-if="schedulemessage" ng-show="dispbtn">
                                        <button  class="waves-effect waves-light btn grey darken-3" ng-model="schduledone" ng-click="schedulemsg()">Schedule</button>
                                        <button  class="waves-effect waves-light btn grey darken-2" ng-click="draftmsg()">Save To Draft</button>
+                                       <button class="waves-effect waves-light btn grey darken-2" ng-click="ComposeMessage()">Post Now</button>
                                    </div>
                                    <div class="card-action" ng-show="!dispbtn">
                                        <a href="#" class="waves-effect waves-light btn grey darken-3">Wait</a>
@@ -389,8 +392,59 @@
                                         <div class="row">
                                             <div class="col s12 m6">
                                                 <div class="row">
-                                                    <div class="input-field col s12">
-                                                        <select multiple id="dayscheduleprofiles">
+                                                    <div class="col s12">
+
+                                                        <ul class="col s12 shinh" id="checkboxdatadaywise" style="max-height:250px; overflow-y:scroll;">
+                                                            <li style="padding:5px 0;">
+                                                                <label>
+                                                                    <!----------------<input  type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />------------->
+                                                                    <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAlldaywise" onclick="checkdaywise();" />
+                                                                    <span style="float:left;">Check All</span>
+                                                                </label>
+                                                            </li>
+                                                            <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                                                <label>
+                                                                    <input onclick="profiledaywise();" name="selector[]" class="subcheckboxdaywise" id="fb_{{profile.profileId}}_SB" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
+                                                                </label>
+                                                            </li>
+                                                            <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                                                <label>
+                                                                    <input onclick="profiledaywise();" name="selector[]" class="subcheckboxdaywise" id="fb_{{profile.profileId}}_SB" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                                                </label>
+                                                            </li>
+                                                            <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
+                                                                <label>
+                                                                    <input name="selector[]" onclick="profiledaywise();" class="subcheckboxdaywise" id="tw_{{profile.profileId}}_SB" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
+                                                                </label>
+                                                            </li>
+                                                            <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                                                <label>
+                                                                    <input name="selector[]" onclick="profiledaywise();" class="subcheckboxdaywise" id="lin_{{profile.profileId}}_SB" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                                                </label>
+                                                            </li>
+                                                            <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
+                                                                <label>
+                                                                    <input name="selector[]" onclick="profiledaywise();" class="subcheckboxdaywise" id="Cmpylinpage_{{profile.profileId}}_SB" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                                    <span style="float:left;">{{profile.profileName}}</span>
+                                                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                                                </label>
+                                                            </li>
+                                                        </ul>
+
+                                                        <!--<select multiple id="dayscheduleprofiles">
                                                             <option value="" disabled selected>Select Your Account</option>
                                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:0}  | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="fb_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
@@ -398,7 +452,7 @@
                                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:3} | filter:{profileType:'!13'}" value="lin_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
                                                         </select>
-                                                        <label>Select Profiles</label>
+                                                        <label>Select Profiles</label>-->
                                                     </div>
                                                 </div>
                                                 <!--date and time start-->
@@ -620,6 +674,41 @@
         if (count == 0) {
             //alert("yess " + count);
             $("#checkAll").prop('checked', true);
+        }
+    }
+</script>
+
+<script>
+    $(document).ready(function () {
+        Materialize.updateTextFields();
+    });
+    function closeModeldaywise() {
+        jQuery('input:checkbox').removeAttr('checked');
+    }
+
+    function checkdaywise() {
+        var flag = $('#checkAlldaywise').is(":checked");
+        $('#checkboxdatadaywise input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+
+
+    function profiledaywise() {
+        var count = 0;
+        $("#checkboxdatadaywise :checkbox").each(function () {
+            if (this.id != 'checkAlldaywise') {
+                if (!($("#" + this.id).prop('checked'))) {
+                    count++;
+                }
+            }
+        });
+
+        if (count > 0) {
+            $("#checkAlldaywise").prop('checked', false);
+        }
+        if (count == 0) {
+            $("#checkAlldaywise").prop('checked', true);
         }
     }
 </script>

@@ -304,36 +304,30 @@
                                             </ul>
                                         </div>
                                         </li>
-                                        <!--<li class="truncate">
-                                            <a class="collapsible-header waves-effect waves-orange">
-                                                Conversed with
+                                        <li class="truncate">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Followers and their profile details">
+                                                Do not follow back
                                             </a>
                                             <div class="collapsible-body">
                                                 <ul>
-                                                    <li class="truncate">
-                                                        <a href="#/.html">Chanchal Santra</a>
-                                                    </li>
-                                                    <li class="truncate">
-                                                        <a href="#/.html">Abhi</a>
+                                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                                        <a href="#/your_unfollowers/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </li>-->
-                                        <!--<li class="truncate">
-                                            <a class="collapsible-header waves-effect waves-orange">
-                                                Have mentioned with
+                                        </li>
+                                        <li class="truncate">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Followers and their profile details">
+                                                Mentions Based
                                             </a>
                                             <div class="collapsible-body">
                                                 <ul>
-                                                    <li class="truncate">
-                                                        <a href="#/.html">Chanchal Santra</a>
-                                                    </li>
-                                                    <li class="truncate">
-                                                        <a href="#/.html">Abhi</a>
+                                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                                        <a href="#/mentionsbased/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </li>-->
+                                        </li>
                                    </ul>
                                 </div>
                             </li>
@@ -407,6 +401,9 @@
                             </li>
                             <li class="truncate">
                                 <a href="#/link_shareathon.html" title="It automates feeds from Selected Fan pages to user admin Pages">Link Shareathon</a>
+                            </li>
+                            <li class="truncate">
+                                <a href="#/fbtw_feedsharing.html" title="It share feeds from Selected fb pages to other socail media profile">Share Feeds</a>
                             </li>
 
                         </ul>

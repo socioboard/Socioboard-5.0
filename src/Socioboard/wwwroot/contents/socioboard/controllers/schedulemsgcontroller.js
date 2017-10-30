@@ -108,11 +108,13 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             else {
                 var date_value = ($('.md-input')[0]).value;
             }
+            var datval = date_value;
             //var date_value = ($('.md-input')[0]).value;
             var date = date_value.split("/");
             date_value = date[1] + "/" + date[0] + "/" + date[2];
             var time_value = ($('.md-input')[1]).value;
-            var scheduletime = date_value + ' ' + time_value;
+            // var scheduletime = date_value + ' ' + time_value;
+            var scheduletime = datval + ' ' + time_value;
             var newdate1 = new Date(scheduletime.replace("AM", "").replace("PM", "")).toUTCString();
             var d = new Date(newdate1);
             var d4 = d.setHours(d.getHours() + 5);
@@ -151,7 +153,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
 
             if (message != "") {
-                if (profilesnames.length > 0) {
+                if (profilesnames.length > 0) {                    
                     if (scheduletime != "") {
                         // if (date_value != "") {
                         $scope.checkfile();
@@ -697,7 +699,23 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         $scope.daywiseScheduleMsg = function () {
             $scope.repeat = false;
-            var profiles = $('#dayscheduleprofiles').val();
+
+            var profilesnamesdaywise = new Array();
+            $("#checkboxdatadaywise .subcheckboxdaywise").each(function () {
+
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profilesnamesdaywise.indexOf(attrId);
+                    if (index > -1) {
+                        profilesnamesdaywise.splice(index, 1);
+                    }
+                } else {
+                    profilesnamesdaywise.push(attrId);
+                }
+            });
+            var profilesdaywise = $('#checkboxdatadaywise').val();
+
+            var profilesdaywise = $('#dayscheduleprofiles').val();
             var message = $('#dayScheduleMsg').val();
             var timeRepeat = $('#timesRepeat').val();
 
@@ -759,7 +777,11 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             //}
 
             if (message != "") {
-                if (profiles.length > 0) {
+                if (profilesnamesdaywise.length > 0) {
+                    var profiledaywiseUpdated = new Array();
+                    angular.forEach(profilesnamesdaywise, function (item) {
+                            profiledaywiseUpdated.push(item.replace("_SB",""));
+                    })
                     if (scheduletime != "") {
                         $scope.checkfile();
                         if ($scope.check == true) {
@@ -769,7 +791,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             $scope.dispbtn = false;
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/DaywiseScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&weekdays=' + dval + '&message=' + 'none' + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#dayimageUrl').val()),
+                                url: apiDomain + '/api/SocialMessages/DaywiseScheduleMessage?profileId=' + profiledaywiseUpdated + '&userId=' + $rootScope.user.Id + '&weekdays=' + dval + '&message=' + 'none' + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#dayimageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -805,7 +827,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
                             $http({
                                 method: 'POST',
-                                url: apiDomain + '/api/SocialMessages/DaywiseScheduleMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&weekdays=' + dval + '&message=' + 'none' + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#dayimageUrl').val()),
+                                url: apiDomain + '/api/SocialMessages/DaywiseScheduleMessage?profileId=' + profiledaywiseUpdated + '&userId=' + $rootScope.user.Id + '&weekdays=' + dval + '&message=' + 'none' + '&localscheduletime=' + scheduletime + '&imagePath=' + encodeURIComponent($('#dayimageUrl').val()),
                                 data: formData,
                                 headers: {
                                     'Content-Type': undefined
@@ -849,7 +871,125 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             }
         }
 
+        //code for compose message start
 
+        $scope.ComposeMessage = function () {
+            $scope.repeat = false;
+            var profilesnames = new Array();
+            $("#checkboxdata .subcheckbox").each(function () {
+
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = profilesnames.indexOf(attrId);
+                    if (index > -1) {
+                        profilesnames.splice(index, 1);
+                    }
+                } else {
+                    profilesnames.push(attrId);
+                }
+            });
+
+            var profiles = $('#checkboxdata').val();
+            var message = $('#ScheduleMsg').val();
+            if (/\S/.test(message)) {
+            }
+            else {
+                swal("Please enter a message");
+                return false;
+            }
+            var updatedmessage = "";
+            var postdata = message.split("\n");
+
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+            message = updatedmessage;
+            if (message != "") {
+                if (profilesnames.length > 0) {
+                    $scope.checkfile();
+                    $scope.findExtension();
+                    var transferedImage = null;
+                    try {
+                        transferedImage = $rootScope.schedulemessage.picUrl;
+                    }
+                    catch (er) {
+                        transferedImage = '';
+                    }
+                    if ($scope.check == true) {
+                        var formData = new FormData();
+                        formData.append('files', $("#input-file-now").get(0).files[0]);
+                        formData.append('messageText', message);
+                        $scope.dispbtn = false;
+                        $http({
+                            method: 'POST',
+                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profilesnames + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus + '&mediaType=' + $scope.fileExtensionName + '&imagePath=' + transferedImage,
+                            data: formData,
+                            headers: {
+                                'Content-Type': undefined
+                            },
+                            transformRequest: angular.identity,
+                        }).then(function (response) {
+
+                                $('#ScheduleMsg').val('');
+                                $scope.dispbtn = true;
+
+                                $scope.rep = true;
+                                $rootScope.draftDelete = "true";
+                                swal("Message Posted successfully");
+                                closeModel();
+                                $(".dropify-clear").click();
+                            
+                           
+                        }, function (reason) {
+
+                        });
+                    }
+                    else if ($scope.check == false) {
+
+                        var formData = new FormData();
+                        formData.append('messageText', message);
+                        $scope.dispbtn = false;
+                        $http({
+                            method: 'POST',
+                            url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profilesnames + '&userId=' + $rootScope.user.Id + '&message=' + message + '&shortnerstatus=' + $rootScope.user.urlShortnerStatus + '&mediaType=' + $scope.fileExtensionName + '&imagePath=' + transferedImage,
+                            data: formData,
+                            headers: {
+                                'Content-Type': undefined
+                            },
+                            transformRequest: angular.identity,
+                        }).then(function (response) {
+
+                            $('#ScheduleMsg').val('');
+                            $scope.dispbtn = true;
+                            $rootScope.draftDelete = "true";
+                            swal("Message Posted successfully");
+                            $(".dropify-clear").click();
+
+                        }, function (reason) {
+
+                        });
+                    }
+                    else {
+                        alertify.set({ delay: 3000 });
+                        alertify.error("File extension is not valid. Please upload an image file");
+                        $('#input-file-now').val('');
+                    }
+
+
+                }
+                else {
+                    swal('Please select a profile to Post the message');
+                }
+            } else {
+                swal('Please enter some text to Post the message');
+            }
+        }
+
+        //End Compose Msg
 
 
         $('.dropify').dropify();

@@ -260,7 +260,7 @@ namespace Api.Socioboard.Controllers
             {
                 MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
                 var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
-                var sort = builder.Descending(t => t.FeedDate);
+                var sort = builder.Descending(t => t.EntryDate);
                 var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
@@ -288,7 +288,7 @@ namespace Api.Socioboard.Controllers
                 List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
                 MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
                 var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
-                var sort = builder.Descending(t => t.FeedDate);
+                var sort = builder.Descending(t => t.EntryDate); 
                 var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
@@ -328,7 +328,7 @@ namespace Api.Socioboard.Controllers
                 List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
                 MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
                 var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
-                var sort = builder.Descending(t => t.FeedDate);
+                var sort = builder.Descending(t => t.EntryDate);
                 var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
@@ -447,7 +447,7 @@ namespace Api.Socioboard.Controllers
                 List<Domain.Socioboard.Models.Facebookpage> lstpages = new List<Facebookpage>();
                 lstpages = Fbpages.Getfacebookpages(accesstoken);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
                 lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
                 string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
                 if (lstStr.Length > 0)

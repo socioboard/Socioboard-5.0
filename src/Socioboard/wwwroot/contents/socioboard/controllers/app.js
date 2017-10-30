@@ -691,6 +691,49 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
             }
         })
 
+        // mentions based       
+        .state('mentionsbased', {
+            url: "/mentionsbased/{profileId}",
+            templateUrl: "../contents/socioboard/views/discovery/mentionsbased.html",
+            data: { pageTitle: 'Mentions Based', pageSubTitle: 'updated' },
+            controller: "MentionsBasedController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/mentionsbasedcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+
+        // ur unfollowers        
+        .state('your_unfollowers', {
+            url: "/your_unfollowers/{profileId}",
+            templateUrl: "../contents/socioboard/views/discovery/your_unfollowers.html",
+            data: { pageTitle: 'Your UnFollowers', pageSubTitle: 'updated' },
+            controller: "YourUnFollowerController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/yourunfollowerscontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
         .state('calendar', {
             url: "/calendar",
             templateUrl: "../contents/socioboard/views/publishing/calendar.html",
@@ -2048,6 +2091,27 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                 }]
             }
         })
+
+        // fbtw_feedsharing
+         .state('fbtw_feedsharing', {
+             url: "/fbtw_feedsharing.html",
+             templateUrl: "../contents/socioboard/views/shareathon/fbtw_feedsharing.html",
+             data: { pageTitle: 'Create page shareathon', pageSubTitle: 'updated' },
+             controller: "FacebookTwitterFeedsShareController",
+
+             resolve: {
+                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                     return $ocLazyLoad.load({
+                         name: 'SocioboardApp',
+                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                         files: [
+                             '../contents/socioboard/js/admin/plugins.js',
+                             '../contents/socioboard/controllers/facebooktwitterfeedshare.js'
+                         ]
+                     });
+                 }]
+             }
+         })
 
 
         .state('groups', {

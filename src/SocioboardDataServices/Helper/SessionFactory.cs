@@ -27,6 +27,11 @@ namespace SocioboardDataServices.Helper
                 string wanted_path = System.IO.Directory.GetCurrentDirectory();
                 if (string.IsNullOrEmpty(configfilepath))
                 {
+                    //                  var appEnv = CallContextServiceLocator.Locator.ServiceProvider
+                    //.GetService(typeof(IApplicationEnvironment)) as IApplicationEnvironment;
+                    //path =Helper.AppSettings.NhibernateFilePath;
+                    // path = System.Reflection.Assembly.GetExecutingAssembly().Location;
+                    // path = @"D:\bitbucket\Updated\src\SocioboardDataServices\hibernate.cfg.xml";
                     path = wanted_path + "\\hibernate.cfg.xml";
                 }
                 else

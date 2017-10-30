@@ -641,6 +641,8 @@ namespace Api.Socioboard.Repositories
                         objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
                         objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
                         objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
+                        objFacebookFeed.shareStatus = false;
+                        
 
                     }
                     catch (Exception ex) { }
@@ -710,6 +712,11 @@ namespace Api.Socioboard.Repositories
                     }
                     objFacebookFeed.FeedDescription = message;
                     objFacebookFeed.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                    try
+                    {
+                        objFacebookFeed.sharedate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");//this is feed date value for share feed  in another socail media
+                    }
+                    catch { }
                     objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, AccessToken, settings, _logger);
                     try
                     {
@@ -1658,14 +1665,14 @@ namespace Api.Socioboard.Repositories
             List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
             var builder = Builders<MongoFacebookFeed>.Sort;
-            var sort = builder.Descending(t => t.FeedDate);
+            var sort = builder.Descending(t => t.EntryDate);
             var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
             var task = Task.Run(async () =>
             {
                 return await result;
             });
             IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
-            var sortt = lstFbFeeds.OrderByDescending(t => Convert.ToDateTime(t.FeedDate));
+            var sortt = lstFbFeeds.OrderByDescending(t => Convert.ToDateTime(t.EntryDate));
             foreach (var item in sortt.ToList())
             {
                 Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
@@ -1696,7 +1703,7 @@ namespace Api.Socioboard.Repositories
             List<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeedsLs = new List<MongoFacebookFeed>();
             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
             var builder = Builders<MongoFacebookFeed>.Sort;
-            var sort = builder.Descending(t => t.FeedDate);
+            var sort = builder.Descending(t => t.EntryDate);
             if (typeShort == "maxlikes")
             {
                 var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
@@ -1838,7 +1845,7 @@ namespace Api.Socioboard.Repositories
             List<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeedsLs = new List<MongoFacebookFeed>();
             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
             var builder = Builders<MongoFacebookFeed>.Sort;
-            var sort = builder.Descending(t => t.FeedDate);
+            var sort = builder.Descending(t => t.EntryDate);
             if (typeFilter != "socioboard")
             {
                 var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId) && t.postType.Equals(typeFilter), sort, skip, count);

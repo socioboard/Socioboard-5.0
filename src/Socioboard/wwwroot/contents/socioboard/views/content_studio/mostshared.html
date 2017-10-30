@@ -235,12 +235,14 @@
                         <select multiple id="shraeathonfacebookpage">
                             <option value="" disabled selected>Choose your option</option>
                             <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:1} && filter:{profileType:0}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>-->
-                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                            <option ng-repeat="profile in lstProfiles |filter:{profileType:0} && filter:{profileType:1} && filter:{profileType:2} && filter:{profileType:3} | filter:{profileType:'!5'}|filter:{profileType:'!6'}|filter:{profileType:'!7'}|filter:{profileType:'!8'} |filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                         
                         </select>
                        
                         <label>Select an Account to Automate post</label>
                     </div>
+
+             
                    
                     <div class="input-field col s12">
                         <select id="shraeathontimeinterval">
@@ -253,6 +255,7 @@
                         </select>
                         <label>Set Your Time Interval</label>
                     </div>
+
                     <div ng-init="dispbtn= {{dispbtn}}"></div>
                     <div class="col l12 center margin-top-50">
                         <a ng-show="dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">post</a>
@@ -292,6 +295,9 @@
 </div>
 
 <script>
+    function closeModel() {
+        jQuery('input:checkbox').removeAttr('checked');
+    }
     $(function () {
         // Initializes and creates emoji set from sprite sheet
         window.emojiPicker = new EmojiPicker({
@@ -324,3 +330,37 @@
         }
     }
 </script>
+
+<!--<script>
+    $(function () {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: '../contents/socioboard/global/plugins/emoji-picker/lib/img/',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        window.emojiPicker.discover();
+    });
+    function check() {
+        var flag = $('#checkAlll').is(":checked");
+        $('#checkboxdataa input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+    function profile() {
+        var count = 0;
+        $("#checkboxdataa  :checkbox").each(function () {
+            if (this.id != 'checkAlll') {
+                if (!($("#" + this.id).prop('checked'))) {
+                    count++;
+                }
+            }
+        });
+        if (count > 0) {
+            $("#checkAlll").prop('checked', false);
+        }
+        if (count == 0) {
+            $("#checkAlll").prop('checked', true);
+        }
+    }
+</script>-->

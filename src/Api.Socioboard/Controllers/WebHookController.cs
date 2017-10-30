@@ -207,6 +207,11 @@ namespace Api.Socioboard.Controllers
                         catch { }
                         try
                         {
+                            _FacebookPagePost.shareStatus = false;
+                        }
+                        catch { }
+                        try
+                        {
                             _FacebookPagePost.FbComment = "http://graph.facebook.com/" + postid + "/comments";
                             _FacebookPagePost.FbLike = "http://graph.facebook.com/" + postid + "/likes";
                         }
@@ -249,8 +254,19 @@ namespace Api.Socioboard.Controllers
                             //_FacebookPagePost.FeedDate = DateTime.Parse(postingTime).ToString();
                             _logger.LogError("FeedDate error" + _FacebookPagePost.FeedDate);
                         }
+                        try
+                        {
+                            _FacebookPagePost.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                        }
+                        catch { }
 
-                        _FacebookPagePost.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                       
+
+                        try
+                        {
+                            _FacebookPagePost.sharedate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                        }
+                        catch { }
 
                         try
                         {

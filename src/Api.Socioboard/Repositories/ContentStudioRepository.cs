@@ -393,7 +393,6 @@ namespace Api.Socioboard.Repositories
             IList<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> lsitdatashare = task.Result.ToList();
             return lsitdatashare.ToList();
 
-
         }
 
         public static List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> updateShareathonByUserId(long userId, Helper.AppSettings _appSettings, Helper.Cache _redisCache)
@@ -406,7 +405,7 @@ namespace Api.Socioboard.Repositories
             else
             {
                 MongoRepository _ShareathonRepository = new MongoRepository("ContentFeedsShareathon", _appSettings);
-                var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.UserId == userId);
+                var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.UserId == userId && t.Status==false);
                 var task = Task.Run(async () =>
                 {
                     return await ret;
@@ -415,7 +414,23 @@ namespace Api.Socioboard.Repositories
                 return task.Result.ToList();
             }
         }
-      
+
+
+        public static string updateDb(long userId, Helper.AppSettings settings)
+        {
+            MongoRepository mongorepo = new MongoRepository("ContentFeedsShareathon", settings);
+            try
+            {
+                mongorepo.DeleteMany<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(t => t.UserId == userId && t.Status == true);
+                return "success";
+                //return lsitdatashare.ToList();
+            }
+            catch (Exception ex)
+            {
+                return "Error";
+            }
+        }
+
 
     }
 }

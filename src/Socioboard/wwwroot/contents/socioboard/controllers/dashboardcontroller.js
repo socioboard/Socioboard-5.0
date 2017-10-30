@@ -359,6 +359,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         $scope.draftMsg = function () {
             $scope.draftbtn = false;
             var message = $('#composeMessage').val();
+            if (/\S/.test(message)){
             var updatedmessage = "";
             var postdata = message.split("\n");
             for (var i = 0; i < postdata.length; i++) {
@@ -370,7 +371,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             updatedmessage = updatedmessage.replace("-+", 'jjj');
             message = updatedmessage;
             $scope.findExtension();
-            if (message != "" && message != undefined) {
+           // if (message != "" && message != undefined) {
                 $scope.checkfile();
                 if ($scope.check == true) {
                     var formData = new FormData();

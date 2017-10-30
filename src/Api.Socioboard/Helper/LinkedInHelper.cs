@@ -66,7 +66,7 @@ namespace Api.Socioboard.Helper
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                         scheduledMessage.url = ImageUrl;
                         scheduledMessage.mediaType = mediaType;
-                        scheduledMessage.socialprofileName = profileName;
+                        scheduledMessage.socialprofileName = _LinkedInAccount.LinkedinUserName;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";
@@ -118,7 +118,7 @@ namespace Api.Socioboard.Helper
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                         scheduledMessage.url = ImageUrl;
                         scheduledMessage.mediaType = mediaType;
-                        scheduledMessage.socialprofileName = profileName;
+                        scheduledMessage.socialprofileName = _LinkedInAccount.LinkedinUserName;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";
@@ -189,7 +189,7 @@ namespace Api.Socioboard.Helper
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                         scheduledMessage.url = upload;
                         scheduledMessage.mediaType = mediaType;
-                        scheduledMessage.socialprofileName = profileName;
+                        scheduledMessage.socialprofileName = objlicompanypage.LinkedinPageName;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";
@@ -243,7 +243,7 @@ namespace Api.Socioboard.Helper
                         scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                         scheduledMessage.url = upload;
                         scheduledMessage.mediaType = mediaType;
-                        scheduledMessage.socialprofileName = profileName;
+                        scheduledMessage.socialprofileName = objlicompanypage.LinkedinPageName;
                         dbr.Add<ScheduledMessage>(scheduledMessage);
 
                         return "posted";

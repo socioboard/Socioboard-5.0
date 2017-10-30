@@ -1,0 +1,138 @@
+<style>
+    ul.shinh li label {
+        font-size: 14px;
+        color: grey;
+        padding: 0 10px;
+        color: #ff4081;
+    }
+
+    ul.shinh li:hover {
+        background: #e5e5e5;
+        color: #ff4081;
+        cursor: pointer;
+        padding: 0 10px;
+    }
+
+    ul.shinh li label input {
+        margin-right: 10px;
+        height: 20px;
+        width: 20px;
+        background: transparent !important;
+    }
+</style>   
+ <div data-ng-controller="FacebookTwitterFeedsShareController">
+	    <!-- Page name -->
+
+	    <!-- START CONTENT -->
+            <section id="content">
+                <!-- Compose Email Structure -->
+                <div class="row">
+                    <div class="col m12">
+                        <div class="row">                            
+                            <div id="feeds">
+                                <h5 class="row feeds_title blue darken-4 white-text" style="padding: 10px;">
+                                    <span class="left" style="font-size: 30px; line-height: 45px;">Link Your FacebookPage To Other Social Media</span>
+                                    <img src="../contents/socioboard/images/social.png" class="responsive-img right" style="height: 50px;"/>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col offset-s1 s10 offset-m1 m10 offset-l2 l8">
+                      <div  id="feeds">                        
+                        <div>
+                        	<div class="row">
+			                    <form class="col s12">			                        
+				                    <div class="input-field no-space col s12 m5">
+                                        <b class="grey-text text-darken-3">Select facebook page to share feeds</b>
+									    <select multiple id="facebookpageId">
+									      <option value="" disabled selected>Choose your option</option>
+                                            <option ng-repeat="profile in lstProfiles | filter:{profileType:1}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}"  value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+									    </select>
+									</div>
+                                    <div class="col m2 s12 center">
+                                        <h1><i class="fa fa-arrow-right" aria-hidden="true" style="color: #1c4aa5;"></i></h1>
+                                    </div>	
+                                    <div class="col s12 m5">
+                                        <div class="row">
+                                            <b class="grey-text text-darken-3">Select social profile</b>
+                                            <div class="input-field col s12 no-space">
+                                                <input ng-model="query[queryBy]" id="search_name" type="text" class="validate" placeholder="Search Profile">
+                                                <!--<label for="search_name" style="left:0px;"></label>-->
+                                            </div>
+                                            <ul class="col s12 shinh no-space" id="checkboxdata" style="max-height:250px; overflow-y:scroll;">
+                                                <li style="padding:5px 0;">
+                                                    <label>
+                                                        <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
+                                                        <span style="float:left;">Check All</span>
+                                                    </label>
+                                                </li>
+                                             
+                                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
+                                                    <label>
+                                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                        <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
+                                                    </label>
+                                                </li>
+                                                <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                                    <label>
+                                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                        <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                        <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                                        <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                                    </label>
+                                                </li>
+                                               
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div ng-init="dispbtn= {{dispbtn}}"></div>
+				                    <div class="col l12 center margin-top-50">
+				                      	<a  ng-show="dispbtn" ng-click="facebookfeedshare()" class="btn blue darken-4 btn_round darken-4 waves-effect waves-light">Share</a>
+                                        <a ng-show="!dispbtn" ng-click="facebookfeedshare()" class="btn blue darken-4 btn_round darken-4 waves-effect waves-light">wait</a>
+				                    </div>
+			                    </form>
+			                </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </section>
+    </div>
+<script>
+    function closeModel() {
+        jQuery('input:checkbox').removeAttr('checked');
+    }
+    $(function () {
+        // Initializes and creates emoji set from sprite sheet
+        window.emojiPicker = new EmojiPicker({
+            emojiable_selector: '[data-emojiable=true]',
+            assetsPath: '../contents/socioboard/global/plugins/emoji-picker/lib/img/',
+            popupButtonClasses: 'fa fa-smile-o'
+        });
+        window.emojiPicker.discover();
+    });
+    function check() {
+        var flag = $('#checkAll').is(":checked");
+        $('#checkboxdata input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+    function profile() {
+        var count = 0;
+        $("#checkboxdata  :checkbox").each(function () {
+            if (this.id != 'checkAll') {
+                if (!($("#" + this.id).prop('checked'))) {
+                    count++;
+                }
+            }
+        });
+        if (count > 0) {
+            $("#checkAll").prop('checked', false);
+        }
+        if (count == 0) {
+            $("#checkAll").prop('checked', true);
+        }
+    }
+</script>

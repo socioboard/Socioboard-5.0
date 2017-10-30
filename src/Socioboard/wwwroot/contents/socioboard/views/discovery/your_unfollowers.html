@@ -1,0 +1,69 @@
+<div data-ng-controller="YourUnFollowerController">
+    <!-- START CONTENT -->
+    <section id="content">
+        <!--start container-->
+        <div class="row">
+            <div class="col l12">
+                <h4>People Who Do Not Follow You Back</h4>
+            </div>
+        </div>
+        <!--card widgets end-->
+        <div class="row">
+            <div class="col l12 s12">
+                <div class="card hoverable" ng-repeat="follower in twtfollowerdata">
+                    <div class="row no-space">
+                        <div class="col l2 m2 s2 center">
+                            <img src="{{follower.profile_image_url}}" class="responsive-img circle margin-top-10">
+                            <h6 class="grey-text text-darken-4">{{follower.name}}</h6>
+                            <h6 class="grey-text text-darken-2"> @{{follower.screen_name}}</h6>
+                        </div>
+                        <div class="col l8 m8 s8">
+                            <div class="row no-space">
+                                <div class="col m4">
+                                    <h5><i class="fa fa-map-marker" aria-hidden="true"></i><strong class="pink-text text-darken-1 truncate">{{follower.location}}</strong></h5>
+                                </div>
+                                <div class="col m4">
+                                    <h5>Following  <strong class="pink-text text-darken-1 truncate">{{follower.following}}</strong></h5>
+                                </div>
+                                <div class="col m4">
+                                    <h5>Followers  <strong class="pink-text text-darken-1 truncate">{{follower.followers}}</strong></h5>
+                                </div>
+                                <div class="col m12">
+                                    <h6><i class="fa fa-file-text-o" aria-hidden="true"></i>  <strong class="pink-text text-darken-1 truncate">{{follower.description}}</strong></h6>                         
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col l2 m2 s2">
+                            <a class="btn btn_style btn_gred_purple margin-top-30"   href="https://twitter.com/{{follower.screen_name}}" target="_blank">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--<div class="center">
+                <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />You Have No Follower<br /></h6>
+            </div>-->
+            <br />
+            <div class="center margin-top-50" ng-if="lastreach!=true">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--end container-->
+
+    </section>
+    <!-- END CONTENT -->
+</div>
+
+

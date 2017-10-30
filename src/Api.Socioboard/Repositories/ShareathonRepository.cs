@@ -272,5 +272,32 @@ namespace Api.Socioboard.Repositories
                 return "Error";
             }
         }
+
+        public static string AddFacebookFeedShareDetail(long userId, string socialProfile, string FacebookPageId, string socialmedia, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
+        {
+            
+
+            MongoRepository _fbFeedShareRepository = new MongoRepository("FacebookPageFeedShare", _appSettings);                      
+            Domain.Socioboard.Models.Mongo.FacebookPageFeedShare _facebookfeedsShare = new Domain.Socioboard.Models.Mongo.FacebookPageFeedShare();
+            _facebookfeedsShare.Id = ObjectId.GenerateNewId();
+            _facebookfeedsShare.strId = ObjectId.GenerateNewId().ToString();
+            _facebookfeedsShare.userId = userId;
+            _facebookfeedsShare.pageId = FacebookPageId;
+            _facebookfeedsShare.socialProfiles = socialProfile;
+            _facebookfeedsShare.socialmedia = socialmedia;
+            var ret = _fbFeedShareRepository.Find<Domain.Socioboard.Models.Mongo.FacebookPageFeedShare>(t => t.pageId == FacebookPageId && t.socialProfiles == socialProfile);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+            int count = task.Result.Count;
+            if (count < 1)
+            {
+                _fbFeedShareRepository.Add(_facebookfeedsShare);
+            }                                                                                     
+            
+            return "added successfully";
+        }
+
     }
 }

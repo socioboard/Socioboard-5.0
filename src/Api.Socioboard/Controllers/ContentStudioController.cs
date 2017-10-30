@@ -194,10 +194,15 @@ namespace Api.Socioboard.Controllers
             return Ok(pagedata);
         }
 
-       
+        [HttpGet("updatecontentDb")]        
+        public IActionResult updatecontentDb(long userId)
+        {
+            string res = Repositories.ContentStudioRepository.updateDb(userId, _appSettings);
+            return Ok(res);
+        }
 
 
-        [HttpGet("UserpageShareathon")]
+        [HttpGet("UserpageShareathon")]      
         public IActionResult UserpageShareathon(long userId)
         {
             List<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon> lstPageShareathon = Repositories.ContentStudioRepository.updateShareathonByUserId(userId, _appSettings, _redisCache);

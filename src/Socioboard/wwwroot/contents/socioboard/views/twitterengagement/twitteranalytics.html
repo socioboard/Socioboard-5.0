@@ -8,13 +8,13 @@
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-2 white-text" style="padding:20px;margin:0;font-weight:300"><i class="icon-folder"></i>Twitter Analytics</h5>
                     <ul class="collection smartinbox_slider">
-                        <li class="collection-item avatar" ng-repeat="notification in lstNotifications | notificationbyprofilesfileter : filterType : selectedProfiles  ">
+                        <li class="collection-item avatar" ng-repeat="notification in lstNotifications | notificationbyprofilesfileter : filterType : selectedProfiles | filter:key_search">
                             <img src="{{notification.fromProfileUrl}}" alt="{{notification.fromScreenName}}" class="circle">
-                            <span ng-if="notification.type==0" class="email-title">{{notification.fromScreenName}} mention {{notification.recipientName}}</span>
-                            <span ng-if="notification.type==1 && notification.fromScreenName!=''" class="email-title">{{notification.fromScreenName}} retweet {{notification.recipientName}} Post</span>
-                            <span ng-if="notification.type==1 && notification.fromScreenName==''" class="email-title">{{notification.fromName}} retweet {{notification.recipientName}} Post</span>
-                            <span ng-if="notification.type==6" class="email-title">{{notification.fromName}} New Follower Alert</span>
-                            <span ng-if="notification.type==11" class="email-title">{{notification.fromName}} Facebook Page Notification</span>
+                            <span ng-if="notification.type==0" class="email-title"><b>{{notification.fromScreenName}}</b> -- mention {{notification.recipientName}}</span>
+                            <span ng-if="notification.type==1 && notification.fromScreenName!=''" class="email-title"><b>{{notification.fromScreenName}}</b> -- retweet {{notification.recipientName}} Post</span>
+                            <span ng-if="notification.type==1 && notification.fromScreenName==''" class="email-title"><b>{{notification.fromName}}</b> -- retweet {{notification.recipientName}} Post</span>
+                            <span ng-if="notification.type==6" class="email-title"><b>{{notification.fromName}}</b> -- New Follower Alert</span>
+                            <span ng-if="notification.type==11" class="email-title"><b>{{notification.fromName}}</b> -- Facebook Page Notification</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
                                     <p class="break_word ultra-small">{{notification.twitterMsg}}</p>
@@ -89,167 +89,181 @@
             <div class="col s12 m4 l4">
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-2 white-text" style="padding:20px;margin:0;font-weight:300"><i class="icon-folder"></i>Filter</h5>
-                    <div class="section section_filter">
-                        <h6>PROFILES</h6>
-                        <div class="smartinbox_filter_slider">
-                            <!--rendering twitter profiles start-->
-                            <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:2}">
-                                <div class="row valign-wrapper">
-                                    <div class="col s2">
-                                        <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
-                                    </div>
-                                    <div class="col s8">
-                                        <span class="black-text">
-                                            {{profile.profileName}}
-                                        </span>
-                                    </div>
-                                    <div class="col s2">
-                                        <p>
-                                            <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
-                                            <label for="test_{{profile.profileId}}"></label>
-                                        </p>
-                                    </div>
+                        <div class="section section_filter">
+                            <h6>Search <a href="javascript:void(0)" class="fa fa-minus-circle red-text" ng-if="keysearch==true" title="Clear search" ng-click="clearSearch();key_search.twitterMsg=''"></a></h6>
+                            <div class="row no-space">
+                                <div class="input-field col s12 no-padding">
+                                    <!--<input id="name_search" type="text" ng-model="name_search.fromName" ng-change="changeSearch()" class="validate">-->
+                                    <input id="name_search" type="text" ng-model="name_search" ng-change="changeSearch(name_search)" class="validate">
+                                    <label for="name_search" style="left:0px;">Contact Search</label>
+                                </div>
+                                <div class="input-field col s12 no-padding">
+                                    <input id="key_search" type="text" ng-model="key_search.twitterMsg" ng-change="changeSearch('socioboard_key_search')" class="validate">
+                                    <label for="key_search" style="left:0px;">Keyword Search</label>
                                 </div>
                             </div>
-                            <!--<div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}">
-                                <div class="row valign-wrapper">
-                                    <div class="col s2">
-                                        <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
-                                    </div>
-                                    <div class="col s8">
-                                        <span class="black-text">
-                                            {{profile.profileName}}
-                                        </span>
-                                    </div>
-                                    <div class="col s2">
-                                        <p>
-                                            <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
-                                            <label for="test_{{profile.profileId}}"></label>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:2} |filter:{ProfileType:1}">
-                                <div class="row valign-wrapper">
-                                    <div class="col s2">
-                                        <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
-                                    </div>
-                                    <div class="col s8">
-                                        <span class="black-text">
-                                            {{profile.profileName}}
-                                        </span>
-                                    </div>
-                                    <div class="col s2">
-                                        <p>
-                                            <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
-                                            <label for="test_{{profile.profileId}}"></label>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>-->
-                            <!--rendering twitter profiles end-->
-
                         </div>
-                    </div>
-                    <!--<div class="section section_filter">
-                      <h6>MESSAGE TYPES</h6>
-                      <div class="grey lighten-5 z-depth-1" ng-repeat="filterop in filterType">
-                        <div class="row valign-wrapper">
-                          <div class="col s1">
-                            <i class="fa fa-facebook" ng-if="filterop=='Notifications'"></i>
-                              <i class="fa fa-twitter" ng-if="filterop!='Notifications'"></i>
-                          </div>
-                          <div class="col s8">
+                        <div class="section section_filter">
+                            <h6>PROFILES</h6>
+                            <div class="smartinbox_filter_slider">
+                                <!--rendering twitter profiles start-->
+                                <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                    <div class="row valign-wrapper">
+                                        <div class="col s2">
+                                            <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
+                                        </div>
+                                        <div class="col s8">
+                                            <span class="black-text">
+                                                {{profile.profileName}}
+                                            </span>
+                                        </div>
+                                        <div class="col s2">
+                                            <p>
+                                                <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
+                                                <label for="test_{{profile.profileId}}"></label>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--<div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}">
+                    <div class="row valign-wrapper">
+                        <div class="col s2">
+                            <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
+                        </div>
+                        <div class="col s8">
                             <span class="black-text">
-                                {{filterop}}
+                                {{profile.profileName}}
                             </span>
-                          </div>
-                          <div class="col s2">
+                        </div>
+                        <div class="col s2">
                             <p>
-                              <input type="checkbox" checked="checked" name="filterType[]"  value="{{filterop}}" ng-click="toggleSelection(filterop)" ng-checked="selection.indexOf(filterop) > -1"   id="{{filterop}}" />
-                              <label for="{{filterop}}"></label>
+                                <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
+                                <label for="test_{{profile.profileId}}"></label>
                             </p>
-                          </div>
-                        </div>
-                      </div>
-
-                    </div>-->
-                    <div class="section section_filter">
-                        <h6>MESSAGE TYPES</h6>
-                        <!--<div class="grey lighten-5 z-depth-1">
-                            <div class="row valign-wrapper">
-                                <div class="col s1">
-                                    <i class="fa fa-facebook"></i>
-                                </div>
-                                <div class="col s8">
-                                    <span class="black-text">
-                                        Notifications
-                                    </span>
-                                </div>
-                                <div class="col s2">
-                                    <p>
-                                        <input type="checkbox" name="filterType[]" value="Notifications" ng-click="toggleSelection(9)" ng-checked="filterType.indexOf(9) > -1" id="Notifications" />
-                                        <label for="Notifications"></label>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>-->
-                        <div class=" grey lighten-5 z-depth-1">
-                            <div class="row valign-wrapper">
-                                <div class="col s1">
-                                    <i class="fa fa-twitter"></i>
-                                </div>
-                                <div class="col s8">
-                                    <span class="black-text">
-                                        Mentions
-                                    </span>
-                                </div>
-                                <div class="col s2">
-                                    <p>
-                                        <input type="checkbox" name="filterType[]" value="0" ng-click="toggleSelection(0)" ng-checked="filterType.indexOf(0) > -1" id="Mentions" />
-                                        <label for="Mentions"></label>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class=" grey lighten-5 z-depth-1">
-                            <div class="row valign-wrapper">
-                                <div class="col s1">
-                                    <i class="fa fa-twitter"></i>
-                                </div>
-                                <div class="col s8">
-                                    <span class="black-text">
-                                        Retweets
-                                    </span>
-                                </div>
-                                <div class="col s2">
-                                    <p>
-                                        <input type="checkbox" name="filterType[]" value="1" ng-click="toggleSelection(1)" ng-checked="filterType.indexOf(1) > -1" id="Retweets" />
-                                        <label for="Retweets"></label>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class=" grey lighten-5 z-depth-1">
-                            <div class="row valign-wrapper">
-                                <div class="col s1">
-                                    <i class="fa fa-twitter"></i>
-                                </div>
-                                <div class="col s8">
-                                    <span class="black-text">
-                                        New Followers
-                                    </span>
-                                </div>
-                                <div class="col s2">
-                                    <p>
-                                        <input type="checkbox" name="filterType[]" value="New Followers" ng-click="toggleSelection(6)" ng-checked="filterType.indexOf(6) > -1" id="NewFollowers" />
-                                        <label for="NewFollowers"></label>
-                                    </p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="grey lighten-5 z-depth-1" ng-repeat="profile in lstProfiles | filter:{profileType:2} |filter:{ProfileType:1}">
+                    <div class="row valign-wrapper">
+                        <div class="col s2">
+                            <img src="{{profile.profilePic}}" alt="{{profile.profileName}}" class="circle responsive-img">
+                        </div>
+                        <div class="col s8">
+                            <span class="black-text">
+                                {{profile.profileName}}
+                            </span>
+                        </div>
+                        <div class="col s2">
+                            <p>
+                                <input type="checkbox" value="{{profile.profileId}}" checked="checked" ng-click="toggleProfileSelection(profile.profileId)" id="test_{{profile.profileId}}" />
+                                <label for="test_{{profile.profileId}}"></label>
+                            </p>
+                        </div>
+                    </div>
+                </div>-->
+                                <!--rendering twitter profiles end-->
+
+                            </div>
+                        </div>
+                        <!--<div class="section section_filter">
+          <h6>MESSAGE TYPES</h6>
+          <div class="grey lighten-5 z-depth-1" ng-repeat="filterop in filterType">
+            <div class="row valign-wrapper">
+              <div class="col s1">
+                <i class="fa fa-facebook" ng-if="filterop=='Notifications'"></i>
+                  <i class="fa fa-twitter" ng-if="filterop!='Notifications'"></i>
+              </div>
+              <div class="col s8">
+                <span class="black-text">
+                    {{filterop}}
+                </span>
+              </div>
+              <div class="col s2">
+                <p>
+                  <input type="checkbox" checked="checked" name="filterType[]"  value="{{filterop}}" ng-click="toggleSelection(filterop)" ng-checked="selection.indexOf(filterop) > -1"   id="{{filterop}}" />
+                  <label for="{{filterop}}"></label>
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>-->
+                        <div class="section section_filter">
+                            <h6>MESSAGE TYPES</h6>
+                            <!--<div class="grey lighten-5 z-depth-1">
+                <div class="row valign-wrapper">
+                    <div class="col s1">
+                        <i class="fa fa-facebook"></i>
+                    </div>
+                    <div class="col s8">
+                        <span class="black-text">
+                            Notifications
+                        </span>
+                    </div>
+                    <div class="col s2">
+                        <p>
+                            <input type="checkbox" name="filterType[]" value="Notifications" ng-click="toggleSelection(9)" ng-checked="filterType.indexOf(9) > -1" id="Notifications" />
+                            <label for="Notifications"></label>
+                        </p>
+                    </div>
+                </div>
+            </div>-->
+                            <div class=" grey lighten-5 z-depth-1">
+                                <div class="row valign-wrapper">
+                                    <div class="col s1">
+                                        <i class="fa fa-twitter"></i>
+                                    </div>
+                                    <div class="col s8">
+                                        <span class="black-text">
+                                            Mentions
+                                        </span>
+                                    </div>
+                                    <div class="col s2">
+                                        <p>
+                                            <input type="checkbox" name="filterType[]" value="0" ng-click="toggleSelection(0)" ng-checked="filterType.indexOf(0) > -1" id="Mentions" />
+                                            <label for="Mentions"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" grey lighten-5 z-depth-1">
+                                <div class="row valign-wrapper">
+                                    <div class="col s1">
+                                        <i class="fa fa-twitter"></i>
+                                    </div>
+                                    <div class="col s8">
+                                        <span class="black-text">
+                                            Retweets
+                                        </span>
+                                    </div>
+                                    <div class="col s2">
+                                        <p>
+                                            <input type="checkbox" name="filterType[]" value="1" ng-click="toggleSelection(1)" ng-checked="filterType.indexOf(1) > -1" id="Retweets" />
+                                            <label for="Retweets"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class=" grey lighten-5 z-depth-1">
+                                <div class="row valign-wrapper">
+                                    <div class="col s1">
+                                        <i class="fa fa-twitter"></i>
+                                    </div>
+                                    <div class="col s8">
+                                        <span class="black-text">
+                                            New Followers
+                                        </span>
+                                    </div>
+                                    <div class="col s2">
+                                        <p>
+                                            <input type="checkbox" name="filterType[]" value="New Followers" ng-click="toggleSelection(6)" ng-checked="filterType.indexOf(6) > -1" id="NewFollowers" />
+                                            <label for="NewFollowers"></label>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
         <!--end container-->

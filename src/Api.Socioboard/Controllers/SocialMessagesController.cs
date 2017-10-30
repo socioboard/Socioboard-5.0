@@ -62,7 +62,7 @@ namespace Api.Socioboard.Controllers
             var uploads = string.Empty;
             string imgPath = string.Empty;
             string temp = string.Empty;
-            string tempmsg = message;
+            string tempmsg = message.Replace("<br>","");
             if (shortnerStatus == Domain.Socioboard.Enum.UrlShortener.bitlyUri)
             {
                 temp = Utility.GetConvertedUrls(ref tempmsg, shortnerStatus);
@@ -243,7 +243,7 @@ namespace Api.Socioboard.Controllers
                         {
                             string prId = temp_item_profileId.Substring(3, temp_item_profileId.Length - 3);
                             Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, temp_item_profileName, dbr, _logger);
+                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
 
                         }).Start();
                     }

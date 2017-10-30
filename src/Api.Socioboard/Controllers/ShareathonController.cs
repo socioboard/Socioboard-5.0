@@ -137,6 +137,55 @@ namespace Api.Socioboard.Controllers
             return Ok(pagedata);
         }
 
-        
+        [HttpPost("FacebookFeedShare")]
+        public IActionResult FacebookFeedShare(long userId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string FacebookPageId = Request.Form["FacebookPageId"];
+            string socialProfiles = Request.Form["OtherSocialProfile"];
+            string[] socailProfielId = null;
+            socailProfielId = socialProfiles.Split(',');
+
+            string[] facebookPageId = null;
+            facebookPageId = FacebookPageId.Split(',');
+
+
+
+            foreach (var pageId in facebookPageId)
+            {
+                foreach (var item in socailProfielId)
+                {
+                    if (item.StartsWith("tw"))
+                    {
+                        try
+                        {
+                            string prId = item.Substring(3, item.Length - 3);
+                            Repositories.ShareathonRepository.AddFacebookFeedShareDetail(userId, prId, pageId, "tw", _redisCache, _appSettings, dbr);
+                            //    return Ok(pagedata);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            _logger.LogError(ex.StackTrace);
+                        }
+                    }
+                    if (item.StartsWith("lin"))
+                    {
+                        try
+                        {
+                            string prId = item.Substring(4, item.Length - 4);
+                            Repositories.ShareathonRepository.AddFacebookFeedShareDetail(userId, prId, pageId, "lin", _redisCache, _appSettings, dbr);
+                        }
+                        catch (System.Exception ex)
+                        {
+                            _logger.LogError(ex.StackTrace);
+
+
+                        }
+                    }
+                }
+            }
+
+            return Ok("Added Sucessfully");
+        }
     }
 }

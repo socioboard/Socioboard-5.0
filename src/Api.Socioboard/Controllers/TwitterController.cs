@@ -442,6 +442,20 @@ namespace Api.Socioboard.Controllers
             return Ok(lstfollowerlist);
         }
 
+        [HttpGet("TwitterUnfollowers")]
+        public IActionResult TwitterUnfollowers(string profileId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.TwitterMutualFans> lstfollowerlist = Helper.TwitterHelper.twitterUnfollowerslist(profileId, dbr, _appSettings);
+            return Ok(lstfollowerlist);
+        }
 
+        [HttpGet("TwitterMentions")]
+        public IActionResult TwitterMentions(string profileId)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.TwitterMentionSugg> lstMentionSugg = Helper.TwitterHelper.TwitterMentionBased(profileId, dbr, _logger, _redisCache, _appSettings);
+            return Ok(lstMentionSugg);
+        }
     }
 }

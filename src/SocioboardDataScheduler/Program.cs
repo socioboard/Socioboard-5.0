@@ -1,6 +1,8 @@
 ﻿using SocioboardDataScheduler.Facebook;
 using SocioboardDataScheduler.LinkedIn;
+using SocioboardDataScheduler.Shareathon;
 using SocioboardDataScheduler.Twitter;
+using SocioboardDataScheduler.ContentStudio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +39,9 @@ namespace SocioboardDataServices
                 Console.WriteLine("Enter 3 to run LinkedIn Company Page DataScheduler");
                 Console.WriteLine("Enter 4 to run LinkedIn DataScheduler");
                 Console.WriteLine("Enter 5 to run Page Shareathon DataScheduler");
-                Console.WriteLine("Enter 5 to run Group Shareathon DataScheduler");
+                Console.WriteLine("Enter 6 to run Group Shareathon DataScheduler");
+                Console.WriteLine("Enter 7 to run Content studio Shareathon DataSchedule");
+                Console.WriteLine("Enter 8 to run Facebook DaywiseScheduler");
                 string[] str = { Console.ReadLine() };
 
                 string reporttype = str[0];
@@ -61,6 +65,12 @@ namespace SocioboardDataServices
                         break;
                     case "6":
                         type = "Group Shareathon DataSchedule";
+                        break;
+                    case "7":
+                        type = "Content studio Shareathon DataSchedule";
+                        break;
+                    case "8":
+                        type = "Facebook DaywiseScheduler";
                         break;
                     default:
                         break;
@@ -86,8 +96,54 @@ namespace SocioboardDataServices
                     LinkedInDataScheduler objLinkedInDataScheduler = new LinkedInDataScheduler();
                     objLinkedInDataScheduler.ScheduleLinkedInMessage();
                 }
-               
-                
+                if (type == "Page Shareathon DataSchedule")
+                {
+                    ShareathonDataSchedulars _ShareathonDataSchedulars = new SocioboardDataScheduler.Shareathon.ShareathonDataSchedulars();
+                    while (true)
+                    {
+                        try
+                        {
+                            _ShareathonDataSchedulars.ShareShateathons();
+                            Thread.Sleep(60 * 60 * 1000);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                            Thread.Sleep(60 * 60 * 1000);
+                        }
+                    }
+
+                }
+                if (type == "Group Shareathon DataSchedule")
+                {
+                    ShareathonDataSchedulars _ShareathonDataSchedulars = new SocioboardDataScheduler.Shareathon.ShareathonDataSchedulars();
+                    while (true)
+                    {
+                        try
+                        {
+                            _ShareathonDataSchedulars.ShareGroupShareathon();
+                            Thread.Sleep(60 * 60 * 1000);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                            Thread.Sleep(60 * 60 * 1000);
+                        }
+                    }
+                }
+
+                if (type == "Content studio Shareathon DataSchedule")
+                {
+                    ContentTrendDataScheduler objContentStudioDatascheduler = new ContentTrendDataScheduler();
+                    objContentStudioDatascheduler.SchdeuledContentFeeds();
+                }
+
+                if (type == "Facebook DaywiseScheduler")
+                {
+                    FacebookDataScheduler objDaywiseDatascheduler = new FacebookDataScheduler();
+                    objDaywiseDatascheduler.dayscheduleFBMessage();
+                }
+
             }
 
 
