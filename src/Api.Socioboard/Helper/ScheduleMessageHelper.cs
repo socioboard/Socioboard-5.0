@@ -16,8 +16,9 @@ namespace Api.Socioboard.Helper
         {
 
 
-            ScheduledMessage scheduledMessage = new ScheduledMessage();            
-            scheduledMessage.calendertime = Convert.ToDateTime(localscheduletime);      
+            ScheduledMessage scheduledMessage = new ScheduledMessage();
+            //scheduledMessage.calendertime = Convert.ToDateTime(localscheduletime); error coming so change
+            scheduledMessage.calendertime = DateTime.Today;
             scheduledMessage.shareMessage = shareMessage;
             string userlocalscheduletime = localscheduletime;
             try

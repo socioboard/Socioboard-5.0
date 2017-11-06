@@ -1,0 +1,70 @@
+<div data-ng-controller="ConversationBasedController">
+    <!-- START CONTENT -->
+    <section id="content">
+        <!--start container-->
+        <div class="row">
+            <div class="col l12">
+                <h4>Conversation Based</h4>
+            </div>
+        </div>
+        <!--card widgets end-->
+        <div class="row">
+            <div class="col l12 s12">
+                <div class="card hoverable" ng-repeat="conversation in twtconversationdata">
+                    <div class="row no-space">
+                        <div class="col l2 m2 s2 center">
+                            <img src="{{conversation.fromProfilePic}}" class="responsive-img circle margin-top-10">
+                            <h6 class="grey-text text-darken-4">{{conversation.fromName}}</h6>
+                            <h6 class="grey-text text-darken-2"> @{{conversation.fromScreenName}}</h6>
+                        </div>
+                        <div class="col l8 m8 s8">
+                            <div class="row no-space">
+                                <div class="col m4">
+                                    <h5><i class="fa fa-map-marker" aria-hidden="true"></i><strong class="light-blue-text text-darken-1 truncate">{{conversation.fromLocation}}</strong></h5>
+                                </div>
+                                <div class="col m4">
+                                    <h5>Following  <strong class="light-blue-text text-darken-1 truncate">{{conversation.fromFollowing}}</strong></h5>
+                                </div>
+                                <div class="col m4">
+                                    <h5>Followers  <strong class="light-blue-text text-darken-1 truncate">{{conversation.fromFollowers}}</strong></h5>
+                                </div>
+                                <div class="col m12">
+                                    <h6><i class="fa fa-file-text light-blue-text text-darken-1" aria-hidden="true"></i>  <strong class="black-text truncate">{{conversation.textMsg}}</strong></h6>                         
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col l2 m2 s2">
+                            <a class="btn btn_style btn_round blue margin-top-30"   href="{{conversation.fromProfileLinkUrl}}" target="_blank" title="View Profile"><i class="fa fa-user fa-fw"></i></a>
+                            <!--<a class="btn btn_style btn_round blue margin-top-30" href="{{conversation.postLinkUrl}}" target="_blank" title="View Post"><i class="fa fa-eye fa-fw"></i></a>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!--<div class="center">
+                <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />You Have No Follower<br /></h6>
+            </div>-->
+            <br />
+            <div class="center margin-top-50" ng-if="lastreach!=true">
+                <div class="preloader-wrapper big active">
+                    <div class="spinner-layer spinner-blue-only">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div><div class="gap-patch">
+                            <div class="circle"></div>
+                        </div><div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!--end container-->
+
+    </section>
+    <!-- END CONTENT -->
+</div>
+
+

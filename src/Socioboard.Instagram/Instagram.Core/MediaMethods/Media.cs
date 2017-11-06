@@ -99,7 +99,7 @@ namespace Socioboard.Instagram.Instagram.Core.MediaMethods
         public string UserResentFeeds(string userId, string accessToken)
         {
            // string url = "https://api.instagram.com/v1/users/" + userId + "/media/recent?access_token=" + accessToken;
-            string url = "https://api.instagram.com/v1/users/self/media/recent/?access_token=" + accessToken;
+            string url = "https://api.instagram.com/v1/users/self/media/recent/?access_token=" + accessToken+ "&count=200";
             string json = oAuthIns.RequestGetToUrl(url, null);
             if (string.IsNullOrEmpty(json))
                 return null;

@@ -66,6 +66,30 @@ namespace Api.Socioboard.Repositories
             return null;
         }
 
+        public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> InstagramAdvanceSerachData(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
+        {
+
+            MongoRepository _RssRepository = new MongoRepository("AdvanceSerachData", settings);
+            var builder = Builders<AdvanceSerachData>.Sort;
+            var sort = builder.Descending(t => t.postedTime);
+            var result = _RssRepository.FindWithRange<AdvanceSerachData>(t => t.networkType == networkType, sort, 0, 200);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+
+            IList<AdvanceSerachData> lstflicker = task.Result.ToList();
+            lstflicker = lstflicker.OrderByDescending(kt => kt.postedTime).ToList();
+
+            if (lstflicker != null)
+            {
+                //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
+
+                return lstflicker.ToList();
+            }
+            return null;
+        }
+
         public static List<Domain.Socioboard.Models.Mongo.AdvanceSerachData> FlickerAdvanceSerachData(Domain.Socioboard.Enum.NetworkType networkType, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
 

@@ -1,0 +1,76 @@
+--temp-output:D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\obj\Debug\net452\
+--out:D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\bin\Debug\net452\Socioboard.Twitter.dll
+--define:DEBUG
+--define:TRACE
+--define:NET452
+--suppress-warning:CS1701
+--suppress-warning:CS1702
+--suppress-warning:CS1705
+--optimize:False
+--output-name:Socioboard.Twitter
+--file-version:1.0.0.0
+--version:1.0.0.0
+--informational-version:1.0.0
+--target-framework:.NETFramework,Version=v4.5.2
+--reference:C:\Users\Murari\.nuget\packages\Hammock\1.2.3\lib\net40\Hammock.dll
+--reference:C:\Users\Murari\.nuget\packages\Newtonsoft.Json\8.0.3\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Users\Murari\.nuget\packages\OAuth\1.0.3\lib\net40\OAuth.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Collections.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Collections.Concurrent.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Debug.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Tools.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Diagnostics.Tracing.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Globalization.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.IO.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.IO.Compression.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Net.Http.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Net.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.ObjectModel.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Reflection.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Resources.ResourceManager.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.InteropServices.dll
+--reference:C:\Users\Murari\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0-rc2-24027\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Runtime.Numerics.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.Encoding.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.Encoding.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Text.RegularExpressions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Tasks.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Threading.Timer.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.ReaderWriter.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Facades\System.Xml.XDocument.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xml.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Xml.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\mscorlib.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\System.Core.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.2\Microsoft.CSharp.dll
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\App.Core\Globals.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\App.Core\PhotoUpload.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\App.Core\TwitterErrorConroller.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\App.Core\TwitterFriendsController.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\App.Core\TwitterSearchController.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\App.Core\TwitterUser.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\App.Core\TwitterUserController.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\App.Core\TwitterWebRequest.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Authentication\BasicAuth.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Authentication\IAuthentication.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Authentication\OAuthBase.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Authentication\oAuthTwitter.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Properties\AssemblyInfo.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\Enumerations.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\AccountMethods\Account.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\DirectMessageMethods\DirectMessage.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\FriendshipMethods\Friendship.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\SearchMethods\Search.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\SocialGraphMethods\SocialGraph.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\StatusMethods\Status.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\TimeLineMethods\TimeLine.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\TweetMethods\Tweet.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\UserMethods\Account.cs
+D:\Suresh\Socioboard3.0\NETCore\Socioboard\src\Socioboard.Twitter\Twitter.Core\UserMethods\Users.cs

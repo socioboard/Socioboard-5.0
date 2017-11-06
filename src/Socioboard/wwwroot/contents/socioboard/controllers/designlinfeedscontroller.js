@@ -275,7 +275,8 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         }
 
         $scope.SearchLinkedIndate = function (parm) {
-
+            debugger;
+        $rootScope.lstDiscoverySearchLinkedIn = parm;
             for (var i = 0; i < parm.length; i++) {
                 var date = moment(parm[i].DateTimeOfPost);
                 var newdate = date.toString();
@@ -283,7 +284,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                 date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
                 parm[i].DateTimeOfPost = date;
             }
-            $rootScope.lstDiscoverySearchLinkedIn = parm;
+          
 
         }
 

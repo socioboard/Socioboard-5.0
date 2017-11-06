@@ -5,8 +5,8 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
     $scope.$on('$viewContentLoaded', function() {   
     
         TrendingContent();
-       
-
+        $scope.query = {};
+        $scope.queryBy = '$';
         var lastreach = false;     
         $scope.dispbtn = true;
         $scope.disbtncom = true;
@@ -131,7 +131,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSerachInstagramData?network=' + abc + '&skip=' + startData + '&count=30')
                                   .then(function (response) {
                                       $scope.lstData = response.data;
                                       $scope.fetchdatacomplete = true;
@@ -342,9 +342,9 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
                 var x = angular.toJson(sb);
                 console.log("data");
                 console.log($scope.selectedContentfeed);
-                $scope.dispbtn = false;
-
-
+                if( x!="[]")
+                {
+                    $scope.dispbtn = false;
                 formData.append('FacebookPageId', pageId);
                 var shareData = $scope.datasharethon;
                 formData.append('shareData', x);
@@ -363,14 +363,22 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
                     $scope.dispbtn = true;
                     $('#ShareathonModal').closeModal();
                     swal("successfully scheduled");
+                    closeModel();
+                    //window.location.reload();
                 }, function (reason) {
                     $scope.error = reason.data;
                 });
+                }
+                else {
+                    swal("Please select feeds to be schedule");
+                }
+
+                
                 // end codes to add page shreathon
             }
             else {
                 $scope.dispbtn = true;
-                swal('Please fill in all the details');
+                swal('Please fill all the details');
             }
         }
 
@@ -497,7 +505,12 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         $scope.getOnPageLoadReports();
         $('.modal-trigger').leanModal();
 
-
+        $scope.viewPostModal = function (tempo) {
+            debugger;
+            $scope.feed = tempo;
+            $('#viewPostModal').openModal();
+           
+        }
   });
 
 });

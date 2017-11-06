@@ -292,7 +292,7 @@
                                 </a>
                                 <div class="collapsible-body">
                                     <ul class="collapsible collapsible-accordion">
-                                        <li class="truncate">
+                                        <li class="">
                                             <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Followers and their profile details">
                                                 Your Followers
                                             </a>
@@ -304,8 +304,8 @@
                                             </ul>
                                         </div>
                                         </li>
-                                        <li class="truncate">
-                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Followers and their profile details">
+                                        <li class="">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Unfollowers and their profile details">
                                                 Do not follow back
                                             </a>
                                             <div class="collapsible-body">
@@ -316,8 +316,8 @@
                                                 </ul>
                                             </div>
                                         </li>
-                                        <li class="truncate">
-                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Followers and their profile details">
+                                        <li class="">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter mentions and their profile details">
                                                 Mentions Based
                                             </a>
                                             <div class="collapsible-body">
@@ -328,6 +328,19 @@
                                                 </ul>
                                             </div>
                                         </li>
+                                        <li class="truncate">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see details of twitter profiles for their conversation">
+                                                Conversation Based
+                                            </a>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                                        <a href="#/conversationbased/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+
                                    </ul>
                                 </div>
                             </li>

@@ -18,6 +18,7 @@ using MongoDB.Bson;
 using Socioboard.Twitter.Twitter.Core.UserMethods;
 using Socioboard.Twitter.Twitter.Core.FollowersMethods;
 using Socioboard.Twitter.Twitter.Core.TimeLineMethods;
+using Socioboard.Twitter.Twitter.Core.DirectMessageMethods;
 
 namespace Api.Socioboard.Helper
 {
@@ -876,6 +877,74 @@ namespace Api.Socioboard.Helper
                 return null;
             }
         }
+        public static List<Domain.Socioboard.Models.TwitterMentionSugg> TwitterConversation(string profileId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        {
+            List<Domain.Socioboard.Models.TwitterMentionSugg> lstConveUsers = new List<TwitterMentionSugg>();
+            Domain.Socioboard.Models.TwitterAccount twtacc = new Domain.Socioboard.Models.TwitterAccount();
+            Domain.Socioboard.Models.TwitterAccount imtwtacc = _redisCache.Get<Domain.Socioboard.Models.TwitterAccount>(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterAccount + profileId);
+            if (imtwtacc == null)
+            {
+                twtacc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(profileId)).FirstOrDefault();
+                if (twtacc != null)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterAccount + profileId, twtacc);
+                }
+            }
+            else
+            {
+                twtacc = imtwtacc;
+            }
+            oAuthTwitter oAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
+            oAuth.AccessToken = twtacc.oAuthToken;
+            oAuth.AccessTokenSecret = twtacc.oAuthSecret;
+            oAuth.TwitterScreenName = twtacc.twitterScreenName;
+            oAuth.TwitterUserId = twtacc.twitterUserId;
+            DirectMessage timeline_obj = new DirectMessage();
+            List<string> tempScreenNames = new List<string>();
+            try
+            {
+                JArray jMentionResp = timeline_obj.Get_Direct_Messages(oAuth, 100);
+                if (jMentionResp == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    foreach (var items in jMentionResp)
+                    {
+                        Domain.Socioboard.Models.TwitterMentionSugg _objLstData = new Domain.Socioboard.Models.TwitterMentionSugg();
+
+                        _objLstData.postId = items["id_str"].ToString();
+                        _objLstData.textMsg = items["sender"]["description"].ToString();
+                        _objLstData.fromName = items["sender"]["name"].ToString();
+                        _objLstData.fromScreenName = items["sender"]["screen_name"].ToString();
+                        _objLstData.fromLocation = items["sender"]["location"].ToString();
+                        if (_objLstData.fromLocation == "")
+                        {
+                            _objLstData.fromLocation = "NA";
+                        }
+                        _objLstData.fromFollowers = items["sender"]["followers_count"].ToString();
+                        _objLstData.fromFollowing = items["sender"]["friends_count"].ToString();
+                        _objLstData.fromProfilePic = items["sender"]["profile_image_url_https"].ToString();
+                        _objLstData.fromProfileLinkUrl = "https://twitter.com/" + _objLstData.fromScreenName;
+                        _objLstData.postLinkUrl = "https://twitter.com/SB/status/" + _objLstData.postId;
+                        if (!tempScreenNames.Contains(_objLstData.fromScreenName))
+                        {
+                            lstConveUsers.Add(_objLstData);
+                        }
+                        tempScreenNames.Add(_objLstData.fromScreenName);
+                    }
+                }
+                return lstConveUsers.ToList();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("error finding friendship relation" + ex.StackTrace);
+                _logger.LogError("error finding friendship relation" + ex.Message);
+                return null;
+            }
+        }
+
 
     }
 }

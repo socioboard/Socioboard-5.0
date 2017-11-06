@@ -479,7 +479,7 @@ namespace Api.Socioboard.Repositories
             {
                 MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed", settings);
                 var builder = Builders<MongoTwitterFeed>.Sort;
-                var sort = builder.Descending(t => t.feedDate);
+                var sort = builder.Descending(t => t.feedTimeStamp);
                 var result = mongorepo.FindWithRange<MongoTwitterFeed>(t => t.profileId.Equals(profileId), sort, 0, 100);
                 var task = Task.Run(async () =>
                 {

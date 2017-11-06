@@ -6,8 +6,29 @@
         font-weight: normal;
         padding: 10px 20px;
     }
-</style>
-<style>
+
+  #waterfall li.show {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.3s, top 1s;
+    }
+
+    #waterfall li > div {
+        color: rgba(0,0,0,0.6);
+        border-radius: 3px;
+        margin: 10px;
+        padding: 0px;
+        background: rgb(255,255,255);
+        border: 1px solid rgba(038, 191, 64, 0);
+        transition: all 0.5s;
+    }
+
+        #waterfall li > div:hover {
+            transform: translateY(-10px);
+            border: 1px solid #3b5998;
+            box-shadow: 0 10px 15px rgba(154, 187, 221, 0.4);
+            transition: all 0.3s;
+        }
     ul.shinh li label {
         font-size: 15px;
         color: #333;
@@ -43,96 +64,43 @@
     </div>
 
     <!-- START CONTENT -->
-
-    <div id="profiles">
-        <div id="products" class="row">
-            <div class="product-sizer"></div>
-                <div class="product" ng-repeat="linpost in lstDiscoverySearchLinkedIn | orderBy:'publishedtime':true" my-repeat-feed-timeout-directive>
+    <div id="center">
+        <ul id="waterfall">
+            <li class="collection-item" ng-repeat="linpost in lstDiscoverySearchLinkedIn ">
+                <div class="studio_card">
                     <div class="card hoverable">
                         <div class="card-content">
                             <div class="row">
                                 <div class="col l12 m12 s12 margin-top-10 center">
-                                    <img class="responsive-img circle " src="{{linpost.profileImage}}">
+                                    <img class="responsive-img circle profile_s_pic " src="{{linpost.profileImage}}">
                                 </div>
-                                <div class="col l12 s12 m12 center">
+                                <div class="col l12 m12 s12 margin-top-10 center">
                                     <span class="card-title">{{linpost.profileName}}</span>
                                     <br>
-                                    <!--<span>
-                                    <a href="#" target="_blank">
-                                        <i class="fa fa-linkedin-square fa-fw"></i>@{{linpost.profileName}}
-                                    </a>
-                                </span>-->
                                     <span>
                                         <i class="fa fa-linkedin-square" style="color:#0077B5; font-size:x-large"></i>
                                     </span>
-                            </div>
-                            <div class="col l12 m12 s12">
-                                <p class="description_listen">
-                                   {{getPostData(linpost.message)}}
-                                    <div class="center">
-                                        <img ng-if="linpost.imageurl != null" src="{{linpost.postImgUrl}}" class="responsive-img">
-                                        <!--<div style="word-break:break-all"> {{getPostData(linpost.message)}} </div>-->
-                                    </div>
-                                </p>
+                                </div>
+                                <div class="col l12 m12 s12">
+                                    <p class="description_listen">
+                                        {{getPostData(linpost.message)}}
+                                        <div class="center">
+                                            <img ng-if="linpost.imageurl != null" src="{{linpost.postImgUrl}}" class="responsive-img">
+                                            <!--<div style="word-break:break-all"> {{getPostData(linpost.message)}} </div>-->
+                                        </div>
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-action center">
-                        <a ng-click="schedulefbpost(linpost.message)">Schedule</a>
-                        <a ng-click="openComposeMessage(linpost)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
+                        <div class="card-action center">
+                            <a ng-click="schedulefbpost(linpost.message)"class="waves-effect waves-grey btn btn_round ">Schedule</a>
+                            <a ng-click="openComposeMessage(linpost)" class="waves-effect waves-grey btn grey btn_round ">1-Click</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-
-
-            <!--<div class="row">
-                <div class="col m12">-->
-                    <!--start container-->
-                    <!--<div class="container">-->
-                        <!--card widgets start-->
-                        <!--<div id="profiles">
-                            <div class="row">
-                                <div class="col s12 m6 l3" ng-repeat="linpost in lstDiscoverySearchLinkedIn">
-                                    <div class="card">
-                                        <div class="card-content">
-                                            <div class="row">
-                                                <div class="col l2 m2 s6 margin-top-10">
-                                                    <img class="responsive-img" src="https://media.licdn.com/mpr/mpr/p/8/005/080/2ff/3c89c08.png">
-                                                </div>
-                                                <div class="col l10 s10 m10">
-                                                    <span class="card-title">{{linpost.profileName}}</span>
-                                                    <br>
-                                                    <span>
-                                                        <a style="cursor:context-menu" href="javascript:;">
-                                                            <i class="fa fa-linkedin-square fa-fw"></i>@{{linpost.profileName}}
-                                                        </a>
-                                                    </span>
-                                                </div>
-                                                <div class="col l12 m12 s12">
-                                                    <p class="description_listen">
-                                                        <div style="word-break : break-all"> {{linpost.message}} </div>
-                                                        <img ng-if="linpost.postImgUrl!=''" src="{{linpost.postImgUrl}}" class="responsive-img">
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card-action center">
-                                            <a style="cursor:pointer" ng-click="schedulefbpost(linpost.message)">Schedule</a>-->
-                                            <!--<a ng-click="schedulefbpost(linpost.message)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>-->
-                                        <!--</div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>-->
-                    <!--end container-->
-                <!--</div>
-            </div>-->
-
-            </div>
-        </div>
+            </li>
+        </ul>
+    </div>
 
             <!-- END CONTENT -->
             <!-- add profile -->
@@ -415,6 +383,31 @@
 
         
 <script>
+
+    $(document).ready(function () {
+        $('#waterfall').NewWaterfall();
+    });
+
+    // waterfall
+    function random(min, max) {
+        return min + Math.floor(Math.random() * (max - min + 1))
+    }
+    var loading = false;
+    var dist = 300;
+    var num = 1;
+
+    setInterval(function () {
+        if ($(window).scrollTop() >= $(document).height() - $(window).height() - dist && !loading) {
+            loading = true;
+            $("#test").clone().appendTo('#waterfall');
+            // $("#waterfall").append("<li><div style='height:" + random(50,500) +  "px'>" + num + "</div></li>");
+            num++;
+
+            loading = false;
+        }
+
+
+    }, 60);
     function check() {
         var flag = $('#checkAll').is(":checked");
         $('#checkboxdata input:checkbox').each(function () {

@@ -149,7 +149,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                 //codes to load facebook discovery start
                 $http.post(apiDomain + '/api/FacebookGroups/GetFacebookGroupFeeds?skip=' + ending + '&count=30' + '&keyword=' + categories)
                               .then(function (response) {
-                                
+                                  debugger;
                                
                                   if (response.data != "") {
                                       $('#categories').val('');
@@ -228,7 +228,8 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         }
 
         $scope.SearchFacebookdate = function (parm) {
-
+            debugger;
+            $rootScope.lstDiscoverySearchFacebook = parm;
             for (var i = 0; i < parm.length; i++) {
                 var date = moment(parm[i].DateTimeOfPost);
                 var newdate = date.toString();
@@ -236,7 +237,8 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
                 date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
                 parm[i].DateTimeOfPost = date;
             }
-            $rootScope.lstDiscoverySearchFacebook = parm;
+            debugger;
+            //$rootScope.lstDiscoverySearchFacebook = parm;
 
         }
 
@@ -394,24 +396,27 @@ SocioboardApp.directive("scroll", function ($window) {
 //});
 
 
-SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
-    return function (scope, element, attrs) {
-        if (scope.$last === true) {
-            $timeout(function () {
+//SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
+//    return function (scope, element, attrs) {
+//        if (scope.$last === true) {
+//            $timeout(function () {
               
-                var $containerProducts = $("#products");
-                $containerProducts.imagesLoaded(function () {
-                    $containerProducts.masonry({
-                        itemSelector: ".product",
-                        columnWidth: ".product-sizer",
-                    });
-                });
+//                var $containerProducts = $("#products");
+//                $containerProducts.imagesLoaded(function () {
+//                    $containerProducts.masonry({
+//                        itemSelector: ".product",
+//                        columnWidth: ".product-sizer",
+//                    });
+//                });
 
 
-            });
-        }
-    };
-})
+//            });
+//        }
+//    };
+//})
+
+
+
 
 SocioboardApp.directive('afterRender', function ($timeout) {
     return function (scope, element, attrs) {

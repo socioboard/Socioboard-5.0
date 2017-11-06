@@ -42,6 +42,7 @@ namespace SocioboardDataServices
                 Console.WriteLine("Enter 6 to run Group Shareathon DataScheduler");
                 Console.WriteLine("Enter 7 to run Content studio Shareathon DataSchedule");
                 Console.WriteLine("Enter 8 to run Facebook DaywiseScheduler");
+                Console.WriteLine("Enter 9 to run Share Feeds with OtherSocialMedia Schedule");
                 string[] str = { Console.ReadLine() };
 
                 string reporttype = str[0];
@@ -72,9 +73,14 @@ namespace SocioboardDataServices
                     case "8":
                         type = "Facebook DaywiseScheduler";
                         break;
+                    case "9":
+                        type = "Share Feeds with OtherSocialMedia Schedule";
+                        break;
                     default:
                         break;
                 }
+
+               
 
                 if (type == "Facebook DataScheduler")
                 {
@@ -131,6 +137,23 @@ namespace SocioboardDataServices
                         }
                     }
                 }
+                if (type == "Share Feeds with OtherSocialMedia Schedule")
+                {
+                    FacebookShareFeeds _sharefeedsSchedule = new SocioboardDataScheduler.Shareathon.FacebookShareFeeds();
+                    while (true)
+                    {
+                        try
+                        {
+                            _sharefeedsSchedule.ScheduleTwitterMessage();
+                         
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("issue in web api calling" + ex.StackTrace);
+                            
+                        }
+                    }
+                }
 
                 if (type == "Content studio Shareathon DataSchedule")
                 {
@@ -143,10 +166,7 @@ namespace SocioboardDataServices
                     FacebookDataScheduler objDaywiseDatascheduler = new FacebookDataScheduler();
                     objDaywiseDatascheduler.dayscheduleFBMessage();
                 }
-
             }
-
-
         }
     }
 }

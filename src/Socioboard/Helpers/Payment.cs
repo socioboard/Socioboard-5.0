@@ -39,7 +39,7 @@ namespace Socioboard.Helpers
                 //  redirecturl += "&state=Odisha";
 
                 //Product Name
-                redirecturl += "&item_name=" + itemInfo;
+                redirecturl += "&item_name=" + "Socioboard" + itemInfo;
 
                 //item_number
                 redirecturl += "&item_number=" + 1;
@@ -163,7 +163,7 @@ namespace Socioboard.Helpers
                 //The default is 1.
 
                 redirecturl += "&rm=2"; //Return method. The FORM METHOD used to send data to the URL specified by the return variable.
-                //Allowable values are:
+                                        //Allowable values are:
 
                 //0 – all shopping cart payments use the GET method
                 //1 – the buyer's browser is redirected to the return URL by using the GET method, but no payment variables are included
@@ -171,7 +171,7 @@ namespace Socioboard.Helpers
                 //The default is 0.
 
                 //redirecturl += "&subscr_effective=2014-05-05T10%3A27%3A52.000Z";
-               // redirecturl += "&srt=2";//instalments value* instead of 2 you can put any value
+                // redirecturl += "&srt=2";//instalments value* instead of 2 you can put any value
 
             }
             catch (Exception ex)
@@ -208,7 +208,7 @@ namespace Socioboard.Helpers
                 //  redirecturl += "&state=Odisha";
 
                 //Product Name
-                redirecturl += "&item_name=" + itemInfo;
+                redirecturl += "&item_name=" + "Socioboard" + itemInfo;
 
                 //item_number
                 redirecturl += "&item_number=" + 1;
@@ -340,8 +340,7 @@ namespace Socioboard.Helpers
                 //The default is 0.
 
                 //redirecturl += "&subscr_effective=2014-05-05T10%3A27%3A52.000Z";
-               // redirecturl += "&srt=2";//instalments value* instead of 2 you can put any value
-
+                // redirecturl += "&srt=2";//instalments value* instead of 2 you can put any value
             }
             catch (Exception ex)
             {
@@ -379,7 +378,7 @@ namespace Socioboard.Helpers
                 //  redirecturl += "&state=Odisha";
 
                 //Product Name
-                redirecturl += "&item_name=" + itemInfo;
+                redirecturl += "&item_name=" + "Socioboard" + itemInfo;
 
                 //item_number
                 redirecturl += "&item_number=" + 1;

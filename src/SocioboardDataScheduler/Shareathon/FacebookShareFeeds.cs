@@ -14,6 +14,7 @@ using Socioboard.Twitter.Authentication;
 using Socioboard.Twitter.Twitter.Core.TweetMethods;
 using Socioboard.Twitter.App.Core;
 using Newtonsoft.Json.Linq;
+using Socioboard.LinkedIn.Authentication;
 
 namespace SocioboardDataScheduler.Shareathon
 {
@@ -32,7 +33,7 @@ namespace SocioboardDataScheduler.Shareathon
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     MongoRepository _facebookSharefeeds = new MongoRepository("FacebookPageFeedShare");
-                    var result = _facebookSharefeeds.Find<Domain.Socioboard.Models.Mongo.FacebookPageFeedShare>(t => t.scheduleTime.AddMinutes(5) <=DateTime.UtcNow && t.socialmedia == "tw");
+                    var result = _facebookSharefeeds.Find<Domain.Socioboard.Models.Mongo.FacebookPageFeedShare>(t => t.socialmedia == "tw" ||t.socialmedia == "lin");
                     var task = Task.Run(async () =>
                     {
                         return await result;
@@ -40,16 +41,16 @@ namespace SocioboardDataScheduler.Shareathon
                     IList<Domain.Socioboard.Models.Mongo.FacebookPageFeedShare> lstfbpagefeeds = task.Result.ToList();
                    
                     //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Contains("758233674978426880")).ToList();
-                    var newlstScheduledMessage = lstfbpagefeeds.GroupBy(t => t.pageId).ToList();
+                    lstfbpagefeeds.GroupBy(t => t.pageId).ToList();
 
-                    foreach (var items in newlstScheduledMessage)
+                    foreach (var items in lstfbpagefeeds)
                     {
                         objSemaphore.WaitOne();
                         noOfthreadRunning++;
-                        Thread thread_pageshreathon = new Thread(() => TwitterSchedulemessage(new object[] { dbr, items }));
+                        Thread thread_pageshreathon = new Thread(() => TwitterSchedulemessage(new object[] {  items, dbr , _facebookSharefeeds }));
                         thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
                         thread_pageshreathon.Start();
-                        Thread.Sleep(10 * 1000);
+                        Thread.Sleep(600 * 1000);
                         //while (noOfthreadRunning > 5)
                         //{
                         //    Thread.Sleep(5 * 1000);
@@ -84,15 +85,17 @@ namespace SocioboardDataScheduler.Shareathon
                 {
 
                     Domain.Socioboard.Models.TwitterAccount _TwitterAccount = dbr.Single<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId == id && t.isActive);
+                    Domain.Socioboard.Models.LinkedInAccount _LinkedinAcc = dbr.Single<Domain.Socioboard.Models.LinkedInAccount>(t => t.LinkedinUserId == id && t.IsActive);
+
                     Domain.Socioboard.Models.User _user = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == _TwitterAccount.userId);
 
                     MongoRepository mongoshare = new Helper.MongoRepository("FacebookPageFeedShare");
 
 
 
-                    if (_TwitterAccount != null)
+                    if (_TwitterAccount != null || _LinkedinAcc!=null)
                     {
-                        var resultshare = mongorepo.Find<FacebookPageFeedShare>(t => t.socialProfiles == shareathon.socialProfiles && t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending);
+                        var resultshare = _ShareathonRepository.Find<FacebookPageFeedShare>(t => t.pageId == shareathon.pageId && t.status == Domain.Socioboard.Enum.RealTimeShareFeedStatus.notprocess );
                         var task = Task.Run(async () =>
                         {
                             return await resultshare;
@@ -103,18 +106,34 @@ namespace SocioboardDataScheduler.Shareathon
                         {
                             foreach (var item in feedsData)
                             {
-
-                                try
+                                if (item.socialmedia.StartsWith("tw"))
                                 {
-                                    Console.WriteLine(item.socialProfiles + "Scheduling Started");
-                                    PostTwitterMessage(item, _TwitterAccount, _user);
-                                    Console.WriteLine(item.socialProfiles + "Scheduling");
-                                }
-                                catch (Exception)
-                                {
+                                    try
+                                    {
+                                        Console.WriteLine(item.socialProfiles + "Scheduling Started");
+                                        PostTwitterMessage(item, _TwitterAccount,null, _user);
+                                        Console.WriteLine(item.socialProfiles + "Scheduling");
+                                    }
+                                    catch (Exception)
+                                    {
 
-                                    Thread.Sleep(60000);
+                                        Thread.Sleep(60000);
+                                    }
                                 }
+                                if (item.socialmedia.StartsWith("lin"))
+                                {
+                                    try
+                                    {
+                                        Console.WriteLine(item.socialProfiles + "Scheduling Started");
+                                        PostTwitterMessage(item,null, _LinkedinAcc, _user);
+                                        Console.WriteLine(item.socialProfiles + "Scheduling");
+                                    }
+                                    catch (Exception)
+                                    {
+
+                                        Thread.Sleep(60000);
+                                    }
+                                }                               
                             }
                             //fbAcc.contenetShareathonUpdate = DateTime.UtcNow;
                             //facebookPage.contenetShareathonUpdate = DateTime.UtcNow;
@@ -128,7 +147,7 @@ namespace SocioboardDataScheduler.Shareathon
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Thread.Sleep(60000);
             }
@@ -140,14 +159,14 @@ namespace SocioboardDataScheduler.Shareathon
             }
         }
 
-        public static void PostTwitterMessage(Domain.Socioboard.Models.Mongo.FacebookPageFeedShare fbPagefeedshare, Domain.Socioboard.Models.TwitterAccount _TwitterAccount, Domain.Socioboard.Models.User _user)
+        public static void PostTwitterMessage(Domain.Socioboard.Models.Mongo.FacebookPageFeedShare fbPagefeedshare, Domain.Socioboard.Models.TwitterAccount _TwitterAccount, Domain.Socioboard.Models.LinkedInAccount _LinkedinAcc, Domain.Socioboard.Models.User _user)
         {
             try
             {
                 DatabaseRepository dbr = new DatabaseRepository();
                 MongoRepository _mongofbpostdata = new Helper.MongoRepository("MongoFacebookFeed");
                 MongoRepository mongofacebooksharedata = new Helper.MongoRepository("FacebookPageFeedShare");
-                var result = _mongofbpostdata.Find<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t =>t.ProfileId == fbPagefeedshare.socialProfiles && t.shareStatus==false);
+                var result = _mongofbpostdata.Find<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t =>t.ProfileId == fbPagefeedshare.pageId && t.shareStatus==false );
                 var task = Task.Run(async () =>
                 {
                     return await result;
@@ -156,31 +175,50 @@ namespace SocioboardDataScheduler.Shareathon
 
                 foreach(var item in lstfbpagefeeds)
                 {
-                    if (fbPagefeedshare.scheduleTime <= DateTime.UtcNow)
+                    string twitterdata = null;
+                    string linkedindata = null;
+                    try
                     {
-                        string twitterdata = ComposeTwitterMessage(item.FeedDescription, item.ProfileId,fbPagefeedshare.userId, item.Picture, false, dbr, _TwitterAccount, _user);
-                        if (!string.IsNullOrEmpty(twitterdata) && twitterdata != "feed has not posted")
+                        if (fbPagefeedshare.scheduleTime <= DateTime.UtcNow)
                         {
-                            apiHitsCount++;
-                            item.shareStatus = true;
-                            item.sharedate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                            fbPagefeedshare.lastsharestamp = DateTime.UtcNow;
+
+                            if (_TwitterAccount != null)
+                            {
+                                twitterdata = ComposeTwitterMessage(item.FeedDescription, item.ProfileId, fbPagefeedshare.userId, item.Picture, false, dbr, _TwitterAccount, _user);
+
+                            }
+                            else
+                            {
+                                linkedindata = ComposeLinkedInMessage(item.Picture, fbPagefeedshare.userId, item.FeedDescription, item.ProfileId, "", _LinkedinAcc, dbr, _user);
+                            }
+                            if (!string.IsNullOrEmpty(twitterdata) && twitterdata != "feed has not posted" || !string.IsNullOrEmpty(linkedindata) && linkedindata != "feed has not posted")
+                            {
+                                apiHitsCount++;
+                                item.shareStatus = true;
+                                item.sharedate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                                fbPagefeedshare.lastsharestamp = DateTime.UtcNow;
 
 
-                            FilterDefinition<BsonDocument> filter = new BsonDocument("Id", item.Id);
-                            var update = Builders<BsonDocument>.Update.Set("shareStatus", true);
+                                FilterDefinition<BsonDocument> filter = new BsonDocument("Id", item.Id);
+                                var updatemongo = Builders<BsonDocument>.Update.Set("shareStatus", true);
+                                _mongofbpostdata.Update<MongoFacebookFeed>(updatemongo, filter);
+                            }
+                            else if (twitterdata == "Message not posted")
+                            {
 
-                            _mongofbpostdata.Update<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(update, filter);
-                            mongofacebooksharedata.Update<Domain.Socioboard.Models.Mongo.FacebookPageFeedShare>(update, filter);
-
-                        }
-                        else if (twitterdata == "Message not posted")
-                        {
-                           
+                            }
                         }
                     }
+                    catch (Exception ex)
+                    {
+
+                    }
+                    
                 }
-             
+
+                FilterDefinition<BsonDocument> filters = new BsonDocument("strId", fbPagefeedshare.strId); //new BsonDocument("FeedId", item.FeedId);               
+                var updatefbshare = Builders<BsonDocument>.Update.Set("status", Domain.Socioboard.Enum.RealTimeShareFeedStatus.running);
+                mongofacebooksharedata.Update<FacebookPageFeedShare>(updatefbshare, filters);
             }
             catch (Exception ex)
             {
@@ -243,7 +281,38 @@ namespace SocioboardDataScheduler.Shareathon
 
             return str;
         }
+        public static string ComposeLinkedInMessage(string ImageUrl, long userid, string comment, string ProfileId, string imagepath, Domain.Socioboard.Models.LinkedInAccount _objLinkedInAccount, Model.DatabaseRepository dbr, Domain.Socioboard.Models.User _user)
+        {
+            string json = "";
+            var img = "";
+            Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = _objLinkedInAccount;
+            oAuthLinkedIn _oauth = new oAuthLinkedIn();
+            _oauth.ConsumerKey = AppSettings.LinkedinConsumerKey;
+            _oauth.ConsumerSecret = AppSettings.LinkedinConsumerSecret;
+            _oauth.Token = _LinkedInAccount.OAuthToken;
+            string PostUrl = "https://api.linkedin.com/v1/people/~/shares?format=json";
 
+         
 
+            if (string.IsNullOrEmpty(ImageUrl))
+            {
+                json = _oauth.LinkedProfilePostWebRequest("POST", PostUrl, comment);
+            }
+            else
+            {
+                
+                json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, ImageUrl);
+            }
+            if (!string.IsNullOrEmpty(json))
+            {
+                string msg = "feed shared successfully";
+                return msg;
+            }
+            else
+            {
+                string msg = "feed has not posted";
+                return msg;
+            } 
+        }
     }
 }

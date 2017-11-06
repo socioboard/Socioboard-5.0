@@ -13,7 +13,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me?fields=id,about,bio,birthday,cover,education,email,gender,hometown,name,work");//v2.6
+                return fb.Get("v2.7/me?fields=id,about,bio,birthday,cover,education,email,gender,hometown,name,work,picture");//v2.6
             }
             catch (Exception ex)
             {
@@ -147,7 +147,7 @@ namespace Socioboard.Facebook.Data
             {
                 return fb.Post("v2.7/" + postid + "/comments", args).ToString();//v2.1
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return "Invalid Access Token";
             }

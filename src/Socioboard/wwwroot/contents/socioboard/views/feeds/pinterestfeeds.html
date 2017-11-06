@@ -7,81 +7,149 @@
         border: 4px double rgba(70, 70, 70, 0.98);
         background-color: #E91E63 !important;
     }
+        #waterfall li.show {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.3s, top 1s;
+    }
+
+    #waterfall li > div {
+        color: rgba(0,0,0,0.6);
+        border-radius: 3px;
+        margin: 10px;
+        padding: 0px;
+        background: rgb(255,255,255);
+        border: 1px solid rgba(038, 191, 64, 0);
+        transition: all 0.5s;
+    }
+
+        #waterfall li > div:hover {
+            transform: translateY(-10px);
+            border: 1px solid #3b5998;
+            box-shadow: 0 10px 15px rgba(154, 187, 221, 0.4);
+            transition: all 0.3s;
+        }
 </style>
      <div data-ng-controller="PinterestFeedsController">
         <!-- Page name -->
         <div class="container">
             <div class="row">
-                <div class="col l12 s12">
+                <div class="col l12 s12 m12">
                     <h4>Pinterest Pins</h4>
                 </div>
                 <div class="col l2 m2 s12 center">
                     <img src="{{lstpin._PinterestAccount.profileimgaeurl}}" class="responsive-img circle">
                 </div>
-                <div class="col l10 m10 s12">
+                <div class="col l6 m6 s12">
                     <h4 class="grey-text text-darken-4">{{lstpin._PinterestAccount.firstname}} {{lstpin._PinterestAccount.lastname}}</h4>
                     <h5>Following : <strong class="pink-text text-darken-1">{{lstpin._PinterestAccount.followingcount}}</strong></h5>
                     <h5>Followers : <strong class="pink-text text-darken-1">{{lstpin._PinterestAccount.followerscount}}</strong></h5>
                     <a href="#/pinterestboards/{{lstpin._PinterestAccount.username}}" class="btn btn_style pink white-text">Boards</a>
                     <a href="#/pinterestlikes/{{lstpin._PinterestAccount.username}}" class="btn btn_style pink white-text">Likes</a>
                 </div>
+                <div class="col l2 m2 s12">
+                    <div class="">
+                        <div class="card">
+                            <div class="card-content">
+                                <div class="row no-space">
+                                    <div class="col s12 center">
+                                        <a href="#CreatePinModal" class="modal-trigger">
+                                            <i class="fa fa-plus-circle fa-5x pink-text text-darken-1" aria-hidden="true"></i>
+                                        </a>
+                                        <p class="card-title grey-text text-darken-4">
+                                            <a href="#CreatePinModal" class="truncate modal-trigger grey-text text-darken-4">Save Pin</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <!-- statr pins_board list -->
-        <div id="pins_board" class="row">
-            <div class="product-sizer"></div>
-            <!-- create pin -->
-            <div class="product">
-                <div class="card">
-                    <div class="card-content">
-                        <div class="row no-space">
-                            <div class="col s12 center">
-                                <a href="#CreatePinModal" class="modal-trigger"> 
-                                    <i class="fa fa-plus-circle fa-5x pink-text text-darken-1" aria-hidden="true"></i>
-                                </a>
-                                <p class="card-title grey-text text-darken-4">
-                                    <a href="#CreatePinModal" class="truncate modal-trigger grey-text text-darken-4">Save Pin</a>
-                                </p>
-                            </div>
+         <div class="row">
+             <!-- create pin -->
+             <!--<div class="product">
+                 <div class="card">
+                     <div class="card-content">
+                         <div class="row no-space">
+                             <div class="col s12 center">
+                                 <a href="#CreatePinModal" class="modal-trigger">
+                                     <i class="fa fa-plus-circle fa-5x pink-text text-darken-1" aria-hidden="true"></i>
+                                 </a>
+                                 <p class="card-title grey-text text-darken-4">
+                                     <a href="#CreatePinModal" class="truncate modal-trigger grey-text text-darken-4">Save Pin</a>
+                                 </p>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>-->
+             <!-- all post -->
+             <!--<div class="product" ng-repeat="userpins in lstpin.lstMongoPinterestUserPins" my-repeat-feed-timeout-directive>
+            <div class="card">
+                <div class="card-image waves-effect waves-block waves-light">
+                    <a href="{{userpins.url}}" target="_blank" class="btn-floating btn-large btn-pin waves-effect waves-light pink darken-1"><span><i class="fa fa-thumb-tack fa-fw" aria-hidden="true"></i>{{userpins.repinscount}}</span></a>
+                    <a href="{{userpins.url}}" target="_blank"><img src="{{userpins.imageurl}}" alt="product-img">
+                    </a>
+                </div>
+                <ul class="card-action-buttons">
+                    <li>
+                        <a class="btn-floating waves-effect waves-light light-blue"><i class="mdi-action-info activator"></i></a>
+                    </li>
+                </ul>
+                <div class="card-content">
+                    <div class="row">
+                        <div class="col s8 margin-top-10">
+                            <p class="card-title grey-text text-darken-4">
+                                <a href="{{userpins.creatorurl}}" class="grey-text text-darken-4"><i class="fa fa-pinterest-p fa-fw red-text"></i>@{{userpins.boardname}}</a>
+                            </p>
+                        </div>
+                        <div class="col s4 no-padding center">
+                            <a href="{{userpins.creatorurl}}">
+                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- all post -->
-            <div class="product" ng-repeat="userpins in lstpin.lstMongoPinterestUserPins" my-repeat-feed-timeout-directive>
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <a href="{{userpins.url}}" target="_blank" class="btn-floating btn-large btn-pin waves-effect waves-light pink darken-1"><span><i class="fa fa-thumb-tack fa-fw" aria-hidden="true"></i>{{userpins.repinscount}}</span></a>
-                        <a href="{{userpins.url}}" target="_blank"><img src="{{userpins.imageurl}}" alt="product-img">
-                        </a>
-                    </div>
-                    <ul class="card-action-buttons">
-                        <li>
-                            <a class="btn-floating waves-effect waves-light light-blue"><i class="mdi-action-info activator"></i></a>
-                        </li>
-                    </ul>
-                    <div class="card-content">
-                        <div class="row">
-                            <div class="col s8 margin-top-10">
-                                <p class="card-title grey-text text-darken-4">
-                                    <a href="{{userpins.creatorurl}}" class="grey-text text-darken-4"><i class="fa fa-pinterest-p fa-fw red-text"></i>@{{userpins.boardname}}</a>
-                                </p>
-                            </div>
-                            <div class="col s4 no-padding center">
-                                <a href="{{userpins.creatorurl}}">
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4"><i class="mdi-navigation-close right"></i>{{userpins.metasite_name}}</span>
-                        <p>{{userpins.metatitle}}</p>
-                    </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4"><i class="mdi-navigation-close right"></i>{{userpins.metasite_name}}</span>
+                    <p>{{userpins.metatitle}}</p>
                 </div>
             </div>
-        </div>
-        <!--/ end items list -->
+        </div>-->
+
+
+
+             <div id="center">
+                 <ul id="waterfall">
+                     <li class="collection-item" ng-repeat="userpins in lstpin.lstMongoPinterestUserPins " myRepeatTabDirective>
+                         <div class="studio_card">
+                             <div class="card-image waves-effect waves-block waves-light">                                 
+                                 <a href="{{userpins.url}}" target="_blank" class="center">
+                                     <img class="responsive-img center" src="{{userpins.imageurl}}" alt="product-img" style="display:table; margin-left:auto; margin-right:auto;">
+                                 </a>
+                             </div>
+                             <div class="card-content">
+                                 <div class="row">
+                                     <div class="col s8">
+                                         <p class="card-title grey-text text-darken-4">
+                                             <a href="{{userpins.creatorurl}}" class="grey-text text-darken-4"><i class="fa fa-pinterest-p fa-fw red-text"></i>@{{userpins.boardname}}</a>
+                                         </p>
+                                     </div>
+                                     <div class="col s4 center">
+                                         <!--<a href="{{userpins.creatorurl}}"></a>-->
+                                         <a href="{{userpins.url}}" target="_blank" class="btn-floating btn-pin waves-effect waves-light pink darken-1"><span><i class="fa fa-thumb-tack fa-fw" aria-hidden="true"></i>{{userpins.repinscount}}</span></a>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </li>
+                 </ul>
+             </div>
+         </div>
+            <!--/ end items list -->
 
         <!-- CreatePinModal  -->
         <div id="CreatePinModal" class="modal">
@@ -169,7 +237,10 @@
     </div>
 
     <script type="text/javascript">
+
+
         $(document).ready(function () {
+            $('#waterfall').NewWaterfall();
             $(".device_pin").click(function () {
                 $(".web_pin_div").hide();
                 $(".web_pin").removeClass('activeButton');
@@ -183,4 +254,22 @@
                 $(".web_pin").addClass('activeButton');
             });
         });
+
+
+        // waterfall
+        //function random(min, max) {
+        //    return min + Math.floor(Math.random() * (max - min + 1))
+        //}
+        //var loading = false;
+        //var dist = 300;
+        //var num = 1;
+        //setInterval(function () {
+        //    if ($(window).scrollTop() >= $(document).height() - $(window).height() - dist && !loading) {
+        //        loading = true;
+        //        $("#test").clone().appendTo('#waterfall');
+        //        $("#waterfall").append("<li><div style='height:" + random(50, 500) + "px'>" + num + "</div></li>");
+        //        num++;
+        //        loading = false;
+        //    }
+        //}, 60);
     </script>

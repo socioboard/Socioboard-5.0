@@ -476,7 +476,6 @@ namespace Socioboard.LinkedIn.Authentication
             }
             catch (Exception ex)
             {
-
                 return "";
             }
         }

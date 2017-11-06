@@ -1,4 +1,8 @@
 <style>
+    .profile_s_pic {
+    max-height: 50px;
+    max-width: 50px;
+}
     .fb_feed {
         background: #ececec none repeat scroll 0 0;
         color: #555555;
@@ -6,8 +10,30 @@
         font-weight: normal;
         padding: 10px 20px;
     }
-</style>
-<style>
+
+  #waterfall li.show {
+        opacity: 1;
+        transform: translateY(0);
+        transition: all 0.3s, top 1s;
+    }
+
+    #waterfall li > div {
+        color: rgba(0,0,0,0.6);
+        border-radius: 3px;
+        margin: 10px;
+        padding: 0px;
+        background: rgb(255,255,255);
+        border: 1px solid rgba(038, 191, 64, 0);
+        transition: all 0.5s;
+    }
+
+        #waterfall li > div:hover {
+            transform: translateY(-10px);
+            border: 1px solid #3b5998;
+            box-shadow: 0 10px 15px rgba(154, 187, 221, 0.4);
+            transition: all 0.3s;
+        }
+
     ul.shinh li label {
         font-size: 15px;
         color: #333;
@@ -44,79 +70,46 @@
 
     <!-- START CONTENT -->
 
-    <div id="profiles">
-        <div id="products" class="row">
-            <div class="product-sizer"></div>
-            <div class="product" ng-repeat="fbpost in lstDiscoverySearchFacebook | orderBy:'publishedtime':true" my-repeat-feed-timeout-directive>
-                <div class="card hoverable">
-                    <div class="card-content">
-                        <div class="row">
-                            <div class="col l12 m12 s12 margin-top-10 center">
-                                <img class="responsive-img circle " ng-src="http://graph.facebook.com/{{fbpost.userProfileId}}/picture?type=normal">
-                            </div>
-                            <div class="col l12 s12 m12 center">
-                                <span class="card-title">{{fbpost.profileName}}</span>
-                                <br>
-                                <!--<span>
-                                    <a href="#" target="_blank">
-                                        <i class="fa fa-facebook fa-fw"></i>@{{fbpost.profileName}}
-                                    </a>
-                                </span>-->
-                                <span>
-                                    <i class="fa fa-facebook-official" style="color:#3B5998; font-size:x-large"></i>
-                                </span>
-                            </div>
-                            <div class="col l12 m12 s12">
-                                <p class="description_listen">
-                                    <!--{{getPostData(fbpost.message)}}-->
-                                    {{(fbpost.message)}}
-                                    <div class="center" ng-if="fbpost.postImgUrl != null">
-                                        <!--<img    src="{{fbpost.postImgUrl}}" class="responsive-img">-->
-                                        <!--<div style="word-break:break-all"> {{getPostData(fbpost.message)}} </div>-->
+    <div id="center">
+        <ul id="waterfall">
+            <li class="collection-item" ng-repeat="fbpost in lstDiscoverySearchFacebook">
+                <div class="studio_card">
+                        <div class="card hoverable">
+                            <div class="card-content">
+                                <div class="row">
+                                    <div class="col l12 m12 s12 margin-top-10 center">
+                                        <img class="responsive-img circle profile_s_pic " ng-src="http://graph.facebook.com/{{fbpost.userProfileId}}/picture?type=normal">
                                     </div>
-                                </p>
+                                    <div class="col l12 m12 s12 margin-top-10 center">
+                                        <span class="card-title">{{fbpost.profileName}}</span>
+                                        <br>
+                                        <span>
+                                            <i class="fa fa-facebook-official" style="color:#3B5998; font-size:x-large"></i>
+                                        </span>
+                                    </div>
+                                    <div class="col l12 m12 s12 margin-top-10 center">
+                                        <p class="description_listen">
+                                            <!--{{getPostData(fbpost.message)}}-->
+                                            {{(fbpost.message)}}
+                                            <div class="center" ng-if="fbpost.postImgUrl != null">
+                                                <!--<img    src="{{fbpost.postImgUrl}}" class="responsive-img">-->
+                                                <!--<div style="word-break:break-all"> {{getPostData(fbpost.message)}} </div>-->
+                                            </div>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-action center">
+                                <a ng-click="schedulefbpost(fbpost.message)" class="waves-effect waves-grey btn btn_round ">Schedule</a>
+                                <a ng-click="openComposeMessage(fbpost)" class="waves-effect waves-grey btn grey btn_round ">1-Click</a>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-action center">
-                        <a ng-click="schedulefbpost(fbpost.message)">Schedule</a>
-                        <a ng-click="openComposeMessage(fbpost)" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>
-                    </div>
                 </div>
-            </div>
-
-            <!--<div class="card">
-            <div class="card-content">
-                <div class="row">
-                    <div class="col l2 m2 s6 margin-top-10">
-                        <img class="responsive-img" src="{{fbpost.profileImage}}">
-                    </div>
-                    <div class="col l10 s10 m10">
-                        <span class="card-title">{{fbpost.profileName}}</span>
-                    <br>
-                        <span>
-                            <a style="cursor:context-menu" href="javascript:;">
-                                <i class="fa fa-facebook fa-fw"></i>@{{fbpost.profileName}}
-                            </a>
-                        </span>
-                    </div>
-                    <div class="col l12 m12 s12">
-                        <p class="description_listen">
-                            <div style="word-break:break-all"> {{getPostData(fbpost.message)}} </div>
-
-                            <!--<img ng-if="fbpost.postImgUrl!='N/A'" src="{{fbpost.postImgUrl}}" class="responsive-img">-->
-            <!--</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card-action center">
-              <a style="cursor:pointer" ng-click="schedulefbpost(fbpost.message)">Schedule</a>-->
-            <!--<a ng-click="schedulefbpost(fbpost.message)" href="#" class="waves-effect waves-grey btn gery ">1-Click Schedule</a>-->
-            <!--</div>
-            </div>-->
-
-        </div>
+            </li>
+        </ul>
     </div>
+
+
     </div>
 
     <!-- END CONTENT -->
@@ -268,6 +261,29 @@
 
     
     <script>
+
+        $(document).ready(function () {
+            $('#waterfall').NewWaterfall();
+        });
+
+        // waterfall
+        function random(min, max) {
+            return min + Math.floor(Math.random() * (max - min + 1))
+        }
+        var loading = false;
+        var dist = 300;
+        var num = 1;
+
+        setInterval(function () {
+            if ($(window).scrollTop() >= $(document).height() - $(window).height() - dist && !loading) {
+                loading = true;
+                $("#test").clone().appendTo('#waterfall');
+                // $("#waterfall").append("<li><div style='height:" + random(50,500) +  "px'>" + num + "</div></li>");
+                num++;
+
+                loading = false;
+            }
+        }, 60);
     function check() {
         var flag = $('#checkAll').is(":checked");
         $('#checkboxdata input:checkbox').each(function () {

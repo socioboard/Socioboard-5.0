@@ -285,6 +285,7 @@ namespace Api.Socioboard.Repositories
             _facebookfeedsShare.pageId = FacebookPageId;
             _facebookfeedsShare.socialProfiles = socialProfile;
             _facebookfeedsShare.socialmedia = socialmedia;
+            _facebookfeedsShare.scheduleTime = DateTime.UtcNow;
             var ret = _fbFeedShareRepository.Find<Domain.Socioboard.Models.Mongo.FacebookPageFeedShare>(t => t.pageId == FacebookPageId && t.socialProfiles == socialProfile);
             var task = Task.Run(async () =>
             {

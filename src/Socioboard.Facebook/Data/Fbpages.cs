@@ -57,8 +57,7 @@ namespace Socioboard.Facebook.Data
         public static object getFbPageData(string accessToken)
         {
             FacebookClient fb = new FacebookClient();
-            fb.AccessToken = accessToken;
-           
+            fb.AccessToken = accessToken;          
             try
             {
                 return  fb.Get("v2.7/me?fields=id,name,username,likes,fan_count,cover,emails");

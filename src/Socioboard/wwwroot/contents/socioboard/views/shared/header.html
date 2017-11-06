@@ -203,6 +203,22 @@
                                         </div>
                                     </a>
                                 </li>
+
+                                <li ng-repeat="notify in lstnotifications">
+                                    <a ng-href="#/notification_all" terget="_blank" class="recent-activity-list chat-out-list row no-space" style="height:auto;">
+                                        <div class="col s3 recent-activity-list-icon">
+                                            <img src="{{notify.picUrl}}" class="responsive-img circle" />
+                                        </div>
+                                        <div class="col s9 recent-activity-list-text margin-top-10">
+                                            <h6 class="no-space">{{notify.socialprofileName}}</h6>
+                                            <span class="">Password change , please reconnect your account !!</span>
+                                        </div>
+                                        <div class="col s12">
+                                            <span class="truncate">{{notify.shareMessage}}</span>
+                                            <h6 ng-if="notify.status==0" class="center error_box">Reconnect</h6>
+                                        </div>
+                                    </a>
+                                </li>
                             </ul>
 </li>
                      </ul>

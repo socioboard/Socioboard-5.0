@@ -105,6 +105,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\MediaType.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\NetworkType.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PaymentType.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\PayPalAccountStatus.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\RealTimeShareFeedStatus.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBAccountType.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBGroupUserStatus.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Enum\SBPaymentStatus.cs
@@ -172,6 +173,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Training.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterAccount.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterContactSearch.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterFriendRelation.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterMentionSugg.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterMutualFans.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterNameTable.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\TwitterRecentFollower.cs
@@ -190,6 +192,7 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Conte
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ContentStudioShareathonIdData.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\ElasticmailReport.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacaebookPageDailyReports.cs
+D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPageFeedShare.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPagePost.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\FacebookPagePromotionDetails.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Fbpublicpagedailyreports.cs
@@ -213,7 +216,6 @@ D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\Mongo
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardGplusHashTag.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardInstagramFeeds.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardInstagramHashTag.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoards.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardTwitterHashTag.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardTwtFeeds.cs
 D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\MongoBoardTwtTrendingFeeds .cs

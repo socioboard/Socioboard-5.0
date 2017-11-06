@@ -113,8 +113,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             var date = date_value.split("/");
             date_value = date[1] + "/" + date[0] + "/" + date[2];
             var time_value = ($('.md-input')[1]).value;
-            // var scheduletime = date_value + ' ' + time_value;
-            var scheduletime = datval + ' ' + time_value;
+             var scheduletime = date_value + ' ' + time_value;
+           // var scheduletime = datval + ' ' + time_value;
             var newdate1 = new Date(scheduletime.replace("AM", "").replace("PM", "")).toUTCString();
             var d = new Date(newdate1);
             var d4 = d.setHours(d.getHours() + 5);

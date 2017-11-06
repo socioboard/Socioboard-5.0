@@ -5,6 +5,7 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
     $scope.$on('$viewContentLoaded', function() {   
         $scope.query = {};
         $scope.queryBy = '$';
+        var lastreach = false;
         studio_shareathon_que();
 
 
@@ -12,7 +13,7 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
         $scope.deleteshareathon = function (profileId) {
             swal({
                 title: "Are you sure?",
-                text: "you want to delete this feed!",
+                text: "Do you want to delete this feed!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -24,7 +25,7 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
 	            $http.post(apiDomain + '/api/ContentStudio/DeleteShareathon?PageShareathodId=' + profileId)
                             .then(function (response) {
                                 if (response.data == "success") {
-                                    swal("Deleted!", "Your profile has been deleted.", "success");
+                                    swal("Deleted!", "success");
                                     $scope.loadpageshareathon();
                                 }
                             }, function (reason) {
@@ -62,10 +63,17 @@ SocioboardApp.controller('StudioShareathonQueueController', function ($rootScope
             $http.get(apiDomain + '/api/ContentStudio/ShareathonQueue?userId=' + $rootScope.user.Id)
                            .then(function (response) {
                                $scope.shareathonData = response.data;
+                               if (response.data != "") {
+                                   
+                                   $scope.lastreach = true;
+                               } else {
+                                   $scope.lastreach = true;
+                                   $scope.nomessages = true;
 
+                                  // $('#socio_all').attr('disabled', true);
+                                   //document.getElementById("deleteAll").disabled = true;
+                               }                           
                                console.log($scope.shareathonData);
-
-
                            }, function (reason) {
                                $scope.error = reason.data;
                      });

@@ -224,6 +224,7 @@ namespace Socioboard.GoogleLib.Youtube.Core
             JObject JData = JObject.Parse(accesstoken_jdata);
             string accesstoken = JData["access_token"].ToString();
 
+            commentText = commentText.Replace("\\", "\\\\").Replace("\"", "\\\""); ;
 
             string RequestUrl = "https://content.googleapis.com/youtube/v3/commentThreads?part=snippet&key=" + accesstoken + "&alt=json";
 

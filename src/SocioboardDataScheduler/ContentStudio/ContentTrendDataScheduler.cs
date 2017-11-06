@@ -41,10 +41,7 @@ namespace SocioboardDataScheduler.ContentStudio
                     noOfthread_pageshreathon = 0;
                     foreach (ContentStudioShareathonIdData shareathon in lstPageShareathon)
                     {
-                  
-                       
-
-
+                                         
                         noOfthread_pageshreathon++;
                         Thread thread_pageshreathon = new Thread(() => ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent }));
                       
@@ -134,10 +131,7 @@ namespace SocioboardDataScheduler.ContentStudio
                                                 var updateId = Builders<BsonDocument>.Update.Set("Status", true);
                                                 mongorepo.Update<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(updateId, filterId);
 
-                                            }
-
-                                            
-
+                                            }                                            
                                         }
                                     }
                                     catch

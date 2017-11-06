@@ -91,7 +91,7 @@ namespace Api.Socioboard.Controllers
         }
 
 
-        [HttpGet("GetAdvanceSearchFlickerData")]
+        [HttpGet("GetAdvanceSearchFlickerData")]      
         public IActionResult GetAdvanceSearchFlickerData(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
@@ -100,6 +100,30 @@ namespace Api.Socioboard.Controllers
             if (skip + count < 100)
             {
                 return Ok(Repositories.ContentStudioRepository.FlickerAdvanceSerachData(network, _redisCache, _appSettings).Skip(skip).Take(count));
+            }
+            else
+            {
+                var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSerachData>.Sort;
+                var sort = builder.Descending(t => t.totalShareCount);
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.networkType.Equals(network), sort, skip, count);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitterFeeds = task.Result;
+                return Ok(lstTwitterFeeds);
+            }
+        }
+
+        [HttpGet("GetAdvanceSerachInstagramData")]       
+        public IActionResult GetAdvanceSerachInstagramData(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            skip = 0;
+            MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
+            if (skip + count < 100)
+            {
+                return Ok(Repositories.ContentStudioRepository.InstagramAdvanceSerachData(network, _redisCache, _appSettings).Skip(skip).Take(count));
             }
             else
             {

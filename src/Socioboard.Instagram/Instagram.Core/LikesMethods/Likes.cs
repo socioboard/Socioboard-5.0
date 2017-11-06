@@ -49,7 +49,7 @@ namespace Socioboard.Instagram.Instagram.Core.LikesMethods
                                        {
                                                {"access_token", accessToken}
                                        };
-            string json = oAuthIns.RequestPostToUrl(url, post, oAuthIns.Configuration.Proxy);
+            string json = oAuthIns.RequestPostToUrl(url, post, null);
             if (string.IsNullOrEmpty(json))
                 return true;
 
@@ -70,7 +70,7 @@ namespace Socioboard.Instagram.Instagram.Core.LikesMethods
         {
             string url = "https://api.instagram.com/v1/media/" + mediaid + "/likes?access_token=" + accessToken;
 
-            string json = oAuthIns.RequestDeleteToUrl(url, oAuthIns.Configuration.Proxy);
+            string json = oAuthIns.RequestDeleteToUrl(url, null);
             if (string.IsNullOrEmpty(json))
                 return true;
 

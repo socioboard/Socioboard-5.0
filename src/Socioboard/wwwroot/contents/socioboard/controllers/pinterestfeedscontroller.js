@@ -18,7 +18,7 @@ SocioboardApp.controller('PinterestFeedsController', function ($rootScope, $scop
             $http.get(apiDomain + '/api/Pinterest/GetTopUserPins?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&take=' + count)
                               .then(function (response) {
                                   $scope.lstpin = response.data;
-                                  $scope.reloadFeeds();
+                                  //$scope.reloadFeeds();
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -163,19 +163,19 @@ SocioboardApp.controller('PinterestFeedsController', function ($rootScope, $scop
     });
 
 });
-SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
-    return function (scope, element, attrs) {
-        if (scope.$last === true) {
-            $timeout(function () {
-                console.log("myRepeatFeedTimeoutDirective Called");
-                var $containerProducts = $("#pins_board");
-                $containerProducts.masonry({
-                    itemSelector: ".product",
-                    columnWidth: ".product-sizer",
-                });
-            });
+//SocioboardApp.directive('myRepeatFeedTimeoutDirective', function ($timeout) {
+//    return function (scope, element, attrs) {
+//        if (scope.$last === true) {
+//            $timeout(function () {
+//                console.log("myRepeatFeedTimeoutDirective Called");
+//                var $containerProducts = $("#pins_board");
+//                $containerProducts.masonry({
+//                    itemSelector: ".product",
+//                    columnWidth: ".product-sizer",
+//                });
+//            });
 
 
-        };
-    }
-});
+//        };
+//    }
+//});

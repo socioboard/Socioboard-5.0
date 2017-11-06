@@ -457,5 +457,13 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.TwitterMentionSugg> lstMentionSugg = Helper.TwitterHelper.TwitterMentionBased(profileId, dbr, _logger, _redisCache, _appSettings);
             return Ok(lstMentionSugg);
         }
+        [HttpGet("TwitterConversation")]
+        public IActionResult TwitterConversation(string profileId)
+        {
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            List<Domain.Socioboard.Models.TwitterMentionSugg> lstConveSugg = Helper.TwitterHelper.TwitterConversation(profileId, dbr, _logger, _redisCache, _appSettings);
+            return Ok(lstConveSugg);
+        }
+
     }
 }

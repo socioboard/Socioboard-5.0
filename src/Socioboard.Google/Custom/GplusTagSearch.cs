@@ -18,7 +18,7 @@ namespace Socioboard.Google.Custom
             Hashtag = Hashtag.Replace("%E2%80%AA%E2%80%8E", string.Empty);
             try
             {
-                string Key = "AIzaSyCISaVFe_TJknn92J7xw2diFEi6Z_aroYE";
+                string Key = "";
                 //AIzaSyCvTBnEDnr5DEpvlVDCuxz9K9TK84rX0fE
                 //string RequestUrl = "https://www.googleapis.com/youtube/v3/search?part=" + part + "&maxResults=" + maxResults + "&q=" + keyword + "&key=" + accesstoken;
                 //string RequestUrl = "https://www.googleapis.com/plus/v1/" + Hashtag + "/activities/public/?key=" + Key + "&maxResults=99";

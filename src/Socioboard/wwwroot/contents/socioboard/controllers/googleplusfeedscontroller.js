@@ -46,7 +46,8 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
                               if (response.data != "") {
-                                  $scope.date(response.data);
+                                  //$scope.date(response.data);
+                                  $scope.lstGpFeeds = response.data;
                                   //$scope.reloadFeeds();
                                   $scope.preloadmorefeeds = true;
                                   $scope.dropCalled = true;
@@ -66,6 +67,32 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                           });
             // end codes to load  recent Feeds
         }
+
+        $scope.loadmore_feed = "click here to load more";
+        $scope.listData1 = function () {
+
+            if (reachLast) {
+                return false;
+            }
+            $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId='+ $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=10')
+                        .then(function (response) {
+
+
+                             if (response.data == null || response.data == "") {
+                                 reachLast = true;
+                                 $scope.loadmore_feed = "Reached at bottom";
+                                 $scope.endtwfeeds = true;
+                                 $scope.loaderclassfeed = 'hide';
+                             }
+                             else {
+                                 $scope.lstGpFeeds = $scope.lstGpFeeds.concat(response.data);
+                                 ending = ending + 10;
+                                 $scope.listData1();
+                             }
+                         }, function (reason) {
+                             $scope.error = reason.data;
+                         });
+        };
         $scope.LoadTopFeeds();
         $scope.ReLoadingTopFeeds = function () {
             $scope.filters = false;

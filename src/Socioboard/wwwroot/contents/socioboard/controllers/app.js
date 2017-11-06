@@ -712,6 +712,26 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
             }
         })
 
+                // conversation based       
+        .state('conversationbased', {
+            url: "/conversationbased/{profileId}",
+            templateUrl: "../contents/socioboard/views/discovery/conversationbased.html",
+            data: { pageTitle: 'Conversation Based', pageSubTitle: 'updated' },
+            controller: "ConversationBasedController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/conversationbasedcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
 
         // ur unfollowers        
         .state('your_unfollowers', {
@@ -919,9 +939,10 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
-                            '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            //'../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            //'../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                            '../contents/socioboard/global/plugins/waterfall_grid/newWaterfall.js',
                             '../contents/socioboard/js/admin/plugins.js',
-                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
                              '../contents/socioboard/controllers/pinterestfeedscontroller.js'
 
                         ]
@@ -2251,11 +2272,13 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         name: 'SocioboardApp',
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
-                            '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
-                             '../contents/socioboard/js/admin/moment.min.js',
-                            '../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                            //'../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                            // '../contents/socioboard/js/admin/moment.min.js',
+                            //'../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
+                            '../contents/socioboard/global/plugins/waterfall_grid/newWaterfall.js',
                             '../contents/socioboard/js/admin/plugins.js',
                              '../contents/socioboard/controllers/designfeedscontroller.js'
+
 
                         ]
                     });
@@ -2275,8 +2298,9 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                        name: 'SocioboardApp',
                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                        files: [
-                           '../contents/socioboard/global/plugins/masonry.pkgd.min.js',
-                            '../contents/socioboard/js/admin/moment.min.js',
+                           //'../contents/socioboard/global/plugins/masonry.pkgd.min.js',
+                           // '../contents/socioboard/js/admin/moment.min.js',
+                            '../contents/socioboard/global/plugins/waterfall_grid/newWaterfall.js',
                            '../contents/socioboard/js/admin/plugins.js',
                             '../contents/socioboard/controllers/designlinfeedscontroller.js'
 

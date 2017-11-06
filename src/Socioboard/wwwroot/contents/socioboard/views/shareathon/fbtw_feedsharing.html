@@ -38,23 +38,23 @@
                         </div>
                     </div>
                     <div class="col offset-s1 s10 offset-m1 m10 offset-l2 l8">
-                      <div  id="feeds">                        
+                      <div  id="feeds" style="margin-top: 30px;">                        
                         <div>
                         	<div class="row">
 			                    <form class="col s12">			                        
 				                    <div class="input-field no-space col s12 m5">
-                                        <b class="grey-text text-darken-3">Select facebook page to share feeds</b>
+                                        <b class="grey-text text-darken-3" style="font-size: 17px;">Select facebook page to share feeds</b>
 									    <select multiple id="facebookpageId">
 									      <option value="" disabled selected>Choose your option</option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}"  value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
 									    </select>
 									</div>
                                     <div class="col m2 s12 center">
-                                        <h1><i class="fa fa-arrow-right" aria-hidden="true" style="color: #1c4aa5;"></i></h1>
+                                        <h1><i class="fa fa-arrow-circle-right" aria-hidden="true" style="color: #1c4aa5;"></i></h1>
                                     </div>	
                                     <div class="col s12 m5">
                                         <div class="row">
-                                            <b class="grey-text text-darken-3">Select social profile</b>
+                                            <b class="grey-text text-darken-3" style="font-size: 17px;">Select social profile</b>
                                             <div class="input-field col s12 no-space">
                                                 <input ng-model="query[queryBy]" id="search_name" type="text" class="validate" placeholder="Search Profile">
                                                 <!--<label for="search_name" style="left:0px;"></label>-->

@@ -92,7 +92,7 @@
                     <div class="input-field col s6">
                         <a class="dropdown-button right white-text btn btn_style btn_round col s11 " href='javascript:void(0)' data-activates='quk_drop' style="font-size: medium ;line-height:35px;">Quick Topics</a>
                         <ul class="dropdown-content my-dropdown" id="quk_drop">
-                            <li>  <a href='javascript:void(0)' <strong style="color:black">Quick Topics</strong></a></li>
+                            <!--<li>  <a href='javascript:void(0)' <strong style="color:black">Quick Topics</strong></a></li>-->
                             <li> <a href='javascript:void(0)' ng-click="topic('technology')">Technology</a></li>
                             <li> <a href='javascript:void(0)' ng-click="topic('sport')">Sports</a></li>
                             <li> <a href='javascript:void(0)' ng-click="topic('business')">Business</a></li>
@@ -106,7 +106,7 @@
                     <div class="input-field col s6">
                         <a class="dropdown-button right white-text btn btn_style btn_round col s11" href='javascript:void(0)' data-activates='quk_short' style="font-size: medium ;line-height:35px;border-radius: 78px">Sort By</a>
                         <ul class="dropdown-content my-dropdown" id="quk_short">
-                            <li><a href='javascript:void(0)' <strong style="color:black">Sort By</strong></a></li>
+                            <!--<li><strong style="color:black">Sort By</strong></li>-->
                             <li><a ng-click="sortBy('trending')">Trending</a></li>
                             <li><a ng-click="sortBy('mostshare')">Most Shared</a></li>
                             <li><a ng-click="sortBy('fbshare')">Facebook Shared</a></li>
@@ -139,10 +139,11 @@
                                 </div>                                                           
                             </div>
                         </div>
-                        <div class="card-image waves-effect waves-block waves-light">
+                        <div class="card-image waves-effect waves-block waves-light" ng-click="viewPostModal(feed)">
                           
-                            <a href="{{feed.postUrl}}" target="_blank">
+                            <a>
                                 <img src="{{feed.imageUrl}}">
+                                <!--{{feed.postUrl}}-->
                             </a>
                            
                         </div>
@@ -300,6 +301,24 @@
 </div>
 
 
+<!--open image-->
+<div id="viewPostModal" class="modal" style="max-width: 850px; width: 100%;">
+    <div class="modal-content">
+        <div class="row no-space">
+            <div class="col l12 m12 s12 center">
+                <img class="responsive-img" ng-src="{{feed.imageUrl}}" alt="imgs">
+            </div>
+            <!--<div class="col l4 m4 s4">
+                <span class="card-title grey-text text-darken-4">{{feeds.adminUser}}</span>
+                <p> {{feeds.feed}}</p>
+          
+            </div>-->
+        </div>
+    </div>
+</div>
+<!--end image-->
+
+
 <!--/ end items list -->
   <!-- END CONTENT -->
 <!-- Compose Email Structure -->
@@ -445,6 +464,9 @@
 
 <!--</div>-->
 <script>
+    function closeModel() {
+        jQuery('input:checkbox').removeAttr('checked');
+    }
     $(function () {
         // Initializes and creates emoji set from sprite sheet
         window.emojiPicker = new EmojiPicker({
