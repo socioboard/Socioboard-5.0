@@ -77,5 +77,19 @@ namespace Api.Socioboard.Controllers
             return Ok(lstdiscovery);
         }
 
+        [HttpPost("YoutubeSearch")]
+        public IActionResult YoutubeSearch(string q, int page, string pagecode)
+        {
+            if (page == 0)
+            {
+                List<Domain.Socioboard.Models.Mongo.YoutubeSearch> lstVideoss = Helper.GoogleHelper.YoutubeSearch(q, _appSettings);
+                return Ok(lstVideoss);
+            }
+            else
+            {
+                List<Domain.Socioboard.Models.Mongo.YoutubeSearch> lstVideoss = Helper.GoogleHelper.YoutubeSearchPageCode(q, pagecode, _appSettings);
+                return Ok(lstVideoss);
+            }
+        }
     }
 }

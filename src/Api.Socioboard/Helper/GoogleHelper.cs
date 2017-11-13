@@ -129,7 +129,7 @@ namespace Api.Socioboard.Helper
                         string channelid = item["id"].ToString();
                         string channelname = item["snippet"]["title"].ToString();
                         string channelimage = item["snippet"]["thumbnails"]["default"]["url"].ToString();
-                        channelimage = channelimage.Replace(".jpg","");
+                        channelimage = channelimage.Replace(".jpg", "");
                         string publishdate = item["snippet"]["publishedAt"].ToString();
                         string viewscount = item["statistics"]["viewCount"].ToString();
                         string commentscount = item["statistics"]["commentCount"].ToString();
@@ -187,6 +187,151 @@ namespace Api.Socioboard.Helper
 
             }
             return lstYoutubeProfiles;
+        }
+
+        public static List<Domain.Socioboard.Models.Mongo.YoutubeSearch> YoutubeSearch(string q, Helper.AppSettings _appSettings)
+        {
+            List<Domain.Socioboard.Models.Mongo.YoutubeSearch> lstYoutubeVideos = new List<Domain.Socioboard.Models.Mongo.YoutubeSearch>();
+            string access_token = string.Empty;
+            string refresh_token = string.Empty;
+            Video _Search = new Video(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+
+            string pageCodeinit = "";
+            try
+            {
+                string videosData = _Search.Get_Search_List(_appSettings.GoogleApiKey, q);
+                JObject JvideosData = JObject.Parse(videosData);
+                try
+                {
+                    pageCodeinit = JvideosData["nextPageToken"].ToString();
+                }
+                catch
+                { }
+
+                foreach (var item in JvideosData["items"])
+                {
+                    Domain.Socioboard.Models.Mongo.YoutubeSearch _objVideosDataes = new Domain.Socioboard.Models.Mongo.YoutubeSearch();
+
+                    try
+                    {
+                        _objVideosDataes.YtVideoId = item["id"]["videoId"].ToString();
+                        _objVideosDataes.searchType = "video";
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            _objVideosDataes.YtVideoId = item["id"]["playlistId"].ToString();
+                            _objVideosDataes.searchType = "playlist";
+                        }
+                        catch
+                        {
+                            _objVideosDataes.YtVideoId = item["id"]["channelId"].ToString();
+                            _objVideosDataes.searchType = "channel";
+                        }
+                    }
+                    _objVideosDataes.YtChannelId = item["snippet"]["channelId"].ToString();
+                    _objVideosDataes.VdoUrl = "https://www.youtube.com/watch?v=" + _objVideosDataes.YtVideoId;
+                    _objVideosDataes.VdoTitle = item["snippet"]["title"].ToString();
+                    _objVideosDataes.VdoPublishDate = (Convert.ToDateTime(item["snippet"]["publishedAt"].ToString())).ToString("MMM dd, yyyy");
+                    try
+                    {
+                        _objVideosDataes.VdoImage = item["snippet"]["thumbnails"]["medium"]["url"].ToString();
+                    }
+                    catch
+                    {
+                        _objVideosDataes.VdoImage = item["snippet"]["thumbnails"]["default"]["url"].ToString();
+                    }
+                    _objVideosDataes.VdoEmbed = "https://www.youtube.com/embed/" + _objVideosDataes.YtVideoId;
+                    _objVideosDataes.VdoDescription = item["snippet"]["description"].ToString();
+                    _objVideosDataes.channelTitle = item["snippet"]["channelTitle"].ToString();
+                    _objVideosDataes.Date = Convert.ToDateTime(item["snippet"]["publishedAt"].ToString());
+                    _objVideosDataes.dateTimeUnix = DateExtension.ToUnixTimestamp(_objVideosDataes.Date);
+                    _objVideosDataes.channelUrl = "https://www.youtube.com/channel/" + _objVideosDataes.YtChannelId;
+                    _objVideosDataes.playlistUrl = "https://www.youtube.com/playlist?list=" + _objVideosDataes.YtVideoId;
+                    _objVideosDataes.pageCode = pageCodeinit;
+                    lstYoutubeVideos.Add(_objVideosDataes);
+
+                }
+            }
+            catch
+            {
+
+            }
+            return lstYoutubeVideos;
+        }
+
+
+        public static List<Domain.Socioboard.Models.Mongo.YoutubeSearch> YoutubeSearchPageCode(string q, string pagecode, Helper.AppSettings _appSettings)
+        {
+            List<Domain.Socioboard.Models.Mongo.YoutubeSearch> lstYoutubeVideos = new List<Domain.Socioboard.Models.Mongo.YoutubeSearch>();
+            string access_token = string.Empty;
+            string refresh_token = string.Empty;
+            Video _Search = new Video(_appSettings.GoogleConsumerKey, _appSettings.GoogleConsumerSecret, _appSettings.GoogleRedirectUri);
+
+            string pageCodeinit = "";
+            try
+            {
+                string videosData = _Search.Get_Search_List_Page(_appSettings.GoogleApiKey, q, pagecode);
+                JObject JvideosData = JObject.Parse(videosData);
+                try
+                {
+                    pageCodeinit = JvideosData["nextPageToken"].ToString();
+                }
+                catch
+                { }
+
+                foreach (var item in JvideosData["items"])
+                {
+                    Domain.Socioboard.Models.Mongo.YoutubeSearch _objVideosDataes = new Domain.Socioboard.Models.Mongo.YoutubeSearch();
+
+                    try
+                    {
+                        _objVideosDataes.YtVideoId = item["id"]["videoId"].ToString();
+                        _objVideosDataes.searchType = "video";
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            _objVideosDataes.YtVideoId = item["id"]["playlistId"].ToString();
+                            _objVideosDataes.searchType = "playlist";
+                        }
+                        catch
+                        {
+                            _objVideosDataes.YtVideoId = item["id"]["channelId"].ToString();
+                            _objVideosDataes.searchType = "channel";
+                        }
+                    }
+                    _objVideosDataes.YtChannelId = item["snippet"]["channelId"].ToString();
+                    _objVideosDataes.VdoUrl = "https://www.youtube.com/watch?v=" + _objVideosDataes.YtVideoId;
+                    _objVideosDataes.VdoTitle = item["snippet"]["title"].ToString();
+                    _objVideosDataes.VdoPublishDate = (Convert.ToDateTime(item["snippet"]["publishedAt"].ToString())).ToString("MMM dd, yyyy");
+                    try
+                    {
+                        _objVideosDataes.VdoImage = item["snippet"]["thumbnails"]["medium"]["url"].ToString();
+                    }
+                    catch
+                    {
+                        _objVideosDataes.VdoImage = item["snippet"]["thumbnails"]["default"]["url"].ToString();
+                    }
+                    _objVideosDataes.VdoEmbed = "https://www.youtube.com/embed/" + _objVideosDataes.YtVideoId;
+                    _objVideosDataes.VdoDescription = item["snippet"]["description"].ToString();
+                    _objVideosDataes.channelTitle = item["snippet"]["channelTitle"].ToString();
+                    _objVideosDataes.Date = Convert.ToDateTime(item["snippet"]["publishedAt"].ToString());
+                    _objVideosDataes.dateTimeUnix = DateExtension.ToUnixTimestamp(_objVideosDataes.Date);
+                    _objVideosDataes.channelUrl = "https://www.youtube.com/channel/" + _objVideosDataes.YtChannelId;
+                    _objVideosDataes.playlistUrl = "https://www.youtube.com/playlist?list=" + _objVideosDataes.YtVideoId;
+                    _objVideosDataes.pageCode = pageCodeinit;
+                    lstYoutubeVideos.Add(_objVideosDataes);
+
+                }
+            }
+            catch
+            {
+
+            }
+            return lstYoutubeVideos;
         }
 
     }

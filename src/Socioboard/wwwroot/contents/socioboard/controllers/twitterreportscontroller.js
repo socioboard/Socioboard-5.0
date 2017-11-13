@@ -404,8 +404,8 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
             $scope.totalDirectMessagesSent = totalDirectMessagesSent;
             $scope.totalMessagesReceived = totalMessagesReceived;
             $scope.totalMessagesSent = totalMessagesSent;
-            //$scope.fromDate = moment(new Date((startDate * 1000))).format('YYYY/MM/DD');
-            //$scope.toDate = moment(new Date((endDate * 1000))).format('YYYY/MM/DD');
+            $scope.fromDate = new Date((startDate * 1000));
+            $scope.toDate = new Date((endDate * 1000));
            // $scope.generateGraph(days);
 
         }

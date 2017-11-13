@@ -1,5 +1,6 @@
 ﻿using Api.Socioboard.Helper;
 using Api.Socioboard.Model;
+using Domain.Socioboard.Enum;
 using Domain.Socioboard.Models.Mongo;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
@@ -593,7 +594,8 @@ namespace Api.Socioboard.Repositories
                 {
                     return await result;
                 });
-                IList<MongoTwitterMessage> lstTwtTweets = task.Result;
+                IList<MongoTwitterMessage> TwtTweets = task.Result;
+                IList<MongoTwitterMessage> lstTwtTweets = TwtTweets.Where(t=>t.type==TwitterMessageType.TwitterUsertweet).ToList();
 
                 if (lstTwtTweets != null)
                 {

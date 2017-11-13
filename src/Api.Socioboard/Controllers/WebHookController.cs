@@ -262,11 +262,7 @@ namespace Api.Socioboard.Controllers
 
                        
 
-                        try
-                        {
-                            _FacebookPagePost.sharedate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                        }
-                        catch { }
+                       
 
                         try
                         {

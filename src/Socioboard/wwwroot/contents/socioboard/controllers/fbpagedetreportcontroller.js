@@ -149,8 +149,8 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
             else {
                 sharingByAgeFemaleFollower = 0;
             }
-            $scope.fromDate = moment(new Date((startDate * 1000))).format('YYYY/MM/DD');
-            $scope.toDate = moment(new Date((endDate * 1000))).format('YYYY/MM/DD');
+            $scope.fromDate = new Date((startDate * 1000));
+            $scope.toDate = new Date((endDate * 1000));
             $scope.totalLikes = totalLikes;
             $scope.talkingAbout = talkingAbout;
             $scope.newFans = newFans;

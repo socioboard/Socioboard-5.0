@@ -46,11 +46,18 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
             var pageId = $('#shraeathonfacebookpage').val();
             var timeInterval = $('#shraeathontimeinterval').val();
             if (pageId == "") {
-                if (FacebookUrl == "") {
-                    swal("please enter any facebook page url or select any facebook page");
-                    return false;
-                }
+
+                swal("please select profile");
+                return false;
+
             }
+            if (timeInterval == null) {
+
+                swal("please select time interval");
+                return false;
+
+            }
+          
             var formData = new FormData();
             if (pageId != null && timeInterval != null) {
               
@@ -60,9 +67,12 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
                 var x=angular.toJson(sb);
                 console.log("data");
                 console.log($scope.selectedContentfeed);
+
+
+
                 $scope.dispbtn = false;
                
-
+                if (x != "[]") {
                 formData.append('FacebookPageId', pageId);
                 var shareData = $scope.datasharethon;
                 formData.append('shareData', x);
@@ -77,19 +87,23 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
                     },                               
                     transformRequest: angular.identity,
                 }).then(function (response) {
-                        $scope.lstAdvSearhDataaa = response.data;
-                        $scope.dispbtn = true;
-                        $('#ShareathonModal').closeModal();
-                        closeModel();
-                          swal("successfully scheduled");
-                      }, function (reason) {
-                          $scope.error = reason.data;
-                      });
+                    $scope.lstAdvSearhDataaa = response.data;
+                    $scope.dispbtn = true;
+                    $('#ShareathonModal').closeModal();
+                    closeModel();
+                    swal("successfully scheduled");
+                }, function (reason) {
+                    $scope.error = reason.data;
+                });
+            }
+            else{
+                 swal("Please select feeds to be schedule");
+            }
                 // end codes to add page shreathon
             }
             else {
                 $scope.dispbtn = true;
-                swal('Please fill in all the details');
+                swal('Please fill all the details');
             }
         }
      

@@ -43,10 +43,10 @@
                   <!--Message for paid start-->
                 <li class="bold" ng-if="user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                     <a class="collapsible-header waves-effect waves-cyan" title="You can see and perform activities for twitter accounts">
-                        <i class="icon-envelope-letter"></i> Twitter Engagement
+                        <i class="icon-envelope-letter"></i> Engagement
                     </a>
                     <div class="collapsible-body">
-                        <ul>
+                        <ul class="collapsible collapsible-accordion">
                             <li>
                                 <a href="#/twitteranalytics" title="Here you can see the Twitter account Message of Mention, Retweet, and New followers. You can perform additionally Task and Filter according to your Message type">Twitter Analytics</a>
                             </li>
@@ -57,8 +57,66 @@
                                 <a href="#/mytask" title="You can see all the tasks which are assigned by you and your team members. You can perform additionally Reply, Delete and complete the Task">My Task</a>
                             </li>
                             <!--<li>
-                                <a href="#/sentmessages" title="You can see all your sent messages which are done through socioboard like (Compose, Schedule, Re-socio). In addition, you can Filter these Messages">Sent Message</a>
-                            </li>-->
+                    <a href="#/sentmessages" title="You can see all your sent messages which are done through socioboard like (Compose, Schedule, Re-socio). In addition, you can Filter these Messages">Sent Message</a>
+                </li>-->
+                            <li class="">
+                                <a class="collapsible-header waves-effect waves-orange">
+                                    Suggestions
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul class="collapsible collapsible-accordion">
+                                        <li class="">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Followers and their profile details">
+                                                Your Followers
+                                            </a>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                                        <a href="#/your_followers/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter Unfollowers and their profile details">
+                                                Do not follow back
+                                            </a>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                                        <a href="#/your_unfollowers/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see their Twitter mentions and their profile details">
+                                                Mentions Based
+                                            </a>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                                        <a href="#/mentionsbased/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li class="truncate">
+                                            <a class="collapsible-header waves-effect waves-orange" style="color:#444444" title="You can see details of twitter profiles for their conversation">
+                                                Conversation Based
+                                            </a>
+                                            <div class="collapsible-body">
+                                                <ul>
+                                                    <li ng-repeat="profile in lstProfiles | filter:{profileType:2}">
+                                                        <a href="#/conversationbased/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+
+                                    </ul>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -286,7 +344,7 @@
                                     </ul>
                                 </div>
                             </li>
-                            <li class="">
+                            <!--<li class="">
                                 <a class="collapsible-header waves-effect waves-orange">
                                     Suggestions
                                 </a>
@@ -343,7 +401,7 @@
 
                                    </ul>
                                 </div>
-                            </li>
+                            </li>-->
                         </ul>
                     </div>
                 </li>

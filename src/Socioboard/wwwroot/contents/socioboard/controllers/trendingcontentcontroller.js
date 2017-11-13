@@ -328,10 +328,16 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             var pageId = $('#shraeathonfacebookpage').val();
             var timeInterval = $('#shraeathontimeinterval').val();
             if (pageId == "") {
-                if (FacebookUrl == "") {
-                    swal("please enter any facebook page url or select any facebook page");
+              
+                    swal("please select profile");
                     return false;
-                }
+                
+            }
+            if (timeInterval == null) {
+
+                swal("please select time interval");
+                return false;
+
             }
             var formData = new FormData();
             if (pageId != null && timeInterval != null) {
@@ -378,7 +384,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             }
             else {
                 $scope.dispbtn = true;
-                swal('Please fill all the details');
+                swal('Please provide all details');
             }
         }
 

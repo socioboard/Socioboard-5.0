@@ -392,7 +392,8 @@ SocioboardApp.controller('InstagramreportController', function ($rootScope, $sco
                 }
             });
 
-
+            $scope.fromDate = new Date(startDate * 1000);
+            $scope.toDate = new Date(endDate * 1000);
             $scope.totalMedia = totalMedia;
             $scope.totalFollower = totalFollower;
             $scope.totalFollowing = totalFollowing;

@@ -310,9 +310,10 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
             // end codes to load  recent Feeds
 
         }
-        $scope.reloadFeeds = function () {
-            setTimeout(function () { $scope.LoadNotifications(); }, 1000);
-        }
+        //$scope.reloadFeeds = function () {
+        //    setTimeout(function () { $scope.LoadNotifications(); }, 1000);
+        //}
+
 
         $scope.getOnPageLoadGroups = function () {
             $scope.LoadNotifications();
@@ -670,6 +671,28 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
              }
          })
          // Discovery Suggestion
+
+        // youtube search       
+        .state('youtubesearch', {
+            url: "/youtubesearch",
+            templateUrl: "../contents/socioboard/views/discovery/youtubesearch.html",
+            data: { pageTitle: 'Youtube Search', pageSubTitle: 'updated' },
+            controller: "YoutubeSearchController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/youtubesearchcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
         // ur followers        
         .state('your_followers', {
             url: "/your_followers/{profileId}",

@@ -37,8 +37,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col offset-s1 s10 offset-m1 m10 offset-l2 l8">
-                      <div  id="feeds" style="margin-top: 30px;">                        
+                    <div class="col offset-s1 s10 offset-m1 m10 offset-l2 l8">                     
                         <div>
                         	<div class="row">
 			                    <form class="col s12">			                        
@@ -88,17 +87,222 @@
                                         </div>
                                     </div>
                                     <div ng-init="dispbtn= {{dispbtn}}"></div>
-				                    <div class="col l12 center margin-top-50">
+				                    <div class="col l12 center margin-top-10">
 				                      	<a  ng-show="dispbtn" ng-click="facebookfeedshare()" class="btn blue darken-4 btn_round darken-4 waves-effect waves-light">Share</a>
                                         <a ng-show="!dispbtn" ng-click="facebookfeedshare()" class="btn blue darken-4 btn_round darken-4 waves-effect waves-light">wait</a>
 				                    </div>
 			                    </form>
 			                </div>
+                            <div class="row">
+                                <h5>Feeds share queue</h5>
+                                <table class="display responsive-table striped">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Facebook A/c</th>
+                                            <th>Profile</th>
+                                            <th>Action</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Eclair</td>
+                                            <td>11</td>
+                                            <td>
+                                                <a class="btn btn_style btn_red_round" ng-click=""><i class="fa fa-times fa-fw"></i></a>
+                                            </td>
+                                            <td>
+                                                pending
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>Eclair</td>
+                                            <td>11</td>
+                                            <td>
+                                                <a class="btn btn_style btn_red_round" ng-click=""><i class="fa fa-times fa-fw"></i></a>
+                                            </td>
+                                            <td>
+                                                pending
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                      </div>
                     </div>
                 </div>
+
+                <!-- Compose Email Trigger -->
+                <div ng-show="user.TrailStatus!=2" class="fixed-action-btn" onclick="$('select').material_select('destroy'); $('#composeProfiles').val(''); $('select').material_select(); closeModel()" style="bottom: 45px; right: 24px;">
+                    <div class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+                        <i class="large mdi-editor-mode-edit"></i>
+                    </div>
+                </div>
+                <div ng-if="user.TrailStatus==2" class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                    <a class="btn-floating btn-large red modal-trigger" title="your trial period is expired.Click here to upgrade your account" href="#/upgradeplan">
+                        <i class="large mdi-editor-mode-edit"></i>
+                    </a>
+                </div>
             </section>
+
+     <!-- Compose Email Structure -->
+     <div id="ComposePostModal" class="modal">
+         <div class="modal-content">
+             <nav class="red">
+                 <div class="nav-wrapper">
+                     <div class="left col s12 m5 l5">
+                         <ul>
+                             <!--<li>
+                                <a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
+                            </li>-->
+                             <li>
+                                 <a href="#!" class="email-type">Compose</a>
+                             </li>
+                         </ul>
+                     </div>
+                     <!--<div ng-init="dispbtn= dispbtn"></div>-->
+                     <!--<div class="col s12 m7 l7 hide-on-med-and-down">
+                        <ul class="right">
+                            <li>
+
+                            </li>
+                        </ul>
+                    </div>-->
+                     <!--<ul class="right">
+                        <li>
+                            <div><i class="modal-action  mdi-content-save"></i></div>
+                        </li>-->
+                     <!--<li>
+                        <a href="#!"><i class="mdi-navigation-more-vert"></i></a>
+                    </li>-->
+                     <!--</ul>-->
+                 </div>
+             </nav>
+         </div>
+         <div class="model-email-content">
+             <div class="row no-space">
+                 <form class="col s12">
+                     <div class="row no-space">
+                         <div class="col s12 m6">
+                             <div class="input-field col s12">
+                                 <div class="emoji-picker-container">
+                                     <textarea id="composeMessage" class="materialize-textarea" length="5000" data-emojiable="true" placeholder="Type your message"></textarea>
+                                 </div>
+                             </div>
+                             <div class="row no-space">
+                                 <div class="col s12 m12 l12">
+                                     <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
+                                 </div>
+                                 <div class="col s12 m12 l12">
+                                     <input type="file" id="composeImage" class="dropify" data-default-file="" />
+                                 </div>
+                             </div>
+                         </div>
+                         <div class="col s12 m6">
+                             <div class="row">
+                                 <div class="input-field col s12">
+                                     <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
+                                     <label for="search_name">Search Profile</label>
+                                 </div>
+                                 <!--<div ng-repeat="profile in lstProfiles |filter:query" >-->
+                                 <ul class="col s12 shinh" id="checkboxdata" style="max-height:250px; overflow-y:scroll;">
+                                     <li style="padding:5px 0;">
+                                         <label>
+                                             <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
+                                             <span style="float:left;">Check All</span>
+                                         </label>
+                                     </li>
+                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                         <label>
+                                             <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                             <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
+                                         </label>
+                                     </li>
+                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                         <label>
+                                             <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                             <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                         </label>
+                                     </li>
+                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
+                                         <label>
+                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                             <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
+                                         </label>
+                                     </li>
+                                     <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                         <label>
+                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                             <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                         </label>
+                                     </li>
+                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
+                                         <label>
+                                             <input name="selector[]" onclick="profile();" class="subcheckbox" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                             <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                         </label>
+                                     </li>
+                                 </ul>
+                             </div>
+                         </div>
+                     </div>
+                     <!--<div class="row no-space">
+                        <div class="col s12 m12 l12">
+                            <p>Add your hashtag</p>
+                        </div>
+                        <div class="input-field col s12">
+                            <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
+                        </div>
+                    </div>-->
+                     <!--<div class="row">
+                        <div class="input-field col s12">
+                            <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
+                            <label for="compose">Message</label>
+                        </div>
+                    </div>-->
+                     <!-- <div id="selection" class="row">
+                    <div class="input-field col s12">
+
+                         <select multiple id="composeProfiles" ng-change="selectclick()" ng-model="selectvalue">
+                             <option value="select" disabled my-repeat-dropdown-directive selected>Select Your Account</option>
+                             <option value="selectall">Select all</option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}}</option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:11}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" class="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" class="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                             <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" class="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                         </select>
+                         </div>
+                     </div>-->
+                     <!--</div>-->
+
+
+                     <div class="row no-space">
+                         <a href="" class="btn btn_style blue_btn_style left" ng-click="draftMsg()" style="width:90px;">Save as Draft</a>
+                         <div class="right btn btn_style blue_btn_style">
+                             <div ng-show="dispbtn" ng-click="ComposeMessage()" style="width:90px;">send</div>
+                             <div ng-show="!dispbtn"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
+                         </div>
+                     </div>
+                 </form>
+             </div>
+         </div>
+     </div>
     </div>
 <script>
     function closeModel() {

@@ -20,6 +20,9 @@
                     </h6>
                 </div>
             </div>-->
+        <h4 class="pull-left">
+            <span class="grey-text text-darken-1">Showing last 90 days report ({{fromDate | date}} - {{toDate | date}})</span>
+        </h4>
 
             <div class="row" ng-class="fetchdatacomplete">
 
@@ -32,216 +35,209 @@
                         <div class="collection">
                             <div class="row">
                                 <!--<div class="col l12">
-                                    <blockquote class="groupbox_padding grey lighten-1">
-                                        <h5><i class="fa fa-facebook-official fa-fw fa-2x"></i>My Facebook Pages</h5>
-                                        <div class="row container">
-                                        <p class="pull-left">{{totalLikes}} Total Likes and {{talkingAbout}} people talking about this</p>
-                                        <p class="pull-right"><span>New Fans  {{newFans}}</span><span> 'Unliked' Your Page  {{unliked}}</span></p>
-                                        </div>
-                                    </blockquote>
-                                    <div id="MyFacebookPages" class="charts" style="height: 200px;"></div>
-                                </div>-->
-                                <!-- FACEBOOK total fans start -->
-                                <<!--div class="collection">
-                                    <div class="row">-->
-                                        <div class="col l12">
-                                            <blockquote class="groupbox_padding grey lighten-1">
-                                                <h5><i class="fa fa-facebook-official fa-fw"></i>Total No. Of Fans</h5>
-                                            </blockquote>
-                                            <div id="FBTotalFans" class="chart" style="height: 400px;"></div>
-                                        </div>
-                                    <!--</div>
-                                </div>-->
-
-                                <!--<div class="collection">
-                                    <div class="row">-->
-                                        <div class="col l12">
-                                            <blockquote class="groupbox_padding grey lighten-1">
-                                                <h5 class="feeds_title blue darken-4 white-text">
-                                                    <i class="icon-social-facebook"></i>Total likes on daily basis</span>
-                                                </h5>
-                                                <!--<h5><i class="fa fa-facebook-official fa-fw"></i>Total likes on daily basis</h5>-->
-                                            </blockquote>
-                                            <div id="rate_activity" class="chart" style="height: 300px;"></div>
-                                        </div>
-                                    <!--</div>
-                                </div>-->
-
-                                <!--<div class="collection">
-                                    <div class="row">-->
-                                        <!--<div class="col l12">
-                                            <blockquote class="groupbox_padding grey lighten-1">
-                                                <h5><i class="fa fa-facebook-official fa-fw"></i>Facebook Page Info</h5>
-                                            </blockquote>
-                                            <table id="FacebookPagesInfo" class="display responsive-table striped" cellspacing="0" width="100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Fans</th>
-                                                        <th>Posts</th>
-                                                    </tr>
-                                                </thead>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Fans</th>
-                                                        <th>Posts</th>
-                                                    </tr>
-                                                </tfoot>
-                                                <tbody ng-repeat="fbfanpagelist in rep">-->
-                                                    <!--<tr>
-                                                        <td>Chanchal</td>
-                                                        <td>100</td>
-                                                        <td>100</td>
-                                                        
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Chanchal</td>
-                                                        <td>100</td>
-                                                        <td>100</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Chanchal</td>
-                                                        <td>100</td>
-                                                        <td>100</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td>Chanchal</td>
-                                                        <td>100</td>
-                                                        <td>100</td>
-                                                    </tr>-->
-                                                    <!--<tr>
-                                                        <td>{{fbfanpagelist.name}}</td>
-                                                        <td>{{fbfanpagelist.totalLikes}}</td>
-                                                        <td>{{fbfanpagelist.storyShare}}</td> 
-                                                    </tr>
-                                                                                                 
-                                                </tbody>
-                                            </table>
-                                        </div>-->
-                                    <!--</div>
-                                </div>-->
-
-                                <!-- FACEBOOK total fans end-->
-
-                                <!--<div class="col l12">
-                                    <blockquote class="groupbox_padding grey lighten-1">                               
-                                        <div class="row container-fluid">
-                                            <h5 class="pull-left"><i class="fa fa-street-view fa-fw"></i>PAGE IMPRESSIONS</h5>
-                                            <p class="pull-right"><span>Impressions  {{impressions}}  </span><span> by  {{usersBy}}  Users</span></p>
-                                        </div>
-                                    </blockquote>
-                                    <div id="PAGEIMPRESSIONS" class="charts" style="height: 200px;"></div>
-                                </div>-->
-
-                                <!--<div class="col l12">
-                                    <blockquote class="groupbox_padding grey lighten-1">                      
-                                        <h5><i class="fa fa-pie-chart fa-fw"></i>IMPRESSIONS BREAKDOWN</h5>
-                                    </blockquote>
-                                    <div id="BREAKDOWN_1" class="charts" style="height: 200px;"></div>
-                                    <div id="BREAKDOWN_2" class="charts" style="height: 250px;"></div>
-                                </div>-->
-
-                                <!--<div class="col l12 m12 s12">
-                                    <blockquote class="groupbox_padding grey lighten-1">              
-                                        <h5> <i class="fa fa-male fa-fw"></i>IMPRESSIONS BY AGE &amp; GENDER</h5>
-                                    </blockquote>
-                                    <div id="male_female" class="charts" style="height: 200px;"></div>-->
-                                    <!--<div class="row center">
-                                        <div class="col m6 blue-text">
-                                         <i class="icon-user fa-5x"></i>
-                                         <h5><strong>{{impressionsByAgeMaleFollower}}%</strong></h5>
-                                         <span>MALE FOLLOWERS</span>
-                                        </div>
-                                        <div class="col m6 pink-text">
-                                          <i class="icon-user-female fa-5x"></i>
-                                          <h5><strong>{{impressionsByAgeFemaleFollower}}%</strong></h5>
-                                          <span>FEMALE FOLLOWERS</span>                            
-                                        </div>
-                                    </div>-->
-                                <!--</div>-->
-
-                                <!--<div class="col l6 m6 s12">
-                                    <blockquote class="groupbox_padding grey lighten-1">              
-                                        <h5> <i class="fa fa-male fa-fw"></i>STORY BY AGE &amp; GENDER</h5>
-                                    </blockquote>
-                                    <div id="male_female" class="charts" style="height: 200px;"></div>
-                                    <div class="row center">
-                                        <div class="col m6 blue-text">
-                                         <i class="icon-user fa-5x"></i>
-                                         <h5><strong>4%</strong></h5>
-                                         <span>MALE FOLLOWERS</span>
-                                        </div>
-                                        <div class="col m6 pink-text">
-                                          <i class="icon-user-female fa-5x"></i>
-                                          <h5><strong>9%</strong></h5>
-                                          <span>FEMALE FOLLOWERS</span>                            
-                                        </div>
+                                <blockquote class="groupbox_padding grey lighten-1">
+                                    <h5><i class="fa fa-facebook-official fa-fw fa-2x"></i>My Facebook Pages</h5>
+                                    <div class="row container">
+                                    <p class="pull-left">{{totalLikes}} Total Likes and {{talkingAbout}} people talking about this</p>
+                                    <p class="pull-right"><span>New Fans  {{newFans}}</span><span> 'Unliked' Your Page  {{unliked}}</span></p>
                                     </div>
-                                </div>-->
-
-                                <!--<div class="col l12">
-                                    <blockquote class="groupbox_padding grey lighten-1">              
-                                        <h5> <i class="fa fa-map-marker fa-fw"></i>IMPRESSIONS BY LOCATION</h5>
+                                </blockquote>
+                                <div id="MyFacebookPages" class="charts" style="height: 200px;"></div>
+                            </div>-->
+                                <!-- FACEBOOK total fans start -->
+                                <
+                                <!--div class="collection">
+                               <div class="row">-->
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5><i class="fa fa-facebook-official fa-fw"></i>Total No. Of Fans</h5>
                                     </blockquote>
-                                    <div  id="world" class="charts" style="height: 200px;"></div>
-                                </div>-->
+                                    <div id="FBTotalFans" class="chart" style="height: 400px;"></div>
+                                </div>
+                                <!--</div>
+                            </div>-->
+                                <!--<div class="collection">
+                                <div class="row">-->
+                                <div class="col l12">
+                                    <blockquote class="groupbox_padding grey lighten-1">
+                                        <h5 class="feeds_title blue darken-4 white-text">
+                                            <i class="icon-social-facebook"></i>Total likes on daily basis</span>
+                                        </h5>
+                                        <!--<h5><i class="fa fa-facebook-official fa-fw"></i>Total likes on daily basis</h5>-->
+                                    </blockquote>
+                                    <div id="rate_activity" class="chart" style="height: 300px;"></div>
+                                </div>
+                                <!--</div>
+                            </div>-->
+                                <!--<div class="collection">
+                                <div class="row">-->
+                                <!--<div class="col l12">
+                                <blockquote class="groupbox_padding grey lighten-1">
+                                    <h5><i class="fa fa-facebook-official fa-fw"></i>Facebook Page Info</h5>
+                                </blockquote>
+                                <table id="FacebookPagesInfo" class="display responsive-table striped" cellspacing="0" width="100%">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Fans</th>
+                                            <th>Posts</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Fans</th>
+                                            <th>Posts</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody ng-repeat="fbfanpagelist in rep">-->
+                                <!--<tr>
+                                <td>Chanchal</td>
+                                <td>100</td>
+                                <td>100</td>
+
+                            </tr>
+                            <tr>
+                                <td>Chanchal</td>
+                                <td>100</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>Chanchal</td>
+                                <td>100</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td>Chanchal</td>
+                                <td>100</td>
+                                <td>100</td>
+                            </tr>-->
+                                <!--<tr>
+                                            <td>{{fbfanpagelist.name}}</td>
+                                            <td>{{fbfanpagelist.totalLikes}}</td>
+                                            <td>{{fbfanpagelist.storyShare}}</td>
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                            </div>-->
+                                <!--</div>
+                            </div>-->
+                                <!-- FACEBOOK total fans end-->
+                                <!--<div class="col l12">
+                                <blockquote class="groupbox_padding grey lighten-1">
+                                    <div class="row container-fluid">
+                                        <h5 class="pull-left"><i class="fa fa-street-view fa-fw"></i>PAGE IMPRESSIONS</h5>
+                                        <p class="pull-right"><span>Impressions  {{impressions}}  </span><span> by  {{usersBy}}  Users</span></p>
+                                    </div>
+                                </blockquote>
+                                <div id="PAGEIMPRESSIONS" class="charts" style="height: 200px;"></div>
+                            </div>-->
+                                <!--<div class="col l12">
+                                <blockquote class="groupbox_padding grey lighten-1">
+                                    <h5><i class="fa fa-pie-chart fa-fw"></i>IMPRESSIONS BREAKDOWN</h5>
+                                </blockquote>
+                                <div id="BREAKDOWN_1" class="charts" style="height: 200px;"></div>
+                                <div id="BREAKDOWN_2" class="charts" style="height: 250px;"></div>
+                            </div>-->
+                                <!--<div class="col l12 m12 s12">
+                                <blockquote class="groupbox_padding grey lighten-1">
+                                    <h5> <i class="fa fa-male fa-fw"></i>IMPRESSIONS BY AGE &amp; GENDER</h5>
+                                </blockquote>
+                                <div id="male_female" class="charts" style="height: 200px;"></div>-->
+                                <!--<div class="row center">
+                                <div class="col m6 blue-text">
+                                 <i class="icon-user fa-5x"></i>
+                                 <h5><strong>{{impressionsByAgeMaleFollower}}%</strong></h5>
+                                 <span>MALE FOLLOWERS</span>
+                                </div>
+                                <div class="col m6 pink-text">
+                                  <i class="icon-user-female fa-5x"></i>
+                                  <h5><strong>{{impressionsByAgeFemaleFollower}}%</strong></h5>
+                                  <span>FEMALE FOLLOWERS</span>
+                                </div>
+                            </div>-->
+                                <!--</div>-->
+                                <!--<div class="col l6 m6 s12">
+                                <blockquote class="groupbox_padding grey lighten-1">
+                                    <h5> <i class="fa fa-male fa-fw"></i>STORY BY AGE &amp; GENDER</h5>
+                                </blockquote>
+                                <div id="male_female" class="charts" style="height: 200px;"></div>
+                                <div class="row center">
+                                    <div class="col m6 blue-text">
+                                     <i class="icon-user fa-5x"></i>
+                                     <h5><strong>4%</strong></h5>
+                                     <span>MALE FOLLOWERS</span>
+                                    </div>
+                                    <div class="col m6 pink-text">
+                                      <i class="icon-user-female fa-5x"></i>
+                                      <h5><strong>9%</strong></h5>
+                                      <span>FEMALE FOLLOWERS</span>
+                                    </div>
+                                </div>
+                            </div>-->
+                                <!--<div class="col l12">
+                                <blockquote class="groupbox_padding grey lighten-1">
+                                    <h5> <i class="fa fa-map-marker fa-fw"></i>IMPRESSIONS BY LOCATION</h5>
+                                </blockquote>
+                                <div  id="world" class="charts" style="height: 200px;"></div>
+                            </div>-->
 
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
 
 
                 <!--<div class="col s12 m12 l12">
-                    <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-4 white-text">
-                            <i class="icon-social-facebook"></i>SHARING <small>How people are sharing your content.</small></span>
-                        </h5>-->
-                        <!--<div class="collection">
-                            <div class="row">
-                                <div class="col l12">
-                                    <blockquote class="groupbox_padding grey lighten-1">
-                                        <div class="row container">
-                                            <p class="pull-left">STORIES</p>
-                                            <p class="pull-right"><span>Stories Created {{storiesCreated}}</span></p>
-                                        </div>
-                                    </blockquote>
-                                    <div id="FacebookStories" class="charts" style="height: 200px;"></div>
-                                </div>
-
-                                <div class="col l12">
-                                    <blockquote class="groupbox_padding grey lighten-1">   
-                                        <h5><i class="fa fa-street-view fa-fw"></i>SHARE TYPE</h5>
-                                    </blockquote>
-                                    <div id="ShareType" class="charts" style="height: 200px;"></div>
-                                </div>
-
-                                <div class="col l12 m12 s12">
-                                    <blockquote class="groupbox_padding grey lighten-1">              
-                                        <h5> <i class="fa fa-male fa-fw"></i>SHARING BY AGE &amp; GENDER</h5>
-                                    </blockquote>
-                                    <div id="share_male_female" class="charts" style="height: 200px;"></div>-->
-                                    <!--<div class="row center">
-                                        <div class="col m6 blue-text">
-                                         <i class="icon-user fa-5x"></i>
-                                         <h5><strong>{{sharingByAgeMaleFollower}}%</strong></h5>
-                                         <span>MALE FOLLOWERS</span>
-                                        </div>
-                                        <div class="col m6 pink-text">
-                                          <i class="icon-user-female fa-5x"></i>
-                                          <h5><strong>{{sharingByAgeFemaleFollower}}%</strong></h5>
-                                          <span>FEMALE FOLLOWERS</span>                            
-                                        </div>
-                                    </div>-->
-                                <!--</div>
-
+                <div class="card" id="feeds">
+                    <h5 class="feeds_title blue darken-4 white-text">
+                        <i class="icon-social-facebook"></i>SHARING <small>How people are sharing your content.</small></span>
+                    </h5>-->
+                <!--<div class="collection">
+                <div class="row">
+                    <div class="col l12">
+                        <blockquote class="groupbox_padding grey lighten-1">
+                            <div class="row container">
+                                <p class="pull-left">STORIES</p>
+                                <p class="pull-right"><span>Stories Created {{storiesCreated}}</span></p>
                             </div>
-                            
-                        </div>-->
-                    <!--</div>
-                </div>-->
+                        </blockquote>
+                        <div id="FacebookStories" class="charts" style="height: 200px;"></div>
+                    </div>
+
+                    <div class="col l12">
+                        <blockquote class="groupbox_padding grey lighten-1">
+                            <h5><i class="fa fa-street-view fa-fw"></i>SHARE TYPE</h5>
+                        </blockquote>
+                        <div id="ShareType" class="charts" style="height: 200px;"></div>
+                    </div>
+
+                    <div class="col l12 m12 s12">
+                        <blockquote class="groupbox_padding grey lighten-1">
+                            <h5> <i class="fa fa-male fa-fw"></i>SHARING BY AGE &amp; GENDER</h5>
+                        </blockquote>
+                        <div id="share_male_female" class="charts" style="height: 200px;"></div>-->
+                <!--<div class="row center">
+                <div class="col m6 blue-text">
+                 <i class="icon-user fa-5x"></i>
+                 <h5><strong>{{sharingByAgeMaleFollower}}%</strong></h5>
+                 <span>MALE FOLLOWERS</span>
+                </div>
+                <div class="col m6 pink-text">
+                  <i class="icon-user-female fa-5x"></i>
+                  <h5><strong>{{sharingByAgeFemaleFollower}}%</strong></h5>
+                  <span>FEMALE FOLLOWERS</span>
+                </div>
+            </div>-->
+                <!--</div>
+
+                </div>
+
+            </div>-->
+                <!--</div>
+            </div>-->
 
 
                 <div class="col s12 m12 l12">
@@ -253,29 +249,29 @@
                             <div class="row">
                                 <div class="col l12">
                                     <!--<blockquote class="groupbox_padding grey lighten-1">
-                                        <h5>Facebookpage Profile Details</h5>
-                                        
-                                    </blockquote>-->
+                                    <h5>Facebookpage Profile Details</h5>
+
+                                </blockquote>-->
 
                                     <table id="Fbpost" class="display" cellspacing="0" width="100%">
                                         <thead>
-                                            <tr> 
-                                                <th>S.No.</th>                                              
+                                            <tr>
+                                                <th>S.No.</th>
                                                 <th>Name</th>
                                                 <th>Likes</th>
-                                                <th>Comments</th>                                                
+                                                <th>Comments</th>
                                                 <th>Post</th>
                                                 <th>Shares</th>
                                             </tr>
                                         </thead>
-                                      <tbody>
+                                        <tbody>
                                             <tr ng-repeat="facebookpagepost in fbpagepost" my-repeat-video-tab-directive>
                                                 <!--<td>
-                                                    <img src="http://graph.facebook.com/{{facebookpagepost.pageId}}/picture?type=small" class="responsive-img" style="height: 30px; width: 30px; float: left;">
-                                                    <a ng-if="facebookpagepost.name != null && facebookpagepost.name != '' " class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.name}}</a>
-                                                    <a ng-if="facebookpagepost.name == null || facebookpagepost.name == '' " class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.message}}</a>
+                                                <img src="http://graph.facebook.com/{{facebookpagepost.pageId}}/picture?type=small" class="responsive-img" style="height: 30px; width: 30px; float: left;">
+                                                <a ng-if="facebookpagepost.name != null && facebookpagepost.name != '' " class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.name}}</a>
+                                                <a ng-if="facebookpagepost.name == null || facebookpagepost.name == '' " class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.message}}</a>
 
-                                                </td>-->
+                                            </td>-->
                                                 <!--<td>{{facebookpagepost.reach}}</td>-->
                                                 <!--<td>{{facebookpagepost.engagedUsers}}</td>-->
                                                 <!--<td>{{facebookpagepost.talking}}</td>-->
@@ -286,38 +282,38 @@
                                                 <td>{{facebookpagepost.post}}</td>
                                                 <td>{{facebookpagepost.shares}}</td>
                                                 <!--<td>{{facebookpagepost.post}}%</td>-->
-                                            </tr>                                           
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>
 
                             </div>
-                            
+
                         </div>
                     </div>
                 </div>
             </div>
 
 
-        <div ng-if="fetchdatacomplete!='show'">
-            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-            <div class="center">
-                <div class="preloader-wrapper small active">
-                    <div class="spinner-layer spinner-green-only">
-                        <div class="circle-clipper left">
-                            <div class="circle"></div>
-                        </div><div class="gap-patch">
-                            <div class="circle"></div>
-                        </div><div class="circle-clipper right">
-                            <div class="circle"></div>
+            <div ng-if="fetchdatacomplete!='show'">
+                <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                <div class="center">
+                    <div class="preloader-wrapper small active">
+                        <div class="spinner-layer spinner-green-only">
+                            <div class="circle-clipper left">
+                                <div class="circle"></div>
+                            </div><div class="gap-patch">
+                                <div class="circle"></div>
+                            </div><div class="circle-clipper right">
+                                <div class="circle"></div>
+                            </div>
                         </div>
                     </div>
+                    <br />
+                    <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait for the Report data to be generated</h6>
+
                 </div>
-                <br />
-                <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait for the Report data to be generated</h6>
-
             </div>
-        </div>
 
 
-    </div>
+</div>

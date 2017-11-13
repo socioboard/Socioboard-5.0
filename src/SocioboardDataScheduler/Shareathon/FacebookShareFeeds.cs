@@ -50,7 +50,7 @@ namespace SocioboardDataScheduler.Shareathon
                         Thread thread_pageshreathon = new Thread(() => TwitterSchedulemessage(new object[] {  items, dbr , _facebookSharefeeds }));
                         thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
                         thread_pageshreathon.Start();
-                        Thread.Sleep(600 * 1000);
+                        Thread.Sleep(10 * 1000);
                         //while (noOfthreadRunning > 5)
                         //{
                         //    Thread.Sleep(5 * 1000);
@@ -95,7 +95,7 @@ namespace SocioboardDataScheduler.Shareathon
 
                     if (_TwitterAccount != null || _LinkedinAcc!=null)
                     {
-                        var resultshare = _ShareathonRepository.Find<FacebookPageFeedShare>(t => t.pageId == shareathon.pageId && t.status == Domain.Socioboard.Enum.RealTimeShareFeedStatus.notprocess );
+                        var resultshare = _ShareathonRepository.Find<FacebookPageFeedShare>(t => t.pageId == shareathon.pageId && t.status != Domain.Socioboard.Enum.RealTimeShareFeedStatus.deleted );
                         var task = Task.Run(async () =>
                         {
                             return await resultshare;
@@ -195,11 +195,9 @@ namespace SocioboardDataScheduler.Shareathon
                             {
                                 apiHitsCount++;
                                 item.shareStatus = true;
-                                item.sharedate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                            
                                 fbPagefeedshare.lastsharestamp = DateTime.UtcNow;
-
-
-                                FilterDefinition<BsonDocument> filter = new BsonDocument("Id", item.Id);
+                                FilterDefinition<BsonDocument> filter = new BsonDocument("FeedId", item.FeedId);
                                 var updatemongo = Builders<BsonDocument>.Update.Set("shareStatus", true);
                                 _mongofbpostdata.Update<MongoFacebookFeed>(updatemongo, filter);
                             }
@@ -217,7 +215,7 @@ namespace SocioboardDataScheduler.Shareathon
                 }
 
                 FilterDefinition<BsonDocument> filters = new BsonDocument("strId", fbPagefeedshare.strId); //new BsonDocument("FeedId", item.FeedId);               
-                var updatefbshare = Builders<BsonDocument>.Update.Set("status", Domain.Socioboard.Enum.RealTimeShareFeedStatus.running);
+                var updatefbshare = Builders<BsonDocument>.Update.Set("status", Domain.Socioboard.Enum.RealTimeShareFeedStatus.running).Set("scheduleTime", DateTime.UtcNow);
                 mongofacebooksharedata.Update<FacebookPageFeedShare>(updatefbshare, filters);
             }
             catch (Exception ex)
@@ -232,10 +230,18 @@ namespace SocioboardDataScheduler.Shareathon
             bool rt = false;
             string ret = "";
             string str = "Message posted";
-            if (message.Length > 140)
+            try
             {
-                message = message.Substring(0, 135);
+                if (message.Length > 140)
+                {
+                    message = message.Substring(0, 135);
+                }
             }
+            catch (Exception ex)
+            {
+
+            }
+            
 
             Domain.Socioboard.Models.TwitterAccount objTwitterAccount = TwitterAccount;
             oAuthTwitter OAuthTwt = new oAuthTwitter(AppSettings.twitterConsumerKey, AppSettings.twitterConsumerScreatKey, AppSettings.twitterRedirectionUrl);

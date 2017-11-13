@@ -27,13 +27,13 @@
                                     <td>{{$index +1}}</td>
                                     <td>{{board.bname}}</td>
                                     <td>
-                                        <a class="btn btn_style btn_green_round" href="#/board/{{board.id}}/{{board.boardName}}"  ><i class="fa fa-eye fa-fw"></i>VIEW</a>
+                                        <a class="btn btn_style btn_green_round" style="padding:0px 14px 0px 14px !important;" href="#/board/{{board.id}}/{{board.boardName}}"  ><i class="fa fa-eye fa-fw"></i><span style="display:inline-block;padding-left:5px; vertical-align:top;">VIEW</span></a>
                                     </td>
-                                    <td>
+                                    <!--<td>
                                         <a class="btn btn_style img_comp_btn" href="#/boardanalytics/{{board.boardName}}"><i class="fa fa-bar-chart fa-fw"></i>ANALYTICS</a>
-                                    </td>
+                                    </td>-->
                                      <td>
-                                        <a class="btn btn_style btn_red_round" ng-click="deleteBoard(board.id)"><i class="fa fa-times fa-fw"></i>Delete</a>
+                                        <a class="btn btn_style btn_red_round" style="padding:0px 14px 0px 14px !important;" ng-click="deleteBoard(board.id)"><i class="fa fa-times fa-fw"></i><span style="display:inline-block;padding-left:5px; vertical-align:top;">Delete</span></a>
                                     </td>
                                 </tr>      
                               </tbody>
