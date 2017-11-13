@@ -304,5 +304,76 @@ namespace Socioboard.GoogleLib.Youtube.Core
 
         }
 
+
+        public string Get_Search_List(string apiKey, string query)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/search?part=" + "snippet" + "&maxResults=" + "50" + "&q=" + query + "&key=" + apiKey;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+            return response;
+        }
+
+        public string Get_Search_List_Page(string apiKey, string query, string page)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=50&pageToken=" + page + "&q=" + query + "&key=" + apiKey;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+            return response;
+        }
+
+
+        public string Get_CommentsRepliesBy_CmParentId(string cmParentId, string key)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/comments?part=snippet&maxResults=100&parentId=" + cmParentId + "&key=" + key;
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "token_type", "expires_in" };
+            string[] val = { "Bearer", "3600" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+            return response;
+
+
+        }
+
     }
 }

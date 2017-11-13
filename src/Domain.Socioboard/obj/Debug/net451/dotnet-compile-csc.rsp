@@ -247,6 +247,7 @@
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterRecentDetails.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\TwitterUrlMentions.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\YoutubeReports.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\YoutubeSearch.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Models\Mongo\YoutubeVideoDetailsList.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Properties\AssemblyInfo.cs"
 "D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\Services\AuthMessageSender.cs"

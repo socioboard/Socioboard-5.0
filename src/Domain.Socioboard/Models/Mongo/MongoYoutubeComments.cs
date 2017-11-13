@@ -29,6 +29,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string publishTime { get; set; }
         public string updatedTime { get; set; }
         public string totalReplyCount { get; set; }
+        public string parentIdforReply { get; set; }
 
     }
 }

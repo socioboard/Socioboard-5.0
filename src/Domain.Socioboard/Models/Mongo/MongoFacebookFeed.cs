@@ -33,7 +33,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string Likecount { get; set; }
         public string postType { get; set; }
         public string postingFrom { get; set; }
-        public string sharedate { get; set; }
+     
         public bool shareStatus { get; set; }
         public List<MongoFbPostComment> _facebookComment { get; set; }
 
