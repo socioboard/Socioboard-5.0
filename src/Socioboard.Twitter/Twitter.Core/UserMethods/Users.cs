@@ -637,7 +637,13 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             
        
             if (height != null)
-                strdic.Add("height", height.ToString()); strdic.Add("width", width.ToString()); strdic.Add("offset_left", offset_left);strdic.Add("offset_top", offset_top);
+                strdic.Add("height", height.ToString()); 
+	    if (width != null)
+		strdic.Add("width", width.ToString()); 
+	    if (offset_left != null)
+		strdic.Add("offset_left", offset_left);
+	    if (offset_top != null)
+		strdic.Add("offset_top", offset_top);
             
             string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             return response;
