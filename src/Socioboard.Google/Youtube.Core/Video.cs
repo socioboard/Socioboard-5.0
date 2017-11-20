@@ -224,7 +224,7 @@ namespace Socioboard.GoogleLib.Youtube.Core
             JObject JData = JObject.Parse(accesstoken_jdata);
             string accesstoken = JData["access_token"].ToString();
 
-            commentText = commentText.Replace("\\", "\\\\").Replace("\"", "\\\""); ;
+            commentText = commentText.Replace("\\n", "######2525").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("######2525", "\\n"); ;
 
             string RequestUrl = "https://content.googleapis.com/youtube/v3/commentThreads?part=snippet&key=" + accesstoken + "&alt=json";
 
@@ -375,5 +375,92 @@ namespace Socioboard.GoogleLib.Youtube.Core
 
         }
 
+        public string replyToComment(string refreshtoken, string parentid, string commentText)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+            oAuthToken objoauth = new oAuthToken(_clientId, _clientSecret, _redirectUrl);
+
+            string accesstoken_jdata = objoauth.GetAccessToken(refreshtoken);
+            JObject JData = JObject.Parse(accesstoken_jdata);
+            string accesstoken = JData["access_token"].ToString();
+
+            commentText = commentText.Replace("\\n", "######2525").Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("######2525", "\\n"); ;
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/comments?part=snippet&key=" + accesstoken + "&alt=json";
+
+            string postdata = "{\"snippet\":{\"parentId\":\"" + parentid + "\",\"textOriginal\":\"" + commentText + "\"}}";
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "Authorization", "X-JavaScript-User-Agent" };
+            string[] val = { "Bearer " + accesstoken, "Google APIs Explorer" };
+            string response = string.Empty;
+
+
+            try
+            {
+                response = objoAuthTokenYoutube.Post_WebRequest(Socioboard.GoogleLib.Authentication.oAuthToken.Method.POST, RequestUrl, postdata, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+
+            return response;
+        }
+
+        public string deletesaComment(string refreshtoken, string commentId)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+            oAuthToken objoauth = new oAuthToken(_clientId, _clientSecret, _redirectUrl);
+
+            string accesstoken_jdata = objoauth.GetAccessToken(refreshtoken);
+            JObject JData = JObject.Parse(accesstoken_jdata);
+            string accesstoken = JData["access_token"].ToString();
+
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/comments?id=" + commentId + "&key=" + accesstoken + "&alt=json";
+
+
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "Authorization", "X-JavaScript-User-Agent" };
+            string[] val = { "Bearer " + accesstoken, "Google APIs Explorer" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.WebRequestHeader(path, header, val, Socioboard.GoogleLib.Authentication.oAuthToken.Method.DELETE.ToString());
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+
+
+            return response;
+        }
+
+        public string RejectAComment(string refreshtoken, string commmentId)
+        {
+            oAuthTokenYoutube objoAuthTokenYoutube = new oAuthTokenYoutube(_clientId, _clientSecret, _redirectUrl);
+            oAuthToken objoauth = new oAuthToken(_clientId, _clientSecret, _redirectUrl);
+            string accesstoken_jdata = objoauth.GetAccessToken(refreshtoken);
+            JObject JData = JObject.Parse(accesstoken_jdata);
+            string accesstoken = JData["access_token"].ToString();
+            string RequestUrl = "https://www.googleapis.com/youtube/v3/comments/setModerationStatus?id=" + commmentId + "&moderationStatus=rejected&key=" + accesstoken + "&alt=json";
+            string postdata = "";
+            Uri path = new Uri(RequestUrl);
+            string[] header = { "Authorization", "X-JavaScript-User-Agent" };
+            string[] val = { "Bearer " + accesstoken, "Google APIs Explorer" };
+            string response = string.Empty;
+            try
+            {
+                response = objoAuthTokenYoutube.Post_WebRequest(Socioboard.GoogleLib.Authentication.oAuthToken.Method.POST, RequestUrl, postdata, header, val);
+            }
+            catch (Exception Err)
+            {
+                Console.Write(Err.StackTrace);
+            }
+            return response;
+        }
     }
 }

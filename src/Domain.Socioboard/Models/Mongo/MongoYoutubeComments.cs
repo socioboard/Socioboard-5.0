@@ -30,6 +30,15 @@ namespace Domain.Socioboard.Models.Mongo
         public string updatedTime { get; set; }
         public string totalReplyCount { get; set; }
         public string parentIdforReply { get; set; }
+        public bool active { get; set; }
+        public double publishTimeUnix { get; set; }
 
+
+    }
+
+    public class MongoYoutubeCommentsWtRepl
+    {
+        public MongoYoutubeComments _ParentComments { get; set; }
+        public List<MongoYoutubeComments> _ChildComments { get; set; }
     }
 }
