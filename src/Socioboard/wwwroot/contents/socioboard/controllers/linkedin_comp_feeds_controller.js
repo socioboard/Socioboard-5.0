@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $scope, $http, $timeout, $stateParams, apiDomain, grouptask) {
+SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $scope, $http, $timeout,$stateParams, apiDomain,grouptask) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         likedinfeeds();
@@ -8,9 +8,10 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/LinkedIn/GetTopCompanyPagePosts?pageId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=30')
                           .then(function (response) {
+                           
                               $scope.companypagedata = response.data._LinkedinCompanyPage;
                               $scope.postdate(response.data._LinkedinCompanyPagePosts);
-                              //$scope.reloadFeeds();
+                              $scope.reloadFeeds();
                               setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
                               if (response.data == null) {
                                   reachLast = true;
@@ -38,13 +39,12 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
             $scope.lstlincmpnypageFeeds = parm;
         }
         $scope.getpostcomment = function (OAuthToken, PageId, UpdateKey) {
-            $scope.lstlincmpnypagecommentFeeds = '';
-          
+            debugger;
             //codes to load  comments of  Feeds
             $http.get(apiDomain + '/api/LinkedIn/GetLinkdeinPagePostComment?pageId=' + PageId + '&userId=' + $rootScope.user.Id + '&updatekey=' + UpdateKey + '&OAuthToken=' + OAuthToken)
                         .then(function (response) {
+                            debugger;
                             $scope.commentdate(response.data);
-                            $('.collapsible').collapsible();
 
                         }, function (reason) {
                             $scope.error = reason.data;
@@ -65,8 +65,21 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
 
         }
 
-        $scope.commentpost = function (OAuthToken, PageId, UpdateKey) {
+        $scope.commentpost = function (OAuthToken, PageId, UpdateKey)
+        {
+            debugger;
             var comment = $('#comment').val();
+            var updatedmessage = "";
+            var postdata = comment.split("\n");
+
+            for (var i = 0; i < postdata.length; i++) {
+                updatedmessage = updatedmessage + "<br>" + postdata[i];
+            }
+            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace("+", 'ppp');
+            updatedmessage = updatedmessage.replace("-+", 'jjj');
+            comment = updatedmessage;
             //codes to post  comments on  Feeds
             $http.post(apiDomain + '/api/LinkedIn/PostCommentOnLinkedinCompanyPage?pageId=' + PageId + '&userId=' + $rootScope.user.Id + '&updatekey=' + UpdateKey + '&comment=' + comment)
                         .then(function (response) {
@@ -81,6 +94,22 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
         $scope.TaskModal = function (linfeednotification) {
             $rootScope.linfeednotification = linfeednotification;
             $('#TaskModal').openModal();
+
+        }
+
+        $scope.viewPostModal = function (temp) {
+            debugger;
+            if (temp.postImageUrl == "") {
+                $('#xxxxx').hide();
+            }
+            else
+            {
+                $('#xxxxx').show();
+            }
+            $scope.feeds = temp;
+          $('#viewPostModal').openModal();
+          $('#comment').val('');
+            //$scope.feeds.postImageUrl=""
 
         }
 
@@ -101,7 +130,7 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
             }
         }
 
-
+            
     });
 });
 SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
@@ -109,7 +138,7 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
     return function (scope, element, attrs) {
         if (scope.$last === true) {
             $timeout(function () {
-
+               
                 $('.collapsible').collapsible({
                     accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
                 });

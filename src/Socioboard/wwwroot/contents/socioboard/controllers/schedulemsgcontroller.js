@@ -966,6 +966,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             $('#ScheduleMsg').val('');
                             $scope.dispbtn = true;
                             $rootScope.draftDelete = "true";
+                            closeModel();
                             swal("Message Posted successfully");
                             $(".dropify-clear").click();
 

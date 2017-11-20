@@ -294,11 +294,11 @@ namespace Api.Socioboard.Controllers
                 {
                     if (checkEnable)
                     {
-                        return Ok("Cool! Social SignIn has Enable for Google Account ");
+                        return Ok("You have successfully enabled social sign in for Google Account");
                     }
                     else
                     {
-                        return Ok("You have Successfully Disabled Social SignIn for Google Account");
+                        return Ok("You have successfully disabled social sign in for Google Account");
                     }
 
                 }
@@ -1140,5 +1140,25 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+
+        [HttpGet("GetAllYtComments")]
+        public IActionResult GetAllYtComments(string ChannelId)
+        {
+            return Ok(Repositories.GplusRepository.GetAllYoutubeComments(ChannelId, _redisCache, _appSettings));
+        }
+
+        [HttpGet("GetYtVdoCommentsWithReply")]
+        public IActionResult GetYtVdoCommentsWithReply(string VideoId)
+        {
+            return Ok(Repositories.GplusRepository.GetYoutubeCommentsWithReply(VideoId, _redisCache, _appSettings));
+
+        }
+        [HttpPost("PostCommentsYoutubeReply")]
+        public IActionResult PostCommentsYoutubeReply(string channelId, string idParentComment, string commentText, string videoId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Repositories.GplusRepository.PostCommentsYtReply(channelId, idParentComment, commentText, videoId, _appSettings, _logger, dbr);
+            return Ok("");
+        }
     }
 }

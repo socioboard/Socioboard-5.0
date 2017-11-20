@@ -717,7 +717,11 @@ namespace Api.Socioboard.Repositories
                     //    objFacebookFeed.sharedate = DateTime.UtcNow;//this is feed date value for share feed  in another socail media
                     //}
                     //catch { }
-                    objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, AccessToken, settings, _logger);
+                    //objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, AccessToken, settings, _logger);
+                   
+                        objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, result["comments"], settings, _logger);
+                    
+               
                     try
                     {
                         MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
@@ -1936,6 +1940,13 @@ namespace Api.Socioboard.Repositories
         public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
+            Domain.Socioboard.Models.User user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId) && t.EmailId == fbAcc.EmailId && t.EmailValidateToken == "Facebook").FirstOrDefault();
+            if (user != null)
+            {
+                dbr.Delete<Domain.Socioboard.Models.User>(user);
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + userId);
+            }
+
             if (fbAcc != null)
             {
 

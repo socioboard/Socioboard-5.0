@@ -392,7 +392,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             jQuery('input:checkbox').removeAttr('checked');
             if (lstData != null) {
                 var message = {
-                    "title": lstData.title,
+                   // "title": lstData.title,
                     "link": lstData.postUrl,
                     "image": lstData.imageUrl,
                 };

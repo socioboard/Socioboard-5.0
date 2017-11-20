@@ -62,56 +62,9 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
         };
 
 
-        //$scope.ComposeMessage = function () {
-        //    $scope.disbtncom = false;
-        //    var profiles = $('#composeProfiles').val();
-        //    var message = $('#composeMessage').val();
-        //    var updatedmessage = "";
-        //    var postdata = message.split("\n");
-        //    for (var i = 0; i < postdata.length; i++) {
-        //        updatedmessage = updatedmessage + "<br>" + postdata[i];
-        //    }
-        //    updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-        //    if (profiles.length > 0 && message != '') {
-        //        $scope.checkfile();
-        //        if ($scope.check == true) {
-        //            var formData = new FormData();
-        //            formData.append('files', $("#composeImage").get(0).files[0]);
-        //            $http({
-        //                method: 'POST',
-        //                url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + updatedmessage,
-        //                data: formData,
-        //                headers: {
-        //                    'Content-Type': undefined
-        //                },
-        //                transformRequest: angular.identity,
-        //            }).then(function (response) {
-        //                if (response.data == "Posted") {
-        //                    $scope.disbtncom = true;
-        //                    $('#ComposePostModal').closeModal();
-        //                    swal('Message composed successfully');
-        //                }
+       
 
-        //            }, function (reason) {
-        //                console.log(reason);
-        //            });
-        //        }
-        //        else {
-        //            alertify.set({ delay: 3000 });
-        //            alertify.error("File extension is not valid. Please upload an image file");
-        //            $('#input-file-now').val('');
-        //        }
-        //    }
-        //    else {
-        //        $scope.disbtncom = true;
-        //        if (profiles.length < 0) {
-        //            swal('Please select a profile');
-        //        }
-        //        else {
-        //            swal('Please enter some text to compose this message');
-        //        }
-        //    }
-        //}
+   
 
         $scope.checkfile = function () {
             var filesinput = $('#composeImage');
@@ -239,6 +192,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
             }
             debugger;
             //$rootScope.lstDiscoverySearchFacebook = parm;
+            console.log($rootScope.lstDiscoverySearchFacebook);
 
         }
 
@@ -247,8 +201,10 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
             if (schedulemessage != null)
             {
                 var message = {
-                    "shareMessage": schedulemessage.message,
-                    "picUrl": schedulemessage.postImgUrl
+                   // "shareMessage": schedulemessage.message,
+                    "picUrl": schedulemessage.postImgUrl,
+                     "url": schedulemessage.postUrl,
+              
                 };
                
                 $rootScope.fbComposeMessage = message;
@@ -338,6 +294,13 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
 
         $scope.schedulefbpost = function (schedulemessage) {
             $rootScope.schedulemessage = schedulemessage;
+            var message = {
+                "url": schedulemessage.postUrl,
+            
+            };
+            //console.log(message);
+            //console.log("google");
+            $rootScope.schedulemessage = message;
             $rootScope.grppost = true;
             //window.location.href = "#/schedulemessage";
             $state.go('schedulemessage');
@@ -408,8 +371,6 @@ SocioboardApp.directive("scroll", function ($window) {
 //                        columnWidth: ".product-sizer",
 //                    });
 //                });
-
-
 //            });
 //        }
 //    };

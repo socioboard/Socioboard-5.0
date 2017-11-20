@@ -100,7 +100,7 @@
                                 </div>
                             </div>
                             <div class="card-action center">
-                                <a ng-click="schedulefbpost(fbpost.message)" class="waves-effect waves-grey btn btn_round ">Schedule</a>
+                                <a ng-click="schedulefbpost(fbpost)" class="waves-effect waves-grey btn btn_round ">Schedule</a>
                                 <a ng-click="openComposeMessage(fbpost)" class="waves-effect waves-grey btn grey btn_round ">1-Click</a>
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                         <div class="col s12 m6">
                             <div class="input-field col s12">
                                 <div class="emoji-picker-container">
-                                    <textarea id="composeMessage" class="materialize-textarea" length="5000">{{fbComposeMessage.shareMessage }}</textarea>
+                                    <textarea id="composeMessage" class="materialize-textarea" length="5000">{{fbComposeMessage.url }}</textarea>
                                 </div>
                             </div>
                             <div class="row no-space">
@@ -257,10 +257,7 @@
             </div>
         </div>
     </div>
-    
-
-    
-    <script>
+ <script>
 
         $(document).ready(function () {
             $('#waterfall').NewWaterfall();

@@ -157,10 +157,10 @@
                                                <label>Select Profiles</label>-->
                                            </div>
                                        </div>
-                                       <div class="row">
-                                           <!--<div ng-init="disbtncom= {{disbtncom}}"></div>-->
+                                       <!--<div class="row">
+                                          
                                            <div class="input-field col s12 m4 l4">
-                                               <!--<input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="repetition()"/>-->
+                                           
                                                <input type="checkbox" class="filled-in" id="repeat_post" ng-model="hasChecked" ng-click="justChek(hasChecked)" />
                                                <label for="repeat_post">Repeat post</label>
                                            </div>
@@ -177,7 +177,7 @@
                                                </select>
                                                <label>interval to repeat time</label>
                                            </div>
-                                       </div>
+                                       </div>-->
 
                                        <div class="row no-space">
                                            <div class="input-field col s12">
@@ -219,9 +219,9 @@
                                                    <label for="ScheduleMsg">Type Your Message Here</label>
                                                </div>
                                                <div ng-if="schedulemessage">
-                                                   <textarea id="ScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage.shareMessage" ng-if="!grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.shareMessage}}</textarea>
-                                                   <textarea id="ScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500"></textarea>
-                                                   <label for="ScheduleMsg" class="active">Type Your Message Here</label>
+                                                   <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage.url" ng-if="!grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.url}}</textarea>
+                                                   <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.url}}</textarea>
+                                                  
                                                </div>
                                            </div>
                                            <span class="error-message" ng-show="scheduleform.ScheduleMsgtxt.$dirty && scheduleform.ScheduleMsgtxt.$invalid">
@@ -642,6 +642,9 @@
             <!-- END CONTENT -->               
     </div>
 <script>
+    function closeModel() {
+        jQuery('input:checkbox').removeAttr('checked');
+    }
     $(document).ready(function () {
         Materialize.updateTextFields();
     });
@@ -679,6 +682,9 @@
 </script>
 
 <script>
+    function closeModel() {
+        jQuery('input:checkbox').removeAttr('checked');
+    }
     $(document).ready(function () {
         Materialize.updateTextFields();
     });

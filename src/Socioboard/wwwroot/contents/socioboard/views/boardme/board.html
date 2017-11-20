@@ -101,8 +101,8 @@
                                 </div>
                             </div>
                             <div class="card-action center">
-                                <a ng-click="scheduledraft(feed)">Schedule</a>
-                                <a ng-click="openComposeMessage(feed)" class="btn btn_style col s12 img_comp_btn">1-Click</a>
+                                <a ng-click="scheduledraft(feed)" class="btn btn_style col s6 img_comp_btn">Schedule</a>
+                                <a ng-click="openComposeMessage(feed)" class="btn btn_style col s6 img_comp_btn">1-Click</a>
                             </div>
                         </div>
                     </div>
@@ -330,11 +330,24 @@
                 <form class="col s12">
                     <div class="row no-space">
                         <div class="col s12 m6">
-                            <div class="input-field col s12">
+                            <div class="input-field col s12" ng-if="boardComposeMessage.url != null" >
                                 <div class="emoji-picker-container">
-                                    <textarea id="composeMessage" class="materialize-textarea" length="5000">{{boardComposeMessage.shareMessage }}</textarea>
+                                    <textarea id="composeMessage" disabled class="materialize-textarea active grey-text text-darken-4" length="5000">{{boardComposeMessage.url }}</textarea>
                                 </div>
                             </div>
+                            <!--<div class="input-field col s12" ng-if="boardComposeMessage.url == null">
+                                <div class="emoji-picker-container">
+                                    <textarea ng-if="boardComposeMessage.socialMedia=='twitter'" id="composeMessage" disabled class="materialize-textarea active grey-text text-darken-4" length="5000">
+                                        https://twitter.com/{{boardComposeMessage.fromId}}/status/{{boardComposeMessage.feedId}}
+                                    </textarea>
+                                    <textarea ng-if="boardComposeMessage.socialMedia=='gplus'"    id="composeMessage" disabled class="materialize-textarea active grey-text text-darken-4" length="5000">
+                                        https://twitter.com/{{boardComposeMessage.fromId}}/status/{{boardComposeMessage.feedId}}
+                                    </textarea>
+                                    <textarea ng-if="boardComposeMessage.socialMedia=='instagram'" id="composeMessage" disabled class="materialize-textarea active grey-text text-darken-4" length="5000">
+                                        https://www.instagram.com/{{boardComposeMessage.fromId}}/status/{{boardComposeMessage.feedId}}
+                                    </textarea>
+                                </div>                                
+                            </div>-->
                             <div class="row no-space">
                                 <div class="col s12 m12 l12">
                                     <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>

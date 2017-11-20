@@ -297,6 +297,15 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
                           });
         }
 
+        //YoutubeGroup
+        $scope.loadYtGrpMembers = function () {
+            $http.get(apiDomain + '/api/YoutubeGroup/GetGroupMember?userId=' + $rootScope.user.Id)
+                                 .then(function (response) {
+                                     $rootScope.lstYtGrpMem = response.data;
+                                 }, function (reason) {
+                                     $scope.error = reason.data;
+                                 });
+        }
         //success or failure notification
         $scope.LoadNotifications = function () {
             $http.get(apiDomain + '/api/Notifications/FindNotifications?userId=' + $rootScope.user.Id)
@@ -316,6 +325,7 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
 
 
         $scope.getOnPageLoadGroups = function () {
+            $scope.loadYtGrpMembers();
             $scope.LoadNotifications();
             $scope.getGroupCount();
             var canContinue = true;
@@ -377,6 +387,18 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
 
             // end codes to logout from all session
         }
+
+        $scope.getYtGroupProfile = function () {
+            debugger;
+            $http.get(apiDomain + '/api/YoutubeGroup/GetYtGroupChannel?userId=' + $rootScope.user.Id)
+                                 .then(function (response) {
+                                     $scope.lstYtGrpMem = response.data;
+                                 }, function (reason) {
+                                     $scope.error = reason.data;
+                                 });
+        }
+        $scope.getYtGroupProfile();
+
 
         $scope.getadminDetails = function () {
                $http.get(apiDomain + '/api/GroupMember/GetGroupAdmin?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
@@ -576,6 +598,51 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                  }]
              }
          })
+
+        // youtube inbox Controller
+
+        .state('youtube_inbox', {
+            url: "/youtube_inbox/{profileid}",
+            templateUrl: "../contents/socioboard/views/twitterengagement/youtube_inbox.html",
+            data: { pageTitle: 'Youtube Inbox', pageSubTitle: 'updated' },
+            controller: "YoutubeInboxController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/youtubeinboxcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // youtube group invite Controller
+
+        .state('youtube_group_invite', {
+            url: "/youtubegroup",
+            templateUrl: "../contents/socioboard/views/groups/youtubegroup.html",
+            data: { pageTitle: 'Youtube Group Invite', pageSubTitle: 'updated' },
+            controller: "YoutubeGroupInviteController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/youtubegroupinvitecontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
 
           // schedule message controller
         .state('schedulemessage', {

@@ -8,6 +8,7 @@ SocioboardApp.controller('TwitterInboxController', function ($rootScope, $scope,
         var count = 30; // where to start data
         $scope.messagesEnding = 0; // how much data need to add on each function call
         $scope.messagesReachLast = false; // to check the page ends last or not
+        $scope.nodata = false;
         $scope.lstMessages = [];
         $scope.LoadMessages = function () {
             if (!$scope.messagesReachLast) {
@@ -15,10 +16,16 @@ SocioboardApp.controller('TwitterInboxController', function ($rootScope, $scope,
                 $http.get(apiDomain + '/api/Twitter/GetTwitterDirectMessage?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&skip=' + $scope.messagesEnding + ' &count=' + count)
                               .then(function (response) {
 
-                                  $scope.messagesReachLast = true;
-                                  $scope.lastreached = true;
-                                  for (var i = 0; i < response.data.length; i++) {
-                                      $scope.lstMessages.push(response.data[i]);
+                                  if (response.data == "") {
+                                      $scope.nodata = true;
+                                      $scope.lastreached = true;
+                                  }
+                                  else {
+                                      $scope.messagesReachLast = true;
+                                      $scope.lastreached = true;
+                                      for (var i = 0; i < response.data.length; i++) {
+                                          $scope.lstMessages.push(response.data[i]);
+                                      }
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;

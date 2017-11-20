@@ -1297,11 +1297,11 @@ namespace Api.Socioboard.Controllers
                 {
                     if (checkEnable)
                     {
-                        return Ok("You have successfully enabled Social Signin for facebook account enjoy login without id and pass");
+                        return Ok("You have successfully enabled social sign in for Facebook account, you can now access without login id and password");
                     }
                     else
                     {
-                        return Ok("You have successfully disabled Social signin for facebook account");
+                        return Ok("You have successfully disabled Social sign in for Facebook account");
                     }
 
                 }

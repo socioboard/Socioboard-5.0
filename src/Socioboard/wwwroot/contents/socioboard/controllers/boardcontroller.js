@@ -181,8 +181,11 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
            
              if (schedulemessage.gplusboardaccprofileid != null) {
                 var message = {
-                    "shareMessage": schedulemessage.title,
-                    "picUrl": schedulemessage.imageurl
+                    "url": schedulemessage.feedlink,
+                    "feedId": schedulemessage.feedid,
+                    "fromId": schedulemessage.fromId,
+                    "fromName": schedulemessage.fromName,
+                    "socialMedia": "gplus"
                 };
                 //console.log(message);
                 //console.log("google");
@@ -190,8 +193,11 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             }
             else if (schedulemessage.twitterprofileid != null) {
                 var message = {
-                    "shareMessage": schedulemessage.text,
-                    "picUrl": schedulemessage.imageurl
+                    "url": schedulemessage.feedurl,
+                    "feedId": schedulemessage.feedid,
+                    "fromId": schedulemessage.fromId,
+                    "fromName": schedulemessage.fromName,
+                    "socialMedia":"twitter"
                 };
                 //console.log(message);
                 //console.log("twitter");
@@ -199,8 +205,11 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             }
             else if (schedulemessage.feedid != null) {
                 var message = {
-                    "shareMessage": schedulemessage.tags ,
-                    "picUrl": schedulemessage.imageurl.split('?')[0]
+                    "url": schedulemessage.link,
+                    "feedId": schedulemessage.feedid,
+                    "fromId": schedulemessage.fromId,
+                    "fromName": schedulemessage.fromName,
+                    "socialMedia":"instagram"
                 };
                 //console.log(message);
                 //console.log("instagram");
@@ -219,8 +228,13 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             jQuery('input:checkbox').removeAttr('checked');
             if (schedulemessage.gplusboardaccprofileid != null) {
                 var message = {
-                    "shareMessage": schedulemessage.title,
-                    "picUrl": schedulemessage.imageurl
+                    //"shareMessage": schedulemessage.title,
+                    //"picUrl": schedulemessage.imageurl
+                    "url": schedulemessage.feedlink,
+                    "feedId": schedulemessage.feedid,
+                    "fromId": schedulemessage.fromId,                 
+                    "fromName": schedulemessage.fromName,
+                    "socialMedia": "gplus"
                 };
                 console.log(message);
                 console.log("google");
@@ -228,8 +242,13 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             }
             else if (schedulemessage.twitterprofileid != null) {
                 var message = {
-                    "shareMessage": schedulemessage.text,
-                    "picUrl": schedulemessage.imageurl
+                    //"shareMessage": schedulemessage.text,
+                    //"picUrl": schedulemessage.imageurl
+                    "url": schedulemessage.feedurl,
+                    "feedId": schedulemessage.feedid,
+                    "fromId": schedulemessage.fromId,
+                    "fromName": schedulemessage.fromName,
+                    "socialMedia": "twitter"
                 };
                 console.log(message);
                 console.log("twitter");
@@ -237,8 +256,13 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             }
             else if (schedulemessage.feedid != null) {
                 var message = {
-                    "shareMessage": schedulemessage.tags,
-                    "picUrl": schedulemessage.imageurl
+                    //"shareMessage": schedulemessage.tags,
+                    //"picUrl": schedulemessage.imageurl
+                    "url": schedulemessage.link,
+                    "feedId": schedulemessage.feedid,
+                    "fromId": schedulemessage.fromId,
+                    "fromName": schedulemessage.fromName,
+                    "socialMedia": "instagram"
                 };
                 console.log(message);
                 console.log("instagram");

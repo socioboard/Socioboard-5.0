@@ -3,153 +3,104 @@
             <section id="content">
                 <!--start container-->
                 <!-- description -->
-                <div class="row">
+                <div class="row margin-top-20">
                   <div class="col offset-s1 s12 offset-m1 m10 offset-l1 l10">
-                     <div class="card" id="feeds">
-                        <h5 class="feeds_title blue darken-2 white-text"><i class="fa fa-linkedin-square" aria-hidden="true"></i>Linkedin Company Description</h5>
-                        <div class="company_desc row">
-                          <div class="col l12 center margin-top-10">
-                            <img src="{{companypagedata.logoUrl}}" class="responsive-img company_desc_logo">
+                        <!--<h5 class="feeds_title blue darken-2 white-text"><i class="fa fa-linkedin-square" aria-hidden="true"></i>Linkedin Company Description</h5>-->
+                        <div class="row">
+                          <div class="col l2 center">
+                            <img src="{{companypagedata.logoUrl}}" class="responsive-img company_desc_logo circle margin-top-10">
                           </div>
-                          <hr>
-                          <div class="col l12">
-                            <p>{{companypagedata.description}}.</p>
-                          </div>
-                          <dl class="col l12">
-                            <dt><strong>Specialties</strong></dt>
-                            <dd>{{companypagedata.specialties}}</dd>
-                          </dl>
-                          <dl class="col m4 l4 s12">
-                              <dt><strong>Website</strong></dt>
-                              <dd><a ></a>{{companypagedata.websiteUrl}}</dd>
-                              <dt><strong>Industry</strong></dt>
-                              <dd>{{companypagedata.industries}}</dd>
-                          </dl>
-                          <dl class="col m4 l4 s12">
-                              <dt><strong>Type</strong></dt>
-                              <dd>{{companypagedata.companyType}}</dd>
-                              <dt><strong>Headquarters</strong></dt>
-                              <dd> {{companypagedata.locations}}</dd>
-                          </dl>
-                          <dl class="col m4 l4 s12">
-                              <dt><strong>Company Size</strong></dt>
-                              <dd>{{companypagedata.employeeCountRange}}</dd>
-                              <dt><strong>Founded</strong></dt>
-                              <dd>{{companypagedata.foundedYear}}</dd>
-                          </dl>
+                          <div class="col l10">
+                              <p class="no-space">{{companypagedata.description}}.</p>
+                              <dl class="col l12">
+                                  <dt><strong>Specialties</strong></dt>
+                                  <dd>{{companypagedata.specialties}}</dd>
+                              </dl>
+                              <dl class="col m4 l4 s12">
+                                  <dt><strong>Website</strong></dt>
+                                  <dd><a></a>{{companypagedata.websiteUrl}}</dd>
+                                  <dt><strong>Industry</strong></dt>
+                                  <dd>{{companypagedata.industries}}</dd>
+                              </dl>
+                              <dl class="col m4 l4 s12">
+                                  <dt><strong>Type</strong></dt>
+                                  <dd>{{companypagedata.companyType}}</dd>
+                                  <dt><strong>Headquarters</strong></dt>
+                                  <dd> {{companypagedata.locations}}</dd>
+                              </dl>
+                              <dl class="col m4 l4 s12">
+                                  <dt><strong>Company Size</strong></dt>
+                                  <dd>{{companypagedata.employeeCountRange}}</dd>
+                                  <dt><strong>Founded</strong></dt>
+                                  <dd>{{companypagedata.foundedYear}}</dd>
+                              </dl>
+                          </div>                          
                         </div>
-                      </div>
                   </div>
                 </div>
                 <!--card widgets end-->
-                  <div class="row">
+                  <div class="row no-space">
                       <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                           <div class="card" id="feeds">
                               <h5 class="feeds_title blue darken-2 white-text"><i class="fa fa-linkedin-square" aria-hidden="true"></i>Linkedin Company News Feeds</h5>
-                              <ul class="collection likedinfeeds">
+                              <ul class="collection ">
                                   <li class="collection-item avatar" ng-repeat="lincmpnypagefeed in lstlincmpnypageFeeds">
                                     <img src="{{companypagedata.logoUrl}}" alt="sb" class="circle">
                                     <span class="email-title">{{companypagedata.linkedinPageName}}</span>
-                                    <div class="row feeds_post z-depth-1 hoverable">
-                                      <div class="col m8">
-                                        <p class="break_word ultra-small">{{lincmpnypagefeed.posts}}</p>
-                                      </div>
-                                      <div class="col m4 center" ng-if="lincmpnypagefeed.postImageUrl!=''">
-                                        <img src="{{lincmpnypagefeed.postImageUrl}}" class="responsive-img ">
-                                      </div>
-                                      <div class="col m12" ng-click="getpostcomment(companypagedata.oAuthToken,lincmpnypagefeed.pageId,lincmpnypagefeed.updateKey)">
-                                          <ul class="collapsible" data-collapsible="accordion">
-                                            <li>
-                                              <div class="collapsible-header" ><i class="icon-speech"></i>Comments</div>
-                                              <div class="collapsible-body" >
-                                                <ul class="collection likedinfeeds">
-                                                    <li class="collection-item avatar" ng-repeat="linpostcomment in lstlincmpnypagecommentFeeds" my-repeat-facebook-feed-timeout-directive>
-                                                        <span class="email-title">{{linpostcomment.firstName}} {{linpostcomment.lastName}}</span>
-                                                      <div class="row dashboard_feeds z-depth-1 hoverable">
-                                                        <div class="col m8">
-                                                          <p class="break_word ultra-small">{{linpostcomment.comment}}</p>
-                                                        </div>
-                                                        <!--<div class="col m4 center">
-                                                          <img src="{{linpostcomment.pictureUrl}}" ng-if="linpostcomment.pictureUrl!=''" class="responsive-img ">
-                                                        </div>-->
-                                                      </div>                                         
-                                                      <a class="tooltipped secondary-content" data-position="left" data-delay="50">{{linpostcomment.CommentTime}}</a>
-                                                    </li>
-                                                    <li class="collection-item">
-                                                        <div class="row">
-                                                            <form class="col s10">
-                                                                <div class="row">
-                                                                    <div class="input-field col s12">
-                                                                        <i class="icon-pencil prefix"></i>
-                                                                        <textarea id="comment" class="materialize-textarea"></textarea>
-                                                                        <label for="icon_prefix2">Type your comment here...</label>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                            <span class="col s12 center">
-                                                                <a ng-click="commentpost(companypagedata.oAuthToken,lincmpnypagefeed.pageId,lincmpnypagefeed.updateKey)" class="waves-effect waves-light btn"><i class="icon-cursor"></i></a>
-                                                            </span>
-                                                        </div>
-                                                    </li>
-                                                </ul>
+                                          <div class="row feeds_post z-depth-1 hoverable">
+                                              <div class="col m8">
+                                                  <p class="break_word ultra-small">{{lincmpnypagefeed.posts}}</p>
                                               </div>
-                                            </li>
+                                              <div class="col m4 center" ng-if="lincmpnypagefeed.postImageUrl!=''">
+                                                  <img src="{{lincmpnypagefeed.postImageUrl}}" class="responsive-img ">
+                                              </div>
+                                              <div class="col m12" ng-click="getpostcomment(companypagedata.oAuthToken,lincmpnypagefeed.pageId,lincmpnypagefeed.updateKey)">
+                                                  <a ng-click="viewPostModal(lincmpnypagefeed)" class="btn btn_style blue btn_round">comments</a>
+                                                  <a ng-click="TaskModal(lincmpnypagefeed)" class="modal-trigger right" href="javascript:void(0);" title="Task">
+                                                      <i class="icon-pin"></i>
+                                                  </a>
+                                                  <!--<ul class="collapsible" data-collapsible="accordion">
+                                                      <li>
+                                                          <div class="collapsible-header"><i class="icon-speech"></i>Comments</div>
+                                                          <div class="collapsible-body">
+                                                              <ul class="collection likedinfeeds">
+                                                                  <li class="collection-item avatar" ng-repeat="linpostcomment in lstlincmpnypagecommentFeeds" my-repeat-facebook-feed-timeout-directive>
+                                                                      <span class="email-title">{{linpostcomment.firstName}} {{linpostcomment.lastName}}</span>
+                                                                      <div class="row dashboard_feeds z-depth-1 hoverable">
+                                                                          <div class="col m8">
+                                                                              <p class="break_word ultra-small">{{linpostcomment.comment}}</p>
+                                                                          </div>
+                                                                                </div>
+                                                                      <a class="tooltipped secondary-content" data-position="left" data-delay="50">{{linpostcomment.CommentTime}}</a>
+                                                                  </li>
+                                                                  <li class="collection-item">
+                                                                      <div class="row">
+                                                                          <form class="col s10">
+                                                                              <div class="row">
+                                                                                  <div class="input-field col s12">
+                                                                                      <i class="icon-pencil prefix"></i>
+                                                                                      <textarea id="comment" class="materialize-textarea"></textarea>
+                                                                                      <label for="icon_prefix2">Type your comment here...</label>
+                                                                                  </div>
+                                                                              </div>
+                                                                          </form>
+                                                                          <span class="col s12 center">
+                                                                              <a ng-click="commentpost(companypagedata.oAuthToken,lincmpnypagefeed.pageId,lincmpnypagefeed.updateKey)" class="waves-effect waves-light btn"><i class="icon-cursor"></i></a>
+                                                                              <a ng-click="viewPostModal(insfeed)"></a>
+                                                                          </span>
+                                                                      </div>
+                                                                  </li>
+                                                              </ul>
+                                                          </div>
+                                                      </li>
 
-                                          </ul>
-                                      </div>
-                                    </div>                                         
+                                                  </ul>-->
+                                              </div>
+                                          </div>              
                                     <a class="tooltipped secondary-content" data-position="left" >{{lincmpnypagefeed.postDate}}</a>
-                                      <a ng-click="TaskModal(lincmpnypagefeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" data-tooltip="Task" style="margin-left: 3%;">
-                                          <i class="icon-pin"></i>
-                                      </a>
+                                      
                                   </li>
-                                  
-
-                                  <!--<div class="center">
-                                    <div class="preloader-wrapper big active">
-                                      <div class="spinner-layer spinner-blue">
-                                        <div class="circle-clipper left">
-                                          <div class="circle"></div>
-                                        </div><div class="gap-patch">
-                                          <div class="circle"></div>
-                                        </div><div class="circle-clipper right">
-                                          <div class="circle"></div>
-                                        </div>
-                                      </div>
-
-                                      <div class="spinner-layer spinner-red">
-                                        <div class="circle-clipper left">
-                                          <div class="circle"></div>
-                                        </div><div class="gap-patch">
-                                          <div class="circle"></div>
-                                        </div><div class="circle-clipper right">
-                                          <div class="circle"></div>
-                                        </div>
-                                      </div>
-
-                                      <div class="spinner-layer spinner-yellow">
-                                        <div class="circle-clipper left">
-                                          <div class="circle"></div>
-                                        </div><div class="gap-patch">
-                                          <div class="circle"></div>
-                                        </div><div class="circle-clipper right">
-                                          <div class="circle"></div>
-                                        </div>
-                                      </div>
-
-                                      <div class="spinner-layer spinner-green">
-                                        <div class="circle-clipper left">
-                                          <div class="circle"></div>
-                                        </div><div class="gap-patch">
-                                          <div class="circle"></div>
-                                        </div><div class="circle-clipper right">
-                                          <div class="circle"></div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                  </div>-->
                               </ul>
-
                           </div>
                       </div>                                  
                   </div>
@@ -225,6 +176,52 @@
             </section>
             <!-- END CONTENT -->   
 
+        <!--//comment model open-->
+        <div id="viewPostModal" class="modal" style="max-width: 850px; width: 100%;">
+            <div class="modal-content" style="padding: 15px;">
+                <div class="row no-space">
+                    <div class="col l6 m6 s12">
+                        <img id="xxxxx" class="responsive-img" ng-src="{{feeds.postImageUrl}}" alt="imgs">
+                        <br />
+                        <p id="post">
+                            {{feeds.posts}}
+                        </p>
+                    </div>
+                    <div class="col l6 m6 s12">
+                        <div class="row no-space">
+                            <ul class="collapsible" data-collapsible="accordion" style="box-shadow:none; border: none;">
+                                <li>
+                                    <div class="collapsible-header" style="border-bottom: 0px solid #fff; line-height: 1rem; min-height: 1rem; padding: 6px 1rem; border-radius: 17px; background-color: #d4d4d4;"><b>Comments</b></div>
+                                    <div class="collapsible-body" style="padding: 6px 1rem;">
+                                        <div class="instfeeds">
+                                            <div class="avatar" ng-repeat="linpostcomment in lstlincmpnypagecommentFeeds">
+                                                <span class="grey-text text-darken-4">{{linpostcomment.firstName}} {{linpostcomment.lastName}} :</span>
+                                                <span class="no-space grey-text text-darken-1">{{linpostcomment.comment}}</span>
+                                            </div>
+                                        </div>                                        
+                                        <div class="input-field col s10">
+                                            <input id="comment" placeholder="Add a comment.." class="" type="text">
+                                        </div>
+                                        <div class="input-field col s1">
+                                            <a class="btn btn_style btn_round blue" ng-click="commentpost(companypagedata.oAuthToken,feeds.pageId,feeds.updateKey)">send</a>
+                                        </div>
+                                        <!--<div ng-show="!dispbtn" class="input-field col s1">
+                                            <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                                        </div>-->
+                                        <!--<span class="col s12 center">
+                                            <a ng-click="commentpost(companypagedata.oAuthToken,lincmpnypagefeed.pageId,lincmpnypagefeed.updateKey)" class="waves-effect waves-light btn"><i class="icon-cursor"></i></a>
+                                        </span>-->
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--// close comment model open-->
+
+
         <div id="TaskModal" class="modal">
             <div class="modal-content">
                 <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
@@ -258,3 +255,13 @@
             </div>
         </div>
     </div>
+
+<script type="text/javascript">
+  $('.instfeeds').slimScroll({
+      color: '#1976D2',
+        size: '10px',
+        height: '150px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+</script>

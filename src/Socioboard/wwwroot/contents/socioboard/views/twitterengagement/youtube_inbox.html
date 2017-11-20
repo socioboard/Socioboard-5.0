@@ -1,0 +1,286 @@
+﻿<!-- START MAIN -->
+<div data-ng-controller="YoutubeInboxController">
+    <!-- START WRAPPER -->
+    <div class="wrapper">
+        <!-- START CONTENT -->
+        <section id="content">
+            <!--start container-->
+            <div class="container">
+                <div class="row">
+                    <div class="col m4">
+                        <h4>Youtube</h4>
+                    </div>
+                    <!--<div class="col m8">
+                        <a href="#groupMailModal" class="btn indigo darken-4 white-text btn-floating modal-trigger right margin-top-10" style="width: 50px; height: 50px; line-height: 57px;"title="Group Invite">
+                            <i class="fa fa-user-plus fa-fw"></i>
+                        </a>
+                    </div>-->
+                </div>
+                
+                <div class="row">
+                    <div class="col s12">
+                        <ul class="tabs">
+                            <li class="tab col s3"><a class="active" style="color:#c4302b;" href="#Inbox_tab">Inbox</a></li>
+                            <!--<li class="tab col s3"><a href="#Listening_tab" style="color:#c4302b;">Listening</a></li>
+                            <li class="tab col s3"><a href="#Publishing_tab" style="color:#c4302b;">Publishing</a></li>
+                            <li class="tab col s3"><a href="#Fan_tab" style="color:#c4302b;">Fan &amp; Followers</a></li>
+                            <li class="tab col s3"><a href="#Report_tab" style="color:#c4302b;">Report</a></li>-->
+                        </ul>
+                    </div>
+                    <div id="Inbox_tab" class="col s12">
+                        <div ng-if="noData==false">
+                            <div class="row" ng-if="loadAllComments==true">
+                                <div class="col s12 m12 l12">
+                                    <div class="card-panel">
+                                        <div class="row">
+                                            <div class="col m5 s12">
+                                                <div class="card">
+                                                    <h6 style="margin: 0; padding: 20px 10px; color: #ffffff !important; background-color: #c4302b;">Comments</h6>
+                                                    <ul class="collection no-space " style="overflow-y: scroll; height:400px;">
+                                                        <li class="collection-item avatar" ng-repeat="commentItem in lstYtAllComments">
+                                                            <img src="{{commentItem.authorProfileImageUrl}}" alt="{{commentItem.authorDisplayName}}" class="circle">
+                                                            <span class="email-title">{{commentItem.authorDisplayName}}</span>
+                                                            <label class="right">{{commentItem.publishTime}}</label>
+                                                            <div class="feeds_post z-depth-1 hoverable truncate" ng-click="openVideo(commentItem.videoId, commentItem)" style="cursor: pointer;">
+                                                                <a class="break_word ultra-small grey-text text-darken-4">{{commentItem.commentOriginal}}</a>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="col m7 s12" ng-class="VideoShow">
+                                                <div class="row">
+                                                    <div class="col s12 m12 l12">
+                                                        <div class="card hoverable">
+                                                            <div class="video-container">
+                                                                <iframe width="854" height="480" src="{{videoIdTemp|youtubeEmbedUrl}}" frameborder="0" allowfullscreen=""></iframe>
+                                                            </div>
+                                                            <div class="card-content no-space">
+                                                                <div>
+                                                                    <div class="row">
+                                                                        <form class="col s12">
+                                                                            <div class="row">
+                                                                                <div class="input-field col s9 offset-s1">
+                                                                                    <textarea id="compose_{{videoIdTemp}}" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg"></textarea>
+                                                                                </div>
+                                                                                <div class="input-field col s1 center ">
+                                                                                    <a ng-class="showParentCommentButton" href="javascript:void(0);" class="btn btn_round indigo darken-4 margin-top-30" ng-click="postCommentsMain(videoIdTemp)">Send</a>
+                                                                                    <a ng-class="hideParentCommentButton" href="javascript:void(0);" class="btn btn_round disabled margin-top-30">Send</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                    <ul class="collection no-space" style="overflow-y: scroll; height:400px;" ng-if="singleComment==false">
+                                                                        <li class="collection-item avatar" ng-repeat="itemComment in lstYtVideoComments" ng-if="loadVideoComments==true">
+                                                                            <img src="{{itemComment._ParentComments.authorProfileImageUrl}}" alt="Chanchal Santra" class="circle">
+                                                                            <span class="email-title">{{itemComment._ParentComments.authorDisplayName}}</span>
+                                                                            <label class="right">{{itemComment._ParentComments.publishTime}}</label>
+                                                                            <div class="feeds_post z-depth-1 hoverable truncate">
+                                                                                <p class="break_word ultra-small">{{itemComment._ParentComments.commentOriginal}}</p>
+                                                                                <ul class="collapsible" data-collapsible="accordion" style="box-shadow: none; border-top: 0px solid #ddd; border-right: 0px solid #ddd; border-left: 0px solid #ddd;">
+                                                                                    <li>
+                                                                                        <div class="collapsible-header" style="min-height: 1rem;line-height: 1rem; background-color: #e8ebef;" ng-mouseover="calledColl()"><span class="right">Reply</span></div>
+                                                                                        <div class="collapsible-body">
+                                                                                            <div class="row">
+                                                                                                <ul class="collection no-space comm_scroll">
+                                                                                                    <li class="collection-item avatar" ng-repeat="childCommen in itemComment._ChildComments" my-Repeat-Tab-Directive style="background-color: #e8ebef;">
+                                                                                                        <img src="{{childCommen.authorProfileImageUrl}}" alt="Chanchal Santra" class="circle">
+                                                                                                        <span class="email-title">{{childCommen.authorDisplayName}}</span>
+                                                                                                        <label class="right">{{childCommen.publishTime}}</label>
+                                                                                                        <div class="feeds_post z-depth-1 hoverable">
+                                                                                                            <p class="break_word ultra-small" style="padding:5px;">{{childCommen.commentOriginal}}</p>
+                                                                                                        </div>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                                <form class="col s12">
+                                                                                                    <div class="row right">
+                                                                                                        <div class="input-field col s7 offset-s1">
+                                                                                                            <input id="reply_{{itemComment._ParentComments.commentId}}" length="500" data-emojiable="true" placeholder="Type your msg" type="text" class="validate">
+                                                                                                        </div>
+                                                                                                        <div class="input-field col s1 center">
+                                                                                                            <a ng-class="showChildCommentButton" href="javascript:void(0);" class="btn btn_round indigo darken-4 margin-top-20" ng-click="postCommentsReply(itemComment._ParentComments.commentId, itemComment._ParentComments.videoId)">Reply</a>
+                                                                                                            <a ng-class="hideChildCommentButton" href="javascript:void(0);" class="btn btn_round disabled margin-top-20">Reply</a>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </form>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </li>
+                                                                        <div class="center" ng-if="loadVideoComments==false">
+                                                                            <br /><br /><br />
+                                                                            <div class="preloader-wrapper small active">
+                                                                                <div class="spinner-layer spinner-red-only">
+                                                                                    <div class="circle-clipper left">
+                                                                                        <div class="circle"></div>
+                                                                                    </div><div class="gap-patch">
+                                                                                        <div class="circle"></div>
+                                                                                    </div><div class="circle-clipper right">
+                                                                                        <div class="circle"></div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            <br />
+                                                                            <h6 style="color:gray; font-size:18px; font-family:Calibri">Loading Comments...</h6>
+                                                                        </div>
+                                                                    </ul>
+                                                                    <ul class="collection no-space" style="overflow-y: scroll; height:400px;" ng-if="singleComment==true">
+                                                                        <li class="collection-item avatar">
+                                                                            <img src="{{singleCommentShow.authorProfileImageUrl}}" alt="{{singleCommentShow.authorDisplayName}}" class="circle">
+                                                                            <span class="email-title">{{singleCommentShow.authorDisplayName}}</span>
+                                                                            <label class="right">{{singleCommentShow.publishTime}}</label>
+                                                                            <div class="feeds_post z-depth-1 hoverable truncate">
+                                                                                <a class="break_word ultra-small grey-text text-darken-4">{{singleCommentShow.commentOriginal}}</a>
+                                                                            </div>
+                                                                            <form class="container">
+                                                                                <div class="row">
+                                                                                    <div class="input-field col s9 offset-s1">
+                                                                                        <textarea id="singleCommentReplyText" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg"></textarea>
+                                                                                    </div>
+                                                                                    <div class="input-field col s1 center ">
+                                                                                        <a ng-class="showChildCommentButton" href="javascript:void(0);" class="btn btn_round indigo darken-4 margin-top-30" ng-click="postCommentsReplySingleComment(singleCommentShow.commentId, singleCommentShow.videoId)">Reply</a>
+                                                                                        <a ng-class="hideChildCommentButton" href="javascript:void(0);" class="btn btn_round disabled margin-top-30">Reply</a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </li>
+                                                                        <div class="row center">
+                                                                            <a class="btn btn_round red darken-4 margin-top-20" style="height: 20px !important; line-height: 20px !important; font-size: small;" ng-click="LoadSingleVideoComments(singleCommentShow.videoId)">Show all</a>
+                                                                        </div>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col m7 s12 center" ng-class="VideoShowFalse" style="margin-top:9rem">
+                                                <i class="fa fa-film fa-4x center"></i>
+                                                <h1 class="grey-text">Your video plays here</h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="center" ng-if="loadAllComments==false">
+                                <br /><br /><br /><br /><br /><br /><br /><br />
+                                <div class="preloader-wrapper small active">
+                                    <div class="spinner-layer spinner-red-only">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div><div class="gap-patch">
+                                            <div class="circle"></div>
+                                        </div><div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                                <h6 style="color:gray; font-size:18px; font-family:Calibri">Please wait...</h6>
+                            </div>
+                        </div>
+                        <br /><br /><br /><br /><br /><br /><br />
+                        <h5 ng-if="noData==true" class="center grey-text"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No comments found<br /></h5>
+                    </div>
+                </div>
+                <!--<div id="Listening_tab" class="col s12">
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card-panel">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <!--<div id="Publishing_tab" class="col s12">
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card-panel">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <!--<div id="Fan_tab" class="col s12">
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card-panel">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+                <!--<div id="Report_tab" class="col s12">
+                    <div class="row">
+                        <div class="col s12 m12 l12">
+                            <div class="card-panel">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+            <!--end container-->
+        </section>
+        <!-- END CONTENT -->
+    </div>
+    <!-- END WRAPPER -->
+</div>
+
+<!--<div class="modal" id="groupMailModal">
+    <div class="modal-content">
+       <h5>Group Invite</h5>
+       <div class="row">
+           <div class="col m4">
+               <div class="memb_scroll">
+                   <ul class="collection">
+                       <li class="collection-item avatar" style="min-height: 65px;" ng-repeat="grpmem in lstGrpMem">
+                           <img src="{{grpmem.sbProfilePic}}" alt="" class="circle">
+                           <span class="title truncate" style="width: 80px;margin-top: 10px;">{{grpmem.sbUserName}}</span>
+                           <a href="javascript:void(0);" class="secondary-content" ng-if="grpmem.active == 1"><i class="fa fa-check green-text" aria-hidden="true" title="Accepted"></i></a>
+                           <a href="javascript:void(0);" class="secondary-content" ng-if="grpmem.active == 0"><i class="fa fa-clock-o red-text" aria-hidden="true" title="Pending"></i></a>
+                       </li>
+                   </ul>
+               </div>
+           </div>
+           <div class="col m8">
+               <div class="input-field">
+                   <input id="g_invite" class="active" type="email" placeholder="xx@abc.xyz">
+                   <label for="g_invite" style="left: 0px;">Type Mail id</label>
+               </div>
+           </div>
+       </div>
+    </div>
+    <div class="modal-footer">
+        <a ng-click="inviteGroupMem()" class="modal-action waves-effect waves-green btn-flat btn btn_round indigo darken-4 white-text">Send</a>
+        <a class="modal-action modal-close waves-effect waves-green btn-flat btn btn_round grey darken-3 white-text">Close</a>
+    </div>
+</div>-->
+<!-- END MAIN -->
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.collapsible').collapsible();
+    });
+    $('.memb_scroll').slimScroll({
+              color: '#424242',
+              size: '10px',
+              height: '200px',
+              alwaysVisible: true,
+              allowPageScroll: true
+          });
+</script>
+
+
+<style>
+    .tabs .indicator {
+        position: absolute;
+        bottom: 0;
+        height: 2px;
+        background-color: #c4302b;
+        will-change: left, right;
+    }
+</style>

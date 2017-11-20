@@ -76,7 +76,16 @@ namespace Api.Socioboard.Repositories
            List<Domain.Socioboard.Models.Groupmembers> adminDetails = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.groupid == groupId && t.isAdmin).ToList();
            long userID = adminDetails.First().userId;
            List<Domain.Socioboard.Models.User> user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id == userID).ToList();
-           string Email = user.First().EmailId;
+           string Email = null;
+            try
+            {
+                Email = user.First().EmailId;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            
            adminDetails.First().email = Email;
            return adminDetails;
         }

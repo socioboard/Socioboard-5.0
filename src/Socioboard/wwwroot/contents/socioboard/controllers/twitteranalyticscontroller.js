@@ -6,13 +6,22 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
         twitteranalytics();
         var reachLast = false;
         var x = false;
+        $scope.nodata = false;
 
         $scope.getTwitterNotifications = function () {
             $http.get(apiDomain + '/api/Twitter/GetNotifications?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&skip=0&count=20')
                           .then(function (response) {
-                              $scope.lstNotifications = response.data;
-                              $scope.temp = $scope.lstNotifications;
-                              $scope.x = true;
+
+                              if (response.data != "") {
+                                  $scope.lstNotifications = response.data;
+                                  $scope.temp = $scope.lstNotifications;
+                                  $scope.x = true;
+                              }
+                              else
+                              {
+                                  $scope.nodata = true;
+                                  $scope.x = true;
+                              }
                               //$scope.loaderclass = 'hide';
                               if (response.data == null) {
                                   reachLast = true;

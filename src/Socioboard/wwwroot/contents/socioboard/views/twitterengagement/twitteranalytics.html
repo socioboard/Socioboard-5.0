@@ -4,10 +4,10 @@
         <!--start container-->
         <!--card widgets end-->
         <div class="row">
-            <div class="col s12 m8 l8">
-                <div class="card" id="feeds">
+            <div class="col s12 m8 l8" >
+                <div class="card" id="feeds" >
                     <h5 class="feeds_title blue darken-2 white-text" style="padding:20px;margin:0;font-weight:300"><i class="icon-folder"></i>Twitter Analytics</h5>
-                    <ul class="collection smartinbox_slider">
+                    <ul class="collection smartinbox_slider" ng-if="nodata==false">
                         <li class="collection-item avatar" ng-repeat="notification in lstNotifications | notificationbyprofilesfileter : filterType : selectedProfiles | filter:key_search">
                             <img src="{{notification.fromProfileUrl}}" alt="{{notification.fromScreenName}}" class="circle">
                             <span ng-if="notification.type==0" class="email-title"><b>{{notification.fromScreenName}}</b> -- mention {{notification.recipientName}}</span>
@@ -82,10 +82,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
                         </div>
                     </ul>
+
+                    <div ng-if="nodata==true">
+                        <br /><br /><br /><br /><br /><br /><br />
+                        <div class="center">
+                            <h6 style="color:lightgray; font-size:24px; font-family:Calibri"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />Sorry, No analytics found<br /></h6>
+                        </div>
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                    </div>
                 </div>
             </div>
+            
             <div class="col s12 m4 l4">
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-2 white-text" style="padding:20px;margin:0;font-weight:300"><i class="icon-folder"></i>Filter</h5>

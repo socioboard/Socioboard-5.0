@@ -1668,3 +1668,92 @@
 2017-11-13 12:47:24.563 +05:30 [Debug] Connection id ""0HL9ABB7259MK"" sending FIN.
 2017-11-13 12:47:24.564 +05:30 [Debug] Connection id ""0HL9ABB7259MK"" sent FIN with status "0".
 2017-11-13 12:47:24.564 +05:30 [Debug] Connection id ""0HL9ABB7259MK"" stopped.
+2017-11-13 13:42:27.057 +05:30 [Debug] Hosting starting
+2017-11-13 13:42:27.580 +05:30 [Debug] Hosting started
+2017-11-13 13:42:27.775 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" started.
+2017-11-13 13:42:27.775 +05:30 [Debug] Connection id ""0HL9ADP3OELER"" started.
+2017-11-13 13:42:27.966 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/api/values  
+2017-11-13 13:42:27.966 +05:30 [Information] Request starting HTTP/1.1 DEBUG http://localhost:6361/  0
+2017-11-13 13:42:28.043 +05:30 [Information] Request finished in 94.3497ms 200 
+2017-11-13 13:42:28.092 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" completed keep alive response.
+2017-11-13 13:42:31.608 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/Values"'.
+2017-11-13 13:42:31.702 +05:30 [Debug] Action '"Api.Socioboard.Controllers.ValuesController.Post (Api.Socioboard)"' with id '"bcf4804c-4df5-421b-9887-2682c067230a"' did not match the constraint '"Microsoft.AspNetCore.Mvc.Internal.HttpMethodActionConstraint"'
+2017-11-13 13:42:32.009 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)"
+2017-11-13 13:42:32.191 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" with arguments (null) - ModelState is Valid
+2017-11-13 13:42:32.195 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.ObjectResult".
+2017-11-13 13:42:32.249 +05:30 [Debug] No information found on request to perform content negotiation.
+2017-11-13 13:42:32.259 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.JsonOutputFormatter"' and content type '"application/json"' to write the response.
+2017-11-13 13:42:32.263 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-11-13 13:42:32.310 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/checksociorevtoken application/x-www-form-urlencoded 24
+2017-11-13 13:42:32.311 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/checksociorevtoken"'.
+2017-11-13 13:42:32.313 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)"
+2017-11-13 13:42:33.256 +05:30 [Information] Executed action "Api.Socioboard.Controllers.ValuesController.Get (Api.Socioboard)" in 1236.7638ms
+2017-11-13 13:42:33.333 +05:30 [Information] Request finished in 5406.3074ms 200 application/json; charset=utf-8
+2017-11-13 13:42:33.336 +05:30 [Debug] Connection id ""0HL9ADP3OELER"" completed keep alive response.
+2017-11-13 13:42:33.442 +05:30 [Information] Request starting HTTP/1.1 GET http://localhost:6361/favicon.ico  
+2017-11-13 13:42:33.448 +05:30 [Debug] Request did not match any routes.
+2017-11-13 13:42:33.474 +05:30 [Debug] The request path "" does not match the path filter
+2017-11-13 13:42:33.479 +05:30 [Information] Request finished in 39.2034ms 404 
+2017-11-13 13:42:33.480 +05:30 [Debug] Connection id ""0HL9ADP3OELER"" completed keep alive response.
+2017-11-13 13:42:36.512 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" with arguments (["8d525b71d26ee26"]) - ModelState is Valid
+2017-11-13 13:42:47.634 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/checksociorevtoken application/x-www-form-urlencoded 9
+2017-11-13 13:42:47.635 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/checksociorevtoken"'.
+2017-11-13 13:42:47.640 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)"
+2017-11-13 13:42:48.795 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-11-13 13:42:48.808 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"application/json"' to write the response.
+2017-11-13 13:42:48.815 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-11-13 13:42:48.820 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" in 16505.5975ms
+2017-11-13 13:42:48.837 +05:30 [Information] Request finished in 16515.5102ms 200 application/json; charset=utf-8
+2017-11-13 13:42:48.838 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" completed keep alive response.
+2017-11-13 13:42:49.742 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" with arguments ([""]) - ModelState is Valid
+2017-11-13 13:42:50.400 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-11-13 13:42:50.401 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"application/json"' to write the response.
+2017-11-13 13:42:50.402 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-11-13 13:42:50.403 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" in 2762.0558ms
+2017-11-13 13:42:50.405 +05:30 [Information] Request finished in 2773.454ms 200 application/json; charset=utf-8
+2017-11-13 13:42:50.405 +05:30 [Debug] Connection id ""0HL9ADP3OELER"" completed keep alive response.
+2017-11-13 13:43:07.277 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/checksociorevtoken application/x-www-form-urlencoded 9
+2017-11-13 13:43:07.278 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/checksociorevtoken"'.
+2017-11-13 13:43:07.278 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)"
+2017-11-13 13:43:10.568 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" with arguments ([""]) - ModelState is Valid
+2017-11-13 13:43:11.181 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-11-13 13:43:11.181 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"application/json"' to write the response.
+2017-11-13 13:43:11.182 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-11-13 13:43:11.184 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" in 3903.9378ms
+2017-11-13 13:43:11.195 +05:30 [Information] Request finished in 3913.7457ms 200 application/json; charset=utf-8
+2017-11-13 13:43:11.195 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" completed keep alive response.
+2017-11-13 13:43:11.541 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/checksociorevtoken application/x-www-form-urlencoded 9
+2017-11-13 13:43:11.542 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/checksociorevtoken"'.
+2017-11-13 13:43:11.542 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)"
+2017-11-13 13:43:13.754 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" with arguments ([""]) - ModelState is Valid
+2017-11-13 13:43:13.927 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/checksociorevtoken application/x-www-form-urlencoded 9
+2017-11-13 13:43:13.927 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/checksociorevtoken"'.
+2017-11-13 13:43:13.928 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)"
+2017-11-13 13:43:14.361 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-11-13 13:43:14.361 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"application/json"' to write the response.
+2017-11-13 13:43:14.362 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-11-13 13:43:14.364 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" in 2819.8028ms
+2017-11-13 13:43:14.372 +05:30 [Information] Request finished in 2845.2998ms 200 application/json; charset=utf-8
+2017-11-13 13:43:14.373 +05:30 [Debug] Connection id ""0HL9ADP3OELER"" completed keep alive response.
+2017-11-13 13:43:14.429 +05:30 [Information] Request starting HTTP/1.1 POST http://localhost:6361/api/User/checksociorevtoken application/x-www-form-urlencoded 9
+2017-11-13 13:43:14.429 +05:30 [Debug] Request successfully matched the route with name 'null' and template '"api/User/checksociorevtoken"'.
+2017-11-13 13:43:14.430 +05:30 [Debug] Executing action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)"
+2017-11-13 13:43:17.011 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" with arguments ([""]) - ModelState is Valid
+2017-11-13 13:43:17.467 +05:30 [Information] Executing action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" with arguments ([""]) - ModelState is Valid
+2017-11-13 13:43:17.617 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-11-13 13:43:17.617 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"application/json"' to write the response.
+2017-11-13 13:43:17.618 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-11-13 13:43:17.619 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" in 3689.5678ms
+2017-11-13 13:43:17.622 +05:30 [Information] Request finished in 3695.1217ms 200 application/json; charset=utf-8
+2017-11-13 13:43:17.622 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" completed keep alive response.
+2017-11-13 13:43:19.646 +05:30 [Debug] Executed action method "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)", returned result "Microsoft.AspNetCore.Mvc.OkObjectResult".
+2017-11-13 13:43:19.647 +05:30 [Debug] Selected output formatter '"Microsoft.AspNetCore.Mvc.Formatters.StringOutputFormatter"' and content type '"application/json"' to write the response.
+2017-11-13 13:43:19.648 +05:30 [Information] Executing ObjectResult, writing value "Microsoft.AspNetCore.Mvc.ControllerContext".
+2017-11-13 13:43:19.651 +05:30 [Information] Executed action "Api.Socioboard.Controllers.UserController.checksociorevtoken (Api.Socioboard)" in 5218.4896ms
+2017-11-13 13:43:19.654 +05:30 [Information] Request finished in 5226.9272ms 200 application/json; charset=utf-8
+2017-11-13 13:43:19.655 +05:30 [Debug] Connection id ""0HL9ADP3OELER"" completed keep alive response.
+2017-11-13 13:44:18.227 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" received FIN.
+2017-11-13 13:44:18.395 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" disconnecting.
+2017-11-13 13:44:18.396 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" sending FIN.
+2017-11-13 13:44:18.406 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" sent FIN with status "0".
+2017-11-13 13:44:18.411 +05:30 [Debug] Connection id ""0HL9ADP3OELEQ"" stopped.

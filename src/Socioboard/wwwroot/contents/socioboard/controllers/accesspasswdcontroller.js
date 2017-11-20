@@ -20,7 +20,7 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
         //    swal(Gpluslogin);
         //};
         $scope.twostepsocialmessage = function () {
-            $scope.twostepsociallogin = "You can't use this feature as you enable social signin or signup with Social network";
+            $scope.twostepsociallogin = "You can't use this feature as you enable social sign in or sign up with Social network";
             swal($scope.twostepsociallogin);
         };
         $scope.password = $rootScope.user.Password;

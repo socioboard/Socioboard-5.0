@@ -305,7 +305,8 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         $scope.schedulePost = function (schedulemessage) {
 
             var message = {
-                "shareMessage": schedulemessage.title,
+                //"shareMessage": schedulemessage.title,
+                "url":schedulemessage.link,
                 "picUrl": schedulemessage.image
             };
             $rootScope.schedulemessage = message;

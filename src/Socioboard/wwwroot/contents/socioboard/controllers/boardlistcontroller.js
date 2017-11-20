@@ -44,7 +44,7 @@ SocioboardApp.controller('BoardlistController', function ($rootScope, $scope,$ht
         $scope.deleteBoard = function (profileId) {
         	swal({   
 	        title: "Are you sure?",   
-	        text: "You will not be able to send message via this account!",   
+	        text: "Your board will be deleted",   
 	        type: "warning",   
 	        showCancelButton: true,   
 	        confirmButtonColor: "#DD6B55",   

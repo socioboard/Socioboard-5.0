@@ -12,6 +12,7 @@ using Socioboard.LinkedIn.Authentication;
 using System.Text.RegularExpressions;
 using MongoDB.Driver;
 using System.Collections.Specialized;
+using Api.Socioboard.Helper;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -287,7 +288,67 @@ namespace Api.Socioboard.Controllers
         [HttpPost("PostCommentOnLinkedinCompanyPage")]
         public IActionResult PostCommentOnLinkedinCompanyPage(string pageId,long userId,string updatekey,string comment)
         {
+            string postmessage = "";
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string[] updatedmessgae = Regex.Split(comment, "<br>");
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    if (item.Contains("https://") || item.Contains("http://"))
+                    {
+                        try
+                        {
+                            comment = "http" + Utility.getBetween(item, "http", " ");
+                            try
+                            {
+                                comment = comment.Split(' ')[0].ToString();
+                            }
+                            catch (Exception)
+                            {
+
+                                comment = "http" + Utility.getBetween(item, "http", " ");
+                            }
+                        }
+                        catch
+                        {
+                            string temp_item = item + "###";
+                            comment = "http" + Utility.getBetween(temp_item, "http", "###");
+                            try
+                            {
+                                comment = comment.Split(' ')[0].ToString();
+                            }
+                            catch (Exception)
+                            {
+
+                                comment = "http" + Utility.getBetween(temp_item, "http", "###");
+                            }
+                        }
+                    }
+                    if (item.Contains("hhh") || item.Contains("nnn"))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                        }
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            try
+            {
+                comment = "";
+                //updatedtext = postmessage.Replace(url, "");
+                // updatedtext = postmessage;
+                comment = postmessage;
+            }
+            catch (Exception ex)
+            {
+                comment = postmessage;
+            }
             string postdata = Repositories.LinkedInAccountRepository.PostCommentOnLinkedinCompanyPage(pageId, updatekey, comment, userId, _redisCache, _appSettings, dbr);
             return Ok(postdata);
         }
