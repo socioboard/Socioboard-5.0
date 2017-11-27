@@ -34,7 +34,7 @@ SocioboardApp.controller('YoutubeGroupInviteController', function ($rootScope, $
                                  });
         }
         $scope.loadYtYourGroups();
-    })
-})
+    });
+});
 
        

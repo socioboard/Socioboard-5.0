@@ -37,7 +37,23 @@ namespace Api.Socioboard.Controllers
         public IActionResult InviteGroupMember(Int64 userId, string emailId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            Repositories.YoutubeGroupRepository.InviteGroupMember(userId, emailId, _appSettings, _logger, dbr);
+            Domain.Socioboard.Models.YoutubeGroupInvite tempUser = Repositories.YoutubeGroupRepository.InviteGroupMember(userId, emailId, _appSettings, _logger, dbr);
+
+            if (tempUser != null)
+            {
+                try
+                {
+                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\yt_group_mail.html";
+                    string html = System.IO.File.ReadAllText(path);
+                    html = html.Replace("[NAME]", tempUser.OwnerName).Replace("[LINK]", _appSettings.Domain + "/Home/ActiveYoutubeGroup?Token=" + tempUser.EmailValidationToken);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", tempUser.SBEmailId, "", "", "Socioboard Youtube group invite confirmation link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                }
+                catch
+                {
+                    return Ok();
+                }
+            }
+
             return Ok("");
         }
 
@@ -64,6 +80,21 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             IList<Domain.Socioboard.Models.YoutubeGroupInvite> grppMembers = Repositories.YoutubeGroupRepository.GetYtYourGroups(userId, _appSettings, _logger, dbr);
             return Ok(grppMembers);
+        }
+
+
+
+
+        [HttpPost("ValidateEmail")]
+        public ActionResult ValidateEmail(string Token)
+        {
+
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
+            string resp = Repositories.YoutubeGroupRepository.ValidateEmail(Token, _appSettings, _logger, dbr);
+
+            return Ok();
         }
 
 

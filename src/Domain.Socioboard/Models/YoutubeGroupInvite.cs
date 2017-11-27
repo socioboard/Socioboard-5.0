@@ -17,5 +17,6 @@ namespace Domain.Socioboard.Models
         public virtual string SBEmailId { get; set; }
         public virtual string SBProfilePic { get; set; }
         public virtual Int64 AccessSBUserId { get; set; }
+        public virtual string EmailValidationToken { get; set; }
     }
 }

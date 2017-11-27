@@ -16,7 +16,8 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
         $scope.showChildCommentButton = 'show';
         $scope.hideChildCommentButton = 'hide';
         $scope.loadVideoComments = false;
-
+        $scope.reviewLoaded = 'shhw';//reviewBtn
+        $scope.reviewLoading = 'hide';//reviewBtn
         $scope.fetchComments = function () {
 
             $scope.commentsending = 'hide';
@@ -37,6 +38,7 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
                                   $scope.error = reason.data;
                               });
             // end codes to load Comments
+
 
         }
 
@@ -185,8 +187,34 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
         //End Youtube each group code (channel wise)
 
 
+        // task
+        $scope.taskfbfeedModel = function (notification) {
+            $('#TaskfeedModal').openModal();
+        }
 
+        // end task
 
+        $scope.reviewed = function (commentObj, status, commentType) {
+            $scope.reviewLoaded = 'hide';
+            $scope.reviewLoading = 'shhw';
+            $http.post(apiDomain + '/api/Google/ReviewedComment?commentId=' + commentObj.commentId + '&sbUserName=' + $rootScope.user.FirstName + ' ' + $rootScope.user.LastName + '&status=' + status + '&commentType=' + commentType)
+                                  .then(function (response) {
+                                      if (status == true)
+                                      {
+                                          swal("Reviewed successfully");
+                                      }
+                                      else
+                                      {
+                                          swal("Review cancelled");
+                                      }
+                                      $scope.fetchComments();
+                                      $scope.reviewLoaded = 'shhw';
+                                      $scope.reviewLoading = 'hide';
+                                      $scope.singleCommentShow.review = status;
+                                  }, function (reason) {
+                                      $scope.error = reason.data;
+                                  });
+        }
 
         //Endregion Inbox
     });
@@ -205,6 +233,16 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
                 $('.collapsible').collapsible({
                     accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
                 });
+            });
+        }
+    };
+})
+SocioboardApp.directive('myRepeatCommentsDirective', function ($timeout) {
+
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+                $('ul.tabs').tabs();
             });
         }
     };

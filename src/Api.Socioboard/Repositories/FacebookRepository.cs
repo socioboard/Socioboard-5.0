@@ -710,6 +710,15 @@ namespace Api.Socioboard.Repositories
                     {
                         message = "";
                     }
+                    dynamic comment;
+                    try
+                    {
+                        comment = result["comments"];
+                    }
+                    catch (Exception)
+                    {
+                        comment = null;
+                    }
                     objFacebookFeed.FeedDescription = message;
                     objFacebookFeed.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                     //try
@@ -718,10 +727,8 @@ namespace Api.Socioboard.Repositories
                     //}
                     //catch { }
                     //objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, AccessToken, settings, _logger);
-                   
-                        objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, result["comments"], settings, _logger);
                     
-               
+                    objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, comment,settings, _logger);
                     try
                     {
                         MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
@@ -1514,16 +1521,16 @@ namespace Api.Socioboard.Repositories
             return ret;
         }
 
-        public static List<MongoFbPostComment> FbPostComments(string postid, string AccessToken, Helper.AppSettings settings, ILogger _logger)
+        public static List<MongoFbPostComment> FbPostComments(string postid, dynamic post, Helper.AppSettings settings, ILogger _logger)
         {
-            
+
             List<MongoFbPostComment> lstFbPOstComment = new List<MongoFbPostComment>();
             string ret = string.Empty;
             try
             {
 
-                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
-                dynamic post = FbUser.getPostComments(AccessToken, postid);
+                //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
+                //dynamic post = FbUser.getPostComments(AccessToken, postid);
 
                 foreach (var item in post["data"])
                 {
@@ -2038,7 +2045,7 @@ namespace Api.Socioboard.Repositories
                 return lstFacebookGroup;
             }
         }
-
+        
         public static string FacebookfanPageCount(long userId, long groupId, Model.DatabaseRepository dbr, Helper.Cache _redisCache)
         {
             string[] profileids = null;

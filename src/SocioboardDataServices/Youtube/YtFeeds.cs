@@ -16,21 +16,22 @@ namespace SocioboardDataServices.Youtube
 {
     public class YtFeeds
     {
+        static List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> _lstGlobalComVideos = new List<MongoYoutubeComments>();
         public static void GetYtFeeds(string ChannelId, string AcessToken)
         {
-
             oAuthTokenYoutube ObjoAuthTokenGPlus = new oAuthTokenYoutube(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
             Activities _ObjYtActivities = new Activities(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
-            string apiKey = AppSettings.googleApiKey;
+            string apiKey = AppSettings.googleApiKey_TestApp;
 
             try
             {
-                
+
                 MongoYoutubeFeeds _ObjMongoYtFeeds;
-                string _ChannelVideos = _ObjYtActivities.GetYtVideos(ChannelId,apiKey);
+                string _ChannelVideos = _ObjYtActivities.GetYtVideos(ChannelId, apiKey);
                 JObject J_ChannelVideos = JObject.Parse(_ChannelVideos);
                 foreach (var item in J_ChannelVideos["items"])
                 {
+                    _lstGlobalComVideos.Clear();
                     _ObjMongoYtFeeds = new MongoYoutubeFeeds();
                     _ObjMongoYtFeeds.Id = ObjectId.GenerateNewId();
                     _ObjMongoYtFeeds.YtChannelId = ChannelId;
@@ -125,6 +126,7 @@ namespace SocioboardDataServices.Youtube
 
                         //new Thread(delegate () {
                         GetYtComments(_ObjMongoYtFeeds.YtVideoId, apiKey, ChannelId);
+                        UpdateYtComments(_ObjMongoYtFeeds.YtVideoId, apiKey, ChannelId);
                         //}).Start();
                     }
                     catch { }
@@ -146,7 +148,7 @@ namespace SocioboardDataServices.Youtube
 
 
                 MongoYoutubeComments _ObjMongoYtComments;
-                string _CommentsData = _Videos.Get_CommentsBy_VideoId(VideoId,"","", apiKey);
+                string _CommentsData = _Videos.Get_CommentsBy_VideoId(VideoId, "", "", apiKey);
                 JObject J_CommentsData = JObject.Parse(_CommentsData);
                 foreach (var item in J_CommentsData["items"])
                 {
@@ -215,6 +217,11 @@ namespace SocioboardDataServices.Youtube
                     catch { }
                     try
                     {
+                        _ObjMongoYtComments.publishTimeUnix = UnixTimeFromDatetime(Convert.ToDateTime(_ObjMongoYtComments.publishTime));
+                    }
+                    catch { }
+                    try
+                    {
                         _ObjMongoYtComments.updatedTime = item["snippet"]["topLevelComment"]["snippet"]["updatedAt"].ToString();
                     }
                     catch { }
@@ -223,9 +230,13 @@ namespace SocioboardDataServices.Youtube
                         _ObjMongoYtComments.totalReplyCount = item["snippet"]["totalReplyCount"].ToString();
                     }
                     catch { }
+                    _ObjMongoYtComments.active = true;
+                    _ObjMongoYtComments.review = false;
+                    _ObjMongoYtComments.sbGrpTaskAssign = false;
 
                     try
                     {
+                        _lstGlobalComVideos.Add(_ObjMongoYtComments);//Global var for update the comments
                         MongoRepository youtubecommentsrepo = new MongoRepository("YoutubeVideosComments");
                         var ret = youtubecommentsrepo.Find<MongoYoutubeComments>(t => t.commentId.Equals(_ObjMongoYtComments.commentId));
                         var task = Task.Run(async () =>
@@ -246,7 +257,7 @@ namespace SocioboardDataServices.Youtube
                             try
                             {
                                 FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", _ObjMongoYtComments.commentId);
-                                var update = Builders<BsonDocument>.Update.Set("authorDisplayName", _ObjMongoYtComments.authorDisplayName).Set("authorProfileImageUrl", _ObjMongoYtComments.authorProfileImageUrl).Set("commentDisplay", _ObjMongoYtComments.commentDisplay).Set("commentOriginal", _ObjMongoYtComments.commentOriginal).Set("viewerRating", _ObjMongoYtComments.viewerRating).Set("likesCount", _ObjMongoYtComments.likesCount).Set("totalReplyCount", _ObjMongoYtComments.totalReplyCount).Set("updatedTime", _ObjMongoYtComments.updatedTime);
+                                var update = Builders<BsonDocument>.Update.Set("authorDisplayName", _ObjMongoYtComments.authorDisplayName).Set("authorProfileImageUrl", _ObjMongoYtComments.authorProfileImageUrl).Set("commentDisplay", _ObjMongoYtComments.commentDisplay).Set("commentOriginal", _ObjMongoYtComments.commentOriginal).Set("viewerRating", _ObjMongoYtComments.viewerRating).Set("likesCount", _ObjMongoYtComments.likesCount).Set("totalReplyCount", _ObjMongoYtComments.totalReplyCount).Set("updatedTime", _ObjMongoYtComments.updatedTime).Set("publishTimeUnix", _ObjMongoYtComments.publishTimeUnix).Set("active", _ObjMongoYtComments.active);
                                 youtubecommentsrepo.Update<MongoYoutubeComments>(update, filter);
                             }
                             catch { }
@@ -262,6 +273,41 @@ namespace SocioboardDataServices.Youtube
             }
         }
 
+        public static long UnixTimeFromDatetime(DateTime input)
+        {
+            var timeSpan = (input - new DateTime(1970, 1, 1, 0, 0, 0));
+            return (long)timeSpan.TotalSeconds;
+        }
 
+        public static void UpdateYtComments(string VideoId, string apiKey, string ChannelId)
+        {
+            int c = 0;
+            MongoRepository mongoreposs = new MongoRepository("YoutubeVideosComments");
+            var result = mongoreposs.Find<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(t => t.videoId == VideoId);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> lstAllComment = task.Result;
+
+            List<string> idMongo = lstAllComment.Select(t => t.commentId).ToList();
+            List<string> idLatest = _lstGlobalComVideos.Select(t => t.commentId).ToList();
+            Console.WriteLine("Filter the deleted Elements");
+            foreach (string item in idMongo)
+            {
+                if (!(idLatest.Contains(item)))
+                {
+                    Console.WriteLine("===============");
+                    MongoRepository _mongoRepo = new MongoRepository("YoutubeVideosComments");
+                    var temp = lstAllComment.Single(t => t.commentId == item);
+                    temp.active = false;
+                    FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", temp.commentId);
+                    var update = Builders<BsonDocument>.Update.Set("active", temp.active);
+                    _mongoRepo.Update<MongoYoutubeComments>(update, filter);
+                    Console.WriteLine(c++);
+                }
+                Console.Write(".");
+            }
+        }
     }
 }

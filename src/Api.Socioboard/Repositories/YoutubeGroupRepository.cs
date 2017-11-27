@@ -1,4 +1,5 @@
-﻿using Domain.Socioboard.Models;
+﻿using Domain.Socioboard.Helpers;
+using Domain.Socioboard.Models;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace Api.Socioboard.Repositories
 {
     public class YoutubeGroupRepository
     {
-        public static void InviteGroupMember(Int64 userId, string emailId, Helper.AppSettings settings, ILogger _logger, Model.DatabaseRepository dbr)
+        public static Domain.Socioboard.Models.YoutubeGroupInvite InviteGroupMember(Int64 userId, string emailId, Helper.AppSettings settings, ILogger _logger, Model.DatabaseRepository dbr)
         {
             YoutubeGroupInvite _objGrp = new YoutubeGroupInvite();
 
@@ -60,9 +61,12 @@ namespace Api.Socioboard.Repositories
                     _objGrp.SBProfilePic = _SBUserInvite.ProfilePicUrl;
                 }
                 _objGrp.AccessSBUserId = userId;
+                _objGrp.EmailValidationToken = SBHelper.RandomString(35);
                 dbr.Add(_objGrp);
+                return _objGrp;
+
             }
-            else if (_SBUserInvite == null)
+            else if (_SBUserInvite == null && _grpInvMem==null)
             {
                 _objGrp.UserId = 0;
                 _objGrp.Owner = false;
@@ -72,8 +76,20 @@ namespace Api.Socioboard.Repositories
                 _objGrp.SBUserName = "New User";
                 _objGrp.SBEmailId = emailId;
                 _objGrp.SBProfilePic = "https://i.imgur.com/zqN47Qp.png";
+                _objGrp.EmailValidationToken = SBHelper.RandomString(35);
                 _objGrp.AccessSBUserId = userId;
                 dbr.Add(_objGrp);
+                return _objGrp;
+
+            }
+
+            else if (_grpInvMem.Active == false)
+            {
+                return _grpInvMem;
+            }
+            else
+            {
+                return null;
             }
         }
 
@@ -96,6 +112,37 @@ namespace Api.Socioboard.Repositories
         }
 
 
+        public static string ValidateEmail(string Token, Helper.AppSettings settings, ILogger _logger, Model.DatabaseRepository dbr)
+        {
+            Domain.Socioboard.Models.YoutubeGroupInvite _lstMembers = dbr.Single<Domain.Socioboard.Models.YoutubeGroupInvite>(t => t.EmailValidationToken == Token);
 
+            if (_lstMembers.SBUserName == "New User")
+            {
+                Domain.Socioboard.Models.User tempUser = dbr.Single<Domain.Socioboard.Models.User>(t => t.EmailId == _lstMembers.SBEmailId);
+                if (tempUser != null)
+                {
+                    _lstMembers.SBEmailId = tempUser.EmailId;
+                    if (tempUser.ProfilePicUrl == "" || tempUser.ProfilePicUrl == null)
+                    {
+                    }
+                    else
+                    {
+                        _lstMembers.SBProfilePic = tempUser.ProfilePicUrl;
+                    }
+                    _lstMembers.SBUserName = tempUser.FirstName + " " + tempUser.LastName;
+                    _lstMembers.UserId = tempUser.Id;
+                    _lstMembers.SBEmailId = tempUser.EmailId;
+                    _lstMembers.Active = true;
+                    dbr.Update(_lstMembers);
+                }
+            }
+            else
+            {
+                _lstMembers.Active = true;
+                dbr.Update(_lstMembers);
+            }
+
+            return "200";
+        }
     }
 }
