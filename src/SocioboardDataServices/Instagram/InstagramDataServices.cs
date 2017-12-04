@@ -17,7 +17,7 @@ namespace SocioboardDataServices.Instagram
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Instagramaccounts> lstInstagramaccount = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.IsActive).ToList();
-                 //lstInstagramaccount = lstInstagramaccount.Where(t => t.InstagramId.Contains("180054410")).ToList();
+                
                     foreach (var item in lstInstagramaccount)
                     {
                         try
