@@ -443,5 +443,137 @@ namespace Api.Socioboard.Repositories
                 return "Issue while deleting Profile";
             }
         }
+
+        public static List<Domain.Socioboard.Models.profilesdetail> SearchProfileType(long groupId, string Profiletype, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+                List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+                if (inMemGroupProfiles != null)
+                {
+                    // return inMemGroupProfiles;
+                }
+            }
+            catch { }
+            List<Domain.Socioboard.Models.profilesdetail> lstprofiledetail = new List<profilesdetail>();
+            {
+                if (Profiletype == "Facebook")
+                {
+
+                    List<Domain.Socioboard.Models.Groupprofiles> FbProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook).ToList();
+                    foreach (Domain.Socioboard.Models.Groupprofiles profil in FbProfiles)
+                    {
+                        Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(profil.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.Fbaccount = fbAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "FacebookPage")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> Fbpage = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
+                    foreach (Domain.Socioboard.Models.Groupprofiles page in Fbpage)
+                    {
+                        Domain.Socioboard.Models.Facebookaccounts fbpageAcc = Repositories.FacebookRepository.getFacebookAccount(page.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.Fbaccount = fbpageAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "twitter")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> TwitterProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
+                    foreach (Domain.Socioboard.Models.Groupprofiles Twitter in TwitterProfiles)
+                    {
+                        Domain.Socioboard.Models.TwitterAccount twtAcc = Repositories.TwitterRepository.getTwitterAccount(Twitter.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.Twtaccount = twtAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "instagram")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> InstagramProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram).ToList();
+                    foreach (Domain.Socioboard.Models.Groupprofiles Instagram in InstagramProfiles)
+                    {
+                        Domain.Socioboard.Models.Instagramaccounts insAcc = Repositories.InstagramRepository.getInstagramAccount(Instagram.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.Instaaccount = insAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "googlepluse")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> GPlusProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus).ToList();
+                    foreach (Domain.Socioboard.Models.Groupprofiles GPlus in GPlusProfiles)
+                    {
+                        Domain.Socioboard.Models.Googleplusaccounts gPlusAcc = Repositories.GplusRepository.getGPlusAccount(GPlus.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.Gplusaccount = gPlusAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "linkedin")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> LinkedInProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn).ToList();
+                    foreach (Domain.Socioboard.Models.Groupprofiles LinkedIn in LinkedInProfiles)
+                    {
+                        Domain.Socioboard.Models.LinkedInAccount linkdAcc = Repositories.LinkedInAccountRepository.getLinkedInAccount(LinkedIn.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.LinkdInaccount = linkdAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "linkedincompanypage")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> LinkedInComapanyPageProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage).ToList();
+
+                    foreach (Domain.Socioboard.Models.Groupprofiles LinkedInComapanyPage in LinkedInComapanyPageProfiles)
+                    {
+                        Domain.Socioboard.Models.LinkedinCompanyPage LinkedcompanyAcc = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(LinkedInComapanyPage.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.LinkdINcompanyaccount = LinkedcompanyAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "Youtube")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> YouTubeProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
+                    foreach (Domain.Socioboard.Models.Groupprofiles YouTube in YouTubeProfiles)
+                    {
+                        Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.GplusRepository.getYTChannel(YouTube.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.Ytubeaccount = YTChnl;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "GAnalytics")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> GoogleAnalyticsProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics).ToList();
+
+                    foreach (Domain.Socioboard.Models.Groupprofiles GoogleAnalytics in GoogleAnalyticsProfiles)
+                    {
+                        Domain.Socioboard.Models.GoogleAnalyticsAccount gAAcc = Repositories.GplusRepository.getGAAccount(GoogleAnalytics.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.GAaccount = gAAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+                else if (Profiletype == "Pinterest")
+                {
+                    List<Domain.Socioboard.Models.Groupprofiles> PinterestProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Pinterest).ToList();
+                    foreach (Domain.Socioboard.Models.Groupprofiles Pinterest in PinterestProfiles)
+                    {
+                        Domain.Socioboard.Models.PinterestAccount PinAcc = Repositories.PinterestRepository.getPinterestAccountDetail(Pinterest.profileId, _redisCache, dbr);
+                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
+                        profiledetails.Pintrestaccount = PinAcc;
+                        lstprofiledetail.Add(profiledetails);
+                    }
+                }
+
+                return lstprofiledetail;
+            }
+        }
+
     }
 }

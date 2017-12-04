@@ -212,7 +212,6 @@
                                    </div>
                                    <div class="col s12 m6">
                                        <div class="row">
-
                                            <div class="input-field col s12">
                                                <div ng-if="!schedulemessage">
                                                    <textarea id="ScheduleMsg" class="materialize-textarea" ng-pattern="/^[a-z]+[@+!+#][a-z]*$/" ng-model="ScheduleMsg" required name="ScheduleMsgtxt" length="500"></textarea>
@@ -220,8 +219,7 @@
                                                </div>
                                                <div ng-if="schedulemessage">
                                                    <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage.url" ng-if="!grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.url}}</textarea>
-                                                   <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.url}}</textarea>
-                                                  
+                                                   <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.url}}</textarea>                                                 
                                                </div>
                                            </div>
                                            <span class="error-message" ng-show="scheduleform.ScheduleMsgtxt.$dirty && scheduleform.ScheduleMsgtxt.$invalid">

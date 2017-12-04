@@ -422,5 +422,31 @@ namespace Api.Socioboard.Model
                 }
             }
         }
+
+        public IList<T> FindWithRangeDesct<T>(Expression<Func<T, bool>> query, int skip, int take, Expression<Func<T, long>> DescVar) where T : class, new()
+        {
+            IList<T> result = null;
+            try
+            {
+                using (NHibernate.ISession session = SessionFactory.GetNewSession(_env))
+                {
+                    result = session.Query<T>().OrderByDescending(DescVar).Where(query).Skip(skip).Take(take).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                _logger.LogError(ex.StackTrace);
+                try
+                {
+                    _logger.LogError(ex.InnerException.Message);
+
+                }
+                catch { }
+            }
+
+            return result;
+
+        }
     }
 }

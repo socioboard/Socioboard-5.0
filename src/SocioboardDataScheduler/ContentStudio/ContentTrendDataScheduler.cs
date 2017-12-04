@@ -41,12 +41,17 @@ namespace SocioboardDataScheduler.ContentStudio
                     noOfthread_pageshreathon = 0;
                     foreach (ContentStudioShareathonIdData shareathon in lstPageShareathon)
                     {
-                                         
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(ShceduleConetentStudioFeeds), new object[] { shareathon, dbr, _lstcontent });
+                        //Thread.Sleep(20 * 1000);
                         noOfthread_pageshreathon++;
                         Thread thread_pageshreathon = new Thread(() => ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent }));
-                      
+                        ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
                         thread_pageshreathon.Start();
-                        Thread.Sleep(10 * 1000);
+                        //while (noOfthread_pageshreathon > 5)
+                        //{
+                        //    Thread.Sleep(1 * 1000);
+                        //}
+                        ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
 
                     }
                     Thread.Sleep(TimeSpan.FromMinutes(1));
@@ -131,7 +136,14 @@ namespace SocioboardDataScheduler.ContentStudio
                                                 var updateId = Builders<BsonDocument>.Update.Set("Status", true);
                                                 mongorepo.Update<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(updateId, filterId);
 
-                                            }                                            
+                                            }
+
+                                            //if (!string.IsNullOrEmpty(ret))
+                                            //{
+                                            //    Thread.Sleep(1000 * 60 * shareathon.Timeintervalminutes);
+
+                                            //}
+
                                         }
                                     }
                                     catch
@@ -151,9 +163,11 @@ namespace SocioboardDataScheduler.ContentStudio
                                 var update = Builders<BsonDocument>.Update.Set("Status", false);
                                 _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(update, filter);
                             }
-                           
+                            //}
+                            //else
+                            //{
                             pageapiHitsCount = 0;
-                        
+                            // }
 
                         }
                     }

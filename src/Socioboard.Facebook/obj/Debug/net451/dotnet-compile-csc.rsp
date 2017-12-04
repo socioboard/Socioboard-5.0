@@ -8,8 +8,8 @@
 -debug:full
 -nostdlib
 -nologo
-"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\obj\Debug\net451\dotnet-compile.assemblyinfo.cs"
--out:"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll"
+"D:\SBPROJECT\Developer\src\Socioboard.Facebook\obj\Debug\net451\dotnet-compile.assemblyinfo.cs"
+-out:"D:\SBPROJECT\Developer\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll"
 -r:"C:\Users\GLB-008-PC\.nuget\packages\Facebook\7.0.10-beta\lib\net45\Facebook.dll"
 -r:"C:\Users\GLB-008-PC\.nuget\packages\MongoDB.Bson\2.2.4\lib\net45\MongoDB.Bson.dll"
 -r:"C:\Users\GLB-008-PC\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll"
@@ -43,7 +43,7 @@
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Timer.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.ReaderWriter.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll"
--r:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll"
+-r:"D:\SBPROJECT\Developer\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll"
@@ -51,7 +51,7 @@
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.ComponentModel.DataAnnotations.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Security.dll"
-"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Auth\Authentication.cs"
-"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\Fbpages.cs"
-"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\FbUser.cs"
-"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Properties\AssemblyInfo.cs"
+"D:\SBPROJECT\Developer\src\Socioboard.Facebook\Auth\Authentication.cs"
+"D:\SBPROJECT\Developer\src\Socioboard.Facebook\Data\Fbpages.cs"
+"D:\SBPROJECT\Developer\src\Socioboard.Facebook\Data\FbUser.cs"
+"D:\SBPROJECT\Developer\src\Socioboard.Facebook\Properties\AssemblyInfo.cs"

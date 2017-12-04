@@ -14,7 +14,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         var preloadmore = false;
         $scope.disbtncom = true;
         $scope.buildbtn = true;
-           $scope.query = {};
+        $scope.query = {};
         $scope.queryBy = '$';
         var endfeeds = false;
         $scope.filterrTxtt = 'All Posts';
@@ -59,27 +59,32 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
         //end
         $scope.LoadTopFeeds = function () {
             //codes to load  recent Feeds
-            $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count)
+            $http.get(apiDomain + '/api/Facebook/GetTopFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=' + count + '&type='+ $stateParams.fbProfileType)
                               .then(function (response) {
-                                  $scope.lstFbFeeds = response.data;
-                                  $rootScope.firstFeedDate = $scope.lstFbFeeds[0]._facebookFeed.entryDate;
-                                  //var date = (new Date($rootScope.firstFeedDate).getTime() / 1000);
-                                  //$scope.reloadFeeds();
-                                  //$scope.LoadLatestFeeds();
-                                  $scope.preloadmore = true;
-                                  setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
-                                  if (response.data == null) {
-                                      reachLast = true;
-                                  }
-                                  $scope.dropCalled = true;
-                                  setTimeout(function () {
-                                      $scope.callDropmenu();
-                                  }, 1000);
-                              }, function (reason) {
-                                  $scope.error = reason.data;
+                           $scope.lstFbFeeds = response.data;
+                           $scope.comments = response.data._facebookComment;
+                           $rootScope.firstFeedDate = $scope.lstFbFeeds[0]._facebookFeed.entryDate;
+                           //var date = (new Date($rootScope.firstFeedDate).getTime() / 1000);
+                           //$scope.reloadFeeds();
+                           //$scope.LoadLatestFeeds();
+                           $scope.preloadmore = true;
+                           setTimeout(function () { $('.collapsible').collapsible(); }, 1000);
+                           if (response.data == null) {
+                               reachLast = true;
+                           }
+                           $scope.dropCalled = true;
+                           setTimeout(function () {
+                               $scope.callDropmenu();
+                           }, 1000);
+                       }, function (reason) {
+                           $scope.error = reason.data;
+                       });
+            $http.get(apiDomain + '/api/Facebook/fbtype?profileId=' + $stateParams.profileId)
+                      .then(function (respon) {
+                          $scope.fbprofiletype = respon.data[0].fbProfileType;
+                                  // end codes to load  recent Feeds
                               });
-                // end codes to load  recent Feeds
-            
+        
         }
         $scope.LoadTopFeeds();
 
@@ -362,6 +367,32 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
             }
         }
+        //comments
+        $scope.viewcomment = function (contentFeed) {
+            if (contentFeed.picture == "") {
+                $('#xxxxx').hide();
+            }
+            else {
+                $('#xxxxx').show();
+            }
+            $scope.feeddata = contentFeed;
+            if ($scope.fbprofiletype != 1) {
+                if (contentFeed._facebookComment.length != 0) {
+                    $('#view').openModal();
+                    $scope.allcomment = contentFeed._facebookComment;
+                }
+                else {
+                    swal('Sorry your post have no comment')
+                }
+            }
+            else {
+                    $('#viewpageModal').openModal();
+                    $scope.allcomment = contentFeed._facebookComment;
+            }
+        }
+
+        //end comments
+
 
         //repost
 

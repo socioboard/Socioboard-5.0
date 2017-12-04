@@ -432,31 +432,60 @@
                 <h4>Shareathon Post</h4>
             </div>
             <form class="col s12">
-                <div class="input-field col s12">
-                    <select multiple id="shraeathonfacebookpage">
-                        <option value="" disabled selected>Choose your option</option>
-                        <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:1} && filter:{profileType:0}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>-->
-                        <option ng-repeat="profile in lstProfiles |filter:{profileType:0} && filter:{profileType:1} && filter:{profileType:2} && filter:{profileType:3} | filter:{profileType:'!5'}|filter:{profileType:'!6'}|filter:{profileType:'!7'}|filter:{profileType:'!8'} |filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                <div class="col s12 m12">
+                    <div class="row">
+                        <b class="grey-text text-darken-3" style="font-size: 17px;">Select social profile</b>
 
-                     </select>
+                        <ul class="col s12 shinh" id="checkboxdataAa" style="max-height:250px; overflow-y:scroll;">
+                            <li style="padding:5px 0;">
+                                <label>
+                                    <!----------------<input  type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" ng-model="allSelected" ng-model-options="{getterSetter: true}" />------------->
+                                    <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAlll" onclick="checkK();" />
+                                    <span style="float:left;">Check All</span>
+                                </label>
+                            </li>
+                            <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                <label>
+                                    <input onclick="otherprofile();" name="selector[]" class="subcheckbox" id="{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
+                                </label>
+                            </li>
+                            <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                <label>
+                                    <input onclick="otherprofile();" name="selector[]" class="subcheckbox" id="{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                    <span style="float:left;">{{profile.profileName}}</span>
+                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                </label>
+                            </li>
+                           
+                        </ul>
+                    </div>
+                </div>
+                    <!--<div class="input-field col s12">-->
+                    <!--<select multiple id="shraeathonfacebookpage">
+                     <option value="" disabled selected>Choose your option</option>
+                     <option ng-repeat="profile in lstProfiles |filter:{profileType:0} && filter:{profileType:1} && filter:{profileType:2} && filter:{profileType:3} | filter:{profileType:'!5'}|filter:{profileType:'!6'}|filter:{profileType:'!7'}|filter:{profileType:'!8'} |filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
+                     </select>-->
+                    <!--<label>Select An Account To Automate Post</label>
+                     </div>-->
 
-                    <label>Select An Account To Automate Post</label>
-                </div>
-
-                <div class="input-field col s12">
-                    <select id="shraeathontimeinterval">
-                        <option value="" disabled selected>Choose your option</option>
-                        <option value="20">20 min</option>
-                        <option value="30">30 min</option>
-                        <option value="60">1 hr</option>
-                    </select>
-                    <label>Set Your Time Interval</label>
-                </div>
-                <div ng-init="dispbtn= {{dispbtn}}"></div>
-                <div class="col l12 center margin-top-50">
-                    <a ng-show="dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">post</a>
-                    <a ng-show="!dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">wait</a>
-                </div>
+                    <div class="input-field col s12">
+                        <select id="shraeathontimeinterval">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option value="20">20 min</option>
+                            <option value="30">30 min</option>
+                            <option value="60">1 hr</option>
+                        </select>
+                        <label>Set Your Time Interval</label>
+                    </div>
+                    <div ng-init="dispbtn= {{dispbtn}}"></div>
+                    <div class="col l12 center margin-top-50">
+                        <a ng-show="dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">post</a>
+                        <a ng-show="!dispbtn" ng-click="saveshreathondata()" class="btn grey darken-4 waves-effect waves-light">wait</a>
+                    </div>
             </form>
         </div>
     </div>
@@ -496,6 +525,30 @@
         }
         if (count == 0) {
             $("#checkAll").prop('checked', true);
+        }
+    }
+
+    function checkK() {
+        var flag = $('#checkAlll').is(":checked");
+        $('#checkboxdataAa input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+
+    function otherprofile() {
+        var count = 0;
+        $("#checkboxdataAa  :checkbox").each(function () {
+            if (this.id != 'checkAlll') {
+                if (!($("#" + this.id).prop('checked'))) {
+                    count++;
+                }
+            }
+        });
+        if (count > 0) {
+            $("#checkAlll").prop('checked', false);
+        }
+        if (count == 0) {
+            $("#checkAlll").prop('checked', true);
         }
     }
 </script>

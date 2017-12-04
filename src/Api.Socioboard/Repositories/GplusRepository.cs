@@ -1296,9 +1296,7 @@ namespace Api.Socioboard.Repositories
 
         public static void InitialYtCommentsAdd(string channelid, string AccessToken, Helper.AppSettings settings, ILogger _logger)
         {
-
             //Find Youtube feeds by channel Id
-
             List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> lstyoutubefeed = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>();
             MongoRepository mongorepo = new MongoRepository("YoutubeVideos", settings);
             var builder = Builders<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>.Sort;
@@ -1309,22 +1307,16 @@ namespace Api.Socioboard.Repositories
                 return await result;
             });
             IList<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> lstYtFeeds = task.Result;
-
             List<string> VideoIds = new List<string>();
             VideoIds = lstYtFeeds.Select(t => t.YtVideoId).ToList();
-
-            MongoRepository youtubecommentsrepo = new MongoRepository("YoutubeVideosComments", settings);
+            //MongoRepository youtubecommentsrepo = new MongoRepository("YoutubeVideosComments", settings);
             Video _Videos = new Video(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
-
-
             foreach (string items in VideoIds)
             {
                 try
                 {
-
                     string Comments = _Videos.Get_CommentsBy_VideoId(items, AccessToken, "statistics,contentDetails,snippet", settings.GoogleApiKey);
                     JObject JCommentdata = JObject.Parse(Comments);
-
                     foreach (var item in JCommentdata["items"])
                     {
                         MongoYoutubeComments _YoutubeComments = new MongoYoutubeComments();
@@ -1334,7 +1326,7 @@ namespace Api.Socioboard.Repositories
                             string commentId = item["id"].ToString();
                             string authorDisplayName = item["snippet"]["topLevelComment"]["snippet"]["authorDisplayName"].ToString();
                             string authorProfileImageUrl = item["snippet"]["topLevelComment"]["snippet"]["authorProfileImageUrl"].ToString();
-                            authorProfileImageUrl = authorProfileImageUrl.Replace(".jpg","");
+                            authorProfileImageUrl = authorProfileImageUrl.Replace(".jpg", "");
                             string authorChannelUrl = item["snippet"]["topLevelComment"]["snippet"]["authorChannelUrl"].ToString();
                             string authorChannelId = item["snippet"]["topLevelComment"]["snippet"]["authorChannelId"]["value"].ToString();
                             string textDisplay = item["snippet"]["topLevelComment"]["snippet"]["textDisplay"].ToString();
@@ -1364,10 +1356,38 @@ namespace Api.Socioboard.Repositories
                             _YoutubeComments.updatedTime = updatedAt;
                             _YoutubeComments.totalReplyCount = totalReplyCount;
                             _YoutubeComments.ChannelId = channelid;
-
-
-                            youtubecommentsrepo.Add(_YoutubeComments);
-
+                            _YoutubeComments.active = true;
+                            _YoutubeComments.review = false;
+                            _YoutubeComments.sbGrpTaskAssign = false;
+                            try
+                            {
+                                MongoRepository _mongoRepo = new MongoRepository("YoutubeVideosComments", settings);
+                                var ret = _mongoRepo.Find<MongoYoutubeComments>(t => t.commentId.Equals(_YoutubeComments.commentId));
+                                var task_Reports = Task.Run(async () =>
+                                {
+                                    return await ret;
+                                });
+                                int count_Reports = task_Reports.Result.Count;
+                                if (count_Reports < 1)
+                                {
+                                    try
+                                    {
+                                        _mongoRepo.Add(_YoutubeComments);
+                                    }
+                                    catch { }
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", _YoutubeComments.commentId);
+                                        var update = Builders<BsonDocument>.Update.Set("commentDisplay", _YoutubeComments.commentDisplay).Set("commentOriginal", _YoutubeComments.commentOriginal).Set("publishTimeUnix", _YoutubeComments.publishTimeUnix).Set("review", _YoutubeComments.review).Set("sbGrpTaskAssign", _YoutubeComments.sbGrpTaskAssign);
+                                        _mongoRepo.Update<MongoYoutubeComments>(update, filter);
+                                    }
+                                    catch { }
+                                }
+                            }
+                            catch (Exception ex) { }
 
 
                         }
@@ -1389,6 +1409,148 @@ namespace Api.Socioboard.Repositories
         }
 
 
+        public static void InitialYtReplyCommentsAdd(string channelid, string AccessToken, Helper.AppSettings settings, ILogger _logger)
+        {
+            List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> lstyoutubefeed = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>();
+            MongoRepository mongoreposs = new MongoRepository("YoutubeVideosComments", settings);
+            var result = mongoreposs.Find<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(t => t.ChannelId == channelid);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> lstParentComment = task.Result;
+            foreach (var itemMainComments in lstParentComment)
+            {
+                Video objVideo = new Video(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
+                try
+                {
+                    string commentsReply = objVideo.Get_CommentsRepliesBy_CmParentId(itemMainComments.commentId, settings.GoogleApiKey);
+                    JObject jCommentsReply = JObject.Parse(commentsReply);
+                    MongoYoutubeComments _ObjMongoYtCommentsReply;
+                    foreach (var itemReply in jCommentsReply["items"])
+                    {
+                        _ObjMongoYtCommentsReply = new MongoYoutubeComments();
+                        _ObjMongoYtCommentsReply.Id = ObjectId.GenerateNewId();
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.ChannelId = itemMainComments.ChannelId;
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.videoId = itemMainComments.videoId;
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.commentId = itemReply["id"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.authorDisplayName = itemReply["snippet"]["authorDisplayName"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.authorProfileImageUrl = itemReply["snippet"]["authorProfileImageUrl"].ToString().Replace(".jpg", "");
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.authorChannelUrl = itemReply["snippet"]["authorChannelUrl"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.authorChannelId = itemReply["snippet"]["authorChannelId"]["value"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.commentDisplay = itemReply["snippet"]["textDisplay"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.commentOriginal = itemReply["snippet"]["textOriginal"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.viewerRating = itemReply["snippet"]["viewerRating"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.likesCount = itemReply["snippet"]["likeCount"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.publishTime = itemReply["snippet"]["publishedAt"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.publishTimeUnix = Helper.DateExtension.ToUnixTimestamp(Convert.ToDateTime(_ObjMongoYtCommentsReply.publishTime));
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.updatedTime = itemReply["snippet"]["updatedAt"].ToString();
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.totalReplyCount = "ReplyType";
+                        }
+                        catch { }
+                        try
+                        {
+                            _ObjMongoYtCommentsReply.parentIdforReply = itemReply["snippet"]["parentId"].ToString();
+                        }
+                        catch { }
+                        _ObjMongoYtCommentsReply.active = true;
+                        _ObjMongoYtCommentsReply.review = false;
+                        _ObjMongoYtCommentsReply.sbGrpTaskAssign = false;
+                        try
+                        {
+                            MongoRepository _mongoRepo = new MongoRepository("YoutubeVideosCommentsReply", settings);
+                            var ret = _mongoRepo.Find<MongoYoutubeComments>(t => t.commentId.Equals(_ObjMongoYtCommentsReply.commentId));
+                            var task_Reports = Task.Run(async () =>
+                            {
+                                return await ret;
+                            });
+                            int count_Reports = task_Reports.Result.Count;
+                            if (count_Reports < 1)
+                            {
+                                try
+                                {
+                                    _mongoRepo.Add(_ObjMongoYtCommentsReply);
+                                }
+                                catch { }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", _ObjMongoYtCommentsReply.commentId);
+                                    var update = Builders<BsonDocument>.Update.Set("commentDisplay", _ObjMongoYtCommentsReply.commentDisplay).Set("commentOriginal", _ObjMongoYtCommentsReply.commentOriginal).Set("publishTimeUnix", _ObjMongoYtCommentsReply.publishTimeUnix).Set("review", _ObjMongoYtCommentsReply.review).Set("sbGrpTaskAssign", _ObjMongoYtCommentsReply.sbGrpTaskAssign);
+                                    _mongoRepo.Update<MongoYoutubeComments>(update, filter);
+                                }
+                                catch { }
+                            }
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+        }
 
         public static List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> GetYoutubeComments(string VideoId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
@@ -1469,6 +1631,8 @@ namespace Api.Socioboard.Repositories
                 _YoutubeComments.totalReplyCount = totalReplyCount;
                 _YoutubeComments.ChannelId = channelId;
                 _YoutubeComments.active = true;
+                _YoutubeComments.review = false;
+                _YoutubeComments.sbGrpTaskAssign = false;
                 _YoutubeComments.publishTimeUnix = DateExtension.ConvertToUnixTimestamp(Convert.ToDateTime(publishedAt));
 
                 youtubefeedsrepo.Add(_YoutubeComments);
@@ -1487,20 +1651,20 @@ namespace Api.Socioboard.Repositories
 
         public static List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> GetAllYoutubeComments(string ChannelId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-            int parentComment = 0, childComment = 0;
             List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> lstyoutubeParentComment = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>();
             List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> lstyoutubeChildComment = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>();
-            new Thread(delegate ()
+            Thread ParentThread = new Thread(() =>
             {
                 lstyoutubeParentComment = GetParentCommentYt(ChannelId, settings);
-                parentComment = 1;
-            }).Start();
-            new Thread(delegate ()
+            }); ParentThread.Start();
+
+            Thread ChildThread = new Thread(() =>
             {
                 lstyoutubeChildComment = GetChildCommentYt(ChannelId, settings);
-                childComment = 1;
-            }).Start();
-            while (parentComment == 0 || childComment == 0) { }
+            }); ChildThread.Start();
+
+            ParentThread.Join();
+            ChildThread.Join();
             List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> newList = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>();
             if (lstyoutubeParentComment.Count==0 && lstyoutubeChildComment.Count==0)
             {
@@ -1731,6 +1895,8 @@ namespace Api.Socioboard.Repositories
                 }
                 catch { }
                 _ObjMongoYtCommentsReply.active = true;
+                _ObjMongoYtCommentsReply.review = false;
+                _ObjMongoYtCommentsReply.sbGrpTaskAssign = false;
 
                 youtubefeedsrepo.Add(_ObjMongoYtCommentsReply);
             }
@@ -1738,6 +1904,35 @@ namespace Api.Socioboard.Repositories
             {
 
             }
+        }
+
+        public static void ReviewedComment(string commentId, string sbUserName, bool status, string commentType, Helper.AppSettings settings, ILogger _logger, Model.DatabaseRepository dbr)
+        {
+            MongoRepository mongorepo;
+            if (commentType == "main")
+            {
+                mongorepo = new MongoRepository("YoutubeVideosComments", settings);
+            }
+            else
+            {
+                mongorepo = new MongoRepository("YoutubeVideosCommentsReply", settings);
+            }
+            try
+            {
+                if (status == true)
+                {
+                    FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", commentId);
+                    var update = Builders<BsonDocument>.Update.Set("review", status).Set("reviewedBy", sbUserName).Set("sbGrpTaskAssign", false);
+                    mongorepo.Update<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(update, filter);
+                }
+                else
+                {
+                    FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", commentId);
+                    var update = Builders<BsonDocument>.Update.Set("review", status).Set("reviewedBy", sbUserName).Set("sbGrpTaskAssign", status);
+                    mongorepo.Update<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(update, filter);
+                }
+            }
+            catch { }
         }
     }
 }

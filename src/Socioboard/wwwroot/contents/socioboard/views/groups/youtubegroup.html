@@ -5,49 +5,74 @@
         <!-- START CONTENT -->
         <section id="content">
             <!--start container-->
-            <div class="container">               
+            <div class="container">
                 <div class="row">
                     <div class="col m12">
                         <h4>Youtube Group Invite</h4>
                     </div>
-                </div>   
-                    <div class="row">
-                        <div class="card">
-                            <div class="col m4">
-                                <div class="card">
-                                    <div class="memb_scroll">
-                                        <ul class="collection">
-                                            <li class="collection-item avatar" style="min-height: 65px;" ng-repeat="grpmem in lstYtGrpMem">
-                                                <img src="{{grpmem.sbProfilePic}}" alt="" class="circle">
-                                                <span class="title truncate" style="width: 99px;margin-top: 10px;">{{grpmem.sbUserName}}</span>
-                                                <a href="javascript:void(0);" class="secondary-content" ng-if="grpmem.active == 1"><i class="fa fa-check green-text" aria-hidden="true" title="Accepted"></i></a>
-                                                <a href="javascript:void(0);" class="secondary-content" ng-if="grpmem.active == 0"><i class="fa fa-clock-o red-text" aria-hidden="true" title="Pending"></i></a>
-                                            </li>
-                                        </ul>
+                </div>
+                <div class="row">
+                    <div class="card">
+                        <div class="col m4">
+                            <div class="card">
+                                <h6 style="margin: 0; padding: 20px 10px; color: #ffffff !important; background-color:indigo;">Members</h6>
+                                <div class="memb_scroll">
+                                    <ul class="collection">
+                                        <li class="collection-item avatar" style="min-height: 65px;" ng-repeat="grpmem in lstYtGrpMem">
+                                            <img src="{{grpmem.sbProfilePic}}" alt="" class="circle">
+                                            <div class="title truncate" style="width: 9999px;"><span>{{grpmem.sbUserName}}</span><br /> <span title="" class="grey-text text-darken-1" style="font-size:14px;">{{grpmem.sbEmailId}}</span></div>
+                                            <a href="javascript:void(0);" style="margin-top:6px" class="secondary-content" ng-if="$index == 0"><i class="fa fa-key indigo-text darken-4" aria-hidden="true"></i></a>
+                                            <a href="javascript:void(0);" style="margin-top:-6px" class="secondary-content" ng-if="grpmem.active == 1 && $index > 0"><i class="fa fa-check green-text" aria-hidden="true" title="Accepted"></i></a>
+                                            <a href="javascript:void(0);" style="margin-top:-6px" class="secondary-content" ng-if="grpmem.active == 0 && $index > 0"><i class="fa fa-clock-o red-text" aria-hidden="true" title="Pending"></i></a>
+                                            <a href="javascript:void(0);" ng-click="deleteMember(grpmem)" style="margin-top:20px" class="secondary-content" ng-if="$index > 0"><i class="fa fa-trash-o removeMember" aria-hidden="true" title="Remove"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col m8">
+                            <div class="input-field">
+                                <input id="g_invite" class="active" type="email" placeholder="xx@abc.xyz">
+                                <label for="g_invite" class="active" style="left: 0px;">Type Mail id</label>
+                            </div>
+                        </div>
+                        <a ng-click="inviteGroupMem()" class="btn btn_round indigo darken-4 white-text">Send</a>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <ul class="collapsible" data-collapsible="accordion">
+                        <li>
+                            <div class="collapsible-header">
+                                Others Groups
+                            </div>
+                            <div class="row collapsible-body">
+                                <div class="col m12">
+                                    <div class="card">
+                                        <div class="memb_scroll">
+                                            <ul class="collection">
+                                                <li class="collection-item avatar" style="min-height: 65px;" ng-repeat="yourgrp in YtYourGroups">
+                                                    <img src="http://sgps.in/admin/images/login_icon.png" alt="" class="circle">
+                                                    <div class="title truncate" style="width: 9999px;"><span>{{yourgrp.ownerName}}</span><br /> <span title="" class="grey-text text-darken-1" style="font-size:14px;">{{yourgrp.ownerEmailid}}</span></div>
+                                                    <span class="secondary-content" ng-if="yourgrp.active == 0">
+                                                        <a href="javascript:void(0);" class="btn btn_style btn_round indigo darken-4" ng-click="acceptTeam(yourgrp.emailValidationToken)">Accept</a>
+                                                        <!--<a href="javascript:void(0);" class="btn btn_style btn_round red darken-4">Reject</a>-->
+                                                    </span>
+                                                    <span class="secondary-content" ng-if="yourgrp.active == 1">
+                                                        <!--<a href="javascript:void(0);" class="btn btn_style btn_round red darken-4">Leave</a>-->
+                                                        <a href="javascript:void(0);" class="btn btn_style btn_round indigo darken-4 disabled">Accepted</a>
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col m8">
-                                <div class="input-field">
-                                    <input id="g_invite" class="active" type="email" placeholder="xx@abc.xyz">
-                                    <label for="g_invite" class="active" style="left: 0px;">Type Mail id</label>
-                                </div>
-                            </div>
-                            <a ng-click="inviteGroupMem()" class="btn btn_round indigo darken-4 white-text">Send</a>
-                        </div>
-                </div>   
-                
-                
-                <div class="row">
-                    <ul>
-                        <li ng-repeat="yourgrp in YtYourGroups">
-                            <a>{{yourgrp.ownerName}}</a>
-                            <a ng-if="yourgrp.active == 0"><span>Accept</span><span>Reject</span></a>
-                            <a ng-if="yourgrp.active == 1"><span>Accepted</span></a>
                         </li>
                     </ul>
                 </div>
-                         
+
             </div>
             <!--end container-->
         </section>
@@ -59,12 +84,28 @@
 <!-- END MAIN -->
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('.collapsible').collapsible();
+    });
     $('.memb_scroll').slimScroll({
-              color: '#424242',
-              size: '10px',
-              height: '200px',
-              alwaysVisible: true,
-              allowPageScroll: true
-          });
+        color: '#424242',
+        size: '10px',
+        height: '200px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
 </script>
 
+<style>
+    i.removeMember {
+        color: lightslategrey;
+    }
+
+        i.removeMember:hover {
+            color: red;
+        }
+
+        i.removeMember:active {
+            color: lightslategrey;
+        }
+</style>

@@ -688,6 +688,13 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+        [HttpGet("fbtype")]
+        public IActionResult Fbtype(string profileId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            IList<Domain.Socioboard.Models.Facebookaccounts> Userdata = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId));
+            return Ok(Userdata);
 
+        }
     }
 }

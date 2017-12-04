@@ -215,15 +215,14 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                               if (response.data != "") {
                                   $rootScope.lstAccountProfiles = response.data;
 
-
-                                  $scope.loaderclass = 'hide';
-
+                                  $rootScope.loaderdashboard = false;
+                                  //$scope.loaderclass = 'hide';
+                                  $('#loaderdiv').hide();
                               }
                               else {
-                                  $scope.noLinkedpro = true;
-                                  setTimeout(function () {
-                                      $scope.loaderclass = 'hide';
-                                  }, 3000);
+                                  $('#loaderdiv').hide();
+                                  $scope.nodatass = false;
+                                  $rootScope.loaderdashboard = false;
                               }
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -793,7 +792,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     transformRequest: angular.identity,
 
                 }).then(function (response) {
-                    if (response.data == "Google Analytics Company Page Added Successfully") {
+                    if (response.data == "Google Analytics Added Successfully") {
                         window.location.reload();
                         swal(response.data);
                     }
@@ -1090,7 +1089,6 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             });
         }
-
     });
 });
 

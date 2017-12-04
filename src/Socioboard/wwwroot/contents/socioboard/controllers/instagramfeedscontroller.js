@@ -96,7 +96,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             $scope.lstinsFeeds = null;
             $scope.filterrTxtt = txtt;
             //codes to load  recent Feeds
-            $http.get(apiDomain + '/api/Instagram/GetInstagramFilterFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10' + '&postType=' + postType)
+            $http.get(apiDomain + '/api/Instagram/GetInstagramFilterFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=50' + '&postType=' + postType)
                           .then(function (response) {
                             //  debugger;
                               if (response.data == "") {
@@ -109,8 +109,9 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                               if (response.data == null) {
                                    reachLast = true;
                                   }
-                                  $scope.date(response.data);
-                                  $scope.preloadmorefeeds = true;
+                              $scope.lstinsFeeds = response.data;
+
+                              $scope.preloadmorefeeds = true;
 
                               }, function (reason) {
                                   $scope.error = reason.data;

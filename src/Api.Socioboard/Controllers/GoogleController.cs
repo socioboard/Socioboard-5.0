@@ -809,7 +809,7 @@ namespace Api.Socioboard.Controllers
 
             if (lstAddedAccounts != 0 && lstNotAddedAccounts == 0)
             {
-                return Ok("Google Analytics Company Page Added Successfully");
+                return Ok("Google Analytics Added Successfully");
             }
             else
             {
@@ -998,6 +998,8 @@ namespace Api.Socioboard.Controllers
             Repositories.GplusRepository.InitialYtFeedsAdd(channelid, accesstoken, _appSettings, _logger);
             Thread.Sleep(26000);
             Repositories.GplusRepository.InitialYtCommentsAdd(channelid, accesstoken, _appSettings, _logger);
+            Thread.Sleep(26000);
+            Repositories.GplusRepository.InitialYtReplyCommentsAdd(channelid, accesstoken, _appSettings, _logger);
             return Ok("");
         }
 
@@ -1159,6 +1161,14 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             Repositories.GplusRepository.PostCommentsYtReply(channelId, idParentComment, commentText, videoId, _appSettings, _logger, dbr);
             return Ok("");
+        }
+
+        [HttpPost("ReviewedComment")]
+        public IActionResult ReviewedComment(string commentId, string sbUserName, bool status, string commentType)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Repositories.GplusRepository.ReviewedComment(commentId, sbUserName, status, commentType, _appSettings, _logger, dbr);
+            return Ok();
         }
     }
 }

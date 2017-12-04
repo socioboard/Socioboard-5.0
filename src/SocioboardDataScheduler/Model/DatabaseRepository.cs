@@ -18,7 +18,6 @@ namespace SocioboardDataScheduler.Model
             {
                 using (NHibernate.ISession session = SessionFactory.GetNewSession())
                 {
-
                     result = session.Query<T>().Where(query).ToList();
                 }
             }

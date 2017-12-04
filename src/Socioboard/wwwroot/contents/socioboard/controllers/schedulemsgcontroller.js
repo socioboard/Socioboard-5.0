@@ -614,6 +614,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
         };
         $scope.draftmsg = function () {
+
             var message = $('#ScheduleMsg').val();
             var testmessage = message;
             var updatedmessage = "";
@@ -681,6 +682,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                         $('#ScheduleMsg').val('');
                         $('#ScheduleTime').val('');
                         $scope.dispbtn = true;
+                        closeModel();
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
 

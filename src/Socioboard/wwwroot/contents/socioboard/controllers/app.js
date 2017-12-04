@@ -388,16 +388,16 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
             // end codes to logout from all session
         }
 
-        $scope.getYtGroupProfile = function () {
+        $scope.getYtGroupProfileSidebar = function () {
             debugger;
             $http.get(apiDomain + '/api/YoutubeGroup/GetYtGroupChannel?userId=' + $rootScope.user.Id)
                                  .then(function (response) {
-                                     $scope.lstYtGrpMem = response.data;
+                                     $rootScope.lstYtGrpMembersSidebar = response.data;
                                  }, function (reason) {
                                      $scope.error = reason.data;
                                  });
         }
-        $scope.getYtGroupProfile();
+        $scope.getYtGroupProfileSidebar();
 
 
         $scope.getadminDetails = function () {
@@ -604,6 +604,28 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         .state('youtube_inbox', {
             url: "/youtube_inbox/{profileid}",
             templateUrl: "../contents/socioboard/views/twitterengagement/youtube_inbox.html",
+            data: { pageTitle: 'Youtube Inbox', pageSubTitle: 'updated' },
+            controller: "YoutubeInboxController",
+
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/youtubeinboxcontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // youtube inbox Controller for members
+
+        .state('youtubeinbox_member', {
+            url: "/youtubeinbox_member/{profileid}",
+            templateUrl: "../contents/socioboard/views/twitterengagement/youtubeinbox_member.html",
             data: { pageTitle: 'Youtube Inbox', pageSubTitle: 'updated' },
             controller: "YoutubeInboxController",
 

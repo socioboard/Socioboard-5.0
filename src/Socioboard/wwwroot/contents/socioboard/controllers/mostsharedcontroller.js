@@ -43,9 +43,24 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
 
         $scope.saveshreathondata = function () {
           
-            var pageId = $('#shraeathonfacebookpage').val();
+            var otherprofiles = new Array();
+            $("#checkboxdataAa .subcheckbox").each(function () {
+
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = otherprofiles.indexOf(attrId);
+                    if (index > -1) {
+                        otherprofiles.splice(index, 1);
+                    }
+                } else {
+                    otherprofiles.push(attrId);
+                }
+            });
+
+
+           // var pageId = $('#shraeathonfacebookpage').val();
             var timeInterval = $('#shraeathontimeinterval').val();
-            if (pageId == "") {
+            if (otherprofiles == "") {
 
                 swal("please select profile");
                 return false;
@@ -59,7 +74,7 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
             }
           
             var formData = new FormData();
-            if (pageId != null && timeInterval != null) {
+            if (otherprofiles != null && timeInterval != null) {
               
                 $scope.datasharethon = [];
                 $scope.datasharethon = $scope.selectedContentfeed;
@@ -73,14 +88,14 @@ SocioboardApp.controller('MostSharedController', function ($rootScope, $scope, $
                 $scope.dispbtn = false;
                
                 if (x != "[]") {
-                formData.append('FacebookPageId', pageId);
+                    formData.append('FacebookPageId', otherprofiles);
                 var shareData = $scope.datasharethon;
                 formData.append('shareData', x);
               
                 $http({
 
                     method: 'POST',
-                    url: apiDomain + '/api/ContentStudio/saveDataIdForShare?userId=' + $rootScope.user.Id + '&fbuserIds=' + pageId + '&timeIntervals=' + timeInterval,
+                    url: apiDomain + '/api/ContentStudio/saveDataIdForShare?userId=' + $rootScope.user.Id + '&fbuserIds=' + otherprofiles + '&timeIntervals=' + timeInterval,
                     data: formData,
                     headers: {
                         'Content-Type': undefined

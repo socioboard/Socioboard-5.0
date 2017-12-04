@@ -288,7 +288,7 @@ namespace SocioboardDataScheduler.Shareathon
                                                     //if (pageapiHitsCount < pageMaxapiHitsCount)
                                                     //{
                                                     string ret = ShareFeed(fbAcc.AccessToken, feedId, facebookPage.FbUserId, "", fbAcc.FbUserId, facebookPage.FbUserName);
-                                                    if (!string.IsNullOrEmpty(ret))
+                                                    if(!string.IsNullOrEmpty(ret))
                                                     {
                                                         Thread.Sleep(1000 * 60 * shareathon.Timeintervalminutes);
                                                     }

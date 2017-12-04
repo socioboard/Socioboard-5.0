@@ -21,21 +21,38 @@ SocioboardApp.controller('FacebookTwitterFeedsShareController', function ($rootS
                     profiles.push(attrId);
                 }
             });
+
+
+
+
+            var otherprofiles = new Array();
+            $("#checkboxdataA .subcheckbox").each(function () {
+
+                var attrId = $(this).attr("id");
+                if (document.getElementById(attrId).checked == false) {
+                    var index = otherprofiles.indexOf(attrId);
+                    if (index > -1) {
+                        otherprofiles.splice(index, 1);
+                    }
+                } else {
+                    otherprofiles.push(attrId);
+                }
+            });
        
             var pageId = $('#facebookpageId').val();
         
-            if (pageId == "")
+            if (profiles == "")
             {   
                 swal("please select facebook page");
                 return false;
             }
-            if (profiles != null ) {
+            if (otherprofiles != null) {
               
                 $scope.dispbtn = false;
                 var formData = new FormData();
-                formData.append('FacebookPageId', pageId);
+                formData.append('FacebookPageId', profiles);
                 
-                formData.append('OtherSocialProfile', profiles);
+                formData.append('OtherSocialProfile', otherprofiles);
                 
                 //codes to add  page shreathon
                 //  $http.post(apiDomain + '/api/Shareathon/AddPageShareathon?userId=' + $rootScope.user.Id + '&FacebookPageId=' + pageId + '&Facebookaccountid=' + accountId + '&Timeintervalminutes=' + timeInterval)

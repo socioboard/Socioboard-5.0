@@ -16,7 +16,9 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
         $scope.showChildCommentButton = 'show';
         $scope.hideChildCommentButton = 'hide';
         $scope.loadVideoComments = false;
-
+        $scope.reviewLoaded = 'shhw';//reviewBtn
+        $scope.reviewLoading = 'hide';//reviewBtn
+        $scope.removingtaskloader = 'hide';//taskremove loader
         $scope.fetchComments = function () {
 
             $scope.commentsending = 'hide';
@@ -37,6 +39,7 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
                                   $scope.error = reason.data;
                               });
             // end codes to load Comments
+
 
         }
 
@@ -185,9 +188,92 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
         //End Youtube each group code (channel wise)
 
 
+        
+
+        // end task
+
+        $scope.reviewed = function (commentObj, status, commentType) {
+            $scope.reviewLoaded = 'hide';
+            $scope.reviewLoading = 'shhw';
+            if ($rootScope.user.LastName != null) {
+                var name = $rootScope.user.FirstName + ' ' + $rootScope.user.LastName;
+            }
+            else
+            {
+                var name = $rootScope.user.FirstName;
+            }
+            $http.post(apiDomain + '/api/Google/ReviewedComment?commentId=' + commentObj.commentId + '&sbUserName=' + name + '&status=' + status + '&commentType=' + commentType)
+                                  .then(function (response) {
+                                      if (status == true)
+                                      {
+                                          swal("Reviewed successfully");
+                                      }
+                                      else
+                                      {
+                                          swal("Review cancelled");
+                                      }
+                                      $scope.fetchComments();
+                                      $scope.reviewLoaded = 'shhw';
+                                      $scope.reviewLoading = 'hide';
+                                      $scope.singleCommentShow.sbGrpTaskAssign = false;
+                                      $scope.singleCommentShow.review = status;
+                                  }, function (reason) {
+                                      $scope.error = reason.data;
+                                  });
+        }
+
+        // task
+        $scope.taskOpensModel = function (tempComment) {
+            $('#TaskfeedModal').openModal();
+            $scope.tempCommentForTask = tempComment;
+        }
+
+        $scope.assignedTaskSbMember = function (sbUserObj) {
+            
+            swal({
+                title: "Assign task",
+                text: "Task will be assigned to " + sbUserObj.sbUserName,
+                type: "info",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                var commentType = "";
+                var commentId = $scope.tempCommentForTask.commentId;
+                if ($scope.tempCommentForTask.parentIdforReply == null) {
+                    commentType = "main";
+                }
+                else {
+                    commentType = "Reply";
+                }
+                $http.post(apiDomain + '/api/YoutubeGroup/AssignTask?memberEmail=' + sbUserObj.sbEmailId + '&memberName=' + sbUserObj.sbUserName + '&memberId=' + sbUserObj.userId + '&ownerId=' + sbUserObj.accessSBUserId + '&commentId=' + commentId + '&commentType=' + commentType)
+                                      .then(function (response) {
+                                          swal("Assigned successfully");
+                                          $scope.fetchComments();
+                                          $scope.singleCommentShow.sbGrpTaskAssign = true;
+                                          $scope.singleCommentShow.sbGrpMemberName = sbUserObj.sbUserName;
+                                          $scope.singleCommentShow.review = false;
+                                      }, function (reason) {
+                                          $scope.error = reason.data;
+                                      });
+            });
 
 
 
+        }
+
+        $scope.RemoveTask = function (commentObj, commentType) {
+            $scope.removingtaskloader = 'show';
+            $http.post(apiDomain + '/api/YoutubeGroup/RemoveTask?commentId=' + commentObj.commentId + '&commentType=' + commentType)
+                                  .then(function (response) {
+                                      swal("Task removed");
+                                      $scope.fetchComments();
+                                      $scope.removingtaskloader = 'hide';
+                                      $scope.singleCommentShow.sbGrpTaskAssign = false;
+                                  }, function (reason) {
+                                      $scope.error = reason.data;
+                                  });
+        }
         //Endregion Inbox
     });
 })
@@ -205,6 +291,16 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
                 $('.collapsible').collapsible({
                     accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
                 });
+            });
+        }
+    };
+})
+SocioboardApp.directive('myRepeatCommentsDirective', function ($timeout) {
+
+    return function (scope, element, attrs) {
+        if (scope.$last === true) {
+            $timeout(function () {
+                $('ul.tabs').tabs();
             });
         }
     };

@@ -82,7 +82,7 @@ namespace Api.Socioboard.Controllers
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<ScheduledMessage> lstschedulemsg = new List<ScheduledMessage>();
-                List<Notifications> lstnotifications = dbr.FindWithRange<Notifications>(t => t.UserId == userId, skip, count).ToList();
+                List<Notifications> lstnotifications = dbr.FindWithRangeDesct<Notifications>(t => t.UserId == userId, skip, count, t=>t.Id).ToList();
                 foreach (Notifications notify in lstnotifications)
                 {
                     ScheduledMessage schedulemsg = dbr.Single<ScheduledMessage>(t => t.id == notify.MsgId && t.userId==userId);

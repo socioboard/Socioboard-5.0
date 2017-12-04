@@ -58,7 +58,10 @@
                         <!--emailid change feature header-->
                         <!-- Dropdown Trigger -->
                         <li>
-                            <a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
+                            <!--<a  data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
+                                <i class="icon-bell grey-text text-darken-4" title="Notifications"><span class="badge_notify" ng-if="notifycount>0">{{notifycount}}</span></i>
+                            </a>-->
+                            <a ng-href="#/notification_all" class="waves-effect waves-block waves-light">
                                 <i class="icon-bell grey-text text-darken-4" title="Notifications"><span class="badge_notify" ng-if="notifycount>0">{{notifycount}}</span></i>
                             </a>
                         </li>
@@ -116,6 +119,11 @@
                                     <span class="groupslist"><i class="icon-user"></i>Profile Settings </span>
                                 </a>
                             </li>
+                            <!--<li>
+                                <a href="#/youtubegroup">
+                                    <span class="groupslist"><i class="icon-user"></i>YT group Invite </span>
+                                </a>
+                            </li>-->
                             <li>
                                 <a href="#/access_passwd">
                                     <span class="groupslist"><i class="icon-key"></i>Access Password</span>

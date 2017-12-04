@@ -7,6 +7,7 @@ SocioboardApp.controller('ProfilesController', function ($rootScope, $scope, $ht
         $scope.dispbtn = true;
         $scope.check = false;
         $scope.draftbtn = true;
+        $scope.loaderdashboard = true;
         $scope.query = {};
         $scope.queryBy = '$';
         $scope.message = function (msg) {
@@ -21,16 +22,12 @@ SocioboardApp.controller('ProfilesController', function ($rootScope, $scope, $ht
                               .then(function (response) {
                                   if (response.data != "") {
                                       $scope.lstAccountProfiles = response.data;
-                                     
-                                      
-                                          $scope.loaderclass = 'hide';
-                                      
+                                      $scope.loaderdashboard = false;
                                   }
                                   else {
-                                      $scope.noLinkedpro = true;
-                                      setTimeout(function () {
-                                          $scope.loaderclass = 'hide';
-                                      }, 3000);
+                                      $scope.nodatass = true;
+                                      $('#loaderdiv').hide();
+                                      $scope.loaderdashboard = false;
                                   }
                               }, function (reason) {
                                   $scope.error = reason.data;
@@ -90,6 +87,35 @@ SocioboardApp.controller('ProfilesController', function ($rootScope, $scope, $ht
         }
         //end codes to TotalSetMessages
 
+
+        $scope.searchprofile = function (data) {
+            debugger;
+            $http.get(apiDomain + '/api/GroupProfiles/GetSearchProfile?groupId=' + $rootScope.groupId + '&ProfileType=' + data)
+                           .then(function (response) {
+                               if (response.data != "") {
+                                   $scope.lstAccountProfiles = response.data;
+                                   //$scope.loaderdashboard = false;
+                               }
+                               else
+                               {
+                                   swal({
+                                       title: 'You have no '+ data +' profile',
+                                       //html: $('<div>')
+                                       //  .addClass('some-class')
+                                       //  .text('jQuery is everywhere.'),
+                                       animation: false,
+                                       customClass: 'animated tada'
+                                   })
+                               }
+
+                           });
+
+        }
+
+        //$(document).ready(function () {
+        //    $('select').material_select();
+        //});
+
         $scope.fetchalllProfiles();
         $scope.TotalSetMessages();
         $scope.GetIncommingMessage();
@@ -100,4 +126,3 @@ SocioboardApp.controller('ProfilesController', function ($rootScope, $scope, $ht
       
     });
 });
-

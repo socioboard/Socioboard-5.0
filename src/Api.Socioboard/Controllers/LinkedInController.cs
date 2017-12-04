@@ -290,6 +290,7 @@ namespace Api.Socioboard.Controllers
         {
             string postmessage = "";
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            comment = comment.Replace("hhh", "#").Replace("nnn", "&");
             string[] updatedmessgae = Regex.Split(comment, "<br>");
             foreach (var item in updatedmessgae)
             {
@@ -325,7 +326,7 @@ namespace Api.Socioboard.Controllers
                             }
                         }
                     }
-                    if (item.Contains("hhh") || item.Contains("nnn"))
+                    if (item.Contains("hhh"))
                     {
                         if (item.Contains("hhh"))
                         {
@@ -334,13 +335,25 @@ namespace Api.Socioboard.Controllers
                     }
                     else
                     {
-                        postmessage = postmessage + "\n\r" + item;
+                        //postmessage = postmessage + "\n\r" + item;
                     }
+                    if(item.Contains("nnn"))
+                    {
+                        postmessage = postmessage + "\n\r" + item.Replace("nnn", "&");
+                    }
+                    else
+                    {
+                        //postmessage = postmessage + "\n\r" + item;
+                    }
+                    postmessage = postmessage + "\n\r" + item;
+
+
                 }
+                
             }
             try
             {
-                comment = "";
+                //comment = "";
                 //updatedtext = postmessage.Replace(url, "");
                 // updatedtext = postmessage;
                 comment = postmessage;

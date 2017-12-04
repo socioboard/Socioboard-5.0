@@ -79,10 +79,10 @@ namespace Api.Socioboard.Controllers
                 return BadRequest("This Email is already registered please login to continue");
             }
             IList<User> lstUser1 = dbr.Find<User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
-            if (lstUser1 != null && lstUser1.Count() > 0)
-            {
-                return BadRequest("Phone Number Exist");
-            }
+            //if (lstUser1 != null && lstUser1.Count() > 0)
+            //{
+            //    return BadRequest("Phone Number Exist");
+            //}
             int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
             User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
             if (SavedStatus == 1 && nuser != null)

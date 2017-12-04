@@ -41,12 +41,38 @@
                         <div>
                         	<div class="row">
 			                    <form class="col s12">			                        
-				                    <div class="input-field no-space col s12 m5">
+				                    <div class="no-space col s12 m5">
                                         <b class="grey-text text-darken-3" style="font-size: 17px;">Select facebook page to share feeds</b>
-									    <select multiple id="facebookpageId">
+									    <!--<select multiple id="facebookpageId">
 									      <option value="" disabled selected>Choose your option</option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1}| filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}"  value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-									    </select>
+									    </select>-->
+                                        <ul class="col s12 shinh no-space" id="checkboxdata" style="max-height:250px; overflow-y:scroll;">
+                                            <li style="padding:5px 0;">
+                                                <label>
+                                                    <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
+                                                    <span style="float:left;">Check All</span>
+                                                </label>
+                                            </li>
+
+                                            <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1}" style="padding:5px 0;">
+                                                <label>
+                                                    <input name="selector[]" onclick="profile();" class="subcheckbox" id="{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                    <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>
+                                                </label>
+                                            </li>
+                                            <!--<li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
+                                                <label>
+                                                    <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                    <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
+                                                    <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
+                                                    <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
+                                                </label>
+                                            </li>-->
+
+                                        </ul>
 									</div>
                                     <div class="col m2 s12 center">
                                         <h1><i class="fa fa-arrow-circle-right" aria-hidden="true" style="color: #1c4aa5;"></i></h1>
@@ -54,21 +80,21 @@
                                     <div class="col s12 m5">
                                         <div class="row">
                                             <b class="grey-text text-darken-3" style="font-size: 17px;">Select social profile</b>
-                                            <div class="input-field col s12 no-space">
+                                            <!--<div class="input-field col s12 no-space">
                                                 <input ng-model="query[queryBy]" id="search_name" type="text" class="validate" placeholder="Search Profile">
-                                                <!--<label for="search_name" style="left:0px;"></label>-->
-                                            </div>
-                                            <ul class="col s12 shinh no-space" id="checkboxdata" style="max-height:250px; overflow-y:scroll;">
+                                               
+                                            </div>-->
+                                            <ul class="col s12 shinh no-space" id="checkboxdataA" style="max-height:250px; overflow-y:scroll;">
                                                 <li style="padding:5px 0;">
                                                     <label>
-                                                        <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAll" onclick="check();" />
+                                                        <input type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" id="checkAlll" onclick="checkK();" />
                                                         <span style="float:left;">Check All</span>
                                                     </label>
                                                 </li>
                                              
                                                 <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
                                                     <label>
-                                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                        <input name="selector[]" onclick="otherprofile();" class="subcheckbox" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                                         <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/twticon.png"></span>
@@ -76,7 +102,7 @@
                                                 </li>
                                                 <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                                     <label>
-                                                        <input name="selector[]" onclick="profile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                                        <input name="selector[]" onclick="otherprofile();" class="subcheckbox" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                                         <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/link_icon.png"></span>
@@ -93,7 +119,7 @@
 				                    </div>
 			                    </form>
 			                </div>
-                            <div class="row">
+                            <!--<div class="row">
                                 <h5>Feeds share queue</h5>
                                 <table class="display responsive-table striped">
                                     <thead>
@@ -131,7 +157,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -183,7 +209,7 @@
                  </div>
              </nav>
          </div>
-         <div class="model-email-content">
+         <!--<div class="model-email-content">
              <div class="row no-space">
                  <form class="col s12">
                      <div class="row no-space">
@@ -208,7 +234,7 @@
                                      <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
                                      <label for="search_name">Search Profile</label>
                                  </div>
-                                 <!--<div ng-repeat="profile in lstProfiles |filter:query" >-->
+                              
                                  <ul class="col s12 shinh" id="checkboxdata" style="max-height:250px; overflow-y:scroll;">
                                      <li style="padding:5px 0;">
                                          <label>
@@ -260,38 +286,6 @@
                              </div>
                          </div>
                      </div>
-                     <!--<div class="row no-space">
-                        <div class="col s12 m12 l12">
-                            <p>Add your hashtag</p>
-                        </div>
-                        <div class="input-field col s12">
-                            <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
-                        </div>
-                    </div>-->
-                     <!--<div class="row">
-                        <div class="input-field col s12">
-                            <textarea id="composeMessage" class="materialize-textarea" length="5000"></textarea>
-                            <label for="compose">Message</label>
-                        </div>
-                    </div>-->
-                     <!-- <div id="selection" class="row">
-                    <div class="input-field col s12">
-
-                         <select multiple id="composeProfiles" ng-change="selectclick()" ng-model="selectvalue">
-                             <option value="select" disabled my-repeat-dropdown-directive selected>Select Your Account</option>
-                             <option value="selectall">Select all</option>
-                             <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}}</option>
-                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" class="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                             <option ng-repeat="profile in lstProfiles | filter:{profileType:11}" value="page_{{profile.profileId}}" my-repeat-timeout-directive>  {{profile.profileName}} </option>
-                             <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" class="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                             <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" class="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                             <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" class="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                         </select>
-                         </div>
-                     </div>-->
-                     <!--</div>-->
-
-
                      <div class="row no-space">
                          <a href="" class="btn btn_style blue_btn_style left" ng-click="draftMsg()" style="width:90px;">Save as Draft</a>
                          <div class="right btn btn_style blue_btn_style">
@@ -301,7 +295,7 @@
                      </div>
                  </form>
              </div>
-         </div>
+         </div>-->
      </div>
     </div>
 <script>
@@ -339,4 +333,30 @@
             $("#checkAll").prop('checked', true);
         }
     }
+
+    function checkK() {
+        var flag = $('#checkAll').is(":checked");
+        $('#checkboxdata input:checkbox').each(function () {
+            $(this).prop('checked', flag);
+        });
+    }
+
+    function otherprofile() {
+        var count = 0;
+        $("#checkboxdataA  :checkbox").each(function () {
+            if (this.id != 'checkAlll') {
+                if (!($("#" + this.id).prop('checked'))) {
+                    count++;
+                }
+            }
+        });
+        if (count > 0) {
+            $("#checkAlll").prop('checked', false);
+        }
+        if (count == 0) {
+            $("#checkAlll").prop('checked', true);
+        }
+    }
+
+
 </script>

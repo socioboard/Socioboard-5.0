@@ -32,12 +32,27 @@ namespace Api.Socioboard.Controllers
         private Helper.AppSettings _appSettings;
         private Helper.Cache _redisCache;
 
-
         [HttpPost("InviteGroupMember")]
         public IActionResult InviteGroupMember(Int64 userId, string emailId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            Repositories.YoutubeGroupRepository.InviteGroupMember(userId, emailId, _appSettings, _logger, dbr);
+            Domain.Socioboard.Models.YoutubeGroupInvite tempUser = Repositories.YoutubeGroupRepository.InviteGroupMember(userId, emailId, _appSettings, _logger, dbr);
+
+            if (tempUser != null)
+            {
+                try
+                {
+                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\yt_group_mail.html";
+                    string html = System.IO.File.ReadAllText(path);
+                    html = html.Replace("[NAME]", tempUser.OwnerName).Replace("[LINK]", _appSettings.Domain + "/Home/ActiveYoutubeGroup?Token=" + tempUser.EmailValidationToken);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", tempUser.SBEmailId, "", "", "Socioboard Youtube group invite confirmation link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                }
+                catch
+                {
+                    return Ok();
+                }
+            }
+
             return Ok("");
         }
 
@@ -66,6 +81,39 @@ namespace Api.Socioboard.Controllers
             return Ok(grppMembers);
         }
 
+
+        [HttpPost("ValidateEmail")]
+        public ActionResult ValidateEmail(string Token)
+        {
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
+            string resp = Repositories.YoutubeGroupRepository.ValidateEmail(Token, _appSettings, _logger, dbr);
+
+            return Ok();
+        }
+
+        [HttpPost("AssignTask")]
+        public ActionResult AssignTask(string memberEmail, string memberName, long memberId, long ownerId, string commentId, string commentType)
+        {
+            Repositories.YoutubeGroupRepository.AssignTskComment(memberEmail, memberName, memberId, ownerId, commentId, commentType, _appSettings, _logger);
+            return Ok();
+        }
+
+        [HttpPost("RemoveTask")]
+        public ActionResult RemoveTask(string commentId, string commentType)
+        {
+            Repositories.YoutubeGroupRepository.RemoveTskComment(commentId, commentType, _appSettings, _logger);
+            return Ok();
+        }
+
+        [HttpPost("DeleteMember")]
+        public ActionResult DeleteMember(Int64 id)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Repositories.YoutubeGroupRepository.DeleteMember(id, _appSettings, _logger, dbr);
+            return Ok();
+        }
 
     }
 }

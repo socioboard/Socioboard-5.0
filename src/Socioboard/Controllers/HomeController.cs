@@ -1429,5 +1429,19 @@ namespace Socioboard.Controllers
 
             return File(pdfBytes, "application/pdf", filename);
         }
+
+
+
+        [HttpGet]
+        public async Task<ActionResult> ActiveYoutubeGroup(string Token)
+        {
+            List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
+            Parameters.Add(new KeyValuePair<string, string>("Token", Token));
+            HttpResponseMessage response = await WebApiReq.PostReq("/api/YoutubeGroup/ValidateEmail", Parameters, "", "", _appSettings.ApiDomain);
+
+            return RedirectToAction("Index", "Home");
+        }
+
+
     }
 }

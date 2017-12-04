@@ -100,7 +100,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
 
                 swal({
                     title: "Are you sure?",
-                    text: "You will not be able to send any message via this account!",
+                    text: "This task will be deleted",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#DD6B55",
@@ -143,7 +143,7 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
            $scope.markTaskCompleted = function () {
                swal({
                    title: "Are you sure?",
-                   text: "You will not be able to send any message via this account!",
+                   text: "This task will be marked as completed",
                    type: "warning",
                    showCancelButton: true,
                    confirmButtonColor: "#DD6B55",

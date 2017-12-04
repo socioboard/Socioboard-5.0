@@ -130,7 +130,7 @@
                                         <img ng-src="{{getHttpsURL(fbfeed._facebookFeed.picture)}} " ng-if="fbfeed._facebookFeed.picture!= ''" class="responsive-img">
                                     </div>
 
-                                    <div class="col m12">
+                                    <!--<div class="col m12">
                                         <ul class="collapsible" data-collapsible="accordion">
                                             <li>
                                                 <div class="collapsible-header"><i class="icon-speech"></i>Comments <span class="blue-text"> {{fbfeed._facebookFeed.commentcount}} </span></div>
@@ -168,11 +168,11 @@
                                                 </div>
                                             </li>
                                         </ul>
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <div class="row">
-                                    <div class="col l8 s8">
-                                        <a class="">
+                                    <div class="col l8 s8 left">
+                                        <a class="center">
                                             <i class="icon-like fa-fw"></i><span> {{fbfeed._facebookFeed.likecount}}</span>
                                         </a>
                                     </div>
@@ -182,12 +182,17 @@
                                         </div>
                                     </div>
                                     <div class="col l2 s2 right">
+                                        <div class="center">
+                                            <a ng-click="viewcomment(fbfeed._facebookFeed)" class="right"><i class="icon-bubble" aria-hidden="true"></i> Comment</a>
+                                        </div>
+                                    </div>
+                                    <!--<div class="col l2 s2 right">
                                         <div class="right">
                                             <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed._facebookFeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
                                                 <i class="icon-pin"></i> Task
                                             </a>
                                         </div>
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.entryDate}}</a>
                             </li>
@@ -401,12 +406,76 @@
 </div>
 
 
+<!--//fbprofile comments module--> 
+<div id="view" class="modal" style="min-height:100px;">
+    <div class="modal-content">
+        <form class="row no-space">
+            <div class="col s6 center" >
+                <img class="responsive-img" ng-src="{{feeddata.picture}}" />
+                <p class="no-space">
+                    {{feeddata.feedDescription}}
+                </p>
+            </div>
+            <div class="col s6">
+                <div class="m_comm">
+                    <div ng-repeat="comment in allcomment" my-Chat-Modal-Directive>
+                        {{allcomment.fromName}}
+                        <div class="grey-text text-darken-1"><span><b>{{comment.fromName}}</b></span> : <span class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{comment.comment}}</span></div>
+                    </div>
+                </div>
+           </div>
+        </form>
+    </div>
+</div>
+<!--//End comment module-->
 
+<!--//fbpage comments module--> 
+<div id="viewpageModal" class="modal" style="min-height:100px;">
+    <div class="modal-content">
+        <form class="row no-space">
+            <div class="col s6 center">
+                <img class="responsive-img" ng-src="{{feeddata.picture}}" />
+                <p class="no-space">
+                    {{feeddata.feedDescription}}
+                </p>
+            </div>
+            <div class="col s6">
+                <div class="m_comm">
+                    <div ng-repeat="comment in allcomment" my-Chat-Modal-Directive>
+                        {{allcomment.fromName}}
+                        <div class="grey-text text-darken-1"><span><b>{{comment.fromName}}</b></span> : <span class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{comment.comment}}</span></div>
+                    </div>
+                </div>
+                <div class="input-field col s10">
+                    <input id="postcomment_{{feeddata.feedId}}" placeholder="Add a comment.." class="" type="text">
+                    <!--<label for="postcomment" class="active">Add a comment..</label>-->
+
+                </div>
+                <div class="input-field col s1">
+                    <a class="btn btn_style btn_round" ng-click="PostFacebookComment(feeddata.feedId,feeddata.profileId)">send</a>
+                </div>
+                <!--<div ng-show="!dispbtn" class="input-field col s1">
+                    <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                </div>-->
+            </div>
+        </form>
+    </div>
+</div>
 
 <!-- END CONTENT -->
 <!-- //////////////////////////////////////// Script Code //////////////////////////////////////// -->
 
 <script>
+
+    $('.m_comm').slimScroll({
+        color: '#1D6AD2',
+        size: '10px',
+        height: '300px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+
+
     function chng_btn_val() {
         $('#gif').show();
     }

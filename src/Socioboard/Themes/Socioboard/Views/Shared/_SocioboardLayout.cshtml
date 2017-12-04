@@ -848,7 +848,7 @@ analytics" href="http://statcounter.com/shopify/"
                     var phoneCode = $('#countryCode').val();
                     // var company = $('#req_Company').val();
                     var Phone = $('#PhoneNumber').val();
-                    var PhoneNo = phoneCode + Phone;
+                    //var PhoneNo = phoneCode + Phone;
                     var password = $('#Password').val();
                     var cnfPassword = $('#CnfPassword').val();
                     var accountType = $('#AccountType').val();
@@ -867,7 +867,7 @@ analytics" href="http://statcounter.com/shopify/"
 
                         url: "@ViewBag.ApiDomain/api/user/Register",
 
-                        data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "PhoneNumber": PhoneNo, "password": password, "AccountType": accountType, "PaymentType": PaymentType, "Country": country, "PhoneCode": phoneCode, "ReferdBy": promo_code },
+                        data: { "FirstName": firstName, "LastName": lastName, "EmailId": email, "password": password, "AccountType": accountType, "PaymentType": PaymentType, "Country": country, "PhoneCode": phoneCode, "ReferdBy": promo_code },
 
                         //contentType: "application/json; charset=utf-8",
 
@@ -879,7 +879,6 @@ analytics" href="http://statcounter.com/shopify/"
                             $('#FirstName').val("");
                             $('#LastName').val("");
                             $('#EmailId').val("");
-                            $('#PhoneNumber').val("");
                             $('#Password').val("");
                             $('#CnfPassword').val("");
                             $('#promo_code').val("")

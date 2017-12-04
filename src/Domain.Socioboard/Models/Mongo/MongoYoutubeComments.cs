@@ -32,6 +32,13 @@ namespace Domain.Socioboard.Models.Mongo
         public string parentIdforReply { get; set; }
         public bool active { get; set; }
         public double publishTimeUnix { get; set; }
+        public string sbGrpMemberEmail { get; set; }
+        public string sbGrpMemberName { get; set; }
+        public double sbGrpMemberUserid { get; set; }
+        public double sbGrpAccessOwnerUserid { get; set; }
+        public bool sbGrpTaskAssign { get; set; }
+        public bool review { get; set; }
+        public string reviewedBy { get; set; }
 
 
     }

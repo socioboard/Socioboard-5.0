@@ -373,5 +373,12 @@ namespace Api.Socioboard.Controllers
             }
             return Ok(lstPluginProfile);
         }
+
+        [HttpGet("GetSearchProfile")]
+        public IActionResult SearchProfile(long groupId,string Profiletype)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupProfilesRepository.SearchProfileType(groupId, Profiletype, _redisCache, dbr));
+        }
     }
 }

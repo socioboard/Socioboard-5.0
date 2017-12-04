@@ -75,8 +75,8 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
             for (var i = 0; i < postdata.length; i++) {
                 updatedmessage = updatedmessage + "<br>" + postdata[i];
             }
-            updatedmessage = updatedmessage.replace(/#+/g, 'hhh');
-            updatedmessage = updatedmessage.replace(/&+/g, 'nnn');
+            updatedmessage = updatedmessage.replace(/#/g, 'hhh');
+            updatedmessage = updatedmessage.replace(/&/g, 'nnn');
             updatedmessage = updatedmessage.replace("+", 'ppp');
             updatedmessage = updatedmessage.replace("-+", 'jjj');
             comment = updatedmessage;
@@ -99,6 +99,7 @@ SocioboardApp.controller('LinkedinCompFeedsController', function ($rootScope, $s
 
         $scope.viewPostModal = function (temp) {
             debugger;
+            $scope.lstlincmpnypagecommentFeeds = "";
             if (temp.postImageUrl == "") {
                 $('#xxxxx').hide();
             }
