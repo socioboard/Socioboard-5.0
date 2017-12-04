@@ -8,19 +8,11 @@
 -debug:full
 -nostdlib
 -nologo
-<<<<<<< HEAD
-"D:\SBPROJECT\Developer\src\Socioboard.Facebook\obj\Debug\net451\dotnet-compile.assemblyinfo.cs"
--out:"D:\SBPROJECT\Developer\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\obj\Debug\net451\dotnet-compile.assemblyinfo.cs"
+-out:"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll"
 -r:"C:\Users\GLB-008-PC\.nuget\packages\Facebook\7.0.10-beta\lib\net45\Facebook.dll"
 -r:"C:\Users\GLB-008-PC\.nuget\packages\MongoDB.Bson\2.2.4\lib\net45\MongoDB.Bson.dll"
 -r:"C:\Users\GLB-008-PC\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll"
-=======
-"E:\SocioboardGithub\Socioboard-Core-3.0\src\Socioboard.Facebook\obj\Debug\net451\dotnet-compile.assemblyinfo.cs"
--out:"E:\SocioboardGithub\Socioboard-Core-3.0\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll"
--r:"C:\Users\GLB-027\.nuget\packages\Facebook\7.0.10-beta\lib\net45\Facebook.dll"
--r:"C:\Users\GLB-027\.nuget\packages\MongoDB.Bson\2.2.4\lib\net45\MongoDB.Bson.dll"
--r:"C:\Users\GLB-027\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll"
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll"
@@ -41,7 +33,7 @@
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.InteropServices.dll"
--r:"C:\Users\GLB-027\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll"
+-r:"C:\Users\GLB-008-PC\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Numerics.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.Extensions.dll"
@@ -51,11 +43,7 @@
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Timer.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.ReaderWriter.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll"
-<<<<<<< HEAD
--r:"D:\SBPROJECT\Developer\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll"
-=======
--r:"E:\SocioboardGithub\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll"
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
+-r:"D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll"
@@ -63,14 +51,7 @@
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.ComponentModel.DataAnnotations.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.dll"
 -r:"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Security.dll"
-<<<<<<< HEAD
-"D:\SBPROJECT\Developer\src\Socioboard.Facebook\Auth\Authentication.cs"
-"D:\SBPROJECT\Developer\src\Socioboard.Facebook\Data\Fbpages.cs"
-"D:\SBPROJECT\Developer\src\Socioboard.Facebook\Data\FbUser.cs"
-"D:\SBPROJECT\Developer\src\Socioboard.Facebook\Properties\AssemblyInfo.cs"
-=======
-"E:\SocioboardGithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Auth\Authentication.cs"
-"E:\SocioboardGithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\Fbpages.cs"
-"E:\SocioboardGithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\FbUser.cs"
-"E:\SocioboardGithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Properties\AssemblyInfo.cs"
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Auth\Authentication.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\Fbpages.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\FbUser.cs"
+"D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Properties\AssemblyInfo.cs"

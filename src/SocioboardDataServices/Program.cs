@@ -1,6 +1,7 @@
 ﻿using SocioboardDataServices.Pinterest;
 using SocioboardDataServices.Reports;
 using SocioboardDataServices.Twitter;
+using SocioboardDataServices.TwitterTrimme;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,10 +50,12 @@ namespace SocioboardDataServices
                 Console.WriteLine("Enter 17 to run Youtube DataServices");
                 Console.WriteLine("Enter 18 to run Youtube Reports Dataservices");
                 Console.WriteLine("Enter 19 to run Youtube Video Dataservices");
-                Console.WriteLine("Enter 21 to run Youtube Pinterest Dataservices");
                 Console.WriteLine("Enter 20 to run Find AdsOffer On User Websites Dataservices");
+                Console.WriteLine("Enter 21 to run Youtube Pinterest Dataservices");
+                Console.WriteLine("Enter 22 to run Youtube CommentReply Dataservices");
+                Console.WriteLine("Enter 23 to run deletetwitterfeeds ");
                 string dataService = Console.ReadLine();
-               
+
                 if (dataService == "1")
                 {
                     Facebook.FbDataServices objFBServices = new Facebook.FbDataServices();
@@ -68,7 +71,7 @@ namespace SocioboardDataServices
                     LinkedIn.LinkedInCompanyPageDataServices objLinCompanyPage = new LinkedIn.LinkedInCompanyPageDataServices();
                     objLinCompanyPage.UpdateLinkedInCompanyPage();
                 }
-               else if (dataService == "4")
+                else if (dataService == "4")
                 {
                     Instagram.InstagramDataServices objInsServices = new Instagram.InstagramDataServices();
                     objInsServices.UpdateInstagramAccount();
@@ -95,7 +98,7 @@ namespace SocioboardDataServices
                     Console.WriteLine("done");
                     Console.ReadKey();
                 }
-                else if(dataService=="9")
+                else if (dataService == "9")
                 {
                     InstagramReports.CreateInstagrmaReport();
                     Console.WriteLine("done");
@@ -173,6 +176,20 @@ namespace SocioboardDataServices
                     _PinterestDataService.UpdatePinterestAccount();
                     Console.ReadKey();
                 }
+                else if (dataService == "22")
+                {
+                    Youtube.YtCommentsReply objYt = new Youtube.YtCommentsReply();
+                    objYt.TakeComments();
+                    Console.ReadKey();
+                }
+
+                else if (dataService == "23")
+                {
+                    DeleteTwtFeedsdata objclass = new DeleteTwtFeedsdata();
+                    objclass.deleteTwitterfeeds();
+                    Console.ReadKey();
+                }
+
                 else
                 {
                     Console.WriteLine("Invalid Option");

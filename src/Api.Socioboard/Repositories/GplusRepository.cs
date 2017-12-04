@@ -1919,7 +1919,6 @@ namespace Api.Socioboard.Repositories
             }
             try
             {
-<<<<<<< HEAD
                 if (status == true)
                 {
                     FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", commentId);
@@ -1932,11 +1931,6 @@ namespace Api.Socioboard.Repositories
                     var update = Builders<BsonDocument>.Update.Set("review", status).Set("reviewedBy", sbUserName).Set("sbGrpTaskAssign", status);
                     mongorepo.Update<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(update, filter);
                 }
-=======
-                FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", commentId);
-                var update = Builders<BsonDocument>.Update.Set("review", status).Set("reviewedBy", sbUserName);
-                mongorepo.Update<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(update, filter);
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
             }
             catch { }
         }

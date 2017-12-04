@@ -82,19 +82,10 @@ namespace Api.Socioboard.Controllers
         }
 
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
         [HttpPost("ValidateEmail")]
         public ActionResult ValidateEmail(string Token)
         {
 
-<<<<<<< HEAD
-=======
-
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
 
             string resp = Repositories.YoutubeGroupRepository.ValidateEmail(Token, _appSettings, _logger, dbr);
@@ -102,7 +93,6 @@ namespace Api.Socioboard.Controllers
             return Ok();
         }
 
-<<<<<<< HEAD
         [HttpPost("AssignTask")]
         public ActionResult AssignTask(string memberEmail, string memberName, long memberId, long ownerId, string commentId, string commentType)
         {
@@ -124,8 +114,6 @@ namespace Api.Socioboard.Controllers
             Repositories.YoutubeGroupRepository.DeleteMember(id, _appSettings, _logger, dbr);
             return Ok();
         }
-=======
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
 
     }
 }

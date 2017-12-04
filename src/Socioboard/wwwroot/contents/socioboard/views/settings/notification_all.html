@@ -23,7 +23,7 @@
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-4 white-text">Your notifications</h5>
                     <ul class="collection facebookfeeds">
-                        <li class="collection-item avatar" ng-repeat="notify in lstnotifications | orderBy: reverse:true">
+                        <li class="collection-item avatar" ng-repeat="notify in lstnotifications">
                             <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
                             <span class="email-title">{{notify.socialprofileName}}</span>
                             <div class="row notify_post z-depth-1 hoverable">

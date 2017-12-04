@@ -11,11 +11,10 @@ namespace SocioboardDataScheduler.Helper
         public const string ApiDomain = "http://localhost:6361";
 
         public const string RedisConfiguration = "";
-      
-        public const string NhibernateFilePath = " ";
-        
+        public const string NhibernateFilePath = "";
         public const string MongoDbConnectionString = "";
         public const string MongoDbName = "";
+
 
         //Start facebook App Creds
         public const string FacebookClientId = "";

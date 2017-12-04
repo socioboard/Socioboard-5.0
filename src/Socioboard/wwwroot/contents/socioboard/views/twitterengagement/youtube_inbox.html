@@ -44,21 +44,12 @@
                                                     <div class="card">
                                                         <ul class="collection no-space " style="overflow-y: scroll; height:400px;">
                                                             <li class="collection-item avatar" ng-repeat="commentItem in lstYtAllComments" my-repeat-comments-directive ng-if="commentItem.review!=true">
-<<<<<<< HEAD
                                                                 <img src="{{commentItem.authorProfileImageUrl}}" alt="{{commentItem.authorDisplayName}}" class="circle">
                                                                 <span class="email-title">{{commentItem.authorDisplayName}}</span>
                                                                 <label class="right">{{commentItem.publishTime}}</label>
                                                                 <div class="feeds_post z-depth-1 hoverable truncate" ng-click="openVideo(commentItem.videoId, commentItem)" style="cursor: pointer;">
                                                                     <a class="break_word ultra-small grey-text text-darken-4">{{commentItem.commentOriginal}}<br /><span ng-if="commentItem.sbGrpTaskAssign==true" class="indigo-text">Assigned to {{commentItem.sbGrpMemberName}}</span></a>
                                                                 </div>
-=======
-                                                                    <img src="{{commentItem.authorProfileImageUrl}}" alt="{{commentItem.authorDisplayName}}" class="circle">
-                                                                    <span class="email-title">{{commentItem.authorDisplayName}}</span>
-                                                                    <label class="right">{{commentItem.publishTime}}</label>
-                                                                    <div class="feeds_post z-depth-1 hoverable truncate" ng-click="openVideo(commentItem.videoId, commentItem)" style="cursor: pointer;">
-                                                                        <a class="break_word ultra-small grey-text text-darken-4">{{commentItem.commentOriginal}}</a>
-                                                                    </div>
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -66,20 +57,12 @@
                                                 <div id="Inbox_assigned_tab">
                                                     <div class="card">
                                                         <ul class="collection no-space " style="overflow-y: scroll; height:400px;">
-<<<<<<< HEAD
                                                             <li class="collection-item avatar" ng-repeat="commentItem in lstYtAllComments" my-repeat-comments-directive ng-if="commentItem.sbGrpTaskAssign==true && commentItem.sbGrpMemberUserid==user.Id">
-=======
-                                                            <li class="collection-item avatar" ng-repeat="commentItem in lstYtAllComments">
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                                                                 <img src="{{commentItem.authorProfileImageUrl}}" alt="{{commentItem.authorDisplayName}}" class="circle">
                                                                 <span class="email-title">{{commentItem.authorDisplayName}}</span>
                                                                 <label class="right">{{commentItem.publishTime}}</label>
                                                                 <div class="feeds_post z-depth-1 hoverable truncate" ng-click="openVideo(commentItem.videoId, commentItem)" style="cursor: pointer;">
-<<<<<<< HEAD
                                                                     <a class="break_word ultra-small grey-text text-darken-4">{{commentItem.commentOriginal}}<br /><span ng-if="commentItem.sbGrpTaskAssign==true" class="indigo-text">Assigned to {{commentItem.sbGrpMemberName}}</span></a>
-=======
-                                                                    <a class="break_word ultra-small grey-text text-darken-4">{{commentItem.commentOriginal}}</a>
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                                                                 </div>
                                                             </li>
                                                         </ul>
@@ -88,11 +71,7 @@
                                                 <div id="Inbox_all_tab">
                                                     <div class="card">
                                                         <ul class="collection no-space " style="overflow-y: scroll; height:400px;">
-<<<<<<< HEAD
                                                             <li class="collection-item avatar" ng-repeat="commentItem in lstYtAllComments" my-repeat-comments-directive>
-=======
-                                                            <li class="collection-item avatar" ng-repeat="commentItem in lstYtAllComments">
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                                                                 <img src="{{commentItem.authorProfileImageUrl}}" alt="{{commentItem.authorDisplayName}}" class="circle">
                                                                 <span class="email-title">{{commentItem.authorDisplayName}}</span>
                                                                 <label class="right">{{commentItem.publishTime}}</label>
@@ -101,10 +80,7 @@
                                                                     <br />
                                                                     <i style="margin-top: -14px;" ng-if="commentItem.review==true" class="right fa fa-2x fa-check-circle fa-fw green-text" title="Reviewed"></i>
                                                                     <a ng-if="commentItem.review==true" class="break_word ultra-small green-text text-darken-4">Reviewed by {{commentItem.reviewedBy}}</a>
-<<<<<<< HEAD
                                                                     <a ng-if="commentItem.sbGrpTaskAssign==true" class="indigo-text break_word ultra-small">Assigned to {{commentItem.sbGrpMemberName}}</a>
-=======
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                                                                 </div>
                                                             </li>
                                                         </ul>
@@ -199,12 +175,8 @@
                                                                             </div>
                                                                             <div class="row" style="margin: 10px 0px 0px 0px;">
                                                                                 <div class="left" style="margin-top: 5px;">
-<<<<<<< HEAD
                                                                                     <span ng-if="singleCommentShow.sbGrpTaskAssign==true && singleCommentShow.parentIdforReply == null" class="ultra-small">Assigned to <b>{{singleCommentShow.sbGrpMemberName}}</b><br /><span><a ng-click="RemoveTask(singleCommentShow, 'main')" class="highlight"><b>Remove task </b></a><i class="fa fa-circle-o-notch fa-spin fa-fw" ng-class="removingtaskloader"></i></span></span>
                                                                                     <span ng-if="singleCommentShow.sbGrpTaskAssign==true && singleCommentShow.parentIdforReply != null" class="ultra-small">Assigned to <b>{{singleCommentShow.sbGrpMemberName}}</b><br /><span><a ng-click="RemoveTask(singleCommentShow, 'reply')" class="highlight"><b>Remove task </b></a><i class="fa fa-circle-o-notch fa-spin fa-fw" ng-class="removingtaskloader"></i></span></span>
-=======
-                                                                                    <span>Assign to</span>
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                                                                                 </div>
                                                                                 <div class="right" title="Review">
                                                                                     <a ng-if="singleCommentShow.parentIdforReply == null && singleCommentShow.review==false" href="javascript:void(0)" class="btn btn_style btn_round grey" ng-click="reviewed(singleCommentShow, true, 'main')">
@@ -223,11 +195,7 @@
                                                                                         <i ng-class="reviewLoading" class="fa fa-spinner fa-pulse fa-3x" aria-hidden="true"></i>
                                                                                         <i ng-class="reviewLoaded" class="fa fa-check-circle" aria-hidden="true"></i>
                                                                                     </a>
-<<<<<<< HEAD
                                                                                     <a ng-if="user.TrailStatus!=2" ng-click="taskOpensModel(singleCommentShow)" class="modal-trigger btn btn_style btn_round grey darken-4" href="javascript:void(0);" title="Task">
-=======
-                                                                                    <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed._facebookFeed)" class="modal-trigger btn btn_style btn_round" href="javascript:void(0);" title="Task">
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                                                                                         <i class="icon-pin"></i>
                                                                                     </a>
                                                                                 </div>
@@ -334,7 +302,6 @@
     <div class="modal-content">
         <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-fw"></i></span>
         <h5 class="no-space">ASSIGN TASK TO</h5>
-<<<<<<< HEAD
         <label class="grey-text darken-2">Click on the member to assign task</label>
         <div class="row no-space">
             <form class="input-field col s12">
@@ -342,30 +309,11 @@
                     <img src="{{grpmem.sbProfilePic}}" alt="" class="circle profile-nav-pic ">
                     <a ng-click="assignedTaskSbMember(grpmem)" class="highlight">{{grpmem.sbUserName}}</a>
                 </div>
-=======
-        <div class="row no-space">
-            <form class="input-field col s12">
-                <!--<div ng-repeat="grpmem in lstYtGrpMem">
-                    <a>{{grpmem.sbUserName}}</a>
-                </div>-->
-                <!--<select ng-options="grpmem.sbUserName as grpmem.sbUserName for grpmem in lstYtGrpMem">
-                    <option value="" disabled selected>Select name</option>
-                </select>-->
-                <select id="xyz">
-                    <option value="" disabled selected>Select Your Account</option>
-                    <option ng-repeat="grpmem in lstYtGrpMem" value="{{grpmem.sbEmailId}}"> {{grpmem.sbUserName}} </option>
-                </select>
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
             </form>
         </div>
     </div>
     <div class="modal-footer">
-<<<<<<< HEAD
         <a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-green btn-flat center " ng-click="closeModal()">Close</a>
-=======
-        <a href="javascript:void(0);" class="modal-action waves-effect waves-green btn-flat grey darken-4 white-text" ng-click="addTask('MongoFacebookFeed')">Send</a>
-        <a href="javascript:void(0);" class="modal-action modal-close waves-effect waves-green btn-flat" ng-click="closeModal()">Close</a>
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
     </div>
 </div>
 

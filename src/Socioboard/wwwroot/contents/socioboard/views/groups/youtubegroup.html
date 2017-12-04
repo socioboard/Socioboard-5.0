@@ -10,7 +10,6 @@
                     <div class="col m12">
                         <h4>Youtube Group Invite</h4>
                     </div>
-<<<<<<< HEAD
                 </div>
                 <div class="row">
                     <div class="card">
@@ -28,24 +27,6 @@
                                             <a href="javascript:void(0);" ng-click="deleteMember(grpmem)" style="margin-top:20px" class="secondary-content" ng-if="$index > 0"><i class="fa fa-trash-o removeMember" aria-hidden="true" title="Remove"></i></a>
                                         </li>
                                     </ul>
-=======
-                </div>   
-                    <div class="row">
-                        <div class="card">
-                            <div class="col m4">
-                                <div class="card">
-                                    <h6 style="margin: 0; padding: 20px 10px; color: #ffffff !important; background-color:indigo;">Members</h6>
-                                    <div class="memb_scroll">
-                                        <ul class="collection">
-                                            <li class="collection-item avatar" style="min-height: 65px;" ng-repeat="grpmem in lstYtGrpMem">
-                                                <img src="{{grpmem.sbProfilePic}}" alt="" class="circle">
-                                                <div class="title truncate" style="width: 9999px;"><span>{{grpmem.sbUserName}}</span><br /> <span title="" class="grey-text text-darken-1" style="font-size:14px;">{{grpmem.sbEmailId}}</span></div>
-                                                <a href="javascript:void(0);" class="secondary-content" ng-if="grpmem.active == 1"><i class="fa fa-check green-text" aria-hidden="true" title="Accepted"></i></a>
-                                                <a href="javascript:void(0);" class="secondary-content" ng-if="grpmem.active == 0"><i class="fa fa-clock-o red-text" aria-hidden="true" title="Pending"></i></a>
-                                            </li>
-                                        </ul>
-                                    </div>
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                                 </div>
                             </div>
                         </div>
@@ -64,7 +45,6 @@
                     <ul class="collapsible" data-collapsible="accordion">
                         <li>
                             <div class="collapsible-header">
-<<<<<<< HEAD
                                 Others Groups
                             </div>
                             <div class="row collapsible-body">
@@ -89,33 +69,8 @@
                                     </div>
                                 </div>
                             </div>
-=======
-                                Others Groups 
-                            </div>
-                                <div class="row collapsible-body">
-                                    <div class="col m12">
-                                        <div class="card">
-                                            <div class="memb_scroll">
-                                                <ul class="collection">
-                                                    <li class="collection-item avatar" style="min-height: 65px;" ng-repeat="yourgrp in YtYourGroups">
-                                                        <img src="http://sgps.in/admin/images/login_icon.png" alt="" class="circle">
-                                                        <div class="title truncate" style="width: 9999px;"><span>{{yourgrp.ownerName}}</span><br /> <span title="" class="grey-text text-darken-1" style="font-size:14px;">{{yourgrp.ownerEmailid}}</span></div>
-                                                        <span class="secondary-content" ng-if="yourgrp.active == 0">
-                                                            <a href="javascript:void(0);" class="btn btn_style btn_round indigo darken-4">Accept</a>
-                                                            <a href="javascript:void(0);" class="btn btn_style btn_round red darken-4">Reject</a>
-                                                        </span>
-                                                        <span class="secondary-content" ng-if="yourgrp.active == 1">
-                                                            <a href="javascript:void(0);" class="btn btn_style btn_round red darken-4">Leave</a>
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
                         </li>
-                    </ul>                    
+                    </ul>
                 </div>
 
             </div>

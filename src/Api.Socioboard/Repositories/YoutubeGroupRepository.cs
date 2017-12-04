@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 ﻿using Api.Socioboard.Model;
 using Domain.Socioboard.Helpers;
-=======
-﻿using Domain.Socioboard.Helpers;
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
 using Domain.Socioboard.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
@@ -105,13 +101,6 @@ namespace Api.Socioboard.Repositories
             else if (_grpInvMem.Active == false)
             {
                 return _grpInvMem;
-<<<<<<< HEAD
-=======
-            }
-            else
-            {
-                return null;
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
             }
             else
             {
@@ -180,7 +169,6 @@ namespace Api.Socioboard.Repositories
                 _lstMembers.Active = true;
                 dbr.Update(_lstMembers);
             }
-<<<<<<< HEAD
 
             return "200";
         }
@@ -275,10 +263,6 @@ namespace Api.Socioboard.Repositories
                 var update = Builders<BsonDocument>.Update.Set("sbGrpTaskAssign", false).Set("review", false);
                 mongorepo.Update<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(update, filter);
             }
-=======
-
-            return "200";
->>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
         }
     }
 }

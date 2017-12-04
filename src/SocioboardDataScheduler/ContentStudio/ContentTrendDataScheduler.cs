@@ -36,7 +36,7 @@ namespace SocioboardDataScheduler.ContentStudio
                         return await result;
                     });
                     IList<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData> lstPageShareathon = task.Result.ToList();
-                    //lstPageShareathon = lstPageShareathon.Where(t => t.FbPageId.Equals("1452799044811364")).ToList();
+                   
                     lstPageShareathon.GroupBy(t => t.FbPageId).ToList();
                     noOfthread_pageshreathon = 0;
                     foreach (ContentStudioShareathonIdData shareathon in lstPageShareathon)
