@@ -18,7 +18,10 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
         $scope.loadVideoComments = false;
         $scope.reviewLoaded = 'shhw';//reviewBtn
         $scope.reviewLoading = 'hide';//reviewBtn
+<<<<<<< HEAD
         $scope.removingtaskloader = 'hide';//taskremove loader
+=======
+>>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
         $scope.fetchComments = function () {
 
             $scope.commentsending = 'hide';
@@ -188,6 +191,7 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
         //End Youtube each group code (channel wise)
 
 
+<<<<<<< HEAD
         
 
         // end task
@@ -258,8 +262,38 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
                                       });
             });
 
+=======
+        // task
+        $scope.taskfbfeedModel = function (notification) {
+            $('#TaskfeedModal').openModal();
+        }
+>>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
 
+        // end task
 
+<<<<<<< HEAD
+=======
+        $scope.reviewed = function (commentObj, status, commentType) {
+            $scope.reviewLoaded = 'hide';
+            $scope.reviewLoading = 'shhw';
+            $http.post(apiDomain + '/api/Google/ReviewedComment?commentId=' + commentObj.commentId + '&sbUserName=' + $rootScope.user.FirstName + ' ' + $rootScope.user.LastName + '&status=' + status + '&commentType=' + commentType)
+                                  .then(function (response) {
+                                      if (status == true)
+                                      {
+                                          swal("Reviewed successfully");
+                                      }
+                                      else
+                                      {
+                                          swal("Review cancelled");
+                                      }
+                                      $scope.fetchComments();
+                                      $scope.reviewLoaded = 'shhw';
+                                      $scope.reviewLoading = 'hide';
+                                      $scope.singleCommentShow.review = status;
+                                  }, function (reason) {
+                                      $scope.error = reason.data;
+                                  });
+>>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
         }
 
         $scope.RemoveTask = function (commentObj, commentType) {

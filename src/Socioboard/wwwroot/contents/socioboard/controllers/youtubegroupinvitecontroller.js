@@ -54,6 +54,7 @@ SocioboardApp.controller('YoutubeGroupInviteController', function ($rootScope, $
                                  });
         }
         $scope.loadYtYourGroups();
+<<<<<<< HEAD
 
 
         $scope.validateEmail = function (email) {
@@ -117,6 +118,8 @@ SocioboardApp.controller('YoutubeGroupInviteController', function ($rootScope, $
                                  });
         }
 
+=======
+>>>>>>> cf50914d88f0f1198bb66514f669b54901da952e
     });
 });
 

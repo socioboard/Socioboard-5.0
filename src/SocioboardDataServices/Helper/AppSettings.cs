@@ -30,6 +30,7 @@ namespace SocioboardDataServices.Helper
         public const string googleClientSecret = "";
         public const string googleRedirectionUrl = "";
         public const string googleApiKey = "";
+        public const string googleApiKey_TestApp = "";
         //End Google App Creds 
 
         //Instagram App Creds Start
