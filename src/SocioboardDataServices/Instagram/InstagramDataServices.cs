@@ -13,6 +13,8 @@ namespace SocioboardDataServices.Instagram
         {
             while(true)
             {
+
+
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
