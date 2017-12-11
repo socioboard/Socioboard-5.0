@@ -33,10 +33,8 @@ namespace Socioboard.Facebook.Data
             catch (Exception ex)
             {
                 return 0;
-            }
+            }            
         }
-
-
 
         public static dynamic getFeeds(string accessToken)
         {
@@ -44,13 +42,14 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me/feed?fields=picture,created_time,message,description,story,from,likes,comments{like_count,user_likes,id,message,from,created_time},type,application&limit=30");//v2.1
+                return fb.Get("v2.7/me/feed?limit=99&fields=picture,created_time,message,description,story,from,likes.summary(true),comments.summary(true),type,application");//v2.1
             }
             catch (Exception ex)
             {
                 return "Invalid Access Token";
             }
         }
+
 
         public static dynamic getFeeds(string accessToken, string facebookid)
         {

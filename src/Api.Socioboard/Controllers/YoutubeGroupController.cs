@@ -56,9 +56,6 @@ namespace Api.Socioboard.Controllers
             return Ok("");
         }
 
-
-
-
         [HttpGet("GetGroupMember")]
         public ActionResult GetGroupMember(long userId)
         {

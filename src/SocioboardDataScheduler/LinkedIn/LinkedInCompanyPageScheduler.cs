@@ -90,7 +90,15 @@ namespace SocioboardDataScheduler.LinkedIn
             }
             else
             {
-                
+                //var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                //var endpoint = new ImageEndpoint(client);
+                //IImage image;
+                //using (var fs = new FileStream(ImageUrl, FileMode.Open))
+                //{
+                //    image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                //}
+
+                //var imgs = image.Link;
                 json = company.SetPostOnPageWithImage(Linkedin_oauth, objlicompanypage.LinkedinPageId, ImageUrl, comment);
             }
             if (!string.IsNullOrEmpty(json))

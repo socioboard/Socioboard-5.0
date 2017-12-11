@@ -27,9 +27,9 @@ namespace SocioboardDataScheduler.Helper
 
             //_db = client.GetDatabase(AppSettings.MongoDbName);
 
-            MongoClient client = new MongoClient("");
+            MongoClient client = new MongoClient("mongodb://SB3LiveAdmin:SBLive%$#!12345@37.58.99.114:27017/Socioboard3Live");
 
-            _db = client.GetDatabase("");
+            _db = client.GetDatabase("Socioboard3Live");
 
             this.collecionName = CollectionName;
 

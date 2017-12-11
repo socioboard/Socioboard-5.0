@@ -22,6 +22,7 @@ namespace SocioboardDataServices.Twitter
                     Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
                     oAuthTwitter OAuth = new oAuthTwitter(AppSettings.twitterConsumerKey, AppSettings.twitterConsumerSecret, AppSettings.twitterRedirectionUrl);
                     List<Domain.Socioboard.Models.TwitterAccount> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isActive).ToList();
+                  //  lstTwtAccounts = lstTwtAccounts.Where(t => t.twitterUserId.Equals("758233674978426880")).ToList();
                     foreach (var item in lstTwtAccounts)
                     {
                         try
@@ -35,15 +36,18 @@ namespace SocioboardDataServices.Twitter
                         }
                         catch (Exception ex)
                         {
-                            Thread.Sleep(600000);
+                            //Thread.Sleep(600000);
+                            Thread.Sleep(TimeSpan.FromMinutes(1));
                         }
                     }
-                    Thread.Sleep(600000);
+                    //Thread.Sleep(600000);
+                    Thread.Sleep(TimeSpan.FromMinutes(1));
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("issue in web api calling" + ex.StackTrace);
-                    Thread.Sleep(600000);
+                    // Thread.Sleep(600000);
+                    Thread.Sleep(TimeSpan.FromMinutes(1));
                 }
             }
         }

@@ -116,10 +116,11 @@ namespace SocioboardDataServices.Twitter
                             try
                             {
                                 Savetwitterrecentdetails(profile);
+                                SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
                                 SaveTwitterMessages(twtaccount.twitterUserId, oAuth);
                                 SaveUserRetweets(twtaccount.twitterUserId, oAuth);
                                 SaveUserTweets(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
-                                SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
+                                //SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
                                 SaveUserFollowers(oAuth, twtaccount.twitterScreenName, twtaccount.twitterUserId);
                                 SaveTwitterDirectMessageSent(oAuth, twtaccount.twitterUserId);
                                 SaveTwittwrDirectMessageRecieved(oAuth, twtaccount.twitterUserId);

@@ -1201,6 +1201,11 @@ namespace Socioboard.Controllers
         {
             return View();
         }
+
+
+       
+        [Route("PrivacyPolicy")]
+       
         public IActionResult Privacy()
         {
             return View();

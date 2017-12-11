@@ -184,7 +184,7 @@ namespace Api.Socioboard.Repositories
                         }
                         catch (Exception ex)
                         {
-                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
+                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[5].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
                         }
 
                         objRssFeeds.Title = item.ChildNodes[0].InnerText;
@@ -402,9 +402,27 @@ namespace Api.Socioboard.Repositories
             try
             {
                 MongoRepository _RssRepository = new MongoRepository("Rss", _appSettings);
+                List<Domain.Socioboard.Models.Mongo.Rss> lstRss = new List<Domain.Socioboard.Models.Mongo.Rss>();
+                var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.strId == RssId);
+                var task = Task.Run(async () =>
+                {
+                    return await ret;
+                });
+                lstRss = task.Result.ToList();
+
+                Domain.Socioboard.Models.RssFeedUrl feedurl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Equals(lstRss.First().RssFeedUrl) && t.ProfileId == lstRss.First().ProfileId );
+                if (feedurl != null)
+                {
+                    dbr.Delete<Domain.Socioboard.Models.RssFeedUrl>(feedurl);
+                    
+                }
+
                 var builders = Builders<Domain.Socioboard.Models.Mongo.Rss>.Filter;
                 FilterDefinition<Domain.Socioboard.Models.Mongo.Rss> filter = builders.Eq("strId", RssId);
+                
                 _RssRepository.Delete<Domain.Socioboard.Models.Mongo.Rss>(filter);
+
+               
                 return "success";
             }
             catch (Exception ex)

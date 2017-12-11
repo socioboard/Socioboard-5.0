@@ -25,7 +25,8 @@ namespace SocioboardDataServices.LinkedIn
                         try
                         {
                             oAuthLinkedIn _oauth = new oAuthLinkedIn();
-                         
+                            //_oauth.ConsumerKey = "81k55eukagnqfa";
+                            //_oauth.ConsumerSecret = "d9rqHEf7ewdSbsF1";
                             _oauth.ConsumerKey = AppSettings.LinkedinConsumerKey;
                             _oauth.ConsumerSecret = AppSettings.LinkedinConsumerSecret;
                             _oauth.Token = item.OAuthToken;
@@ -59,13 +60,14 @@ namespace SocioboardDataServices.LinkedIn
                     Model.DatabaseRepository dbr = new Model.DatabaseRepository();
                     AppSettings _appsetting = new AppSettings();
                     List<Domain.Socioboard.Models.LinkedInAccount> lstLinkedinCompanyPage = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.IsActive).ToList();
-        
+                    //lstLinkedinCompanyPage = lstLinkedinCompanyPage.Where(t => t.LinkedinUserName.Contains("AvinashVerma")).ToList();
                     foreach (var item in lstLinkedinCompanyPage)
                     {
                         try
                         {
                             oAuthLinkedIn _oauth = new oAuthLinkedIn();
-                        
+                            //_oauth.ConsumerKey = "81k55eukagnqfa";
+                            //_oauth.ConsumerSecret = "d9rqHEf7ewdSbsF1";
                             _oauth.ConsumerKey = AppSettings.LinkedinConsumerKey;
                             _oauth.ConsumerSecret = AppSettings.LinkedinConsumerSecret;
                             _oauth.Token = item.OAuthToken;

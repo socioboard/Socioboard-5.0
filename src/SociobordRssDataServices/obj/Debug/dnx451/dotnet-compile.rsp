@@ -1,5 +1,5 @@
---temp-output:D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\obj\Debug\dnx451\
---out:D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\bin\Debug\dnx451\SociobordRssDataServices.exe
+--temp-output:D:\SBPROJECT\Developer\src\SociobordRssDataServices\obj\Debug\dnx451\
+--out:D:\SBPROJECT\Developer\src\SociobordRssDataServices\bin\Debug\dnx451\SociobordRssDataServices.exe
 --define:DEBUG
 --define:TRACE
 --define:DNX451
@@ -69,12 +69,12 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Timer.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.ReaderWriter.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Google\bin\Debug\net451\Socioboard.Google.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\bin\Debug\net451\Socioboard.LinkedIn.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Twitter\bin\Debug\net451\Socioboard.Twitter.dll
+--reference:D:\SBPROJECT\Developer\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.Google\bin\Debug\net451\Socioboard.Google.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.LinkedIn\bin\Debug\net451\Socioboard.LinkedIn.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.Twitter\bin\Debug\net451\Socioboard.Twitter.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
@@ -86,11 +86,10 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Data.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Web.Extensions.dll
-D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Program.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Helper\AppSettings.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Helper\SessionFactory.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Model\DatabaseRepository.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Model\MongoRepository.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Properties\AssemblyInfo.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Rss\RssDateServices.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SociobordRssDataServices\Rss\RssFeed.cs
+D:\SBPROJECT\Developer\src\SociobordRssDataServices\Program.cs
+D:\SBPROJECT\Developer\src\SociobordRssDataServices\Helper\SessionFactory.cs
+D:\SBPROJECT\Developer\src\SociobordRssDataServices\Model\DatabaseRepository.cs
+D:\SBPROJECT\Developer\src\SociobordRssDataServices\Model\MongoRepository.cs
+D:\SBPROJECT\Developer\src\SociobordRssDataServices\Properties\AssemblyInfo.cs
+D:\SBPROJECT\Developer\src\SociobordRssDataServices\Rss\RssDateServices.cs
+D:\SBPROJECT\Developer\src\SociobordRssDataServices\Rss\RssFeed.cs

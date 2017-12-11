@@ -405,8 +405,16 @@
                         <a class="white-text btn btn_style black" ng-click="ReLoadingTopFeeds()" title="Recent feeds" href="javascript:void(0)" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a>
                         <span class="right">&nbsp;</span>
                     </div>
+
+                    <!--<div class="left">
+                        <input id="tagSearch" placeholder="search Tag" class="" type="text">
+                        <a ng-click="searchtag()" class="btn">
+                            <i class="fa fa-search"></i>
+                        </a>
+
+                    </div>-->
                 </div>
-                <br /><br />
+                <br /><br /><br /><br />
                 <div class="center">
                     <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No post to display<br /></h6>
                 </div>
@@ -431,13 +439,14 @@
                         <div class="wInnerBall"></div>
                     </div>
                 </div>
-
+               
                 <div id="center">
                     <ul id="waterfall">
                         <li class="collection-item" ng-repeat="insfeed in lstinsFeeds " myRepeatTabDirective>
                             <div class="studio_card">
-                                <a class="card hoverable no-space modal-trigger" ng-click="viewPostModal(insfeed)">
+                                <a class="card hoverable no-space modal-trigger" ng-click="viewPostModal(insfeed)" data-backdrop="static" data-keyboard="false">
                                     <div class="card-image waves-effect waves-block waves-light">
+                                        <span ng-if="insfeed.videoUrl !=null" style="margin-top: 5px;position: absolute;color: #fff;z-index: 1;right: 10px;display: table;font-size: 30px;"><i class="icon-camcorder"></i></span>
                                         <img class="activator" ng-src="{{insfeed.feedImageUrl}}" alt="imgs">
                                     </div>
                                     <div class="card-content">
@@ -464,16 +473,16 @@
             </div>
         </div>
 
-        <!-- Compose Email Structure -->
-        <div id="viewPostModal" class="modal" style="max-width: 850px; width: 100%;">
-            <div class="modal-content">
+        <!-- image calling Structure -->
+        <div id="viewPostModal" class="modal" style="width: 750px;">
+            <div class="modal-content" style="padding: 10px;">
                 <div class="row no-space">
-                    <div class="col l8 m8 s8">
+                    <div class="col l7 m7 s7 center">
                         <img class="responsive-img" ng-src="{{feeds.feedImageUrl}}" alt="imgs">
                     </div>
-                    <div class="col l4 m4 s4">
+                    <div class="col l5 m5 s5">
                         <span class="card-title grey-text text-darken-4">{{feeds.adminUser}}</span>
-                        <p> {{feeds.feed}}</p>
+                        <p style="word-wrap: break-word;"> {{feeds.feed}}</p>
                         <div class="row no-space" >
                             <ul class="col s12 instfeeds" style="padding-bottom: 20px;" >
                                 <li class="collection-item avatar" ng-repeat="inscomment in feeds._InstagramComment">
@@ -483,7 +492,7 @@
                                     <!-- <a class="tooltipped secondary-content" data-position="left">{{inscomment.commentDate}}</a>-->
                                 </li>
                             </ul>
-                            <div class="input-field col s10">
+                            <div class="input-field col s9">
                                 <input id="postcomment" placeholder="Add a comment.." class="" type="text">
                                 <!--<label for="postcomment" class="active">Add a comment..</label>-->
 
@@ -500,6 +509,48 @@
             </div>
         </div>
 
+        <!--end image calling-->
+
+        <!--//video calling strature--> 
+        <div id="VideoPostModal" class="modal" style="max-width: 850px; width: 100%;">
+            <a class="modal-action modal-close right" ng-click="closeasdf()" style="margin-right: 10px; margin-top: 10px; font-size: large;"><i class="fa fa-close black-text"></i></a>
+            <div class="modal-content">
+                <div class="row no-space">
+                    <div class="col l8 m8 s8 center">
+                        <embed id="play" width="360" height="360" autostart="false" allowscriptaccess="always"
+                               src="{{videosss | youtubeEmbedUrl}}" type="video/mp4">
+
+                    </div>
+                    <div class="col l4 m4 s4">
+                        <span class="card-title grey-text text-darken-4">{{feeds.adminUser}}</span>
+                        <p style="word-wrap: break-word;"> {{feeds.feed}}</p>
+                        <div class="row no-space">
+                            <ul class="col s12 instfeeds" style="padding-bottom: 20px;">
+                                <li class="collection-item avatar" ng-repeat="inscomment in feeds._InstagramComment">
+                                    <!--{{insfeed._InstagramComment}}-->
+                                    <!--<img ng-src="{{inscomment.fromProfilePic}}"  class="circle">-->
+                                    <span class="email-title"><b>{{inscomment.fromName}} :</b> {{inscomment.comment}}</span>
+                                    <!-- <a class="tooltipped secondary-content" data-position="left">{{inscomment.commentDate}}</a>-->
+                                </li>
+                            </ul>
+                            <div class="input-field col s10">
+                                <input id="postcomment" placeholder="Add a comment.." class="" type="text">
+                                <!--<label for="postcomment" class="active">Add a comment..</label>-->
+
+                            </div>
+                            <div ng-show="dispbtn" class="input-field col s1">
+                                <a class="btn btn_style btn_round" ng-click="AddInstagramComment(feeds.feedId,feeds.instagramId)">send</a>
+                            </div>
+                            <div ng-show="!dispbtn" class="input-field col s1">
+                                <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end-->
+
     </section>
     <!-- END CONTENT -->
 </div>
@@ -508,7 +559,7 @@
   $('.instfeeds').slimScroll({
         color: '#FAB51C',
         size: '10px',
-        height: '350px',
+        height: '300px',
         alwaysVisible: true,
         allowPageScroll: true
     });
@@ -519,6 +570,8 @@
         function loadmore_feeds() {
             $('#load_circle_insta').show();
         }
+
+        
 </script>
 
 <!-- //////////////////////////////////////// End Script Code //////////////////////////////////////// -->

@@ -230,7 +230,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
 
         $scope.Loaddata = function (key) {
             //codes to load Data
-            $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?keywords=' + key)
+            $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchData?keywords=' + key)
                               .then(function (response) {
                                   $scope.lstData = response.data;
                                   //$scope.fetchdatacomplete = true;

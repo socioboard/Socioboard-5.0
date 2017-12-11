@@ -25,7 +25,10 @@ namespace SocioboardDataScheduler.Helper
                 args["message"] = message;
                 args["link"] = link;
                 ret = fb.Post("v2.7/" + FbUserId + "/feed", args).ToString();
-       
+                //var builders = Builders<BsonDocument>.Filter;
+                //FilterDefinition<BsonDocument> filter = builders.Eq("strId", postId);
+                //var update = Builders<BsonDocument>.Update.Set("Status", true);
+                //contentFeeds.Update<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(update, filter);
 
                 return ret = "Messages Posted Successfully";
             }

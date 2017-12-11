@@ -40,7 +40,7 @@ namespace SocioboardDataScheduler.Shareathon
                     });
                     IList<Domain.Socioboard.Models.Mongo.FacebookPageFeedShare> lstfbpagefeeds = task.Result.ToList();
                    
-                   
+                    //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Contains("758233674978426880")).ToList();
                     lstfbpagefeeds.GroupBy(t => t.pageId).ToList();
 
                     foreach (var items in lstfbpagefeeds)

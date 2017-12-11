@@ -87,6 +87,7 @@
 --resource:"D:\SBPROJECT\Developer\src\Domain.Socioboard\compiler\resources\Mappings\TwitterNameTable.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.TwitterNameTable.hbm.xml
 --resource:"D:\SBPROJECT\Developer\src\Domain.Socioboard\compiler\resources\Mappings\User.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.User.hbm.xml
 --resource:"D:\SBPROJECT\Developer\src\Domain.Socioboard\compiler\resources\Mappings\YoutubeChannel.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.YoutubeChannel.hbm.xml
+--resource:"D:\SBPROJECT\Developer\src\Domain.Socioboard\compiler\resources\Mappings\YoutubeGroupInvite.hbm.xml",Domain.Socioboard.compiler.resources.Mappings.YoutubeGroupInvite.hbm.xml
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Consatants\SocioboardConsts.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\AdsOfferAccountStatus.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\AdsStatus.cs
@@ -177,6 +178,7 @@ D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\TwitterNameTable.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\TwitterRecentFollower.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\User.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\YoutubeChannel.cs
+D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\YoutubeGroupInvite.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Listening\FacebookGroupHashtagDetails.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Listening\FacebookGroupPost.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Listening\FacebookGroupPostComments.cs

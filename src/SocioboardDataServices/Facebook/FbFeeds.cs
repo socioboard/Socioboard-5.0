@@ -256,10 +256,19 @@ namespace SocioboardDataServices.Facebook
                                     {
                                         message = "";
                                     }
+                                    dynamic comment;
+                                    try
+                                    {
+                                        comment = result["comments"];
+                                    }
+                                    catch (Exception)
+                                    {
+                                        comment = null;
+                                    }
                                     objFacebookFeed.FeedDescription = message;
                                     objFacebookFeed.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                                     //objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, fbAcc.AccessToken);
-                                    objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId,result["comments"]);
+                                    objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, comment);
 
 
                                     try

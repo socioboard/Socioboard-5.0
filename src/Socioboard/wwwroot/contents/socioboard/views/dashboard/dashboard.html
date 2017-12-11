@@ -319,15 +319,15 @@
                                                 <i class="icon-info"></i>
                                             </a>
                                             <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['gplusaccount']['gpUserName']}}">{{data['gplusaccount']['gpUserName']}}</span>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span> {{data['gplusaccount']['haveYouInCircles']}}</p>
+                                            <p><i class="icon-user-follow cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span> {{data['gplusaccount']['haveYouInCircles']}}</p>
                                             <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Email Id:</span> <span title="{{data['gplusaccount']['emailId']}}">{{data['gplusaccount']['emailId']}} </span></p>
                                         </div>
                                         <div class="card-reveal">
                                             <span class="card-title grey-text text-darken-4 truncate" title="User Name">{{data['gplusaccount']['gpUserName']}}<i class="mdi-navigation-close right"></i></span>
 
                                             <!--<p>{{gplusProfile.description}}</p>-->
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Following:</span> {{data['gplusaccount']['inYourCircles']}}</p>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span>{{data['gplusaccount']['haveYouInCircles']}}</p>
+                                            <p><i class="icon-user-following cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Following:</span> {{data['gplusaccount']['inYourCircles']}}</p>
+                                            <p><i class="icon-user-follow cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span>{{data['gplusaccount']['haveYouInCircles']}}</p>
                                             <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Email Id"></i> <span class="cyan-text text-darken-2"> Email Id:</span><span title="{{data['gplusaccount']['emailId']}}">{{data['gplusaccount']['emailId']}}</span></p>
                                             <!--<p><i class="mdi-social-cake cyan-text text-darken-2"></i> {{gplusProfile.followingCount}}</p>-->
                                             <p><i class="icon-pointer cyan-text text-darken-2" title="Location"></i> <span class="cyan-text text-darken-2"> Location:</span> <span title="{{data['gplusaccount']['location']}}">{{data['gplusaccount']['location']}}</span></p>
@@ -401,8 +401,8 @@
                                                 <i class="icon-info"></i>
                                             </a>
                                             <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdINcompanyaccount']['linkedinPageName']}}">{{data['linkdINcompanyaccount']['linkedinPageName']}}</span>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
-                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
+                                            <p><i class="icon-user-follow cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
+                                            <p class="truncate"><i class="icon-pointer cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
                                         </div>
                                         <div class="card-content" ng-if="data['linkdINcompanyaccount']['logoUrl']==null">
                                             <img ng-src="http://walyou.com/wp-content/uploads//2010/12/facebook-profile-picture-no-pic-avatar.jpg" class="circle responsive-img activator card-profile-image">
@@ -411,16 +411,16 @@
                                                 <i class="icon-info"></i>
                                             </a>
                                             <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdINcompanyaccount']['linkedinPageName']}}">{{data['linkdINcompanyaccount']['linkedinPageName']}}</span>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
-                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
+                                            <p><i class="icon-user-follow cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span> {{ldata['linkdINcompanyaccount']['numFollowers']}}</p>
+                                            <p class="truncate"><i class="icon-pointer cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Location:</span> <span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
                                         </div>
                                         <div class="card-reveal">
                                             <span class="card-title grey-text text-darken-4 truncate">{{data['linkdINcompanyaccount']['linkedinPageName']}}<i class="mdi-navigation-close right"></i></span>
                                             <p>{{data['linkdINcompanyaccount']['specialties']}}</p>
                                             <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Page Name"></i><span class="cyan-text text-darken-2"> Page Name:</span> {{data['linkdINcompanyaccount']['linkedinPageName']}}</p>
-                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Description"></i><span class="cyan-text text-darken-2"> Description:</span> <span title="{{data['linkdINcompanyaccount']['description']}}">{{data['linkdINcompanyaccount']['description']}}</span></p>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Location"></i><span class="cyan-text text-darken-2"> Location:</span><span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Followers"></i><span class="cyan-text text-darken-2"> Followers:</span>{{data['linkdINcompanyaccount']['numFollowers']}}</p>
+                                            <p class="truncate"><i class="icon-film cyan-text text-darken-2" title="Description"></i><span class="cyan-text text-darken-2"> Description:</span> <span title="{{data['linkdINcompanyaccount']['description']}}">{{data['linkdINcompanyaccount']['description']}}</span></p>
+                                            <p><i class="icon-pointer cyan-text text-darken-2 activator" title="Location"></i><span class="cyan-text text-darken-2"> Location:</span><span title="{{data['linkdINcompanyaccount']['locations']}}">{{data['linkdINcompanyaccount']['locations']}}</span></p>
+                                            <p><i class="icon-user-follow cyan-text text-darken-2 activator" title="Followers"></i><span class="cyan-text text-darken-2"> Followers:</span>{{data['linkdINcompanyaccount']['numFollowers']}}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -438,8 +438,8 @@
                                                 <i class="icon-info"></i>
                                             </a>
                                             <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdInaccount']['linkedinUserName']}}">{{data['linkdInaccount']['linkedinUserName']}}</span>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Connections:</span> {{data['linkdInaccount']['connections']}}</p>
-                                            <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> EmailId: </span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}} </span></p>
+                                            <p><i class="icon-link cyan-text text-darken-2 activator" title="Connections"></i><span class="cyan-text text-darken-2"> Connections : </span>{{data['linkdInaccount']['connections']}}</p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Email Id:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}}</span></p>
 
                                             <!--<p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Connections:</span><span title="{{data['linkdInaccount']['connections']}}">{{data['linkdInaccount']['connections']}}</span> {{data['linkdInaccount']['connections']}}</p>-->
                                             <!--<p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">EmailId:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['{{emailId}}']}}</span></p>-->
@@ -451,8 +451,8 @@
                                                 <i class="icon-info"></i>
                                             </a>
                                             <span class="card-title activator grey-text text-darken-4 truncate" title="{{data['linkdInaccount']['linkedinUserName']}}">{{data['linkdInaccount']['linkedinUserName']}}</span>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Connections:</span> {{data['linkdInaccount']['connections']}}</p>
-                                            <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> EmailId:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}} </span></p>
+                                            <p><i class="icon-user-follow cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Followers:</span> {{data['linkdInaccount']['connections']}}</p>
+                                            <p class="truncate"><i class="icon-user-following cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Following:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}} </span></p>
 
                                             <!--<p><i class="mdi-action-perm-identity cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">Connections:</span><span title="{{data['linkdInaccount']['connections']}}">{{data['linkdInaccount']['connections']}}</span> {{data['linkdInaccount']['connections']}}</p>-->
                                             <!--<p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2">EmailId:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['{{emailId}}']}}</span></p>-->
@@ -461,10 +461,9 @@
                                             <span class="card-title grey-text text-darken-4 truncate">{{data['linkdInaccount']['linkedinUserName']}}<i class="mdi-navigation-close right"></i></span>
 
                                             <!--<p>{{linProfile.specialties}}</p>-->
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Acoount Id"></i><span class="cyan-text text-darken-2"> Account Id:</span> {{data['linkdInaccount']['linkedinUserId']}}</p>
-                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2" title="Name"></i><span class="cyan-text text-darken-2"> Name:</span> <span title="{{data['linkdInaccount']['linkedinUserName']}}">{{data['linkdInaccount']['linkedinUserName']}}</span></p>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="EmailId"></i><span class="cyan-text text-darken-2"> EmailId: </span><span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}}</span></p>
-                                            <p><i class="mdi-action-perm-identity cyan-text text-darken-2 activator" title="Connections"></i><span class="cyan-text text-darken-2"> Connections:</span>{{data['linkdInaccount']['connections']}}</p>
+                                            <p class="truncate"><i class="mdi-action-perm-identity cyan-text text-darken-2" title="Name"></i><span class="cyan-text text-darken-2"> Name:</span> <span title="{{data['linkdInaccount']['linkedinUserName']}}">{{data['linkdInaccount']['linkedinUserName']}}</span></p>
+                                            <p class="truncate"><i class="mdi-communication-email cyan-text text-darken-2"></i><span class="cyan-text text-darken-2"> Email Id:</span> <span title="{{data['linkdInaccount']['emailId']}}">{{data['linkdInaccount']['emailId']}}</span></p>
+                                            <p><i class="icon-link cyan-text text-darken-2 activator" title="Connections"></i><span class="cyan-text text-darken-2"> Connections:</span>{{data['linkdInaccount']['connections']}}</p>
                                         </div>
                                     </div>
                                 </div>

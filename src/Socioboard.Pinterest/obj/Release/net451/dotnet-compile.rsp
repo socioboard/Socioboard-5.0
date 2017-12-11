@@ -1,0 +1,57 @@
+--temp-output:D:\SBPROJECT\Developer\src\Socioboard.Pinterest\obj\Release\net451\
+--out:D:\SBPROJECT\Developer\src\Socioboard.Pinterest\bin\Release\net451\Socioboard.Pinterest.dll
+--define:RELEASE
+--define:TRACE
+--define:NET451
+--suppress-warning:CS1701
+--suppress-warning:CS1702
+--suppress-warning:CS1705
+--optimize:True
+--output-name:Socioboard.Pinterest
+--file-version:1.0.0.0
+--version:1.0.0.0
+--informational-version:1.0.0
+--target-framework:.NETFramework,Version=v4.5.1
+--reference:C:\Users\GLB-008-PC\.nuget\packages\Newtonsoft.Json\9.0.1\lib\net45\Newtonsoft.Json.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Collections.Concurrent.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Debug.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Tools.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Diagnostics.Tracing.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Globalization.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.IO.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.IO.Compression.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Linq.Expressions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.Http.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Net.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.ObjectModel.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Reflection.Primitives.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Resources.ResourceManager.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.InteropServices.dll
+--reference:C:\Users\GLB-008-PC\.nuget\packages\System.Runtime.InteropServices.RuntimeInformation\4.0.0\ref\netstandard1.1\System.Runtime.InteropServices.RuntimeInformation.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Runtime.Numerics.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.Encoding.Extensions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Text.RegularExpressions.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Tasks.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Timer.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.ReaderWriter.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
+--reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
+D:\SBPROJECT\Developer\src\Socioboard.Pinterest\Global.cs
+D:\SBPROJECT\Developer\src\Socioboard.Pinterest\Auth\Authentication.cs
+D:\SBPROJECT\Developer\src\Socioboard.Pinterest\Board\Board.cs
+D:\SBPROJECT\Developer\src\Socioboard.Pinterest\Pin\Pin.cs
+D:\SBPROJECT\Developer\src\Socioboard.Pinterest\Properties\AssemblyInfo.cs
+D:\SBPROJECT\Developer\src\Socioboard.Pinterest\User\User.cs

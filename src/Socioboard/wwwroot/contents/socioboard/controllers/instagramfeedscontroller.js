@@ -88,7 +88,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
 
         $scope.filterSearch = function (postType, txtt) {
-            //   debugger;
+            //    
             $scope.nomessages = false;
 
             $scope.filters = true;
@@ -98,14 +98,14 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Instagram/GetInstagramFilterFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=50' + '&postType=' + postType)
                           .then(function (response) {
-                            //  debugger;
+                            //   
                               if (response.data == "") {
                                   $scope.nomessages = true;
                                   $scope.preloadmorefeeds = true;
                               }
                               // $scope.lstProfiles = response.data;
                               //$scope.lstinsFeeds = response.data;
-                              debugger;
+                               
                               if (response.data == null) {
                                    reachLast = true;
                                   }
@@ -181,7 +181,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         $scope.AddInstagramComment = function (FeedId, InstagramId)
 
         {
-            debugger;
+             
             var text = $('#postcomment').val();
             if (/\S/.test(text)) {
             var updatetitle = "";
@@ -202,7 +202,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                 //codes to post comments
                 $http.post(apiDomain + '/api/Instagram/AddInstagramComment?FeedId=' + FeedId + '&InstagramId=' + InstagramId +'&Text='+text)
                               .then(function (response) {
-                                  debugger;
+                                   
                                   $scope.dispbtn = true;
                                   $('#postcomment' + FeedId).val('');
                                   $scope.LoadTopFeeds();
@@ -227,11 +227,26 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         }
 
         $scope.viewPostModal = function (tempo) {
-            debugger;
-            $scope.feeds = tempo;
-            $scope.comment = tempo._InstagramComment
-            $('#viewPostModal').openModal();
-            $('#postcomment').val("");
+            if (tempo.videoUrl != null) {
+                $scope.feeds = tempo;
+                $scope.videosss = tempo.videoUrl.replace('https://scontent.cdninstagram.com/vp/', '');
+                $('#VideoPostModal').openModal({ dismissible: false });
+                $scope.comment = tempo._InstagramComment
+                $('#postcomment').val("");
+            }
+            else {
+                $scope.feeds = tempo;
+                $scope.comment = tempo._InstagramComment
+                $('#viewPostModal').openModal();
+                $('#postcomment').val("");
+            }
+           
+        }
+
+        $scope.closeasdf=function()
+        {
+            $scope.videosss = "492333f921624565a151805367c8fb60/5A295FFB/t50.2886-16/24362862_170303157047154_3501759438555971584_n.mp4";
+            $('#VideoPostModal').closeModal();
         }
 
         $scope.callDropmenu = function () {
@@ -287,5 +302,26 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         }, 60);
 
 
-    });
+        $scope.searchtag = function () {
+             
+            var tag = $('#tagSearch').val();
+
+            $http.get(apiDomain + '/api/Instagram/Instagramsearch?instagramId=' + $stateParams.profileId + '&tag=' + tag)
+                         .then(function (response) {
+                             var data = response;
+                         });
+
+        }
+
+    })
+})
+.filter('youtubeEmbedUrl', function ($sce) {
+    return function (videoId) {
+        if (videoId) {
+            videoId = videoId.replace('https://', '');
+            return $sce.trustAsResourceUrl('https://scontent.cdninstagram.com/vp/' + videoId);
+        } else {
+
+        }
+    };
 });

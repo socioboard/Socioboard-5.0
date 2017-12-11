@@ -26,7 +26,7 @@ namespace SocioboardDataServices.Gplus
                     oAuthToken objToken = new oAuthToken(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
                     JObject userinfo = new JObject();
                     List<Domain.Socioboard.Models.Googleplusaccounts> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.IsActive).ToList();
-                
+                 // lstTwtAccounts = lstTwtAccounts.Where(t => t.GpUserName.Contains("Avinash Verma")).ToList();
                     foreach (var item in lstTwtAccounts)
                     {
 

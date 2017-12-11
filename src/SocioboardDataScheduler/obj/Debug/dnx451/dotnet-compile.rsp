@@ -1,5 +1,5 @@
---temp-output:D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\obj\Debug\dnx451\
---out:D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\bin\Debug\dnx451\SocioboardDataScheduler.exe
+--temp-output:D:\SBPROJECT\Developer\src\SocioboardDataScheduler\obj\Debug\dnx451\
+--out:D:\SBPROJECT\Developer\src\SocioboardDataScheduler\bin\Debug\dnx451\SocioboardDataScheduler.exe
 --define:DEBUG
 --define:TRACE
 --define:DNX451
@@ -69,11 +69,11 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Timer.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.ReaderWriter.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.LinkedIn\bin\Debug\net451\Socioboard.LinkedIn.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Twitter\bin\Debug\net451\Socioboard.Twitter.dll
+--reference:D:\SBPROJECT\Developer\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.Instagram\bin\Debug\net451\Socioboard.Instagram.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.LinkedIn\bin\Debug\net451\Socioboard.LinkedIn.dll
+--reference:D:\SBPROJECT\Developer\src\Socioboard.Twitter\bin\Debug\net451\Socioboard.Twitter.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
@@ -84,21 +84,21 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Security.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Xml.Linq.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Web.Extensions.dll
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Program.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\ContentStudio\ContentTrendDataScheduler.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Facebook\FacebookDataScheduler.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Facebook\FacebookScheduler.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Helper\AppSettings.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Helper\FBPostContentFeeds.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Helper\MongoRepository.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Helper\SessionFactory.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\LinkedIn\LinkedInCompanyPageScheduler.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\LinkedIn\LinkedInDataScheduler.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\LinkedIn\LinkedInScheduler.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Model\DatabaseRepository.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Model\MongoRepository.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Properties\AssemblyInfo.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Shareathon\FacebookShareFeeds.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Shareathon\ShareathonDataSchedulars.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Twitter\TwitterDatascheduler.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\SocioboardDataScheduler\Twitter\TwitterScheduler.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Program.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\ContentStudio\ContentTrendDataScheduler.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Facebook\FacebookDataScheduler.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Facebook\FacebookScheduler.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Helper\AppSettings.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Helper\FBPostContentFeeds.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Helper\MongoRepository.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Helper\SessionFactory.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\LinkedIn\LinkedInCompanyPageScheduler.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\LinkedIn\LinkedInDataScheduler.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\LinkedIn\LinkedInScheduler.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Model\DatabaseRepository.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Model\MongoRepository.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Properties\AssemblyInfo.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Shareathon\FacebookShareFeeds.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Shareathon\ShareathonDataSchedulars.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Twitter\TwitterDatascheduler.cs
+D:\SBPROJECT\Developer\src\SocioboardDataScheduler\Twitter\TwitterScheduler.cs

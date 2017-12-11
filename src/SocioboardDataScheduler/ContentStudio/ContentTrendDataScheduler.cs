@@ -36,22 +36,23 @@ namespace SocioboardDataScheduler.ContentStudio
                         return await result;
                     });
                     IList<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData> lstPageShareathon = task.Result.ToList();
-                   
+                    //lstPageShareathon = lstPageShareathon.Where(t => t.FbPageId.Equals("1452799044811364")).ToList();
                     lstPageShareathon.GroupBy(t => t.FbPageId).ToList();
                     noOfthread_pageshreathon = 0;
                     foreach (ContentStudioShareathonIdData shareathon in lstPageShareathon)
                     {
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(ShceduleConetentStudioFeeds), new object[] { shareathon, dbr, _lstcontent });
+                       // ThreadPool.QueueUserWorkItem(new WaitCallback(ShceduleConetentStudioFeeds), new object[] { shareathon, dbr, _lstcontent });
                         //Thread.Sleep(20 * 1000);
                         noOfthread_pageshreathon++;
                         Thread thread_pageshreathon = new Thread(() => ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent }));
-                        ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
+                        //ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
                         thread_pageshreathon.Start();
+                        Thread.Sleep(120 * 1000);
                         //while (noOfthread_pageshreathon > 5)
                         //{
                         //    Thread.Sleep(1 * 1000);
                         //}
-                        ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
+                        // ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
 
                     }
                     Thread.Sleep(TimeSpan.FromMinutes(1));
@@ -159,9 +160,9 @@ namespace SocioboardDataScheduler.ContentStudio
                             else
                             {
 
-                                FilterDefinition<BsonDocument> filter = new BsonDocument("strId", shareathon.strId);
-                                var update = Builders<BsonDocument>.Update.Set("Status", false);
-                                _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(update, filter);
+                                //FilterDefinition<BsonDocument> filter = new BsonDocument("strId", shareathon.strId);
+                                //var update = Builders<BsonDocument>.Update.Set("Status", false);
+                                //_ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.ContentFeedsShareathon>(update, filter);
                             }
                             //}
                             //else
