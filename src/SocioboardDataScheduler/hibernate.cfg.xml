@@ -5,10 +5,8 @@
     <property name="dialect">NHibernate.Dialect.MySQLDialect</property>
     <property name="connection.driver_class">NHibernate.Driver.MySqlDataDriver</property>
     <property name="connection.connection_string">
-      <!--Data Source=173.192.35.244;User ID=socioboard3user;Password=1o1AXo6IXi;persist security info=False;initial catalog=Socioboard3;pooling=true;charset=utf8; port=3306;-->
-      <!--Data Source=localhost;User ID=root;Password=1234;persist security info=False;initial catalog=sb3test;pooling=true;charset=utf8; port=3306;-->
-     Data Source=37.58.99.114;User ID=socioboardliveuser;Password=46KA58KADi;persist security info=False;initial catalog=socioboardlive;pooling=true;Convert Zero Datetime=True;charset=utf8; port=3306;
-    </property>
+       Data Source=localhost;User ID=root;Password=1234;persist security info=False;initial catalog=sb3test;pooling=true;charset=utf8; port=3306;
+      </property>
     <property name="show_sql">true</property>
     <mapping assembly="Domain.Socioboard" />
   </session-factory>
