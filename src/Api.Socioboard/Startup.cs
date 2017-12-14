@@ -36,10 +36,10 @@ namespace Api.Socioboard
             Configuration = builder.Build();
             pathToDoc = env.WebRootPath + @"\Api.Socioboard.xml";
             Log.Logger = new LoggerConfiguration()
-        .MinimumLevel.Debug()
-        .WriteTo.ColoredConsole()
-        .WriteTo.RollingFile(Path.Combine(env.WebRootPath, "log/log-{Date}.txt"))
-        .CreateLogger();
+                .MinimumLevel.Debug()
+                .WriteTo.ColoredConsole()
+                .WriteTo.RollingFile(Path.Combine(env.WebRootPath, "log/log-{Date}.txt"))
+                .CreateLogger();
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -51,15 +51,19 @@ namespace Api.Socioboard
             services.AddApplicationInsightsTelemetry(Configuration);
             services.Configure<Helper.AppSettings>(Configuration.GetSection("AppSettings"));
             services.AddMvc();
-            services.AddCors(options => options.AddPolicy("AllowAll", p => p.WithOrigins("http://localhost:6361", "http://localhost:9821")));
+
+            var appSettings = new Helper.AppSettings();
+
+            Configuration.GetSection("AppSettings").Bind(appSettings);
+
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.WithOrigins(appSettings.Domain)));
             services.Configure<FormOptions>(x =>
             {
                 x.ValueLengthLimit = int.MaxValue;
                 x.MultipartBodyLengthLimit = int.MaxValue; // In case of multipart
             });
-            services.AddTransient < IEmailSender, AuthMessageSender>();
-            services.AddTransient < ISmsSender, AuthMessageSender>();
-
+            services.AddTransient<IEmailSender, AuthMessageSender>();
+            services.AddTransient<ISmsSender, AuthMessageSender>();
 
             services.AddSwaggerGen();
             services.ConfigureSwaggerGen(options =>
@@ -78,7 +82,7 @@ namespace Api.Socioboard
             //services.AddScoped<ISearchProvider, SearchProvider>();
         }
 
-        
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {

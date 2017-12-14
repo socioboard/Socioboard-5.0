@@ -25,8 +25,8 @@ var SocioboardApp = angular.module("SocioboardApp", [
 //    })
 //});
 
-SocioboardApp.constant("apiDomain", "http://localhost:6361");
-SocioboardApp.constant("domain", "http://localhost:9821");
+SocioboardApp.constant("apiDomain", apiDomain);
+SocioboardApp.constant("domain", domain);
 //Not Using codes Start
 SocioboardApp.directive('myRepeatDropdownDirective', function () {
     return function (scope, element, attrs) {

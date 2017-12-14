@@ -3,8 +3,8 @@ Core script to handle the entire theme and core functions
 **/
 var Socioboard = function () {
 
-    var apiDomain = 'http://localhost:6361/';
-    var Domain = 'http://localhost:9821/';
+    var apiDomain = apiDomain;
+    var Domain = domain;
 
 }();
 

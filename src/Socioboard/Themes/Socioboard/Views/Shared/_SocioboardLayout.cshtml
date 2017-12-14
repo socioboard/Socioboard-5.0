@@ -1,13 +1,20 @@
-﻿
+﻿@using Socioboard.Helpers;
+@using Microsoft.Extensions.Options
+
 @{
     Layout = null;
     string cpwd = "";
 }
-@using System;
+
+@inject IOptions<AppSettings> Options
 
 <!DOCTYPE html>
 <html>
 <head>
+    <script>
+        var apiDomain = "@(Options.Value.ApiDomain)";
+        var domain = "@(Options.Value.Domain)";
+    </script>
     @*<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>*@
 

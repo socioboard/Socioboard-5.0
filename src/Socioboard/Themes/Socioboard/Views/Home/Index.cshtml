@@ -1,7 +1,10 @@
-﻿@{
+﻿@using Socioboard.Helpers;
+@using Microsoft.Extensions.Options
+@{
     Layout = null;
     Domain.Socioboard.Models.User objplugin = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(ViewBag.user);
 }
+@inject IOptions<AppSettings> Options
 <!DOCTYPE html>
 <html lang="en" data-ng-app="SocioboardApp">
 <head>
@@ -11,6 +14,10 @@
     <meta name="description" content="">
     <meta name="keywords" content="">
     <title data-ng-bind="'Socioboard   ' + $state.current.data.pageTitle"></title>
+    <script>
+        var apiDomain = "@(Options.Value.ApiDomain)";
+        var domain = "@(Options.Value.Domain)";
+    </script>
     @*<link rel="apple-touch-icon" sizes="57x57" href="~/contents/socioboard/images/favicon/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="~/contents/socioboard/images/favicon/apple-icon-60x60.png">
         <link rel="apple-touch-icon" sizes="72x72" href="~/contents/socioboard/images/favicon/apple-icon-72x72.png">
