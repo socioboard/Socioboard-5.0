@@ -73,9 +73,13 @@
   },
 
   "publishOptions": {
-    "include": [
-      "wwwroot"
-    ]
+   "include":
+   [
+      "wwwroot",
+      "appsettings.json",
+      "hibernate.cfg.xml",
+      "web.config"
+   ]
   },
 
   "scripts": {
