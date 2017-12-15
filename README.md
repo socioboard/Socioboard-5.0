@@ -102,13 +102,12 @@ Socioboard is available on web, desktop and mobiles. We have Android and iOS app
 =========================
 
 
-To access the Socioboard Files visit : https://github.com/socioboard/Socioboard-Core-3.0/releases
+To access the Socioboard Files visit : https://github.com/socioboard/Socioboard-Core-3.0
 
 Step 1:Download the socioboard file from above mentioned path.
 
-![](https://i.imgur.com/13VPPyO.png)
+![](https://i.imgur.com/ktvlvpP.png)
 
-![](https://i.imgur.com/Hs5o0Lf.png)
 
 
 Step 2: Now after downloading it, you can see zip file named “socioboard-master.zip”  in your download folder.
