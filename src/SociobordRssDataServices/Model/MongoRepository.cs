@@ -23,9 +23,9 @@ namespace SociobordRssDataServices.Model
         {
 
 
-            MongoClient client = new MongoClient("mongodb://SB3LiveAdmin:SBLive%$#!12345@37.58.99.114:27017/Socioboard3Live");
+            MongoClient client = new MongoClient("");
 
-            _db = client.GetDatabase("Socioboard3Live");
+            _db = client.GetDatabase("");
 
             //MongoClient client = new MongoClient("mongodb://Socioboard3user:sb8520R$lRo0@173.192.35.244:27017/Socioboard3");
 

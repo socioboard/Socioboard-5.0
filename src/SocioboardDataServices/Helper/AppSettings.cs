@@ -10,12 +10,14 @@ namespace SocioboardDataServices.Helper
         public const string Domain = "http://serv1.socioboard.com";
         public const string ApiDomain = "http://servapi1.socioboard.com";
 
-        public const string RedisConfiguration = "";
-        public const string NhibernateFilePath ="";
-        
-
-        public const string MongoDbConnectionString = "mongodb://localhost/admin";
+        public const string RedisConfiguration = "127.0.0.1:6379";
+        public const string NhibernateFilePath = "";
+        //D:\SBPROJECT\Developer\src\SocioboardDataServices
+        public const string MongoDbConnectionString = "";
         public const string MongoDbName = "";
+
+        //public const string MongoDbConnectionString = "mongodb://localhost/admin";
+        //public const string MongoDbName = "Socioboard3";
 
 
         //Start facebook App Creds
@@ -27,16 +29,15 @@ namespace SocioboardDataServices.Helper
         //Google App Creds Start
         public const string googleClientId = "";
         public const string googleClientSecret = "";
-        public const string googleRedirectionUrl = "https://www.socioboard.com/GoogleManager/Google";
+        public const string googleRedirectionUrl = "";
         public const string googleApiKey = "";
         public const string googleApiKey_TestApp = "";
         //End Google App Creds 
 
-        //Instagram App Creds Start
-        public const string instaAuthUrl = "";
+        //Instagram App Creds Start""; "https://api.instagram.com/oauth/authorize/";
         public const string instaClientId = "";
         public const string instaClientSecret = "";
-        public const string instaReturnUrl = "https://www.socioboard.com/InstagramManager/Instagram";
+        public const string instaReturnUrl = "";
         public const string instaTokenRetrivelUrl = "";
         public const string instaApiBaseUrl = "";
         //End Instagram App Creds
@@ -57,7 +58,7 @@ namespace SocioboardDataServices.Helper
         //Twitter App Creds Start
         public const string twitterConsumerKey = "";
         public const string twitterConsumerSecret = "";
-        public const string twitterRedirectionUrl = "https://www.socioboard.com/TwitterManager/Twitter";
+        public const string twitterRedirectionUrl = "";
         //End Twitter App Creds 
 
 
