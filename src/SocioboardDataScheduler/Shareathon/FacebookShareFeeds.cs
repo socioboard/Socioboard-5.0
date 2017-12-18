@@ -50,7 +50,7 @@ namespace SocioboardDataScheduler.Shareathon
                         Thread thread_pageshreathon = new Thread(() => TwitterSchedulemessage(new object[] {  items, dbr , _facebookSharefeeds }));
                         thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
                         thread_pageshreathon.Start();
-                        Thread.Sleep(10 * 1000);
+                        Thread.Sleep(60 * 1000);
                         //while (noOfthreadRunning > 5)
                         //{
                         //    Thread.Sleep(5 * 1000);

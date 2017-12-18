@@ -52,6 +52,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
             .then(function (response) {
              
                 $scope.fbpagedet = response.data;
+                console.log("fbpage", $scope.fbpagedet);
                 $scope.totalfbLikes(days);
               
             }, function (reason) {
@@ -68,6 +69,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
             .then(function (response) {
               
                 $scope.rep = response.data;
+                console.log("abcd", $scope.rep);
                 $scope.totalfans(days);
                
             }, function (reason) {
@@ -83,6 +85,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
             .then(function (response) {
                
                 $scope.fbpagepost = response.data;
+                console.log($scope.fbpagepost);
                // $scope.totalfbLikes(days);
                
             }, function (reason) {

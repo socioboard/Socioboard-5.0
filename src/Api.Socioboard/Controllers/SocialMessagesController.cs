@@ -146,97 +146,97 @@ namespace Api.Socioboard.Controllers
                 {
                     temp_item_profileId = item;
                 }
-
-                if (temp_item_profileId.StartsWith("fb"))
+                string updatedtext = "";
+                string postmessage = "";
+                string url = "";
+                if (!string.IsNullOrEmpty(tempmsg))
                 {
-                    string updatedtext = "";
-                    string postmessage = "";
-                    string url = "";
-                    if (!string.IsNullOrEmpty(tempmsg))
+                    string[] updatedmessgae = Regex.Split(tempmsg, "<br>");
+                    foreach (var items in updatedmessgae)
                     {
-                        string[] updatedmessgae = Regex.Split(tempmsg, "<br>");
-                        foreach (var items in updatedmessgae)
+                        if (!string.IsNullOrEmpty(items))
                         {
-                            if (!string.IsNullOrEmpty(items))
+                            if (items.Contains("https://") || items.Contains("http://"))
                             {
-                                if (items.Contains("https://") || items.Contains("http://"))
+                                if (string.IsNullOrEmpty(url))
                                 {
-                                    if (string.IsNullOrEmpty(url))
+                                    url = items;
+                                    if (items.Contains("https://"))
                                     {
-                                        url = items;
-                                        if (items.Contains("https://"))
+                                        string links = Utility.getBetween(url + "###", "https", "###");
+                                        links = "https" + links;
+                                        try
                                         {
-                                            string links = Utility.getBetween(url + "###", "https", "###");
-                                            links = "https" + links;
-                                            try
-                                            {
-                                                url = links.Split(' ')[0].ToString();
-                                                link = url;
-                                            }
-                                            catch (Exception)
-                                            {
-                                                url = links;
-                                                link = url;
-                                            }
+                                            url = links.Split(' ')[0].ToString();
+                                            link = url;
                                         }
-                                        if (items.Contains("http://"))
+                                        catch (Exception)
                                         {
-                                            string links = Utility.getBetween(url + "###", "http", "###");
-                                            links = "http" + links;
-                                            try
-                                            {
-                                                url = links.Split(' ')[0].ToString();
-                                                link = url;
-                                            }
-                                            catch (Exception)
-                                            {
-                                                url = links;
-                                                link = url;
-                                            }
+                                            url = links;
+                                            link = url;
                                         }
-
+                                    }
+                                    if (items.Contains("http://"))
+                                    {
+                                        string links = Utility.getBetween(url + "###", "http", "###");
+                                        links = "http" + links;
+                                        try
+                                        {
+                                            url = links.Split(' ')[0].ToString();
+                                            link = url;
+                                        }
+                                        catch (Exception)
+                                        {
+                                            url = links;
+                                            link = url;
+                                        }
                                     }
 
                                 }
-                                if (items.Contains("hhh") || items.Contains("nnn"))
+
+                            }
+                            if (items.Contains("hhh") || items.Contains("nnn"))
+                            {
+                                if (items.Contains("hhh"))
                                 {
-                                    if (items.Contains("hhh"))
-                                    {
-                                        postmessage = postmessage + "\n\r" + items.Replace("hhh", "#");
-                                    }
-                                    else
-                                    {
-                                        postmessage = postmessage + "\n\r" + items;
-                                    }
+                                    postmessage = postmessage + "\n\r" + items.Replace("hhh", "#");
                                 }
                                 else
                                 {
                                     postmessage = postmessage + "\n\r" + items;
                                 }
                             }
-
+                            else
+                            {
+                                postmessage = postmessage + "\n\r" + items;
+                            }
                         }
+
                     }
-                    try
+                }
+                try
+                {
+                    if (!string.IsNullOrEmpty(url))
                     {
-                        if (!string.IsNullOrEmpty(url))
-                        {
-                            // link = url;
-                            //updatedtext = postmessage.Replace(url, "");
-                            updatedtext = postmessage;
-
-                        }
-                        else
-                        {
-                            updatedtext = postmessage;
-                        }
-
+                        // link = url;
+                        //updatedtext = postmessage.Replace(url, "");
+                        updatedtext = postmessage;
 
                     }
-                    catch (Exception ex)
+                    else
                     {
-
+                        updatedtext = postmessage;
                     }
+
+
+                }
+                catch (Exception ex)
+                {
+
+                }
+
+                if (temp_item_profileId.StartsWith("fb"))
+                {                  
                     try
                     {
                         new Thread(delegate ()
@@ -254,7 +254,27 @@ namespace Api.Socioboard.Controllers
                 }
 
 
-                if (temp_item_profileId.StartsWith("tw"))
+               else if (temp_item_profileId.StartsWith("urlfb"))
+                {
+                    try
+                    {
+                        new Thread(delegate ()
+                        {
+                            string prId = temp_item_profileId.Substring(6, temp_item_profileId.Length - 6);
+                            Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                            string ret = Helper.FacebookHelper.UrlComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
+
+                        }).Start();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+
+
+
+                else if (temp_item_profileId.StartsWith("tw"))
                 {
                     try
                     {
@@ -271,7 +291,8 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
-                if (temp_item_profileId.StartsWith("lin"))
+                
+               else if (temp_item_profileId.StartsWith("lin"))
                 {
                     try
                     {
@@ -287,7 +308,9 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
-                if (temp_item_profileId.StartsWith("Cmpylinpage"))
+
+                
+                else if (temp_item_profileId.StartsWith("Cmpylinpage"))
                 {
                     try
                     {
@@ -303,6 +326,7 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
+                
             }
 
             return Ok("Posted");
@@ -471,6 +495,40 @@ namespace Api.Socioboard.Controllers
                         // return Ok("Issue With Facebook Page schedulers");
                     }
                 }
+                if (item.StartsWith("urlfb"))
+                {
+                    try
+                    {
+                        string linkurl = message;
+                        link = linkurl;
+                        string prId = item.Substring(6, item.Length - 6);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, "", Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                        //return Ok("Issue With Facebook schedulers");
+                    }
+                }
+
+                if (item.StartsWith("urlpage"))
+                {
+                    try
+                    {
+                        string linkurl = message;
+                        link = linkurl;
+                        string prId = item.Substring(8, item.Length - 8);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, "", Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                    }
+                    catch (System.Exception ex)
+                    {
+                        _logger.LogError(ex.StackTrace);
+                        //return Ok("Issue With Facebook schedulers");
+                    }
+                }
+
                 if (item.StartsWith("tw"))
                 {
                     try

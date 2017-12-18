@@ -135,7 +135,120 @@ namespace Api.Socioboard.Helper
         }
 
 
-       
+        public static string UrlComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Enum.MediaType mediaType, string profileName, DatabaseRepository dbr, ILogger _logger)
+        {
+
+            string ret = "";
+            FacebookClient fb = new FacebookClient();
+            fb.AccessToken = accessToken;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
+            var args = new Dictionary<string, object>();
+
+            //if (!string.IsNullOrEmpty(message))
+            //{
+            //    args["message"] = message;
+            //}
+            if (profiletype == Domain.Socioboard.Enum.FbProfileType.FacebookProfile)
+            {
+                args["privacy"] = FbUser.SetPrivacy("Public", fb, profileId);
+            }
+            try
+            {
+                if (string.IsNullOrEmpty(link))
+                {
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        if (!imagePath.Contains("mp4") && !imagePath.Contains("mov") && !imagePath.Contains("mpeg") && !imagePath.Contains("wmv") && !imagePath.Contains("avi") && !imagePath.Contains("flv") && !imagePath.Contains("3gp"))
+                        {
+                            Uri u = new Uri(imagePath);
+                            string filename = string.Empty;
+                            string extension = string.Empty;
+                            extension = System.IO.Path.GetExtension(u.AbsolutePath).Replace(".", "");
+                            var media = new FacebookMediaObject
+                            {
+                                FileName = "filename",
+                                ContentType = "image/" + extension
+                            };
+                            var webClient = new WebClient();
+                            byte[] img = webClient.DownloadData(imagePath);
+                            media.SetValue(img);
+                            args["source"] = media;
+                            ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();
+                        }
+                        else
+                        {
+                            Uri u = new Uri(imagePath);
+                            string filename = string.Empty;
+                            string extension = string.Empty;
+                            filename = imagePath.Substring(imagePath.IndexOf("get?id=") + 7);
+                            if (!string.IsNullOrWhiteSpace(filename))
+                            {
+                                extension = filename.Substring(filename.IndexOf(".") + 1);
+                            }
+                            var media = new FacebookMediaObject
+                            {
+                                FileName = filename,
+                                ContentType = "video/" + extension
+                            };
+                            //byte[] img = System.IO.File.ReadAllBytes(imagepath);
+                            var webClient = new WebClient();
+                            byte[] img = webClient.DownloadData(imagePath);
+                            media.SetValue(img);
+                           // args["title"] = message;
+                           // args["description"] = message;
+                            args["source"] = media;
+                            ret = fb.Post("v2.7/" + fbUserId + "/videos", args).ToString();//v2.1 
+                        }
+                    }
+                    else
+                    {
+                       // args["message"] = message;
+                       // ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();
+                    }
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(link))
+                    {
+                        args["link"] = link;
+                    }
+                    if (!string.IsNullOrEmpty(imagePath))
+                    {
+                        args["picture"] = imagePath.Replace("&amp;", "&");
+                    }
+                    ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
+
+                }
+                ScheduledMessage scheduledMessage = new ScheduledMessage();
+                scheduledMessage.createTime = DateTime.UtcNow;
+                scheduledMessage.picUrl = "https://graph.facebook.com/" + fbUserId + "/picture?type=small";//imagePath;
+                scheduledMessage.profileId = profileId;
+                if (profiletype == Domain.Socioboard.Enum.FbProfileType.FacebookProfile)
+                {
+                    scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.Facebook;
+                }
+                else
+                {
+                    scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage;
+                }
+                scheduledMessage.scheduleTime = DateTime.UtcNow;
+                scheduledMessage.shareMessage ="";
+                scheduledMessage.userId = userId;
+                scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
+                scheduledMessage.url = imagePath;//"https://graph.facebook.com/"+ fbUserId + "/picture?type=small";
+                scheduledMessage.mediaType = mediaType;
+                scheduledMessage.socialprofileName = profileName;
+                dbr.Add<ScheduledMessage>(scheduledMessage);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                _logger.LogError(ex.StackTrace);
+            }
+            return ret;
+        }
+
 
         public static string FacebookComposeMessageRss(string message, string accessToken, string FbUserId, string title, string link, string rssFeedId, Helper.AppSettings _appSettings)
         {

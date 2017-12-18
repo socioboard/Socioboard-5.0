@@ -133,6 +133,17 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        [HttpGet("GetInstaUserdetails")]
+        public IActionResult GetInstaUserdetails(long userId, string instagramid)
+        {
+          
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            IList<Domain.Socioboard.Models.Instagramaccounts> Userdata = dbr.Find<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId==(instagramid));
+
+            
+            return Ok(Userdata);
+        }
+
         [HttpGet("GetInstagramFilterFeeds")]
         public IActionResult GetInstagramFilterFeeds(long userId, string instagramId, int skip, int count, string postType)
         {
@@ -203,6 +214,17 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string commentData = Repositories.InstagramRepository.AddInstagramComment(FeedId, Text, InstagramId, groupId, _appSettings, _redisCache, dbr);
             return Ok(commentData);
+        }
+
+        [HttpGet("DeleteinstagramFeed")]
+
+        public IActionResult DeleteinstagramFeed(string profileId, string FeedId)
+        {
+            MongoRepository _DeleteistagramFeeds = new MongoRepository("InstagramFeed", _appSettings);
+            var builders = Builders<Domain.Socioboard.Models.Mongo.InstagramFeed>.Filter;
+            FilterDefinition<Domain.Socioboard.Models.Mongo.InstagramFeed> filter = builders.Eq("FeedId", FeedId);
+            _DeleteistagramFeeds.Delete<Domain.Socioboard.Models.Mongo.InstagramFeed>(filter);
+            return Ok();
         }
     }
 }

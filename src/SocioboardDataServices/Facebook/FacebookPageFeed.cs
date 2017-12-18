@@ -70,12 +70,56 @@ namespace SocioboardDataServices.Facebook
                         catch { }
                         while (apiHitsCount < MaxapiHitsCount)
                         {
-                            SaveFacebookFeeds(fbAcc.AccessToken, fbAcc.FbUserId,fbAcc.FbUserName);
-                            SavePageConversations(fbAcc.AccessToken, fbAcc.FbUserId);
-                            SaveFacebookPageFeed(fbAcc.AccessToken, fbAcc.FbUserId,fbAcc.FbUserName);
-                            SaveFacebookPagePromotionalDetails(fbAcc.AccessToken, fbAcc.FbUserId);
-                            SaveFacebookPageTaggedDetails(fbAcc.AccessToken, fbAcc.FbUserId);
-                            // SavePageNotification(fbAcc.AccessToken, fbAcc.FbUserId);
+                            try
+                            {
+                                SaveFacebookFeeds(fbAcc.AccessToken, fbAcc.FbUserId, fbAcc.FbUserName);
+                            }
+                            catch(Exception ex)
+                            {
+
+                            }
+                            try
+                            {
+                                SavePageConversations(fbAcc.AccessToken, fbAcc.FbUserId);
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                            try
+                            {
+                                SaveFacebookPageFeed(fbAcc.AccessToken, fbAcc.FbUserId, fbAcc.FbUserName);
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                            try
+                            {
+                                SaveFacebookPagePromotionalDetails(fbAcc.AccessToken, fbAcc.FbUserId);
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                            try
+                            {
+                                SaveFacebookPageTaggedDetails(fbAcc.AccessToken, fbAcc.FbUserId);
+                            }
+                            catch (Exception ex)
+                            {
+                                
+                            }
+                            //try
+                            //{
+                            //    // SavePageNotification(fbAcc.AccessToken, fbAcc.FbUserId);
+                            //}
+                            //catch (Exception ex)
+                            //{
+
+                            //}
+
+                            
                         }
                     }
 

@@ -35,8 +35,8 @@
                                 <li><a href="javascript:void(0)" ng-click="ShortSearch('leastretweet', 'Least Retweet')">Least Retweet</a></li>
                             </ul>
                         </div>
-                        <!--<ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">-->
-                        <ul class="collection" style="overflow-y:scroll; height:576px" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+                        <ul class="collection twtfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
+                        <!--<ul class="collection" style="overflow-y:scroll; height:576px" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">-->
                             <li class="collection-item avatar" ng-repeat="twtfeed in lstTwtFeeds">
                                 <img src="{{twtfeed.fromProfileUrl}}" alt="{{twtfeed.fromName}}" class="circle">
                                 <span class="email-title">{{twtfeed.fromName}}</span>
@@ -55,7 +55,7 @@
                                             <i class="fa fa-retweet fa-fw" title="Retweet"></i><span>{{twtfeed.retweetcount | thousandSuffix:1}}</span>
                                         </span>
                                     </div>
-                                    <div class="col l3 s2">
+                                    <div class="col l1 s1">
                                         <span ng-click="twitterfavorite(twtfeed.screenName,twtfeed.profileId,twtfeed.messageId)">
                                             <i class="fa fa-star fa-fw" title="Favorite"></i><span>{{twtfeed.likecount | thousandSuffix:1}}</span>
                                         </span>
@@ -82,6 +82,11 @@
                                         <span ng-click="tasktwtfeedModel(twtfeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
                                             <i class="icon-pin" title="Task"></i>
                                         </span>
+                                    </div>
+                                    <div class="col l1 s1">
+                                        <a ng-click="Deletefeeds(twtfeed.messageId)" class="right black-text">
+                                            <i class="icon-trash" aria-hidden="true" title="Delete"></i>
+                                        </a>
                                     </div>
                                     <div class="col l3 s3">
                                         <a ng-click="openComposeMessage(twtfeed)" class="right black-text">

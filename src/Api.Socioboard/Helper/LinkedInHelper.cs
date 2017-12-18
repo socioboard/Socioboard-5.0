@@ -142,6 +142,128 @@ namespace Api.Socioboard.Helper
 
         }
 
+        public static string UrlPostLinkedInMessage(string ImageUrl, long userid, string comment, string ProfileId, string imagepath, Domain.Socioboard.Enum.MediaType mediaType, string profileName, Helper.Cache _redisCache, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
+        {
+            try
+            {
+
+                if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://") && !string.IsNullOrEmpty(ImageUrl))
+                {
+                    var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                    var endpoint = new ImageEndpoint(client);
+                    IImage image;
+                    using (var fs = new FileStream(imagepath, FileMode.Open))
+                    {
+                        image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                    }
+
+                    var img = image.Link;
+                    string json = "";
+                    Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = Repositories.LinkedInAccountRepository.getLinkedInAccount(ProfileId, _redisCache, dbr);
+                    oAuthLinkedIn _oauth = new oAuthLinkedIn();
+                    _oauth.ConsumerKey = _appSettings.LinkedinApiKey;
+                    _oauth.ConsumerSecret = _appSettings.LinkedinSecretKey;
+                    _oauth.Token = _LinkedInAccount.OAuthToken;
+                    string PostUrl = "https://api.linkedin.com/v1/people/~/shares?format=json";
+                    if (string.IsNullOrEmpty(ImageUrl))
+                    {
+                        json = _oauth.LinkedProfilePostWebRequest("POST", PostUrl, comment);
+                    }
+                    else
+                    {
+                        json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, img);
+                    }
+
+                    if (!string.IsNullOrEmpty(json))
+                    {
+
+                        ScheduledMessage scheduledMessage = new ScheduledMessage();
+                        scheduledMessage.createTime = DateTime.UtcNow;
+                        scheduledMessage.picUrl = _LinkedInAccount.ProfileImageUrl;
+                        scheduledMessage.profileId = ProfileId;
+                        scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.LinkedIn;
+                        scheduledMessage.scheduleTime = DateTime.UtcNow;
+                        scheduledMessage.shareMessage = comment;
+                        scheduledMessage.userId = userid;
+                        scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
+                        scheduledMessage.url = ImageUrl;
+                        scheduledMessage.mediaType = mediaType;
+                        scheduledMessage.socialprofileName = _LinkedInAccount.LinkedinUserName;
+                        dbr.Add<ScheduledMessage>(scheduledMessage);
+
+                        return "posted";
+                    }
+                    else
+                    {
+                        json = "Message not posted";
+                        return json;
+                    }
+                }
+                else
+                {
+                    string json = "";
+                    Domain.Socioboard.Models.LinkedInAccount _LinkedInAccount = Repositories.LinkedInAccountRepository.getLinkedInAccount(ProfileId, _redisCache, dbr);
+                    oAuthLinkedIn _oauth = new oAuthLinkedIn();
+                    _oauth.ConsumerKey = _appSettings.LinkedinApiKey;
+                    _oauth.ConsumerSecret = _appSettings.LinkedinSecretKey;
+                    _oauth.Token = _LinkedInAccount.OAuthToken;
+                    string PostUrl = "https://api.linkedin.com/v1/people/~/shares?format=json";
+                    if (string.IsNullOrEmpty(ImageUrl))
+                    {
+                        json = _oauth.LinkedProfilePostWebRequest("POST", PostUrl, comment);
+                    }
+                    else
+                    {
+                        var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                        var endpoint = new ImageEndpoint(client);
+                        IImage image;
+                        using (var fs = new FileStream(imagepath, FileMode.Open))
+                        {
+                            image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                        }
+
+                        var img = image.Link;
+                        json = _oauth.LinkedProfilePostWebRequestWithImage("POST", PostUrl, comment, img);
+                    }
+
+                    if (!string.IsNullOrEmpty(json))
+                    {
+
+                        ScheduledMessage scheduledMessage = new ScheduledMessage();
+                        scheduledMessage.createTime = DateTime.UtcNow;
+                        scheduledMessage.picUrl = _LinkedInAccount.ProfileImageUrl;
+                        scheduledMessage.profileId = ProfileId;
+                        scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.LinkedIn;
+                        scheduledMessage.scheduleTime = DateTime.UtcNow;
+                        scheduledMessage.shareMessage = comment;
+                        scheduledMessage.userId = userid;
+                        scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
+                        scheduledMessage.url = ImageUrl;
+                        scheduledMessage.mediaType = mediaType;
+                        scheduledMessage.socialprofileName = _LinkedInAccount.LinkedinUserName;
+                        dbr.Add<ScheduledMessage>(scheduledMessage);
+
+                        return "posted";
+                    }
+                    else
+                    {
+                        json = "Message not posted";
+                        return json;
+                    }
+                }
+
+            }
+
+
+            catch (Exception ex)
+            {
+
+                return "Message not posted";
+            }
+
+
+        }
+
         public static string PostLinkedInCompanyPagePost(string upload,string ImageUrl, long userid, string comment, string LinkedinPageId, Domain.Socioboard.Enum.MediaType mediaType, string profileName, Helper.Cache _redisCache,Model.DatabaseRepository dbr,Helper.AppSettings _appSettings)
         {
            try
@@ -269,6 +391,135 @@ namespace Api.Socioboard.Helper
             }
                
         }
+
+        public static string UrlPostLinkedInCompanyPagePost(string upload, string ImageUrl, long userid, string comment, string LinkedinPageId, Domain.Socioboard.Enum.MediaType mediaType, string profileName, Helper.Cache _redisCache, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        {
+            try
+            {
+                if (!ImageUrl.Contains("https://") && !ImageUrl.Contains("http://") && !string.IsNullOrEmpty(ImageUrl))
+                {
+                    var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                    var endpoint = new ImageEndpoint(client);
+                    IImage image;
+                    using (var fs = new FileStream(ImageUrl, FileMode.Open))
+                    {
+                        image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                    }
+                    var img = image.Link;
+                    string json = "";
+                    Domain.Socioboard.Models.LinkedinCompanyPage objlicompanypage = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(LinkedinPageId, _redisCache, dbr);
+                    oAuthLinkedIn Linkedin_oauth = new oAuthLinkedIn();
+                    Linkedin_oauth.ConsumerKey = _appSettings.LinkedinApiKey;
+                    Linkedin_oauth.ConsumerSecret = _appSettings.LinkedinSecretKey;
+                    Linkedin_oauth.Verifier = objlicompanypage.OAuthVerifier;
+                    Linkedin_oauth.TokenSecret = objlicompanypage.OAuthSecret;
+                    Linkedin_oauth.Token = objlicompanypage.OAuthToken;
+                    Linkedin_oauth.Id = objlicompanypage.LinkedinPageId;
+                    Linkedin_oauth.FirstName = objlicompanypage.LinkedinPageName;
+                    Company company = new Company();
+                    if (string.IsNullOrEmpty(ImageUrl))
+                    {
+                        json = company.SetPostOnPage(Linkedin_oauth, objlicompanypage.LinkedinPageId, comment);
+                    }
+                    else
+                    {
+                        json = company.SetPostOnPageWithImage(Linkedin_oauth, objlicompanypage.LinkedinPageId, img, comment);
+                    }
+                    if (!string.IsNullOrEmpty(json))
+                    {
+
+                        ScheduledMessage scheduledMessage = new ScheduledMessage();
+                        scheduledMessage.createTime = DateTime.UtcNow;
+                        scheduledMessage.picUrl = objlicompanypage.LogoUrl;
+                        scheduledMessage.profileId = objlicompanypage.LinkedinPageId;
+                        scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage;
+                        scheduledMessage.scheduleTime = DateTime.UtcNow;
+                        scheduledMessage.shareMessage = comment;
+                        scheduledMessage.userId = userid;
+                        scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
+                        scheduledMessage.url = upload;
+                        scheduledMessage.mediaType = mediaType;
+                        scheduledMessage.socialprofileName = objlicompanypage.LinkedinPageName;
+                        dbr.Add<ScheduledMessage>(scheduledMessage);
+
+                        return "posted";
+                    }
+                    else
+                    {
+                        json = "Message not posted";
+                        return json;
+                    }
+                }
+                else
+                {
+                    string json = "";
+                    Domain.Socioboard.Models.LinkedinCompanyPage objlicompanypage = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(LinkedinPageId, _redisCache, dbr);
+                    oAuthLinkedIn Linkedin_oauth = new oAuthLinkedIn();
+                    Linkedin_oauth.ConsumerKey = _appSettings.LinkedinApiKey;
+                    Linkedin_oauth.ConsumerSecret = _appSettings.LinkedinSecretKey;
+                    Linkedin_oauth.Verifier = objlicompanypage.OAuthVerifier;
+                    Linkedin_oauth.TokenSecret = objlicompanypage.OAuthSecret;
+                    Linkedin_oauth.Token = objlicompanypage.OAuthToken;
+                    Linkedin_oauth.Id = objlicompanypage.LinkedinPageId;
+                    Linkedin_oauth.FirstName = objlicompanypage.LinkedinPageName;
+                    Company company = new Company();
+                    if (string.IsNullOrEmpty(ImageUrl))
+                    {
+                        json = company.SetPostOnPage(Linkedin_oauth, objlicompanypage.LinkedinPageId, comment);
+                    }
+                    else
+                    {
+                        var client = new ImgurClient("5f1ad42ec5988b7", "f3294c8632ef8de6bfcbc46b37a23d18479159c5");
+                        var endpoint = new ImageEndpoint(client);
+                        IImage image;
+                        using (var fs = new FileStream(ImageUrl, FileMode.Open))
+                        {
+                            image = endpoint.UploadImageStreamAsync(fs).GetAwaiter().GetResult();
+                        }
+                        var img = image.Link;
+                        json = company.SetPostOnPageWithImage(Linkedin_oauth, objlicompanypage.LinkedinPageId, img, comment);
+                    }
+                    if (!string.IsNullOrEmpty(json))
+                    {
+
+                        ScheduledMessage scheduledMessage = new ScheduledMessage();
+                        scheduledMessage.createTime = DateTime.UtcNow;
+                        scheduledMessage.picUrl = objlicompanypage.LogoUrl;
+                        scheduledMessage.profileId = objlicompanypage.LinkedinPageId;
+                        scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage;
+                        scheduledMessage.scheduleTime = DateTime.UtcNow;
+                        scheduledMessage.shareMessage = comment;
+                        scheduledMessage.userId = userid;
+                        scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
+                        scheduledMessage.url = upload;
+                        scheduledMessage.mediaType = mediaType;
+                        scheduledMessage.socialprofileName = objlicompanypage.LinkedinPageName;
+                        dbr.Add<ScheduledMessage>(scheduledMessage);
+
+                        return "posted";
+                    }
+                    else
+                    {
+                        json = "Message not posted";
+                        return json;
+                    }
+                }
+
+
+                //}
+                //catch(Exception ex)
+                //{
+                //    return "Message not posted";
+                //}
+
+            }
+            catch (Exception ex)
+            {
+                return "Message not posted";
+            }
+
+        }
+
 
         public static string GetAccessToken(string Code, Helper.AppSettings _appSettings)
         {

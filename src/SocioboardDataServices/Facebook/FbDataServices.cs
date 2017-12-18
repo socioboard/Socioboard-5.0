@@ -16,7 +16,7 @@ namespace SocioboardDataServices.Facebook
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookProfile).ToList();
-                   // lstFbAcc = lstFbAcc.Where(t => t.FbUserId.Contains("1147423001968179")).ToList();
+                   
                     FbFeeds fbfeeds = new FbFeeds();
                     foreach (var item in lstFbAcc)
                     {
@@ -50,7 +50,7 @@ namespace SocioboardDataServices.Facebook
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
-                   // lstFbAcc = lstFbAcc.Where(t => t.FbUserId.Contains("1452799044811364")).ToList();
+                  
                     foreach (var item in lstFbAcc)
                     {
                         try
@@ -59,7 +59,7 @@ namespace SocioboardDataServices.Facebook
                             FacebookPageFeed.updateFacebookPageFeeds(item);
                             Console.WriteLine(item.FbUserName + "Updated");
                         }
-                        catch
+                        catch(Exception ex)
                         {
                             Thread.Sleep(600000);
                         }

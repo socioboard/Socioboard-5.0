@@ -595,6 +595,23 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
           }
         //end contact search
 
+    //delete feeds
+          $scope.Deletefeeds = function (id) {
+              debugger;
+              var messageid = id;
+              $http.get(apiDomain + '/api/Twitter/DeleteTwtFeed?profileId=' + $stateParams.profileId + '&messageId=' + messageid)
+                          .then(function (response) {
+                              window.location.reload();
+                              //$scope.preloadmoretweets = true;
+                              //if (response.data == null) {
+                              //    TweetsreachLast = true;
+                              //}
+                          //}, function (reason) {
+                              //$scope.error = reason.data;
+                          });
+              // end codes to load  recent Tweets
+          }
+        //end 
     });
 });
 

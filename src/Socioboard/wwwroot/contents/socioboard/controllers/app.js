@@ -389,7 +389,6 @@ SocioboardApp.controller('SidebarController', function ($rootScope, $scope, $htt
         }
 
         $scope.getYtGroupProfileSidebar = function () {
-            debugger;
             $http.get(apiDomain + '/api/YoutubeGroup/GetYtGroupChannel?userId=' + $rootScope.user.Id)
                                  .then(function (response) {
                                      $rootScope.lstYtGrpMembersSidebar = response.data;
@@ -1963,7 +1962,8 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                             '../contents/socioboard/global/plugins/amcharts/amcharts/amcharts.js',
                             '../contents/socioboard/global/plugins/amcharts/amcharts/serial.js',
                             '../contents/socioboard/global/plugins/amcharts/amcharts/pie.js',
-                            '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                            //'../contents/socioboard/global/plugins/amcharts/amcharts/themes/light.js',
+                             '../contents/socioboard/global/plugins/amcharts/amcharts/themes/light1.js',
                             '../contents/socioboard/js/admin/plugins.js',
                             '../contents/socioboard/controllers/fbpagedetreportcontroller.js'
                             //'../contents/socioboard/js/admin/moment.min.js'

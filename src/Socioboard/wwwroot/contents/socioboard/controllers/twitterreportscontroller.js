@@ -19,7 +19,8 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
             //codes to load  instgarm  profiles start
             $http.get(apiDomain + '/api/TwitterReports/GettwtfollowfollowingGraph?groupId=' + $rootScope.groupId)
                           .then(function (response) {
-                            $scope.GettwtfollowfollowingGraph = response.data;
+                              $scope.GettwtfollowfollowingGraph = response.data;
+                              console.log("following", $scope.GettwtfollowfollowingGraph);
                               $scope.generatefollowfollowingGraphs();
                           }, function (reason) {
                               $scope.error = reason.data;
@@ -415,13 +416,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
             var count = 0;
             $scope.GettwtfollowfollowingGraph();
             $scope.getprofiledata();
-            //angular.forEach($rootScope.lstProfiles, function (value, key) {
-            //   if (count == 0) {
-            //        $scope.GettwtfollowfollowingGraph(value.profileOwnerId);
-            //        $scope.getprofiledata(value.profileOwnerId)
-            //        count = count + 1;
-            //    }
-            //});
+           
         }
         $scope.getOnPageLoadReports();
         

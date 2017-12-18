@@ -85,7 +85,7 @@
 	animation-delay: 0.7095s;
 		-o-animation-delay: 0.7095s;
 		-ms-animation-delay: 0.7095s;
-		-webkit-animation-delay: 0.7095s;
+	    	-webkit-animation-delay: 0.7095s;
 		-moz-animation-delay: 0.7095s;
 }
 
@@ -374,26 +374,25 @@
     <section id="content">
         <!--start container-->
         <div class="container">
-            <div class="row">
-                <!--<div class="col l2 m2 s12 center">
-                    <img src="https://instagram.fblr2-1.fna.fbcdn.net/t51.2885-19/s150x150/21819559_926472614176639_3169016111542829056_n.jpg" class="responsive-img circle margin-top-10">
+            <div class="row no-space">
+                <div class="col l2 m2 s12 center">                  
+                    <img src={{detailsuser.profileUrl}} class="responsive-img circle margin-top-10">
                 </div>
                 <div class="col l5 m5 s12">
-                    <h5 class="grey-text text-darken-4">Chanchal Santra</h5>
-                    <h6>posts : <strong class="grey-text text-darken-1">99</strong></h6>
-                    <h6>followers : <strong class="grey-text text-darken-1">99</strong></h6>
-                    <h6>following : <strong class="grey-text text-darken-1">99</strong></h6>
-                    <h6>Chanchal Santra Design is a FUNNY word. 🙄 www.behance.net/chanchalsantra</h6>
-                </div>-->
-                <div class="col s12 margin-top-10 ">
-                    <div class="right">
+                    <h5 class="grey-text text-darken-4 margin-top-20">{{detailsuser.insUserName}}</h5>
+                    <h6>posts : <strong class="grey-text text-darken-1">{{detailsuser.totalImages}}</strong></h6>
+                    <h6>followers : <strong class="grey-text text-darken-1">{{detailsuser.followers}}</strong></h6>
+                    <h6>following : <strong class="grey-text text-darken-1">{{detailsuser.followedBy}}</strong></h6>
+                    <h6>{{detailsuser.bio}}</h6>
+                </div>
+                <div class="col s12 m5 l5 ">
+                    <div class="right  margin-top-20">
                         <a class="dropdown-button btn white-text btn_style black ng-binding" href="javascript:void(0)" data-activates="dropdownFilter" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">All Posts</a>
                         <ul id="dropdownFilter" class="dropdown-content" style="white-space: nowrap; position: absolute; top: 20px; left: 678.484px; opacity: 1; display: none;">
                             <li><a href="javascript:void(0)" style="color:black"><strong>Filter</strong></a></li>
                             <li><a href="javascript:void(0)" ng-click="filterSearch('image', 'Image')">Image posts</a></li>
                             <li><a href="javascript:void(0)" ng-click="filterSearch('video', 'Video')">Video posts</a></li>
                         </ul>
-
                         <a class="dropdown-button white-text btn btn_style black ng-binding" href="javascript:void(0)" data-activates="dropdownSort" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Popular</a>
                         <ul id="dropdownSort" class="dropdown-content" style="white-space: nowrap; position: absolute; top: 20px; left: 587.438px; opacity: 1; display: none;">
                             <li><a href="javascript:void(0)" style="color:black"><strong>Popular</strong></a></li>
@@ -405,16 +404,10 @@
                         <a class="white-text btn btn_style black" ng-click="ReLoadingTopFeeds()" title="Recent feeds" href="javascript:void(0)" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a>
                         <span class="right">&nbsp;</span>
                     </div>
-
-                    <!--<div class="left">
-                        <input id="tagSearch" placeholder="search Tag" class="" type="text">
-                        <a ng-click="searchtag()" class="btn">
-                            <i class="fa fa-search"></i>
-                        </a>
-
-                    </div>-->
                 </div>
-                <br /><br /><br /><br />
+            </div>
+            <div class="row no-space">
+                <br /><br />
                 <div class="center">
                     <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No post to display<br /></h6>
                 </div>
@@ -492,17 +485,31 @@
                                     <!-- <a class="tooltipped secondary-content" data-position="left">{{inscomment.commentDate}}</a>-->
                                 </li>
                             </ul>
-                            <div class="input-field col s9">
-                                <input id="postcomment" placeholder="Add a comment.." class="" type="text">
-                                <!--<label for="postcomment" class="active">Add a comment..</label>-->
 
+                            <div class="row no-space">
+                                <div class="col l6 s6">
+                                    <a ng-click="Deletefeeds(feeds.feedId)" class="black-text">
+                                        <i class="icon-trash" aria-hidden="true" title="Delete"></i>
+                                    </a>
+                                </div>
+                                <div class="col l6 s6">
+                                        <i class="icon-heart red-text"  ng-if="feeds.isLike==1" ng-click="InstagramLikeUnLike(feeds.likeCount,feeds.isLike,feeds.feedId,feeds.instagramId)"></i>
+                                        <i class="icon-heart red-text"  ng-if="feeds.isLike==0" ng-click="InstagramLikeUnLike(feeds.likeCount,feeds.isLike,feeds.feedId,feeds.instagramId)"></i>
+                                </div>
                             </div>
-                            <div ng-show="dispbtn" class="input-field col s1" >
-                                <a class="btn btn_style btn_round" ng-click="AddInstagramComment(feeds.feedId,feeds.instagramId)">send</a>
-                            </div>
-                            <div ng-show="!dispbtn" class="input-field col s1">
-                                <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
-                            </div>
+                            <div class="row no-space">
+                                <div class="input-field col s9">
+                                    <input id="postcomment" placeholder="Add a comment.." class="" type="text">
+                                    <!--<label for="postcomment" class="active">Add a comment..</label>-->
+
+                                </div>
+                                <div ng-show="dispbtn" class="input-field col s1">
+                                    <a class="btn btn_style btn_round" ng-click="AddInstagramComment(feeds.feedId,feeds.instagramId,feeds.type)">send</a>
+                                </div>
+                                <div ng-show="!dispbtn" class="input-field col s1">
+                                    <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                                </div>
+                             </div>
                         </div>
                     </div>
                 </div>
@@ -533,18 +540,33 @@
                                     <!-- <a class="tooltipped secondary-content" data-position="left">{{inscomment.commentDate}}</a>-->
                                 </li>
                             </ul>
-                            <div class="input-field col s10">
-                                <input id="postcomment" placeholder="Add a comment.." class="" type="text">
-                                <!--<label for="postcomment" class="active">Add a comment..</label>-->
+                            <div class="row no-space">
+                                <div class="col l6 s6">
+                                    <a ng-click="Deletefeeds(feeds.feedId)" class="black-text">
+                                        <i class="icon-trash" aria-hidden="true" title="Delete"></i>
+                                    </a>
+                                </div>
+                                <div class="col l6 s6">
+                                    <a class="red-text">
+                                        <i class="icon-heart" aria-hidden="true" title="Like"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row no-space">
+                                <div class="input-field col s10">
+                                    <input id="postvideocomment" placeholder="Add a comment.." class="" type="text">
+                                    <!--<label for="postcomment" class="active">Add a comment..</label>-->
 
-                            </div>
-                            <div ng-show="dispbtn" class="input-field col s1">
-                                <a class="btn btn_style btn_round" ng-click="AddInstagramComment(feeds.feedId,feeds.instagramId)">send</a>
-                            </div>
-                            <div ng-show="!dispbtn" class="input-field col s1">
-                                <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
-                            </div>
-                        </div>
+                                </div>
+                                <div ng-show="dispbtn" class="input-field col s1">
+                                    <a class="btn btn_style btn_round" ng-click="AddInstagramComment(feeds.feedId,feeds.instagramId,feeds.type)">send</a>
+                                </div>
+                                <div ng-show="!dispbtn" class="input-field col s1">
+                                    ut
+                                    <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                                </div>
+                             </div>                                
+                         </div>
                     </div>
                 </div>
             </div>
@@ -559,7 +581,7 @@
   $('.instfeeds').slimScroll({
         color: '#FAB51C',
         size: '10px',
-        height: '300px',
+        height: '250px',
         alwaysVisible: true,
         allowPageScroll: true
     });

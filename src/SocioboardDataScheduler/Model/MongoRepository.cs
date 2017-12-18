@@ -27,9 +27,6 @@ namespace SocioboardDataServices.Model
 
             _db = client.GetDatabase(AppSettings.LiveMongoDbName);
 
-            //MongoClient client = new MongoClient(AppSettings.ServMongoDbConnectionString);
-
-            //_db = client.GetDatabase(AppSettings.ServMongoDbName);
 
             this.collecionName = CollectionName;
             

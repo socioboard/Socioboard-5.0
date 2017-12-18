@@ -465,5 +465,16 @@ namespace Api.Socioboard.Controllers
             return Ok(lstConveSugg);
         }
 
+        [HttpGet("DeleteTwtFeed")]
+
+        public IActionResult deleteTwtFeed(string profileId ,string messageId)
+        {
+            MongoRepository _DeleteTwtFeeds = new MongoRepository("MongoTwitterFeed", _appSettings);
+            var builders = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>.Filter;
+            FilterDefinition<Domain.Socioboard.Models.Mongo.MongoTwitterFeed> filter = builders.Eq("messageId", messageId);
+            _DeleteTwtFeeds.Delete<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>(filter);
+            return Ok();
+        }
+
     }
 }

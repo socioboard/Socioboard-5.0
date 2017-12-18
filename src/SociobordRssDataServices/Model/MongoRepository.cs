@@ -27,9 +27,7 @@ namespace SociobordRssDataServices.Model
 
             _db = client.GetDatabase("");
 
-            //MongoClient client = new MongoClient("mongodb://Socioboard3user:sb8520R$lRo0@173.192.35.244:27017/Socioboard3");
-
-            //_db = client.GetDatabase("Socioboard3");
+         
 
             this.collecionName = CollectionName;
             

@@ -12,13 +12,11 @@ namespace SocioboardDataServices.Helper
 
         public const string RedisConfiguration = "127.0.0.1:6379";
         public const string NhibernateFilePath = "";
-        //D:\SBPROJECT\Developer\src\SocioboardDataServices
+        
         public const string MongoDbConnectionString = "";
         public const string MongoDbName = "";
 
-        //public const string MongoDbConnectionString = "mongodb://localhost/admin";
-        //public const string MongoDbName = "Socioboard3";
-
+     
 
         //Start facebook App Creds
         public const string FacebookClientId = "";

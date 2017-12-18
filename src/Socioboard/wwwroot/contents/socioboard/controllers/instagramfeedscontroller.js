@@ -25,23 +25,21 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=12')
                           .then(function (response) {
-                              // $scope.lstProfiles = response.data;
-                              //$scope.lstinsFeeds = response.data;
-                               if (response.data == null) {
+                              if (response.data == null) {
                                   reachLast = true;
-                               }
-                               $scope.lstinsFeeds = response.data;
-                               //$scope.date($scope.lstinFeeds);
-                               //$scope.reloadFeeds();
-                               $scope.preloadmorefeeds = true;
-                               $scope.dropCalled = true;
-                               setTimeout(function () {
-                                   $scope.callDropmenu();
-                               }, 1000);
-                             
+                              }
+                              $scope.lstinsFeeds = response.data;
+                              $scope.preloadmorefeeds = true;
+                              $scope.dropCalled = true;
+                              $scope.userdetails();
+                              setTimeout(function () {
+                                  $scope.callDropmenu();
+                              }, 1000);
+
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
+          
             // end codes to load  recent Feeds
         }
        
@@ -56,10 +54,14 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             $scope.LoadTopFeeds();
         }
 
-          //$scope.reloadFeeds = function () {
-          //    setTimeout(function () { $scope.LoadTopFeeds(); }, 10000);
-          //}
-
+        $scope.userdetails = function () {
+            debugger;
+            $http.get(apiDomain + '/api/Instagram/GetInstaUserdetails?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id)
+                          .then(function (response) {
+                              debugger;
+                              $scope.detailsuser = response.data[0];
+                          });
+        }
 
         $scope.listData = function () {
 
@@ -178,11 +180,16 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             // end codes to like Feeds
         }
        
-        $scope.AddInstagramComment = function (FeedId, InstagramId)
-
+        $scope.AddInstagramComment = function (FeedId, InstagramId ,type)
+           
         {
-             
-            var text = $('#postcomment').val();
+            if (type != "image")
+            {
+                var text = $('#postvideocomment').val();
+            } else
+            {
+                var text = $('#postcomment').val();
+            }
             if (/\S/.test(text)) {
             var updatetitle = "";
 
@@ -208,6 +215,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                                   $scope.LoadTopFeeds();
                                   swal('Posted');
                                   $('#postcomment').val("");
+                                  $('#postvideocomment').val("");
                                   window.location.reload();
                               }, function (reason) {
                                   $scope.error = reason.data;
@@ -260,6 +268,23 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                 alignment: 'right' // Displays dropdown with edge aligned to the left of button
             });
         }
+
+        $scope.Deletefeeds = function (id) {
+            debugger;
+            var Feedid = id;
+            $http.get(apiDomain + '/api/Instagram/DeleteinstagramFeed?profileId=' + $stateParams.profileId + '&FeedId=' + Feedid)
+                        .then(function (response) {
+                            window.location.reload();
+                            //$scope.preloadmoretweets = true;
+                            //if (response.data == null) {
+                            //    TweetsreachLast = true;
+                            //}
+                            //}, function (reason) {
+                            //$scope.error = reason.data;
+                        });
+            // end codes to load  recent Tweets
+        }
+        //end 
 
         $scope.addTask = function (feedTableType) {
 

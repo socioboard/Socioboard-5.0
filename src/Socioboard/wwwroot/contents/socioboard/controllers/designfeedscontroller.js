@@ -202,7 +202,7 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
             {
                 var message = {
                    // "shareMessage": schedulemessage.message,
-                    "picUrl": schedulemessage.postImgUrl,
+                   // "picUrl": schedulemessage.postImgUrl,
                      "url": schedulemessage.postUrl,
               
                 };

@@ -112,18 +112,20 @@ namespace Api.Socioboard.Repositories
                         List<Domain.Socioboard.Models.Facebookaccounts> lstacc = new List<Domain.Socioboard.Models.Facebookaccounts>();
                         var randomColor = String.Format("#{0:X6}", random.Next(0x1000000));
                         Domain.Socioboard.Models.Mongo.totalFacebookpagefans fbreportData = new totalFacebookpagefans();
-                        string fansCount = lstfbfanpage.ToList().Where(t => t.pageId == lstcolordata.pageId).Sum(t => Convert.ToInt64(t.perDayLikes)).ToString();
+                        // string fansCount = lstfbfanpage.ToList().Where(t => t.pageId == lstcolordata.pageId).Sum(t => Convert.ToInt64(t.perDayLikes)).ToString();
+
                         lstacc = lstfanpageacc.Where<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == lstcolordata.pageId).ToList();
                         //lstFbAcc = lstFbAcc.Where(t => t.FbUserId.Contains("1842605449304385")).ToList();
 
 
                         fbreportData.startdate = dayStart;
                         fbreportData.endtdate = dayEnd;
-                        fbreportData.totalfans = fansCount;
+                        fbreportData.totalfans = lstcolordata.totalLikes;
                         fbreportData.profileId = lstcolordata.pageId;
                         fbreportData.facebookPagename = lstacc.First().FbUserName;
                         fbreportData.profilepic = lstacc.First().ProfileUrl;
                         fbreportData.colors = Convert.ToString(randomColor);
+
                         reportdata.Add(fbreportData);
                     }
                     if (lstfbfanpage.Count > 0)
@@ -205,7 +207,16 @@ namespace Api.Socioboard.Repositories
                         Domain.Socioboard.Models.Mongo.totalfbPagePostDetails fbreportData = new totalfbPagePostDetails();
                         string comments = lstfacebookpagepost.ToList().Where(t => t.PageId == lstcolordata.PageId).Sum(t => Convert.ToInt64(t.Comments)).ToString();
                         string likes = lstfacebookpagepost.ToList().Where(t => t.PageId == lstcolordata.PageId).Sum(t => Convert.ToInt64(t.Likes)).ToString();
-                        //string posts = lstfacebookpagepost.ToList().Where(t => t.PageId == lstcolordata.PageId).Count(t => Convert.ToBoolean(t.PageId)).ToString();
+                        string posts = null;
+                        try
+                        {
+                            posts = lstfacebookpagepost.ToList().Where(t => t.PageId == lstcolordata.PageId).Count(t => Convert.ToBoolean(int.Parse(t.PostId))).ToString();
+
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
                         string talkings = lstfacebookpagepost.ToList().Where(t => t.PageId == lstcolordata.PageId).Sum(t => Convert.ToInt64(t.Talking)).ToString();
                         string shares = lstfacebookpagepost.ToList().Where(t => t.PageId == lstcolordata.PageId).Sum(t => Convert.ToInt64(t.Shares)).ToString();
 
