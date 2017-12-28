@@ -445,7 +445,7 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         //$scope.fetchYTChannels();
 
         $scope.deleteProfile = function (profileId) {
-
+          
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to send any message via this account!",
@@ -455,31 +455,61 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 confirmButtonText: "Yes, delete it!",
                 closeOnConfirm: false
             },
+
             function () {
-
-
-                $http({
-                    method: 'POST',
-                    url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
-                }).then(function (response) {
-                    if (response.data == "Deleted") {
-                        // swal("Deleted!", "Your profile has been deleted", "Success");
-                        swal("Deleted!", "Account is deleted", "success");
-                    }
-                    window.location.reload();
-                });
-                //    else {
-                //        //  swal("Deleted!", response.data, "success");
-                //        swal("Deleted!","success");
-                //    }
-
-                //}, function (reason) {
-                //    // swal("Deleted!", reason, "success");
-                //    swal("Deleted!","success");
-                //});
-
-                //todo: code to delete profile
+                $scope.chk(profileId);
+                if ($scope.isprimacc == false) {
+                    
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                    }).then(function (response) {
+                        if (response.data == "Deleted") {
+                            // swal("Deleted!", "Your profile has been deleted", "Success");
+                            swal("Deleted!", "Account is deleted", "success");
+                        }
+                        window.location.reload();
+                    });
+                }
+                if ($scope.isprimacc == true) {
+                    swal("You can't delete primary account");
+                  }                
             });
+        }
+
+        $scope.chk = function (profileId) {
+            debugger;
+            $http({
+                method: 'POST',
+                url: apiDomain + '/api/GroupProfiles/IsPrimaryAcc?userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+            }).then(function (response) {
+                debugger;
+                if (response.data == "Primary Account") {
+                    $scope.isprimacc = true;
+                }
+                else {
+                    $scope.isprimacc = false;
+                }
+            });
+        }
+
+        $scope.delconfprimaryacc = function (profileId) {
+            debugger;
+            $http({
+                method: 'POST',
+                url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+            }).then(function (response) {
+                if (response.data == "Deleted") {
+                    // swal("Deleted!", "Your profile has been deleted", "Success");
+                    swal("Deleted!", "Account is deleted", "success");
+                }
+                window.location.reload();
+            });
+        }
+
+
+        $scope.isprimaryacc = function (profileId) {
+           
         }
 
         $scope.deleteGpProfile = function (profileId) {
@@ -558,22 +588,12 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
                 }).then(function (response) {
                     if (response.data == "Deleted") {
-                        // swal("Deleted!", "Your profile has been deleted", "Success");
+                        
                         swal("Deleted!", "Account is deleted", "success");
                     }
                     window.location.reload();
                 });
-                //    else {
-                //        //  swal("Deleted!", response.data, "success");
-                //        swal("Deleted!","success");
-                //    }
-
-                //}, function (reason) {
-                //    // swal("Deleted!", reason, "success");
-                //    swal("Deleted!","success");
-                //});
-
-                //todo: code to delete profile
+              
             });
         }
 

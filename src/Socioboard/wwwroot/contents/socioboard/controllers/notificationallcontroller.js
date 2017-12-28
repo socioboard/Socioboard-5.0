@@ -26,10 +26,26 @@ SocioboardApp.controller('NotificationAllController', function ($rootScope, $sco
         }
         $scope.LoadAllNotifications();
 
-        $scope.loadmore = function () {
+        $scope.changepass = function () {
 
-            
+            $http.get(apiDomain + '/api/Notifications/ChangePasswordDetail?userId=' + $rootScope.user.Id )
+                              .then(function (response) {
+                                  $scope.lstChangePass = response.data;
+                                  console.log($scope.lstChangePass);
+                                  var abc = $scope.lstChangePass;
+                                
+                                  //$scope.notifycount = $scope.notifycount + 10;
+                                 
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+            // end codes to load  recent Feeds
+        }
+        $scope.changepass();
 
+
+        // start codes to load  recent Feeds
+        $scope.loadmore = function () {       
             $("#load_more_toggle").addClass("hide");
             $http.get(apiDomain + '/api/Notifications/FindAllNotifications?userId=' + $rootScope.user.Id + '&skip=' + $scope.notifycount + '&count=' + 10)
                               .then(function (response) {
@@ -42,9 +58,8 @@ SocioboardApp.controller('NotificationAllController', function ($rootScope, $sco
                                   })
                               }, function (reason) {
                                   $scope.error = reason.data;
-                              });
-            // end codes to load  recent Feeds
-
+                              });         
         }
+        // end codes to load  recent Feeds
     });
 });

@@ -32,7 +32,8 @@ namespace SocioboardDataServices.Helper
         public const string googleApiKey_TestApp = "";
         //End Google App Creds 
 
-        //Instagram App Creds Start""; "https://api.instagram.com/oauth/authorize/";
+        //Instagram App Creds Start"";
+        public const string instaAuthUrl = "";
         public const string instaClientId = "";
         public const string instaClientSecret = "";
         public const string instaReturnUrl = "";

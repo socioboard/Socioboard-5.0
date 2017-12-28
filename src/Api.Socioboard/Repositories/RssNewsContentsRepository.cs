@@ -205,34 +205,7 @@ namespace Api.Socioboard.Repositories
 
                     }
                 }
-                //if (responce_Baskar.Contains(keywordslist))
-                //{
-                //    try
-                //    {
-                //        string data = obj_reqest.getBetween(responce_Baskar, "<th>RSS Path</th>", "<div class=\"rss-right\">");
-                //        string[] report = Regex.Split(data, "<tr>");
-                //        foreach (string item in report)
-                //        {
-                //            try
-                //            {
-                //                if (item.Contains(keywordslist))
-                //                {
-                //                    string[] value = Regex.Split(item, "<td>");
-                //                    url[3] = obj_reqest.getBetween(value[2], "href=\"", "\"");
-                //                    break;
-                //                }
-                //            }
-                //            catch (Exception ex)
-                //            {
-
-                //            }
-                //        }
-                //    }
-                //    catch (Exception ex)
-                //    {
-
-                //    }
-                //}
+                
 
                 foreach (var itemurl in url)
                 {

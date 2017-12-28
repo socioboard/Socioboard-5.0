@@ -226,5 +226,24 @@ namespace Api.Socioboard.Controllers
             _DeleteistagramFeeds.Delete<Domain.Socioboard.Models.Mongo.InstagramFeed>(filter);
             return Ok();
         }
+
+        [HttpGet("Searchinsta")]
+        public IActionResult Searchinsta(string instagramId, string qury,string count)
+        {
+            count = "1";
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string Searchdata = Repositories.InstagramRepository.Searchbyname(qury, instagramId, count, _appSettings, _redisCache, dbr);
+            return Ok(Searchdata);
+
+        }
+
+        [HttpPost("followpeople")]
+        public IActionResult followpeople(string instagramId ,string followingid)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string Searchdata = Repositories.InstagramRepository.Followpeople( instagramId, followingid, _appSettings, _redisCache, dbr);
+            return Ok(Searchdata);
+
+        }
     }
 }

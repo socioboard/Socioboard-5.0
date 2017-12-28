@@ -68,10 +68,12 @@
                                     <ul class="collection" style="border: 0px solid #e0e0e0;">
                                         <li class="grey-text text-darken-4"><i class="fa fa-dot-circle-o fa-fw" aria-hidden="true"></i>Primary Account</li>
                                         <li class="collection-item avatar" >
-                                            <div class="col s12" ng-if="userdetail.password!=null"> <!--ng-if="userdetail.emailValidateToken!='Facebook' && userdetail.emailValidateToken!='Google'">-->
-                                                <div class="left">
-                                                    <img src="{{userdetail.profilePicUrl}}" class="responsive-img profilePic">
-                                                    <!--<img ng-if="userdetail.emailValidateToken=='Facebook'" class="responsive-img msgiconPoss" src="/contents/socioboard/images/fb_icon.png">-->
+                                            <div class="col s12" ng-if="userdetail.password!=null"> 
+                                                <div ng-if="profilePicExist == 1" class="left">
+                                                    <img src="{{userdetail.profilePicUrl}}" class="responsive-img profilePic">                                                   
+                                                </div>
+                                                <div ng-if="profilePicExist == 0" class="left">
+                                                    <img src="{{user.ProfilePicUrl}}" class="responsive-img profilePic">
                                                 </div>
                                                 <div style="display: inline-block; margin-left:20px;">
                                                     <span>User login emailid</span><br />
@@ -98,24 +100,7 @@
                                                     <span>{{userdetail.emailId}}</span> 
                                                 </div>              
                                             </div>
-                                            <!--<div class="secondary-content margin-top-10">
-                                                <div class="switch" ng-if="userdetail.emailValidateToken=='Facebook'">
-                                                    <label  >
-                                                        Off
-                                                        <input type="checkbox"   ng-disabled="false" ng-model="socailValfb"  ng-click="socialLoginPrimaryUser(socailVal)">
-                                                        <span class="lever"></span>
-                                                        On
-                                                    </label>                                                   
-                                                </div>
-                                                <div class="switch" ng-if="userdetail.emailValidateToken=='Google'">
-                                                    <label >
-                                                        Off
-                                                        <input type="checkbox"  ng-model="socailValGo" ng-click="socialLoginPrimaryUser(socailVal)">
-                                                        <span class="lever"></span>
-                                                        On
-                                                    </label>                                                  
-                                                </div>                                                      
-                                            </div>-->
+                                            
                                         </li>
                                     </ul>
                                     <ul class="collection" style="border: 0px solid #e0e0e0;">

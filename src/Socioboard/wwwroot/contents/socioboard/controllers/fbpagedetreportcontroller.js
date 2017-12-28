@@ -95,6 +95,48 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
         }
         //for fbpage daily report details-------end
 
+         $scope.reconnect = function (xyz) {            
+            $http.get(domain + '/socioboard/recfbcont?id=' + $stateParams.profileId + '&fbprofileType=' + xyz)
+                              .then(function (response) {
+                                  window.location.href = response.data;
+
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+
+        };
+
+        $scope.fbprofiles = function () {
+         
+            $http.get(apiDomain + '/api/Facebook/GetFacebookProfilesOnlyforReconn?groupId=' + $rootScope.groupId)
+            .then(function (response) {
+                console.log(response.data)
+                if (response.data != null) {
+                    var ac = false;
+                    $scope.profiledet = response.data;
+                    angular.forEach($scope.profiledet, function (value, key) {
+                        if (value.fbUserId == $stateParams.profileId) {
+                            $scope.reconnect(value.fbProfileType);
+                            ac = true;
+                        }
+
+                    });
+
+                    if (!ac) {
+                        $scope.reconnect(null);
+                    }
+
+                }
+
+
+            }, function (reason) {
+                $scope.error = reason.data;
+            });
+
+        };
+
+
+
 
         $scope.getData = function (profileId, days) {
             $scope.GetFacebookPagePostData(profileId, days);

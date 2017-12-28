@@ -77,6 +77,13 @@ namespace Api.Socioboard.Controllers
             return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr, _appSettings));
         }
 
+        [HttpPost("IsPrimaryAcc")]
+        public IActionResult IsPrimaryAcc(long userId, string profileId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupProfilesRepository.IsPrimaryAccount(userId, profileId, dbr, _appSettings));
+        }
+
         [HttpPost("AddSelectedProfiles")]
         public IActionResult AddSelectedProfiles(long groupId, long userId)
         {

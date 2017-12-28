@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Socioboard.Instagram.App.Core;
 using Socioboard.Instagram.Authentication;
 using Socioboard.Instagram.Instagram.Core.MediaMethods;
+using Socioboard.Instagram.Instagram.Core.RelationshipMethods;
 using Socioboard.Instagram.Instagram.Core.UsersMethods;
 using System;
 using System.Collections.Generic;
@@ -1134,6 +1135,32 @@ namespace Api.Socioboard.Repositories
                 return "";
             }
 
+        }
+
+        //public static string SearchastagData(string tag, string InstagramId, long groupId, Helper.AppSettings _appSettings, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        //{
+        //    Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = Repositories.InstagramRepository.getInstagramAccount(InstagramId, _redisCache, dbr);
+        //    TagController objSearchtag = new TagController();
+        //    string reta = objSearchtag.GetTagSearch(tag, _Instagramaccounts.AccessToken);
+        //    return "";
+        //}
+
+        public static string Searchbyname(string quary, string InstagramId,string count, Helper.AppSettings _appSettings, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = Repositories.InstagramRepository.getInstagramAccount(InstagramId, _redisCache, dbr);
+            UserController objSearch = new UserController();
+            Relationship objfollw = new Relationship();
+            string reta = objSearch.GetUsersSearch(quary, count, _Instagramaccounts.AccessToken, InstagramId);
+            return reta;
+        }
+
+
+        public static string Followpeople(string InstagramId, string followingid, Helper.AppSettings _appSettings, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        {
+            Domain.Socioboard.Models.Instagramaccounts _Instagramaccounts = Repositories.InstagramRepository.getInstagramAccount(InstagramId, _redisCache, dbr);
+            Relationship objfollw = new Relationship();
+            string respon = objfollw.FollowPost(followingid, _Instagramaccounts.AccessToken);
+            return respon ;
         }
     }
 }

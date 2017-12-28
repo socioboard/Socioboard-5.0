@@ -85,7 +85,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                 return false;
             }
 
-
+            
 
             var updatedmessage = "";
             var postdata = message.split("\n");

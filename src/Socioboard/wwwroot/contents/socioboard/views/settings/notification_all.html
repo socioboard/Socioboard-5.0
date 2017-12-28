@@ -23,6 +23,18 @@
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-4 white-text">Your notifications</h5>
                     <ul class="collection facebookfeeds">
+                        <li class="card">
+                            <a ng-href="#/notification_all" terget="_blank" class="recent-activity-list chat-out-list row no-space" style="height:auto;">
+
+                                <div ng-if="lstChangePass.userId!=''" class="col s9 recent-activity-list-text margin-top-10">
+                                   
+                                    <span  ng-if="lstChangePass.userId!=''" class="">For {{lstChangePass.userPrimaryEmail}} account password has change , please reconnect your account !!</span>
+                                </div>
+                                <div class="col s12">
+                                    <h6 ng-if="lstChangePass.userId !=''" class="center error_box">Reconnect</h6>
+                                </div>
+                            </a>
+                        </li>
                         <li class="collection-item avatar" ng-repeat="notify in lstnotifications">
                             <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
                             <span class="email-title">{{notify.socialprofileName}}</span>
@@ -41,6 +53,8 @@
                             </div>
                             <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
                         </li>
+
+                        
                     </ul>
                     <ul class="collection facebookfeeds">
                         <li class="collection-item avatar" ng-repeat="notify in loadlstnotifications">
@@ -62,6 +76,7 @@
                             <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
                         </li>
                     </ul>
+
                     <div class="load_more" ng-if="notifycount !=0" id="load_more_toggle">
                         <a class="center" ng-click="loadmore()">Load More</a>
                     </div>

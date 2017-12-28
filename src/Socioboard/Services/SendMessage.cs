@@ -18,7 +18,7 @@ namespace Socioboard.Services
 
         //way2sms not working
         string uid = "9210663604";
-        string password = "K3937C";
+        string password = "";
         string message = "hi";
         string no = "9210663604";
         //com.experttexting.www.ExptTextingAPI ExptTexting = new com.experttexting.www.ExptTextingAPI();
@@ -67,7 +67,7 @@ namespace Socioboard.Services
         public void sent()
 
         {
-            bool isSent = SendOTPSMS("9210663604", "9179547655", "Qqu5UO3E7TmshCvqH4OopsQfWzxkp1IWWtZjsnwWYO13hIc3y0", "9210663604", "OTP: 324353");
+            bool isSent = SendOTPSMS("", "", "", "", "");
         }
         public  bool SendOTPSMS(string senderMobileNo, string senderPassword, string MshapeKey, string receiverMobileNo, string Message)
         {

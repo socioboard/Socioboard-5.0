@@ -444,6 +444,32 @@ namespace Api.Socioboard.Repositories
             }
         }
 
+        public static string IsPrimaryAccount(long userId, string profileId, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        {
+            Domain.Socioboard.Models.User user = new User();
+            Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
+            try
+            {
+                 user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId) && t.EmailId == fbAcc.EmailId && t.EmailValidateToken == "Facebook").FirstOrDefault();
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            if (user != null)
+            {
+                
+                return "Primary Account";
+            }
+            else
+            {
+                return "Not Primary Account";
+            }
+            
+        }
+
+
         public static List<Domain.Socioboard.Models.profilesdetail> SearchProfileType(long groupId, string Profiletype, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
             try

@@ -1,6 +1,6 @@
 'use strict';
 
-SocioboardApp.controller('FacebookreportController', function ($rootScope, $scope, $http, $timeout, apiDomain) {
+SocioboardApp.controller('FacebookreportController', function ($rootScope, $scope, $http, $timeout, apiDomain,domain) {
     //alert('helo');
     $scope.$on('$viewContentLoaded', function () {
         $('#Fbfeedsdetails').DataTable({
@@ -70,6 +70,47 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
             });
         }
         //addaed by me end for total fans
+
+        $scope.reconnect = function (xyz) {
+            $http.get(domain + '/socioboard/recfbcont?id=' + $scope.selectedProfile + '&fbprofileType=' + xyz)
+                              .then(function (response) {
+                                  window.location.href = response.data;
+
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+
+        };
+
+        $scope.fbprofiles = function () {
+
+            console.log($scope.selectedProfile);
+            $http.get(apiDomain + '/api/Facebook/GetFacebookProfilesOnlyforReconn?groupId=' + $rootScope.groupId)
+            .then(function (response) {
+                console.log(response.data)
+                if (response.data != null) {
+                    var ac = false;
+                    $scope.profiledet = response.data;
+                    angular.forEach($scope.profiledet, function (value, key) {
+                        if (value.fbUserId == $scope.selectedProfile) {
+                            $scope.reconnect(value.fbProfileType);
+                            ac = true;
+                        }
+
+                    });
+
+                    if (!ac) {
+                        $scope.reconnect(null);
+                    }
+
+                }
+
+
+            }, function (reason) {
+                $scope.error = reason.data;
+            });
+
+        };
 
 
         $scope.getData = function (profileId, days) {
