@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting;
 using Socioboard.Facebook.Data;
 using Microsoft.AspNetCore.Cors;
 using Domain.Socioboard.Models.Mongo;
+using MongoDB.Bson;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -133,7 +134,34 @@ namespace Api.Socioboard.Controllers
                             int res = Api.Socioboard.Repositories.FacebookRepository.ReFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, reconnect, _redisCache, _appSettings, _logger);
                             if (res == 1)
                             {
+                        
+                                MongoRepository repofb = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
+                                try
+                                {
+                                    var result = repofb.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.profileId == fbacc.FbUserId );
+                                    var task = Task.Run(async () =>
+                                    {
+                                        return await result;
+                                    });
+                                    int count = task.Result.Count;
+
+                                    IList<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstFbFeeds = task.Result;
+                                    if(count>0)
+                                    {
+                                        FilterDefinition<BsonDocument> filter = new BsonDocument("profileId", lstFbFeeds.FirstOrDefault().profileId);                                                                             
+                                        var update = Builders<BsonDocument>.Update.Set("status", true);
+                                        repofb.Update<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(update, filter);
+
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+
+                                }
+
                                 return Ok("Facebook account Reconnect Successfully");
+
+
                             }
                             else
                             {

@@ -23,17 +23,19 @@
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-4 white-text">Your notifications</h5>
                     <ul class="collection facebookfeeds">
-                        <li class="card">
+                        <li class="card" >
                             <a ng-href="#/notification_all" terget="_blank" class="recent-activity-list chat-out-list row no-space" style="height:auto;">
 
-                                <div ng-if="lstChangePass.userId!=''" class="col s9 recent-activity-list-text margin-top-10">
-                                   
-                                    <span  ng-if="lstChangePass.userId!=''" class="">For {{lstChangePass.userPrimaryEmail}} account password has change , please reconnect your account !!</span>
+                                <div   ng-show="lstChangePass.id" class="col s9 recent-activity-list-text margin-top-10">              
+                                    <span  class="" style="color:red">'{{lstChangePass.emailId}}' facebook account password has change , please reconnect your account !!</span>
                                 </div>
-                                <div class="col s12">
-                                    <h6 ng-if="lstChangePass.userId !=''" class="center error_box">Reconnect</h6>
-                                </div>
+                                
                             </a>
+                           
+                            <div ng-show="lstChangePass.id" class="load_more" style="height:auto;">
+                                <a ng-click="reconnect()" class="center">Reconnect</a>
+                            </div>
+                           
                         </li>
                         <li class="collection-item avatar" ng-repeat="notify in lstnotifications">
                             <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">

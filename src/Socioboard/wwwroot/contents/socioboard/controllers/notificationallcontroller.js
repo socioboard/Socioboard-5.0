@@ -28,7 +28,7 @@ SocioboardApp.controller('NotificationAllController', function ($rootScope, $sco
 
         $scope.changepass = function () {
 
-            $http.get(apiDomain + '/api/Notifications/ChangePasswordDetail?userId=' + $rootScope.user.Id )
+            $http.get(apiDomain + '/api/Notifications/ChangePasswordDetail?userId=' + $rootScope.user.Id+'&user' )
                               .then(function (response) {
                                   $scope.lstChangePass = response.data;
                                   console.log($scope.lstChangePass);
@@ -42,6 +42,39 @@ SocioboardApp.controller('NotificationAllController', function ($rootScope, $sco
             // end codes to load  recent Feeds
         }
         $scope.changepass();
+
+
+
+        $scope.getfbprofileId = function () {
+
+            $http.get(apiDomain + '/api/Notifications/getfbchangeprofile?userId=' + $rootScope.user.Id)
+                              .then(function (response) {
+                                  $scope.lstfbprofile = response.data;
+                                 // console.log($scope.lstfbprofile);
+                                  //var abc = $scope.lstfbprofile;
+
+                                  //$scope.notifycount = $scope.notifycount + 10;
+
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+            // end codes to load  recent Feeds
+        }
+        $scope.getfbprofileId();
+
+        $scope.reconnect = function () {
+            var facebookid = $scope.lstfbprofile;
+            console.log($scope.lstfbprofile);
+          //  console.log("abcd", $scope.lstfbprofile.userPrimaryEmail);
+            $http.get(domain + '/socioboard/recfbcont?id=' + facebookid + '&fbprofileType=' + 0)
+                              .then(function (response) {
+                                  window.location.href = response.data;
+
+                              }, function (reason) {
+                                  $scope.error = reason.data;
+                              });
+
+        };
 
 
         // start codes to load  recent Feeds

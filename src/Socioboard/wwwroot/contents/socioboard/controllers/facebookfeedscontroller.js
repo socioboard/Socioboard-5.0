@@ -217,20 +217,14 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                             $scope.reconnect(value.fbProfileType);
                             ac = true;
                         }
-
                     });
-
                     if (!ac) {
                         $scope.reconnect(null);
                     }
-
                 }
-
-
             }, function (reason) {
                 $scope.error = reason.data;
             });
-
         };
 
         $scope.confirmation = function () {

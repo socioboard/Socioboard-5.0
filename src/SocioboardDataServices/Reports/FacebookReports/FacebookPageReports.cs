@@ -22,37 +22,42 @@ namespace SocioboardDataServices.Reports.FacebookReports
             {
                 try
                 {
+                    int c = 0;
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.IsActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
-                   
+                    //lstFbAcc = lstFbAcc.Where(t => t.FbUserId.Contains("790900144392091")).ToList();
                     foreach (var item in lstFbAcc)
                     {
-                        if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
-                        {
-                            CreateReports(item.FbUserId, item.AccessToken, item.Is90DayDataUpdated);
+                        //if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
+                        //{
+                            CreateReports(item.FbUserId, item.AccessToken, item.Is90DayDataUpdated,item.UserId);
                             item.Is90DayDataUpdated = true;
                             item.lastpagereportgenerated = DateTime.UtcNow;
                             dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(item);
                             cache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterMessageReportsByProfileId + item.FbUserId);
-                        }
+                            Console.WriteLine(c++);
+                            Console.WriteLine("updated "+item.FbUserId);
+
+                       // }
                     }
                     Thread.Sleep(60000);
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("issue in web api calling" + ex.StackTrace);
-                    Thread.Sleep(600000);
+                    Thread.Sleep(60000);
                 }
             }
         }
 
-        public static void CreateReports(string ProfileId, string AccessToken, bool is90daysupdated)
+        public static void CreateReports(string ProfileId, string AccessToken, bool is90daysupdated,long userId)
         {
             int day = 1;
             if (!is90daysupdated)
             {
                 day = 90;
             }
+
             double since = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow.AddDays(-day));
             double until = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
             JObject pageobj = new JObject();
@@ -80,6 +85,12 @@ namespace SocioboardDataServices.Reports.FacebookReports
             JObject jofacebooksharing_typeUrlobj = new JObject();
             JObject jofacebookagegenderUrlobj = new JObject();
 
+            MongoRepository mongorepofb = new MongoRepository("FacebookPasswordChangeUserDetail");
+           
+            string errormsg = null;
+            string ispasschange = null;
+            string msg = null;
+
 
             #region likes
             try
@@ -96,10 +107,14 @@ namespace SocioboardDataServices.Reports.FacebookReports
             {
                 string facebooknewfanUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_fan_adds?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputface = getFacebookResponse(facebooknewfanUrl);
+                ispasschange = outputface;
                 likesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputface)["data"].ToString())[0]["values"].ToString());
             }
             catch (Exception ex)
             {
+                errormsg = ispasschange;
+                msg = getBetween(errormsg, "e\":\"", ":");
+
             }
             #endregion
             #region unlikes
@@ -107,10 +122,12 @@ namespace SocioboardDataServices.Reports.FacebookReports
             {
                 string facebookunlikjeUrl = "https://graph.facebook.com/v2.7/" + ProfileId + "/insights/page_fan_removes?pretty=0&since=" + since.ToString() + "&suppress_http_code=1&until=" + until.ToString() + "&access_token=" + AccessToken;
                 string outputfaceunlike = getFacebookResponse(facebookunlikjeUrl);
+                ispasschange = outputfaceunlike;
                 unlikesobj = JArray.Parse(JArray.Parse(JObject.Parse(outputfaceunlike)["data"].ToString())[0]["values"].ToString());
             }
             catch (Exception ex)
             {
+                errormsg = ispasschange;
             }
             #endregion
             #region impression
@@ -226,6 +243,52 @@ namespace SocioboardDataServices.Reports.FacebookReports
             {
 
             }
+            try
+            {
+                if (msg == "Error validating access token")
+                {
+
+                    DatabaseRepository dbr = new DatabaseRepository();
+                    Domain.Socioboard.Models.Facebookaccounts lstFbAcc = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == ProfileId);
+                    Domain.Socioboard.Models.User lstUser = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == lstFbAcc.UserId);
+                    Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail fbdetailpass = new Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail();
+                    fbdetailpass.Id = ObjectId.GenerateNewId();
+                    fbdetailpass.strId = ObjectId.GenerateNewId().ToString();
+                    fbdetailpass.userId = userId;
+                    fbdetailpass.profileId = ProfileId;
+                    fbdetailpass.message = msg;
+                    fbdetailpass.userPrimaryEmail = lstUser.EmailId;
+                    fbdetailpass.dateValue = DateTime.Today.ToString();
+                    fbdetailpass.status = false;
+
+                    try
+                    {
+                        MongoRepository mongorepo = new MongoRepository("FacebookPasswordChangeUserDetail");
+                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.profileId == fbdetailpass.profileId);
+                        var task = Task.Run(async () =>
+                        {
+                            return await ret;
+                        });
+                        if (task.Result != null)
+                        {
+                            if (task.Result.Count() < 1)
+                            {
+                                mongorepo.Add<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(fbdetailpass);
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+           
+
             #endregion
             foreach (JObject obj in likesobj)
             {
@@ -827,7 +890,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
                 try
                 {
                     MongoRepository mongorepo = new MongoRepository("FacaebookPageDailyReports");
-                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports>(t => t.date == facebookReportViewModal.date);
+                    var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports>(t => t.date == facebookReportViewModal.date && t.pageId == facebookReportViewModal.pageId);
                     var task = Task.Run(async () =>
                     {
                         return await ret;
@@ -848,6 +911,22 @@ namespace SocioboardDataServices.Reports.FacebookReports
 
 
 
+        }
+
+
+        public static string getBetween(string strSource, string strStart, string strEnd)
+        {
+            int Start, End;
+            if (strSource.Contains(strStart) && strSource.Contains(strEnd))
+            {
+                Start = strSource.IndexOf(strStart, 0) + strStart.Length;
+                End = strSource.IndexOf(strEnd, Start);
+                return strSource.Substring(Start, End - Start);
+            }
+            else
+            {
+                return "";
+            }
         }
 
         public static string getFacebookResponse(string Url)

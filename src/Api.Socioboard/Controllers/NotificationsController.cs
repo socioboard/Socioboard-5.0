@@ -140,6 +140,64 @@ namespace Api.Socioboard.Controllers
         }
 
 
-      
+        [HttpGet("ChangePasswordDetail")]
+        public IActionResult ChangePasswordDetail(long userId)
+        {
+            try
+            {
+              
+                MongoRepository mongorepo = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                List<Domain.Socioboard.Models.Facebookaccounts> datalst = dbr.Find<Facebookaccounts>(t => t.UserId == userId).ToList();
+                Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
+                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status==false);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                int count = task.Result.Count;
+                IList<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstfbpasschange = task.Result;
+              
+            
+                if (count>0)
+                {
+                    return Ok(userDet);
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+
+
+        }
+
+        [HttpGet("getfbchangeprofile")]
+        public IActionResult getfbchangeprofile(long userId)
+        {
+            MongoRepository mongorepo = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            List<Domain.Socioboard.Models.Facebookaccounts> datalst = dbr.Find<Facebookaccounts>(t => t.UserId == userId).ToList();
+            Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
+            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status==false);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            int count = task.Result.Count;
+            IList<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstfbpasschange = task.Result;
+            if (count>0)
+            {
+                return Ok(lstfbpasschange.FirstOrDefault().profileId);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
     }
 }
