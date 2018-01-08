@@ -1,4 +1,4 @@
 ++ visual studio  2015
 ++ robomongo
 ++ mysql db
-++ asp.net core preview inatsll 
+++ asp.net core preview install 
