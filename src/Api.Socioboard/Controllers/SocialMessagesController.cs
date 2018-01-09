@@ -245,7 +245,7 @@ namespace Api.Socioboard.Controllers
                             Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
                             string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
 
-                        }).Start();
+                       }).Start();
                     }
                     catch (Exception ex)
                     {

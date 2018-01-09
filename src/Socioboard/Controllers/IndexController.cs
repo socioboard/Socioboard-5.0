@@ -986,7 +986,8 @@ namespace Socioboard.Controllers
                 }
                 else
                 {
-                    return Redirect(response.RequestMessage.RequestUri.OriginalString);
+                    //return Redirect(response.RequestMessage.RequestUri.OriginalString);
+                    return Content(response.RequestMessage.RequestUri.OriginalString);
                 }
             }
             else

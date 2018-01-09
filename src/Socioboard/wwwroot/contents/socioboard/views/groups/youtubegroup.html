@@ -21,7 +21,7 @@
                                         <li class="collection-item avatar" style="min-height: 65px;" ng-repeat="grpmem in lstYtGrpMem">
                                             <img src="{{grpmem.sbProfilePic}}" alt="" class="circle">
                                             <div class="title truncate" style="width: 9999px;"><span>{{grpmem.sbUserName}}</span><br /> <span title="" class="grey-text text-darken-1" style="font-size:14px;">{{grpmem.sbEmailId}}</span></div>
-                                            <a href="javascript:void(0);" style="margin-top:6px" class="secondary-content" ng-if="$index == 0"><i class="fa fa-key indigo-text darken-4" aria-hidden="true"></i></a>
+                                            <a href="javascript:void(0);" style="margin-top:6px" class="secondary-content" ng-if="$index == 0"><i class="fa fa-key indigo-text darken-4" title="Admin" aria-hidden="true"></i></a>
                                             <a href="javascript:void(0);" style="margin-top:-6px" class="secondary-content" ng-if="grpmem.active == 1 && $index > 0"><i class="fa fa-check green-text" aria-hidden="true" title="Accepted"></i></a>
                                             <a href="javascript:void(0);" style="margin-top:-6px" class="secondary-content" ng-if="grpmem.active == 0 && $index > 0"><i class="fa fa-clock-o red-text" aria-hidden="true" title="Pending"></i></a>
                                             <a href="javascript:void(0);" ng-click="deleteMember(grpmem)" style="margin-top:20px" class="secondary-content" ng-if="$index > 0"><i class="fa fa-trash-o removeMember" aria-hidden="true" title="Remove"></i></a>

@@ -444,8 +444,41 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         //$scope.fetchYTChannels();
 
-        $scope.deleteProfile = function (profileId) {
+        //$scope.deleteProfile = function (profileId) {
           
+        //    swal({
+        //        title: "Are you sure?",
+        //        text: "You will not be able to send any message via this account!",
+        //        type: "warning",
+        //        showCancelButton: true,
+        //        confirmButtonColor: "#DD6B55",
+        //        confirmButtonText: "Yes, delete it!",
+        //        closeOnConfirm: false
+        //    },
+
+        //    function () {
+        //        $scope.chk(profileId);
+        //        if ($scope.isprimacc == false) {
+                    
+        //            $http({
+        //                method: 'POST',
+        //                url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+        //            }).then(function (response) {
+        //                if (response.data == "Deleted") {
+        //                    // swal("Deleted!", "Your profile has been deleted", "Success");
+        //                    swal("Deleted!", "Account is deleted", "success");
+        //                }
+        //                window.location.reload();
+        //            });
+        //        }
+        //        if ($scope.isprimacc == true) {
+        //            swal("You can't delete primary account");
+        //          }                
+        //    });
+        //}
+
+        $scope.deleteProfile = function (profileId) {
+
             swal({
                 title: "Are you sure?",
                 text: "You will not be able to send any message via this account!",
@@ -455,62 +488,55 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                 confirmButtonText: "Yes, delete it!",
                 closeOnConfirm: false
             },
-
             function () {
-                $scope.chk(profileId);
-                if ($scope.isprimacc == false) {
-                    
-                    $http({
-                        method: 'POST',
-                        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
-                    }).then(function (response) {
-                        if (response.data == "Deleted") {
-                            // swal("Deleted!", "Your profile has been deleted", "Success");
-                            swal("Deleted!", "Account is deleted", "success");
-                        }
-                        window.location.reload();
-                    });
-                }
-                if ($scope.isprimacc == true) {
-                    swal("You can't delete primary account");
-                  }                
+
+
+                $http({
+                    method: 'POST',
+                    url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+                }).then(function (response) {
+                    if (response.data == "Deleted") {
+                        // swal("Deleted!", "Your profile has been deleted", "Success");
+                        swal("Deleted!", "Account is deleted", "success");
+                    }
+                    window.location.reload();
+                });
+
             });
         }
 
-        $scope.chk = function (profileId) {
-            debugger;
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/GroupProfiles/IsPrimaryAcc?userId=' + $rootScope.user.Id + '&profileId=' + profileId,
-            }).then(function (response) {
-                debugger;
-                if (response.data == "Primary Account") {
-                    $scope.isprimacc = true;
-                }
-                else {
-                    $scope.isprimacc = false;
-                }
-            });
-        }
+        //$scope.chk = function (profileId) {
+        //    debugger;
+        //    $http({
+        //        method: 'POST',
+        //        url: apiDomain + '/api/GroupProfiles/IsPrimaryAcc?userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+        //    }).then(function (response) {
+        //        debugger;
+        //        if (response.data == "Primary Account") {
+        //            $scope.isprimacc = true;
+        //        }
+        //        else {
+        //            $scope.isprimacc = false;
+        //        }
+        //    });
+        //}
 
-        $scope.delconfprimaryacc = function (profileId) {
-            debugger;
-            $http({
-                method: 'POST',
-                url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
-            }).then(function (response) {
-                if (response.data == "Deleted") {
-                    // swal("Deleted!", "Your profile has been deleted", "Success");
-                    swal("Deleted!", "Account is deleted", "success");
-                }
-                window.location.reload();
-            });
-        }
+        //$scope.delconfprimaryacc = function (profileId) {
+        //    debugger;
+        //    $http({
+        //        method: 'POST',
+        //        url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
+        //    }).then(function (response) {
+        //        if (response.data == "Deleted") {
+        //            // swal("Deleted!", "Your profile has been deleted", "Success");
+        //            swal("Deleted!", "Account is deleted", "success");
+        //        }
+        //        window.location.reload();
+        //    });
+        //}
 
 
-        $scope.isprimaryacc = function (profileId) {
-           
-        }
+       
 
         $scope.deleteGpProfile = function (profileId) {
 

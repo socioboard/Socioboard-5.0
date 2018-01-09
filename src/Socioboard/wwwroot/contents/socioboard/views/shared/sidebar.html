@@ -117,6 +117,23 @@
                                     </ul>
                                 </div>
                             </li>
+                            <li class="bold">
+                                <a class="collapsible-header waves-effect waves-cyan" title="Youtube Inbox">
+                                    Youtube Inbox 
+                                </a>
+                                <div class="collapsible-body">
+                                    <ul>
+                                        <li ng-repeat="profile in lstProfiles | filter:{profileType:7}">
+                                            <a href="#/youtube_inbox/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-user"></i>{{profile.profileName}}</a>
+                                        </li>
+                                    </ul>
+                                    <ul>
+                                        <li ng-repeat="profile in lstYtGrpMembersSidebar">
+                                            <a href="#/youtubeinbox_member/{{profile.profileId}}" class="truncate" style="color:#444444"><i class="icon-users"></i>{{profile.profileName}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </li>

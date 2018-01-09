@@ -179,11 +179,11 @@
                                                                                     <span ng-if="singleCommentShow.sbGrpTaskAssign==true && singleCommentShow.parentIdforReply != null" class="ultra-small">Assigned to <b>{{singleCommentShow.sbGrpMemberName}}</b><br /><span><a ng-click="RemoveTask(singleCommentShow, 'reply')" class="highlight"><b>Remove task </b></a><i class="fa fa-circle-o-notch fa-spin fa-fw" ng-class="removingtaskloader"></i></span></span>
                                                                                 </div>
                                                                                 <div class="right" title="Review">
-                                                                                    <a ng-if="singleCommentShow.parentIdforReply == null && singleCommentShow.review==false" href="javascript:void(0)" class="btn btn_style btn_round grey" ng-click="reviewed(singleCommentShow, true, 'main')">
+                                                                                    <a ng-if="singleCommentShow.parentIdforReply == null && singleCommentShow.review==false" href="javascript:void(0)" class="btn btn_style btn_round highlightgreen grey" ng-click="reviewed(singleCommentShow, true, 'main')">
                                                                                         <i ng-class="reviewLoading" class="fa fa-spinner fa-pulse fa-3x" aria-hidden="true"></i>
                                                                                         <i ng-class="reviewLoaded" class="fa fa-check-circle" aria-hidden="true"></i>
                                                                                     </a>
-                                                                                    <a ng-if="singleCommentShow.parentIdforReply != null && singleCommentShow.review==false" href="javascript:void(0)" class="btn btn_style btn_round grey" ng-click="reviewed(singleCommentShow, true, 'reply')">
+                                                                                    <a ng-if="singleCommentShow.parentIdforReply != null && singleCommentShow.review==false" href="javascript:void(0)" class="btn btn_style btn_round highlightgreen grey" ng-click="reviewed(singleCommentShow, true, 'reply')">
                                                                                         <i ng-class="reviewLoading" class="fa fa-spinner fa-pulse fa-3x" aria-hidden="true"></i>
                                                                                         <i ng-class="reviewLoaded" class="fa fa-check-circle" aria-hidden="true"></i>
                                                                                     </a>
@@ -195,9 +195,7 @@
                                                                                         <i ng-class="reviewLoading" class="fa fa-spinner fa-pulse fa-3x" aria-hidden="true"></i>
                                                                                         <i ng-class="reviewLoaded" class="fa fa-check-circle" aria-hidden="true"></i>
                                                                                     </a>
-                                                                                    <a ng-if="user.TrailStatus!=2" ng-click="taskOpensModel(singleCommentShow)" class="modal-trigger btn btn_style btn_round grey darken-4" href="javascript:void(0);" title="Task">
-                                                                                        <i class="icon-pin"></i>
-                                                                                    </a>
+                                                                                    <a ng-click="taskOpensModel(singleCommentShow)" class="modal-trigger btn btn_style btn_round grey darken-4" href="javascript:void(0);" title="Task"><b>Assign</b></a>
                                                                                 </div>
                                                                             </div>
                                                                             <form class="container">
@@ -382,6 +380,16 @@
         }
 
         a.highlight:active {
+            text-decoration: underline;
+            color: indigo;
+        }
+
+
+        a.highlightgreen:hover {
+            color: green;
+        }
+
+        a.highlightgreen:active {
             text-decoration: underline;
             color: indigo;
         }
