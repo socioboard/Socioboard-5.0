@@ -13,6 +13,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             $http.get(apiDomain + '/api/GroupReport/getgroupReportData?groupId=' + $rootScope.groupId + '&daysCount=' + days)
                           .then(function (response) {
                               $scope.dailyReportsList = response.data;
+                              console.log($scope.dailyReportsList); 
                               $scope.getData(days);
                               $scope.fetchdatacomplete = true;
 
@@ -56,8 +57,10 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                 if (value.date > startDate) {
                     inbox =inbox+ value.inbox;
                     sent = sent + value.sent;
-                    twitterfollower = twitterfollower + value.twitterfollower;
-                    fbfan = fbfan + value.fbfan;
+                    //twitterfollower = twitterfollower + value.twitterfollower;
+                    twitterfollower =  value.twitterfollower;
+                    // fbfan = fbfan + value.fbfan;
+                    fbfan = value.fbfan;
                     interaction = interaction + value.interaction;
                     twtmentions = twtmentions + value.twtmentions;
                     twtretweets = twtretweets + value.twtretweets;

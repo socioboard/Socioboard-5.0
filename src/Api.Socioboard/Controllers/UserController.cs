@@ -1575,9 +1575,18 @@ namespace Api.Socioboard.Controllers
                     user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
                     try
                     {
+                        user.FirstName = (Convert.ToString(profile["first_name"]));
+                    }
+                    catch
+                    {
                         user.FirstName = (Convert.ToString(profile["name"]));
                     }
+                    try
+                    {
+                        user.LastName = (Convert.ToString(profile["last_name"]));
+                    }
                     catch { }
+
                     user.RegistrationType = Domain.Socioboard.Enum.SBRegistrationType.Faceboook;
 
                     int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);

@@ -202,7 +202,7 @@ SocioboardApp.controller('YoutubeInboxController', function ($rootScope, $scope,
             {
                 var name = $rootScope.user.FirstName;
             }
-            $http.post(apiDomain + '/api/Google/ReviewedComment?commentId=' + commentObj.commentId + '&sbUserName=' + name + '&status=' + status + '&commentType=' + commentType)
+            $http.post(apiDomain + '/api/Google/ReviewedComment?commentId=' + commentObj.commentId + '&sbUserName=' + name + '&sbUserId=' + $rootScope.user.Id + '&status=' + status + '&commentType=' + commentType)
                                   .then(function (response) {
                                       if (status == true)
                                       {

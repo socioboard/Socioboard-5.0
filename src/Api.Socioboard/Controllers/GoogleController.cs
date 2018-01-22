@@ -1164,10 +1164,10 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("ReviewedComment")]
-        public IActionResult ReviewedComment(string commentId, string sbUserName, bool status, string commentType)
+        public IActionResult ReviewedComment(string commentId, string sbUserName, Int64 sbUserId, bool status, string commentType)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            Repositories.GplusRepository.ReviewedComment(commentId, sbUserName, status, commentType, _appSettings, _logger, dbr);
+            Repositories.GplusRepository.ReviewedComment(commentId, sbUserName, sbUserId, status, commentType, _appSettings, _logger, dbr);
             return Ok();
         }
     }

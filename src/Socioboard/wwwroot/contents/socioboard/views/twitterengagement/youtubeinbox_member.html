@@ -121,16 +121,6 @@
                                                                                         <div class="collapsible-header" style="min-height: 1rem;line-height: 1rem; background-color: #e8ebef;" ng-mouseover="calledColl()"><span class="right">Reply</span></div>
                                                                                         <div class="collapsible-body">
                                                                                             <div class="row">
-                                                                                                <ul class="collection no-space comm_scroll">
-                                                                                                    <li class="collection-item avatar" ng-repeat="childCommen in itemComment._ChildComments" my-Repeat-Tab-Directive style="background-color: #e8ebef;">
-                                                                                                        <img src="{{childCommen.authorProfileImageUrl}}" alt="Chanchal Santra" class="circle">
-                                                                                                        <span class="email-title">{{childCommen.authorDisplayName}}</span>
-                                                                                                        <label class="right">{{childCommen.publishTime}}</label>
-                                                                                                        <div class="feeds_post z-depth-1 hoverable">
-                                                                                                            <p class="break_word ultra-small" style="padding:5px;">{{childCommen.commentOriginal}}</p>
-                                                                                                        </div>
-                                                                                                    </li>
-                                                                                                </ul>
                                                                                                 <form class="col s12">
                                                                                                     <div class="row right">
                                                                                                         <div class="input-field col s7 offset-s1">
@@ -142,6 +132,17 @@
                                                                                                         </div>
                                                                                                     </div>
                                                                                                 </form>
+                                                                                                <ul class="col s12 collection no-space comm_scroll">
+                                                                                                    <li class="collection-item avatar" ng-repeat="childCommen in itemComment._ChildComments" my-Repeat-Tab-Directive style="background-color: #e8ebef;">
+                                                                                                        <img src="{{childCommen.authorProfileImageUrl}}" alt="Chanchal Santra" class="circle">
+                                                                                                        <span class="email-title">{{childCommen.authorDisplayName}}</span>
+                                                                                                        <label class="right">{{childCommen.publishTime}}</label>
+                                                                                                        <div class="feeds_post z-depth-1 hoverable">
+                                                                                                            <p class="break_word ultra-small" style="padding:5px;">{{childCommen.commentOriginal}}</p>
+                                                                                                        </div>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                                
                                                                                             </div>
                                                                                         </div>
                                                                                     </li>

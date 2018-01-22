@@ -206,7 +206,7 @@ SocioboardApp.controller('DiscoveryController', function ($rootScope, $scope, $h
             else
             {
                 $scope.dispbtn = true;
-                swal('Enter a keyword to search');
+                //swal('Enter a keyword to search');
             }
         }
 

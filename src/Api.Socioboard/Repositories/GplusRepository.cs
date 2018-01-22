@@ -1906,7 +1906,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static void ReviewedComment(string commentId, string sbUserName, bool status, string commentType, Helper.AppSettings settings, ILogger _logger, Model.DatabaseRepository dbr)
+        public static void ReviewedComment(string commentId, string sbUserName, Int64 sbUserId, bool status, string commentType, Helper.AppSettings settings, ILogger _logger, Model.DatabaseRepository dbr)
         {
             MongoRepository mongorepo;
             if (commentType == "main")
@@ -1922,13 +1922,13 @@ namespace Api.Socioboard.Repositories
                 if (status == true)
                 {
                     FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", commentId);
-                    var update = Builders<BsonDocument>.Update.Set("review", status).Set("reviewedBy", sbUserName).Set("sbGrpTaskAssign", false);
+                    var update = Builders<BsonDocument>.Update.Set("review", status).Set("reviewedBy", sbUserName).Set("reviewedBysbUserId", sbUserId).Set("sbGrpTaskAssign", false);
                     mongorepo.Update<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(update, filter);
                 }
                 else
                 {
                     FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", commentId);
-                    var update = Builders<BsonDocument>.Update.Set("review", status).Set("reviewedBy", sbUserName).Set("sbGrpTaskAssign", status);
+                    var update = Builders<BsonDocument>.Update.Set("review", status).Set("reviewedBy", sbUserName).Set("reviewedBysbUserId", sbUserId).Set("sbGrpTaskAssign", status);
                     mongorepo.Update<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>(update, filter);
                 }
             }

@@ -58,15 +58,15 @@
                 <div class="card" ng-repeat="post in postedRssData | orderBy:'publishingDate':true">
                     <div class="card-content">
                         <span ng-click="" class="right" role="button" tabindex="0" style="margin-right: 5px;"><i class="fa fa-close grey-text"></i></span>
-                        <div class="row">
+                        <div class="row"  charset="utf-8">
                             <div class="col l12">
                                 <h6 style="color:#777"><strong>{{post.title}}</strong></h6>
                                 <div class="">
-                                    <a href="{{post.link}}" class="truncate" target="_blank" style="color:cornflowerblue">{{post.link}}</a>
-                                </div>
+                                    <a href="{{post.link}}" class="truncate" target="_blank" style="color:cornflowerblue" >{{post.link}}</a>
                                 </div>
                             </div>
-                                <div class="row">
+                         </div>
+                         <div class="row">
                                     <div class="col l12">
                                         <div style="display: block; margin: auto;">
                                             <img src="{{post.image}}" class="rssPostImage">
@@ -199,138 +199,7 @@
         </div>
 
 
-        <!--<div id="ComposePostModal" class="modal">
-            <div class="modal-content">
-                <nav class="red">
-                    <div class="nav-wrapper">
-                        <div class="left col s12 m5 l5">
-                            <ul>-->
-                                <!--<li><a href="#!" class="email-menu"><i class="modal-action modal-close  mdi-hardware-keyboard-backspace"></i></a>
-                                </li>-->
-                                <!--<li><a href="#!" class="email-type">Compose</a></li>
-
-                            </ul>
-                        </div>
-                        <div ng-init="disbtncom= {{disbtncom}}"></div>
-                        <div class="col s12 m7 l7 hide-on-med-and-down">
-                            <ul class="right">
-                                <li>
-                                    <div ng-show="disbtncom" ng-click="ComposeMessage()"><i class="modal-action  mdi-content-send"></i></div>
-                                    <div ng-show="!disbtncom"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></div>
-                                </li>-->
-                                <!--<li>
-                                    <a href="#!"><i class="modal-action modal-close  mdi-content-send"></i></a>
-                                </li>-->
-                            <!--</ul>
-                        </div>
-
-                    </div>
-                </nav>
-            </div>
-            <div class="model-email-content">
-                <div class="row">
-                    <form class="col s12">
-                        <div class="row">
-                            <div class="input-field col s12">
-                                <div class="emoji-picker-container">
-                                    <textarea id="composeMessage" class="materialize-textarea" length="500" data-emojiable="true" placeholder="Type your msg">{{contentMessage.title}}  {{contentMessage.link}}</textarea>
-                                </div>
-                            </div>
-                        </div>-->
-                        <!--<div class="row">
-                            <div class="col s12 m12 l12">
-                                <p>Add your hashtag</p>
-                            </div>
-                            <div class="input-field col s12">
-                                <input name="tags" id="tags" value="SocioBoard,SB,hashtag" />
-                            </div>
-                        </div>-->
-                        <!--<div class="row section">
-                            <div class="col s12 m12 l12">
-                                <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
-                            </div>
-                            <input type="hidden" id="imageUrl" value="{{contentMessage.image}}" />
-                            <div class="col s12 m12 l12">
-                                <input type="file" id="composeImage" class="dropify" after-render  data-default-file="{{contentMessage.image}}" />
-                            </div>
-                            <div class="col s12 m12 l12" ng-if="!contentMessage">
-                                <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
-                            </div>
-
-                        </div>-->
-                        <!--<div class="row">-->
-                            <!--<div class="input-field col s12">
-                                <select multiple id="composeProfiles">
-                                    <option value="" disabled selected>Choose your option</option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'}" value="fb_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:2}" value="tw_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:3}" value="lin_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                    <option ng-repeat="profile in lstProfiles | filter:{profileType:4}" value="Cmpylinpage_{{profile.profileId}}" my-repeat-dropdown-directive>  {{profile.profileName}} </option>
-                                </select>
-                            </div>-->
-                            <!--<div style="max-height:250px; overflow-y:scroll;" class="row">
-                                <div class="input-field col s12">
-                                    <input ng-model="query[queryBy]" id="search_name" type="text" class="validate">
-                                    <label for="search_name">Search Profile</label>
-                                </div>
-                                <ul class="shinh" id="checkboxdatarss">
-                                    <li style="padding:5px 0;">
-                                        <label>
-                                            <input id="checkAll" onclick="check();" type="checkbox" style="visibility:visible;position:relative;left:5px; float:left" />
-                                            <span style="float:left;">Check All</span>
-                                        </label>
-                                    </li>
-                                    <li ng-repeat="profile in lstProfiles |filter:query | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                        <label>
-                                            <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
-                                            <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/fb_icon.png"></span>
-                                        </label>
-                                    </li>
-                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                        <label>
-                                            <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/Fb_page-icon.png"></span>
-                                        </label>
-                                    </li>
-                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:2}" style="padding:5px 0;">
-                                        <label>
-                                            <input onclick="profile();" name="selector[]" class="subcheckboxrss" id="tw_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
-                                            <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/twticon.png"></span>
-                                        </label>
-                                    </li>
-                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:3} | filter:{profileType:'!13'}" style="padding:5px 0;">
-                                        <label>
-                                            <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="lin_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left"  />
-                                            <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
-                                        </label>
-                                    </li>
-                                    <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:4}" style="padding:5px 0;">
-                                        <label>
-                                            <input name="selector[]" onclick="profile();" class="subcheckboxrss" id="Cmpylinpage_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
-                                            <span style="float:left;">{{profile.profileName}}</span>
-                                            <span style="float:right;"><img src="/contents/socioboard/images/link_icon.png"></span>
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div ng-init="draftbtn= {{draftbtn}}"></div>
-                            <div>
-                                <div ng-show="draftbtn" ng-click="draftMsg()" class="btn btn_style">Draft</div>
-                                <div ng-show="!draftbtn"><i class="fa fa-spinner fa-spin fa-3x fa-fw"></i></div>
-                            </div>
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-        </div>-->
+        
    
     <!-- END CONTENT -->
 

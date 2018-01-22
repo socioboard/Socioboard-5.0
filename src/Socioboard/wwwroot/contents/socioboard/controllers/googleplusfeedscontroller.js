@@ -45,6 +45,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
+                              debugger;
                               if (response.data != "") {
                                   //$scope.date(response.data);
                                   $scope.lstGpFeeds = response.data;
@@ -55,8 +56,11 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                                       $scope.callDropmenu();
                                   }, 1000);
                               } else {
-                                  $scope.preloadmorefeeds = true;
+                                  //$scope.preloadmorefeeds = true;
                                   $scope.nofeeds = true;
+                                  $scope.loadmore_feed = "Reached at bottom";
+                                  $scope.nofeeds = true;
+                                  $scope.loaderclassfeed = 'hide';
                                   $scope.dropCalled = true;
                                   setTimeout(function () {
                                       $scope.callDropmenu();
@@ -76,12 +80,13 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             }
             $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId='+ $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=10')
                         .then(function (response) {
+                            debugger;
 
 
                              if (response.data == null || response.data == "") {
                                  reachLast = true;
                                  $scope.loadmore_feed = "Reached at bottom";
-                                 $scope.endtwfeeds = true;
+                                 $scope.nofeeds = true;
                                  $scope.loaderclassfeed = 'hide';
                              }
                              else {

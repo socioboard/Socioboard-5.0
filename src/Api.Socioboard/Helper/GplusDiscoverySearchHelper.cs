@@ -32,9 +32,10 @@ namespace Api.Socioboard.Helper
                 {
                     using (var gplusresponse = gpluslistpagerequest.GetResponse())
                     {
-                        using (var stream = new StreamReader(gplusresponse.GetResponseStream(), Encoding.GetEncoding(1252)))
+                        using (var stream = new StreamReader(gplusresponse.GetResponseStream(), Encoding.GetEncoding(1256)))
                         {
                             response = stream.ReadToEnd();
+
 
                         }
                     }

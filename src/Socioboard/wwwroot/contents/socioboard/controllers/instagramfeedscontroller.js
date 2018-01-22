@@ -6,11 +6,13 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         $scope.nomessages = false;
         instagramfeeds();
         var start = 0;
-        var preloadmorefeeds = false;
+        var lstnofeeds = false;
+        var preloadmorefeeds = false;   
         var endfeeds = false;
         var ending = start + 10;
         var reachLast = false;
         var count = 10;
+       // var show = true;
         $scope.filterrTxtt = 'All Posts';
         $scope.SorttTxtt = 'Popular';
         $scope.dispbtn = true;
@@ -25,17 +27,23 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=12')
                           .then(function (response) {
-                              if (response.data == null) {
-                                  reachLast = true;
-                              }
-                              $scope.lstinsFeeds = response.data;
-                              $scope.preloadmorefeeds = true;
-                              $scope.dropCalled = true;
                               $scope.userdetails();
-                              setTimeout(function () {
-                                  $scope.callDropmenu();
-                              }, 1000);
-
+                              if (response.data.length == "0") {
+                                  $scope.lstnofeeds = true;
+                                  $scope.show =true;
+                                  $scope.preloadmorefeedss = false;
+                              }
+                              else {
+                                  $scope.lstinsFeeds = response.data;
+                                  $scope.show = false;
+                                  $scope.preloadmorefeedss = false;
+                                  $scope.preloadmorefeeds = false;
+                                  $scope.dropCalled = true;
+                                  // $scope.userdetails();
+                                  setTimeout(function () {
+                                      $scope.callDropmenu();
+                                  }, 1000);
+                              }
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -69,13 +77,15 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
                 return false;
             }
             $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=9')
-                         .then(function (response) {                          
+                         .then(function (response) {
+                             debugger;
                              // $scope.lstProfiles = response.data;
                              if (response.data == null || response.data == "") {
+                                 $scope.endfeeds = true;
                                  reachLast = true;
                                  $scope.loadmore = "Reached at bottom";
-                                 $scope.loadmorefeeds = 'hide';
-                                 $scope.endfeeds = true;
+                                 $scope.preloadmorefeeds = 'hide';
+                              
                              }
                              else {
                                  $scope.lstinsFeeds = $scope.lstinsFeeds.concat(response.data);
@@ -328,11 +338,28 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
 
         $scope.searchtag = function () {
-             
-            var tag = $('#tagSearch').val();
-
-            $http.get(apiDomain + '/api/Instagram/Instagramsearch?instagramId=' + $stateParams.profileId + '&tag=' + tag)
+            var qury = $('#categories').val();
+            $http.get(apiDomain + '/api/Instagram/Searchinsta?instagramId=' + $stateParams.profileId + '&qury=' + qury)
                          .then(function (response) {
+                             debugger;
+                             if (response != null) {
+                                 $scope.seachdata = response.data.data;
+                                 debugger;
+                                 $('#SearchProfileModal').openModal();
+                             }
+                             else {
+                                 swal('No Result Found')
+                             }debugger;
+                             var data = response;
+                         });
+
+        }
+
+
+        $scope.Follow = function (id) {
+            $http.post(apiDomain + '/api/Instagram/followpeople?instagramId=' + $stateParams.profileId + '&followingid=' + id)
+                         .then(function (response) {
+                             swal('Sucessfully follow')
                              var data = response;
                          });
 

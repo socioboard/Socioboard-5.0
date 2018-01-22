@@ -16,16 +16,23 @@ SocioboardApp.controller('YoutubeFeedsController', function ($rootScope, $scope,
             //codes to load videos
             $http.get(apiDomain + '/api/Google/GetYTVideos?ChannelId=' + $stateParams.profileId + '&sortType=none')
                               .then(function (response) {
-                                  $scope.lstYtFeeds = response.data;
-                                  //$scope.reloadFeeds();
-                                  $scope.preloadmorevideos = true;
-                                  $scope.dropCalled = true;
-                                  setTimeout(function () {
-                                      $scope.callDropmenu();
-                                  }, 1000);
-                                  setTimeout(function () {
-                                      onYouTubeIframeAPIReady();
-                                  }, 15000);
+                                  if (response.data == "") {
+                                      $scope.nodata = true;
+                                      $scope.preloadmorevideos = true;
+                                      $scope.dropCalled = true;
+                                  }
+                                  else {
+                                      $scope.lstYtFeeds = response.data;
+                                      //$scope.reloadFeeds();
+                                      $scope.preloadmorevideos = true;
+                                      $scope.dropCalled = true;
+                                      setTimeout(function () {
+                                          $scope.callDropmenu();
+                                      }, 1000);
+                                      setTimeout(function () {
+                                          onYouTubeIframeAPIReady();
+                                      }, 15000);
+                                  }
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });

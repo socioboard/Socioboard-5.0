@@ -21,25 +21,25 @@
                                             <li><a href="javascript:void(0)" ng-click="filterSearch('event')">Event</a></li>
                                         </ul>
                                     </div>
-                                    <ul class="collection gplusfeeds">
+                                    <ul class="collection ">
                                         <li class="collection-item avatar" ng-repeat="gplusfeed in lstGpFeeds">
-                                          <img src="{{gplusfeed.fromProfileImage}}" alt="{{gplusfeed.fromUserName}}" class="circle">
-                                          <span class="email-title">{{gplusfeed.fromUserName}}</span>
-                                          <div class="row feeds_post z-depth-1 hoverable">
-                                            <div class="col m8">
-                                              <a class="break_word ultra-small black-text" href="{{gplusfeed.activityUrl}}" target="_blank">{{gplusfeed.title}}</a>
+                                            <img src="{{gplusfeed.fromProfileImage}}" alt="{{gplusfeed.fromUserName}}" class="circle">
+                                            <span class="email-title">{{gplusfeed.fromUserName}}</span>
+                                            <div class="row feeds_post z-depth-1 hoverable">
+                                                <div class="col m8">
+                                                    <a class="break_word ultra-small black-text" href="{{gplusfeed.activityUrl}}" target="_blank">{{gplusfeed.title}}</a>
+                                                </div>
+                                                <div class="col m4 center" ng-if="gplusfeed.attachmentType=='photo'">
+                                                    <img src="{{gplusfeed.attachment}}" class="responsive-img ">
+                                                </div>
+                                                <div class="col m4 center" ng-if="gplusfeed.attachmentType=='article'">
+                                                    <img src="{{gplusfeed.attachment}}" class="responsive-img ">
+                                                </div>
+                                                <div class="col m4 center" ng-if="gplusfeed.attachmentType=='event'">
+                                                    {{gplusfeed.content}}
+                                                </div>
                                             </div>
-                                            <div class="col m4 center" ng-if="gplusfeed.attachmentType=='photo'">
-                                              <img src="{{gplusfeed.attachment}}" class="responsive-img ">
-                                            </div>
-                                              <div class="col m4 center" ng-if="gplusfeed.attachmentType=='article'">
-                                                  <img src="{{gplusfeed.attachment}}" class="responsive-img ">
-                                              </div>
-                                              <div class="col m4 center" ng-if="gplusfeed.attachmentType=='event'">
-                                                  {{gplusfeed.content}}
-                                              </div>
-                                          </div>                                         
-                                          <a class="tooltipped secondary-content" data-position="left">{{gplusfeed.publishedDate}}</a>
+                                            <a class="tooltipped secondary-content" data-position="left">{{gplusfeed.publishedDate}}</a>
 
                                             <div class="row">
                                                 <div class="col s2 center">
@@ -63,59 +63,60 @@
                                             </div>
                                         </li>
                                         <!--<div class="center">
-                                          <div class="preloader-wrapper big active">
-                                            <div class="spinner-layer spinner-blue">
-                                              <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                              </div><div class="gap-patch">
-                                                <div class="circle"></div>
-                                              </div><div class="circle-clipper right">
-                                                <div class="circle"></div>
-                                              </div>
-                                            </div>
+          <div class="preloader-wrapper big active">
+            <div class="spinner-layer spinner-blue">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
 
-                                            <div class="spinner-layer spinner-red">
-                                              <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                              </div><div class="gap-patch">
-                                                <div class="circle"></div>
-                                              </div><div class="circle-clipper right">
-                                                <div class="circle"></div>
-                                              </div>
-                                            </div>
+            <div class="spinner-layer spinner-red">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
 
-                                            <div class="spinner-layer spinner-yellow">
-                                              <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                              </div><div class="gap-patch">
-                                                <div class="circle"></div>
-                                              </div><div class="circle-clipper right">
-                                                <div class="circle"></div>
-                                              </div>
-                                            </div>
+            <div class="spinner-layer spinner-yellow">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
 
-                                            <div class="spinner-layer spinner-green">
-                                              <div class="circle-clipper left">
-                                                <div class="circle"></div>
-                                              </div><div class="gap-patch">
-                                                <div class="circle"></div>
-                                              </div><div class="circle-clipper right">
-                                                <div class="circle"></div>
-                                              </div>
-                                            </div>
-                                          </div>
-                                        </div>-->
+            <div class="spinner-layer spinner-green">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>-->
                                         <div class="cssload-container" ng-if="preloadmorefeeds!=true">
                                             <div></div>
                                             <div></div>
                                             <div></div>
                                             <div></div>
                                         </div>
-                                        <!--<h6 style="margin-left:37%; color:lightgray; font-size:30px; font-family:Calibri" ng-if="nofeeds==true && filters!=true"><br /><br /><br /><br /><span><img style="margin-left:14%; width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>-->
+                                    </ul>
+                                        <h6 style="margin-left:37%; color:lightgray; font-size:30px; font-family:Calibri" ng-if="nofeeds==true && filters!=true"><br /><br /><span><img style="margin-left:14%; width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
                                         <div class="col s12 center">
                                             <a class="btn btn_style red_btn_style" ng-click="listData1()" onClick="this.style.visibility = 'hidden';  loadmore_feeds();" ng-if="preloadmorefeeds==true && filters!=true">Load More</a>
                                         </div>
-                                            </ul>
+                                  
 
                                 </div>
                             </div>                                  

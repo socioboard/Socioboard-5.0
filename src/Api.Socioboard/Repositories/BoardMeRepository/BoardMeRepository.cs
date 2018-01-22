@@ -71,6 +71,13 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                     dbr.Add<Domain.Socioboard.Models.MongoBoards>(board);
                     return "successfulyy added.";
                 }
+                else if(boards.Count > 0 && boards.First().isActive == Domain.Socioboard.Enum.boardStatus.inactive)
+                {
+                    boards.First().isActive = Domain.Socioboard.Enum.boardStatus.active;
+                    boards.First().userId = userId;
+                    dbr.Update(boards.First());
+                    return "successfulyy added.";
+                }
                 else
                 {
                     return "board Exist";
@@ -160,6 +167,7 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 DateTime toTime = DateTime.UtcNow.AddMinutes(-DateTime.UtcNow.Minute).AddHours(-24);
                 List<Domain.Socioboard.Models.MongoBoards> lstmongo = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId==0).ToList();
                 lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
+                lstmongo.RemoveAll(s => s.boardName.Contains("\\"));
                 return lstmongo;
 
             }
@@ -177,6 +185,7 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 DateTime toTime = DateTime.UtcNow.AddDays(-7);
                 List<Domain.Socioboard.Models.MongoBoards> lstmongo = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId == 0).ToList();
                 lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
+                lstmongo.RemoveAll(s => s.boardName.Contains("\\"));
                 return lstmongo;
 
             }
@@ -195,6 +204,7 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 DateTime toTime = DateTime.UtcNow.AddDays(-30);
                 List<Domain.Socioboard.Models.MongoBoards> lstmongo = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId == 0).ToList();
                 lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
+                lstmongo.RemoveAll(s => s.boardName.Contains("\\"));
                 return lstmongo;
 
             }
@@ -213,6 +223,7 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
                 DateTime toTime = DateTime.UtcNow.AddDays(-365);
                 List<Domain.Socioboard.Models.MongoBoards> lstmongo = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId == 0).ToList();
                 lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
+                lstmongo.RemoveAll(s => s.boardName.Contains("\\"));
                 return lstmongo;
 
             }

@@ -375,7 +375,26 @@
         <!--start container-->
         <div class="container">
             <div class="row no-space">
-                <div class="col l2 m2 s12 center">                  
+                <!--<div class="col offset-s5 s5">
+                    <div class="input-field">
+                        <input id="categories" type="text" class="validate">
+                        <label for="categories" style="left:0;">Search user by name</label>
+                    </div>
+                </div>-->
+                <!--<div class="col s2 center margin-top-20">-->
+                    <!--href="#SearchProfileModal"-->
+                    <!--<a  ng-click="searchtag()" class="btn btn_round ">
+                        <i class="fa fa-search"></i>
+                    </a>
+                </div>-->
+               <!--<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="loadFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>-->
+            </div>
+            <div class="row no-space">
+                <!--<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="loadFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>-->
+             <div class="row no-space" ng-if="show!=true">
+                 <a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;  text-align:center">{{filterrTxtt}}</a><span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;  text-align:center">{{SorttTxtt}}</a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="loadFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a><span class="right">&nbsp;</span>
+             </div>
+                 <div class="col l2 m2 s12 center">                  
                     <img src={{detailsuser.profileUrl}} class="responsive-img circle margin-top-10">
                 </div>
                 <div class="col l5 m5 s12">
@@ -387,13 +406,13 @@
                 </div>
                 <div class="col s12 m5 l5 ">
                     <div class="right  margin-top-20">
-                        <a class="dropdown-button btn white-text btn_style black ng-binding" href="javascript:void(0)" data-activates="dropdownFilter" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">All Posts</a>
+                        <!--<a class="dropdown-button btn white-text btn_style black ng-binding" href="javascript:void(0)" data-activates="dropdownFilter" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">All Posts</a>-->
                         <ul id="dropdownFilter" class="dropdown-content" style="white-space: nowrap; position: absolute; top: 20px; left: 678.484px; opacity: 1; display: none;">
                             <li><a href="javascript:void(0)" style="color:black"><strong>Filter</strong></a></li>
                             <li><a href="javascript:void(0)" ng-click="filterSearch('image', 'Image')">Image posts</a></li>
                             <li><a href="javascript:void(0)" ng-click="filterSearch('video', 'Video')">Video posts</a></li>
                         </ul>
-                        <a class="dropdown-button white-text btn btn_style black ng-binding" href="javascript:void(0)" data-activates="dropdownSort" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Popular</a>
+                        <!--<a class="dropdown-button white-text btn btn_style black ng-binding" href="javascript:void(0)" data-activates="dropdownSort" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Popular</a>-->
                         <ul id="dropdownSort" class="dropdown-content" style="white-space: nowrap; position: absolute; top: 20px; left: 587.438px; opacity: 1; display: none;">
                             <li><a href="javascript:void(0)" style="color:black"><strong>Popular</strong></a></li>
                             <li><a href="javascript:void(0)" ng-click="sortSearch('mLikes','Most likes')">Most Likes</a></li>
@@ -401,7 +420,7 @@
                             <li><a href="javascript:void(0)" ng-click="sortSearch('lLikes', 'Least likes')">Least Likes</a></li>
                             <li><a href="javascript:void(0)" ng-click="sortSearch('lComments', 'Least comments')">Least Comments</a></li>
                         </ul>
-                        <a class="white-text btn btn_style black" ng-click="ReLoadingTopFeeds()" title="Recent feeds" href="javascript:void(0)" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a>
+                        <!--<a class="white-text btn btn_style black" ng-click="ReLoadingTopFeeds()" title="Recent feeds" href="javascript:void(0)" style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Recent</a>-->
                         <span class="right">&nbsp;</span>
                     </div>
                 </div>
@@ -409,13 +428,13 @@
             <div class="row no-space">
                 <br /><br />
                 <div class="center">
-                    <h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="nomessages==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No post to display<br /></h6>
+                    <!--<h6 style="color:lightgray; font-size:24px; font-family:Calibri" ng-if="endfeeds==true"><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No post to display<br /></h6>-->
                 </div>
                 <br />
             </div>
             <div class="row" >
                 <!-- loader -->
-                <div class="windows8" ng-if="preloadmorefeeds!=true">
+                <div class="windows8" ng-if="preloadmorefeedss !=false">
                     <div class="wBall" id="wBall_1">
                         <div class="wInnerBall"></div>
                     </div>
@@ -461,8 +480,11 @@
                     </ul>
                 </div>
                 <div class="col s12 center">
-                    <a class="btn btn_style blue_btn_style" ng-click="listData()" onClick="this.style.visibility = 'hidden';  loadmore_feeds();"  ng-if="preloadmorefeeds==true && filters!=true">Load More</a>
-                </div>
+                    <a class="btn btn_style blue_btn_style" ng-click="listData()" onClick="this.style.visibility = 'hidden';  loadmore_feeds();"  ng-if="preloadmorefeeds==false">Load More</a>
+                    <h6 style="color:lightgray; font-size:30px; font-family:Calibri" ng-if="endfeeds==true && filters!=true"><br /><br /><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
+                    <h6 style="color:lightgray; font-size:30px; font-family:Calibri" ng-if="lstnofeeds==true"><br /><br /><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
+                
+</div>
             </div>
         </div>
 
@@ -562,6 +584,7 @@
                                     <a class="btn btn_style btn_round" ng-click="AddInstagramComment(feeds.feedId,feeds.instagramId,feeds.type)">send</a>
                                 </div>
                                 <div ng-show="!dispbtn" class="input-field col s1">
+                               
                                     <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
                                 </div>
                              </div>                                
@@ -572,6 +595,25 @@
         </div>
         <!--end-->
 
+        <!--//search user strature--> 
+        <div id="SearchProfileModal" class="modal" style="width: 630px">
+            <a  class="modal-action modal-close waves-effect waves-green btn-flat right"><i class="fa fa-times"></i></a>
+            <div class="modal-content" style="padding: 10px;">
+                <div class="row no-space">
+                    <div class="col m12">
+                        <div class="">
+                            <ul class="collection no-space">
+                                <li class="collection-item avatar" ng-repeat="item in seachdata" style="min-height: 65px;">
+                                    <img src={{item.profile_picture}} alt="" class="circle">
+                                    <a class="break_word grey-text text-darken-2" style="margin-top: 10px; display: inline-block;" href="https://www.instagram.com/{{item.username}}" target="_blank" >{{item.username}}</a>
+                                    <a class="secondary-content btn btn_style btn_round blue" ng-click="Follow(item.id)">Follow</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
     <!-- END CONTENT -->
 </div>
@@ -583,7 +625,14 @@
         height: '250px',
         alwaysVisible: true,
         allowPageScroll: true
-    });
+  });
+  $('.insearch').slimScroll({
+      color: '#FAB51C',
+      size: '10px',
+      height: '450px',
+      alwaysVisible: true,
+      allowPageScroll: true
+  });
 </script>
 <!-- //////////////////////////////////////// Script Code //////////////////////////////////////////// -->
 

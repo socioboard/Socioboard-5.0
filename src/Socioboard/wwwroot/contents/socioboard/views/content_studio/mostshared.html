@@ -62,7 +62,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="lstData in lstAdvSearhDataaa">
+                        
+                        <tr ng-repeat="lstData in lstAdvSearhDataaa" content="text/html" charset="utf-8">
                             <td>
                                 <input name="selectedContentfeed[]" class="filled-in subcheckbox" id="{{lstData.postId}}" type="checkbox" ng-checked="selectedContentfeed.indexOf(lstData) > -1" ng-click="Toggle(lstData)" />
                                 <label for="{{lstData.postId}}">&nbsp;</label>
