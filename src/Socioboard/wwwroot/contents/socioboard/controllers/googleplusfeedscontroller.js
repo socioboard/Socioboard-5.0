@@ -45,7 +45,6 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=10')
                           .then(function (response) {
-                              debugger;
                               if (response.data != "") {
                                   //$scope.date(response.data);
                                   $scope.lstGpFeeds = response.data;
@@ -80,9 +79,6 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
             }
             $http.get(apiDomain + '/api/Google/GetGplusFeeds?profileId='+ $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=10')
                         .then(function (response) {
-                            debugger;
-
-
                              if (response.data == null || response.data == "") {
                                  reachLast = true;
                                  $scope.loadmore_feed = "Reached at bottom";
@@ -140,15 +136,19 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                           .then(function (response) {
                               // $scope.lstProfiles = response.data;
                               //$scope.lstinsFeeds = response.data;
-                              if (response.data == null) {
+                              if (response.data == null || response.data == "") {
                                   reachLast = true;
+                                  $scope.loadmore_feed = "Reached at bottom";
+                                  $scope.nofeedsss = true;
+                                  $scope.loaderclassfeed = 'hide';
                               }
-                              $scope.date(response.data);
-                              $scope.preloadmorefeeds = true;
-
+                              else {
+                                  $scope.date(response.data);
+                                  $scope.preloadmorefeeds = true;
+                              }
 
                           }, function (reason) {
-                              $scope.error = reason.data;
+                              //$scope.error = reason.data;
                           });
             // end codes to load  recent Feeds
         }

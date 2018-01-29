@@ -182,7 +182,7 @@ namespace Api.Socioboard.Repositories.BoardMeRepository
             try
             {
                 DateTime fromTime = DateTime.UtcNow.AddDays(-1);
-                DateTime toTime = DateTime.UtcNow.AddDays(-7);
+                DateTime toTime = DateTime.UtcNow.AddDays(-25);
                 List<Domain.Socioboard.Models.MongoBoards> lstmongo = dbr.Find<Domain.Socioboard.Models.MongoBoards>(t => (t.trendingtype == Domain.Socioboard.Enum.TrendingType.facebook || t.trendingtype == Domain.Socioboard.Enum.TrendingType.twitter) && t.isActive == Domain.Socioboard.Enum.boardStatus.active && t.createDate.Date >= toTime.Date && t.createDate.Date <= fromTime.Date && t.userId == 0).ToList();
                 lstmongo = lstmongo.OrderByDescending(t => t.createDate).ToList();
                 lstmongo.RemoveAll(s => s.boardName.Contains("\\"));

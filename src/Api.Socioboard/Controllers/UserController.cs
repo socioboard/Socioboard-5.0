@@ -1654,8 +1654,44 @@ namespace Api.Socioboard.Controllers
                 {
                     x.firstName = firstName;
                     x.lastName = lastName;
+                 
+                    if (user != null)
+                    {
+                        var uploads = string.Empty;
+                        var filename = "";
+                        var imgPath = "";
+                        if (files != null && files.Length > 0)
+                        {
+                            var fileName = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.Trim('"');
+                            filename = Microsoft.Net.Http.Headers.ContentDispositionHeaderValue
+                                    .Parse(files.ContentDisposition)
+                                    .FileName
+                                    .Trim('"');
+                            var tempName = Domain.Socioboard.Helpers.SBHelper.RandomString(10) + '.' + fileName.Split('.')[1];
+                            filename = _appEnv.WebRootPath + "\\upload" + $@"\{tempName}";
+                            imgPath = filename;
+                            uploads = _appSettings.ApiDomain + "/api/Media/get?id=" + $@"{tempName}";
+                            try
+                            {
+                                using (FileStream fs = System.IO.File.Create(filename))
+                                {
+                                    files.CopyTo(fs);
+                                    fs.Flush();
+                                }
+                                x.profileImg = uploads;
+                            }
+                            catch (System.Exception ex)
+                            {
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return NotFound("User not found");
+                    }
                     dbr.Update<Domain.Socioboard.Models.Groupmembers>(x);
                 }
+
             }
             catch { }
 

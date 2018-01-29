@@ -1676,8 +1676,9 @@ namespace Api.Socioboard.Repositories
             List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
             var builder = Builders<MongoFacebookFeed>.Sort;
-            var sort = builder.Descending(t => t.FeedDate);
-            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, 20);
+
+            var sort = builder.Descending(t => t.EntryDate);
+            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
             var task = Task.Run(async () =>
             {
                 return await result;

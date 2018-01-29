@@ -5,7 +5,7 @@
                         <!--card widgets end-->
                         <div class="row">
                             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
-                                <div class="card" id="feeds">
+                                <div class="card" id="feeds" style="height:100vh;overflow-y:auto;">
                                     <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>Google plus Live feeds<a class='dropdown-button right white-text' href='javascript:void(0)' data-activates='dropdownFilter'><i class="fa fa-filter"></i></a>
                                         <a class='right white-text btn_style black' ng-click="ReconnectGplus('recgplus')" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px; text-align:center">Reconnect</a>
                                     </h5>
@@ -113,6 +113,7 @@
                                         </div>
                                     </ul>
                                         <h6 style="margin-left:37%; color:lightgray; font-size:30px; font-family:Calibri" ng-if="nofeeds==true && filters!=true"><br /><br /><span><img style="margin-left:14%; width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
+                                    <h6 style="margin-left:37%; color:lightgray; font-size:30px; font-family:Calibri" ng-if="nofeedsss==true"><br /><br /><span><img style="margin-left:14%; width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
                                         <div class="col s12 center">
                                             <a class="btn btn_style red_btn_style" ng-click="listData1()" onClick="this.style.visibility = 'hidden';  loadmore_feeds();" ng-if="preloadmorefeeds==true && filters!=true">Load More</a>
                                         </div>

@@ -105,6 +105,7 @@ namespace Api.Socioboard.Repositories
                 if (task.Result != null)
                 {
                     IList<Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports> lstfbfanpage = task.Result.ToList();
+                    lstfbfanpage = lstfbfanpage.OrderByDescending(t => t.date).ToList();
                     var facebookId = lstfbfanpage.GroupBy(x => x.pageId).Select(x => x.First()).ToList();
                     var random = new Random();
                     foreach (Domain.Socioboard.Models.Mongo.FacaebookPageDailyReports lstcolordata in facebookId)

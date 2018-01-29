@@ -289,8 +289,10 @@ namespace Api.Socioboard.Repositories
 
                 Domain.Socioboard.Models.Facebookaccounts listfb = dbr.FindSingle<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == fbid);
                 int countval = 0;
+                int countitem = 0;
                 foreach (var item in shareathon)
                 {
+                    
                     var retval = mongoreposhareId.Find<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(t => t.FbPageId.Contains(fbid) && t.postId == item.postId);
                     var taskval = Task.Run(async () =>
                     {
@@ -307,7 +309,17 @@ namespace Api.Socioboard.Repositories
                         lstIdforPost.UserId = listfb.UserId;
                         lstIdforPost.Timeintervalminutes = timeInterval;
                         lstIdforPost.postId = item.postId;
-                        lstIdforPost.lastsharestamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                        if (countitem==0)
+                        {
+                            lstIdforPost.lastsharestamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                        }
+                        else
+                        {
+                            var result = TimeSpan.FromMinutes(timeInterval);
+                          //  lstIdforPost.lastsharestamp = lstIdforPost.lastsharestamp + datetotimestamp;
+                            countitem++;
+                        }
+                       
 
                         try
                         {
