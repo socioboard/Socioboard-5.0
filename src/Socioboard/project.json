@@ -1,4 +1,4 @@
-{
+﻿{
   "dependencies": {
     "Microsoft.ApplicationInsights.AspNetCore": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
@@ -24,7 +24,7 @@
     "Serilog.Extensions.Logging": "1.1.0",
     "Serilog.Sinks.ColoredConsole": "2.0.0",
     "Serilog.Sinks.RollingFile": "2.1.0",
-    "Hammock": "1.2.3",
+    "Hammock": "1.0.0",
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Socioboard.Facebook": "1.0.0-*",
     "Serilog": "2.1.0",
@@ -63,9 +63,7 @@
     "publishOptions": {
       "include": [
         "wwwroot",
-        "Themes/Socioboard/Views",
-        "appsettings.json",
-        "web.config"
+        "Themes/Socioboard/Views"
       ]
     },
 
