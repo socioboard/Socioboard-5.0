@@ -366,5 +366,13 @@ namespace Api.Socioboard.Controllers
             return Ok(postdata);
         }
 
+        [HttpGet("GetLinkedinPageSingle")]
+        public IActionResult GetLinkedinPageSingle(string pageId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            Domain.Socioboard.Models.LinkedinCompanyPage pageDetails = dbr.Single<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.LinkedinPageId == pageId);
+            return Ok(pageDetails);
+        }
+
     }
 }

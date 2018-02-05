@@ -267,7 +267,6 @@ namespace Api.Socioboard.Controllers
                         try
                         {
                             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
-
                             mongorepo.Add<MongoFacebookFeed>(_FacebookPagePost);
                             _logger.LogInformation("first feeds added " + _FacebookPagePost);
                         }
@@ -420,15 +419,146 @@ namespace Api.Socioboard.Controllers
                     if (x["changes"][0]["value"]["item"] == "share")
                     {
                         string profileId = Convert.ToString(x["id"]);
+                        _logger.LogInformation("ProfileId" + profileId);
                         string sendId = Convert.ToString(x["changes"][0]["value"]["sender_id"]);
+                        _logger.LogInformation("sendId" + sendId);
                         string sendername = Convert.ToString(x["changes"][0]["value"]["sender_name"]);
+                        _logger.LogInformation("sendername" + sendername);
                         string postid = Convert.ToString(x["changes"][0]["value"]["post_id"]);
+                        _logger.LogInformation("postid" + postid);
                         string message = Convert.ToString(x["changes"][0]["value"]["message"]);
+                        _logger.LogInformation("message" + message);
                         string postTime = Convert.ToString(x["changes"][0]["value"]["created_time"]);
+                        _logger.LogInformation("postTime" + postTime);
                         string share_id = Convert.ToString(x["changes"][0]["value"]["share_id"]);
+                        _logger.LogInformation("share_id" + share_id);
                         string link = Convert.ToString(x["changes"][0]["value"]["link"]);
                         _logger.LogInformation("link" + link);
-                    }
+
+
+
+
+
+                        Domain.Socioboard.Models.Mongo.MongoFacebookFeed _FacebookPagePost = new MongoFacebookFeed();
+                        _FacebookPagePost.Id = ObjectId.GenerateNewId();
+                        _FacebookPagePost.ProfileId = profileId;
+                        _FacebookPagePost.Type = "fb_feed";
+
+                        try
+                        {
+                            _FacebookPagePost.FromName = sendername;
+                            _logger.LogInformation("FromName" + sendername);
+                        }
+                        catch
+                        {
+                            _FacebookPagePost.FromName = "";
+                        }
+                        try
+                        {
+                            _FacebookPagePost.FeedId = postid;
+                            _logger.LogInformation("FeedId" + postid);
+                        }
+                        catch
+                        {
+                            _FacebookPagePost.FeedId = "";
+                        }
+                        try
+                        {
+                            _FacebookPagePost.FeedDescription = link;
+                            _logger.LogInformation("FeedDescription" + link);
+
+                        }
+                        catch(Exception ex)
+                        {
+                            _FacebookPagePost.FeedDescription = "";
+                            _logger.LogInformation("Exception" + ex);
+                        }
+                        try
+                        {
+                            _FacebookPagePost.FromId = sendId;
+                        }
+                        catch
+                        {
+                            _FacebookPagePost.FromId = "";
+                        }
+                        try
+                        {
+                            _FacebookPagePost.Picture = "";
+
+                        }
+                        catch { }
+                        try
+                        {
+                            _FacebookPagePost.shareStatus = false;
+                        }
+                        catch { }
+                        try
+                        {
+                            _FacebookPagePost.FbComment = "http://graph.facebook.com/" + postid + "/comments";
+                            _FacebookPagePost.FbLike = "http://graph.facebook.com/" + postid + "/likes";
+                        }
+                        catch (Exception)
+                        {
+                            _FacebookPagePost.FbComment = "";
+                            _FacebookPagePost.FbLike = "";
+
+                        }
+                        try
+                        {
+                            _FacebookPagePost.FromProfileUrl = "http://graph.facebook.com/" + profileId + "/picture?type=small";
+                            _logger.LogInformation("FromProfileUrl" + _FacebookPagePost.FromProfileUrl);
+                        }
+                        catch (Exception)
+                        {
+                            _FacebookPagePost.FromProfileUrl = "";
+                        }
+
+
+
+                        try
+                        {
+                            double datevalue = Convert.ToDouble(postTime);
+                            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            dateTime = dateTime.AddSeconds(datevalue);
+                            string printDate = dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
+                            string createddate = Convert.ToDateTime(printDate).ToString("yyyy-MM-dd h:mm tt");
+                            DateTime convertedDate = DateTime.SpecifyKind(DateTime.Parse(createddate), DateTimeKind.Utc);
+                            _FacebookPagePost.FeedDate = convertedDate.ToString();
+                            //_FacebookPagePost.FeedDate = DateTime.Parse(postingTime).ToString("yyyy/MM/dd HH:mm:ss");
+                            // _FacebookPagePost.FeedDate = DateTime.Parse(x["changes"][0]["value"]["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                            _logger.LogInformation("FeedDate" + _FacebookPagePost.FeedDate);
+                        }
+                        catch
+                        {
+                            //string postingTime = postTime.ToString();
+                            //_FacebookPagePost.FeedDate = DateTime.Parse(postingTime).ToString("yyyy/MM/dd HH:mm:ss");
+                            // _FacebookPagePost.FeedDate = DateTime.Parse(x["changes"][0]["value"]["created_time"]["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                            //_FacebookPagePost.FeedDate = DateTime.Parse(postingTime).ToString();
+                            _logger.LogError("FeedDate error" + _FacebookPagePost.FeedDate);
+                        }
+                        try
+                        {
+                            _FacebookPagePost.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                        }
+                        catch { }
+                        
+
+                        try
+                        {
+                            MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
+
+                            mongorepo.Add<MongoFacebookFeed>(_FacebookPagePost);
+                            _logger.LogInformation("first feeds added" + _FacebookPagePost);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogInformation("Feeds 1st error");
+                            _logger.LogInformation(ex.Message);
+                            _logger.LogError(ex.StackTrace);
+                        }
+
+                    
+                }
                     if (x["changes"][0]["value"]["item"] == "like" || x["changes"][0]["value"]["item"] == "like")
                     {
                         string profileId = Convert.ToString(x["id"]);

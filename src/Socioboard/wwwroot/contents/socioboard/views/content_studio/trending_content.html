@@ -55,6 +55,23 @@
         width: 20px;
         background: transparent !important;
     }
+
+    .flags {
+    display: inline-block;
+    height: 12px;
+    width: 16px;
+    margin-right: 5px;
+    background-image: url('/contents/socioboard/images/countries-flags-small.png') !important;
+    background-repeat: no-repeat !important;
+}
+
+   .flags.aus{ background-position: -208px 0px;}
+   .flags.bel{ background-position: -48px -11px;}
+   .flags.can{ background-position: -48px -22px;}
+   .flags.us{  background-position: -64px -154px;}
+   .flags.uk{  background-position: -160px -44px;}
+   .flags.fr{  background-position: -128px -44px;}
+   .flags.ger{ background-position: -64px -33px;}
 </style>
 
 <div data-ng-controller="TrendingContentController">
@@ -80,7 +97,7 @@
         </div>
         <div class="row white-text grey darken-4">
             <div class="" style="height:55px;">
-                <div class="col m8 s12 margin-top-10">
+                <div class="col m6 s12 margin-top-10" charset="UTF-8">
                     <a class="btn btn_style" title="Global search"  ng-click="globeSearch('general')"><i class="fa fa-globe"></i></a>
                     <a class="btn btn_style" title="Dailymotion"  ng-click="dailyMotion('dailymotion')"><i class="fa" style=" text-transform: lowercase; font-family: inherit; font-size: x-large; font-weight: 600;">d</i></a>                  
                     <a class="btn btn_style" title="Youtube" ng-click="youtube('youtube')"><i class="fa fa-youtube"></i></a>
@@ -88,8 +105,24 @@
                     <a class="btn btn_style" title="Instagram" ng-click="instagram('instagram')"><i class="fa fa-instagram"></i></a>
                     <a class="btn btn_style" title="Flickr" ng-click="flickr('flickr')"><i class="fa fa-flickr"></i></a>
                 </div>
-                <div class="col m4 s12">
-                    <div class="input-field col s6">
+                <div class="col m6 s12" charset="UTF-8">
+
+                    <div class="input-field col s4">
+                        <a class="dropdown-button right white-text btn btn_style btn_round col s11 " href='javascript:void(0)' data-activates='quk_drop01' style="font-size: medium ;line-height:35px;">World</a>
+                        <ul class="dropdown-content my-dropdown" id="quk_drop01">
+                            <!--<li>  <a href='javascript:void(0)' <strong style="color:black">Quick Topics</strong></a></li>-->
+                            <li> <a href='javascript:void(0)' ng-click="topic('technology')"><span class="flags aus"></span> Australia</a></li>
+                            <li> <a href='javascript:void(0)' ng-click="topic('sport')"><span class="flags bel"></span> Belgium</a></li>
+                            <li> <a href='javascript:void(0)' ng-click="topic('business')"><span class="flags can"></span> Canada</a></li>
+                            <li> <a href='javascript:void(0)' ng-click="topic('politics')"><span class="flags us"></span> United States</a></li>
+                            <li> <a href='javascript:void(0)' ng-click="topic('entertainment')"><span class="flags uk"></span> United Kingdom</a></li>
+                            <li> <a href='javascript:void(0)' ng-click="topic('gaming')"><span class="flags fr"></span> France</a></li>
+                            <li> <a href='javascript:void(0)' ng-click="topic('science_and_nature')"><span class="flags ger"></span> Germany</a></li>
+                           
+                        </ul>
+                    </div>
+
+                    <div class="input-field col s4">
                         <a class="dropdown-button right white-text btn btn_style btn_round col s11 " href='javascript:void(0)' data-activates='quk_drop' style="font-size: medium ;line-height:35px;">Quick Topics</a>
                         <ul class="dropdown-content my-dropdown" id="quk_drop">
                             <!--<li>  <a href='javascript:void(0)' <strong style="color:black">Quick Topics</strong></a></li>-->
@@ -103,7 +136,7 @@
                             <li> <a ng-click="topic('music')">Music</a></li>
                         </ul>
                     </div>
-                    <div class="input-field col s6">
+                    <div class="input-field col s4" charset="UTF-8">
                         <a class="dropdown-button right white-text btn btn_style btn_round col s11" href='javascript:void(0)' data-activates='quk_short' style="font-size: medium ;line-height:35px;border-radius: 78px">Sort By</a>
                         <ul class="dropdown-content my-dropdown" id="quk_short">
                             <!--<li><strong style="color:black">Sort By</strong></li>-->
@@ -128,7 +161,7 @@
     <div id="center">
         <ul id="waterfall">
             <!-- for all -->
-            <li class="show" id="test" ng-repeat="feed in lstData"  ng-if="feedyt.networkType!=2">
+            <li class="show" id="test" ng-repeat="feed in lstData"  ng-if="feedyt.networkType!=2"  charset="UTF-8">
                 <div class="studio_card" >
                     <div class="card hoverable no-space">
                         <div class="row margin-top-10 no-bottom-space">
@@ -147,7 +180,7 @@
                             </a>
                            
                         </div>
-                        <div class="card-content">
+                        <div class="card-content" charset="UTF-8">
                             <div class="row no-space">
                                 <div class="col s12" style="margin: 3px 0px;">
                                     <p class="card-title ">
@@ -289,7 +322,6 @@
             </div>
             <br />
             <h6 style="color:gray; font-size:18px; font-family:Calibri;">Please wait while we are processing</h6>
-
         </div>
     </div>
 

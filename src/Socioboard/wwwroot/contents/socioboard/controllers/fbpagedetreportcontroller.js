@@ -920,6 +920,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
                         date: new Date((value.date * 1000)),
                         totalLikes: value.totalLikes
                     });
+                    console.log("totalLikes", totalLikes);
 
                 }
             });

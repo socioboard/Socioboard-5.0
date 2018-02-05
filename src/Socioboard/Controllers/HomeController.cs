@@ -261,6 +261,9 @@ namespace Socioboard.Controllers
                             ViewBag.profileCount = count;
                             ViewBag.MaxCount = MaxCount;
                             ViewBag.AccountType = user.AccountType;
+                            //for primary account finding start 
+                            ViewBag.userPrimary = user;
+                            // end
                             if (count > MaxCount)
                             {
                                 ViewBag.downgrade = "true";
@@ -307,6 +310,9 @@ namespace Socioboard.Controllers
                             int MaxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(user.AccountType);
                             ViewBag.profileCount = count;
                             ViewBag.MaxCount = MaxCount;
+                            //for primary account finding start 
+                            ViewBag.userPrimary = user;
+                            // end
                             if (count > MaxCount)
                             {
                                 ViewBag.downgrade = "true";

@@ -1566,6 +1566,7 @@ namespace Api.Socioboard.Controllers
                     user.UserType = "User";
                     user.EmailValidateToken = "Facebook";
                     user.SocialLoginEnableFb = true;
+                    user.SocialLoginEnableGo = true;
                     user.LastLoginTime = DateTime.UtcNow;
                     try
                     {
