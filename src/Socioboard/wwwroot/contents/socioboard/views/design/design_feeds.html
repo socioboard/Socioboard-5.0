@@ -100,7 +100,7 @@
                                 </div>
                             </div>
                             <div class="card-action center">
-                                <a ng-click="schedulefbpost(fbpost)" class="waves-effect waves-grey btn btn_round ">Schedule</a>
+                                <a ng-click="schedulefbpost(fbpost.message)" class="waves-effect waves-grey btn btn_round ">Schedule</a>
                                 <a ng-click="openComposeMessage(fbpost)" class="waves-effect waves-grey btn grey btn_round ">1-Click</a>
                             </div>
                         </div>
@@ -172,10 +172,10 @@
                         <div class="col s12 m6">
                             <div class="input-field col s12">
                                 <div class="emoji-picker-container">
-                                    <textarea id="composeMessage" disabled class="materialize-textarea active grey-text text-darken-4" length="5000">{{fbComposeMessage.url }}</textarea>
+                                    <textarea id="composeMessage" disabled class="materialize-textarea active grey-text text-darken-4" length="5000">{{fbComposeMessage.shareMessage }}</textarea>
                                 </div>
                             </div>
-                            <!--<div class="row no-space">
+                            <div class="row no-space">
                                 <div class="col s12 m12 l12">
                                     <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
                                 </div>
@@ -187,7 +187,7 @@
                                 <div class="col s12 m8 l9" ng-if="!fbComposeMessage">
                                     <input type="file" id="composeImage" class="dropify" after-render data-default-file="" />
                                 </div>
-                            </div>-->
+                            </div>
                         </div>
                         <div class="col s12 m6">
                             <div class="row">
@@ -204,7 +204,7 @@
                                     </li>
                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
                                         <label>
-                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="urlfb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                             <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
@@ -212,7 +212,7 @@
                                     </li>
                                     <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                         <label>
-                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="urlfb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
+                                            <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                             <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                             <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                             <span style="float:right;"><img ng-src="/contents/socioboard/images/Fb_page-icon.png"></span>

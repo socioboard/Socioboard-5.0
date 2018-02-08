@@ -111,6 +111,7 @@ D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\SBGroupUserStatus.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\SBPaymentStatus.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\SBRegistrationType.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\SBUserActivationStatus.cs
+D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\ScheduledStatus.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\ScheduleStatus.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\SessionHistoryStatus.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Enum\SocialProfileStatus.cs
@@ -195,6 +196,7 @@ D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\FacaebookPageDailyRepo
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\FacebookPageFeedShare.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\FacebookPagePost.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\FacebookPagePromotionDetails.cs
+D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\FacebookPasswordChangeUserDetail.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\Fbpublicpagedailyreports.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\FbPublicPagePost.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\GoogleAnalyticsReport.cs
@@ -240,6 +242,8 @@ D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\Rss.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\RssFeed.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\RssNewsContents.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\RssNewsContentsFeeds.cs
+D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\SavedFeedsComments.cs
+D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\SavedFeedsManagement.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\SharethonGroupPost.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\SharethonPagePost.cs
 D:\SBPROJECT\Developer\src\Domain.Socioboard\Models\Mongo\TaskComments.cs

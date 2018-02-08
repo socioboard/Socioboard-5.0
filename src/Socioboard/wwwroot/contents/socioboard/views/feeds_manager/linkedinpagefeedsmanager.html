@@ -1,0 +1,140 @@
+<div data-ng-controller="LinkedinPageFeedsManagerController">
+    <!-- START CONTENT -->
+    <section id="content">
+        <!--start container-->
+        <!--card widgets end-->
+        <div class="row">
+            <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                <div class="card light-blue darken-2">
+                    <div class="col s12 center">
+                        <img src="{{profileData.logoUrl}}" class="profilePicHeadin circle margin-top-10" style="border: 3px solid #ffffff59;" />
+                        <h5 class="white-text margin-bottom-10">{{profileData.linkedinPageName}}</h5>
+                        <i class="fa fa-linkedin fa-5x white-text" style="position: absolute; top: 86px; right: 9px; opacity: .3;"></i>
+                        <i class="fa fa-linkedin fa-5x white-text" style="position: absolute;top: -25px;right: 40px;opacity: 0.15;font-size: 24em;"></i>
+                        <!--<i class="fa white-text" style="position: absolute;top: 30px;left: 1px;opacity: 0.1;font-size: 8em;font-family: cursive;">{{profileData.linkedinPageName}}</i>-->
+
+                    </div>
+                </div>
+                <div class="card" id="feeds">
+                    <ul class="collection facebookfeeds">
+                        <li class="collection-item avatar" ng-repeat="feeds in feedsSavedData">
+                            <img src="{{feeds.picUrl}}" alt="Chanchal Santra" class="circle">
+                            <span class="email-title">{{feeds.socialProfileName}}</span>
+                            <div class="row feeds_post z-depth-1 hoverable">
+                                <div class="col m8">
+                                    <p class="break_word ultra-small">{{feeds.shareMessage}}</p>
+                                </div>
+                                <!-- img -->
+                                <div class="col m4 center" ng-if="feeds.mediaType == 1">
+                                    <img src="{{feeds.url}}" class="responsive-img">
+                                </div>
+                                <!-- video -->
+                                <div class="col m4 center" ng-if="feeds.mediaType == 2">
+                                    <video class="responsive-video" controls>
+                                        <source src="{{feeds.url | Url}}" type="video/mp4">
+                                    </video>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col l3 s3">
+                                    <a class="center grey-text text-darken-4">
+                                        <i class="icon-action-undo fa-fw"></i><span> Publish Now</span>
+                                    </a>
+                                </div>
+                                <div class="col l3 s3">
+                                    <a class="center grey-text text-darken-4">
+                                        <i class="icon-clock fa-fw"></i><span> Scedule</span>
+                                    </a>
+                                </div>
+                                <div ng-if="feeds.review==false" class="col l3 s3">
+                                    <a class="center grey-text text-darken-4">
+                                        <i class="icon-check fa-fw"></i><span> Approve</span>
+                                    </a>
+                                </div>
+                                <div ng-if="feeds.review==true" class="col l3 s3">
+                                    <a class="center green-text">
+                                        <i class="icon-check fa-fw green-text"></i><span> Approved</span>
+                                    </a>
+                                </div>
+                                <div class="col l3 s3">
+                                    <div class="center">
+                                        <a ng-click="openComment(feeds)" class="grey-text text-darken-4"><i class="icon-bubble" aria-hidden="true"></i> Comment</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <label class="grey-text text-darken-2 secondary-content" data-position="left" title="{{feeds.savedTime * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}">{{feeds.savedTime * 1000 | date}} - {{feeds.savedTime * 1000 | date:'HH:mm'}}</label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!--end container-->
+        <!-- Compose Email Trigger -->
+        <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+            <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+                <i class="large mdi-editor-mode-edit"></i>
+            </a>
+        </div>
+
+        <!-- Compose Email Structure -->
+        <div id="ComposePostModal" class="modal">
+            <div class="model-email-content">
+                <div class="row no-space">
+                    <form class="col s12">
+                        <!--Default version-->
+                        <div class="row section">
+                            <div class="col s12 m6">
+                                <p>Select your file</p>
+                                <input type="file" id="input_file" class="dropify" data-default-file="" />
+                            </div>
+                            <div class="input-field col s12 m6">
+                                <textarea id="compose" class="materialize-textarea" length="500"></textarea>
+                                <label for="compose">Compose email</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a class="modal-action waves-effect waves-green btn blue_btn_style btn-flat" ng-click="ComposeMessage()">Connect</a>
+                <a class="modal-action modal-close waves-effect waves-green btn btn_round btn-flat">Close</a>
+            </div>
+        </div>
+
+        <!--//fbpage comments module-->
+        <div id="commentModal" class="modal" style="min-height:100px;">
+            <div class="modal-content">
+                <form class="row no-space">
+                    <div class="col s6 center">
+
+                        <video class="responsive-video" controls ng-if="selectedFeed.mediaType == 2">
+                            <source src="{{selectedFeed.url | Url}}" type="video/mp4">
+                        </video>
+
+                        <img class="responsive-img" ng-src="{{selectedFeed.url}}" ng-if="selectedFeed.mediaType == 1" />
+
+                        <p class="no-space">
+                            {{selectedFeed.shareMessage}}
+                        </p>
+
+                    </div>
+                    <div class="col s6">
+                        <div class="m_comm">
+                            <div ng-repeat="comment in allcomment">
+                                <div class="grey-text text-darken-1"><span><b>{{comment.userName}}</b></span> : <span class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{comment.commentText}}</span></div>
+                            </div>
+                        </div>
+                        <div class="input-field col s10">
+                            <input id="postcomment_text" placeholder="Add a comment.." class="" type="text" ng-model="postcommentText">
+                        </div>
+                        <div class="input-field col s1">
+                            <a class="btn btn_style btn_round" ng-click="addComment(selectedFeed, postcommentText)">send</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+    <!-- END CONTENT -->
+</div>

@@ -95,5 +95,27 @@ namespace Api.Socioboard.Repositories
                 return null;
             }
         }
+
+        public static IList<Domain.Socioboard.Models.Mongo.SavedFeedsComments> GetComments(string postId, long groupId, Helper.AppSettings _settings)
+        {
+            MongoRepository mongorepo = new MongoRepository("SavedFeedsComments", _settings);
+            try
+            {
+                var builder = Builders<Domain.Socioboard.Models.Mongo.SavedFeedsComments>.Sort;
+                var sort = builder.Descending(t => t.savedTime);
+                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.SavedFeedsComments>(t => t.postId.Equals(postId) && t.groupId.Equals(groupId));
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<Domain.Socioboard.Models.Mongo.SavedFeedsComments> lstYtFeeds = task.Result;
+                return lstYtFeeds;
+            }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }
+

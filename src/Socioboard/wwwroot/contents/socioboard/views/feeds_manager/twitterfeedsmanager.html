@@ -1,0 +1,163 @@
+<div data-ng-controller="TwitterFeedsManagerController">
+  <!-- START CONTENT -->
+  <section id="content">
+      <!--start container-->
+        <!--card widgets end-->
+        <div class="row">
+            <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+              <div class="card light-blue text-darken-1">
+                  <div class="col s12 center">
+                      <img src="https://scontent.fblr2-1.fna.fbcdn.net/v/t1.0-1/p160x160/15241939_120804085073697_6874322294797274382_n.jpg?oh=7b731e46cc7426dec18ecaaebb49795c&oe=5B209B9C" class="profilePicHeadin circle margin-top-10" style="border: 3px solid #ffffff59;"/>
+                      <h5 class="white-text margin-bottom-10">Chanchal</h5>
+                      <i class="fa fa-twitter fa-5x white-text" style="position: absolute; top: 86px; right: 9px; opacity: .3;"></i>
+                  </div>
+              </div>
+                <div class="card" id="feeds">
+                    <ul class="collection facebookfeeds">
+                        <li class="collection-item avatar">
+                            <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
+                            <span class="email-title">Chanchal Santra</span>
+                            <div class="row feeds_post z-depth-1 hoverable">
+                                <div class="col m8">
+                                    <p class="break_word ultra-small">You have Google+ request from john doe.You have Google+ request</p>
+                                </div>
+                                <div class="col m4 center">
+                                    <img src="https://fbexternal-a.akamaihd.net/safe_image.php?d=AQDY0eJAQlqN-waC&w=130&h=130&url=https%3A%2F%2Fnyoobserver.files.wordpress.com%2F2016%2F04%2Fgettyimages-453828570.jpg%3Fquality%3D80&cfs=1" class="responsive-img">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col l3 s3">
+                                    <a class="center grey-text text-darken-4">
+                                        <i class="icon-action-undo fa-fw"></i><span> Publish Now</span>
+                                    </a>
+                                </div>
+                                <div class="col l3 s3">
+                                    <a class="center grey-text text-darken-4">
+                                        <i class="icon-clock fa-fw"></i><span> Scedule</span>
+                                    </a>
+                                </div>
+                                <div ng-if="5==4" class="col l3 s3">
+                                    <a class="center grey-text text-darken-4">
+                                        <i class="icon-check fa-fw"></i><span> Approve</span>
+                                    </a>
+                                </div>
+                                <div ng-if="5==5" class="col l3 s3">
+                                    <a class="center green-text">
+                                        <i class="icon-check fa-fw green-text"></i><span> Approved</span>
+                                    </a>
+                                </div>
+                                <div class="col l3 s3">
+                                    <div class="center">
+                                        <a ng-click="viewcomment(fbfeed._facebookFeed)" class="grey-text text-darken-4"><i class="icon-bubble" aria-hidden="true"></i> Comment</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="tooltipped secondary-content" data-position="left" data-tooltip="09">09:09am</a>
+                            </li>
+                        <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
+                            <img ng-src="https://graph.facebook.com/{{fbfeed._facebookFeed.fromId}}/picture?type=small" alt="{{fbfeed._facebookFeed.fromName}}" class="circle">
+                            <span class="email-title">{{fbfeed._facebookFeed.fromName}}</span>
+                            <div class="row feeds_post">
+                                <div class="col m8 ">
+                                    <a class="break_word ultra-small black-text" href="https://www.facebook.com/{{fbfeed._facebookFeed.feedId}}" target="_blank">{{fbfeed._facebookFeed.feedDescription}}</a>
+                                </div>
+                                <!--<strong>{{fbfeed.postType}}-------{{fbfeed.postingFrom}}</strong>-->
+                                <div class="col m4 center">
+                                    <img ng-src="{{getHttpsURL(fbfeed._facebookFeed.picture)}} " ng-if="fbfeed._facebookFeed.picture!= ''" class="responsive-img">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col l8 s8 left">
+                                    <a class="center">
+                                        <i class="icon-like fa-fw"></i><span> {{fbfeed._facebookFeed.likecount}}</span>
+                                    </a>
+                                </div>
+                                <div class="col l2 s2 right">
+                                    <div class="center">
+                                        <a ng-click="openComposeMessage(fbfeed._facebookFeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
+                                    </div>
+                                </div>
+                                <div class="col l2 s2 right">
+                                    <div class="center">
+                                        <a ng-click="viewcomment(fbfeed._facebookFeed)" class="right"><i class="icon-bubble" aria-hidden="true"></i> Comment</a>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.entryDate}}</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>                                  
+        </div>
+      <!--end container-->
+
+      <!-- Compose Email Trigger -->
+      <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+        <a class="btn-floating btn-large red modal-trigger" href="#ComposePostModal">
+          <i class="large mdi-editor-mode-edit"></i>
+        </a>
+      </div>
+
+      <!-- Compose Email Structure -->
+      <div id="ComposePostModal" class="modal">
+        <div class="model-email-content">
+          <div class="row no-space">
+            <form class="col s12">
+              <!--Default version-->
+              <div class="row section">
+                <div class="col s12 m6">
+                   <p>Select your file</p>
+                    <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                </div>
+                <div class="input-field col s12 m6">
+                  <textarea id="compose" class="materialize-textarea" length="500"></textarea>
+                  <label for="compose">Compose email</label>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+          <div class="modal-footer">
+              <a class="modal-action waves-effect waves-green btn blue_btn_style btn-flat">Connect</a>
+              <a class="modal-action modal-close waves-effect waves-green btn btn_round btn-flat">Close</a>
+          </div>
+      </div>
+
+      <!--//fbpage comments module-->
+      <div id="viewpageModal" class="modal" style="min-height:100px;">
+          <div class="modal-content">
+              <form class="row no-space">
+                  <div class="col s6 center">
+                      <img class="responsive-img" ng-src="{{feeddata.picture}}" />
+                      <p class="no-space">
+                          {{feeddata.feedDescription}}
+                      </p>
+                  </div>
+                  <div class="col s6">
+                      <div class="m_comm">
+                          <div ng-repeat="comment in allcomment" my-Chat-Modal-Directive>
+                              {{allcomment.fromName}}
+                              <div class="grey-text text-darken-1"><span><b>{{comment.fromName}}</b></span> : <span class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{comment.comment}}</span></div>
+                          </div>
+                      </div>
+                      <div class="input-field col s10">
+                          <input id="postcomment_{{feeddata.feedId}}" placeholder="Add a comment.." class="" type="text">
+                          <!--<label for="postcomment" class="active">Add a comment..</label>-->
+
+                      </div>
+                      <div class="input-field col s1">
+                          <a class="btn btn_style btn_round" ng-click="PostFacebookComment(feeddata.feedId,feeddata.profileId)">send</a>
+                      </div>
+                      <!--<div ng-show="!dispbtn" class="input-field col s1">
+                        <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
+                    </div>-->
+                  </div>
+              </form>
+          </div>
+      </div>
+
+  </section>
+  <!-- END CONTENT -->   
+</div>

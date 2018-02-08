@@ -1,4 +1,5 @@
-﻿using Api.Socioboard.Model;
+﻿using Api.Socioboard.Helper;
+using Api.Socioboard.Model;
 using Api.Socioboard.Repositories;
 using Domain.Socioboard.Interfaces.Services;
 using Domain.Socioboard.Models.Mongo;
@@ -39,6 +40,10 @@ namespace Api.Socioboard.Controllers
         [HttpPost("SavePost")]
         public IActionResult SavePost(SavedFeedsManagement objData, IFormFile files)
         {
+            if (files != null)
+            {
+                objData.url = MediaHelper.UploadMedia(files, _appSettings, _appEnv);
+            }
             bool status = SavedFeedsManagementRepository.SavePost(objData, _appSettings);
             return Ok(status);
         }
@@ -69,5 +74,10 @@ namespace Api.Socioboard.Controllers
             return Ok(SavedFeedsManagementRepository.GetSavedFeeds(profileId, groupId, _appSettings));
         }
 
+        [HttpGet("GetComments")]
+        public IActionResult GetComments(string postId, long groupId)
+        {
+            return Ok(SavedFeedsManagementRepository.GetComments(postId, groupId, _appSettings));
+        }
     }
 }

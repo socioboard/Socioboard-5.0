@@ -248,6 +248,10 @@ ul.side-nav.leftside-navigation li.active > a{
     height: 54px;
     width: 54px;
 }
+.profilePicHeadin {
+    height: 99px;
+    width: 99px;
+}
 .msgiconPoss {
     margin-left: -15px;
 }
@@ -892,5 +896,3 @@ ul.side-nav.leftside-navigation li.active > a{
     color: #fff;
     cursor: pointer;
 }
-
-

@@ -5,6 +5,7 @@ namespace Domain.Socioboard.Enum
     {
         Compleated=1,
         Pending=0,
-        Deleted=2
+        Deleted=2,
+        error = 3
     }
 }

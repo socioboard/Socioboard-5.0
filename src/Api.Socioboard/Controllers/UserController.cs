@@ -1260,7 +1260,7 @@ namespace Api.Socioboard.Controllers
                     html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + user.EmailValidateToken + "&id=" + user.Id);
 
 
-                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", user.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", user.EmailId, "", "", "Socioboard Email confirmation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
 
                     return Ok("Mail Sent Successfully.");
                 }
@@ -2191,7 +2191,7 @@ namespace Api.Socioboard.Controllers
             }
             else
             {
-                return BadRequest("New Email and Conform Email are not same");
+                return BadRequest("New Email and Confirm Email are not same");
             }
 
         }

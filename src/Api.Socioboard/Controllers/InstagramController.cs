@@ -245,5 +245,13 @@ namespace Api.Socioboard.Controllers
             return Ok(Searchdata);
 
         }
+
+        [HttpGet("GetInstaAccSingle")]
+        public IActionResult GetInstaAccSingle(string accId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Domain.Socioboard.Models.Instagramaccounts pageDetails = dbr.Single<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId == accId);
+            return Ok(pageDetails);
+        }
     }
 }

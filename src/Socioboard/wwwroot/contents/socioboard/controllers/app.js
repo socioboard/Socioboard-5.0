@@ -1108,6 +1108,91 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         })
 
 
+     // feeds manager
+        // facebook feeds manager
+
+        .state('facebookfeedsmanager', {
+            url: "/facebookfeedsmanager",
+            templateUrl: "../contents/socioboard/views/feeds_manager/facebookfeedsmanager.html",
+            data: { pageTitle: 'Facebook feeds manager', pageSubTitle: 'updated' },
+            controller: "FacebookFeedsManagerController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/facebookfeedsmanagercontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // twitter feeds manager
+
+        .state('twitterfeedsmanager', {
+            url: "/twitterfeedsmanager",
+            templateUrl: "../contents/socioboard/views/feeds_manager/twitterfeedsmanager.html",
+            data: { pageTitle: 'Facebook feeds manager', pageSubTitle: 'updated' },
+            controller: "TwitterFeedsManagerController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/twitterfeedsmanagercontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // linkedinpage feeds manager
+
+        .state('linkedinpagefeedsmanager', {
+            url: "/linkedinpagefeedsmanager/{profileId}",
+            templateUrl: "../contents/socioboard/views/feeds_manager/linkedinpagefeedsmanager.html",
+            data: { pageTitle: 'Linkedin Page feeds manager', pageSubTitle: 'updated' },
+            controller: "LinkedinPageFeedsManagerController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/linkedinpagefeedsmanagercontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
+        // instagram feeds manager
+
+        .state('instagramfeedsmanager', {
+            url: "/instagramfeedsmanager/{profileId}",
+            templateUrl: "../contents/socioboard/views/feeds_manager/instagramfeedsmanager.html",
+            data: { pageTitle: 'Instagram feeds manager', pageSubTitle: 'updated' },
+            controller: "InstagramFeedsManagerController",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'SocioboardApp',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            '../contents/socioboard/js/admin/plugins.js',
+                            '../contents/socioboard/controllers/instagramfeedsmanagercontroller.js'
+                        ]
+                    });
+                }]
+            }
+        })
+
            // facebook feeds controller
 
          .state('facebookfeeds', {
@@ -2510,6 +2595,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                 }]
             }
         })
+
 
 }]).run(function ($rootScope, $state) {
     $rootScope.$on('$stateChangeStart', function (event, toState, $stateParams) {

@@ -1,4 +1,5 @@
-﻿using Domain.Socioboard.Helpers;
+﻿using Domain.Socioboard.Enum;
+using Domain.Socioboard.Helpers;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using Newtonsoft.Json;
@@ -17,11 +18,14 @@ namespace Domain.Socioboard.Models.Mongo
         public string strId { get; set; }
         public long userId { get; set; }
         public string userPrimaryEmail { get; set; }
+        public string fbAccEmail { get; set; }
         public string profileId { get; set; }
         public string profileName { get; set; }
         public string message { get; set; }
         public string dateValue { get; set; }
         public bool status { get; set; }
+        public string socialmedia { get; set; }
+        public SBRegistrationType RegistrationType { get; set; }
 
 
 

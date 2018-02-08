@@ -357,8 +357,8 @@ namespace Api.Socioboard.Repositories
 
                         new Thread(delegate ()
                          {
+                             FacebookRepository.SaveFacebookPageFeed(fbAcc.AccessToken, lstFbAcc.First().FbUserId, lstFbAcc.First().FbUserName, settings);
                              FacebookRepository.SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
-                             FacebookRepository.SaveFacebookPageFeed(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings);
                              FacebookRepository.SavePageConversations(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                              FacebookRepository.SaveFacebookPagePromotionalDetails(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                              FacebookRepository.SaveFacebookPageTaggedDetails(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
@@ -368,7 +368,7 @@ namespace Api.Socioboard.Repositories
                              UpdateDeleteLinkShareathon(fbAcc.FbUserName, userId, settings);
                          }).Start();
 
-                       
+
 
                     }
                 }
@@ -993,7 +993,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static void SaveFacebookPageFeed(string accesstoken, string facebookid, Helper.AppSettings _appSettings)
+        public static void SaveFacebookPageFeed(string accesstoken, string facebookid,string fbpagename ,Helper.AppSettings _appSettings)
         {
             try
             {
@@ -1011,7 +1011,10 @@ namespace Api.Socioboard.Repositories
                         {
                             _FacebookPagePost.PageName = _feed["from"]["name"].ToString();
                         }
-                        catch { }
+                        catch
+                        {
+                            _FacebookPagePost.PageName = fbpagename;
+                        }
                         try
                         {
                             _FacebookPagePost.PostId = _feed["id"].ToString();
@@ -1178,7 +1181,7 @@ namespace Api.Socioboard.Repositories
                         {
                             var update = Builders<Domain.Socioboard.Models.Mongo.FacebookPagePost>.Update.Set(t => t.Likes, _FacebookPagePost.Likes).Set(t => t.Comments, _FacebookPagePost.Comments).Set(t => t.Shares, _FacebookPagePost.Shares)
                             .Set(t => t.EngagedUsers, _FacebookPagePost.EngagedUsers).Set(t => t.Talking, _FacebookPagePost.Talking).Set(t => t.Engagement, _FacebookPagePost.Engagement)
-                            .Set(t => t.Reach, _FacebookPagePost.Reach).Set(t => t.Link, _FacebookPagePost.Link);
+                            .Set(t => t.Reach, _FacebookPagePost.Reach).Set(t => t.Link, _FacebookPagePost.Link).Set(t => t.PageName, _FacebookPagePost.PageName);
                             reppoFacebookPagePost.Update<Domain.Socioboard.Models.Mongo.FacebookPagePost>(update, t => t.PostId == _FacebookPagePost.PostId);
                         }
                         else

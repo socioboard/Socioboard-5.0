@@ -201,9 +201,9 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
             if (schedulemessage != null)
             {
                 var message = {
-                   // "shareMessage": schedulemessage.message,
-                   // "picUrl": schedulemessage.postImgUrl,
-                     "url": schedulemessage.postUrl,
+                   "shareMessage": schedulemessage.message,
+                    "picUrl": schedulemessage.postImgUrl,
+                     //"url": schedulemessage.postUrl,
               
                 };
                
@@ -294,13 +294,14 @@ SocioboardApp.controller('DesignFeedsController', function ($rootScope, $scope, 
 
         $scope.schedulefbpost = function (schedulemessage) {
             $rootScope.schedulemessage = schedulemessage;
-            var message = {
-                "url": schedulemessage.postUrl,
+            //var message = {
+            //    "url": schedulemessage.postUrl,
             
-            };
+            //};
             //console.log(message);
             //console.log("google");
-            $rootScope.schedulemessage = message;
+
+            //$rootScope.schedulemessage = message;
             $rootScope.grppost = true;
             //window.location.href = "#/schedulemessage";
             $state.go('schedulemessage');

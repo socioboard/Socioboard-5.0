@@ -284,12 +284,15 @@ namespace Api.Socioboard.Repositories
 
 
             int totalval = 0;
+           // DateTime timeval = DateTime.Now;
             foreach (var fbid in lstProfileIds)
             {
-
+               
                 Domain.Socioboard.Models.Facebookaccounts listfb = dbr.FindSingle<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == fbid);
                 int countval = 0;
                 int countitem = 0;
+                string timevalue = null;
+                string sectimevalue = null;
                 foreach (var item in shareathon)
                 {
                     
@@ -309,28 +312,34 @@ namespace Api.Socioboard.Repositories
                         lstIdforPost.UserId = listfb.UserId;
                         lstIdforPost.Timeintervalminutes = timeInterval;
                         lstIdforPost.postId = item.postId;
+                        lstIdforPost.lastsharestamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
                         if (countitem==0)
                         {
-                            lstIdforPost.lastsharestamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                            lstIdforPost.latsSharetime = DateTime.UtcNow;
                         }
                         else
                         {
-                            var result = TimeSpan.FromMinutes(timeInterval);
+                           // a.AddMinutes
+                            DateTime secval = Convert.ToDateTime(timevalue);
+                            lstIdforPost.latsSharetime = secval.AddMinutes(timeInterval);//timevalue.latsSharetime.AddMinutes(timeInterval);
+                          // var result = TimeSpan.FromMinutes(timeInterval);
                           //  lstIdforPost.lastsharestamp = lstIdforPost.lastsharestamp + datetotimestamp;
-                            countitem++;
+
                         }
                        
 
                         try
                         {
                             mongoreposhareId.Add(lstIdforPost);
-                            //countval++;
+                          
                         }
                         catch (Exception ex)
                         {
                             //return "not added";
                         }
-
+                       DateTime timeval =  lstIdforPost.latsSharetime;
+                        timevalue =timeval.ToString();
+                        
                     }
                     int count = 0;
                     try
@@ -371,7 +380,19 @@ namespace Api.Socioboard.Repositories
                         lstforShareathon.UserId = userId;
                         lstforShareathon.Timeintervalminutes = timeInterval;
                         lstforShareathon.lastsharestamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                       
                         lstforShareathon.Status = false;
+                        if (countitem == 0)
+                        {
+                            lstforShareathon.latsSharetime = DateTime.UtcNow;
+                        }
+                        else
+                        {
+                            // a.AddMinutes
+                            DateTime sectableaddtime = Convert.ToDateTime(sectimevalue);
+                            lstforShareathon.latsSharetime = sectableaddtime.AddMinutes(timeInterval);
+
+                        }
                         try
                         {
                             mongorepo.Add(lstforShareathon);
@@ -381,12 +402,16 @@ namespace Api.Socioboard.Repositories
                         {
                             //return "not added";
                         }
+
+                        DateTime timevalsec = lstforShareathon.latsSharetime;
+                        sectimevalue = timevalsec.ToString();
+
                     }
                     else
                     {
                         // return "some problem while adding";
                     }
-
+                    countitem++;
                     totalval = countval;
                 }
             }

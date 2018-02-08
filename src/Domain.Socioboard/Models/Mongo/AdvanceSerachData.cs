@@ -24,6 +24,8 @@ namespace Domain.Socioboard.Models.Mongo
         public string domainType { get; set; }
         public string title { get; set; }
         public string userName { get; set; }
+        public string country { get; set; }
+        public string language { get; set; }
         public string videourl { get; set; }
         public double postedTime { get; set; }
         public string publishDate { get; set; }

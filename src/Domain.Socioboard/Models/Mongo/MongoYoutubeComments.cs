@@ -39,6 +39,7 @@ namespace Domain.Socioboard.Models.Mongo
         public bool sbGrpTaskAssign { get; set; }
         public bool review { get; set; }
         public string reviewedBy { get; set; }
+        public double reviewedBysbUserId { get; set; }
 
 
     }
