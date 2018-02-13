@@ -83,6 +83,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         $scope.cmpbtn = true;
 
         $scope.ComposeMessage = function () {
+            debugger;
             $scope.disbtncom = false;
             var profiles = new Array();
             $("#checkboxdata .subcheckbox").each(function () {

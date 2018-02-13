@@ -1,5 +1,5 @@
---temp-output:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Pinterest\obj\Debug\net451\
---out:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Pinterest\bin\Debug\net451\Socioboard.Pinterest.dll
+--temp-output:C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Pinterest\obj\Debug\net451\
+--out:C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Pinterest\bin\Debug\net451\Socioboard.Pinterest.dll
 --define:DEBUG
 --define:TRACE
 --define:NET451
@@ -49,9 +49,9 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Microsoft.CSharp.dll
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Global.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Auth\Authentication.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Board\Board.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Pin\Pin.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Properties\AssemblyInfo.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Pinterest\User\User.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Global.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Auth\Authentication.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Board\Board.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Pin\Pin.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Pinterest\Properties\AssemblyInfo.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Pinterest\User\User.cs

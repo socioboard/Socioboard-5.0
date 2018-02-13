@@ -700,6 +700,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         }
 
         $scope.daywiseScheduleMsg = function () {
+            debugger;
             $scope.repeat = false;
 
             var profilesnamesdaywise = new Array();
@@ -785,10 +786,11 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             profiledaywiseUpdated.push(item.replace("_SB",""));
                     })
                     if (scheduletime != "") {
-                        $scope.checkfile();
+                        $scope.checkfiles();
+                        $scope.findExtensions();
                         if ($scope.check == true) {
                             var formData = new FormData();
-                            formData.append('files', $("#input-file-now").get(0).files[0]);
+                            formData.append('files', $("#input-file-nows").get(0).files[0]);
                             formData.append('messageText', message);
                             $scope.dispbtn = false;
                             $http({
@@ -870,6 +872,39 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             }
             else {
                 swal('Please enter some text to schedule the message');
+            }
+        }
+
+        $scope.checkfiles = function () {
+            var filesinput = $('#input-file-nows');
+            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
+            if (filesinput != undefined && filesinput[0].files[0] != null) {
+                if ($scope.hasExtensions('#input-file-nows', fileExtension)) {
+                    $scope.check = true;
+                }
+                else {
+                    $scope.check = false;
+                }
+            }
+        }
+
+        $scope.hasExtensions = function (inputID, exts) {
+            var fileName = $('#input-file-nows').val();
+            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
+        }
+
+        $scope.findExtensions = function () {
+            var fileName = $('#input-file-nows');
+            var fileExtensionImage = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
+            var fileExtensionVideo = ['mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
+            if ($scope.hasExtension('#input-file-nows', fileExtensionImage)) {
+                $scope.fileExtensionName = 1;
+            }
+            else if ($scope.hasExtension('#input-file-nows', fileExtensionVideo)) {
+                $scope.fileExtensionName = 2;
+            }
+            else {
+                $scope.fileExtensionName = 0;
             }
         }
 

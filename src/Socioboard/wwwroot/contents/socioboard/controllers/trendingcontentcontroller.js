@@ -11,6 +11,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         $scope.dispbtn = true;
         $scope.disbtncom = true;
         
+        $scope.temptext = "Quick Topics";
         $scope.deleteProfile = function(profileId){
         	// console.log(profileId);
         	swal({   
@@ -300,8 +301,9 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         }
 
 
-        $scope.topic = function (networkType) {
+        $scope.topic = function (networkType,pass) {
            
+            $scope.temptext = pass;
             $http.get(apiDomain + '/api/ContentStudio/QuickTopics?networkType=' + networkType + '&skip=' + startData + '&count=30')
                           .then(function (response) {
                             
@@ -310,7 +312,6 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
                               console.log($scope.lstData);
                               startData = response.data.length;
                               $scope.lastreach = true;
-                             
                            
                               if (response.data == null) {
                                   ReachLast = true;

@@ -1,5 +1,5 @@
---temp-output:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\obj\Debug\net451\
---out:D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll
+--temp-output:C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Facebook\obj\Debug\net451\
+--out:C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Facebook\bin\Debug\net451\Socioboard.Facebook.dll
 --define:DEBUG
 --define:TRACE
 --define:NET451
@@ -45,7 +45,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Threading.Timer.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.ReaderWriter.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\Facades\System.Xml.XDocument.dll
---reference:D:\socioboardgithub\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll
+--reference:C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Domain.Socioboard\bin\Debug\net451\Domain.Socioboard.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\mscorlib.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Core.dll
@@ -53,7 +53,7 @@
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.ComponentModel.DataAnnotations.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Net.dll
 --reference:C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5.1\System.Security.dll
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Auth\Authentication.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\Fbpages.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\FbUser.cs
-D:\socioboardgithub\Socioboard-Core-3.0\src\Socioboard.Facebook\Properties\AssemblyInfo.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Facebook\Auth\Authentication.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\Fbpages.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Facebook\Data\FbUser.cs
+C:\Users\GLB-008-PC\Documents\GitHub\Socioboard-Core-3.0\src\Socioboard.Facebook\Properties\AssemblyInfo.cs

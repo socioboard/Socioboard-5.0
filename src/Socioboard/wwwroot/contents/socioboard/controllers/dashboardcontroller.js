@@ -4,6 +4,8 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
     //alert('helo');
 
     $scope.$on('$viewContentLoaded', function () {
+       
+        
         $scope.dispbtn = true;
         $scope.check = false;
         $scope.draftbtn = true;
