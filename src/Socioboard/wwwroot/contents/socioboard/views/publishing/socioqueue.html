@@ -60,8 +60,11 @@
                                 </div>
                             </td>
                             <td class="center">
-                                <span style="word-break : break-all">
+                                <span style="word-break : break-all"   ng-if="socioqueue.shareMessage">
                                     {{socioqueue.shareMessage}}
+                                </span>
+                                <span style="word-break : break-all" ng-if="!socioqueue.shareMessage">
+                                    {{socioqueue.link}}
                                 </span>
                                 <br>
                                 <img ng-if="socioqueue.mediaType==1" src="{{getProperURL(socioqueue.url)}}" class="responsive-img" style="width:200px">
@@ -128,7 +131,7 @@
     </section>
     <!-- END CONTENT -->
     <!-- Modal Structure -->
-    <div id="SocioqueueModal" class="modal">
+    <!--<div id="SocioqueueModal" class="modal">
         <form class="col s12" name="editscheduleform">
             <div class="modal-content">
                 <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
@@ -148,6 +151,22 @@
         </form>
 
         
+    </div>-->
+
+    <div id="SocioqueueModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-action modal-close right"><i class="fa fa-times fa-2x"></i></span>
+            <h5>Edit Message</h5>
+            <div class="row center">
+                <div class="input-field col s12">
+                    <textarea id="editScheduleMsg" class="materialize-textarea" length="500" value=""></textarea>
+                    <!--<label for="ScheduleMsg">Edit Message Here</label>-->
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="savesocioqueueedit()">Save</a>
+        </div>
     </div>
     <!--</script>-->
 

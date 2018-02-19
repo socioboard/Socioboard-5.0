@@ -235,7 +235,7 @@ SocioboardApp.directive('myRepeatTabDirective', function ($timeout) {
         if (scope.$last === true) {
             $timeout(function () {
                 $('select').material_select();
-
+                $('ul.tabs').tabs();
             });
         }
     };

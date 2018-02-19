@@ -53,9 +53,8 @@ SocioboardApp.controller('InstagramFeedsManagerController', function ($rootScope
                         },
                         transformRequest: angular.identity,
                     }).then(function (response) {
-                        if (response.data == "Posted") {
-                            $('#ComposePostModal').closeModal();
-                            swal('Message composed successfully');
+                        if (response.data == true) {
+                            swal('Post saved successfully');
                             $(".dropify-clear").click();
                         }
 
@@ -95,6 +94,7 @@ SocioboardApp.controller('InstagramFeedsManagerController', function ($rootScope
             var fileName = $('#input_file').val();
             return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }
+
         //code for checking the file format end
         $scope.findExtension = function () {
             var fileName = $('#input_file');
@@ -111,11 +111,12 @@ SocioboardApp.controller('InstagramFeedsManagerController', function ($rootScope
             }
         }
 
+        //Comments Management
         $scope.openComment = function (selectedFeedData) {
             $('#commentModal').openModal();
             $scope.selectedFeed = selectedFeedData;
 
-            $http.get(apiDomain + '/api/SavedFeedsManagement/GetComments?postId=' + selectedFeedData.id + '&groupId=' + $rootScope.groupId)
+            $http.get(apiDomain + '/api/SavedFeedsManagement/GetComments?postId=' + selectedFeedData.strId + '&groupId=' + $rootScope.groupId)
                          .then(function (response) {
                              $scope.allcomment = response.data;
                          }, function (reason) {
@@ -127,34 +128,59 @@ SocioboardApp.controller('InstagramFeedsManagerController', function ($rootScope
         $scope.addComment = function (selectedFeedData, comment) {
             $http({
                 method: 'POST',
-                url: apiDomain + '/api/SavedFeedsManagement/SaveComment?postId=' + selectedFeedData.id + '&profileId=' + selectedFeedData.socialProfileId + '&commentText=' + comment + '&userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId + '&userProfilePic=' + $rootScope.user.ProfilePicUrl + '&userName=' + $rootScope.user.FirstName + ' ' + $rootScope.user.LastName,
+                url: apiDomain + '/api/SavedFeedsManagement/SaveComment?postId=' + selectedFeedData.strId + '&profileId=' + selectedFeedData.socialProfileId + '&commentText=' + comment + '&userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId + '&userProfilePic=' + $rootScope.user.ProfilePicUrl + '&userName=' + $rootScope.user.FirstName + ' ' + $rootScope.user.LastName,
                 headers: {
                     'Content-Type': undefined
                 },
                 transformRequest: angular.identity,
             }).then(function (response) {
                 if (response.data == "Posted") {
-                    //done
+                    swal("Comment Posted");
                 }
 
             }, function (reason) {
 
             });
         }
+        //END COMMENTS MANAGEMANT
 
-        $scope.loadComments = function () {
-            $http.get(apiDomain + '/api/SavedFeedsManagement/GetComments?postId=' + $stateParams.profileId)
-                         .then(function (response) {
-                             debugger;
-                             $scope.profileData = response.data;
-                         }, function (reason) {
-                             $scope.error = reason.data;
-                         });
+        //Delete Post
+        $scope.deletePost = function (tempPostId) {
+            swal({
+                title: "Delete task",
+                text: "Post will be deleted",
+                type: "info",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                $http.post(apiDomain + '/api/SavedFeedsManagement/DeletePost?postId=' + tempPostId)
+                          .then(function (response) {
+                              if (response.data == true) {
+                                  swal("Deleted");
+                              }
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            });
         }
+        //END DELETE POST
 
-
-
-        
+        //Show AND hide Header
+        $scope.hideheadernames = " Hide";
+        var countheader = 0;
+        $scope.hideHeader = function () {
+            countheader++;
+            if (countheader % 2 == 0) {
+                $("#myHide").show();
+                $scope.hideheadernames = " Hide";
+            }
+            else {
+                $("#myHide").hide();
+                $scope.hideheadernames = " Show";
+            }
+        }
+        //END show AND hide Header
     });
 })
 .filter('Url', function ($sce) {

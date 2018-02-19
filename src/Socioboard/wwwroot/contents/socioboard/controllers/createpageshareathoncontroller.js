@@ -11,10 +11,8 @@ SocioboardApp.controller('CreatePageShareathonController', function ($rootScope,
             var FacebookUrl = $('#postpage_url').val();
             var pageId = $('#shraeathonfacebookpage').val();
             var timeInterval = $('#shraeathontimeinterval').val();
-            if (pageId == "")
-            {
-                if(FacebookUrl == "")
-                {
+            if (pageId == "") {
+                if (FacebookUrl == "") {
                     swal("please enter any facebook page url or select any facebook page");
                     return false;
                 }
@@ -62,7 +60,18 @@ SocioboardApp.controller('CreatePageShareathonController', function ($rootScope,
             var pageId = $('#shraeathonfacebookpage').val();
             var FacebookUrl = $('#postpage_url').val();
             var timeInterval = $('#shraeathontimeinterval').val();
-            
+            if (accountId == null) {
+                accountId = $rootScope.pageshareathondata.facebookaccountid
+            }
+            if (pageId == null || pageId.length == 0) {
+                pageId = $rootScope.pageshareathondata.facebookpageid
+            }
+            if (FacebookUrl == null) {
+                FacebookUrl = $rootScope.pageshareathondata.facebookPageUrl
+            }
+            if (timeInterval == null) {
+                timeInterval = $rootScope.pageshareathondata.timeintervalminutes
+            }
             if (accountId != null && timeInterval != null) {
                 if (FacebookUrl != "") {
                     if (FacebookUrl.indexOf("facebook") == -1 || FacebookUrl.indexOf("https") == -1 || FacebookUrl.indexOf("http") == -1) {

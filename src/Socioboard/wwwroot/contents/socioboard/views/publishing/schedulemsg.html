@@ -269,10 +269,11 @@
                                                    <textarea id="ScheduleMsg" class="materialize-textarea" ng-pattern="/^[a-z]+[@+!+#][a-z]*$/" ng-model="ScheduleMsg" required name="ScheduleMsgtxt" length="500"></textarea>
                                                    <label for="ScheduleMsg">Type Your Message Here</label>
                                                </div>
-                                               <div ng-if="schedulemessage">
-                                                   <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage.url" ng-if="!grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.url}}</textarea>
-                                                   <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.url}}</textarea>                                                 
-                                               </div>
+                                               <div ng-if="schedulemessage">                                                                                                                         
+                                                   <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage.url" ng-if="!grppost && !draftpost"  required name="ScheduleMsgtxt" length="500">{{schedulemessage.url}}</textarea>
+                                                   <textarea id="ScheduleMsg" disabled class="materialize-textarea active grey-text text-darken-4" ng-model="schedulemessage.shareMessage" ng-if="grppost && !draftpost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.shareMessage}}</textarea>                                                 
+                                                   <textarea id="ScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage.shareMessage" ng-if="draftpost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.shareMessage}}</textarea>
+                                                </div>
                                            </div>
                                            <span class="error-message" ng-show="scheduleform.ScheduleMsgtxt.$dirty && scheduleform.ScheduleMsgtxt.$invalid">
                                                <span style="color:red" ng-show="scheduleform.ScheduleMsgtxt.$error.required">Please enter Schedule Message</span>
@@ -284,7 +285,7 @@
                                            <div class="col s12 m12 l12">
                                                <input type="hidden" id="imageUrl" value="{{schedulemessage.picUrl}}" />
                                                <div ng-if="schedulemessage">
-                                                   <input type="file" id="input-file-now" class="dropify" after-render data-default-file="{{schedulemessage.picUrl}}" />
+                                                   <input type="file" id="input-file-now"  class="dropify" after-render data-default-file="{{schedulemessage.picUrl}}" />
                                                    <!--<input type="file" id="input-file-now" class="dropify" data-default-file="" />-->
                                                </div>
                                                <div ng-if="!schedulemessage">
@@ -638,8 +639,9 @@
                                                             <label for="dayScheduleMsg">Type Your Message Here</label>
                                                         </div>
                                                         <div ng-if="schedulemessage">
-                                                            <textarea id="dayScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage.shareMessage" ng-if="!grppost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.shareMessage}}</textarea>
+                                                            <textarea id="dayScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage.shareMessage" ng-if="!grppost && !draftpost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.shareMessage}}</textarea>
                                                             <textarea id="dayScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage" ng-if="grppost" required name="ScheduleMsgtxt" length="500"></textarea>
+                                                            <textarea id="ScheduleMsg" class="materialize-textarea active" ng-model="schedulemessage.shareMessage" ng-if="draftpost" required name="ScheduleMsgtxt" length="500">{{schedulemessage.shareMessage}}</textarea>
                                                             <label for="dayScheduleMsg">Type Your Message Here</label>
                                                         </div>
                                                     </div>
@@ -654,15 +656,13 @@
                                                     <div class="col s12 m12 l12">
                                                         <input type="hidden" id="dayimageUrl" value="{{schedulemessage.picUrl}}" />
                                                         <div ng-if="schedulemessage">
-                                                            <input type="file" id="input-file-nows" class="dropify" after-render data-default-file="{{schedulemessage.picUrl}}" />
+                                                            <input type="file" id="input-file-now" class="dropify" after-render data-default-file="{{schedulemessage.picUrl}}" />
                                                         </div>
                                                         <div ng-if="!schedulemessage">
-                                                            <input type="file" id="input-file-nows" class="dropify" after-render data-default-file="" />
+                                                            <input type="file" id="input-file-now" class="dropify" after-render data-default-file="" />
                                                         </div>
 
                                                     </div>
-
-                                                  
                                                 </div>
                                                 <div class="row section">
                                                     <div class="col s12 m12 l12">

@@ -245,7 +245,7 @@ namespace Api.Socioboard.Controllers
                             Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
                             string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
 
-                       }).Start();
+                        }).Start();
                     }
                     catch (Exception ex)
                     {
@@ -336,6 +336,12 @@ namespace Api.Socioboard.Controllers
         [HttpPost("ScheduleMessage")]
         public async Task<ActionResult> ScheduleMessage(string message, string profileId, long userId, string imagePath, string link, string scheduledatetime, string localscheduletime, IFormFile files, string messageText, Domain.Socioboard.Enum.MediaType mediaType)
         {
+
+            string updatemessage = Request.Form["messageText"];
+            if (message == "none")
+            {
+                messageText = updatemessage;
+            }
             message = messageText;
             var filename = "";
             string postmessage = "";
@@ -503,7 +509,7 @@ namespace Api.Socioboard.Controllers
                         link = linkurl;
                         string prId = item.Substring(6, item.Length - 6);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, "", Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, link, Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {

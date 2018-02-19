@@ -107,7 +107,7 @@ namespace Api.Socioboard.Controllers
                     html = html.Replace("[FirstName]", nuser.FirstName);
                     html = html.Replace("[AccountType]", nuser.AccountType.ToString());
                     html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + nuser.EmailValidateToken + "&id=" + nuser.Id);
-                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", nuser.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", nuser.EmailId, "", "", "Socioboard Email confirmation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
                 }
                 catch
                 {
@@ -175,7 +175,7 @@ namespace Api.Socioboard.Controllers
                     html = html.Replace("[FirstName]", nuser.FirstName);
                     html = html.Replace("[AccountType]", nuser.AccountType.ToString());
                     html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + nuser.EmailValidateToken + "&id=" + nuser.Id);
-                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", nuser.EmailId, "", "", "Socioboard Email conformation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", nuser.EmailId, "", "", "Socioboard Email confirmation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
                 }
                 catch
                 {

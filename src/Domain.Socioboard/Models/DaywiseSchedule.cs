@@ -27,5 +27,6 @@ namespace Domain.Socioboard.Models
         public virtual string url { get; set; }
         public virtual string link { get; set; }
         public virtual string socialprofileName { get; set; }
+        public virtual DateTime calendertime { get; set; }
     }
 }

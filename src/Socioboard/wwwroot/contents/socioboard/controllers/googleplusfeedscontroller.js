@@ -60,7 +60,7 @@ SocioboardApp.controller('GooglePlusFeedsController', function ($rootScope, $sco
                                   $scope.loadmore_feed = "Reached at bottom";
                                   $scope.nofeeds = true;
                                   $scope.loaderclassfeed = 'hide';
-                                  //$scope.dropCalled = true;
+                                  $scope.dropCalled = true;
                                   setTimeout(function () {
                                       $scope.callDropmenu();
                                   }, 1000);

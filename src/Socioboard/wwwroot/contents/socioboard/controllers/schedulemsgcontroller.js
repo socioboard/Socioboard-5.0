@@ -7,9 +7,19 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         $scope.dispbtn = true;
         $scope.repeat = false;
 
-        if($rootScope.schedulemessage)
-        {
+        if ($rootScope.schedulemessage) {
             $('#ScheduleMsg').focus();
+        }
+        if ($rootScope.schedulemessage != undefined) {
+            console.log($rootScope.schedulemessage);
+            $timeout(function () {
+                var composeImagedropify = $('#input-file-now').parents('.dropify-wrapper');
+                 $(composeImagedropify).find('.dropify-render').html('<img src="' + $rootScope.schedulemessage.picUrl + '">');
+                $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
+            }, 3000)
+
+            //$rootScope.schedulemessage.val('');
+
         }
 
         $scope.currentDate = new Date();
@@ -85,7 +95,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                 return false;
             }
 
-            
+
 
             var updatedmessage = "";
             var postdata = message.split("\n");
@@ -113,8 +123,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             var date = date_value.split("/");
             date_value = date[1] + "/" + date[0] + "/" + date[2];
             var time_value = ($('.md-input')[1]).value;
-             var scheduletime = date_value + ' ' + time_value;
-           // var scheduletime = datval + ' ' + time_value;
+            var scheduletime = date_value + ' ' + time_value;
+            // var scheduletime = datval + ' ' + time_value;
             var newdate1 = new Date(scheduletime.replace("AM", "").replace("PM", "")).toUTCString();
             var d = new Date(newdate1);
             var d4 = d.setHours(d.getHours() + 5);
@@ -153,7 +163,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
 
 
             if (message != "") {
-                if (profilesnames.length > 0) {                    
+                if (profilesnames.length > 0) {
                     if (scheduletime != "") {
                         // if (date_value != "") {
                         $scope.checkfile();
@@ -174,7 +184,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             }).then(function (response) {
 
                                 if (response.data == "scheduled") {
-
+                                    debugger;
+                                    $rootScope.schedulemessage = undefined;
                                     if (num < y) {
 
                                         $scope.chekRepat();
@@ -183,6 +194,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                         $scope.weekloopsch();
                                     }
                                     else {
+                                       
                                         $('#ScheduleMsg').val('');
                                         $('#ScheduleTime').val('');
                                         $('#input_0').val('');
@@ -219,6 +231,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                 },
                                 transformRequest: angular.identity,
                             }).then(function (response) {
+                                $rootScope.schedulemessage =undefined;
                                 if (num < y) {
                                     $scope.chekRepat();
                                 }
@@ -700,7 +713,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
         }
 
         $scope.daywiseScheduleMsg = function () {
-            debugger;
             $scope.repeat = false;
 
             var profilesnamesdaywise = new Array();
@@ -783,14 +795,13 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                 if (profilesnamesdaywise.length > 0) {
                     var profiledaywiseUpdated = new Array();
                     angular.forEach(profilesnamesdaywise, function (item) {
-                            profiledaywiseUpdated.push(item.replace("_SB",""));
+                        profiledaywiseUpdated.push(item.replace("_SB", ""));
                     })
                     if (scheduletime != "") {
-                        $scope.checkfiles();
-                        $scope.findExtensions();
+                        $scope.checkfile();
                         if ($scope.check == true) {
                             var formData = new FormData();
-                            formData.append('files', $("#input-file-nows").get(0).files[0]);
+                            formData.append('files', $("#input-file-now").get(0).files[0]);
                             formData.append('messageText', message);
                             $scope.dispbtn = false;
                             $http({
@@ -875,39 +886,6 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             }
         }
 
-        $scope.checkfiles = function () {
-            var filesinput = $('#input-file-nows');
-            var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp', 'mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
-            if (filesinput != undefined && filesinput[0].files[0] != null) {
-                if ($scope.hasExtensions('#input-file-nows', fileExtension)) {
-                    $scope.check = true;
-                }
-                else {
-                    $scope.check = false;
-                }
-            }
-        }
-
-        $scope.hasExtensions = function (inputID, exts) {
-            var fileName = $('#input-file-nows').val();
-            return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
-        }
-
-        $scope.findExtensions = function () {
-            var fileName = $('#input-file-nows');
-            var fileExtensionImage = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
-            var fileExtensionVideo = ['mov', 'mp4', 'mpeg', 'wmv', 'avi', 'flv', '3gp'];
-            if ($scope.hasExtension('#input-file-nows', fileExtensionImage)) {
-                $scope.fileExtensionName = 1;
-            }
-            else if ($scope.hasExtension('#input-file-nows', fileExtensionVideo)) {
-                $scope.fileExtensionName = 2;
-            }
-            else {
-                $scope.fileExtensionName = 0;
-            }
-        }
-
         //code for compose message start
 
         $scope.ComposeMessage = function () {
@@ -971,16 +949,16 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                             transformRequest: angular.identity,
                         }).then(function (response) {
 
-                                $('#ScheduleMsg').val('');
-                                $scope.dispbtn = true;
+                            $('#ScheduleMsg').val('');
+                            $scope.dispbtn = true;
 
-                                $scope.rep = true;
-                                $rootScope.draftDelete = "true";
-                                swal("Message Posted successfully");
-                                closeModel();
-                                $(".dropify-clear").click();
-                            
-                           
+                            $scope.rep = true;
+                            $rootScope.draftDelete = "true";
+                            swal("Message Posted successfully");
+                            closeModel();
+                            $(".dropify-clear").click();
+
+
                         }, function (reason) {
 
                         });

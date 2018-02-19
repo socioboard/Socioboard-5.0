@@ -93,7 +93,7 @@
                             </div>
                         </div>
                         <div class="card-action center">
-                            <a ng-click="schedulefbpost(linpost.message)"class="waves-effect waves-grey btn btn_round ">Schedule</a>
+                            <a ng-click="schedulefbpost(linpost)"class="waves-effect waves-grey btn btn_round ">Schedule</a>
                             <a ng-click="openComposeMessage(linpost)" class="waves-effect waves-grey btn grey btn_round ">1-Click</a>
                         </div>
                     </div>
@@ -230,25 +230,34 @@
                 <div class="modal-content">
                     <a href="" class="right modal-action modal-close waves-effect waves-green"><i class="icon-close"></i></a>
                     <h4 class="center">Categories Featured</h4>
-                    <div class="row">
-                        <div class="col l12 s12 m12">
-                            <div class="input-field">
-                                <input value="" id="categories" type="text" class="validate">
-                                <label class="active" for="categories">Search your categories</label>
+
+                    <form class="col s12" name="discoveryform">
+                        <div class="row">
+                            <div class="col l12 s12 m12">
+                                <div class="input-field">
+                                    <input value="" id="categories" type="text" class="validate">
+                                    <label class="active" for="categories">Search your categories</label>
+                                </div>
+                                <div class="col s2">
+                                    <!--<a ng-click="discovery()" class="btn">
+                                        <i class="fa fa-search"></i>
+                                    </a>-->
+                                    <button type="submit" ng-show="!dispbtn" ng-click="discovery()" class="btn">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <button ng-show="dispbtn" class="btn">
+                                        <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="col s2">
-                                <a ng-click="discovery()" class="btn">
-                                    <i class="fa fa-search"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <!--<div class="col l4 m4 s12" ng-repeat="categories in lstcategories">
-                            <div class="collection">
-                                <a ng-click="discovery(categories.keyword)" class="collection-item active">{{categories.keyword}}</a>
-                            </div>
-                        </div>-->
-                    </div>
+                            <!--<div class="col l4 m4 s12" ng-repeat="categories in lstcategories">
+                <div class="collection">
+                    <a ng-click="discovery(categories.keyword)" class="collection-item active">{{categories.keyword}}</a>
                 </div>
+            </div>-->
+                        </div>
+                        </form>
+</div>
                 <div class="col l12 s12 m12 fb_feed">
                     <span style="color: buttontext; font-size: 17px;">
                         To Get More Leads visit our partner &nbsp;&nbsp;
@@ -292,7 +301,7 @@
                         <div class="col s12 m6">
                             <div class="input-field col s12">
                                 <div class="emoji-picker-container">
-                                    <textarea id="composeMessage" class="materialize-textarea" length="5000">{{liComposeMessage.shareMessage }}</textarea>
+                                    <textarea id="composeMessage" disabled class="materialize-textarea active grey-text text-darken-4" length="5000">{{liComposeMessage.shareMessage }}</textarea>
                                 </div>
                             </div>
                             <div class="row no-space">

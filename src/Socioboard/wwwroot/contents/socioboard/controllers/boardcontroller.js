@@ -218,7 +218,8 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
 
 
 
-            $rootScope.grppost = false;
+             $rootScope.grppost = false;
+             $rootScope.draftpost = false;
             $state.go('schedulemessage');
         }
       

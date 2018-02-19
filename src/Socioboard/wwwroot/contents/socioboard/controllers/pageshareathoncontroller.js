@@ -58,6 +58,7 @@ SocioboardApp.controller('PageShareathonController', function ($rootScope, $scop
 
         $scope.editpageshareathon = function (pageshareathon) {
             $rootScope.pageshareathondata = pageshareathon;
+           // console.log($rootScope.pageshareathondata);
             window.location.href = "#/edit_page_shareathon.html";
         }
 

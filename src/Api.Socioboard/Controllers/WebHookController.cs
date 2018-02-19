@@ -267,6 +267,7 @@ namespace Api.Socioboard.Controllers
                         try
                         {
                             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
+
                             mongorepo.Add<MongoFacebookFeed>(_FacebookPagePost);
                             _logger.LogInformation("first feeds added " + _FacebookPagePost);
                         }
@@ -468,7 +469,7 @@ namespace Api.Socioboard.Controllers
                             _logger.LogInformation("FeedDescription" + link);
 
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             _FacebookPagePost.FeedDescription = "";
                             _logger.LogInformation("Exception" + ex);
@@ -541,7 +542,7 @@ namespace Api.Socioboard.Controllers
                             _FacebookPagePost.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                         }
                         catch { }
-                        
+
 
                         try
                         {
@@ -557,8 +558,8 @@ namespace Api.Socioboard.Controllers
                             _logger.LogError(ex.StackTrace);
                         }
 
-                    
-                }
+
+                    }
                     if (x["changes"][0]["value"]["item"] == "like" || x["changes"][0]["value"]["item"] == "like")
                     {
                         string profileId = Convert.ToString(x["id"]);

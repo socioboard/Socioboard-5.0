@@ -43,7 +43,7 @@
                     <h5 class="feeds_title blue lighten-3 white-text"><i class="icon-social-twitter"></i>Twitter Posts</h5>
                     <ul class="collection twtfeeds">
                         <li class="collection-item avatar" ng-repeat="twtfeed in lstDiscoverySearchTwitter">
-                            <img src="{{twtfeed.profileImageUrl}}" alt="{{twtfeed.fromName}}" class="circle">
+                            <img ng-src="{{twtfeed.profileImageUrl}}" alt="{{twtfeed.fromName}}" class="circle">
                             <span class="email-title">{{twtfeed.fromName}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
@@ -60,14 +60,14 @@
                     <h5 class="feeds_title red darken-2 white-text"><i class="fa fa-google-plus"></i>GooglePlus Posts</h5>
                     <ul class="collection gplusfeeds">
                         <li class="collection-item avatar" ng-repeat="gplusfeed in lstDiscoverySearchGplus">
-                            <img src="{{gplusfeed.profileImageUrl}}" alt="{{gplusfeed.fromName}}" class="circle">
+                            <img ng-src="{{gplusfeed.profileImageUrl}}" alt="{{gplusfeed.fromName}}" class="circle">
                             <span class="email-title">{{gplusfeed.fromName}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
                                     <p class="break_word ultra-small">{{gplusfeed.message}}.</p>
                                 </div>
                             </div>
-                            <a class="tooltipped secondary-content" data-position="left" href="{{gplusfeed.messageId}}">{{gplusfeed.createdTime}}am</a>
+                            <a class="tooltipped secondary-content" data-position="left" href="{{gplusfeed.messageId}}">{{gplusfeed.createdTime}}</a>
                         </li>
 
 
@@ -79,7 +79,7 @@
                     <h5 class="feeds_title instagram_color white-text"><i class="fa fa-instagram"></i>Instagram Posts</h5>
                     <ul class="collection instagramfeeds">
                         <li class="collection-item avatar" ng-repeat="insfeed in lstDiscoverySearchinstagram">
-                            <img class="circle" src="{{insfeed.imageUrl}}" alt="{{insfeed.adminUser}}">
+                            <img class="circle" ng-src="{{insfeed.imageUrl}}" alt="{{insfeed.adminUser}}">
                             <span class="email-title">{{insfeed.adminUser}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">

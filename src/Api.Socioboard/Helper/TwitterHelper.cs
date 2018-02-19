@@ -935,6 +935,7 @@ namespace Api.Socioboard.Helper
                         tempScreenNames.Add(_objLstData.fromScreenName);
                     }
                 }
+                lstConveUsers.RemoveAll(t => t.fromScreenName == twtacc.twitterScreenName);
                 return lstConveUsers.ToList();
             }
             catch (Exception ex)

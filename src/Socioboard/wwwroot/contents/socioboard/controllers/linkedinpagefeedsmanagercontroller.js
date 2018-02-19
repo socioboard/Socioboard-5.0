@@ -5,22 +5,19 @@ SocioboardApp.controller('LinkedinPageFeedsManagerController', function ($rootSc
     $scope.$on('$viewContentLoaded', function() {   
     
         linkedinpagefeedsmanager();
+        
+
+        //Ui
         $('.collapsible').collapsible({
 	      accordion : false 
         });
-
-        $scope.openModels=function()
-        {
-            $('#chatComment').openModal();
-            $('#closeDiv').closeModal();
-        }
+        //END UI
             
-
+        //Compose post
         $scope.ComposeMessage = function () {
             var message = $('#compose').val();
             var updatedmessage = "";
-            var testmsg = message;
-            message = encodeURIComponent(message);
+            var testmsg = message;message = encodeURIComponent(message);
 
             $scope.findExtension();
             if (/\S/.test(testmsg)) {
@@ -57,7 +54,7 @@ SocioboardApp.controller('LinkedinPageFeedsManagerController', function ($rootSc
                 swal('Please enter some text to compose this message');
             }
         }
-        //code for compose message end
+        //END COMPOSE POST
 
         //code for checking the file format start
         $scope.checkfile = function () {
@@ -80,6 +77,8 @@ SocioboardApp.controller('LinkedinPageFeedsManagerController', function ($rootSc
             return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }
         //code for checking the file format end
+
+        //Extension Type
         $scope.findExtension = function () {
             var fileName = $('#input_file');
             var fileExtensionImage = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
@@ -94,6 +93,7 @@ SocioboardApp.controller('LinkedinPageFeedsManagerController', function ($rootSc
                 $scope.fileExtensionName = 0;
             }
         }
+        //END EXTENSION TYPE
 
         //Find profile data
         $scope.loadProfileDetails = function () {
@@ -106,7 +106,9 @@ SocioboardApp.controller('LinkedinPageFeedsManagerController', function ($rootSc
                          });
         }
         $scope.loadProfileDetails();
+        //END FIND PROFILE DATA
 
+        //Get Onload saved Feeds
         $scope.loadfeedsSavedData = function () {
             $http.get(apiDomain + '/api/SavedFeedsManagement/GetSavedFeeds?profileId=' + $stateParams.profileId + '&groupId=' + $rootScope.groupId)
                          .then(function (response) {
@@ -117,12 +119,14 @@ SocioboardApp.controller('LinkedinPageFeedsManagerController', function ($rootSc
                          });
         }
         $scope.loadfeedsSavedData();
+        //END GET ONLOAD SAVED FEEDS
 
+        //Comments Management
         $scope.openComment = function (selectedFeedData) {
             $('#commentModal').openModal();
             $scope.selectedFeed = selectedFeedData;
 
-            $http.get(apiDomain + '/api/SavedFeedsManagement/GetComments?postId=' + selectedFeedData.id + '&groupId=' + $rootScope.groupId)
+            $http.get(apiDomain + '/api/SavedFeedsManagement/GetComments?postId=' + selectedFeedData.strId + '&groupId=' + $rootScope.groupId)
                          .then(function (response) {
                              $scope.allcomment = response.data;
                          }, function (reason) {
@@ -134,36 +138,67 @@ SocioboardApp.controller('LinkedinPageFeedsManagerController', function ($rootSc
         $scope.addComment = function (selectedFeedData, comment) {
             $http({
                 method: 'POST',
-                url: apiDomain + '/api/SavedFeedsManagement/SaveComment?postId=' + selectedFeedData.id + '&profileId=' + selectedFeedData.socialProfileId + '&commentText=' + comment + '&userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId + '&userProfilePic=' + $rootScope.user.ProfilePicUrl + '&userName=' + $rootScope.user.FirstName + ' ' + $rootScope.user.LastName,
+                url: apiDomain + '/api/SavedFeedsManagement/SaveComment?postId=' + selectedFeedData.strId + '&profileId=' + selectedFeedData.socialProfileId + '&commentText=' + comment + '&userId=' + $rootScope.user.Id + '&groupId=' + $rootScope.groupId + '&userProfilePic=' + $rootScope.user.ProfilePicUrl + '&userName=' + $rootScope.user.FirstName + ' ' + $rootScope.user.LastName,
                 headers: {
                     'Content-Type': undefined
                 },
                 transformRequest: angular.identity,
             }).then(function (response) {
                 if (response.data == "Posted") {
-                    //done
+                    swal("Comment Posted");
                 }
 
             }, function (reason) {
 
             });
         }
+        //END COMMENTS MANAGEMANT
 
-        $scope.loadComments = function () {
-            $http.get(apiDomain + '/api/SavedFeedsManagement/GetComments?postId=' + $stateParams.profileId)
-                         .then(function (response) {
-                             debugger;
-                             $scope.profileData = response.data;
-                         }, function (reason) {
-                             $scope.error = reason.data;
-                         });
+        //Delete Post
+        $scope.deletePost = function (tempPostId) {
+            swal({
+                title: "Delete task",
+                text: "Post will be deleted",
+                type: "info",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                showLoaderOnConfirm: true
+            }, function () {
+                $http.post(apiDomain + '/api/SavedFeedsManagement/DeletePost?postId=' + tempPostId)
+                          .then(function (response) {
+                              if (response.data == true) {
+                                  swal("Deleted");
+                              }
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
+            });
         }
+        //END DELETE POST
 
+        //Show AND hide Header
+        $scope.hideheadernames = " Hide";
+        var countheader = 0;
+        $scope.hideHeader = function () {
+            countheader++;
+            if (countheader % 2 == 0) {
+                $("#myHide").show();
+                $scope.hideheadernames = " Hide";
+            }
+            else {
+                $("#myHide").hide();
+                $scope.hideheadernames = " Show";
+            }
+        }
+        //END show AND hide Header
 
+       
     });
 })
+//Filter Video
 .filter('Url', function ($sce) {
     return function (Url) {
         return $sce.trustAsResourceUrl(Url);
     };
 });
+//END FILTER VIDEO

@@ -16,6 +16,7 @@ namespace Domain.Socioboard.Models.Mongo
         [BsonId]
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId commentId { get; set; }
+        public string strCommentId { get; set; }
         public string postId { get; set; }
         public string profileId { get; set; }
         public string commentText { get; set; }

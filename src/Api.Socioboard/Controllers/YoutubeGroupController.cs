@@ -82,6 +82,8 @@ namespace Api.Socioboard.Controllers
         }
 
 
+
+
         [HttpPost("ValidateEmail")]
         public ActionResult ValidateEmail(string Token)
         {

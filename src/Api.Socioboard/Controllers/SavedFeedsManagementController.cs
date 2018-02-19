@@ -48,6 +48,13 @@ namespace Api.Socioboard.Controllers
             return Ok(status);
         }
 
+        [HttpPost("DeletePost")]
+        public IActionResult DeletePost(string postId)
+        {
+            bool status = SavedFeedsManagementRepository.DeletePost(postId, _appSettings);
+            return Ok(status);
+        }
+
         [HttpPost("SaveComment")]
         public IActionResult SaveComment(SavedFeedsComments objData)
         {

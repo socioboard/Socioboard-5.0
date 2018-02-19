@@ -781,6 +781,69 @@ instagramfeeds = function () {
     });
 }
 
+// instagram feeds manager
+instagramfeedsmanager = function () {
+    // initialize core components
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+
+    $('.instagramfeeds').slimScroll({
+        color: '-webkit-gradient(linear,left top,right top,color-stop(32%,#FAB51C),color-stop(60%,#EF0915),color-stop(100%,#BE039C))',
+        size: '10px',
+        height: '600px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+
+    $('.instagramcommand').slimScroll({
+        color: '-webkit-gradient(linear,left top,right top,color-stop(32%,#FAB51C),color-stop(60%,#EF0915),color-stop(100%,#BE039C))',
+        size: '10px',
+        height: '300px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+}
 
 //  youtube  feeds
 
@@ -1084,6 +1147,66 @@ calendar = function () {
 }
 //linkedin comany page feed
 likedinfeeds = function () {
+    // initialize core components
+
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    $('.collapsible').collapsible({
+        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+
+    // Basic
+    $('.dropify').dropify();
+
+    // Translated
+    $('.dropify-fr').dropify({
+        messages: {
+            default: 'Glissez-déposez un fichier ici ou cliquez',
+            replace: 'Glissez-déposez un fichier ou cliquez pour remplacer',
+            remove: 'Supprimer',
+            error: 'Désolé, le fichier trop volumineux'
+        }
+    });
+
+    // Used events
+    var drEvent = $('.dropify-event').dropify();
+
+    drEvent.on('dropify.beforeClear', function (event, element) {
+        return confirm("Do you really want to delete \"" + element.filename + "\" ?");
+    });
+
+    drEvent.on('dropify.afterClear', function (event, element) {
+        alert('File deleted');
+    });
+
+
+    $('.likedinfeeds').slimScroll({
+        color: '#1a84bc',
+        size: '10px',
+        height: '600px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+}
+
+//linkedinpagefeedsmanager
+linkedinpagefeedsmanager = function () {
     // initialize core components
 
     $('.modal-trigger').leanModal();
@@ -2661,166 +2784,3 @@ youtube_inbox = function () {
     $('.dropify').dropify();
 
 }
-
-
-// facebook feeds manager
-
-facebookfeedsmanager = function () {
-    // initialize core components
-
-    $('.modal-trigger').leanModal();
-    $('ul.tabs').tabs();
-    $('select').material_select();
-    $('.tooltipped').tooltip({ delay: 50 });
-    $('.dropdown-button').dropdown({
-        inDuration: 300,
-        outDuration: 225,
-        constrain_width: false, // Does not change width of dropdown to that of the activator
-        hover: true, // Activate on hover
-        gutter: 0, // Spacing from edge
-        belowOrigin: false, // Displays dropdown below the button
-        alignment: 'left' // Displays dropdown with edge aligned to the left of button
-    });
-
-    $('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 15 // Creates a dropdown of 15 years to control year
-    });
-    $('.collapsible').collapsible({
-        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-    });
-
-    // Basic
-    $('.dropify').dropify();
-
-
-    $('.facebookfeeds').slimScroll({
-        color: '#3B5998',
-        size: '10px',
-        height: '600px',
-        alwaysVisible: true,
-        allowPageScroll: true
-    });
-}
-
-// twitter feeds manager
-
-twitterfeedsmanager = function () {
-    // initialize core components
-
-    $('.modal-trigger').leanModal();
-    $('ul.tabs').tabs();
-    $('select').material_select();
-    $('.tooltipped').tooltip({ delay: 50 });
-    $('.dropdown-button').dropdown({
-        inDuration: 300,
-        outDuration: 225,
-        constrain_width: false, // Does not change width of dropdown to that of the activator
-        hover: true, // Activate on hover
-        gutter: 0, // Spacing from edge
-        belowOrigin: false, // Displays dropdown below the button
-        alignment: 'left' // Displays dropdown with edge aligned to the left of button
-    });
-
-    $('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 15 // Creates a dropdown of 15 years to control year
-    });
-    $('.collapsible').collapsible({
-        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-    });
-
-    // Basic
-    $('.dropify').dropify();
-
-
-    $('.twitterfeeds').slimScroll({
-        color: '#3B5998',
-        size: '10px',
-        height: '600px',
-        alwaysVisible: true,
-        allowPageScroll: true
-    });
-}
-
-// linkedinpage feeds manager
-
-linkedinpagefeedsmanager = function () {
-    // initialize core components
-
-    $('.modal-trigger').leanModal();
-    $('ul.tabs').tabs();
-    $('select').material_select();
-    $('.tooltipped').tooltip({ delay: 50 });
-    $('.dropdown-button').dropdown({
-        inDuration: 300,
-        outDuration: 225,
-        constrain_width: false, // Does not change width of dropdown to that of the activator
-        hover: true, // Activate on hover
-        gutter: 0, // Spacing from edge
-        belowOrigin: false, // Displays dropdown below the button
-        alignment: 'left' // Displays dropdown with edge aligned to the left of button
-    });
-
-    $('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 15 // Creates a dropdown of 15 years to control year
-    });
-    $('.collapsible').collapsible({
-        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-    });
-
-    // Basic
-    $('.dropify').dropify();
-
-
-    $('.linkedinpagefeeds').slimScroll({
-        color: '#3B5998',
-        size: '10px',
-        height: '600px',
-        alwaysVisible: true,
-        allowPageScroll: true
-    });
-}
-
-// instagram feeds manager
-
-instagramfeedsmanager = function () {
-    // initialize core components
-
-    $('.modal-trigger').leanModal();
-    $('ul.tabs').tabs();
-    $('select').material_select();
-    $('.tooltipped').tooltip({ delay: 50 });
-    $('.dropdown-button').dropdown({
-        inDuration: 300,
-        outDuration: 225,
-        constrain_width: false, // Does not change width of dropdown to that of the activator
-        hover: true, // Activate on hover
-        gutter: 0, // Spacing from edge
-        belowOrigin: false, // Displays dropdown below the button
-        alignment: 'left' // Displays dropdown with edge aligned to the left of button
-    });
-
-    $('.datepicker').pickadate({
-        selectMonths: true, // Creates a dropdown to control month
-        selectYears: 15 // Creates a dropdown of 15 years to control year
-    });
-    $('.collapsible').collapsible({
-        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
-    });
-
-    // Basic
-    $('.dropify').dropify();
-
-
-    $('.instagramfeeds').slimScroll({
-        color: '#3B5998',
-        size: '10px',
-        height: '600px',
-        alwaysVisible: true,
-        allowPageScroll: true
-    });
-}
-
-

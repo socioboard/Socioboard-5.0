@@ -80,6 +80,19 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
             var FacebookGroupId = $('#facebookgroupid').val();
             var Timeintervalminutes = $('#grouptimerinterval').val();
 
+            if (Facebookaccountid == null) {
+                Facebookaccountid = $rootScope.grouphareathondata.facebookaccountid
+            }
+            if (FacebookGroupId.length == 0) {
+                FacebookGroupId = $rootScope.grouphareathondata.facebooknameid
+            }
+            if (FacebookUrl == null) {
+                FacebookUrl = $rootScope.grouphareathondata.facebookPageUrl
+            }
+            if (Timeintervalminutes == null) {
+                Timeintervalminutes = $rootScope.grouphareathondata.timeintervalminutes
+            }
+
             if (FacebookUrl.indexOf("facebook") == -1 || FacebookUrl.indexOf("https") == -1 || FacebookUrl.indexOf("http") == -1) {
                 swal("please enter url like https://www.facebook.com/bollycrazy");
                 return false;

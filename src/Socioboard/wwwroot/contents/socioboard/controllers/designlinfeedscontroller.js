@@ -195,7 +195,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
 
 
         $scope.discovery = function (keyword) {
-          
+            $scope.dispbtn = true;
             var categories = $('#categories').val();
             if ($rootScope.user.TrailStatus == 2) {
                 swal("You cannot use paid features as your trial period has expired");
@@ -210,6 +210,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                 //codes to load facebook discovery start
                 $http.post(apiDomain + '/api/LinkedInGroups/GetLinkedInGroupFeeds?skip=' + ending + '&count=30' + '&keyword=' + categories)
                               .then(function (response) {
+                                  $scope.dispbtn = false;
                                   if (response.data!="") {
                                       $('#categories').val('');
                                       $('#searchcatagory').closeModal();
@@ -232,6 +233,7 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
                 // end codes to load facebook discovery
             }
             else {
+                $scope.dispbtn = false;
                 swal('Please enter a keyword');
             }
         }
@@ -276,24 +278,34 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
         }
 
         $scope.SearchLinkedIndate = function (parm) {
-            debugger;
+           // debugger;
         $rootScope.lstDiscoverySearchLinkedIn = parm;
-            for (var i = 0; i < parm.length; i++) {
-                var date = moment(parm[i].DateTimeOfPost);
-                var newdate = date.toString();
-                var splitdate = newdate.split(" ");
-                date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
-                parm[i].DateTimeOfPost = date;
-            }
+            //for (var i = 0; i < parm.length; i++) {
+            //    var date = moment(parm[i].DateTimeOfPost);
+            //    var newdate = date.toString();
+            //    var splitdate = newdate.split(" ");
+            //    date = splitdate[0] + " " + splitdate[1] + " " + splitdate[2] + " " + splitdate[3];
+            //    parm[i].DateTimeOfPost = date;
+            //}
           
 
         }
 
 
-        $scope.schedulefbpost= function (schedulemessage) {
-            $rootScope.schedulemessage = schedulemessage;
+        $scope.schedulefbpost = function (schedulemessage) {
+            debugger;
+          //  $rootScope.schedulemessage = schedulemessage;
+            var message = {
+                "shareMessage": schedulemessage.message,
+                "picUrl": schedulemessage.postImgUrl
+                //"url": schedulemessage.postUrl,
+
+            };
             $rootScope.grppost = true;
+            $rootScope.draftpost = false;
             //window.location.href = "#/schedulemsg";
+            $rootScope.schedulemessage = message;
+            console.log($rootScope.schedulemessage);
             $state.go('schedulemessage');
         }
 
@@ -310,17 +322,17 @@ SocioboardApp.controller('DesignFeedsINController', function ($rootScope, $scope
 
         // vanilla JS
 		// init with element
-		var grid = document.querySelector('.grid');
-		var msnry = new Masonry( grid, {
-		  // options...
-		  itemSelector: '.grid-item',
-		  columnWidth: 200
-		});
+		//var grid = document.querySelector('.grid');
+		//var msnry = new Masonry( grid, {
+		//  // options...
+		//  itemSelector: '.grid-item',
+		//  columnWidth: 200
+		//});
 
-		// init with selector
-		var msnry = new Masonry( '.grid', {
-		  // options...
-		});
+		//// init with selector
+		//var msnry = new Masonry( '.grid', {
+		//  // options...
+		//});
 
   });
 

@@ -94,7 +94,7 @@ namespace Api.Socioboard.Repositories
                 MongoRepository _ShareathonRepository = new MongoRepository("Shareathon", _appSettings);
                 var builders = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", PageShareathodId);
-                var update = Builders<BsonDocument>.Update.Set("Facebookaccountid", objfacebook.FbUserId).Set("FacebookPageId", FacebookPageId)
+                var update = Builders<BsonDocument>.Update.Set("Facebookaccountid", objfacebook.FbUserId).Set("Facebookpageid", FacebookPageId)
                    .Set("FacebookPageUrlId", pageid.TrimEnd(',')).Set("FacebookPageUrl", FacebookUrl).Set("Timeintervalminutes", Timeintervalminutes).Set("Facebookusername", objfacebook.FbUserName).Set("Facebookpagename", facebookpagename.TrimEnd(','));
                 _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.PageShareathon>(update, filter);
                 return "Success";
@@ -261,7 +261,7 @@ namespace Api.Socioboard.Repositories
                 MongoRepository _ShareathonRepository = new MongoRepository("GroupShareathon", _appSettings);
                 var builders = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", GroupShareathodId);
-                var update = Builders<BsonDocument>.Update.Set("Facebookaccountid", _Facebookaccounts.FbUserId).Set("Facebookusername", _Facebookaccounts.FbUserName).Set("FacebookPageId", pageid.TrimEnd(','))
+                var update = Builders<BsonDocument>.Update.Set("Facebookaccountid", _Facebookaccounts.FbUserId).Set("Facebookusername", _Facebookaccounts.FbUserName).Set("Facebookpageid", pageid.TrimEnd(','))
                     .Set("Facebookgroupid", groupId.TrimEnd(',')).Set("FacebookPageUrl", FacebookUrl).Set("Facebookgroupname", groupName.TrimEnd(',')).Set("Facebooknameid", FacebookGroupId)
                     .Set("Timeintervalminutes", Timeintervalminutes);
                 _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.GroupShareathon>(update, filter);

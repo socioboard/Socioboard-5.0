@@ -476,5 +476,48 @@ namespace Api.Socioboard.Controllers
             return Ok();
         }
 
+
+        //[HttpGet("feeds")]
+        //public IActionResult feeds(string profileId)
+        //{
+        //    oAuthTwitter OAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
+        //    DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+        //    IList<Domain.Socioboard.Models.TwitterAccount> TwtAccounts =dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId== profileId).ToList();
+        //    foreach (var item in TwtAccounts)
+        //    {
+        //        OAuth.AccessToken = item.oAuthToken;
+        //        OAuth.AccessTokenSecret = item.oAuthSecret;
+        //        OAuth.TwitterScreenName = item.twitterScreenName;
+        //    }
+        //    return Ok(Repositories.TwitterRepository.feedsss(profileId, OAuth.TwitterScreenName, OAuth, _logger, _appSettings));
+
+        //}
+
+        //[HttpGet("searchkeyword")]
+        // public IActionResult searchkeyword(string profileId,string keyword)
+        // {
+        //     oAuthTwitter OAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
+        //     DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+        //     IList<Domain.Socioboard.Models.TwitterAccount> TwtAccounts = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId == profileId).ToList();
+        //     foreach (var item in TwtAccounts)
+        //     {
+        //         OAuth.AccessToken = item.oAuthToken;
+        //         OAuth.AccessTokenSecret = item.oAuthSecret;
+        //         OAuth.TwitterScreenName = item.twitterScreenName;
+        //     }
+        //     return Ok(Repositories.TwitterRepository.keywords(profileId, OAuth.TwitterScreenName, OAuth,keyword));
+
+        // }
+
+        [HttpGet("GettwitterSingle")]
+
+        public IActionResult GettwitterSingle(string profileId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            Domain.Socioboard.Models.TwitterAccount AccDetails = dbr.Single<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId == profileId);
+            return Ok(AccDetails);
+
+        }
+
     }
 }

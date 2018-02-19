@@ -33,27 +33,42 @@ namespace Socioboard.Controllers
         }
 
 
-        [ResponseCache(Duration = 100)]
+       // [ResponseCache(Duration = 100)]
         [HttpGet]
         public IActionResult Logout()
         {
-            HttpContext.Session.Remove("User");
-            HttpContext.Session.Remove("selectedGroupId");
-            // await Task.Run(() =>
-            // {
-            //     logoutsessiondata();
-            // }
-            //);
-            // Task.Run(logoutsessiondata);
-             logoutsessiondata();
-            //await logoutsessiondata();
-            HttpContext.Session.Clear();
-            ViewBag.user = null;
-            ViewBag.selectedGroupId = null;
-            ViewBag.groupProfiles = null;
+            try
+            {
+                HttpContext.Session.Remove("User");
+                HttpContext.Session.Remove("selectedGroupId");
+                HttpContext.Session.SetObjectAsJson("User", null);
+                HttpContext.Session.SetObjectAsJson("selectedGroupId", null);
+                // await Task.Run(() =>
+                // {
+                //     logoutsessiondata();
+                // }
+                //);
+                // Task.Run(logoutsessiondata);
+                logoutsessiondata();
+                //await logoutsessiondata();
+                HttpContext.Session.Clear();
+                ViewBag.user = null;
+                ViewBag.selectedGroupId = null;
+                ViewBag.groupProfiles = null;
 
-            return Content("logout");
-            // return RedirectToAction("Index", "Index");
+                return Content("logout");
+                // return RedirectToAction("Index", "Index");
+            }
+            catch (Exception)
+            {
+                HttpContext.Session.SetObjectAsJson("User", null);
+                HttpContext.Session.SetObjectAsJson("selectedGroupId", null);
+                HttpContext.Session.Clear();
+                ViewBag.user = null;
+                ViewBag.selectedGroupId = null;
+                ViewBag.groupProfiles = null;
+                return Content("logout");
+            }
         }
 
         private async Task logoutsessiondata()

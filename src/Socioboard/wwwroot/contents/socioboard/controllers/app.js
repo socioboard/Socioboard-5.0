@@ -312,7 +312,7 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
                               .then(function (response) {
                                   $scope.lstnotifications = response.data;
                                   $scope.notifycount = $scope.lstnotifications.length;
-                                  $scope.reloadFeeds();
+                                 // $scope.reloadFeeds();
                                }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -1133,9 +1133,9 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         // twitter feeds manager
 
         .state('twitterfeedsmanager', {
-            url: "/twitterfeedsmanager",
+            url: "/twitterfeedsmanager/{profileId}",
             templateUrl: "../contents/socioboard/views/feeds_manager/twitterfeedsmanager.html",
-            data: { pageTitle: 'Facebook feeds manager', pageSubTitle: 'updated' },
+            data: { pageTitle: 'Twitter feeds manager', pageSubTitle: 'updated' },
             controller: "TwitterFeedsManagerController",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
@@ -2470,7 +2470,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                             //'../contents/socioboard/global/plugins/masonry.pkgd.min.js',
-                            // '../contents/socioboard/js/admin/moment.min.js',
+                             '../contents/socioboard/js/admin/moment.min.js',
                             //'../contents/socioboard/js/admin/imagesloaded.pkgd.min.js',
                             '../contents/socioboard/global/plugins/waterfall_grid/newWaterfall.js',
                             '../contents/socioboard/js/admin/plugins.js',

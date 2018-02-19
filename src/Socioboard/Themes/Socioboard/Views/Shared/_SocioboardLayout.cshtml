@@ -96,6 +96,7 @@
     <link href="~/contents/socioboard/css/frontend/custom.css" rel="stylesheet" />
     <link href="~/contents/socioboard/global/plugins/animate.css" type="text/css" rel="stylesheet" media="screen,projection" />
     <link href="~/contents/socioboard/global/plugins/simple-line-icons/simple-line-icons.css" rel="stylesheet" />
+    <link href="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" />
     @RenderSection("CSS", false)
 </head>
 
@@ -544,7 +545,7 @@
                     </div>*@
                     <div class="row">
                         <div class="input-field col s12">
-                            <input id="Password" name="Password" type="password" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" required class="validate" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@@$#!%*?&])[A-Za-z\d$@@#$!%*?&]{8,}">
+                            <input id="Password" name="Password" type="password" title="One Capital letter,One Small letter,One number,One special character and min lenght must be 8" data-rule-minlength="8" required class="validate" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@@$!%*?&])[A-Za-z\d$@@$!%*?&]{8,}">
                             <label for="Password">Password</label>
                         </div>
                     </div>
@@ -676,6 +677,7 @@
     <link href="~/contents/socioboard/css/frontend/alertify.core.css" rel="stylesheet" type="text/css" />
     <link href="~/contents/socioboard/css/frontend/alertify.default.css" rel="stylesheet" type="text/css" id="toggleCSS" />
     <script src="~/contents/socioboard/js/frontend/jquery.cookie.js"></script>
+    <script src="~/contents/socioboard/global/plugins/sweetalert/dist/sweetalert.min.js"></script>
     <script type="text/javascript" src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
 
     <script type="text/javascript">
@@ -1036,6 +1038,10 @@ analytics" href="http://statcounter.com/shopify/"
                             else {
                                 alertify.set({ delay: 5000 });
                                 alertify.error(msg);
+                                //swal({
+                                //    type: 'error',
+                                //    title: msg,
+                                //    });
                             }
                         },
                         error: function (msg) {

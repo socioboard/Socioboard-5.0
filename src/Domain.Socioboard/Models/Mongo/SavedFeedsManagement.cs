@@ -16,6 +16,7 @@ namespace Domain.Socioboard.Models.Mongo
         [BsonId]
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
+        public string strId { get; set; }
         public string shareMessage { get; set; }
         public string postLink { get; set; }
         public double savedTime { get; set; }

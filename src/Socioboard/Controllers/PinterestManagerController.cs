@@ -139,8 +139,13 @@ namespace Socioboard.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> Pinterest(string code)
+        public async Task<ActionResult> Pinterest(string code,string state)
         {
+            if (state == "None")
+            {
+                TempData["Error"] = "You did not authorized your account for our app.";
+                return RedirectToAction("Index", "Home");
+            }
             string pinterestSession = HttpContext.Session.GetObjectFromJson<string>("Pinterest");
             string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
             if (pinterestSession.Equals("Pinterest_Account"))

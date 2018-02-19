@@ -16,9 +16,25 @@ namespace Api.Socioboard.Repositories
             try
             {
                 objDta.Id = ObjectId.GenerateNewId();
+                objDta.strId = ObjectId.GenerateNewId().ToString();
                 objDta.savedTime = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow);
                 MongoRepository mongorepo = new MongoRepository("SavedFeedsManagement", _settings);
                 var result = mongorepo.Add<Domain.Socioboard.Models.Mongo.SavedFeedsManagement>(objDta);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool DeletePost(string postId, Helper.AppSettings _settings)
+        {
+            try
+            {
+                MongoRepository mongorepo = new MongoRepository("SavedFeedsManagement", _settings);
+                FilterDefinition<BsonDocument> filter = new BsonDocument("strId", postId);
+                mongorepo.Delete(filter);
                 return true;
             }
             catch
@@ -32,6 +48,7 @@ namespace Api.Socioboard.Repositories
             try
             {
                 objDta.commentId = ObjectId.GenerateNewId();
+                objDta.strCommentId = ObjectId.GenerateNewId().ToString();
                 objDta.savedTime = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow);
                 objDta.updateCommentStatus = false;
                 MongoRepository mongorepo = new MongoRepository("SavedFeedsComments", _settings);
@@ -49,7 +66,7 @@ namespace Api.Socioboard.Repositories
             MongoRepository mongorepo = new MongoRepository("SavedFeedsComments", _settings);
             try
             {
-                FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", commentId);
+                FilterDefinition<BsonDocument> filter = new BsonDocument("strCommentId", commentId);
                 var update = Builders<BsonDocument>.Update.Set("sbGrpMemberName", UpdateCommentText).Set("updateCommentStatus", true);
                 mongorepo.Update<MongoYoutubeComments>(update, filter);
                 return true;
@@ -65,7 +82,7 @@ namespace Api.Socioboard.Repositories
             MongoRepository mongorepo = new MongoRepository("SavedFeedsComments", _settings);
             try
             {
-                FilterDefinition<BsonDocument> filter = new BsonDocument("commentId", commentId);
+                FilterDefinition<BsonDocument> filter = new BsonDocument("strCommentId", commentId);
                 mongorepo.Delete(filter);
                 return true;
             }

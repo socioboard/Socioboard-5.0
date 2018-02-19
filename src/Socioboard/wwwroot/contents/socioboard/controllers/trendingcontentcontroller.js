@@ -12,6 +12,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         $scope.disbtncom = true;
         
         $scope.temptext = "Quick Topics";
+        $scope.sortbytxt = "Sort By";
         $scope.deleteProfile = function(profileId){
         	// console.log(profileId);
         	swal({   
@@ -276,8 +277,9 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
        
        
 
-        $scope.sortBy = function (sortType) {
+        $scope.sortBy = function (sortType,name) {
             
+            $scope.sortbytxt = name;
             $http.get(apiDomain + '/api/ContentStudio/GetSortByData?sortType=' + sortType + '&skip=' + startData + '&count=70')
                           .then(function (response) {
                              

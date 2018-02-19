@@ -107,7 +107,8 @@ SocioboardApp.controller('DraftMessageController', function ($rootScope, $scope,
             var x;
           
             $rootScope.schedulemessage = schedulemessage;
-            $rootScope.grppost = false;
+           // console.log("schedulemsg",$rootScope.schedulemessage);
+            $rootScope.draftpost = true;
             $rootScope.draft_id = schedulemessage.id;
             // window.location.href = "#/schedulemsg";
             $state.go('schedulemessage');

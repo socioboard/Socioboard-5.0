@@ -18,7 +18,7 @@
 			                    <form class="col s12">
 			                        <div class="input-field col s12">
 									    <select id="shraeathonfacebookaccount" >
-                                            <option value="" disabled selected>{{pageshareathondata.facebookusername}}</option>
+                                            <option value="{{profile.profileId}}" disabled selected>{{pageshareathondata.facebookusername}}</option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                             <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:0}"  selected value="{{profile.profileId}}" ng-if="pageshareathondata.facebookaccountid.indexOf(profile.profileId) > -1" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:0}"   value="{{profile.profileId}}" ng-if="pageshareathondata.facebookaccountid.indexOf(profile.profileId) ==-1" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>-->
@@ -27,7 +27,7 @@
 									</div>
 				                    <div class="input-field col s12">
 									    <select multiple id="shraeathonfacebookpage">
-									      <option value="{{pageshareathondata.facebookpageid}}"  selected>{{pageshareathondata.facebookpagename}}</option>
+									      <option value="{{pageshareathondata.facebookpageid}}" disabled selected>{{pageshareathondata.facebookpagename}}</option>
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
 									    </select>
 									    <label>Select Pages Whose Post's You Want To Automate</label>

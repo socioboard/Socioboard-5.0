@@ -150,7 +150,7 @@ namespace Api.Socioboard.Controllers
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<Domain.Socioboard.Models.Facebookaccounts> datalst = dbr.Find<Facebookaccounts>(t => t.UserId == userId).ToList();
                 Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
-                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status==false && t.fbAccEmail !=null);
+                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status==false);
                 var task = Task.Run(async () =>
                 {
                     return await result;
@@ -161,7 +161,7 @@ namespace Api.Socioboard.Controllers
             
                 if (count>0)
                 {
-                    return Ok(lstfbpasschange);
+                    return Ok(userDet);
                 }
                 else
                 {

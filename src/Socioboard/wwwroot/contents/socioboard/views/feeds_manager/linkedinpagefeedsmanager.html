@@ -5,15 +5,32 @@
         <!--card widgets end-->
         <div class="row">
             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
-                <div class="card light-blue darken-2">
+                <div class="card light-blue darken-2" id="myHide">
                     <div class="col s12 center">
-                        <img src="{{profileData.logoUrl}}" class="profilePicHeadin circle margin-top-10" style="border: 3px solid #ffffff59;" />
+                        <img src="{{profileData.logoUrl}}" class="profilePicHeade circle margin-top-10" style="border: 3px solid #ffffff59;" />
                         <h5 class="white-text margin-bottom-10">{{profileData.linkedinPageName}}</h5>
                         <i class="fa fa-linkedin fa-5x white-text" style="position: absolute; top: 86px; right: 9px; opacity: .3;"></i>
                         <i class="fa fa-linkedin fa-5x white-text" style="position: absolute;top: -25px;right: 40px;opacity: 0.15;font-size: 24em;"></i>
                         <!--<i class="fa white-text" style="position: absolute;top: 30px;left: 1px;opacity: 0.1;font-size: 8em;font-family: cursive;">{{profileData.linkedinPageName}}</i>-->
 
                     </div>
+                </div>
+                <div class="card">
+                    <nav>
+                        <div class="nav-wrapper">
+                            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                                <li ng-click="hideHeader()"><a href="javascript:void(0)"><i class="fa fa-eye"></i>{{hideheadernames}}</a></li>
+                            </ul>
+                                <a class='dropdown-button' href='#' data-activates='dropdown1'>Last created</a>
+
+                                <ul id='dropdown1' class='dropdown-content'>
+                                    <li><a href="#!">First scheduled</a></li>
+                                    <li><a href="#!">Last scheduled</a></li>
+                                    <li><a href="#!">First created</a></li>
+                                    <li><a href="#!">First created</a></li>
+                                </ul>
+                        </div>
+                    </nav>
                 </div>
                 <div class="card" id="feeds">
                     <ul class="collection facebookfeeds">
@@ -23,6 +40,12 @@
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
                                     <p class="break_word ultra-small">{{feeds.shareMessage}}</p>
+                                </div>
+                                <div class="col m4 ">
+                                    <div class="tooltip right">
+                                        <a ng-click="deletePost(feeds.strId)" href="javascript:void(0)"><i class="fa fa-times myColor" aria-hidden="true"></i></a>
+                                        <span class="tooltiptext">Delete</span>
+                                    </div>
                                 </div>
                                 <!-- img -->
                                 <div class="col m4 center" ng-if="feeds.mediaType == 1">
@@ -138,3 +161,62 @@
     </section>
     <!-- END CONTENT -->
 </div>
+
+
+
+
+
+
+
+
+<style>
+    .myColor:hover {
+        color: red;
+    }
+    .myColor{
+        color:#757575;
+    }
+
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 76px !important;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 226% !important;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            .tooltip .tooltiptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+    #myHide {
+    transition:2s;
+    }
+   
+</style>
+

@@ -7,22 +7,22 @@
             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
               <div class="card light-blue text-darken-1">
                   <div class="col s12 center">
-                      <img src="https://scontent.fblr2-1.fna.fbcdn.net/v/t1.0-1/p160x160/15241939_120804085073697_6874322294797274382_n.jpg?oh=7b731e46cc7426dec18ecaaebb49795c&oe=5B209B9C" class="profilePicHeadin circle margin-top-10" style="border: 3px solid #ffffff59;"/>
-                      <h5 class="white-text margin-bottom-10">Chanchal</h5>
-                      <i class="fa fa-twitter fa-5x white-text" style="position: absolute; top: 86px; right: 9px; opacity: .3;"></i>
+                      <img src="{{profileData.profileImageUrl}}" class="profilePicHeadin circle margin-top-10" style="border: 3px solid #ffffff59;"/>
+                      <h5 class="white-text margin-bottom-10">{{profileData.twitterScreenName}}</h5>
+                      <i class="fa fa-twitter fa-5x white-text" style="position: absolute; top: 50px; right: 9px; opacity: .3;"></i>
                   </div>
               </div>
                 <div class="card" id="feeds">
                     <ul class="collection facebookfeeds">
-                        <li class="collection-item avatar">
-                            <img src="https://pbs.twimg.com/profile_images/683936086079307777/FXrYjpal.jpg" alt="Chanchal Santra" class="circle">
-                            <span class="email-title">Chanchal Santra</span>
+                        <li class="collection-item avatar" ng-repeat="feeds in feedsSavedData">
+                            <img src="{{feeds.picUrl}}" alt="Chanchal Santra" class="circle">
+                            <span class="email-title">{{feeds.socialProfileName}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
-                                    <p class="break_word ultra-small">You have Google+ request from john doe.You have Google+ request</p>
+                                    <p class="break_word ultra-small">{{feeds.shareMessage}}</p>
                                 </div>
                                 <div class="col m4 center">
-                                    <img src="https://fbexternal-a.akamaihd.net/safe_image.php?d=AQDY0eJAQlqN-waC&w=130&h=130&url=https%3A%2F%2Fnyoobserver.files.wordpress.com%2F2016%2F04%2Fgettyimages-453828570.jpg%3Fquality%3D80&cfs=1" class="responsive-img">
+                                    <img src="{{feeds.url}}" class="responsive-img">
                                 </div>
                             </div>
                             <div class="row">
@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <a class="tooltipped secondary-content" data-position="left" data-tooltip="09">09:09am</a>
+                            <a class="secondary-content" ></a>
                             </li>
                         <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
                             <img ng-src="https://graph.facebook.com/{{fbfeed._facebookFeed.fromId}}/picture?type=small" alt="{{fbfeed._facebookFeed.fromName}}" class="circle">
@@ -102,25 +102,25 @@
 
       <!-- Compose Email Structure -->
       <div id="ComposePostModal" class="modal">
-        <div class="model-email-content">
-          <div class="row no-space">
-            <form class="col s12">
-              <!--Default version-->
-              <div class="row section">
-                <div class="col s12 m6">
-                   <p>Select your file</p>
-                    <input type="file" id="input-file-now" class="dropify" data-default-file="" />
-                </div>
-                <div class="input-field col s12 m6">
-                  <textarea id="compose" class="materialize-textarea" length="500"></textarea>
-                  <label for="compose">Compose email</label>
-                </div>
+          <div class="model-email-content">
+              <div class="row no-space">
+                  <form class="col s12">
+                      <!--Default version-->
+                      <div class="row section">
+                          <div class="col s12 m6">
+                              <p>Select your file</p>
+                              <input type="file" id="input_file" class="dropify" data-default-file="" />
+                          </div>
+                          <div class="input-field col s12 m6">
+                              <textarea id="compose" class="materialize-textarea" length="500"></textarea>
+                              <label for="compose">Compose email</label>
+                          </div>
+                      </div>
+                  </form>
               </div>
-            </form>
           </div>
-        </div>
           <div class="modal-footer">
-              <a class="modal-action waves-effect waves-green btn blue_btn_style btn-flat">Connect</a>
+              <a class="modal-action waves-effect waves-green btn blue_btn_style btn-flat" ng-click="ComposeMessage()">Connect</a>
               <a class="modal-action modal-close waves-effect waves-green btn btn_round btn-flat">Close</a>
           </div>
       </div>

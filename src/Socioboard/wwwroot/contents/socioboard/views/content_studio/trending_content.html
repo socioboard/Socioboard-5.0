@@ -124,31 +124,35 @@
                     
                         <div class="input-field col s4">
                             <a class="dropdown-button right white-text btn btn_style btn_round col s11 " href='javascript:void(0)' data-activates='quk_drop' style="font-size: medium ;line-height:35px;">{{temptext}}</a>
-                            <ul class="dropdown-content my-dropdown" id="quk_drop">
-                                <li> <a href='javascript:void(0)' ng-click="topic('technology','Technology')">Technology</a></li>
-                                <li> <a href='javascript:void(0)' ng-click="topic('sport','Sports')">Sports</a></li>
-                                <li> <a href='javascript:void(0)' ng-click="topic('business','Business')">Business</a></li>
-                                <li> <a href='javascript:void(0)' ng-click="topic('politics','Politics')">Politics</a></li>
-                                <li> <a href='javascript:void(0)' ng-click="topic('entertainment','Entertainment')">Entertainment</a></li>
-                                <li> <a href='javascript:void(0)' ng-click="topic('gaming','Gaming')">Gaming</a></li>
-                                <li> <a href='javascript:void(0)' ng-click="topic('science_and_nature','Science & Nature')">Science &amp; Nature</a></li>
-                                <li> <a ng-click="topic('music','Music')">Music</a></li>
+                            <ul class="dropdown-content my-dropdown" id="quk_drop">                              
+                                <li> <a  ng-click="topic('technology','Technology')">Technology</a></li>
+                                <li> <a  ng-click="topic('sport','Sports')">Sports</a></li>
+                                <li> <a  ng-click="topic('business','Business')">Business</a></li>
+                                <li> <a  ng-click="topic('politics','Politics')">Politics</a></li>
+                                <li> <a  ng-click="topic('entertainment','Entertainment')">Entertainment</a></li>
+                                <li> <a  ng-click="topic('gaming','Gaming')">Gaming</a></li>
+                                <li> <a  ng-click="topic('science_and_nature','Science & Nature')">Science &amp; Nature</a></li>
+                                <li> <a  ng-click="topic('music','Music')">Music</a></li>
+                                <li> <a ng-click="topic('general','Quick Topic')">None</a></li>
                             </ul>
                         </div>
                         
 
                         <div class="input-field col s4" charset="UTF-8">
-                            <a class="dropdown-button right white-text btn btn_style btn_round col s11" href='javascript:void(0)' data-activates='quk_short' style="font-size: medium ;line-height:35px;border-radius: 78px">Sort By</a>
+                            <a class="dropdown-button right white-text btn btn_style btn_round col s11" href='javascript:void(0)' data-activates='quk_short' style="font-size: medium ;line-height:35px;border-radius: 78px">{{sortbytxt}}</a>
                             <ul class="dropdown-content my-dropdown" id="quk_short">
                                 <!--<li><strong style="color:black">Sort By</strong></li>-->
-                                <li><a ng-click="sortBy('trending')">Trending</a></li>
-                                <li><a ng-click="sortBy('mostshare')">Most Shared</a></li>
-                                <li><a ng-click="sortBy('fbshare')">Facebook Shared</a></li>
-                                <li><a ng-click="sortBy('twtshare')">Twitter Shared</a></li>
-                                <li><a ng-click="sortBy('gplus')">Gplus Shared</a></li>
-                                <li><a ng-click="sortBy('Pininterest')">Pinterest Shared</a></li>
-                                <li><a ng-click="sortBy('LinkedIn')">LinkedIn Shared</a></li>
-                                <li><a ng-click="sortBy('redit')">Redit Shared</a></li>
+                                <li><a ng-click="sortBy('trending','Trending')">Trending</a></li>
+                                <li><a ng-click="sortBy('mostshare','Most share')">Most Shared</a></li>
+                                <li><a ng-click="sortBy('fbshare','Facebook Shared')">Facebook Shared</a></li>
+                                <li><a ng-click="sortBy('twtshare','Twitter Shared')">Twitter Shared</a></li>
+                                <li><a ng-click="sortBy('gplus','Gplus Shared')">Gplus Shared</a></li>
+                                <li><a ng-click="sortBy('Pininterest','Pinterest Shared')">Pinterest Shared</a></li>
+                                <li><a ng-click="sortBy('LinkedIn','LinkedIn Shared')">LinkedIn Shared</a></li>
+                                <li><a ng-click="sortBy('redit','Redit Shared')">Redit Shared</a></li>
+
+
+                                <li><a ng-click="sortBy('general','Sort By')">None</a></li>
                             </ul>
                         </div>
                     </div>

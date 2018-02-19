@@ -18,7 +18,7 @@
 			                    <form class="col s12">
 			                        <div class="input-field col s12" ng-controller="CreateGroupShareathonController">
 									    <select id="groupshareathonfacebookaccount" ng-model="selected" ng-change="getfacebookgroup(selected)">
-									     <option value="" disabled selected>{{grouphareathondata.facebookusername}}</option>
+									     <option value="{{profile.profileId}}" disabled selected>{{grouphareathondata.facebookusername}}</option>
                                             <!--<option ng-repeat="profile in lstProfiles | filter:{profileType:0}" selected value="{{profile.profileId}}" ng-if="grouphareathondata.facebookaccountid.indexOf(profile.profileId) > -1" my-repeat-timeout-directive>  {{profile.profileName}} </option>-->
                                             <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                         </select>

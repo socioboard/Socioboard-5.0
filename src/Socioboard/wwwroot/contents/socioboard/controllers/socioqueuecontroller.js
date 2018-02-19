@@ -65,6 +65,7 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
             $rootScope.editscdmessage = sharemessage;           
             $rootScope.socioqueueId = socioqueueId;
             $('#SocioqueueModal').openModal();
+            document.getElementById('editScheduleMsg').value = sharemessage;
             
             //$scope.modalinstance = $modal.open({
             //    templateUrl: 'editschedulemessageModalContent.html',
