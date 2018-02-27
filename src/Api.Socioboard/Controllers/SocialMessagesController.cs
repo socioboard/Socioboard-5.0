@@ -526,7 +526,7 @@ namespace Api.Socioboard.Controllers
                         link = linkurl;
                         string prId = item.Substring(8, item.Length - 8);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, "", Domain.Socioboard.Enum.SocialProfileType.Facebook, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName,link, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {

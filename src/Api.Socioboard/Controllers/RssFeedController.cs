@@ -204,6 +204,14 @@ namespace Api.Socioboard.Controllers
             }
             //  lstRss = lstRss.Where(t => !string.IsNullOrEmpty(t.Message)).ToList();
             //return Ok(lstRss);
-        }     
+        }
+
+
+        [HttpPost("DeleteContentFeeds")]
+        public IActionResult DeleteContentFeeds(string contentfeedid)
+        {
+            string feedData = Repositories.RssNewsContentsRepository.DeleteContentfeedsRepo(contentfeedid, _appSettings);
+            return Ok(feedData);
+        }
     }
 }

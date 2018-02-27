@@ -123,6 +123,20 @@
     <!-- Modal Structure -->
     <!--<script id="editschedulemessageModalContent.html" type="text/ng-template">-->
     <div id="SocioqueueModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-action modal-close right"><i class="fa fa-times fa-2x"></i></span>
+            <h5>Edit Message</h5>
+            <div class="row center">
+                <div class="input-field col s12">
+                    <textarea id="editScheduleMsg" class="materialize-textarea" length="500" value=""></textarea>                  
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="savesocioqueueedit()">Save</a>
+        </div>
+    </div>
+    <!--<div id="SocioqueueModal" class="modal">
         <form class="col s12" name="editscheduleform">
             <div class="modal-content">
                 <span class="modal-action modal-close right" ng-click="closeModal()"><i class="fa fa-times fa-2x"></i></span>
@@ -131,23 +145,15 @@
                     <div class="input-field col s8">
                         <div>
                             <textarea id="editScheduleMsg" class="materialize-textarea" length="500" ng-model="editscdmessage" value=""></textarea>
-                            <!--<input type="text" id="editScheduleMsg" ng-model="editscdmessage" class="materialize-textarea" length="500"  />-->
-                            <!--<label for="editScheduleMsg">Edit Message Here</label>-->
-                        </div>
-
-                    </div>
-                    <!--<div class="col s4">
-                        <img src="../../images/SocioboardCore_logo.png" class="responsive-img">
-                    </div>-->
+                            </div>
+                    </div>                   
                 </div>
             </div>
             <div class="modal-footer">
                 <a class="modal-action modal-close waves-effect waves-green btn grey" ng-click="savesocioqueueedit()">Save</a>
             </div>
-        </form>
-
-        
-    </div>
+        </form>      
+    </div>-->
     <!--</script>-->
     <!--<script>
     $(document).ready(function(){

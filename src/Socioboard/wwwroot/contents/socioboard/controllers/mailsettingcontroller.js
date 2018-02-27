@@ -5,7 +5,8 @@ SocioboardApp.controller('MailSettingController', function ($rootScope, $scope, 
     $scope.$on('$viewContentLoaded', function() {   
 
         mailsetting();
-
+        $scope.passwordss = $rootScope.user.Password;
+        $scope.Sigin = $rootScope.user.EmailValidateToken
         $scope.mailSettings = {};
         //codes to intilize mail settings
         $scope.mailSettings.dailyGrpReportsSummery = $rootScope.user.dailyGrpReportsSummery;

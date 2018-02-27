@@ -18,19 +18,20 @@ namespace Domain.Socioboard.Models.Mongo
         public ObjectId Id { get; set; }
         public string strId { get; set; }
         public string FbPageId { get; set; }
-        public long UserId { get; set; }        
-        public string postdescription { get; set; }     
+        public long UserId { get; set; }
+        public string postdescription { get; set; }
         public NetworkType networkType { get; set; }
-        public string postId { get; set; }      
+        public string postId { get; set; }
         public string title { get; set; }
         public string facebookAccount { get; set; }
-        public string videourl { get; set; }      
+        public string videourl { get; set; }
         public string ImageUrl { get; set; }
         public string postUrl { get; set; }
         public double postedTime { get; set; }
         public bool Status { get; set; }
-        public virtual int Timeintervalminutes { get; set; }
-        public virtual double lastsharestamp { get; set; }
+        public DateTime latsSharetime { get; set; }
+        public int Timeintervalminutes { get; set; }
+        public double lastsharestamp { get; set; }
 
     }
 

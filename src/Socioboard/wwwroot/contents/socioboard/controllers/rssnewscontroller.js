@@ -51,10 +51,24 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 closeOnConfirm: false
             },
 	        function () {
+
+	            $http.post(apiDomain + '/api/RssFeed/DeleteContentFeeds?contentfeedid=' + profileId)
+                           .then(function (response) {
+                               if (response.data == "success") {
+                                   swal("Deleted!", "Your profile has been deleted.", "success");
+                                   window.location.reload();
+                                   //$scope.loadpageshareathon();
+                               }
+                           }, function (reason) {
+                               $scope.error = reason.data;
+                           });
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "success");
+	           // swal("Deleted!", "Your profile has been deleted.", "success");
 	        });
         }
+
+
+
 
         $('#tags').tagsInput();
 
@@ -64,7 +78,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             //if()
             if ($rootScope.keyword == null || $rootScope.keyword == undefined) {
 
-                $http.get(apiDomain + '/api/RssFeed/getRssNewsFeedsPost?userId=' + $rootScope.user.Id + '&skip=0&count=200')
+                $http.get(apiDomain + '/api/RssFeed/getRssNewsFeedsPost?userId=' + $rootScope.user.Id + '&skip=0&count=50')
             .then(function (response) {
                 if (response.data != "") {
 
@@ -305,7 +319,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         $scope.schedulePost = function (schedulemessage) {
 
             var message = {
-                //"shareMessage": schedulemessage.title,
+                "shareMessage": schedulemessage.title,
                 "url":schedulemessage.link,
                 "picUrl": schedulemessage.image
             };

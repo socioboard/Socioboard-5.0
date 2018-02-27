@@ -11,7 +11,7 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
             $('#ScheduleMsg').focus();
         }
         if ($rootScope.schedulemessage != undefined) {
-            console.log($rootScope.schedulemessage);
+            //console.log($rootScope.schedulemessage);
             $timeout(function () {
                 var composeImagedropify = $('#input-file-now').parents('.dropify-wrapper');
                  $(composeImagedropify).find('.dropify-render').html('<img src="' + $rootScope.schedulemessage.picUrl + '">');

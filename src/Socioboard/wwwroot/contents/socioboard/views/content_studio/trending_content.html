@@ -309,6 +309,12 @@
             </li>           
         </ul>
     </div>
+    <div class="col s12 center">
+        <a class="btn btn_style blue_btn_style" ng-click="listData()" onClick="this.style.visibility = 'hidden';  loadmore_feeds();" ng-if="preloadmorefeeds==false">Load More</a>
+        <h6 style="color:lightgray; font-size:30px; font-family:Calibri" ng-if="endfeeds==true && filters!=true"><br /><br /><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
+        <h6 style="color:lightgray; font-size:30px; font-family:Calibri" ng-if="lstnofeeds==true"><br /><br /><span><img style="width:60px" src="http://i.imgur.com/0MjybMu.png" /></span><br />No posts to show<br /></h6>
+
+    </div>
 
 
     <div ng-if="fetchdatacomplete!=true">
@@ -366,7 +372,7 @@
                 <div class="left col s12 m5 l5">
                     <ul>
                         <li>
-                            <a href="#!" class="email-type">Compose</a>
+                            <a href="javascript:void(0)" class="email-type">Compose</a>
                         </li>
                     </ul>
                 </div>

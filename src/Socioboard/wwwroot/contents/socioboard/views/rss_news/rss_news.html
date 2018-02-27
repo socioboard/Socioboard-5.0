@@ -57,7 +57,7 @@
             <div class="col offset-s1 s10 offset-m2 m7 offset-l2 l8">
                 <div class="card" ng-repeat="post in postedRssData | orderBy:'publishingDate':true">
                     <div class="card-content">
-                        <span ng-click="" class="right" role="button" tabindex="0" style="margin-right: 5px;"><i class="fa fa-close grey-text"></i></span>
+                        <span ng-click="deleteMsg(post.link)" class="right" role="button" tabindex="0" style="margin-right: 5px;"><i class="fa fa-close grey-text"></i></span>
                         <div class="row"  charset="utf-8">
                             <div class="col l12">
                                 <h6 style="color:#777"><strong>{{post.title}}</strong></h6>
@@ -98,7 +98,7 @@
                         <div class="left col s12 m5 l5">
                             <ul>
                                 <li>
-                                    <a href="#!" class="email-type">Compose</a>
+                                    <a href="javascript:void(0)" class="email-type">Compose</a>
                                 </li>
                             </ul>
                         </div>

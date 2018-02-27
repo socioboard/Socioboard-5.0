@@ -23,5 +23,7 @@ namespace Domain.Socioboard.Models.Mongo
         public bool Status { get; set; }
         public virtual int Timeintervalminutes { get; set; }
         public virtual double lastsharestamp { get; set; }
+        public DateTime latsSharetime { get; set; }
     }
+
 }

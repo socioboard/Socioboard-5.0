@@ -177,7 +177,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         }
 
 
-        $scope.scheduledraft = function (schedulemessage) {
+        $scope.scheduledraft = function (schedulemessage) {            
            
              if (schedulemessage.gplusboardaccprofileid != null) {
                 var message = {
@@ -185,6 +185,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,
                     "fromName": schedulemessage.fromName,
+                    "picUrl": schedulemessage.imageurl,
                     "socialMedia": "gplus"
                 };
                 //console.log(message);
@@ -197,6 +198,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,
                     "fromName": schedulemessage.fromName,
+                    "picUrl": schedulemessage.imageurl,
                     "socialMedia":"twitter"
                 };
                 //console.log(message);
@@ -209,6 +211,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,
                     "fromName": schedulemessage.fromName,
+                    "picUrl": schedulemessage.imageurl,
                     "socialMedia":"instagram"
                 };
                 //console.log(message);
@@ -230,7 +233,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             if (schedulemessage.gplusboardaccprofileid != null) {
                 var message = {
                     //"shareMessage": schedulemessage.title,
-                    //"picUrl": schedulemessage.imageurl
+                    //"picUrl": schedulemessage.imageurl,
                     "url": schedulemessage.feedlink,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,                 
@@ -244,7 +247,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             else if (schedulemessage.twitterprofileid != null) {
                 var message = {
                     //"shareMessage": schedulemessage.text,
-                    //"picUrl": schedulemessage.imageurl
+                    //"picUrl": schedulemessage.imageurl,
                     "url": schedulemessage.feedurl,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,
@@ -258,7 +261,7 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
             else if (schedulemessage.feedid != null) {
                 var message = {
                     //"shareMessage": schedulemessage.tags,
-                    //"picUrl": schedulemessage.imageurl
+                    //"picUrl": schedulemessage.imageurl,
                     "url": schedulemessage.link,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,

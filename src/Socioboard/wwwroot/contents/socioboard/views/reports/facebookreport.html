@@ -1,4 +1,8 @@
-    <div data-ng-controller="FacebookreportController">
+<style>
+    .centerClass{ text-align:center;}
+</style>   
+
+ <div data-ng-controller="FacebookreportController">
             <!-- Page name -->
             <div class="container" ng-class="fetchdatacomplete">
                 <div class="col m12">
@@ -16,13 +20,12 @@
                         <a ng-click="getData(selectedProfile,15)" class="btn" title="Last 15 days report">15</a>
                         <a ng-click="getData(selectedProfile,30)" class="btn" title="Last 30 days report">30</a>
                         <a ng-click="getData(selectedProfile,60)" class="btn" title="Last 60 days report">60</a>
-                        <a ng-click="getData(selectedProfile,90)" class="btn" title="Last 90 days report">90</a>
+                        <a ng-click="getData(selectedProfile,90)" class="btn" title="Last 90 days report">90</a>                       
                     </h6>
                 </div>
             </div>
 
             <div class="row" ng-class="fetchdatacomplete">
-
                 <!-- FACEBOOK STATS -->
                 <div class="col s12 m12 l12">
                     <div class="card" id="feeds">
@@ -170,6 +173,7 @@
                         <div class="collection">
                             <div class="row">
                                 <div class="col l12">
+
                                    <table id="Fbfeedsdetails" class="display responsive-table striped" cellspacing="0" width="100%">
                                         <thead>
                                             <tr>
@@ -189,23 +193,23 @@
                                         <tbody>
                                             <tr ng-repeat="facebookpagepost in FacebookPagePost" my-repeat-video-tab-directives>
 
-                                                <td style="width: 1%;">{{$index+1}}</td>
-                                                <td style="width: 50%;">
-                                                    <img src="http://graph.facebook.com/{{facebookpagepost.pageId}}/picture?type=small" class="responsive-img" style="height: 30px; width: 30px; float: left;">
-                                                     
-                                                    <a href="https://facebook.com/{{facebookpagepost.pageName}}" target="_blank">{{facebookpagepost.pageName}}</a> {{facebookpagepost.feedDate}} <br>
-                                                    <a ng-if="facebookpagepost.name != null && facebookpagepost.name != '' " class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.name}}</a>
-                                                    <a ng-if="facebookpagepost.name == null || facebookpagepost.name == '' " class="grey-text text-darken-3" style="vertical-align: middle; padding-left: 10px;">{{facebookpagepost.message}}</a>
-
+                                                <td class="centerClass">{{$index+1}}</td>
+                                                <td>
+                                                    <img src="http://graph.facebook.com/{{facebookpagepost.pageId}}/picture?type=small" class="responsive-img" style="height: 30px; width: 30px; vertical-align:middle;">
+                                                    
+                                                        <a href="https://facebook.com/{{facebookpagepost.pageName}}" target="_blank">{{facebookpagepost.pageName}}</a> {{facebookpagepost.feedDate}}
+                                                        <a ng-if="facebookpagepost.name != null && facebookpagepost.name != '' " class="grey-text text-darken-3" style="vertical-align: middle; white-space: nowrap;width: 138px;overflow: hidden;text-overflow: ellipsis;display:block;">{{facebookpagepost.name}}</a>
+                                                        <a ng-if="facebookpagepost.name == null || facebookpagepost.name == '' " class="grey-text text-darken-3" style="vertical-align: middle; white-space: nowrap;width: 138px;overflow: hidden;text-overflow: ellipsis;display:block;">{{facebookpagepost.message}}</a>
+                                                    
                                                 </td>
                                                 <!--<td>{{facebookpagepost.reach}}</td>
                                                 <td>{{facebookpagepost.engagedUsers}}</td>-->
-                                                <td style="width: 10%;"><a href="https://facebook.com/{{facebookpagepost.postId}}" target="_blank"><span class=" blue-text text-darken-4"><i class="fa fa-facebook"></i> facebook</span></a></td>                                    
-                                                <td>{{facebookpagepost.talking}}</td>
-                                                <td>{{facebookpagepost.likes}}</td>
-                                                <td>{{facebookpagepost.comments}}</td>
-                                                <td>{{facebookpagepost.shares}}</td>
-                                                <td>{{facebookpagepost.engagement}}%</td>
+                                                <td class="centerClass"><a href="https://facebook.com/{{facebookpagepost.postId}}" target="_blank"><span class=" blue-text text-darken-4"><i class="fa fa-facebook"></i> facebook</span></a></td>                                    
+                                                <td class="centerClass">{{facebookpagepost.talking}}</td>
+                                                <td class="centerClass">{{facebookpagepost.likes}}</td>
+                                                <td class="centerClass">{{facebookpagepost.comments}}</td>
+                                                <td class="centerClass">{{facebookpagepost.shares}}</td>
+                                                <td class="centerClass">{{facebookpagepost.engagement}}%</td>
                                             </tr>
                                             
                                         </tbody>

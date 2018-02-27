@@ -595,5 +595,22 @@ namespace Api.Socioboard.Repositories
         }
 
 
+        public static string DeleteContentfeedsRepo(string feedId, Helper.AppSettings _appSettings)
+        {
+            try
+            {
+                MongoRepository _ContentFeedsRepo = new MongoRepository("RssNewsContentsFeeds", _appSettings);
+                var builders = Builders<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>.Filter;
+                FilterDefinition<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> filter = builders.Eq("Link", feedId);
+                _ContentFeedsRepo.Delete<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>(filter);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                return "Error";
+            }
+        }
+
+
     }
 }

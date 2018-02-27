@@ -279,13 +279,13 @@
                                                <span style="color:red" ng-show="scheduleform.ScheduleMsgtxt.$error.required">Please enter Schedule Message</span>
                                            </span>
 
-                                           <div class="col s12 m12 l12">
+                                           <div class="col s12 m12 l12" >
                                                <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
                                            </div>
                                            <div class="col s12 m12 l12">
                                                <input type="hidden" id="imageUrl" value="{{schedulemessage.picUrl}}" />
                                                <div ng-if="schedulemessage">
-                                                   <input type="file" id="input-file-now"  class="dropify" after-render data-default-file="{{schedulemessage.picUrl}}" />
+                                                   <input type="file" id="input-file-now"  ng-if="schedulemessage.picUrl!=null" class="dropify" after-render data-default-file="{{schedulemessage.picUrl}}" />
                                                    <!--<input type="file" id="input-file-now" class="dropify" data-default-file="" />-->
                                                </div>
                                                <div ng-if="!schedulemessage">

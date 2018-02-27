@@ -1,3 +1,66 @@
+<script>
+
+    (function ($) {
+        $(document).ready(function () {
+            $('#composeProfiles option').each(function (index) {
+                if (index == 2) {
+                    $(this).html('<img ng-src="/contents/socioboard/images/fb_icon.png">' + $(this).html());
+                }
+                //if (index == 3 || index == 4)
+                //{
+                //     $(this).html('<img ng-src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+                //}
+                if (index == 3) {
+                    $(this).html('<img ng-src="/contents/socioboard/images/Fb_page-icon.png">' + $(this).html());
+                }
+                if (index == 4) {
+                    $(this).html('<img ng-src="/contents/socioboard/images/twticon.png">' + $(this).html());
+                }
+                if (index == 5) {
+                    $(this).html('<img ng-src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+                }
+                if (index == 6) {
+                    $(this).html('<img ng-src="/contents/socioboard/images/link_icon.png">' + $(this).html());
+                }
+                //$(this).html('<img ng-src="http://jsfiddle.net/img/logo.png">' + $(this).html());
+            })
+        });
+    })(jQuery);
+</script>
+
+<style>
+    #profile-card {
+        min-height: 330px;
+    }
+
+    ul.shinh li label {
+        font-size: 15px;
+        color: #333;
+        padding: 0 10px;
+        color: #ff4081;
+    }
+
+    ul.shinh li:hover {
+        background: #e5e5e5;
+        color: #ff4081;
+        cursor: pointer;
+        padding: 0 10px;
+    }
+
+    ul.shinh li label input {
+        margin-right: 10px;
+        height: 20px;
+        width: 20px;
+        background: transparent !important;
+    }
+
+    .iconprofile {
+        position: absolute;
+        top: 36px;
+        z-index: 1;
+        left: 44px;
+    }
+</style>
 <div data-ng-controller="CreateGroupShareathonController">
     <!-- Page name -->
     <div class="container">

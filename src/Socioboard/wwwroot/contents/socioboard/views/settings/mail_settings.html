@@ -21,7 +21,8 @@
                                 <div class="row" id="change_email_btn">
                                     <h5><strong>Email ID</strong></h5>
                                     <p>You can change  your email address by clicking on change email</p>
-                                  <a class="btn btn_style btn-blue modal-trigger" href="#ChangeEmailModal">Change Email</a>
+                                    <a class="btn btn_style btn-blue modal-trigger" href="#ChangeEmailModal" ng-if="passwordss !=null">Change Email</a>
+                                    <a class="btn btn_style modal-trigger" ng-if="passwordss ==null" style="background:#757575!important;">You can't change Email Because You LogIn With {{Sigin}}</a>
                                 </div>
                                 <div class="row" id="mail_div" style="display: none;">
                                     <form class="col s12" ng-submit="UpdateEmailID(updateEmailID)">

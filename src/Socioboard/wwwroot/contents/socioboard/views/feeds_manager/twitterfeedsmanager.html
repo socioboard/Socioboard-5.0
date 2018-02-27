@@ -5,12 +5,14 @@
         <!--card widgets end-->
         <div class="row">
             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
-              <div class="card light-blue text-darken-1">
+              <div class="card light-blue text-darken-2">
                   <div class="col s12 center">
-                      <img src="{{profileData.profileImageUrl}}" class="profilePicHeadin circle margin-top-10" style="border: 3px solid #ffffff59;"/>
+                      <img src="{{profileData.profileImageUrl}}" class="profilePicHeadin circle margin-top-10" style="border: 3px solid #ffffff59;width:90px;"/>
                       <h5 class="white-text margin-bottom-10">{{profileData.twitterScreenName}}</h5>
-                      <i class="fa fa-twitter fa-5x white-text" style="position: absolute; top: 50px; right: 9px; opacity: .3;"></i>
-                  </div>
+                      <i class="fa fa-twitter fa-5x white-text" style="position: absolute; top:85px; right: 40px; opacity: .3;"></i>
+                      <i class="fa fa-twitter fa-5x white-text" style="position: absolute;top: -46px;right: 40px;opacity: 0.15;font-size: 24em;"></i>
+
+                    </div>
               </div>
                 <div class="card" id="feeds">
                     <ul class="collection facebookfeeds">
@@ -36,12 +38,12 @@
                                         <i class="icon-clock fa-fw"></i><span> Scedule</span>
                                     </a>
                                 </div>
-                                <div ng-if="5==4" class="col l3 s3">
+                                <div ng-if="feeds.review==false" class="col l3 s3 right">
                                     <a class="center grey-text text-darken-4">
                                         <i class="icon-check fa-fw"></i><span> Approve</span>
                                     </a>
                                 </div>
-                                <div ng-if="5==5" class="col l3 s3">
+                                <div ng-if="feeds.review==true" class="col l3 s3 right">
                                     <a class="center green-text">
                                         <i class="icon-check fa-fw green-text"></i><span> Approved</span>
                                     </a>

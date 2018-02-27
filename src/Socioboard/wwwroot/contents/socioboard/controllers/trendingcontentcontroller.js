@@ -23,9 +23,18 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
 	        confirmButtonColor: "#DD6B55",   
 	        confirmButtonText: "Yes, delete it!",   
 	        closeOnConfirm: false }, 
-	        function(){   
+	        function () {
+	            $http.post(apiDomain + '/api/ContentStudio/DeleteContentStudiofeeds?contentfeedid=' + profileId)
+                           .then(function (response) {
+                               if (response.data == "success") {
+                                   swal("Deleted!", "Your profile has been deleted.", "success");
+                                   //$scope.loadpageshareathon();
+                               }
+                           }, function (reason) {
+                               $scope.error = reason.data;
+                           });
 	            //todo: code to delete profile
-	            swal("Deleted!", "Your profile has been deleted.", "success"); 
+	            //swal("Deleted!", "Your profile has been deleted.", "success"); 
 	            });
         }
 

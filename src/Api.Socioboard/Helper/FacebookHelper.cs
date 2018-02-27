@@ -232,7 +232,7 @@ namespace Api.Socioboard.Helper
                     scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage;
                 }
                 scheduledMessage.scheduleTime = DateTime.UtcNow;
-                scheduledMessage.shareMessage ="";
+                scheduledMessage.shareMessage =link;
                 scheduledMessage.userId = userId;
                 scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                 scheduledMessage.url = imagePath;//"https://graph.facebook.com/"+ fbUserId + "/picture?type=small";

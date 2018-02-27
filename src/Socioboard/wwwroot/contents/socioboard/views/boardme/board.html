@@ -64,7 +64,7 @@
         <div id="center" >
             <ul id="waterfall">
                 <li class="show" id="test" ng-repeat="feed in  lstBoardFeeds | orderBy:'publishedtime':true">
-                     <div class="studio_card" >
+                     <div class="studio_card">
                         <div class="card hoverable">
                             <div class="card-content">
                                 <div class="row">
@@ -79,12 +79,12 @@
                                                 <i class="fa fa-twitter-square fa-fw "></i>@{{feed.fromName}}
                                             </a>
                                         </span>
-                                        <span ng-if="feed.instagramaccountid !=null"  >
+                                        <span ng-if="feed.instagramaccountid !=null" >
                                             <a ng-href="https://www.instagram.com/{{feed.fromId}}" target="_blank" class=" brown-text text-darken-1">
                                                 <i class="fa fa-instagram fa-fw "></i>@{{feed.fromName}}
                                             </a>
                                         </span>
-                                        <span ng-if="feed.gplusboardaccprofileid!=null">
+                                        <span ng-if="feed.gplusboardaccprofileid!=null" >
                                             <a ng-href="https://plus.google.com/{{feed.fromId}}" target="_blank" class=" red-text text-darken-3">
                                                 <i class="fa fa-google-plus-square fa-fw "></i>@{{feed.fromName}}
                                             </a>
@@ -318,7 +318,7 @@
                     <div class="left col s12 m5 l5">
                         <ul>
                             <li>
-                                <a href="#!" class="email-type">Compose</a>
+                                <a href="javascript:void(0)" class="email-type">Compose</a>
                             </li>
                         </ul>
                     </div>
@@ -354,7 +354,7 @@
                                 </div>
                                 <input type="hidden" id="imageUrl" value="{{boardComposeMessage.picUrl}}" />
                                 <div class="col s12 m8 l9" ng-if="boardComposeMessage">
-                                    <input type="file" id="composeImage" class="dropify" after-render data-default-file="{{boardComposeMessage.picUrl}}" disabled/>
+                                    <input type="file" id="composeImage" ng-if="boardComposeMessage.picUrl!=null" class="dropify" after-render data-default-file="{{boardComposeMessage.picUrl}}" disabled/>
                                 </div>
 
                                 <div class="col s12 m8 l9" ng-if="!boardComposeMessage">
