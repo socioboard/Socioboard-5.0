@@ -724,5 +724,14 @@ namespace Api.Socioboard.Controllers
             return Ok(Userdata);
 
         }
+
+        [HttpGet("GetFbAccSingle")]
+        public IActionResult GetFbAccSingle(string accId)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            Domain.Socioboard.Models.Facebookaccounts pageDetails = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == accId);
+            return Ok(pageDetails);
+        }
+
     }
 }

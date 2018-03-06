@@ -24,6 +24,7 @@
 /// <reference path="contents/socioboard/controllers/ewalletlistcontroller.js" />
 /// <reference path="contents/socioboard/controllers/extensionscontroller.js" />
 /// <reference path="contents/socioboard/controllers/facebookfeedscontroller.js" />
+/// <reference path="contents/socioboard/controllers/facebookfeedsmanagercontroller.js" />
 /// <reference path="contents/socioboard/controllers/facebookpagereportcontroller.js" />
 /// <reference path="contents/socioboard/controllers/facebookreportcontroller.js" />
 /// <reference path="contents/socioboard/controllers/facebooktwitterfeedshare.js" />

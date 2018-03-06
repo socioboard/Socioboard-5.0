@@ -208,15 +208,23 @@ namespace Api.Socioboard.Helper
                 }
                 else
                 {
-                    if (!string.IsNullOrEmpty(link))
-                    {
-                        args["link"] = link;
-                    }
+                    //if (!string.IsNullOrEmpty(link))
+                    //{
+                    //    args["link"] = link;
+                    //}
                     if (!string.IsNullOrEmpty(imagePath))
                     {
                         args["picture"] = imagePath.Replace("&amp;", "&");
                     }
-                    ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
+                    try
+                    {
+                        ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
+                   
 
                 }
                 ScheduledMessage scheduledMessage = new ScheduledMessage();

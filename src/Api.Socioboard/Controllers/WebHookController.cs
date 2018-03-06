@@ -367,20 +367,36 @@ namespace Api.Socioboard.Controllers
                     }
                     if (x["changes"][0]["value"]["item"] == "comment")
                     {
+                        _logger.LogInformation("comment section started");
+
                         string profileId = Convert.ToString(x["id"]);
+                        _logger.LogInformation("profileId" + profileId);
+
                         string sendId = Convert.ToString(x["changes"][0]["value"]["sender_id"]);
+                        _logger.LogInformation("sendId" + sendId);
+
                         string sendername = Convert.ToString(x["changes"][0]["value"]["sender_name"]);
+                        _logger.LogInformation("sendId" + sendId);
+
                         string like = Convert.ToString(x["changes"][0]["value"]["item"]);
                         _logger.LogInformation("like" + like);
+
                         string postid = Convert.ToString(x["changes"][0]["value"]["post_id"]);
+                        _logger.LogInformation("postid" + postid);
+
                         string message = Convert.ToString(x["changes"][0]["value"]["message"]);
+                        _logger.LogInformation("message" + message);
+
                         string postTime = Convert.ToString(x["changes"][0]["value"]["created_time"]);
-                        _logger.LogInformation("postTime comment" + postTime);
+                        _logger.LogInformation("postTime Comment" + postTime);
+
                         string comment_id = Convert.ToString(x["changes"][0]["value"]["comment_id"]);
                         _logger.LogInformation("comment_id " + comment_id);
 
                         if (!string.IsNullOrEmpty(comment_id))
                         {
+                            _logger.LogInformation("saving data started");
+
                             MongoFbPostComment fbPostComment = new MongoFbPostComment();
                             fbPostComment.Id = MongoDB.Bson.ObjectId.GenerateNewId();
                             fbPostComment.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
@@ -391,17 +407,94 @@ namespace Api.Socioboard.Controllers
                             string printDate = dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
                             string createddate = Convert.ToDateTime(printDate).ToString("yyyy-MM-dd h:mm tt");
                             DateTime convertedDate = DateTime.SpecifyKind(DateTime.Parse(createddate), DateTimeKind.Utc);
-                            fbPostComment.Commentdate = convertedDate.ToString();
-                            _logger.LogInformation("commnet date" + fbPostComment.Commentdate);
+                            try
+                            {
+                                fbPostComment.Commentdate = convertedDate.ToString();
+                                _logger.LogInformation("commnet date" + fbPostComment.Commentdate);
+                            }
+                            catch (Exception ex)
+                            {
+                                fbPostComment.Commentdate = " ";
+                                _logger.LogInformation("commnetDate error" + ex.Message);
+                            }
+
+
                             //fbPostComment.Commentdate = DateTime.Parse(postTime).ToString("yyyy/MM/dd HH:mm:ss");
-                            fbPostComment.PostId = postid;
-                            fbPostComment.Likes = 0;
-                            fbPostComment.UserLikes = 0;
-                            fbPostComment.PictureUrl = message;
-                            fbPostComment.FromName = sendername;
-                            fbPostComment.FromId = sendId;
-                            fbPostComment.CommentId = comment_id;
-                            fbPostComment.Comment = message;
+                            try
+                            {
+                                fbPostComment.PostId = postid;
+                            }
+                            catch (Exception ex)
+                            {
+                                fbPostComment.PostId = " ";
+                                _logger.LogInformation("PostId error" + ex.Message);
+                            }
+                            try
+                            {
+                                fbPostComment.Likes = Convert.ToInt16(like);
+                            }
+                            catch(Exception ex)
+                            {
+                                fbPostComment.Likes = 0;
+                                _logger.LogInformation("Likes error" + ex.Message);
+                            }
+                            try
+                            {
+                                fbPostComment.UserLikes = 0;
+                            }
+                            catch(Exception ex)
+                            {
+                                fbPostComment.UserLikes = 0;
+                                _logger.LogInformation("userlikes error" + ex.Message);
+                            }
+                            try
+                            {
+                                fbPostComment.PictureUrl = message;
+                            }
+                            catch(Exception ex)
+                            {
+                                fbPostComment.PictureUrl = " ";
+                                _logger.LogInformation("PictureUrl error" + ex.Message);
+                            }
+                            try
+                            {
+                                fbPostComment.FromName = sendername;
+                            }
+                            catch (Exception ex)
+                            {
+                                fbPostComment.FromName = " ";
+                                _logger.LogInformation("FromName error" + ex.Message);
+                            }
+
+                            try
+                            {
+                                fbPostComment.FromId = sendId;
+                            }
+                            catch (Exception ex)
+                            {
+                                fbPostComment.FromId = " ";
+                                _logger.LogInformation("FromId error" + ex.Message);
+                            }
+
+                            try
+                            {
+                                fbPostComment.CommentId = comment_id;
+                            }
+                            catch (Exception ex)
+                            {
+                                fbPostComment.CommentId = " ";
+                                _logger.LogInformation("CommentId error" + ex.Message);
+                            }
+                            try
+                            {
+                                fbPostComment.Comment = message;
+                            }
+                            catch (Exception ex)
+                            {
+                                fbPostComment.Comment = " ";
+                                _logger.LogInformation("CommentId error" + ex.Message);
+                            }
+                            
                             try
                             {
 
@@ -421,22 +514,27 @@ namespace Api.Socioboard.Controllers
                     {
                         string profileId = Convert.ToString(x["id"]);
                         _logger.LogInformation("ProfileId" + profileId);
+
                         string sendId = Convert.ToString(x["changes"][0]["value"]["sender_id"]);
                         _logger.LogInformation("sendId" + sendId);
+
                         string sendername = Convert.ToString(x["changes"][0]["value"]["sender_name"]);
                         _logger.LogInformation("sendername" + sendername);
+
                         string postid = Convert.ToString(x["changes"][0]["value"]["post_id"]);
                         _logger.LogInformation("postid" + postid);
+
                         string message = Convert.ToString(x["changes"][0]["value"]["message"]);
                         _logger.LogInformation("message" + message);
+
                         string postTime = Convert.ToString(x["changes"][0]["value"]["created_time"]);
                         _logger.LogInformation("postTime" + postTime);
+
                         string share_id = Convert.ToString(x["changes"][0]["value"]["share_id"]);
                         _logger.LogInformation("share_id" + share_id);
+
                         string link = Convert.ToString(x["changes"][0]["value"]["link"]);
                         _logger.LogInformation("link" + link);
-
-
 
 
 
@@ -457,7 +555,7 @@ namespace Api.Socioboard.Controllers
                         try
                         {
                             _FacebookPagePost.FeedId = postid;
-                            _logger.LogInformation("FeedId" + postid);
+                            _logger.LogInformation("FeedId " + postid);
                         }
                         catch
                         {
@@ -562,12 +660,68 @@ namespace Api.Socioboard.Controllers
                     }
                     if (x["changes"][0]["value"]["item"] == "like" || x["changes"][0]["value"]["item"] == "like")
                     {
+
                         string profileId = Convert.ToString(x["id"]);
+                        _logger.LogInformation("ProfileId" + profileId);
                         string sendId = Convert.ToString(x["changes"][0]["value"]["sender_id"]);
+                        _logger.LogInformation("sendId" + sendId);
                         string sendername = Convert.ToString(x["changes"][0]["value"]["sender_name"]);
+                        _logger.LogInformation("sendername" + sendername);
                         string postid = Convert.ToString(x["changes"][0]["value"]["post_id"]);
+                        _logger.LogInformation("postid" + postid);
                         string postTime = Convert.ToString(x["changes"][0]["value"]["created_time"]);
                         _logger.LogInformation("postTime in like part" + postTime);
+                        string like = null;
+                        try
+                        {
+                            like = Convert.ToString(x["changes"][0]["value"]["likes"]);
+                            _logger.LogInformation("like " + like);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogInformation("like error"+ex);
+                        }
+                      
+
+                        if (!string.IsNullOrEmpty(profileId))
+                        {
+                            MongoFbPostComment fbPostComment = new MongoFbPostComment();
+                            fbPostComment.Id = MongoDB.Bson.ObjectId.GenerateNewId();
+                            fbPostComment.EntryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+
+                            double datevalue = Convert.ToDouble(postTime);
+                            System.DateTime dateTime = new System.DateTime(1970, 1, 1, 0, 0, 0, 0);
+                            dateTime = dateTime.AddSeconds(datevalue);
+                            string printDate = dateTime.ToShortDateString() + " " + dateTime.ToShortTimeString();
+                            string createddate = Convert.ToDateTime(printDate).ToString("yyyy-MM-dd h:mm tt");
+                            DateTime convertedDate = DateTime.SpecifyKind(DateTime.Parse(createddate), DateTimeKind.Utc);
+                            fbPostComment.Commentdate = convertedDate.ToString();
+                            _logger.LogInformation("commnet date" + fbPostComment.Commentdate);
+                            //fbPostComment.Commentdate = DateTime.Parse(postTime).ToString("yyyy/MM/dd HH:mm:ss");
+                            fbPostComment.PostId = postid;
+                            fbPostComment.Likes = Convert.ToInt16(like);
+                            fbPostComment.UserLikes = 0;
+                           // fbPostComment.PictureUrl = message;
+                            fbPostComment.FromName = sendername;
+                            fbPostComment.FromId = sendId;
+                          //  fbPostComment.CommentId = comment_id;
+                          //  fbPostComment.Comment = message;
+                            try
+                            {
+
+                                MongoRepository fbPostRepo = new MongoRepository("MongoFbPostComment", _appSettings);
+                                fbPostRepo.Add<MongoFbPostComment>(fbPostComment);
+                                _logger.LogInformation("added data in MongoFbPostComment");
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogInformation("comment error while adding in mongo");
+                                _logger.LogInformation(ex.Message);
+                                _logger.LogError(ex.StackTrace);
+                            }
+                        }
+
+
                     }
 
                 }

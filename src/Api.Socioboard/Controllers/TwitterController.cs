@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Cors;
 using System.Text.RegularExpressions;
 using Domain.Socioboard.Interfaces.Services;
 using System.Threading;
+using MongoDB.Bson;
+using Api.Socioboard.Repositories;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -519,5 +521,23 @@ namespace Api.Socioboard.Controllers
 
         }
 
+        // [HttpPost("publish")]
+        //public IActionResult publish(string profileId,string twitterText, long userId , string imgUrl ,string strid)
+        //{
+        //    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+        //    string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, twitterText, profileId, userId, imgUrl, true, 0, "", dbr, _logger);
+        //    if (ret =="")
+        //    {
+        //        string responce = SavedFeedsManagementRepository.publish( profileId,  strid, _appSettings);
+
+        //        return Ok(responce);
+        //    }
+        //    else
+        //    {
+        //        return Ok("failed");
+        //    }
+           
+
+        //  }
     }
 }

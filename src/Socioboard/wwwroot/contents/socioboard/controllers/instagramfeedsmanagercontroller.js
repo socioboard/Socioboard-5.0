@@ -144,6 +144,48 @@ SocioboardApp.controller('InstagramFeedsManagerController', function ($rootScope
         }
         //END COMMENTS MANAGEMANT
 
+        //aprove post 
+
+        $scope.aprovepost = function (value) {
+            debugger;
+            if (value.review == false) {
+                var d = value.strId
+                $http.post(apiDomain + '/api/SavedFeedsManagement/aprove?strid=' + d + '&update=' + 'true')
+                   .then(function (response) {
+                       swal({
+                           position: 'top-end',
+                           type: 'success',
+                           title: 'Your Post  is aprove',
+                           showConfirmButton: false,
+                           timer: 5000
+                       })
+                       window.location.reload()
+                   })
+
+
+            }
+            else {
+                var e = value.strId
+                $http.post(apiDomain + '/api/SavedFeedsManagement/aprove?strid=' + e + '&update=' + 'false')
+           .then(function (response) {
+               swal({
+                   position: 'top-end',
+                   type: 'success',
+                   title: 'sucessfully changes ',
+                   showConfirmButton: false,
+                   timer: 5000
+               })
+               window.location.reload()
+
+           })
+            }
+
+
+        }
+        //End 
+
+
+
         //Delete Post
         $scope.deletePost = function (tempPostId) {
             swal({

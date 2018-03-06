@@ -43,7 +43,66 @@ SocioboardApp.controller('TwitterFeedsManagerController', function ($rootScope, 
 
 
 
+        $scope.aprovepost = function (value) {
+            debugger;
+            if (value.review == false)
+            {
+                var d = value.strId
+                $http.post(apiDomain + '/api/SavedFeedsManagement/aprove?strid=' + d + '&update=' + 'true')
+                   .then(function (response) {
+                       swal({
+                           position: 'top-end',
+                           type: 'success',
+                           title: 'Your Post  is aprove',
+                           showConfirmButton: false,
+                           timer: 5000
+                       })
+                       window.location.reload()
+                   })
 
+
+            }
+            else
+            {
+                var e = value.strId
+                $http.post(apiDomain + '/api/SavedFeedsManagement/aprove?strid=' + e+ '&update=' + 'false')
+           .then(function (response) {
+               swal({
+                   position: 'top-end',
+                   type: 'success',
+                   title: 'sucessfully changes ',
+                   showConfirmButton: false,
+                   timer: 5000
+               })
+               window.location.reload()
+
+           })
+            }
+
+
+        }
+
+
+        $scope.publish = function (post) {
+            debugger;
+            $http.post(apiDomain + '/api/Twitter/publish?profileId=' + $stateParams.profileId + '&twitterText=' + post.shareMessage + '&UserId=' + post.userId + '&imgUrl=' + post.url + '&strid=' + post.strId)
+                         .then(function (response) {
+                             
+                             //if (response == "") {
+                                 swal({
+                                     position: 'top-end',
+                                     type: 'success',
+                                     title: 'Your Post sucessfully publish ',
+                                     showConfirmButton: false,
+                                     timer: 4000
+                                 })
+                             //}
+                             //else {
+                             //    swal("Somthing Went Wrong");
+                             //}
+                       
+                         });
+        }
 
         $scope.ComposeMessage = function () {
             debugger;
@@ -129,11 +188,22 @@ SocioboardApp.controller('TwitterFeedsManagerController', function ($rootScope, 
       
 
 
-
-
-
-
-
+        //Show AND hide Header
+        $scope.hideheadernames = " Hide";
+        var countheader = 0;
+        $scope.hideHeader = function () {
+            debugger;
+            countheader++;
+            if (countheader % 2 == 0) {
+                $("#myHide").show();
+                $scope.hideheadernames = " Hide";
+            }
+            else {
+                $("#myHide").hide();
+                $scope.hideheadernames = " Show";
+            }
+        }
+        //END show AND hide Header
 
             
     });

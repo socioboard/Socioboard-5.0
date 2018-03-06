@@ -5,15 +5,33 @@
         <!--card widgets end-->
         <div class="row">
             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
-              <div class="card light-blue text-darken-2">
+              <div class="card light-blue text-darken-2" id="myHide">
                   <div class="col s12 center">
                       <img src="{{profileData.profileImageUrl}}" class="profilePicHeadin circle margin-top-10" style="border: 3px solid #ffffff59;width:90px;"/>
                       <h5 class="white-text margin-bottom-10">{{profileData.twitterScreenName}}</h5>
                       <i class="fa fa-twitter fa-5x white-text" style="position: absolute; top:85px; right: 40px; opacity: .3;"></i>
                       <i class="fa fa-twitter fa-5x white-text" style="position: absolute;top: -46px;right: 40px;opacity: 0.15;font-size: 24em;"></i>
-
                     </div>
               </div>
+
+                <nav>
+                    <div class="nav-wrapper">
+                        <ul id="nav-mobile" class="left hide-on-med-and-down">
+                            <!--<li><a href="javascript:void(0)"><i class="fa fa-eye"></i>Hide</a></li>-->
+                           <li ng-click="hideHeader()"><a href="javascript:void(0)"><i class="fa fa-eye"></i>{{hideheadernames}}</a></li>
+                        </ul>
+                        <a class='dropdown-button' href='#' data-activates='dropdown1'>Last created</a>
+
+                        <ul id='dropdown1' class='dropdown-content'>
+                            <li><a href="#!">First scheduled</a></li>
+                            <li><a href="#!">Last scheduled</a></li>
+                            <li><a href="#!">First created</a></li>
+                            <li><a href="#!">First created</a></li>
+                        </ul>
+
+                    </div>
+                </nav>
+
                 <div class="card" id="feeds">
                     <ul class="collection facebookfeeds">
                         <li class="collection-item avatar" ng-repeat="feeds in feedsSavedData">
@@ -27,10 +45,10 @@
                                     <img src="{{feeds.url}}" class="responsive-img">
                                 </div>
                             </div>
-                            <div class="row">
+                                <div class="row" ng-if="feeds.status!=2" >
                                 <div class="col l3 s3">
                                     <a class="center grey-text text-darken-4">
-                                        <i class="icon-action-undo fa-fw"></i><span> Publish Now</span>
+                                        <i ng-click="publish(feeds)" class="icon-action-undo fa-fw"></i><span> Publish Now</span>
                                     </a>
                                 </div>
                                 <div class="col l3 s3">
@@ -40,12 +58,12 @@
                                 </div>
                                 <div ng-if="feeds.review==false" class="col l3 s3 right">
                                     <a class="center grey-text text-darken-4">
-                                        <i class="icon-check fa-fw"></i><span> Approve</span>
+                                        <i ng-click="aprovepost(feeds)" class="icon-check fa-fw"></i><span> Approve</span>
                                     </a>
                                 </div>
                                 <div ng-if="feeds.review==true" class="col l3 s3 right">
                                     <a class="center green-text">
-                                        <i class="icon-check fa-fw green-text"></i><span> Approved</span>
+                                        <i  ng-click="aprovepost(feeds)" class="icon-check fa-fw green-text"></i><span> Approved</span>
                                     </a>
                                 </div>
                                 <div class="col l3 s3">
@@ -54,39 +72,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <a class="secondary-content" ></a>
+                         
+
+                            <div class="row" ng-if="feeds.status==2">
+                               
+                            </div>
+
                             </li>
-                        <li class="collection-item avatar" ng-repeat="fbfeed in lstFbFeeds" myRepeatTabDirective>
-                            <img ng-src="https://graph.facebook.com/{{fbfeed._facebookFeed.fromId}}/picture?type=small" alt="{{fbfeed._facebookFeed.fromName}}" class="circle">
-                            <span class="email-title">{{fbfeed._facebookFeed.fromName}}</span>
-                            <div class="row feeds_post">
-                                <div class="col m8 ">
-                                    <a class="break_word ultra-small black-text" href="https://www.facebook.com/{{fbfeed._facebookFeed.feedId}}" target="_blank">{{fbfeed._facebookFeed.feedDescription}}</a>
-                                </div>
-                                <!--<strong>{{fbfeed.postType}}-------{{fbfeed.postingFrom}}</strong>-->
-                                <div class="col m4 center">
-                                    <img ng-src="{{getHttpsURL(fbfeed._facebookFeed.picture)}} " ng-if="fbfeed._facebookFeed.picture!= ''" class="responsive-img">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col l8 s8 left">
-                                    <a class="center">
-                                        <i class="icon-like fa-fw"></i><span> {{fbfeed._facebookFeed.likecount}}</span>
-                                    </a>
-                                </div>
-                                <div class="col l2 s2 right">
-                                    <div class="center">
-                                        <a ng-click="openComposeMessage(fbfeed._facebookFeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
-                                    </div>
-                                </div>
-                                <div class="col l2 s2 right">
-                                    <div class="center">
-                                        <a ng-click="viewcomment(fbfeed._facebookFeed)" class="right"><i class="icon-bubble" aria-hidden="true"></i> Comment</a>
-                                    </div>
-                                </div>
-                            </div>
-                            <a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.entryDate}}</a>
-                        </li>
+                  
 
                     </ul>
 

@@ -133,6 +133,58 @@ namespace Api.Socioboard.Repositories
                 return null;
             }
         }
+
+        public static bool changeaprove(string strid, bool update, Helper.AppSettings _settings)
+        {
+            MongoRepository mongorepo = new MongoRepository("SavedFeedsManagement", _settings);
+            try
+            {
+                FilterDefinition<BsonDocument> filter = new BsonDocument("strId", strid);
+                var Update = Builders<BsonDocument>.Update.Set("review", update);
+                mongorepo.Update<MongoYoutubeComments>(Update, filter);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        public static string publish(string profileId, string strid, Helper.AppSettings _settings)
+        {
+            MongoRepository mongorepo = new MongoRepository("SavedFeedsManagement", _settings);
+            try
+            {
+                FilterDefinition<BsonDocument> filter = new BsonDocument("strId", strid);
+                var Update = Builders<BsonDocument>.Update.Set("status", "2");
+                mongorepo.Update<MongoYoutubeComments>(Update, filter);
+                return "sucess";
+            }
+            catch
+            {
+                return "failed"; 
+            }
+        }
+
+
+        public static bool  scheduleMsgRepo(string postId, long groupId,string schtime, Helper.AppSettings _settings)
+        {
+            MongoRepository mongorepo = new MongoRepository("SavedFeedsManagement", _settings);
+            try
+            {
+
+                FilterDefinition<BsonDocument> filter = new BsonDocument("postId", postId);
+                var update = Builders<BsonDocument>.Update.Set("scheduleTime", schtime);
+                mongorepo.Update<MongoYoutubeComments>(update, filter);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }
 

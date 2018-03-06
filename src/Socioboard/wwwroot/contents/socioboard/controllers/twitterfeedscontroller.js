@@ -612,6 +612,35 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
               // end codes to load  recent Tweets
           }
         //end 
+
+          $scope.connect = function () {
+              debugger;
+             
+              $http.get(apiDomain + '/api/Twitter/feeds?profileId=' + $stateParams.profileId)
+                          .then(function (response) {
+                              debugger;
+                              $scope.UserTweets = response.data;
+                              //$scope.preloadmoretweets = true;
+                              //if (response.data == null) {
+                              //    TweetsreachLast = true;
+                              //}
+                              //}, function (reason) {
+                              //$scope.error = reason.data;
+                          });
+              // end codes to load  recent Tweets
+          }
+
+          $scope.keywordsearch = function (data) {
+              debugger;
+              var key = $('#categories').val();
+              $http.get(apiDomain + '/api/Twitter/searchkeyword?profileId=' + $stateParams.profileId + '&keyword=' + key)
+                          .then(function (response) {
+                              debugger;
+                              $scope.UserTweets = response.data;
+                          });
+              // end codes to load  recent Tweets
+          }
+
     });
 });
 

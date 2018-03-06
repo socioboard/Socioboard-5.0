@@ -43,7 +43,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
           
             swal({
                 title: "Are you sure?",
-                text: "You will not be able to send message via this account!",
+                text: "You want to delete this!",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#DD6B55",
@@ -55,7 +55,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 	            $http.post(apiDomain + '/api/RssFeed/DeleteContentFeeds?contentfeedid=' + profileId)
                            .then(function (response) {
                                if (response.data == "success") {
-                                   swal("Deleted!", "Your profile has been deleted.", "success");
+                                   swal("Deleted!", "content feed has been deleted.", "success");
                                    window.location.reload();
                                    //$scope.loadpageshareathon();
                                }

@@ -229,47 +229,45 @@ SocioboardApp.controller('BoardController', function ($rootScope, $scope, $http,
         $scope.cmpbtn = true;
 
         $scope.openComposeMessage = function (schedulemessage) {
+           // console.log(schedulemessage);
             jQuery('input:checkbox').removeAttr('checked');
             if (schedulemessage.gplusboardaccprofileid != null) {
                 var message = {
                     //"shareMessage": schedulemessage.title,
-                    //"picUrl": schedulemessage.imageurl,
+                    "picUrl": schedulemessage.imageurl,
                     "url": schedulemessage.feedlink,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,                 
                     "fromName": schedulemessage.fromName,
                     "socialMedia": "gplus"
                 };
-                console.log(message);
-                console.log("google");
+             
                 $rootScope.boardComposeMessage = message;
             }
             else if (schedulemessage.twitterprofileid != null) {
                 var message = {
                     //"shareMessage": schedulemessage.text,
-                    //"picUrl": schedulemessage.imageurl,
+                    "picUrl": schedulemessage.imageurl,
                     "url": schedulemessage.feedurl,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,
                     "fromName": schedulemessage.fromName,
                     "socialMedia": "twitter"
                 };
-                console.log(message);
-                console.log("twitter");
+              
                 $rootScope.boardComposeMessage = message;
             }
             else if (schedulemessage.feedid != null) {
                 var message = {
                     //"shareMessage": schedulemessage.tags,
-                    //"picUrl": schedulemessage.imageurl,
+                    "picUrl": schedulemessage.imageurl,
                     "url": schedulemessage.link,
                     "feedId": schedulemessage.feedid,
                     "fromId": schedulemessage.fromId,
                     "fromName": schedulemessage.fromName,
                     "socialMedia": "instagram"
                 };
-                console.log(message);
-                console.log("instagram");
+              
                 $rootScope.boardComposeMessage = message;
 
             }

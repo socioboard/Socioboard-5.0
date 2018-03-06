@@ -1112,7 +1112,7 @@ SocioboardApp.config(['$stateProvider', '$urlRouterProvider', function ($statePr
         // facebook feeds manager
 
         .state('facebookfeedsmanager', {
-            url: "/facebookfeedsmanager",
+            url: "/facebookfeedsmanager/{profileId}",
             templateUrl: "../contents/socioboard/views/feeds_manager/facebookfeedsmanager.html",
             data: { pageTitle: 'Facebook feeds manager', pageSubTitle: 'updated' },
             controller: "FacebookFeedsManagerController",

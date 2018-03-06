@@ -264,8 +264,9 @@
                                         </a>
                                         <div class="collapsible-body">
                                             <ul>
-                                                <li class="truncate">
-                                                    <a href="#/facebookfeedsmanager"><i class="icon-user"></i>Chanchal Santra</a>
+                                               
+                                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} && filter:{profileType:1}">
+                                                    <a href="#/facebookfeedsmanager/{{profile.profileId}}" class="truncate"><i class="icon-user"></i>{{profile.profileName}}</a>
                                                 </li>
                                             </ul>
                                         </div>

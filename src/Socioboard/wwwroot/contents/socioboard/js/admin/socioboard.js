@@ -662,6 +662,46 @@ facebookfeeds = function () {
     });
 }
 
+// facebook feeds manager
+
+facebookfeedsmanager = function () {
+    // initialize core components
+
+    $('.modal-trigger').leanModal();
+    $('ul.tabs').tabs();
+    $('select').material_select();
+    $('.tooltipped').tooltip({ delay: 50 });
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: true, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: false, // Displays dropdown below the button
+        alignment: 'left' // Displays dropdown with edge aligned to the left of button
+    });
+
+    $('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15 // Creates a dropdown of 15 years to control year
+    });
+    $('.collapsible').collapsible({
+        accordion: false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+
+    // Basic
+    $('.dropify').dropify();
+
+
+    $('.facebookfeeds').slimScroll({
+        color: '#3B5998',
+        size: '10px',
+        height: '600px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
+}
+
 twitterfeeds = function () {
     // initialize core components
     $('.modal-trigger').leanModal();

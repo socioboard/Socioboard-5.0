@@ -80,12 +80,12 @@
                                             </a>
                                         </span>
                                         <span ng-if="feed.instagramaccountid !=null" >
-                                            <a ng-href="https://www.instagram.com/{{feed.fromId}}" target="_blank" class=" brown-text text-darken-1">
+                                            <a ng-href="https://www.instagram.com/{{feed.fromId}}" target="_blank" class="brown-text text-darken-1">
                                                 <i class="fa fa-instagram fa-fw "></i>@{{feed.fromName}}
                                             </a>
                                         </span>
                                         <span ng-if="feed.gplusboardaccprofileid!=null" >
-                                            <a ng-href="https://plus.google.com/{{feed.fromId}}" target="_blank" class=" red-text text-darken-3">
+                                            <a ng-href="https://plus.google.com/{{feed.fromId}}" target="_blank" class="red-text text-darken-3">
                                                 <i class="fa fa-google-plus-square fa-fw "></i>@{{feed.fromName}}
                                             </a>
                                         </span>
@@ -353,8 +353,11 @@
                                     <p>Select your file [Ex: gif, jpeg, png, mp4, ...]</p>
                                 </div>
                                 <input type="hidden" id="imageUrl" value="{{boardComposeMessage.picUrl}}" />
-                                <div class="col s12 m8 l9" ng-if="boardComposeMessage">
+                                <div class="col s12 m8 l9" ng-if="boardComposeMessage && boardComposeMessage.picUrl!=null">
                                     <input type="file" id="composeImage" ng-if="boardComposeMessage.picUrl!=null" class="dropify" after-render data-default-file="{{boardComposeMessage.picUrl}}" disabled/>
+                                </div>
+                                <div class="col s12 m8 l9" ng-if="boardComposeMessage && boardComposeMessage.picUrl==null">
+                                    <input type="file" id="composeImage" after-render data-default-file=""  />
                                 </div>
 
                                 <div class="col s12 m8 l9" ng-if="!boardComposeMessage">
@@ -441,7 +444,7 @@
         $('#waterfall').NewWaterfall();
     });
 
-    // 自动加载更多
+    // 自动加载更多 automatic load more
     function random(min, max) {
         return min + Math.floor(Math.random() * (max - min + 1))
     }

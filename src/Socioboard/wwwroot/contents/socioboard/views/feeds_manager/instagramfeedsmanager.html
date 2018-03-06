@@ -77,12 +77,12 @@
                                 </div>
                                 <div ng-if="feeds.review==false" class="col l3 s3 right">
                                     <a class="center grey-text text-darken-4">
-                                        <i class="icon-check fa-fw"></i><span> Approve</span>
+                                        <i ng-click="aprovepost(feeds)" class="icon-check fa-fw"></i><span> Approve</span>
                                     </a>
                                 </div>
                                 <div ng-if="feeds.review==true" class="col l3 s3 right">
                                     <a class="center green-text">
-                                        <i class="icon-check fa-fw green-text"></i><span> Approved</span>
+                                        <i  ng-click="aprovepost(feeds)" class="icon-check fa-fw green-text"></i><span> Approved</span>
                                     </a>
                                 </div>
 

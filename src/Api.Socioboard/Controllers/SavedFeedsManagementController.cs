@@ -86,5 +86,20 @@ namespace Api.Socioboard.Controllers
         {
             return Ok(SavedFeedsManagementRepository.GetComments(postId, groupId, _appSettings));
         }
+
+        [HttpPost("aprove")]
+        public IActionResult aprove(string strid ,bool update)
+        {
+            bool status = SavedFeedsManagementRepository.changeaprove(strid, update, _appSettings);
+            return Ok(status);
+        }
+
+        //ScheduleMsg
+        [HttpPost("ScheduleMsg")]
+        public IActionResult ScheduleMsg(string postId, long groupId ,string schtime)
+        {
+            bool status = SavedFeedsManagementRepository.scheduleMsgRepo(postId, groupId, schtime, _appSettings);
+            return Ok(status);
+        }
     }
 }
