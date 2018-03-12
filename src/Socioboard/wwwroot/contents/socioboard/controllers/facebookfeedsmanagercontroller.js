@@ -73,7 +73,7 @@ SocioboardApp.controller('FacebookFeedsManagerController', function ($rootScope,
                            showConfirmButton: false,
                            timer: 5000
                        })
-                       window.location.reload()
+                       $scope.loadfeedsSavedData();
                    })
 
 
@@ -123,7 +123,9 @@ SocioboardApp.controller('FacebookFeedsManagerController', function ($rootScope,
                         transformRequest: angular.identity,
                     }).then(function (response) {
                         if (response.data == true) {
-                            swal('Post saved successfully');
+                            $scope.loadfeedsSavedData();
+                            $('#ComposePostModal').closeModal();
+                            swal('Post saved successfully');                         
                             console.log(response.data);
                             $(".dropify-clear").click();
                         }
@@ -196,26 +198,57 @@ SocioboardApp.controller('FacebookFeedsManagerController', function ($rootScope,
 
         }
 
-        $scope.hour_select = function (hrvalue) {
-            $scope.hourval = hrvalue;
-
-        }
-        $scope.min_select = function (minvalu) {
-            $scope.minval = minvalu;
-        }
-        $scope.ampm_select = function (ampmval) {
-            $scope.ampmvalu = ampmval;
-        }
-
-
-        $scope.schedule = function (selectedFeedData) {
+        //open schedule modal
+        $scope.openSchedule = function (feeds) {
+        debugger;
             $('#scheduleModal').openModal();
-            $scope.selectedFeed = selectedFeedData;
-            var datetime = $scope.hourval + ":" + $scope.minval + '' + $scope.ampmvalu
+            $scope.selectedFeedsch = feeds;
+            $rootScope.feedval = feeds;
+            console.log("noroot", $scope.selectedFeedsch);
+            console.log("withroot", $rootScope.feedval);
+            var dateval = $('#datepickerval').val();
+            var timeval = $scope.hourval + ":" + $scope.minval + '' + $scope.ampmvalu ;
+            console.log(datetime);
+            //$http.get(apiDomain + '/api/SavedFeedsManagement/ScheduleMsg?postId=' + selectedFeedData.strId + '&groupId=' + $rootScope.groupId + '&schtime=')
+            //             .then(function (response) {
+            //                 $scope.allcomment = response.data;
+            //             }, function (reason) {
+            //                 $scope.error = reason.data;
+            //             });
 
-            $http.get(apiDomain + '/api/SavedFeedsManagement/ScheduleMsg?postId=' + selectedFeedData.strId + '&groupId=' + $rootScope.groupId + '&schtime=')
+        }
+
+        //schedule post
+        $scope.schdule = function (schdata) {
+            debugger;
+          //  $('#scheduleModal').openModal();
+          //  $scope.selectedFeedsch = selectedFeedData;
+            // $rootScope.feedval = selectedFeedData;
+            var $input = $('.datepicker').pickadate();
+            var picker = $input.pickadate('picker','dateformat');
+            var dt = new Date(picker.get());
+            var hr = $('#hourSelect').val();
+            var min = $('#minSelect').val();
+            var ampm = $('#AmPmSelect').val();
+            var timeval = hr + ':' + min +ampm;
+            //$('#datepicker').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+
+           
+            console.log(dt);
+            var datetime = $scope.hourval + ":" + $scope.minval + '' + $scope.ampmvalu;
+
+            $http.get(apiDomain + '/api/SavedFeedsManagement/ScheduleMsg?postId=' + schdata.postId + '&groupId=' + $rootScope.groupId + '&schtime=' + picker.get() + '&timeval=' + timeval)
                          .then(function (response) {
                              $scope.allcomment = response.data;
+                             if(response.data == true)
+                             {
+                                 $('#scheduleModal').closeModal();
+                                 swal("successfully scheduled")
+                                 $scope.loadfeedsSavedData();
+                             }
+                             else {
+                                 swal("error while scheduling")
+                             }
                          }, function (reason) {
                              $scope.error = reason.data;
                          });
@@ -256,6 +289,7 @@ SocioboardApp.controller('FacebookFeedsManagerController', function ($rootScope,
                 $http.post(apiDomain + '/api/SavedFeedsManagement/DeletePost?postId=' + tempPostId)
                           .then(function (response) {
                               if (response.data == true) {
+                                  $scope.loadfeedsSavedData();
                                   swal("Deleted");
                               }
                           }, function (reason) {

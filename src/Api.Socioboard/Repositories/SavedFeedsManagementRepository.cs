@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace Api.Socioboard.Repositories
             {
                 objDta.Id = ObjectId.GenerateNewId();
                 objDta.strId = ObjectId.GenerateNewId().ToString();
+                objDta.postId = ObjectId.GenerateNewId().ToString();
                 objDta.savedTime = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow);
                 MongoRepository mongorepo = new MongoRepository("SavedFeedsManagement", _settings);
                 var result = mongorepo.Add<Domain.Socioboard.Models.Mongo.SavedFeedsManagement>(objDta);
@@ -168,15 +170,26 @@ namespace Api.Socioboard.Repositories
         }
 
 
-        public static bool  scheduleMsgRepo(string postId, long groupId,string schtime, Helper.AppSettings _settings)
+        public static bool  scheduleMsgRepo(string postId, long groupId,DateTime schtime,string timeval, Helper.AppSettings _settings)
         {
+                     
             MongoRepository mongorepo = new MongoRepository("SavedFeedsManagement", _settings);
             try
             {
+                string dateval = schtime.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
+                DateTime schdatetime = Convert.ToDateTime(dateval + " " + timeval);
+                
 
                 FilterDefinition<BsonDocument> filter = new BsonDocument("postId", postId);
-                var update = Builders<BsonDocument>.Update.Set("scheduleTime", schtime);
-                mongorepo.Update<MongoYoutubeComments>(update, filter);
+                var update = Builders<BsonDocument>.Update.Set("scheduleTime", schdatetime).Set("schedOrNotstatus", 1).Set("scheduleTimestr", schdatetime.ToString());
+                try
+                {
+                    mongorepo.Update<SavedFeedsManagement>(update, filter);
+                }
+                catch (Exception ex)
+                {
+
+                }
                 return true;
             }
             catch

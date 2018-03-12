@@ -24,6 +24,7 @@ SocioboardApp.controller('TwitterFeedsManagerController', function ($rootScope, 
                          .then(function (response) {
                              debugger;
                              $scope.profileData = response.data;
+                             console.log($scope.profileData);
                          }, function (reason) {
                              $scope.error = reason.data;
                          });
@@ -57,7 +58,7 @@ SocioboardApp.controller('TwitterFeedsManagerController', function ($rootScope, 
                            showConfirmButton: false,
                            timer: 5000
                        })
-                       window.location.reload()
+                       $scope.loadfeedsSavedData();
                    })
 
 
@@ -74,7 +75,7 @@ SocioboardApp.controller('TwitterFeedsManagerController', function ($rootScope, 
                    showConfirmButton: false,
                    timer: 5000
                })
-               window.location.reload()
+               $scope.loadfeedsSavedData();
 
            })
             }
@@ -96,6 +97,7 @@ SocioboardApp.controller('TwitterFeedsManagerController', function ($rootScope, 
                                      showConfirmButton: false,
                                      timer: 4000
                                  })
+                              $scope.loadfeedsSavedData();
                              //}
                              //else {
                              //    swal("Somthing Went Wrong");
@@ -126,7 +128,8 @@ SocioboardApp.controller('TwitterFeedsManagerController', function ($rootScope, 
                         },
                         transformRequest: angular.identity,
                     }).then(function (response) {
-                        if (response.data == "Posted") {
+                        if (response.data == true) {
+                            $scope.loadfeedsSavedData();
                             $('#ComposePostModal').closeModal();
                             swal('Message composed successfully');
                             $(".dropify-clear").click();
@@ -147,6 +150,64 @@ SocioboardApp.controller('TwitterFeedsManagerController', function ($rootScope, 
             }
         }
         //code for compose message end
+
+
+        //open schedule modal
+        $scope.openSchedule = function (feeds) {
+            debugger;
+            $('#scheduleModal').openModal();
+            $scope.selectedFeedsch = feeds;
+            $rootScope.feedval = feeds;
+            console.log("noroot", $scope.selectedFeedsch);
+            console.log("withroot", $rootScope.feedval);
+            var dateval = $('#datepickerval').val();
+            var timeval = $scope.hourval + ":" + $scope.minval + '' + $scope.ampmvalu;
+            console.log(datetime);
+            //$http.get(apiDomain + '/api/SavedFeedsManagement/ScheduleMsg?postId=' + selectedFeedData.strId + '&groupId=' + $rootScope.groupId + '&schtime=')
+            //             .then(function (response) {
+            //                 $scope.allcomment = response.data;
+            //             }, function (reason) {
+            //                 $scope.error = reason.data;
+            //             });
+
+        }
+
+        //schedule post
+        $scope.schdule = function (schdata) {
+            debugger;
+            //  $('#scheduleModal').openModal();
+            //  $scope.selectedFeedsch = selectedFeedData;
+            // $rootScope.feedval = selectedFeedData;
+            var $input = $('.datepicker').pickadate();
+            var picker = $input.pickadate('picker', 'dateformat');
+            var dt = new Date(picker.get());
+            var hr = $('#hourSelect').val();
+            var min = $('#minSelect').val();
+            var ampm = $('#AmPmSelect').val();
+            var timeval = hr + ':' + min + ampm;
+            //$('#datepicker').datepicker({ dateFormat: 'dd-mm-yy' }).val();
+
+
+            console.log(dt);
+            var datetime = $scope.hourval + ":" + $scope.minval + '' + $scope.ampmvalu;
+
+            $http.get(apiDomain + '/api/SavedFeedsManagement/ScheduleMsg?postId=' + schdata.postId + '&groupId=' + $rootScope.groupId + '&schtime=' + picker.get() + '&timeval=' + timeval)
+                         .then(function (response) {
+                             $scope.allcomment = response.data;
+                             if (response.data == true) {
+                                 $scope.loadfeedsSavedData();
+                                 $('#scheduleModal').closeModal();
+                                 swal("successfully scheduled")
+                                
+                             }
+                             else {
+                                 swal("error while scheduling")
+                             }
+                         }, function (reason) {
+                             $scope.error = reason.data;
+                         });
+
+        }
 
 
         //code for checking the file format start

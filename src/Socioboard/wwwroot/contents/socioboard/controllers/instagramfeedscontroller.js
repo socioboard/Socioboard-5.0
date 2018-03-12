@@ -9,9 +9,10 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         var lstnofeeds = false;
         var preloadmorefeeds = false;   
         var endfeeds = false;
-        var ending = start + 10;
+        var ending = start + 12;
         var reachLast = false;
         var count = 10;
+        var videofiltter = false;
        // var show = true;
         $scope.filterrTxtt = 'All Posts';
         $scope.SorttTxtt = 'Popular';
@@ -78,7 +79,6 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             }
             $http.get(apiDomain + '/api/Instagram/GetInstagramFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=' + ending + '&count=9')
                          .then(function (response) {
-                             debugger;
                              // $scope.lstProfiles = response.data;
                              if (response.data == null || response.data == "") {
                                  $scope.endfeeds = true;
@@ -100,9 +100,7 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
 
         $scope.filterSearch = function (postType, txtt) {
-            //    
             $scope.nomessages = false;
-
             $scope.filters = true;
             $scope.preloadmorefeeds = false;
             $scope.lstinsFeeds = null;
@@ -110,21 +108,20 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             //codes to load  recent Feeds
             $http.get(apiDomain + '/api/Instagram/GetInstagramFilterFeeds?instagramId=' + $stateParams.profileId + '&userId=' + $rootScope.user.Id + '&skip=0&count=50' + '&postType=' + postType)
                           .then(function (response) {
-                            //   
+                              debugger;
+                              if (postType == "video")
+                              {
+                                  $scope.videofiltter = true;
+                              }
                               if (response.data == "") {
                                   $scope.nomessages = true;
                                   $scope.preloadmorefeeds = true;
                               }
-                              // $scope.lstProfiles = response.data;
-                              //$scope.lstinsFeeds = response.data;
-                               
                               if (response.data == null) {
                                    reachLast = true;
                                   }
                               $scope.lstinsFeeds = response.data;
-
                               $scope.preloadmorefeeds = true;
-
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
@@ -280,7 +277,6 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
         }
 
         $scope.Deletefeeds = function (id) {
-            debugger;
             var Feedid = id;
             $http.get(apiDomain + '/api/Instagram/DeleteinstagramFeed?profileId=' + $stateParams.profileId + '&FeedId=' + Feedid)
                         .then(function (response) {
@@ -341,15 +337,13 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
             var qury = $('#categories').val();
             $http.get(apiDomain + '/api/Instagram/Searchinsta?instagramId=' + $stateParams.profileId + '&qury=' + qury)
                          .then(function (response) {
-                             debugger;
                              if (response != null) {
                                  $scope.seachdata = response.data.data;
-                                 debugger;
                                  $('#SearchProfileModal').openModal();
                              }
                              else {
                                  swal('No Result Found')
-                             }debugger;
+                             }
                              var data = response;
                          });
 

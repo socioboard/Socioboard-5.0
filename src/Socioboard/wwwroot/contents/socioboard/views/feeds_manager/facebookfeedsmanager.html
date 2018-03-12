@@ -1,8 +1,3 @@
-<style>
-    md-dialog {
-        opacity: 1 !important;
-    }
-</style>
 <div data-ng-controller="FacebookFeedsManagerController">
   <!-- START CONTENT -->
   <section id="content">
@@ -10,13 +5,13 @@
         <!--card widgets end-->
         <div class="row">
             <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
-
                 <div class="card blue darken-4" id="myHide">
                     <div class="col s12 center">
                         <img src="{{profileData.profileUrl}}" class="profilePicHeade circle margin-top-10" style="border: 3px solid #ffffff59;" />
                         <h5 class="white-text margin-bottom-10">{{profileData.fbUserName}}</h5>
                         <i class="fa fa-facebook fa-5x white-text" style="position: absolute; top: 86px; right: 9px; opacity: .3;"></i>
-                        <i class="fa fa-facebook fa-5x white-text" style="position: absolute;top: -15px;right: 40px;opacity: 0.15;font-size: 24em;"></i>                       
+                        <i class="fa fa-facebook fa-5x white-text" style="position: absolute;top: -15px;right: 40px;opacity: 0.15;font-size: 24em;"></i>
+                        <!--<i class="fa white-text" style="position: absolute;top: 30px;left: 1px;opacity: 0.1;font-size: 8em;font-family: cursive;">{{profileData.insUserName}}</i>-->
                     </div>
                 </div>
                 <nav>
@@ -45,7 +40,7 @@
                 <div class="card" id="feeds">
                     <ul class="collection facebookfeeds">
                         <li class="collection-item avatar" ng-repeat="feeds in feedsSavedData">
-                            <img src="{{feeds.picUrl}}" alt="Chanchal Santra" class="circle">
+                            <img src="{{feeds.picUrl}}" class="circle">
                             <span class="email-title">{{feeds.socialProfileName}}</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
@@ -74,9 +69,14 @@
                                         <!--<i class="icon-action-undo fa-fw"></i><span> Publish Now</span>-->
                                     </a>
                                 </div>
-                                <div class="col l3 s3">
-                                    <a ng-click="schdule(feeds)" class="center grey-text text-darken-4">
-                                        <i class="icon-clock fa-fw"></i><span> Scedule</span>
+                                <div class="col l3 s3" ng-if="feeds.schedOrNotstatus ==0">
+                                    <a ng-click="openSchedule(feeds)" class="center grey-text text-darken-4">
+                                        <i class="icon-clock fa-fw"></i><span> Schedule</span>
+                                    </a>
+                                </div>
+                                <div class="col l3 s3" ng-if="feeds.schedOrNotstatus ==1">
+                                    <a ng-click="openSchedule(feeds)" class="myBtn center white-text text-darken-4">
+                                        <i class="icon-clock fa-fw"></i><span> Scheduled</span>
                                     </a>
                                 </div>
                                 <div class="col l3 s3 right">
@@ -85,13 +85,13 @@
                                     </div>
                                 </div>
                                 <div ng-if="feeds.review==false" class="col l3 s3 right">
-                                    <a class="center grey-text text-darken-4">
-                                        <i class="icon-check fa-fw"></i><span> Approve</span>
+                                    <a ng-click="aprovepost(feeds)" class="center grey-text text-darken-4">
+                                        <i  class="icon-check fa-fw"></i><span> Approve</span>
                                     </a>
                                 </div>
                                 <div ng-if="feeds.review==true" class="col l3 s3 right">
-                                    <a class="center green-text">
-                                        <i class="icon-check fa-fw green-text"></i><span> Approved</span>
+                                    <a ng-click="aprovepost(feeds)" class="myBtn  center white-text">
+                                        <i class="icon-check fa-fw white-text"></i><span> Approved</span>
                                     </a>
                                 </div>
 
@@ -112,8 +112,6 @@
           </a>
       </div>
 
-    
-
       <!-- Compose Email Structure -->
       <div id="ComposePostModal" class="modal">
           <div class="model-email-content">
@@ -125,41 +123,9 @@
                               <p>Select your file</p>
                               <input type="file" id="input_file" class="dropify" data-default-file="" />
                           </div>
-                          <div class="col s12 m6">
-                              <div class="input-field">
-                                  <textarea id="compose" class="materialize-textarea" length="500"></textarea>
-                                  <label for="compose">Compose email</label>
-                              </div>
-                              <div class="row no-space">
-                                  <div class="input-field col s12">
-                                      <div id="content" layout="column" flex>
-                                          <md-content flex layout="column" layout-align="center center" layout-padding>
-                                              <div layout="row" ng-form="demoForm">
-                                                  <div layout-padding>
-                                                      <div>
-                                                          <mdp-date-picker mdp-open-on-click required name="dateFormat" mdp-placeholder="(dd/mm/yyyy)" mdp-format="DD/MM/YYYY" ng-model="currentDate">
-                                                              <div ng-show="demoForm.dateFormat.$error.required">
-                                                                  <div ng-message="required">This is required</div>
-                                                                  <div ng-message="format">Invalid format</div>
-                                                              </div>
-                                                          </mdp-date-picker>
-                                                      </div>
-                                                  </div>
-                                                  <div layout-padding>
-                                                      <div>
-                                                          <mdp-time-picker mdp-open-on-click name="timeFormat" required ng-model="currentDate" mdp-format="HH:mm" mdp-placeholder="(hh/mm)">
-                                                              <div ng-show="demoForm.timeFormat.$error.required">
-                                                                  <div ng-message="required">This is required</div>
-                                                                  <div ng-message="format">Invalid format</div>
-                                                              </div>
-                                                          </mdp-time-picker>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </md-content>
-                                      </div>
-                                  </div>
-                              </div>
+                          <div class="input-field col s12 m6">
+                              <textarea id="compose" class="materialize-textarea" length="500"></textarea>
+                              <label for="compose">Compose email</label>
                           </div>
                       </div>
                   </form>
@@ -211,33 +177,25 @@
               <form class="row no-space">
                   <div class="col s6 center">
 
-                      <video class="responsive-video" controls ng-if="selectedFeed.mediaType == 2">
-                          <source src="{{selectedFeed.url | Url}}" type="video/mp4">
+                      <video class="responsive-video" controls ng-if="selectedFeedsch.mediaType == 2">
+                          <source src="{{selectedFeedSch.url | Url}}" type="video/mp4">
                       </video>
 
-                      <img class="responsive-img" ng-src="{{selectedFeed.url}}" ng-if="selectedFeed.mediaType == 1" />
+                      <img class="responsive-img" ng-src="{{selectedFeedsch.url}}" ng-if="selectedFeedsch.mediaType == 1" />
 
                       <p class="no-space">
-                          {{selectedFeed.shareMessage}}
+                          {{selectedFeedsch.shareMessage}}
                       </p>
 
                   </div>
                   <div class="col s6">
-                      <div class="m_comm">
-                          <div ng-repeat="comment in allcomment">
-                              <div class="grey-text text-darken-1"><span><b>{{comment.userName}}</b></span> : <span class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{comment.commentText}}</span></div>
-                          </div>
-                      </div>
-                      <div class="input-field col s12">
-                          <input id="postcomment_text" placeholder="Add a comment.." class="" type="text" ng-model="postcommentText">
-                      </div>
                       <div class="input-field col s12">
                           <input type="date" class="datepicker">
                           <label for="dob">DATE</label>
                       </div>
                       <div class="input-field col s12">
                           <div class="input-field col s4">
-                              <select id="hourSelect" name="hourSelect" onchange="hour_select(value)">
+                              <select id="hourSelect" name="hourSelect" ng-click="hour_select(value)">
                                   <option value="" disabled selected>hour</option>
                                   <option value="01">01</option>
                                   <option value="02">02</option>
@@ -317,19 +275,19 @@
                                   <option value="59">59</option>
                                   <option value="60">60</option>
 
-                            </select>
+                              </select>
                           </div>
                           <div class="input-field col s4">
                               <select id="AmPmSelect" name="AmPmSelect" ng-click="ampm_select(value)">
                                   <option value="" disabled selected>AM / PM</option>
-                                  <option value="1">AM</option>
-                                  <option value="2">PM</option>
+                                  <option value="AM">AM</option>
+                                  <option value="PM">PM</option>
                               </select>
 
                           </div>
                       </div>
                       <div class="input-field col s1">
-                          <a class="btn btn_style btn_round" ng-click="addComment(selectedFeed, postcommentText)">send</a>
+                          <a class="btn btn_style btn_round" ng-click="schdule(selectedFeedsch)">schedule</a>
                       </div>
                   </div>
               </form>
@@ -389,10 +347,17 @@
 
     .right {
     }
-    .modal {
+     .modal {
         max-height:none!important;
         height:75%!important;
     }
+
+   
+    .myBtn{
+      border: 2px solid green;
+      border-radius: 20px;
+      padding: 3px 12px;
+      background:green;
+    }
+
 </style>
-
-

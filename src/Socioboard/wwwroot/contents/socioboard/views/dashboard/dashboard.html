@@ -469,7 +469,7 @@
                                 </div>
                                 <!--LinkedIn Account profiles bind end-->
                                 <!--Pinterest Account profiles bind start-->
-                                <div class="col s12 m6 l4" ng-if="data['pintrestaccount'] != null && data['pintrestaccount'] != ''">
+                                <!--<div class="col s12 m6 l4" ng-if="data['pintrestaccount'] != null && data['pintrestaccount'] != ''">
                                     <div id="profile-card" class="card">
                                         <div class="card-image waves-effect waves-block waves-light">
                                             <img class="activator" ng-src="{{data['pintrestaccount']['profileimgaeurl']}}" alt="{{data['pintrestaccount']['firstname']}} {{data['pintrestaccount']['lastname']}}">
@@ -492,7 +492,7 @@
                                             <p><i class="icon-user-following cyan-text text-darken-2 activator" title="followingcount"></i><span class="cyan-text text-darken-2"> Following:</span>{{data['pintrestaccount']['followingcount']}}</p>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                                 <!--Pinterest Account profiles bind end-->
                             </div>
 
@@ -1066,7 +1066,7 @@
                                         </ul>
                                     </div>
                                 </li>
-                                <li>
+                                <!--<li>
                                     <div class="collapsible-header red-text text-darken-3"><i class="fa fa-pinterest fa-fw"></i>Pinterest</div>
                                     <div class="collapsible-body">
                                         <ul>
@@ -1087,7 +1087,7 @@
                                             </li>
                                         </ul>
                                     </div>
-                                </li>
+                                </li>-->
                                 <!--<li>
                                     <div class="card center">
                                         <a class="waves-effect waves-light modal-trigger" href="#addprofile">
@@ -1326,7 +1326,7 @@
                         <li class="tab col s1"><a href="#google"><i class="fa fa-google-plus fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#linkedin"><i class="fa fa-linkedin fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#instagram"><i class="fa fa-instagram fa-fw fa-2x"></i></a></li>
-                        <li class="tab col s1"><a href="#pinterest"><i class="fa fa-pinterest fa-fw fa-2x"></i></a></li>
+                        <!--<li class="tab col s1"><a href="#pinterest"><i class="fa fa-pinterest fa-fw fa-2x"></i></a></li>-->
                         <li class="tab col s1"><a href="#youtube"><i class="fa fa-youtube fa-fw fa-2x"></i></a></li>
                         <li class="tab col s1"><a href="#ganalytics"><i class="fa fa-line-chart fa-fw fa-2x"></i></a></li>
                     </ul>
@@ -1422,7 +1422,7 @@
                         <a  ng-click="profileaddmessage()" disable class="waves-effect grey waves-light btn"><i class="fa fa-instagram fa-fw"></i>Add Instagram Profile</a>
                     </div>
                 </div>
-                <div id="pinterest" class="col s12">
+                <!--<div id="pinterest" class="col s12">
                     <div class="center-align"  ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7">
                         <p>To allow Socioboard access to your Pinterest account, you must first give authorization from the Pinterest website</p>
                         <a href="../PinterestManager/AuthenticatePinterest" class="waves-effect waves-light btn"><i class="fa fa-pinterest fa-fw"></i>Add a pinterest Profile</a>
@@ -1431,7 +1431,7 @@
                         <p>To allow Socioboard access to your Pinterest account, you must first give authorization from the Pinterest website</p>
                         <a   ng-click="message()" disable class="waves-effect grey waves-light btn"><i class="fa fa-pinterest fa-fw"></i>Add a pinterest Profile</a>
                     </div>
-                </div>
+                </div>-->
                 <div id="youtube" class="col s12">
                     <div class="center-align" ng-if="user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7 ">
                         <p>To allow Socioboard access to your Youtube account, you must first give authorization from the Youtube website</p>

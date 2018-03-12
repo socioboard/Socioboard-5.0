@@ -95,10 +95,10 @@ namespace Api.Socioboard.Controllers
         }
 
         //ScheduleMsg
-        [HttpPost("ScheduleMsg")]
-        public IActionResult ScheduleMsg(string postId, long groupId ,string schtime)
+        [HttpGet("ScheduleMsg")]
+        public IActionResult ScheduleMsg(string postId, long groupId ,DateTime schtime,string timeval)
         {
-            bool status = SavedFeedsManagementRepository.scheduleMsgRepo(postId, groupId, schtime, _appSettings);
+            bool status = SavedFeedsManagementRepository.scheduleMsgRepo(postId, groupId, schtime, timeval, _appSettings);
             return Ok(status);
         }
     }

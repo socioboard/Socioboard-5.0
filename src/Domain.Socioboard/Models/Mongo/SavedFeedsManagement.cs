@@ -17,10 +17,11 @@ namespace Domain.Socioboard.Models.Mongo
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
         public string strId { get; set; }
+        public string postId { get; set; }
         public string shareMessage { get; set; }
         public string postLink { get; set; }
         public double savedTime { get; set; }
-        public ScheduledStatus status { get; set; }
+        public ScheduledStatusFeedsManager status { get; set; }
         public bool review { get; set; }
         public long userId { get; set; }
         public string sbuserName { get; set; }
@@ -34,6 +35,12 @@ namespace Domain.Socioboard.Models.Mongo
         public string link { get; set; }
         public double calenderTime { get; set; }
         public MediaType mediaType { get; set; }
-        
+        public DateTime scheduleTime { get; set; }
+        public string scheduleTimestr { get; set; }
+
+        public int schedOrNotstatus { get; set; }
+
+       
+
     }
 }

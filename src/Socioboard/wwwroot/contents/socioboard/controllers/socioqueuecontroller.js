@@ -121,8 +121,6 @@ SocioboardApp.controller('SocioqueueController', function ($rootScope, $scope, $
 
         }
 
-
-
         var getAllSelected = function () {
             var selectedItems = $scope.lstsocioqueuemessage.filter(function (profile) {
                 return $scope.temp;
