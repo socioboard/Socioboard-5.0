@@ -54,12 +54,12 @@ namespace Socioboard.Instagram.Instagram.Core.UsersMethods
         /// <returns></returns>
         public string UsersSearch(string query, string count, string accessToken, string clientid)
         {
-            string url = "https://api.instagram.com/v1/users/search?access_token=" + accessToken;
+            string url = "https://api.instagram.com/v1/" + "users/search?q=" + query + "&access_token=" + accessToken;
             if (string.IsNullOrEmpty(accessToken))
                 url = "https://api.instagram.com/v1/users/search?client_id=" + clientid;
 
-            if (!string.IsNullOrEmpty(query)) url = url + "&q=" + query;
-            if (!string.IsNullOrEmpty(count)) url = url + "&count=" + count;
+            //if (!string.IsNullOrEmpty(query)) url = url + "&q=" + query;
+            //if (!string.IsNullOrEmpty(count)) url = url + "&count=" + count;
             string json = objoAuthIns.RequestGetToUrl(url, null);
             if (string.IsNullOrEmpty(json))
                 return null;
@@ -67,6 +67,18 @@ namespace Socioboard.Instagram.Instagram.Core.UsersMethods
             //InstagramResponse<User[]> res = Base.DeserializeObject<InstagramResponse<User[]>>(json);
 
             return json;
+            ////https://api.instagram.com/v1/users/search?q=jack&access_token=ACCESS-TOKEN
+            ////https://api.instagram.com/v1/users/self/?access_token=ACCESS-TOKEN
+            //string url = objoAuthIns.Configuration.ApiBaseUrl + "users/search?q="+query+ "?access_token=" + accessToken;
+            //if (string.IsNullOrEmpty(accessToken))
+            //    url = objoAuthIns.Configuration.ApiBaseUrl + "users/" + userid + "/?client_id=" + objoAuthIns.Configuration.ClientId;
+
+            //string json = objoAuthIns.RequestGetToUrl(url, objoAuthIns.Configuration.Proxy);
+            //if (string.IsNullOrEmpty(json))
+            //    return null;
+
+            //InstagramResponse<User> res = Base.DeserializeObject<InstagramResponse<User>>(json);
+            //return json;
         }
 
         /// <summary>

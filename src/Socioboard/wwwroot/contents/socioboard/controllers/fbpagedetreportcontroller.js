@@ -805,7 +805,7 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
                     "fillAlphas": 1,
                     "lineAlpha": 0.1,
                     "type": "column",
-                    "valueField": "totalLikes"
+                    "valueField": "totalLikes" 
                 }],
                 "depth3D": 20,
                 "angle": 30,
@@ -842,8 +842,9 @@ SocioboardApp.controller('FbpagedetreportController', function ($rootScope, $sco
                     $scope.chartlikes.push({
                         date: new Date((value.date * 1000)),
                         totalLikes: value.perDayLikes
+                       
                     });
-
+                    console.log(totalLikes);
                 }
             });
            

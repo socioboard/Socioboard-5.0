@@ -42,7 +42,9 @@ namespace SocioboardDataServices.Youtube
                                     {
                                         try
                                         {
-                                       
+                                            //string objRefresh = ObjoAuthTokenYtubes.GetAccessToken(item.RefreshToken);
+                                            //JObject objaccesstoken = JObject.Parse(objRefresh);
+                                            //string access_token = objaccesstoken["access_token"].ToString();
 
                                             string ChannelInfo = ObjVideo.GetChannelInfo(apiKey, item.YtubeChannelId);
                                             JObject JChannelInfo = JObject.Parse(ChannelInfo);

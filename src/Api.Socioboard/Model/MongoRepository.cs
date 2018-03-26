@@ -167,10 +167,17 @@ namespace Api.Socioboard.Model
 
         public System.Threading.Tasks.Task Add<T>(T item) where T : class, new()
         {
-            var document = BsonDocument.Parse(JsonConvert.SerializeObject(item));
-            
+            try
+            {
+                var document = BsonDocument.Parse(JsonConvert.SerializeObject(item));
+
                 var collection = _db.GetCollection<BsonDocument>(collecionName);
                 return collection.InsertOneAsync(document);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
             
         }
 

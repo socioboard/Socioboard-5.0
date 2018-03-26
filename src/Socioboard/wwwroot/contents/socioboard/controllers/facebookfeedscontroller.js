@@ -193,7 +193,9 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
         facebookfeeds();
 
-        $scope.reconnect = function (xyz) {            
+        $scope.reconnect = function (xyz) {
+     
+            
             $http.get(domain + '/socioboard/recfbcont?id=' + $stateParams.profileId + '&fbprofileType=' + xyz)
                               .then(function (response) {
                                   window.location.href = response.data;
@@ -217,14 +219,20 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                             $scope.reconnect(value.fbProfileType);
                             ac = true;
                         }
+
                     });
+
                     if (!ac) {
                         $scope.reconnect(null);
                     }
+
                 }
+
+
             }, function (reason) {
                 $scope.error = reason.data;
             });
+
         };
 
         $scope.confirmation = function () {
@@ -314,15 +322,17 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
 
         $scope.PostFacebookComment = function (feedId, ProfileId) {
             var postcomment = $('#postcomment_' + feedId).val();
-
+            $scope.loader = true;
             if (/\S/.test(postcomment)) {
                 $scope.sendingcomment = true;
                 $scope.sendicon = true;
                 var timezoneOffset = new Date().toLocaleString();
                 $http.post(apiDomain + '/api/Facebook/PostFacebookComment?postId=' + feedId + '&profileId=' + ProfileId + '&message=' + encodeURIComponent(postcomment) + '&timezoneOffset=' + timezoneOffset)
                                      .then(function (response) {
+                                         $scope.loader = false;
                                          $scope.sendingcomment = false;
                                          swal(response.data);
+                                         $('#viewpageModal').closeModal();
                                          $('#postcomment_' + feedId).val('');
                                          // $scope.LoadTopComments(feedId);
                                          $scope.LoadTopFeeds();
@@ -344,7 +354,6 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             Materialize.updateTextFields();
         }
         $scope.addTask = function (feedTableType) {
-
             var memberId = $('.task-user-member:checked');
             var taskComment = $('#taskfbfeedComment').val();
             if (!memberId.val()) {
@@ -356,16 +365,21 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             else {
                 var assignUserId = memberId.val();
                 grouptask.addtasks(assignUserId, feedTableType, taskComment, $rootScope.taskNotification.feedDescription, $rootScope.taskNotification.feedId, $rootScope.taskNotification.picture);
-
+                $('#TaskfbfeedModal').closeModal();
             }
         }
         //comments
         $scope.viewcomment = function (contentFeed) {
+            $http.get(apiDomain + '/api/Facebook/GetFacebookPostComment?postId=' + contentFeed.feedId)
+                          .then(function (response) {
+                              $scope.allcommen = response.data;
+                          }
+                          )
             if (contentFeed.picture == "") {
-                $('#xxxxx').hide();
+                $('#imga').hide();
             }
             else {
-                $('#xxxxx').show();
+                $('#imga').show();
             }
             $scope.feeddata = contentFeed;
             if ($scope.fbprofiletype != 1) {
@@ -378,8 +392,10 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                 }
             }
             else {
-                    $('#viewpageModal').openModal();
-                    $scope.allcomment = contentFeed._facebookComment;
+                $('#viewpageModal').openModal();
+                $('#comment').val('');
+                $scope.allcommen = "";
+               
             }
         }
 

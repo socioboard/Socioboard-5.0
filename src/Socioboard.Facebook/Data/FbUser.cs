@@ -13,7 +13,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me?fields=id,about,bio,birthday,cover,education,email,gender,hometown,name,work,picture");//v2.6
+                return fb.Get("v2.7/me?fields=id,about,bio,birthday,cover,education,email,gender,hometown,name,first_name,last_name,work,picture");//v2.6
             }
             catch (Exception ex)
             {

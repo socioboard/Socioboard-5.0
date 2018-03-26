@@ -20,10 +20,9 @@ namespace SocioboardDataScheduler.Facebook
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage) && t.scheduleTime <= DateTime.UtcNow).ToList();
-                    //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("1155481037833115")).ToList();
+                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage) && t.scheduleTime <= DateTime.UtcNow).ToList();                  
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
-
+                    int count = 1;
                     foreach (var items in newlstScheduledMessage)
                     {
                         objSemaphore.WaitOne();
@@ -31,7 +30,7 @@ namespace SocioboardDataScheduler.Facebook
                         Thread thread_pageshreathon = new Thread(() => schedulemessages(new object[] { dbr, items }));
                         thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
                         thread_pageshreathon.Start();
-                        Thread.Sleep(10 * 1000);
+                        Thread.Sleep(600 * 1000);
                         //while (noOfthreadRunning > 5)
                         //{
                         //    Thread.Sleep(1 * 1000);
@@ -40,7 +39,7 @@ namespace SocioboardDataScheduler.Facebook
                         //{
                         //    schedulemessages();
                         //}).Start();
-
+                        Console.WriteLine(count++);
                     }
                     Thread.Sleep(TimeSpan.FromMinutes(1));
 

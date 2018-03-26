@@ -25,7 +25,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
                     int c = 0;
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.IsActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
-                    //lstFbAcc = lstFbAcc.Where(t => t.FbUserId.Contains("790900144392091")).ToList();
+            
                     foreach (var item in lstFbAcc)
                     {
                         //if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
@@ -38,7 +38,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
                             Console.WriteLine(c++);
                             Console.WriteLine("updated "+item.FbUserId);
 
-                       // }
+                      //  }
                     }
                     Thread.Sleep(60000);
                 }

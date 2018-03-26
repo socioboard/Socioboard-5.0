@@ -27,7 +27,7 @@ namespace SociobordRssDataServices.Model
 
             _db = client.GetDatabase("");
 
-         
+       
 
             this.collecionName = CollectionName;
             

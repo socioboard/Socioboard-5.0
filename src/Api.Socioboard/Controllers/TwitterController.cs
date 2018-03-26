@@ -521,14 +521,14 @@ namespace Api.Socioboard.Controllers
 
         }
 
-        [HttpPost("publish")]
-        public IActionResult publish(string profileId, string twitterText, long userId, string imgUrl, string strid)
+         [HttpPost("publish")]
+        public IActionResult publish(string profileId,string twitterText, long userId , string imgUrl ,string strid)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, twitterText, profileId, userId, imgUrl, true, 0, "", dbr, _logger);
-            if (ret == "")
+            if (ret =="")
             {
-                string responce = SavedFeedsManagementRepository.publish(profileId, strid, _appSettings);
+                string responce = SavedFeedsManagementRepository.publish( profileId,  strid, _appSettings);
 
                 return Ok(responce);
             }
@@ -536,8 +536,10 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("failed");
             }
+           
 
-
-              }
-        }
+          }
+          
+      
+    }
 }

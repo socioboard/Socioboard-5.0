@@ -20,11 +20,13 @@ namespace SocioboardDataServices.Reports
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.Groups> lstTwtAcc = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
-                    //lstTwtAcc = lstTwtAcc.Where(t => t.id==48).ToList();
-                    foreach (var item in lstTwtAcc)
+                    List<Domain.Socioboard.Models.Groups> grpid = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
+                    //var grpids = grpid.GroupBy(t => t.id).ToList();
+                     // grpid = grpid.Where(t => t.id== 1152529).ToList();  
+                    foreach (var item in grpid)
                     {
                         CreateReports(item.id, DateTime.UtcNow);
+                        Console.WriteLine("item name" + item.groupName);
                     }
                     Thread.Sleep(120000);
                 }

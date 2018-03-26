@@ -110,6 +110,9 @@ namespace SocioboardDataScheduler.Facebook
                             byte[] img = webClient.DownloadData(imagePath);
                             media.SetValue(img);
                             args["source"] = media;
+                            //args["age_min"] = 26;
+                            //args["age_max"] = 27;
+                          
                             ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();
                         }
                         else
@@ -229,6 +232,9 @@ namespace SocioboardDataScheduler.Facebook
             }
             catch (Exception ex)
             {
+
+                schmessage.status = Domain.Socioboard.Enum.ScheduleStatus.error;
+                dbr.Update<ScheduledMessage>(schmessage);
                 apiHitsCount = MaxapiHitsCount;
                 Domain.Socioboard.Models.Notifications notify = new Notifications();
                 Notifications lstnotifications = dbr.Single<Notifications>(t => t.MsgId == schmessage.id);

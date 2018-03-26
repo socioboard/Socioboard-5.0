@@ -23,8 +23,16 @@
                 }
                 //$(this).html('<img ng-src="http://jsfiddle.net/img/logo.png">' + $(this).html());
             })
+
+            if (window.history && window.history.pushState) {
+                window.history.pushState('forward', null, './#forward');
+                $(window).on('popstate', function () {
+                });
+            }
         });
     })(jQuery);
+    
+    
 </script>
 
 <style>

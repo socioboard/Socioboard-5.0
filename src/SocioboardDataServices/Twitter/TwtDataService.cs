@@ -22,7 +22,7 @@ namespace SocioboardDataServices.Twitter
                     Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
                     oAuthTwitter OAuth = new oAuthTwitter(AppSettings.twitterConsumerKey, AppSettings.twitterConsumerSecret, AppSettings.twitterRedirectionUrl);
                     List<Domain.Socioboard.Models.TwitterAccount> lstTwtAccounts = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isActive).ToList();
-                 
+             
                     foreach (var item in lstTwtAccounts)
                     {
                         try

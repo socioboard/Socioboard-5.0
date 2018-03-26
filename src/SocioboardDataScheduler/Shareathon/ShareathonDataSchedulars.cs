@@ -13,6 +13,7 @@ using MongoDB.Driver;
 
 using System.Text.RegularExpressions;
 using System.Threading;
+using SocioboardDataScheduler.Global;
 
 namespace SocioboardDataScheduler.Shareathon
 {
@@ -33,29 +34,23 @@ namespace SocioboardDataScheduler.Shareathon
 
             DatabaseRepository dbr = new DatabaseRepository();
             MongoRepository _ShareathonRepository = new MongoRepository("Shareathon");
+            //var result = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.FacebookStatus == 1 && t.Userid == 500591);//self acco
             var result = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.FacebookStatus == 1);
             var task = Task.Run(async () =>
             {
                 return await result;
             });
             IList<Domain.Socioboard.Models.Mongo.PageShareathon> lstPageShareathon = task.Result.ToList();
-            ThreadPool.SetMaxThreads(10, 5);
+           
             noOfthread_pageshreathonRunning = 0;
             foreach (PageShareathon shareathon in lstPageShareathon.ToList())
             {
                 try
                 {
-                    //ThreadPool.QueueUserWorkItem(new WaitCallback(pageshreathon), new object[] { shareathon, dbr, _ShareathonRepository });
-                    //Thread.Sleep(20 * 1000);
-                    //pageshreathon(new object[] { shareathon, dbr, _ShareathonRepository });
-                    noOfthread_pageshreathonRunning++;
+                  
                     Thread thread_pageshreathon = new Thread(() => pageshreathon(new object[] { shareathon, dbr, _ShareathonRepository }));
                     thread_pageshreathon.Start();
-                    while (noOfthread_pageshreathonRunning > 5)
-                    {
-                        Thread.Sleep(1 * 1000);
-                    }
-                    //  pageshreathon(new object[] { shareathon, dbr, _ShareathonRepository });
+                 
                 }
                 catch (Exception)
                 {
@@ -80,7 +75,7 @@ namespace SocioboardDataScheduler.Shareathon
 
                 args["link"] = link;
 
-                var ret1 = mongorepo.Find<Domain.Socioboard.Models.Mongo.SharethonPagePost>(t => t.Facebookaccountid == fbUserId && t.Facebookpageid == pageId && t.PostId == FeedId);
+                var ret1 = mongorepo.Find<Domain.Socioboard.Models.Mongo.SharethonPagePost>(t => t.Facebookaccountid.Equals(fbUserId) && t.Facebookpageid.Equals(pageId) && t.PostId.Equals(FeedId));
                 var task = Task.Run(async () =>
                 {
                     return await ret1;
@@ -94,7 +89,7 @@ namespace SocioboardDataScheduler.Shareathon
                    
                     if (count < 1)
                     {
-                        dynamic output = fb.Post("v2.1/" + fbUserId + "/feed", args);
+                        dynamic output = fb.Post("v2.7/" + fbUserId + "/feed", args);
                         string feed_id = output["id"].ToString();
                         if (!string.IsNullOrEmpty(feed_id))
                         {
@@ -138,7 +133,7 @@ namespace SocioboardDataScheduler.Shareathon
                 return await result;
             });
             IList<Domain.Socioboard.Models.Mongo.GroupShareathon> lstGroupShareathon = task.Result.ToList();
-            ThreadPool.SetMaxThreads(10, 5);
+            //ThreadPool.SetMaxThreads(10, 5);
             noOfthread_groupshreathonRunning = 0;
             foreach (GroupShareathon shareathon in lstGroupShareathon)
             {
@@ -146,14 +141,14 @@ namespace SocioboardDataScheduler.Shareathon
                 {
                     //ThreadPool.QueueUserWorkItem(new WaitCallback(groupshreathon), new object[] { shareathon, dbr, _ShareathonRepository });
                     //Thread.Sleep(20 * 1000);
-                    //groupshreathon(new object[] { shareathon, dbr, _ShareathonRepository });
+                   // groupshreathon(new object[] { shareathon, dbr, _ShareathonRepository });
                     noOfthread_groupshreathonRunning++;
                     Thread thread_groupshreathon = new Thread(() => groupshreathon(new object[] { shareathon, dbr, _ShareathonRepository }));
                     thread_groupshreathon.Start();
-                    while (noOfthread_groupshreathonRunning > 5)
-                    {
-                        Thread.Sleep(1 * 1000);
-                    }
+                    //while (noOfthread_groupshreathonRunning > 5)
+                    //{
+                    //    Thread.Sleep(1 * 1000);
+                    //}
 
                 }
                 catch (Exception)
@@ -180,12 +175,13 @@ namespace SocioboardDataScheduler.Shareathon
                 int i = r.Next(0, length - 1);
                 if (!lstPost.Contains(feedid[i]))
                 {
+                    string postId = feedid[i].ToString();
                     lstPost.Add(feedid[i]);
                     lstCout++;
                     foreach (var item in grpid)
                     {
                         string[] grpdata = Regex.Split(item, "<:>");
-                        var ret1 = mongorepo.Find<Domain.Socioboard.Models.Mongo.SharethonGroupPost>(t => t.Facebookgroupid == grpdata[1] && t.PostId == FeedId[i].ToString());
+                        var ret1 = mongorepo.Find<Domain.Socioboard.Models.Mongo.SharethonGroupPost>(t => t.Facebookgroupid.Equals(grpdata[1]) && t.PostId.Equals(postId));
                         var task = Task.Run(async () =>
                         {
                             return await ret1;
@@ -250,6 +246,7 @@ namespace SocioboardDataScheduler.Shareathon
                 Model.DatabaseRepository dbr = (Model.DatabaseRepository)arr[1];
                 MongoRepository _ShareathonRepository = (MongoRepository)arr[2];
                 string[] ids = shareathon.Facebookpageid.Split(',');
+                GlobalVariable.pageShareathonIdsRunning.Add(shareathon.strId);
                 foreach (string id in ids)
                 {
                     try
@@ -288,7 +285,7 @@ namespace SocioboardDataScheduler.Shareathon
                                                     //if (pageapiHitsCount < pageMaxapiHitsCount)
                                                     //{
                                                     string ret = ShareFeed(fbAcc.AccessToken, feedId, facebookPage.FbUserId, "", fbAcc.FbUserId, facebookPage.FbUserName);
-                                                    if(!string.IsNullOrEmpty(ret))
+                                                    if (!string.IsNullOrEmpty(ret))
                                                     {
                                                         Thread.Sleep(1000 * 60 * shareathon.Timeintervalminutes);
                                                     }
@@ -309,7 +306,7 @@ namespace SocioboardDataScheduler.Shareathon
                                     {
 
                                         FilterDefinition<BsonDocument> filter = new BsonDocument("strId", shareathon.strId);
-                                        var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 1);
+                                        var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 0);
                                         _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.PageShareathon>(update, filter);
                                     }
                                 }
@@ -396,6 +393,7 @@ namespace SocioboardDataScheduler.Shareathon
                 catch (Exception)
                 {
                 }
+                GlobalVariable.pageShareathonIdsRunning.Remove(shareathon.strId);
             }
             catch (Exception e)
             {
@@ -472,7 +470,7 @@ namespace SocioboardDataScheduler.Shareathon
                                     else
                                     {
                                         FilterDefinition<BsonDocument> filter = new BsonDocument("strId", shareathon.strId);
-                                        var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 1);
+                                        var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 0);
                                         _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.GroupShareathon>(update, filter);
                                         groupapiHitsCount = groupMaxapiHitsCount;
                                     }

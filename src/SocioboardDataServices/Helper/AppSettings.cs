@@ -10,13 +10,14 @@ namespace SocioboardDataServices.Helper
         public const string Domain = "http://serv1.socioboard.com";
         public const string ApiDomain = "http://servapi1.socioboard.com";
 
-        public const string RedisConfiguration = "127.0.0.1:6379";
+        public const string RedisConfiguration = " ";
         public const string NhibernateFilePath = "";
-        
+        //D:\SBPROJECT\Developer\src\SocioboardDataServices
         public const string MongoDbConnectionString = "";
         public const string MongoDbName = "";
 
-     
+      
+
 
         //Start facebook App Creds
         public const string FacebookClientId = "";
@@ -32,7 +33,7 @@ namespace SocioboardDataServices.Helper
         public const string googleApiKey_TestApp = "";
         //End Google App Creds 
 
-        //Instagram App Creds Start"";
+        //Instagram App Creds Start
         public const string instaAuthUrl = "";
         public const string instaClientId = "";
         public const string instaClientSecret = "";

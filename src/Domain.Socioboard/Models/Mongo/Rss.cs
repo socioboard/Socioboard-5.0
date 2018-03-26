@@ -25,6 +25,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string CreatedOn { get; set; }
         public string ProfileName { get; set; }
         public string ProfileImageUrl { get; set; }
+        public string lastupdate { get; set; }
 
         [JsonPropertyAttribute("rssFeedUrls")]
         public Domain.Socioboard.Models.RssFeedUrl rssFeedUrl { get; set; }

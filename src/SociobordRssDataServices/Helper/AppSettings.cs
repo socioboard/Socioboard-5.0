@@ -13,7 +13,7 @@ namespace SociobordRssDataServices.Helper
         public const string RedisConfiguration = "";
         public const string NhibernateFilePath = "";
         public const string MongoDbConnectionString = "";
-        public const string MongoDbName = "Socioboard3";
+        public const string MongoDbName = "";
 
 
         //Start facebook App Creds

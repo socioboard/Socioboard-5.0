@@ -412,7 +412,7 @@ namespace Api.Socioboard.Controllers
                 List<MongoBoardGplusFeeds> lstBGFeeds = objTwitterPagelist.ToList();
                 foreach (var items_lstBGFeed in lstBGFeeds)
                 {
-                    if (items_lstBGFeed.FromName.Any(c => char.IsSymbol(c)))
+                    if (items_lstBGFeed.FromName.Any(c => char.IsSymbol(c)) || items_lstBGFeed.Title.Contains("¾"))
                     {
                         objTwitterPagelist.Remove(items_lstBGFeed);
                     }

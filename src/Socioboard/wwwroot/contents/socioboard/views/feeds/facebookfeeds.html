@@ -171,30 +171,32 @@
                                     </div>-->
                                 </div>
                                 <div class="row">
-                                    <div class="col l8 s8 left">
+                                    <div class="col l6 s8 left">
                                         <a class="center">
                                             <i class="icon-like fa-fw"></i><span> {{fbfeed._facebookFeed.likecount}}</span>
                                         </a>
                                     </div>
-                                    <div class="col l2 s2 right">
-                                        <div class="center">
-                                            <a ng-click="openComposeMessage(fbfeed._facebookFeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
-                                        </div>
-                                    </div>
-                                    <div class="col l2 s2 right">
+                                    <div class="col l2 s1 center">
                                         <div class="center">
                                             <a ng-click="viewcomment(fbfeed._facebookFeed)" class="right"><i class="icon-bubble" aria-hidden="true"></i> Comment</a>
                                         </div>
                                     </div>
-                                    <!--<div class="col l2 s2 right">
-                                        <div class="right">
+                                    <div class="col l2 s1 center">
+                                        <div class="center">
+                                            <a ng-click="openComposeMessage(fbfeed._facebookFeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col l2 s1 center">
+                                        <div class="center">
                                             <a ng-if="user.TrailStatus!=2" ng-click="taskfbfeedModel(fbfeed._facebookFeed)" data-tooltip-id="9b92f7d1-8f4a-65f2-786e-cdcc587cd805" class="tooltipped modal-trigger" href="javascript:void(0);" data-position="top" data-delay="50" style="margin-left: 3%;">
                                                 <i class="icon-pin"></i> Task
                                             </a>
                                         </div>
-                                    </div>-->
+                                    </div>
+                                    
                                 </div>
-                                <a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.entryDate}}</a>
+                                <a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.feedDate}}</a>
                             </li>
                             <!--End Feeds-->
                         </ul>
@@ -407,7 +409,7 @@
 
 
 <!--//fbprofile comments module--> 
-<div id="view" class="modal" style="min-height:100px;">
+<!--<div id="view" class="modal" style="min-height:100px;">
     <div class="modal-content">
         <form class="row no-space">
             <div class="col s6 center" >
@@ -426,11 +428,47 @@
            </div>
         </form>
     </div>
+</div>-->
+
+
+
+<div id="view" class="modal" style="max-width: 850px; width: 100%;">
+    <div class="modal-content" style="padding: 15px;">
+        <div class="row no-space">
+            <div class="col l6 m6 s12">
+                    <img id="img" class="responsive-img" ng-src="{{feeddata.picture}}" alt="img">
+                <br />
+                <p>
+                    {{feeddata.feedDescription}}
+                </p>
+            </div>
+            <div class="col l6 m6 s12">
+                <div class="row no-space">
+                    <ul class="collapsible" data-collapsible="accordion" style="box-shadow:none; border: none;">
+                        <li>
+                            <div class="collapsible-header" style="border-bottom: 0px solid #fff; line-height: 1rem; min-height: 1rem; padding: 6px 1rem; border-radius: 17px; background-color: #d4d4d4;"><b>Comments</b></div>
+                            <div class="collapsible-body" style="padding: 6px 1rem;">
+                                <div class="instfeeds">
+                                    <div class="avatar" ng-repeat="comment in allcomment">
+                                        <span class="grey-text text-darken-4">{{comment.fromName}} :</span>
+                                        <span class="no-space grey-text text-darken-1" style="word-wrap: break-word;">{{comment.comment}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <!--//End comment module-->
 
+
+
+
 <!--//fbpage comments module--> 
-<div id="viewpageModal" class="modal" style="min-height:100px;">
+<!--<div id="viewpageModal" class="modal" style="min-height:100px;">
     <div class="modal-content">
         <form class="row no-space">
             <div class="col s6 center">
@@ -441,28 +479,71 @@
             </div>
             <div class="col s6">
                 <div class="m_comm">
-                    <div ng-repeat="comment in allcomment" my-Chat-Modal-Directive>
-                        {{allcomment.fromName}}
+                    <div ng-repeat="comment in allcommen" my-Chat-Modal-Directive>
+                        {{allcommen.fromName}}
                         <div class="grey-text text-darken-1"><span><b>{{comment.fromName}}</b></span> : <span class="break_word ultra-small" style="word-wrap:break-word; white-space:pre-line; line-break:auto">{{comment.comment}}</span></div>
                     </div>
                 </div>
                 <div class="input-field col s10">
                     <input id="postcomment_{{feeddata.feedId}}" placeholder="Add a comment.." class="" type="text">
-                    <!--<label for="postcomment" class="active">Add a comment..</label>-->
+                   <label for="postcomment" class="active">Add a comment..</label>
 
-                </div>
+               </div>
                 <div class="input-field col s1">
                     <a class="btn btn_style btn_round" ng-click="PostFacebookComment(feeddata.feedId,feeddata.profileId)">send</a>
                 </div>
-                <!--<div ng-show="!dispbtn" class="input-field col s1">
+                <div ng-show="!dispbtn" class="input-field col s1">
                     <i class="fa fa-spinner fa-pulse fa-2x fa-fw"></i>
-                </div>-->
+                </div>
             </div>
         </form>
     </div>
-</div>
+ 
+</div>-->
 
 <!-- END CONTENT -->
+
+<!--/////new fbpage comments module/////-->
+
+<div id="viewpageModal" class="modal" style="max-width: 850px; width: 100%;">
+    <div class="modal-content" style="padding: 15px;">
+        <div class="row no-space">
+            <div class="col l6 m6 s12">
+                    <img id="imga" class="responsive-img" ng-src="{{feeddata.picture}}" alt="img">
+                    <br />
+                <p>
+                    {{feeddata.feedDescription}}
+                </p>
+            </div>
+            <div class="col l6 m6 s12">
+                <div class="row no-space">
+                    <ul class="collapsible" data-collapsible="accordion" style="box-shadow:none; border: none;">
+                        <li>
+                            <div class="collapsible-header" style="border-bottom: 0px solid #fff; line-height: 1rem; min-height: 1rem; padding: 6px 1rem; border-radius: 17px; background-color: #d4d4d4;"><b>Comments</b></div>
+                            <div class="collapsible-body" style="padding: 6px 1rem;">
+                                <div class="instfeeds">
+                                    <div class="avatar" ng-repeat="comment in allcommen">
+                                        <span class="grey-text text-darken-4">{{comment.fromName}} :</span>
+                                        <span class="no-space grey-text text-darken-1" style="word-wrap: break-word;">{{comment.comment}}</span>
+                                    </div>
+                                </div>
+                                <div class="input-field col s10">
+                                    <input id="postcomment_{{feeddata.feedId}}" placeholder="Add a comment.." class="" type="text">
+                                </div>
+                                <div class="input-field col s1">
+                                    <a class="btn btn_style btn_round blue" ng-click="PostFacebookComment(feeddata.feedId,feeddata.profileId)">send</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--//////////-->
+
+
 <!-- //////////////////////////////////////// Script Code //////////////////////////////////////// -->
 
 <script>
@@ -657,5 +738,14 @@
         $("html, body").animate({ scrollTop: 0 }, "slow");
         return false;
     });
+
+    $('.instfeeds').slimScroll({
+        color: '#1976D2',
+        size: '10px',
+        height: '150px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
 </script>
+
 <!-- //////////////////////////////////////// End Style CSS for Pre Loader //////////////////////////////////////// -->

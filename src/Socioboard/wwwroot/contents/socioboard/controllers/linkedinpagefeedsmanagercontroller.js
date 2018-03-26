@@ -236,7 +236,6 @@ SocioboardApp.controller('LinkedinPageFeedsManagerController', function ($rootSc
         }
 
         //aprove post 
-
         $scope.aprovepost = function (value) {
             debugger;
             if (value.review == false) {

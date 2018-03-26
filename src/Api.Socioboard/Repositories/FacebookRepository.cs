@@ -358,7 +358,7 @@ namespace Api.Socioboard.Repositories
                         new Thread(delegate ()
                          {
                              FacebookRepository.SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
-                             FacebookRepository.SaveFacebookPageFeed(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings);
+                             FacebookRepository.SaveFacebookPageFeed(fbAcc.AccessToken, lstFbAcc.First().FbUserId, fbAcc.FbUserName,settings);
                              FacebookRepository.SavePageConversations(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                              FacebookRepository.SaveFacebookPagePromotionalDetails(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                              FacebookRepository.SaveFacebookPageTaggedDetails(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
@@ -993,17 +993,18 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static void SaveFacebookPageFeed(string accesstoken, string facebookid, Helper.AppSettings _appSettings)
+        public static void SaveFacebookPageFeed(string accesstoken, string facebookid, string fbpagename,Helper.AppSettings _appSettings)
         {
             try
             {
+                Domain.Socioboard.Models.Mongo.FacebookPagePost _FacebookPagePost = new FacebookPagePost();
 
                 dynamic fbfeeds = FbUser.getFeeds(accesstoken, facebookid);
                 foreach (var _feed in fbfeeds["data"])
                 {
                     try
                     {
-                        Domain.Socioboard.Models.Mongo.FacebookPagePost _FacebookPagePost = new FacebookPagePost();
+                        //Domain.Socioboard.Models.Mongo.FacebookPagePost _FacebookPagePost = new FacebookPagePost();
                         _FacebookPagePost.Id = ObjectId.GenerateNewId();
                         _FacebookPagePost.strId = ObjectId.GenerateNewId().ToString();
                         _FacebookPagePost.PageId = facebookid;
@@ -1011,7 +1012,10 @@ namespace Api.Socioboard.Repositories
                         {
                             _FacebookPagePost.PageName = _feed["from"]["name"].ToString();
                         }
-                        catch { }
+                        catch(Exception ex)
+                        {
+                            _FacebookPagePost.PageName = fbpagename;
+                        }
                         try
                         {
                             _FacebookPagePost.PostId = _feed["id"].ToString();

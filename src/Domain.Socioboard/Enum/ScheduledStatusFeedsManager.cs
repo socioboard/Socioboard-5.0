@@ -10,7 +10,6 @@ namespace Domain.Socioboard.Enum
         Default = 0,
         Scheduled = 1,
         Published = 2,
-        Deleted = 3,
-        error = 4
+        Deleted = 3
     }
 }

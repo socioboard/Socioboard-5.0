@@ -198,7 +198,7 @@ namespace Api.Socioboard.Repositories
                 if (task.Result != null)
                 {
                     IList<Domain.Socioboard.Models.Mongo.FacebookPagePost> lstfacebookpagepost = task.Result.ToList();
-                    var facebookId = lstfacebookpagepost.GroupBy(x => x.PageId).Select(x => x.First()).ToList();
+                    var facebookId = lstfacebookpagepost.GroupBy(x => x.PageId).Select(x => x.Last()).ToList();
                     var random = new Random();
                     foreach (Domain.Socioboard.Models.Mongo.FacebookPagePost lstcolordata in facebookId)
                     {

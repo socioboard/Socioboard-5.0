@@ -16,7 +16,7 @@ namespace SocioboardDataServices.Facebook
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookProfile).ToList();
-                   
+                 
                     FbFeeds fbfeeds = new FbFeeds();
                     foreach (var item in lstFbAcc)
                     {

@@ -253,5 +253,73 @@ namespace Api.Socioboard.Controllers
             Domain.Socioboard.Models.Instagramaccounts pageDetails = dbr.Single<Domain.Socioboard.Models.Instagramaccounts>(t => t.InstagramId == accId);
             return Ok(pageDetails);
         }
+
+
+        // [HttpGet("alldata")]
+        //public IActionResult Notifications(long groupId, long userId , int skip, int count)
+        //{
+
+        //    DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+        //    List<int> alldata = new List<int>();
+        //    List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+        //    List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>();
+        //    List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> TwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>();
+        //    foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
+        //    {
+        //        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
+        //        var builder = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>.Sort;
+        //        var sort = builder.Descending(t => t.messageDate);
+        //        var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId.Equals(item.profileId) && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterUsertweet), sort, skip, count);
+        //        var task = Task.Run(async () =>
+        //        {
+        //            return await result;
+        //        });
+        //        IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwitterTweets = task.Result;
+        //         TwtMessages = lstTwitterTweets.Where(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterUsertweet).ToList();
+        //        if (lstTwitterTweets != null)
+        //        {
+        //            lstTwtMessages.AddRange(lstTwitterTweets);
+        //        }
+        //        var d = lstTwitterTweets.Count;
+        //    }
+        //    int posttext = TwtMessages.FindAll(t => t.twitterMsg!= null && t.mediaUrl== null && !t.twitterMsg.Contains("http") || !t.twitterMsg.Contains("https") || !t.twitterMsg.Contains("www.") || !t.twitterMsg.Contains("http://") || !t.twitterMsg.Contains("https://") || !t.twitterMsg.Contains("www.")).Count;
+        //    int mediapost = TwtMessages.FindAll(t => t.mediaUrl != null).Count;
+        //    int linkpost= TwtMessages.FindAll(t => t.twitterMsg.Contains("http") || t.twitterMsg.Contains("https") || t.twitterMsg.Contains("www.") || t.twitterMsg.Contains("http://") || t.twitterMsg.Contains("https://") || t.twitterMsg.Contains("www.")).Count;
+        //    int mentions = lstTwtMessages.FindAll(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention).Count;
+        //    int retweet = lstTwtMessages.FindAll(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet).Count;
+
+        ////  || t.twitterMsg.Contains("https") || t.twitterMsg.Contains("www.") || t.twitterMsg.Contains("http://") || t.twitterMsg.Contains("https://") || t.twitterMsg.Contains("www.")
+        //    alldata.Add(mentions);
+        //    alldata.Add(retweet);
+        //    List<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> lstTwtMessagess = new List<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>();
+
+        //    foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
+        //    {
+        //        MongoRepository mongorepoDm = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
+
+        //        var builder = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>.Sort;
+        //        var sort = builder.Descending(t => t.entryDate);
+        //        var result = mongorepoDm.FindWithRange<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => t.profileId.Equals(item.profileId) && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent), sort, skip, count);
+        //        var task = Task.Run(async () =>
+        //        {
+        //            return await result;
+        //        });
+        //        IList<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> lstTwitterdm = task.Result;
+        //        if (lstTwitterdm != null)
+        //        {
+        //            lstTwtMessagess.AddRange(lstTwitterdm);
+        //        }
+
+        //    }
+
+        //    int dmrecived = lstTwtMessagess.FindAll(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived).Count;
+        //    int dmsend = lstTwtMessagess.FindAll(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent).Count;
+        //    alldata.Add(dmrecived);
+        //    alldata.Add(dmsend);
+        //    alldata.Add(posttext);
+        //    alldata.Add(mediapost);
+        //    alldata.Add(linkpost);
+        //    return Ok(alldata);
+        //}
     }
 }

@@ -820,10 +820,34 @@ namespace Api.Socioboard.Controllers
                 PaymentTransaction _paymentdetail = dbr.Single<PaymentTransaction>(t => t.userid == id);
                 if (_user != null)
                 {
-                    string msg = Repositories.PaymentTransactionRepository.CancelRecurringPayment(_paymentdetail.paymentId, _user.Id, _appSettings.paypalapiUsername, _appSettings.paypalapiPassword, _appSettings.paypalapiSignature, dbr);
-                    if (msg == "Success")
+                    if (_paymentdetail != null)
                     {
+                        string msg = Repositories.PaymentTransactionRepository.CancelRecurringPayment(_paymentdetail.paymentId, _user.Id, _appSettings.paypalapiUsername, _appSettings.paypalapiPassword, _appSettings.paypalapiSignature, dbr);
+                        if (msg == "Success")
+                        {
 
+                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
+                            _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
+                            _user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
+                            _user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
+                            _user.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.free;
+                            int res = dbr.Update<User>(_user);
+                            if (res == 1)
+                            {
+                                return Ok("Your plan Canceled Sucessfully");
+                            }
+                            else
+                            {
+                                return BadRequest("Issue while canceling your plan.");
+                            }
+                        }
+                        else
+                        {
+                            return BadRequest("Failed to cancel your plan please try after some time");
+                        }
+                    }
+                    else
+                    {
                         _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
                         _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
                         _user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
@@ -839,11 +863,6 @@ namespace Api.Socioboard.Controllers
                             return BadRequest("Issue while canceling your plan.");
                         }
                     }
-                    else
-                    {
-                        return BadRequest("Failed to cancel your plan please try after some time");
-                    }
-
 
                 }
                 else
@@ -1278,15 +1297,15 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("EnableDisableSocialLogin")]
-        public IActionResult EnableDisableSocialLogin(long userId,string facebookid, bool checkEnable)
+        public IActionResult EnableDisableSocialLogin(long userId, string facebookid, bool checkEnable)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
-           IList<Facebookaccounts> lstFbacc = dbr.Find<Facebookaccounts>(t => t.FbUserId.Equals(facebookid));
+            IList<Facebookaccounts> lstFbacc = dbr.Find<Facebookaccounts>(t => t.FbUserId.Equals(facebookid));
 
             if (user.TwostepEnable == false)
             {
-               // user.SocialLoginEnableFb = checkEnable;
+                // user.SocialLoginEnableFb = checkEnable;
                 lstFbacc.First().SocailSignInEnable = checkEnable;
 
 
@@ -1324,7 +1343,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
-           
+
 
             if (user.TwostepEnable == false)
             {
@@ -1353,7 +1372,7 @@ namespace Api.Socioboard.Controllers
                 {
                     return Ok("Can't disable it because you have choose login option from facebook or google");
                 }
-               
+
 
             }
             else
@@ -1410,8 +1429,8 @@ namespace Api.Socioboard.Controllers
                 IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
                 IList<User> userDet = dbr.Find<User>(t => t.Id == lstFbacc.First().UserId);
                 if (lstUser != null && lstUser.Count() > 0)
-                {                   
-                    if ( lstFbacc !=null && lstFbacc.Count()>0  && lstUser.FirstOrDefault().Id == lstFbacc.FirstOrDefault().UserId)
+                {
+                    if (lstFbacc != null && lstFbacc.Count() > 0 && lstUser.FirstOrDefault().Id == lstFbacc.FirstOrDefault().UserId)
                     {
                         if (lstUser.FirstOrDefault().SocialLoginEnableFb == true)
                         {
@@ -1422,7 +1441,7 @@ namespace Api.Socioboard.Controllers
                                     lstUser.First().RefrralCode = "SOCIOBOARD_" + lstUser.First().Id;
                                 }
                                 DateTime d1 = DateTime.UtcNow;
-                                                                       
+
                                 try
                                 {
 
@@ -1452,7 +1471,7 @@ namespace Api.Socioboard.Controllers
                     }
                     else
                     {
-                        if (lstFbacc !=null && lstFbacc.Count>0)
+                        if (lstFbacc != null && lstFbacc.Count > 0)
                         {
                             if (lstFbacc.First().IsActive == true)//&& userDet.First().SocialLoginEnableFb == true)
                             {
@@ -1623,7 +1642,7 @@ namespace Api.Socioboard.Controllers
             User user = dbr.Single<User>(t => t.Id == userId);//&& (t.EmailValidateToken == "Facebook" ||t.EmailValidateToken=="Google" || t.EmailValidateToken ==));
 
             return Ok(user);
-            
+
         }
 
         /// <summary>
@@ -1655,7 +1674,7 @@ namespace Api.Socioboard.Controllers
                 {
                     x.firstName = firstName;
                     x.lastName = lastName;
-                 
+
                     if (user != null)
                     {
                         var uploads = string.Empty;

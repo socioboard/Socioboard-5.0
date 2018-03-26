@@ -1,4 +1,5 @@
-﻿using SocioboardDataServices.Pinterest;
+﻿using SocioboardDataServices.CustomTwitterFeeds;
+using SocioboardDataServices.Pinterest;
 using SocioboardDataServices.Reports;
 using SocioboardDataServices.Twitter;
 using SocioboardDataServices.TwitterTrimme;
@@ -54,6 +55,8 @@ namespace SocioboardDataServices
                 Console.WriteLine("Enter 21 to run Youtube Pinterest Dataservices");
                 Console.WriteLine("Enter 22 to run Youtube CommentReply Dataservices");
                 Console.WriteLine("Enter 23 to run deletetwitterfeeds ");
+                Console.WriteLine("Enter 24 to run CustomUpdateTwitterFeeds");
+                Console.WriteLine("Enter 25 to run YoutubeGroupUpdatesData ");
                 string dataService = Console.ReadLine();
 
                 if (dataService == "1")
@@ -189,7 +192,18 @@ namespace SocioboardDataServices
                     objclass.deleteTwitterfeeds();
                     Console.ReadKey();
                 }
-
+                else if (dataService == "24")
+                {
+                    CustomtwtClass objclass = new CustomtwtClass();
+                    objclass.UpdateCustomeTwitterAccountFeeds();
+                    Console.ReadKey();
+                }
+                else if (dataService == "25")
+                {
+                    Youtube.YoutubeGroupsUpdatesData objclass = new Youtube.YoutubeGroupsUpdatesData();
+                    objclass.YoutubeGrpUpdat();
+                    Console.ReadKey();
+                }
                 else
                 {
                     Console.WriteLine("Invalid Option");

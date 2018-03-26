@@ -30,29 +30,24 @@ namespace SocioboardDataScheduler.ContentStudio
                     MongoRepository _lstcontent = new MongoRepository("ContentFeedsShareathon");
                     MongoRepository _lstcontentid = new MongoRepository("ContentStudioShareathonIdData");
 
-                    var result = _lstcontentid.Find<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(t => t.Status == false);                   
+                    var result = _lstcontentid.Find<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(t => t.Status == false);
                     var task = Task.Run(async () =>
                     {
                         return await result;
                     });
                     IList<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData> lstPageShareathon = task.Result.ToList();
-                    //lstPageShareathon = lstPageShareathon.Where(t => t.FbPageId.Equals("1452799044811364")).ToList();
+                    //lstPageShareathon = lstPageShareathon.Where(t => t.FbPageId.Equals("1155481037833115")).ToList();
                     lstPageShareathon.GroupBy(t => t.FbPageId).ToList();
                     noOfthread_pageshreathon = 0;
                     foreach (ContentStudioShareathonIdData shareathon in lstPageShareathon)
                     {
-                       // ThreadPool.QueueUserWorkItem(new WaitCallback(ShceduleConetentStudioFeeds), new object[] { shareathon, dbr, _lstcontent });
-                        //Thread.Sleep(20 * 1000);
+
                         noOfthread_pageshreathon++;
                         Thread thread_pageshreathon = new Thread(() => ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent }));
-                        //ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
+
                         thread_pageshreathon.Start();
-                        Thread.Sleep(120 * 1000);
-                        //while (noOfthread_pageshreathon > 5)
-                        //{
-                        //    Thread.Sleep(1 * 1000);
-                        //}
-                        // ShceduleConetentStudioFeeds(new object[] { shareathon, dbr, _lstcontent });
+                        Thread.Sleep(60* 1000);
+
 
                     }
                     Thread.Sleep(TimeSpan.FromMinutes(1));
@@ -69,6 +64,7 @@ namespace SocioboardDataScheduler.ContentStudio
         public void ShceduleConetentStudioFeeds(object o)
         {
             MongoRepository mongorepo = new Helper.MongoRepository("ContentFeedsShareathon");
+            MongoRepository mongorepoconid = new MongoRepository("ContentStudioShareathonIdData");
             int pageapiHitsCount;
             object[] arr = o as object[];
             ContentStudioShareathonIdData shareathon = (ContentStudioShareathonIdData)arr[0];
@@ -119,15 +115,20 @@ namespace SocioboardDataScheduler.ContentStudio
                                     {
                                         DateTime dt = SBHelper.ConvertFromUnixTimestamp(obj.lastsharestamp);
                                         dt = dt.AddMinutes(obj.Timeintervalminutes);
-                                        if ((obj.Status == false && SBHelper.ConvertToUnixTimestamp(dt) <= SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow)))
-                                        {
+                                        double datetotimestamp = SBHelper.ConvertToUnixTimestamp(dt);
 
+                                        DateTime dateval = obj.latsSharetime;// change on 07/02/2018
+
+                                        // if ((obj.Status == false && SBHelper.ConvertToUnixTimestamp(dt) <= SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow))) // comment on 07/02/2018
+
+                                        if ((obj.Status == false && dateval <= DateTime.UtcNow))
+                                        {
                                             string ret = Helper.FBPostContentFeeds.FacebookComposeMessageRss(obj.title, facebookPage.AccessToken, facebookPage.FbUserId, "", obj.postUrl, obj.postId);
                                             if (ret == "Messages Posted Successfully")
                                             {
+                                                obj.lastsharestamp = datetotimestamp;
                                                 obj.Status = true;
                                                 shareathon.Status = true;
-
 
                                                 FilterDefinition<BsonDocument> filter = new BsonDocument("strId", obj.strId);
                                                 var update = Builders<BsonDocument>.Update.Set("Status", true);
@@ -135,8 +136,19 @@ namespace SocioboardDataScheduler.ContentStudio
 
                                                 FilterDefinition<BsonDocument> filterId = new BsonDocument("strId", shareathon.strId);
                                                 var updateId = Builders<BsonDocument>.Update.Set("Status", true);
-                                                mongorepo.Update<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(updateId, filterId);
+                                                mongorepoconid.Update<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(updateId, filterId);
 
+                                                FilterDefinition<BsonDocument> filterIds = new BsonDocument("strId", obj.strId);
+                                                var updatetime = Builders<BsonDocument>.Update.Set("lastsharestamp", obj.lastsharestamp);
+                                                mongorepoconid.Update<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>(updatetime, filterIds);
+
+                                               
+
+                                                //var updateshareid = Builders<Domain.Socioboard.Models.Mongo.ContentStudioShareathonIdData>.Update.Set(t => t.Status,true);
+                                                //reppoFacebookPagePost.Update<Domain.Socioboard.Models.Mongo.FacebookPagePost>(update, t => t.PostId == _FacebookPagePost.PostId);
+
+
+                                                Thread.Sleep(60*1000);
                                             }
 
                                             //if (!string.IsNullOrEmpty(ret))

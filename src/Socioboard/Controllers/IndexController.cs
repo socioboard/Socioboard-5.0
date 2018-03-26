@@ -987,6 +987,7 @@ namespace Socioboard.Controllers
                 else
                 {
                     //return Redirect(response.RequestMessage.RequestUri.OriginalString);
+                    //return Redirect(response.RequestMessage.RequestUri.OriginalString);
                     return Content(response.RequestMessage.RequestUri.OriginalString);
                 }
             }
@@ -999,17 +1000,57 @@ namespace Socioboard.Controllers
         public async Task<IActionResult> PayUMoneySuccessful(FormCollection form)
         {
             string status = Request.Form["status"].ToString();
-
+            string plan = string.Empty;
             string output = "false";
+            Domain.Socioboard.Models.Package _Package = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.Package>("Package");
             if (status == "success")
             {
+                if (_Package.packagename == "Free")
+                {
+                    plan = "Free";
+                }
+                else if (_Package.packagename == "Deluxe")
+                {
+                    plan = "Deluxe";
+
+                }
+                else if (_Package.packagename == "Premium")
+                {
+                    plan = "Premium";
+
+                }
+                else if (_Package.packagename == "Topaz")
+                {
+                    plan = "Topaz";
+
+                }
+                else if (_Package.packagename == "Platinum")
+                {
+                    plan = "Platinum";
+
+                }
+                else if (_Package.packagename == "Gold")
+                {
+                    plan = "Gold";
+
+                }
+                else if (_Package.packagename == "Ruby")
+                {
+                    plan = "Ruby";
+
+                }
+                else if (_Package.packagename == "Standard")
+                {
+                    plan = "Standard";
+
+                }
                 string payuMoneyId = Request.Form["payuMoneyId"].ToString();
                 string PG_TYPE = Request.Form["PG_TYPE"].ToString();
                 string txnid = Request.Form["txnid"].ToString();
                 string amount = Request.Form["amount"].ToString();
                 string productinfo = Request.Form["productinfo"].ToString();
                 Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-                Domain.Socioboard.Models.Package _Package = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.Package>("Package");
+                
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
                 Parameters.Add(new KeyValuePair<string, string>("UserName", user.FirstName + " " + user.LastName));
@@ -1018,6 +1059,7 @@ namespace Socioboard.Controllers
                 Parameters.Add(new KeyValuePair<string, string>("PaymentType", user.PaymentType.ToString()));
                 Parameters.Add(new KeyValuePair<string, string>("trasactionId", txnid));
                 Parameters.Add(new KeyValuePair<string, string>("paymentId", payuMoneyId));
+                Parameters.Add(new KeyValuePair<string, string>("accType", plan));
                 HttpResponseMessage response = await WebApiReq.PostReq("/api/PaymentTransaction/UpgradeAccount", Parameters, "", "", _appSettings.ApiDomain);
                 if (response.IsSuccessStatusCode)
                 {

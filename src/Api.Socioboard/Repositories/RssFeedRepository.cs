@@ -46,7 +46,7 @@ namespace Api.Socioboard.Repositories
 
                 if (_RssFeedUrl != null)
                 {
-                    return "null";
+                    //return "null";
                 }
                 else
                 {

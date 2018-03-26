@@ -10,9 +10,9 @@ namespace SocioboardDataScheduler.Helper
         public const string Domain = "http://localhost:9821";
         public const string ApiDomain = "http://localhost:6361";
 
-        public const string RedisConfiguration = "127.0.0.1:6379";
+        public const string RedisConfiguration = "";
         public const string NhibernateFilePath = "";
-
+ 
         public const string MongoDbConnectionString = "";
         public const string MongoDbName = "";
 
@@ -20,7 +20,7 @@ namespace SocioboardDataScheduler.Helper
         //Start facebook App Creds
         public const string FacebookClientId = "";
         public const string FacebookClientSecretKey = "";
-        public const string FacebookRedirectUrl = "";
+        public const string FacebookRedirectUrl = "http://serv1.socioboard.com/FacebookManager/Facebook";
         //End facebook App Creds
 
 
@@ -37,7 +37,7 @@ namespace SocioboardDataScheduler.Helper
         //Twitter App Creds Start
         public const string twitterConsumerKey = "";
         public const string twitterConsumerScreatKey = "";
-        public const string twitterRedirectionUrl = "";
+        public const string twitterRedirectionUrl = "https://www.socioboard.com/TwitterManager/Twitter";
         //End Twitter App Creds 
 
         //Mongo DB Connection string Start

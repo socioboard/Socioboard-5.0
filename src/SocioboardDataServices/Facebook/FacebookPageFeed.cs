@@ -72,12 +72,21 @@ namespace SocioboardDataServices.Facebook
                         {
                             try
                             {
+                                SaveFacebookPageFeed(fbAcc.AccessToken, fbAcc.FbUserId, fbAcc.FbUserName);
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
+                            try
+                            {
                                 SaveFacebookFeeds(fbAcc.AccessToken, fbAcc.FbUserId, fbAcc.FbUserName);
                             }
                             catch(Exception ex)
                             {
 
                             }
+                          
                             try
                             {
                                 SavePageConversations(fbAcc.AccessToken, fbAcc.FbUserId);
@@ -86,14 +95,7 @@ namespace SocioboardDataServices.Facebook
                             {
 
                             }
-                            try
-                            {
-                                SaveFacebookPageFeed(fbAcc.AccessToken, fbAcc.FbUserId, fbAcc.FbUserName);
-                            }
-                            catch (Exception ex)
-                            {
-
-                            }
+                           
                             try
                             {
                                 SaveFacebookPagePromotionalDetails(fbAcc.AccessToken, fbAcc.FbUserId);

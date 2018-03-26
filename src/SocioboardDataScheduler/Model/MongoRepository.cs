@@ -27,6 +27,7 @@ namespace SocioboardDataServices.Model
 
             _db = client.GetDatabase(AppSettings.LiveMongoDbName);
 
+   
 
             this.collecionName = CollectionName;
             

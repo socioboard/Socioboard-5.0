@@ -16,8 +16,6 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                               console.log($scope.dailyReportsList); 
                               $scope.getData(days);
                               $scope.fetchdatacomplete = true;
-
-                             
                           }, function (reason) {
                               $scope.error = reason.data;
                           });
@@ -141,6 +139,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             angular.forEach($scope.generatefacebookGraphData, function (value, key) {
                 if (value.date > startDate) {
                     totalLikes = totalLikes + parseInt(value.totalLikes);
+                    console.log("totalLikes", totalLikes);
                     talkingAbout = talkingAbout + parseInt(value.talkingAbout);
                     newFans = newFans + parseInt(value.likes);
                     unliked = unliked + parseInt(value.unlikes);
@@ -952,7 +951,7 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
                 }
             });
         }
-
+    
         $scope.generatesharechart = function (days) {
             $scope.chartshareData = [];
             var story_Fans = 0;

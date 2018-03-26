@@ -29,12 +29,12 @@
                                     <tbody>
                                       <tr>
                                         <td>Incoming Messages</td>
-                                        <td>{{inbox}}</td>
+                                        <td>{{recivedm}}</td>
                                         <td><div class="project-line-1"></div></td>
                                       </tr>
                                       <tr>
                                         <td>Sent Messages</td>
-                                        <td>{{sent}}</td>
+                                        <td>{{sentdm}}</td>
                                         <td><div class="project-line-1"></div></td>
                                       </tr>
                                       <tr>
@@ -51,12 +51,17 @@
                                 </table>
                             </div>
                             <div class="col l6">
-                                <table class="" >
+                                <div style="padding:75px;">
+                                    <h5>
+                                        <strong class="orange-text">{{recivedm + sentdm}}</strong> INTERACTIONS
+                                    </h5>
+                                </div>
+                                <!--<table class="" >
                                     <tbody>
                                         <tr>
                                             <td>
                                                 <h5>
-                                                    <strong class="orange-text">{{interaction}}</strong> INTERACTIONS
+                                                    <strong class="orange-text">{{recivedm + sentdm}}</strong> INTERACTIONS
                                                 </h5>
                                             </td>
                                             <td>
@@ -76,7 +81,7 @@
                                             </td>
                                         </tr>
                                     </tbody>
-                                </table>
+                                </table>-->
                             </div>
                             
                         </div>
@@ -87,7 +92,8 @@
                 <div class="col s12 m12 l12">
                     <div class="card" id="feeds">
                         <h5 class="feeds_title blue lighten-3 white-text">
-                            <i class="icon-social-twitter"></i>TWITTER STATS <small>Stats for {{twitter_account_count}} Twitter accounts in the Socioboard group.</small></span>
+                            <!--<i class="icon-social-twitter"></i>TWITTER STATS <small>Stats for {{twitter_account_count}} Twitter accounts in the Socioboard group.</small></span>-->
+                               <i class="icon-social-twitter"></i>TWITTER STATS <small>Stats for Twitter accounts in the Socioboard group.</small></span>
                         </h5>
                         <div class="collection">
                             <!--<div class="col l6">
@@ -114,31 +120,33 @@
                                     <h5>TWITTER STATS</h5>
                                 </blockquote>
                                 <div class="row center">
-                                    <div class="col m12">
+                                    <!--<div class="col m12">
                                         <h5 class="GroupStats_twt">
                                             <i class="icon-user-follow fa-2x fa-fw blue-text text-darken-3"></i>
                                             <h5><strong>{{twitterfollower}}</strong></h5>
                                             <span>New followers in this time period.</span>
                                         </h5>
-                                    </div>
+                                    </div>-->
                                     <div class="col m4">
                                          <h5 class="GroupStats_twt">
-                                            <i class="icon-anchor fa-2x fa-fw blue-text text-darken-3"></i>
-                                            <h5><strong>{{interaction}}</strong></h5>
-                                            <span>Link Clicks</span>
+                                             <i class="icon-user-follow fa-2x fa-fw blue-text text-darken-3"></i>
+                                            <!--<i class="icon-anchor fa-2x fa-fw blue-text text-darken-3"></i>-->
+                                            <!--<h5><strong>{{interaction}}</strong></h5>-->
+                                             <h5><strong>{{twitterfollower}}</strong></h5>
+                                            <span>New followers in this time period.</span>
                                         </h5>
                                     </div>
                                     <div class="col m4">
                                         <h5 class="GroupStats_twt">
                                             <i class="fa fa-at fa-2x fa-fw blue-text text-darken-3"></i>
-                                            <h5><strong>{{twtmentions}}</strong></h5>
+                                            <h5><strong>{{mendata}}</strong></h5>
                                             <span>Mentions</span>
                                         </h5>
                                     </div>
                                     <div class="col m4">
                                         <h5 class="GroupStats_twt">
                                             <i class="fa fa-retweet fa-2x fa-fw blue-text text-darken-3"></i>
-                                            <h5><strong>{{twtretweets}}</strong></h5>
+                                            <h5><strong>{{redata}}</strong></h5>
                                             <span>Retweets</span>
                                         </h5>
                                     </div>
@@ -156,19 +164,19 @@
                                 </blockquote>
                                 <h5 class="GroupStats_twt">
                                     <i class="fa fa-text-width fa-2x fa-fw"></i>
-                                    <strong>{{plainText}}</strong>
+                                    <strong>{{posttext}}</strong>
                                     <br>
                                     <span>Plain Text</span>
                                 </h5>
                                 <h5 class="GroupStats_twt">
                                     <i class="fa fa-link fa-2x fa-fw"></i>
-                                    <strong>{{linkstoPages}}</strong>
+                                    <strong>{{mediapost}}</strong>
                                     <br>
                                     <span>Links to Pages</span>
                                 </h5>
                                 <h5 class="GroupStats_twt">
                                     <i class="fa fa-camera-retro fa-2x fa-fw"></i>
-                                    <strong>{{photoLinks}}</strong>
+                                    <strong>{{linkpost}}</strong>
                                     <br>
                                     <span>Photo Links</span>
                                 </h5>
@@ -281,13 +289,10 @@
                                         </div>
                                     </div>-->
                                 </div>
-
                             </div>
-
                         </div>
                     </div>
                 </div>
-
             </div>
 
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />

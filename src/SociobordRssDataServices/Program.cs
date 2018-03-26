@@ -31,6 +31,7 @@ namespace SociobordRssDataServices
             {
                 Console.WriteLine("Enter 1 to run RSS DataServices");
                 Console.WriteLine("Enter 2 to run RSS Contents news DataServices");
+                Console.WriteLine("Enter 3 to run RSS recent post Dataservice");
                 string dataService = Console.ReadLine();
                 if (dataService == "1")
                 {
@@ -41,6 +42,11 @@ namespace SociobordRssDataServices
                 {
                     RssDateServices _RssDateServices = new RssDateServices();
                     _RssDateServices.RssContentsFeeds();
+                }
+                else if(dataService == "3")
+                {
+                    RssDateServices _RssDateServices = new RssDateServices();
+                    _RssDateServices.RssFeedRecent();
                 }
             }
         }

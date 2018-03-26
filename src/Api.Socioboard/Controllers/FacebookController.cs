@@ -233,7 +233,7 @@ namespace Api.Socioboard.Controllers
                     byte[] img = webClient.DownloadData(imagePath);
                     media.SetValue(img);
                     args["source"] = media;
-                    ret = fb.Post("v2.0/" + objFacebookAccount.FbUserId + "/photos", args).ToString();
+                    ret = fb.Post("v2.7/" + objFacebookAccount.FbUserId + "/photos", args).ToString();
                 }
                 else
                 {
@@ -241,7 +241,7 @@ namespace Api.Socioboard.Controllers
                     {
                         args["link"] = link;
                     }
-                    ret = fb.Post("v2.0/" + objFacebookAccount.FbUserId + "/feed", args).ToString();
+                    ret = fb.Post("v2.7/" + objFacebookAccount.FbUserId + "/feed", args).ToString();
 
                 }
                 ScheduledMessage scheduledMessage = new ScheduledMessage();

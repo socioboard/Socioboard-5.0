@@ -349,6 +349,23 @@ SocioboardApp.controller('InstagramFeedsController', function ($rootScope, $scop
 
         }
 
+            //$scope.reportaaa = function () {
+
+        //    $http.get(apiDomain + '/api/Twitter/Notifications?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&skip=0&count=')
+        //                  .then(function (response) {
+        //                      $scope.mendata = response.data[0];
+        //                      $scope.redata = response.data[1];
+        //                      $scope.recivedm = response.data[2];
+        //                      $scope.sentdm = response.data[3];
+        //                      $scope.posttext = response.data[4];
+        //                      $scope.mediapost = response.data[5];
+        //                      $scope.linkpost = response.data[6];
+        //                      $scope.fetchdatacomplete = true;
+        //                  })
+
+        //}
+        //$scope.reportaaa();
+
 
         $scope.Follow = function (id) {
             $http.post(apiDomain + '/api/Instagram/followpeople?instagramId=' + $stateParams.profileId + '&followingid=' + id)

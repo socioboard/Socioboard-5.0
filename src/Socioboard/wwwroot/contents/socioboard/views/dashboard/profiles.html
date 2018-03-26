@@ -17,7 +17,7 @@
                                     <input ng-model="query[queryBy]" id="icon_prefix" type="text" class="validate">
                                     <label for="icon_prefix">Search Profile</label>
                                 </div>
-                                <div class="input-field col s7 right" >
+                                <div class="input-field col s7" >
                                     <!--<img src="/contents/socioboard/images/facebookSearch.png" ng-click="searchprofile('Facebook')" style="cursor: pointer;"/>
                                     <img src="/contents/socioboard/images/instagramSearch.png" ng-click="searchprofile('Facebook')" style="cursor: pointer;" />
                                     <img src="/contents/socioboard/images/twitterSearch.png" ng-click="searchprofile('Facebook')" style="cursor: pointer;" />
@@ -25,17 +25,19 @@
                                     <img src="/contents/socioboard/images/youtubeSearch.png" ng-click="searchprofile('Facebook')" style="cursor: pointer;" />
                                     <img src="/contents/socioboard/images/linkedinSearch.png" ng-click="searchprofile('Facebook')" style="cursor: pointer;" />
                                     <img src="/contents/socioboard/images/pinterestSearch.png" ng-click="searchprofile('Facebook')" style="cursor: pointer;" />-->
-                                   
-                                    <i class="fa fa-facebook-square fa-3x blue-text text-darken-4 fa-fw" ng-click="searchprofile('Facebook')" style="cursor: pointer;"></i>
-                                    <i class="fa fa-flag fa-3x orange-text text-darken-2 fa-fw" ng-click="searchprofile('FacebookPage')" style="cursor: pointer;"></i>
-                                    <i class="fa fa-twitter-square fa-3x light-blue-text text-darken-2 fa-fw" ng-click="searchprofile('twitter')" style="cursor: pointer;"></i>
-                                    <i class="fa fa-instagram fa-3x deep-orange-text text-darken-1 fa-fw" ng-click="searchprofile('instagram')"  style="cursor: pointer;"></i>
-                                    <i class="fa fa-google-plus-square fa-3x red-text text-darken-2 fa-fw" ng-click="searchprofile('googlepluse')"  style="cursor: pointer;"></i>
-                                    <i class="fa fa-pinterest-square fa-3x deep-orange-text text-darken-4 fa-fw" ng-click="searchprofile('Pinterest')"  style="cursor: pointer;"></i>
-                                    <i class="fa fa-bar-chart fa-3x yellow-text text-darken-4 fa-fw" ng-click="searchprofile('GAnalytics')"  style="cursor: pointer;"></i>
-                                    <i class="fa fa-youtube-square fa-3x red-text text-darken-4 fa-fw" ng-click="searchprofile('Youtube')"  style="cursor: pointer;"></i>
-                                    <i class="fa fa-linkedin-square fa-3x indigo-text text-darken-2 fa-fw" ng-click="searchprofile('linkedin')"  style="cursor: pointer;"></i>
-                                    <i class="fa fa-linkedin fa-3x indigo-text text-darken-2 fa-fw" ng-click="searchprofile('linkedincompanypage')"  style="cursor: pointer;"></i>
+                                    <div class="right">
+                                        <span class="btn btn_round blue_btn_style" ng-click="fetchalllProfiles()" title="All Social" style="cursor: pointer;">All</span>
+                                        <i class="fa fa-facebook-square fa-2x blue-text text-darken-4 fa-fw" ng-click="searchprofile('Facebook')" style="cursor: pointer;"></i>
+                                        <i class="fa fa-flag fa-2x orange-text text-darken-2 fa-fw" ng-click="searchprofile('FacebookPage')" style="cursor: pointer;"></i>
+                                        <i class="fa fa-twitter-square fa-2x light-blue-text text-darken-2 fa-fw" ng-click="searchprofile('twitter')" style="cursor: pointer;"></i>
+                                        <i class="fa fa-instagram fa-2x deep-orange-text text-darken-1 fa-fw" ng-click="searchprofile('instagram')" style="cursor: pointer;"></i>
+                                        <i class="fa fa-google-plus-square fa-2x red-text text-darken-2 fa-fw" ng-click="searchprofile('googlepluse')" style="cursor: pointer;"></i>
+                                        <!--<i class="fa fa-pinterest-square fa-2x deep-orange-text text-darken-4 fa-fw" ng-click="searchprofile('Pinterest')" style="cursor: pointer;"></i>-->
+                                        <i class="fa fa-bar-chart fa-2x yellow-text text-darken-4 fa-fw" ng-click="searchprofile('GAnalytics')" style="cursor: pointer;"></i>
+                                        <i class="fa fa-youtube-square fa-2x red-text text-darken-4 fa-fw" ng-click="searchprofile('Youtube')" style="cursor: pointer;"></i>
+                                        <i class="fa fa-linkedin-square fa-2x indigo-text text-darken-2 fa-fw" ng-click="searchprofile('linkedin')" style="cursor: pointer;"></i>
+                                        <i class="fa fa-linkedin fa-2x indigo-text text-darken-2 fa-fw" ng-click="searchprofile('linkedincompanypage')" style="cursor: pointer;"></i>
+                                    </div>
                                 </div>
                             </div>
                         </form>

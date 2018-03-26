@@ -43,6 +43,7 @@ namespace SocioboardDataServices
                 Console.WriteLine("Enter 7 to run Content studio Shareathon DataSchedule");
                 Console.WriteLine("Enter 8 to run Facebook DaywiseScheduler");
                 Console.WriteLine("Enter 9 to run Share Feeds with OtherSocialMedia Schedule");
+                Console.WriteLine("Enter 10 to run Facebook feeds manager schedule");
                 string[] str = { Console.ReadLine() };
 
                 string reporttype = str[0];
@@ -75,6 +76,9 @@ namespace SocioboardDataServices
                         break;
                     case "9":
                         type = "Share Feeds with OtherSocialMedia Schedule";
+                        break;
+                    case "10":
+                        type = "Facebook feeds manager schedule";
                         break;
                     default:
                         break;
@@ -166,6 +170,14 @@ namespace SocioboardDataServices
                     FacebookDataScheduler objDaywiseDatascheduler = new FacebookDataScheduler();
                     objDaywiseDatascheduler.dayscheduleFBMessage();
                 }
+
+                if (type == "Facebook feeds manager schedule")
+                {
+                    FacebookFeedsManagerSched objfbfeedsmanager = new FacebookFeedsManagerSched();
+                    objfbfeedsmanager.ScheduleFacebookfeedmanagerPost();
+                }
+
+
             }
         }
     }
