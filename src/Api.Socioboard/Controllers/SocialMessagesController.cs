@@ -252,9 +252,27 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
+                else if (temp_item_profileId.StartsWith("page"))
+                {
+                    try
+                    {
+                        new Thread(delegate ()
+                        {
+                            string prId = temp_item_profileId.Substring(5, temp_item_profileId.Length - 5);
+                            Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
+
+                        }).Start();
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
 
 
-               else if (temp_item_profileId.StartsWith("urlfb"))
+
+                else if (temp_item_profileId.StartsWith("urlfb"))
                 {
                     try
                     {

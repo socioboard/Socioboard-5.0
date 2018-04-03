@@ -68,6 +68,7 @@ namespace Api.Socioboard.Repositories
                 Dictionary<string, string> configurationMap = new Dictionary<string, string>();
 
                 configurationMap.Add("mode", "live");
+
                 // Signature Credential
                 configurationMap.Add("account1.apiUsername", paypalapiusername);
                 configurationMap.Add("account1.apiPassword", paypalpassword);

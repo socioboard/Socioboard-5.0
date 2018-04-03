@@ -142,7 +142,7 @@
                                                 if (((List<Domain.Socioboard.Helpers.PluginProfile>)Model).Any(t => t.type == "twitter"))
                                                 {
 
-                                                    int count = 140;
+                                                    int count = 280;
                                                     if (!string.IsNullOrEmpty(objplugin.content))
                                                     {
                                                         content = objplugin.content;
@@ -254,7 +254,7 @@
                                                                                     Message for Twitter
                                                                                 </span>
                                                                                 <span class="pull-right" id="twt-text-count">
-                                                                                    @(140 - tweetUrlLength)
+                                                                                    @(280 - tweetUrlLength)
                                                                                 </span>
                                                                             </div>
 
@@ -937,14 +937,14 @@
             var tweetUriLength = '@tweetUrlLength';
             var val = document.getElementById('txt-twt-message').value;
             var len = +val.length + +tweetUriLength;
-            if (len > 140) {
+            if (len > 280) {
                 $('#twt-text-count').removeClass('text-success');
                 $('#twt-text-count').addClass('text-danger');
             } else {
                 $('#twt-text-count').removeClass('text-danger');
                 $('#twt-text-count').addClass('text-success');
             }
-            $('#twt-text-count').text(140 - len);
+            $('#twt-text-count').text(280 - len);
 
         }
 
@@ -967,10 +967,10 @@
             var updatedmessage = "";
             if ($('.twitter-text-show').css('display') == 'block') {
                 twitterText = $('#txt-twt-message').val();
-                if (twitterText.length + +'@tweetUrlLength' > 140) {
+                if (twitterText.length + +'@tweetUrlLength' > 280) {
                     $('#twt-text-count').removeClass('text-success');
                     $('#twt-text-count').addClass('text-danger');
-                    $('#twt-text-count').text('Your Tweet was over 140 characters.');
+                    $('#twt-text-count').text('Your Tweet was over 280 characters.');
                     return null;
                 }
                 @if(objplugin.profileType=="twitter")

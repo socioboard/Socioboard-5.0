@@ -7,10 +7,12 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         TrendingContent();
         $scope.query = {};
         $scope.queryBy = '$';
-        var lastreach = false;     
+        var lastreach = false;
+        $scope.displaybtn = true;
         $scope.dispbtn = true;
         $scope.disbtncom = true;
-        
+        var reachLast = false;
+        var preloadmorefeeds = false;
         $scope.temptext = "Quick Topics";
         $scope.sortbytxt = "Sort By";
         $scope.deleteProfile = function(profileId){
@@ -192,18 +194,31 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             if (!ReachLast) {
                 // var abc = "twitter";
                 var abcd = 0;
-                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=' + startData + '&count=30')
+                $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + abc + '&skip=0&count=30')
                                   .then(function (response) {
                                     
-                                      $scope.lstData = response.data;
-                                      console.log("single data", $scope.lstData[0].postId);
+                                    //  $scope.lstData = response.data;
+                                     // console.log("single data", $scope.lstData[0].postId);
                                       //startData = response.data.length;
-                                      $scope.lastreach = true;
-                                      $scope.fetchdatacomplete = true;
+                                    //  $scope.lastreach = true;
+                                     
                                     
                                       if (response.data == null) {
                                           ReachLast = true;
-                                         
+                                          $scope.lstnofeeds = true;
+                                          $scope.fetchdatacomplete = true;
+                                      }
+                                      else {
+                                          $scope.lstData = response.data;
+                                          $scope.show = false;
+                                          $scope.fetchdatacomplete = true;
+                                          $scope.preloadmorefeedss = false;
+                                          $scope.preloadmorefeeds = false;
+                                          $scope.dropCalled = true;
+                                          // $scope.userdetails();
+                                          setTimeout(function () {
+                                              $scope.callDropmenu();
+                                          }, 1000);
                                       }
                                   }, function (reason) {
                                       $scope.error = reason.data;
@@ -212,6 +227,49 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             }
         }
         
+        $scope.callDropmenu = function () {
+            $('.dropdown-button').dropdown({
+                inDuration: 300,
+                outDuration: 225,
+                constrain_width: false, // Does not change width of dropdown to that of the activator
+                hover: true, // Activate on hover
+                gutter: 0, // Spacing from edge
+                belowOrigin: false, // Displays dropdown below the button
+                alignment: 'right' // Displays dropdown with edge aligned to the left of button
+            });
+        }
+
+
+        $scope.listData = function () {
+
+            var datavar = 'general';
+            //if (reachLast) {
+            //    return false;
+            //}
+            $scope.displaybtn = false;
+            $http.get(apiDomain + '/api/ContentStudio/GetAdvanceSearchDataTrending?network=' + datavar + '&skip=' + endingData + '&count=20')
+                         .then(function (response) {
+                             // $scope.lstProfiles = response.data;
+                             if (response.data == null || response.data == "") {
+                                 $scope.endfeeds = true;
+                                 reachLast = true;
+                                 $scope.loadmore = "Reached at bottom";
+                                 //$scope.preloadmorefeeds = 'hide';
+
+                             }
+                             else {
+                                 //$scope.lstData = response.data;
+                                 $scope.lstData = $scope.lstData.concat(response.data);
+                                 //$scope.date($scope.lstinFeeds);
+                                 $scope.preloadmorefeeds = false;
+                                 endingData = endingData + 20;
+                                 $scope.displaybtn = true;
+                                // $scope.listData();
+                             }
+                         }, function (reason) {
+                             $scope.error = reason.data;
+                         });
+        };
 
 
         $scope.imgur = function (abc) {
@@ -322,6 +380,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
                               $scope.fetchdatacomplete = true;
                               console.log($scope.lstData);
                               startData = response.data.length;
+                              startData = startData + 0;
                               $scope.lastreach = true;
                            
                               if (response.data == null) {
@@ -541,8 +600,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         $scope.viewPostModal = function (tempo) {
             debugger;
             $scope.feed = tempo;
-            $('#viewPostModal').openModal();
-           
+            $('#viewPostModal').openModal();           
         }
   });
 

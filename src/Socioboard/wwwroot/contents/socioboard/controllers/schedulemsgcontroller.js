@@ -825,6 +825,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                     $scope.rep = true;
                                     $rootScope.draftDelete = "true";
                                     swal("Message scheduled successfully");
+                                    closeModel();
+                                    $(".dropify-clear").click();
 
                                 }
                                 else {
@@ -862,6 +864,8 @@ SocioboardApp.controller('ScheduleMessageController', function ($rootScope, $sco
                                     $scope.dispbtn = true;
                                     $rootScope.draftDelete = "true";
                                     swal("Message scheduled successfully");
+                                    closeModel();
+                                    $(".dropify-clear").click();
                                 }
                             }, function (reason) {
 

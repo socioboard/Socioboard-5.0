@@ -21,8 +21,14 @@ SocioboardApp.controller('MailSettingController', function ($rootScope, $scope, 
         $scope.mailSettings.scheduleSuccessUpdates = $rootScope.user.scheduleSuccessUpdates;
         //end codes to intilize mail settings
         //verify password
+       
+        $scope.ChangeEmailModal = function () {
+            $('#password').val('');
+            $('#ChangeEmailModal').openModal();
+        }
 
         $scope.VerifyPassword = function (verifyPassword) {
+         
             var pass = $('#password').val();
             if (/\S/.test(pass)) {
                 $http({
@@ -34,6 +40,7 @@ SocioboardApp.controller('MailSettingController', function ($rootScope, $scope, 
 
                     alertify.set({ delay: 5000 });
                     alertify.success(response.data);
+                    $('#password').val('');
                     $('#ChangeEmailModal').closeModal();
                     document.querySelector("#mail_div").style.display = "block";
                     document.querySelector("#change_email_btn").style.display = "none";
@@ -42,7 +49,7 @@ SocioboardApp.controller('MailSettingController', function ($rootScope, $scope, 
                     alertify.set({ delay: 5000 });
                     alertify.error(reason.data);
                     $('#ChangeEmailModal').closeModal();
-                    window.location.reload();
+                  //  window.location.reload();
 
 
                 });

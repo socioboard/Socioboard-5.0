@@ -46,7 +46,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetAdvanceSearchDataTrending(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-           // skip = 0;
+            skip = 0;
             MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
             if (skip + count < 100)
             {
