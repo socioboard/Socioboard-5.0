@@ -139,7 +139,6 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             angular.forEach($scope.generatefacebookGraphData, function (value, key) {
                 if (value.date > startDate) {
                     totalLikes = totalLikes + parseInt(value.totalLikes);
-                    console.log("totalLikes", totalLikes);
                     talkingAbout = talkingAbout + parseInt(value.talkingAbout);
                     newFans = newFans + parseInt(value.likes);
                     unliked = unliked + parseInt(value.unlikes);
@@ -952,6 +951,25 @@ SocioboardApp.controller('GroupreportController', function ($rootScope, $scope, 
             });
         }
     
+
+          $scope.reportaaa = function () {
+
+            $http.get(apiDomain + '/api/Twitter/Notifications?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&skip=0&count=')
+                          .then(function (response) {
+                              $scope.mendata = response.data[0];
+                              $scope.redata = response.data[1];
+                              $scope.recivedm = response.data[2];
+                              $scope.sentdm = response.data[3];
+                              $scope.posttext = response.data[4];
+                              $scope.mediapost = response.data[5];
+                              $scope.linkpost = response.data[6];
+                              $scope.fetchdatacomplete = true;
+                          })
+
+        }
+        $scope.reportaaa();
+
+
         $scope.generatesharechart = function (days) {
             $scope.chartshareData = [];
             var story_Fans = 0;

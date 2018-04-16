@@ -97,7 +97,7 @@ namespace Api.Socioboard.Repositories
                     _Rss.rssFeedUrl = rssobj;
                     _Rss.CreatedOn = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                     _RssRepository.Add(_Rss);
-                    UrlAdded++;
+                     UrlAdded++;
                 }
                 else
                 {
@@ -162,6 +162,12 @@ namespace Api.Socioboard.Repositories
                                     objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
                                     objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
                                 }
+                                else if(item.ChildNodes[2].InnerText.Contains("http"))
+                                {
+                                    objRssFeeds.Message = item.ChildNodes[1].InnerText;
+                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "<.*?>", string.Empty).Replace("[&#8230;]", "");
+                                    objRssFeeds.Message = Regex.Replace(objRssFeeds.Message, "@<[^>]+>|&nbsp;", string.Empty);
+                                }
                                 else
                                 {
                                     objRssFeeds.Message = item.ChildNodes[2].InnerText;
@@ -180,11 +186,20 @@ namespace Api.Socioboard.Repositories
 
                         try
                         {
-                            objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
+                            if(item.ChildNodes[3].Name== "pubDate")
+                            {
+                                objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[3].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
+                            }
+                            else
+                            {
+                                objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[4].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
+                            }
+                            
                         }
                         catch (Exception ex)
                         {
                             objRssFeeds.PublishingDate = DateTime.Parse(item.ChildNodes[5].InnerText).ToString("yyyy/MM/dd HH:mm:ss");
+                            
                         }
 
                         objRssFeeds.Title = item.ChildNodes[0].InnerText;
@@ -193,12 +208,24 @@ namespace Api.Socioboard.Repositories
                         {
                             try
                             {
-                                objRssFeeds.Image = item.ChildNodes[1].InnerText;
-                                objRssFeeds.Image = getBetween(objRssFeeds.Image, "src=\"", "\"");
-                                objRssFeeds.Link = item.ChildNodes[1].InnerText;
-                                objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
-
-
+                                //objRssFeeds.Image = item.ChildNodes[1].InnerText;
+                               // objRssFeeds.Image = getBetween(objRssFeeds.Image, "src=\"", "\"");
+                               if(item.ChildNodes[2].Name=="link")
+                                {
+                                    objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                                }
+                                else
+                                {
+                                    objRssFeeds.Link = item.ChildNodes[1].InnerText;
+                                    objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                                }
+                               
+                               
+                                if(objRssFeeds.Link=="")
+                                {
+                                    objRssFeeds.Link = item.ChildNodes[1].InnerText;
+                                }
+                                
                             }
                             catch (Exception ex)
                             {
@@ -206,10 +233,83 @@ namespace Api.Socioboard.Repositories
                                 objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                             }
                         }
+                        else if(item.ChildNodes[3].InnerText.Contains("www")|| item.ChildNodes[3].InnerText.Contains("https"))
+                        {
+                            try
+                            {
+                                objRssFeeds.Message = item.ChildNodes[4].InnerText;
+                                objRssFeeds.Message = getBetween(objRssFeeds.Message, "<a href=\"", "\">");
+                            }
+                            catch (Exception ex)
+                            {
+                                objRssFeeds.Link = "";
+                            }
+                            try
+                            {
+                                objRssFeeds.Link = item.ChildNodes[3].InnerText;
+                            }
+                            catch (Exception ex)
+                            {
+                                objRssFeeds.Link = "";
+                            }
+                        }
+                        else if(item.ChildNodes[2].InnerText.Contains("https"))
+                        {
+                            try
+                            {
+                                objRssFeeds.Link = item.ChildNodes[2].InnerText;
+                            }
+                            catch (Exception ex)
+                            {
+                                objRssFeeds.Link = "";
+                            }
+                            try
+                            {
+                                if(item.ChildNodes[7].Name == "description")
+                                {
+                                    objRssFeeds.Message = item.ChildNodes[7].InnerText;
+                                }
+                                else
+                                {
+                                    objRssFeeds.Message = item.ChildNodes[6].InnerText;
+                                    //objRssFeeds.Message = getBetween(objRssFeeds.Message, "<a href=\"", "\">");
+                                }
+                              
+                            }
+                            catch(Exception ex)
+                            {
+                                objRssFeeds.Message = "";
+                            }
+                            try
+                            {
+                                objRssFeeds.Title = item.ChildNodes[1].InnerText;
+                            }
+                            catch (Exception ex)
+                            {
+                                objRssFeeds.Message = "";
+                            }
+                            try
+                            {
+                                if(item.ChildNodes[8].Name != "media")
+                                {
+                                    objRssFeeds.Image = item.ChildNodes[8].InnerText;
+                                }
+                                else
+                                {
+                                    objRssFeeds.Image = "";
+                                }
+                               
+                            }
+                            catch (Exception ex)
+                            {
+                                objRssFeeds.Message = "";
+                            }
+
+                        }
                         else
                         {
                             objRssFeeds.Link = item.ChildNodes[2].InnerText;
-                           // objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
+                            // objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                         }
                         objRssFeeds.RssFeedUrl = TextUrl;
                         objRssFeeds.ProfileId = profileid;

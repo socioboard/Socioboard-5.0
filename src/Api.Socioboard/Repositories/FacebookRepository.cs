@@ -1682,7 +1682,7 @@ namespace Api.Socioboard.Repositories
             var builder = Builders<MongoFacebookFeed>.Sort;
 
             var sort = builder.Descending(t => t.EntryDate);
-            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, 20);
             var task = Task.Run(async () =>
             {
                 return await result;
@@ -1690,14 +1690,15 @@ namespace Api.Socioboard.Repositories
             IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = null;
             try
             {
-                lstFbFeeds = task.Result;
+                lstFbFeeds = task.Result.ToList();
             }
             catch (Exception ex)
             {
 
             }
-            //var sortt = lstFbFeeds.OrderByDescending(t => Convert.ToDateTime(t.EntryDate));
-            foreach (var item in lstFbFeeds)//sortt.ToList())
+         //   lstFbFeeds = lstFbFeeds.OrderByDescending(t => t.EntryDate).ToList();
+            // foreach (var item in lstFbFeeds)//sortt.ToList())
+            foreach (var item in lstFbFeeds)
             {
                 Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
                 //MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);

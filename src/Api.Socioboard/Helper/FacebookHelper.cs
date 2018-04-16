@@ -208,10 +208,10 @@ namespace Api.Socioboard.Helper
                 }
                 else
                 {
-                    //if (!string.IsNullOrEmpty(link))
-                    //{
-                    //    args["link"] = link;
-                    //}
+                    if (!string.IsNullOrEmpty(link))
+                    {
+                        args["link"] = link;
+                    }
                     if (!string.IsNullOrEmpty(imagePath))
                     {
                         args["picture"] = imagePath.Replace("&amp;", "&");

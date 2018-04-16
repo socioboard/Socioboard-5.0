@@ -59,7 +59,7 @@ namespace Api.Socioboard.Controllers
             List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
             string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
-           // string[] lstname= lstGrpProfiles.Select(t => t.profileName).ToArray();
+            // string[] lstname= lstGrpProfiles.Select(t => t.profileName).ToArray();
             //List<Domain.Socioboard.Models.TwitterAccount> lstInsAcc = new List<Domain.Socioboard.Models.TwitterAccount>();
             List<Domain.Socioboard.Models.Mongo.twtfollowfollowing> lstTwtreport = new List<Domain.Socioboard.Models.Mongo.twtfollowfollowing>();
             lstTwtreport = Repositories.TwitterReportsRepository.gettwtfollofollowingReport(lstStr, 90, _redisCache, _appSettings,dbr);

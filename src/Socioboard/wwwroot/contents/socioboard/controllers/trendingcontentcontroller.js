@@ -15,6 +15,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         var preloadmorefeeds = false;
         $scope.temptext = "Quick Topics";
         $scope.sortbytxt = "Sort By";
+
         $scope.deleteProfile = function(profileId){
         	// console.log(profileId);
         	swal({   
@@ -375,10 +376,30 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
             $scope.temptext = pass;
             $http.get(apiDomain + '/api/ContentStudio/QuickTopics?networkType=' + networkType + '&skip=' + startData + '&count=30')
                           .then(function (response) {
-                            
-                              $scope.lstData = response.data;
-                              $scope.fetchdatacomplete = true;
-                              console.log($scope.lstData);
+
+
+                                 if (response.data == null) {
+                                          ReachLast = true;
+                                          $scope.lstnofeeds = true;
+                                          $scope.fetchdatacomplete = true;
+                                      }
+                                      else {
+                                          $scope.lstData = response.data;
+                                          $scope.show = false;
+                                          $scope.fetchdatacomplete = true;
+                                          $scope.preloadmorefeedss = false;
+                                          $scope.preloadmorefeeds = false;
+                                          $scope.dropCalled = true;
+                                          // $scope.userdetails();
+                                          setTimeout(function () {
+                                              $scope.callDropmenu();
+                                          }, 1000);
+                                      }
+
+   
+                             // $scope.lstData = response.data;
+                             // $scope.fetchdatacomplete = true;
+                             // console.log($scope.lstData);
                               startData = response.data.length;
                               startData = startData + 0;
                               $scope.lastreach = true;

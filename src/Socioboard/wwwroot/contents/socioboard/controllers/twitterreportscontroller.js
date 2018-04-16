@@ -37,6 +37,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
                               $scope.getfeedsdata();
                               $scope.getprofiledatawithdate = [];
                               $scope.getprofilelist = response.data;
+                              console.log($scope.getprofilelist);
                               angular.forEach($scope.getprofilelist, function (value, key) {
                                   $scope.getprofiledatawithdate.push({
 
@@ -393,7 +394,7 @@ SocioboardApp.controller('TwitterreportsController', function ($rootScope, $scop
                     totalDirectMessagesSent = totalDirectMessagesSent + value.directMessagesSent;
                     totalMessagesReceived = totalMessagesReceived + value.messagesReceived;
                     totalMessagesSent = totalMessagesSent + value.messagesSent;
-                   // $scope.graphData = $scope.graphData.concat(value);
+                   //$scope.graphData = $scope.graphData.concat(value);
                 }
             });
 

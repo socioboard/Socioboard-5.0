@@ -153,7 +153,7 @@ namespace Api.Socioboard.Controllers
 
                             if (item.groupName == "Socioboard")
                             {
-                                return BadRequest("You cann't delete default group choose other one");
+                                return BadRequest("You can't delete default group choose other one");
                             }
                             else
                             {
@@ -174,7 +174,7 @@ namespace Api.Socioboard.Controllers
                         {
                             if (items.groupName == "Socioboard")
                             {
-                                return BadRequest("You cann't delete default group choose other one");
+                                return BadRequest("You can't delete default group choose other one");
                             }
                             else
                             {

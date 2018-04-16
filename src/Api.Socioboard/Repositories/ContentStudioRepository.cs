@@ -26,11 +26,15 @@ namespace Api.Socioboard.Repositories
                 return await result;
             });
 
-
+           
             // IList<AdvanceSerachData> lstyoutube = task.Result.ToList();
             IList<AdvanceSerachData> lstyoutube = task.Result.ToList();//.Take(30).Skip(0).ToList();
             lstyoutube = lstyoutube.OrderByDescending(kt => kt.postedTime).ToList();
             lstyoutube = lstyoutube.OrderByDescending(gb => gb.totalShareCount).ToList();//Take(30).Skip(0).ToList();
+
+            string valdt = Domain.Socioboard.Helpers.SBHelper.ConvertFromUnixTimestamp(lstyoutube.First().postedTime).ToString();
+
+
             if (lstyoutube != null)
             {
                 //_redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + profileId, lstFbFeeds.ToList());
