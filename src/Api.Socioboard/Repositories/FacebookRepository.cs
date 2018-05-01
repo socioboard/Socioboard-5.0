@@ -638,7 +638,13 @@ namespace Api.Socioboard.Repositories
                         objFacebookFeed.FromName = result["from"]["name"].ToString();
                         objFacebookFeed.FromId = result["from"]["id"].ToString();
                         objFacebookFeed.FeedId = result["id"].ToString();
-                        objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                        try
+                        {
+                            //objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                            objFacebookFeed.FeedDateToshow = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                            objFacebookFeed.FeedDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(Convert.ToDateTime(objFacebookFeed.FeedDateToshow)).ToString();
+                        }
+                        catch(Exception ex) { }
                         objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
                         objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
                         objFacebookFeed.shareStatus = false;
@@ -1680,8 +1686,10 @@ namespace Api.Socioboard.Repositories
             List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
             MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
             var builder = Builders<MongoFacebookFeed>.Sort;
+            
 
-            var sort = builder.Descending(t => t.EntryDate);
+            var sort = builder.Descending(t => t.FeedDate);
+            
             var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, 20);
             var task = Task.Run(async () =>
             {

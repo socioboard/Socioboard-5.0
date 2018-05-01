@@ -44,22 +44,22 @@ namespace Api.Socioboard.Controllers
         [HttpPost("AddRssUrl")]
         public IActionResult AddRssUrl(long userId, long groupId, string rssUrl, string profileId)
         {
-
-            try
-            {
-                XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
-                xmlDoc.Load(rssUrl);
-                var abc = xmlDoc.DocumentElement.GetElementsByTagName("item");
-                if (abc.Count == 0)
+             
+                try
+                {
+                    XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
+                    xmlDoc.Load(rssUrl);
+                    var abc = xmlDoc.DocumentElement.GetElementsByTagName("item");
+                    if (abc.Count == 0)
+                    {
+                        return Ok("This Url Does't  Conatin Rss Feed");
+                    }
+                }
+                catch (Exception ex)
                 {
                     return Ok("This Url Does't  Conatin Rss Feed");
                 }
-            }
-            catch (Exception ex)
-            {
-                return Ok("This Url Does't  Conatin Rss Feed");
-            }           
-
+                               
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string _RssFeedUrl = Repositories.RssFeedRepository.AddRssUrl(profileId, rssUrl, dbr);
             if (_RssFeedUrl != "null") 
@@ -81,7 +81,7 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(3, item.Length - 3);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.Facebook, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, dbr, _appSettings);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.Facebook, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, null,dbr, _appSettings);
 
                     }
 
@@ -89,14 +89,84 @@ namespace Api.Socioboard.Controllers
                     {
                         string prId = item.Substring(5, item.Length - 5);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, dbr, _appSettings);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, null,dbr, _appSettings);
 
                     }
                     if (item.StartsWith("tw"))
                     {
                         string prId = item.Substring(3, item.Length - 3);
                         Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
-                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.Twitter, objTwitterAccount.profileImageUrl, objTwitterAccount.twitterName, dbr, _appSettings);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.Twitter, objTwitterAccount.profileImageUrl, objTwitterAccount.twitterName, null,dbr, _appSettings);
+
+                    }
+                }
+
+
+            }
+            return Ok("Added Successfully");
+        }
+
+        [HttpPost("AddXMlUrl")]
+        public IActionResult AddXMlUrl(long userId, long groupId, string rssUrl, string profileId)
+        {
+
+            try
+            {
+                XmlDocument xmlDoc = new XmlDocument(); // Create an XML document object
+                xmlDoc.Load(rssUrl);
+                var abc = xmlDoc.DocumentElement.GetElementsByTagName("sitemap");
+                
+                if (abc.Count == 0)
+                {
+                    var urldata = xmlDoc.DocumentElement.GetElementsByTagName("url");
+                    if(urldata.Count==0)
+                    {
+                        return Ok("This Url Does't  Conatin xml sitemap url");
+                    }                   
+                }
+            }
+            catch (Exception ex)
+            {
+                return Ok("This Url Does't  Conatin xml sitemap url");
+            }
+
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+            string _RssFeedUrl = Repositories.RssFeedRepository.AddRssUrl(profileId, rssUrl, dbr);
+            if (_RssFeedUrl != "null")
+            {
+                string[] lstProfileIds = null;
+                if (profileId != null)
+                {
+                    lstProfileIds = profileId.Split(',');
+                    profileId = lstProfileIds[0];
+                }
+                else
+                {
+                    return Ok("profileId required");
+                }
+
+                foreach (var item in lstProfileIds)
+                {
+                    if (item.StartsWith("fb"))
+                    {
+                        string prId = item.Substring(3, item.Length - 3);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.Facebook, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName, "xmldata",dbr, _appSettings);
+
+                    }
+
+                    if (item.StartsWith("page"))
+                    {
+                        string prId = item.Substring(5, item.Length - 5);
+                        Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, "http://graph.facebook.com/" + objFacebookAccount.FbUserId + "/picture?type=small", objFacebookAccount.FbUserName,"xmldata" ,dbr, _appSettings);
+
+                    }
+                    if (item.StartsWith("tw"))
+                    {
+                        string prId = item.Substring(3, item.Length - 3);
+                        Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Api.Socioboard.Repositories.TwitterRepository.getTwitterAccount(prId, _redisCache, dbr);
+                        string ret = Repositories.RssFeedRepository.AddRssFeed(rssUrl, userId, prId, Domain.Socioboard.Enum.SocialProfileType.Twitter, objTwitterAccount.profileImageUrl, objTwitterAccount.twitterName,"xmldata", dbr, _appSettings);
 
                     }
                 }
@@ -184,10 +254,8 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             if(count < 100)
             {
-               // return Ok(Repositories.TwitterRepository.GetTopFeeds(profileId, userId, _redisCache, _appSettings).Skip(skip).Take(count));
-                return Ok(Repositories.RssNewsContentsRepository.GetRssNewsPostedFeeds(userId, _redisCache, _appSettings).Skip(skip).Take(count));
-               // List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = Repositories.RssNewsContentsRepository.GetRssNewsPostedFeeds(userId, _redisCache, _appSettings);
-
+               return Ok(Repositories.RssNewsContentsRepository.GetRssNewsPostedFeeds(userId, _redisCache, _appSettings).Skip(skip).Take(count));
+            
             }
             else
             {

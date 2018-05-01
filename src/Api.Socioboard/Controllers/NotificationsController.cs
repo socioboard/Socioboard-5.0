@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using Socioboard.Twitter.App.Core;
 using MongoDB.Driver;
 using Domain.Socioboard.Models;
+using MongoDB.Bson;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -144,12 +145,11 @@ namespace Api.Socioboard.Controllers
         public IActionResult ChangePasswordDetail(long userId)
         {
             try
-            {
-              
+            {              
                 MongoRepository mongorepo = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<Domain.Socioboard.Models.Facebookaccounts> datalst = dbr.Find<Facebookaccounts>(t => t.UserId == userId).ToList();
-                Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
+              //  Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
                 var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.userId == userId && t.status==false);
                 var task = Task.Run(async () =>
                 {
@@ -157,23 +157,69 @@ namespace Api.Socioboard.Controllers
                 });
                 int count = task.Result.Count;
                 IList<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstfbpasschange = task.Result;
-              
-            
+                List<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstfab = new List<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>();
+                foreach(var lstfb in lstfbpasschange)
+                {
+                    if (lstfb.message.Contains("password"))
+                    {
+                        string str = lstfb.message;
+                        try
+                        {
+                            lstfab.Add(lstfb);
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                        
+                    }
+                    
+                }
                 if (count>0)
                 {
-                    return Ok(userDet);
+                    return Ok(lstfab);
                 }
                 else
                 {
-                    return NotFound();
+                    return Ok("No Data");
                 }
             }
             catch (Exception ex)
             {
                 return NotFound();
             }
+        }
 
+        [HttpGet("ChangeStatus")]
+        public IActionResult ChangeStatus(string profileId)
+        {
+            try
+            {
+                MongoRepository mongorepo = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
+                //  DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
+                // List<Domain.Socioboard.Models.Facebookaccounts> datalst = dbr.Find<Facebookaccounts>(t => t.UserId == userId).ToList();
+                //  Domain.Socioboard.Models.User userDet = dbr.FindSingle<User>(t => t.Id == userId);
+               // Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail lstchanges = new Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail();
+                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.profileId == profileId && t.status == false);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                int count = task.Result.Count;
+                if (count > 0)
+                {
+                   
+                    var builders = Builders<BsonDocument>.Filter;
+                    FilterDefinition<BsonDocument> filter = builders.Eq("profileId", profileId);
+                    var update = Builders<BsonDocument>.Update.Set("status", true);
+                    mongorepo.Update<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(update, filter);
+                }
+            }
+            catch (Exception ex)
+            {
 
+            }
+            return Ok("success");
         }
 
         [HttpGet("getfbchangeprofile")]
@@ -192,7 +238,7 @@ namespace Api.Socioboard.Controllers
             IList<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstfbpasschange = task.Result;
             if (count>0)
             {
-                return Ok(lstfbpasschange.FirstOrDefault().profileId);
+                return Ok(lstfbpasschange);
             }
             else
             {

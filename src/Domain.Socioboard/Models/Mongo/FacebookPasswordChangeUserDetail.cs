@@ -16,7 +16,7 @@ namespace Domain.Socioboard.Models.Mongo
         public ObjectId Id { get; set; }
         public string strId { get; set; }
         public long userId { get; set; }
-        public string userPrimaryEmail { get; set; }
+        public string FbEmail { get; set; }
         public string profileId { get; set; }
         public string profileName { get; set; }
         public string message { get; set; }
