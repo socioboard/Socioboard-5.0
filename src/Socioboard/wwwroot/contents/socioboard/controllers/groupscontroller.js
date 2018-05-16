@@ -54,18 +54,18 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 
         $scope.deleteGroups = function(groupsId){
         	
-        	swal({   
-	        title: "Are you sure?",   
-	        text: "You want to remove this group ?",   
-	        type: "warning",   
-	        showCancelButton: true,   
-	        confirmButtonColor: "#DD6B55",   
-	        confirmButtonText: "Yes, delete it!",   
-	        closeOnConfirm: false }, 
+            swal({   
+                title: "Are you sure?",   
+                text: "You want to remove this group ?",   
+                type: "warning",   
+                showCancelButton: true,   
+                confirmButtonColor: "#DD6B55",   
+                confirmButtonText: "Yes, delete it!",   
+                closeOnConfirm: false }, 
 	        function(){   
 	            //todo: code to delete profile
 	            swal("Deleted!", "Group has been deleted", "Success"); 
-	            });
+	        });
         }
 
         $scope.addgroupmodal = function () {
@@ -107,8 +107,8 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
         //get GroupProfiles of a perticular group and add to groups array in group
         $scope.getGroupProfiles = function (index, groupId) {
           
-           // if ($rootScope.groups[index].profiles == undefined) {
-                //codes to load  fb profiles start
+            // if ($rootScope.groups[index].profiles == undefined) {
+            //codes to load  fb profiles start
             $http.get(apiDomain + '/api/GroupProfiles/GetAllGroupProfiles?groupId=' + groupId)
                               .then(function (response) {
                                   $rootScope.groups[index].profiles = response.data;
@@ -116,22 +116,22 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-                // end codes to load fb profiles
-           // }
+            // end codes to load fb profiles
+            // }
 
         }
 
         //get GroupProfiles to connect of a perticular group and add to groups array in group
         $scope.getGroupProfilesToconnect = function (index, groupId) {
             
-           // if ($rootScope.groups[index].profilesToConnect == undefined) {
-                $http.get(apiDomain + '/api/GroupProfiles/getProfilesAvailableToConnect?groupId=' + groupId +'&userId='+ $rootScope.user.Id)
-                              .then(function (response) {
-                                  $rootScope.groups[index].profilesToConnect = response.data;
+            // if ($rootScope.groups[index].profilesToConnect == undefined) {
+            $http.get(apiDomain + '/api/GroupProfiles/getProfilesAvailableToConnect?groupId=' + groupId +'&userId='+ $rootScope.user.Id)
+                          .then(function (response) {
+                              $rootScope.groups[index].profilesToConnect = response.data;
                                 
-                              }, function (reason) {
-                                  $scope.error = reason.data;
-                              });
+                          }, function (reason) {
+                              $scope.error = reason.data;
+                          });
             //}
 
         }
@@ -150,23 +150,37 @@ SocioboardApp.controller('GroupsController', function ($rootScope, $scope, $http
 
         $scope.adminDelete = function (index, groupId) {
 
-            $http.get(apiDomain + '/api/GroupMember/DeleteGroup?groupId=' + groupId + '&userId=' + $rootScope.user.Id)
-                          .then(function (response) {
-                            
-                              $scope.success = response.data;
-                              swal("Team is deleted");
-                              window.location.reload();
-                          }, function (reason) {
-                              $scope.error = reason.data;
-                          });
+            swal({
+                title: "Are you sure?",
+                // text: "You will not be able to send any message via this account!",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, delete Team!",
+                closeOnConfirm: false
+            },
+              function () {
+                  $http.get(apiDomain + '/api/GroupMember/DeleteGroup?groupId=' + groupId + '&userId=' + $rootScope.user.Id)
+                                .then(function (response) {
+
+                                    $scope.success = response.data;
+                                    swal("Deleted!", "Team is deleted", "success");
+
+                                    window.location.reload();
+                                }, function (reason) {
+                                    $scope.error = reason.data;
+                                })
+              });
         }
+    
+    
         $scope.leaveGroup = function (index, groupId) {
 
             $http.get(apiDomain + '/api/GroupMember/LeaveGroup?groupId=' + groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
                              
                               $scope.success = response.data;
-                              swal("successfully Leave");
+                              swal("Left team successfully.");
                               window.location.reload();
                           }, function (reason) {
                               $scope.error = reason.data;

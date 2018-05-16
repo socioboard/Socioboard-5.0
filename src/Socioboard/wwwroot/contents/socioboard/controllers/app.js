@@ -307,18 +307,43 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
                                  });
         }
         //success or failure notification
-        $scope.LoadNotifications = function () {
-            $http.get(apiDomain + '/api/Notifications/FindNotifications?userId=' + $rootScope.user.Id)
+        //$scope.LoadNotifications = function () {
+        //    $http.get(apiDomain + '/api/Notifications/FindNotifications?userId=' + $rootScope.user.Id)
+        //                      .then(function (response) {
+        //                          $scope.lstnotifications = response.data;
+        //                          $scope.notifycount = $scope.lstnotifications.length;
+        //                         // $scope.reloadFeeds();
+        //                       }, function (reason) {
+        //                          $scope.error = reason.data;
+        //                      });
+        //    // end codes to load  recent Feeds
+
+        //}
+
+        $scope.changepass = function () {
+            
+            $http.get(apiDomain + '/api/Notifications/ChangePasswordDetail?userId=' + $rootScope.user.Id)
                               .then(function (response) {
-                                  $scope.lstnotifications = response.data;
-                                  $scope.notifycount = $scope.lstnotifications.length;
-                                 // $scope.reloadFeeds();
-                               }, function (reason) {
+                                  $scope.lstChangePass = response.data;
+                                  
+                                  var abc = $scope.lstChangePass;
+                                  $scope.lstsinglepass = [];
+                                  angular.forEach($scope.lstChangePass, function (value, key) {
+                                      $scope.lstsinglepass.push(value.profileName);
+                                  });
+                                  if (response.data != "No Data") {
+                                      $scope.notifycount = $scope.lstsinglepass.length;
+                                  }
+                                  else {
+                                      $scope.notifycount = 0;
+                                  }
+                                  console.log("data", $scope.notifycount);
+                              }, function (reason) {
                                   $scope.error = reason.data;
                               });
             // end codes to load  recent Feeds
-
         }
+        $scope.changepass();
         //$scope.reloadFeeds = function () {
         //    setTimeout(function () { $scope.LoadNotifications(); }, 1000);
         //}
@@ -326,7 +351,7 @@ SocioboardApp.controller('HeaderController', function ($rootScope, $scope, $http
 
         $scope.getOnPageLoadGroups = function () {
             $scope.loadYtGrpMembers();
-            $scope.LoadNotifications();
+            //$scope.LoadNotifications();
             $scope.getGroupCount();
             var canContinue = true;
             angular.forEach($rootScope.groups, function (value, key) {

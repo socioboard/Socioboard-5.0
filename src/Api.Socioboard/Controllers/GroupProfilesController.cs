@@ -74,9 +74,19 @@ namespace Api.Socioboard.Controllers
         public IActionResult DeleteProfile(long groupId, long userId, string profileId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr, _appSettings));
-        }
+            Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
+            // Domain.Socioboard.Models.User user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId) && t.EmailId == fbAcc.EmailId && t.EmailValidateToken == "Facebook").FirstOrDefault();
+            Domain.Socioboard.Models.User user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId)).FirstOrDefault(); 
+            if (fbAcc != null && fbAcc.EmailId ==user.EmailId)
+            {
+                return BadRequest("Primary Account can't be delete ");
+            }
+            else
+            {
+                return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr, _appSettings));
+            }
 
+        }
         [HttpPost("IsPrimaryAcc")]
         public IActionResult IsPrimaryAcc(long userId, string profileId)
         {

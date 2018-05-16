@@ -23,21 +23,17 @@
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-4 white-text">Your notifications</h5>
                     <ul class="collection facebookfeeds">
-                        <li class="card" >
+                        <li class="card" ng-repeat="profile in lstsinglepass" >
                             <a ng-href="#/notification_all" terget="_blank" class="recent-activity-list chat-out-list row no-space" style="height:auto;">
-
-                                <div   ng-show="lstChangePass.id" class="col s9 recent-activity-list-text margin-top-10">              
-                                    <span  class="" style="color:red">'{{lstChangePass.emailId}}' facebook account password has change , please reconnect your account !!</span>
+                                <div class="col s9 recent-activity-list-text margin-top-10">              
+                                    <strong>'{{profile}}'</strong> <span style="color:black!important;">facebook account password has change ,please reconnect respective account or page from 'My feeds' module !!</span>
                                 </div>
-                                
-                            </a>
-                           
-                            <div ng-show="lstChangePass.id" class="load_more" style="height:auto;">
+                            </a>                           
+                            <!--<div  class="load_more" style="height:auto;">
                                 <a ng-click="reconnect()" class="center">Reconnect</a>
-                            </div>
-                           
+                            </div>-->                           
                         </li>
-                        <li class="collection-item avatar" ng-repeat="notify in lstnotifications">
+                        <!--<li class="collection-item avatar" ng-repeat="notify in lstnotifications">
                             <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
                             <span class="email-title">{{notify.socialprofileName}}</span>
                             <div class="row notify_post z-depth-1 hoverable">
@@ -49,16 +45,11 @@
                                 <div class="col m4 center">
                                     <img src="{{notify.url}}" class="responsive-img noti_feeds_img">
                                 </div>
-                                <!--<div class="col m4 center video-container">
-                                    <iframe width="20" height="20" src="{{notify.url}}" frameborder="0" allowfullscreen></iframe>
-                                </div>-->
                             </div>
                             <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
-                        </li>
-
-                        
+                        </li>-->                        
                     </ul>
-                    <ul class="collection facebookfeeds">
+                    <!--<ul class="collection facebookfeeds">
                         <li class="collection-item avatar" ng-repeat="notify in loadlstnotifications">
                             <img src="{{notify.picUrl}}" alt="{{notify.socialprofileName}}" class="circle">
                             <span class="email-title">{{notify.socialprofileName}}</span>
@@ -71,17 +62,14 @@
                                 <div class="col m4 center">
                                     <img src="{{notify.url}}" class="responsive-img noti_feeds_img">
                                 </div>
-                                <!--<div class="col m4 center video-container">
-                    <iframe width="20" height="20" src="{{notify.url}}" frameborder="0" allowfullscreen></iframe>
-                </div>-->
                             </div>
                             <a class="tooltipped secondary-content" data-position="left">{{notify.localscheduletime |date:'medium'}}</a>
                         </li>
-                    </ul>
+                    </ul>-->
 
-                    <div class="load_more" ng-if="notifycount !=0" id="load_more_toggle">
-                        <a class="center" ng-click="loadmore()">Load More</a>
-                    </div>
+                    <!--<div class="load_more" ng-if="notifycount !=0" id="load_more_toggle">-->
+                        <!--<a class="center" ng-click="loadmore()">Load More</a>-->
+                    <!--</div>-->
                 </div>
             </div>
         </div>

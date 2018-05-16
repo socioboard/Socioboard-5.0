@@ -65,7 +65,7 @@ SocioboardApp.controller('BillingController', function ($rootScope, $scope, $htt
             $http.get(apiDomain + '/api/Billing/CurrentPlanDetails?userid=' + $rootScope.user.Id )
                           .then(function (response) {
                               $scope.plandetails = response.data;
-                              console.log($scope.plandetails);
+                              //console.log($scope.plandetails);
                               
                           }, function (reason) {
                               $scope.error = reason.data;

@@ -93,7 +93,7 @@
                                     <form class="col m12">
                                         <div class="row">
                                             <div class="input-field col s12">
-                                                <select multiple id="schedulerssprofiles1">
+                                                <select multiple id="schedulerssprofilesxml">
                                                     <option value="" disabled selected>Choose your option</option>
                                                     <option ng-repeat="profile in lstProfiles | filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="fb_{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
                                                     <option ng-repeat="profile in lstProfiles | filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" value="page_{{profile.profileId}}" my-repeat-timeout-directive my-repeat-dropdown-directive>  {{profile.profileName}} </option>
@@ -106,7 +106,7 @@
                                             <form class="col s12">
                                                 <div class="row">
                                                     <div class="input-field col s12">
-                                                        <input id="rssfeedurl" type="url" class="validate">
+                                                        <input id="xmlfeedurl" type="url" class="validate">
                                                         <label for="url" data-error="wrong" data-success="right">Enter Your Xml Url Here</label>
                                                     </div>
                                                 </div>
@@ -117,8 +117,8 @@
                             </div>
                             <div ng-init="dispbtn= {{dispbtn}}"></div>
                             <div class="card-action">
-                                <a ng-show="dispbtn" ng-click="AddRssUrl()" class="waves-effect waves-light btn grey darken-3">Schedule</a>
-                                <a ng-show="!dispbtn" ng-click="AddRssUrl()" class="btn grey darken-4 waves-effect waves-light">wait</a>
+                                <a ng-show="dispbtn" ng-click="AddXMLUrl()" class="waves-effect waves-light btn grey darken-3">Schedule</a>
+                                <a ng-show="!dispbtn" ng-click="AddXMLUrl()" class="btn grey darken-4 waves-effect waves-light">wait</a>
                             </div>
                         </div>
                     </div>

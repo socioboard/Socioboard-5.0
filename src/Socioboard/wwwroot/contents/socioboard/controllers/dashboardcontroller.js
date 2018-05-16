@@ -3,7 +3,7 @@
 SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $http, $modal, $timeout, $state, apiDomain, domain) {
     //alert('helo');
 
-    $scope.$on('$viewContentLoaded', function () {             
+    $scope.$on('$viewContentLoaded', function () {
         $scope.dispbtn = true;
         $scope.check = false;
         $scope.draftbtn = true;
@@ -500,9 +500,14 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                         swal("Deleted!", "Account is deleted", "success");
                     }
                     window.location.reload();
-                });
-
+                },
+                 function (reason) {
+                     debugger;
+                     swal("Deleted!", "Primary Account can't be delete", "error");
+                 });
+               
             });
+
         }
 
         //$scope.chk = function (profileId) {

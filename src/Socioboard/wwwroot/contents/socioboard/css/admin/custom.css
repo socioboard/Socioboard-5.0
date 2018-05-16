@@ -435,12 +435,12 @@ ul.side-nav.leftside-navigation li.active > a{
 .dropdown-content-small:before{
     position: absolute;
     top: -7px;
-    right: 9px;
+    right: 120px;
     display: inline-block !important;
     border-right: 7px solid transparent;
-    border-bottom: 7px solid #eee;
+    border-bottom: 7px solid #fff;
     border-left: 7px solid transparent;
-    border-bottom-color: rgba(0, 0, 0, 0.2);
+    border-bottom-color: #fff;
     content: '';
 }
 .dropdown-content-small li > a, .dropdown-content-small li > span{

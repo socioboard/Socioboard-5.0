@@ -14,6 +14,86 @@
     font-size: 20px;
     font-weight: 300;
 }
+.noti_feeds_img {
+    height: 200px !important;
+}
+
+.load_more {
+    text-align: center;
+    border: 1px solid #fff;
+    border-radius: 13px;
+    margin-bottom: 7px;
+    background: palevioletred;
+}
+    .slimScrollDiv {
+        height:auto!important;
+    }
+    .collection{
+        height:auto!important;
+    }
+
+.load_more a {
+    color: #fff !important;
+}
+.myBadge {
+    min-width: 3rem;
+    padding: 2px 4px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: white;
+    right: 15px;
+    box-sizing: border-box; 
+    background: red;
+    border-radius:20%;
+}
+ .mysidenav {
+    max-height:400px;
+    width:450px;
+    color:black;
+    line-height:20px !important;
+    background-color: #fff;
+    padding: 5px 15px 0px 15px;
+    border-radius:0px 0px 4px 4px;
+    border: 1px solid rgba(100, 100, 100, .4);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+    overflow:auto !important;
+    margin-left:85px;
+
+}
+/*.mysidenav:after {
+    content:"";
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-bottom:10px solid #fff;
+    position:absolute;
+    margin-left:215px;
+    top:-10px;
+}*/
+.mysidenav .myInner {
+    background:#f2f2f2;
+    padding:10px;
+    cursor:pointer;
+    border-radius:8px;
+    font-size:13px;
+    border:1px solid #d9d9d9;
+    margin-bottom:10px;
+        white-space: initial;
+}
+.mysidenav .myInner:hover {
+    box-shadow:0px 0px 8px -2px black;    
+}
+.mysidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 25px;
+    color:black;
+    display: block;
+    transition: 0.3s;
+}
+
+.mysidenav a:hover {
+    color: #ccc;
+}
 </style> 
  <!-- START HEADER -->
     <header id="header" class="page-topbar">
@@ -61,9 +141,12 @@
                             <!--<a  data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse">
                                 <i class="icon-bell grey-text text-darken-4" title="Notifications"><span class="badge_notify" ng-if="notifycount>0">{{notifycount}}</span></i>
                             </a>-->
-                            <a ng-href="#/notification_all" class="waves-effect waves-block waves-light">
-                                <i class="icon-bell grey-text text-darken-4" title="Notifications"><span class="badge_notify" ng-if="notifycount>0">{{notifycount}}</span></i>
+                            <a href="javascript:void(0)" class="waves-effect waves-block waves-light dropdown-button" data-activates='myNotification'>
+                                <i id="temp" class="icon-bell grey-text text-darken-4" title="Notifications"><span class="myBadge" ng-if="notifycount>0">{{notifycount}}</span></i>   
                             </a>
+                            <!--<a ng-href="#/notification_all" class="waves-effect waves-block waves-light">
+                                <i class="icon-bell grey-text text-darken-4" title="Notifications"><span class="badge_notify" ng-if="notifycount>0">{{notifycount}}</span></i>
+                            </a>-->
                         </li>
                        <li>
                             <!--<a href="javascript:void(0)" class="waves-effect waves-block waves-light dropdown-button" data-activates='account_list'>
@@ -177,9 +260,20 @@
                             </li>
                          </div>
                     </ul>
+                    <!-- notification -->
+                    <div class="dropdown-content dropdown-content-small mysidenav" id='myNotification'>
+                        <h6 class="feeds_title blue darken-4 white-text" style="text-align:center;padding:10px;margin-bottom:15px;">Your notifications</h6>
+                        <div class="myInner" ng-repeat="profile in lstsinglepass" ng-if="notifycount!=0">
+                            <strong style="font-size:14px!important;">'{{profile}}'</strong><span style="color:black!important;display:block;line-height:20px !important;">facebook account password has change ,please reconnect respective account or page from 'Myfeeds' module !!</span>
+                        </div>
+                        <div ng-if="notifycount==0">
+                            <p>NO DATA</p>
+                        </div>
+                    </div>
                 </div>
             </nav>
         </div>
+        
         <!-- end header nav-->
     </header>
     <!-- END HEADER -->
@@ -216,12 +310,78 @@
                      </ul>
             </aside>
             <!-- LEFT RIGHT SIDEBAR NAV-->
-           <script type="text/javascript">
-            $('.account_scroll').slimScroll({
-                color: '#3B5998',
-                size: '10px',
-                height: '350px',
-                alwaysVisible: true,
-                allowPageScroll: true
-            });
+
+<!-- Notification modal for password change -->
+<!--<div id="myNotification" class="modal">
+    <div class="modal-content"  id="content" style="background:#ff6600;border:none!important;">
+          
+            <div class="row" style="margin-bottom:0!important;">
+                <div class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
+                    <div class="card" id="feeds">
+                        <h5 class="feeds_title blue darken-4 white-text" style="text-align:center;">Your notifications</h5>
+                        <ul class="collection facebookfeeds" style="padding:20px 30px!important;height:auto!important;">
+                            <li class="card" ng-repeat="profile in lstsinglepass">
+                                <a terget="_blank" class="recent-activity-list chat-out-list row no-space">
+                                    <div class="col s12 recent-activity-list-text margin-top-10" style="font-size:large;">
+                                        <strong>'{{profile}}'</strong> <span style="color:black!important;">facebook account password has change ,please reconnect respective account or page from 'Myfeeds' module !!</span>
+                                    </div>
+                                </a>
+                             
+                            </li>
+                           
+                        </ul>
+                      
+
+                        <div class="load_more" ng-if="notifycount !=0" id="load_more_toggle">
+                          
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>-->
+
+<script type="text/javascript">
+    $('.account_scroll').slimScroll({
+        color: '#3B5998',
+        size: '10px',
+        height: '350px',
+        alwaysVisible: true,
+        allowPageScroll: true
+    });
 </script>
+<!--<script>
+    var i = 0;
+    function openNav() {
+        if (i % 2 == 0) { 
+            document.getElementById("mySidenav").style.display = "block";
+            i++;
+        }
+        else{
+            document.getElementById("mySidenav").style.display = "none";
+            i++;
+        }
+        
+    }
+
+    window.addEventListener("click", function (event, mySidenav, temp) {
+        var a = document.getElementById("mySidenav");
+        var b = document.getElementById("temp");
+        if (event.target !== a && event.target !== b) {
+            a.style.display = "none";
+        } else if (event.target == b) {
+            if (a.style.display == "none"){
+                a.style.display = "block";
+            } else {
+                a.style.display = "none";
+            }
+        } else if (event.target == a) {
+            a.style.display = "block";
+        }
+        console.log(event.target);
+    });
+     
+        
+</script>-->
+
+

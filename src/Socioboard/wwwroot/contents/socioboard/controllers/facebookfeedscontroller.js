@@ -198,13 +198,24 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
             
             $http.get(domain + '/socioboard/recfbcont?id=' + $stateParams.profileId + '&fbprofileType=' + xyz)
                               .then(function (response) {
+                               
                                   window.location.href = response.data;
-
+                                 
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
 
         };
+        $scope.changestatus = function () {
+            debugger;
+            $http.get(apiDomain + '/api/Notifications/ChangeStatus?profileId=' + $stateParams.profileId)
+            .then(function (response) {
+               // $scope.status = response.data;
+                console.log(response.data)
+            },function(reason){
+                $scope.error = reason.data;
+            });
+        }
 
         $scope.fbprofiles = function () {
          
@@ -216,6 +227,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                     $scope.profiledet = response.data;
                     angular.forEach($scope.profiledet, function (value, key) {
                         if (value.fbUserId == $stateParams.profileId) {
+                            $scope.changestatus();
                             $scope.reconnect(value.fbProfileType);
                             ac = true;
                         }
@@ -223,6 +235,7 @@ SocioboardApp.controller('FacebookFeedsController', function ($rootScope, $scope
                     });
 
                     if (!ac) {
+                        $scope.changestatus();
                         $scope.reconnect(null);
                     }
 

@@ -237,7 +237,7 @@ namespace Api.Socioboard.Controllers
                 user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
                 user.CreateDate = DateTime.UtcNow;
                 user.EmailId = EmailId;
-                user.ExpiryDate = DateTime.UtcNow.AddDays(1);
+                user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                 user.UserName = "Socioboard";
                 user.EmailValidateToken = "Google";
                 user.UserType = "User";
@@ -467,7 +467,7 @@ namespace Api.Socioboard.Controllers
                 user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
                 user.CreateDate = DateTime.UtcNow;
                 user.EmailId = EmailId;
-                user.ExpiryDate = DateTime.UtcNow.AddDays(1);
+                user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                 user.UserName = "Socioboard";
                 user.EmailValidateToken = "Google";
                 user.UserType = "User";

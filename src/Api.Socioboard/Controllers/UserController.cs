@@ -429,6 +429,15 @@ namespace Api.Socioboard.Controllers
             User user = dbr.Single<User>(t => t.Id == Id);
             if (user != null)
             {
+            if(user.EmailValidateToken=="Google")
+                {
+                    string name = user.FirstName;
+                    var nam = name.Split(' ');
+                    string fname = nam[0];
+                    string lname = nam[1];
+                    user.FirstName = fname;
+                    user.LastName = lname;
+                }
                 return Ok(user);
             }
             else
@@ -1579,7 +1588,7 @@ namespace Api.Socioboard.Controllers
                     user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
                     user.CreateDate = DateTime.UtcNow;
                     user.EmailId = EmailId;
-                    user.ExpiryDate = DateTime.UtcNow.AddDays(1);
+                    user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                     user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
                     user.UserName = "Socioboard";
                     user.UserType = "User";

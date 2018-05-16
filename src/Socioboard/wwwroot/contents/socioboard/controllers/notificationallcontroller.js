@@ -27,21 +27,36 @@ SocioboardApp.controller('NotificationAllController', function ($rootScope, $sco
         $scope.LoadAllNotifications();
 
         $scope.changepass = function () {
-
-            $http.get(apiDomain + '/api/Notifications/ChangePasswordDetail?userId=' + $rootScope.user.Id+'&user' )
+           
+            $http.get(apiDomain + '/api/Notifications/ChangePasswordDetail?userId=' + $rootScope.user.Id)
                               .then(function (response) {
-                                  $scope.lstChangePass = response.data;
-                                  console.log($scope.lstChangePass);
+                                  $scope.lstChangePass = response.data; 
                                   var abc = $scope.lstChangePass;
-                                
-                                  //$scope.notifycount = $scope.notifycount + 10;
+                                  $scope.lstsinglepass = [];
+                                  angular.forEach($scope.lstChangePass, function (value, key) {            
+                                          $scope.lstsinglepass.push(value.profileName);          
+                                  });
+                                  console.log($scope.lstsinglepass);
+                                  if (response.data != "No Data") {
+                                      $scope.notifycount = $scope.lstsinglepass.length;
+                                  }
+                                  else {
+                                      $scope.notifycount = 0;
+                                  }
                                  
+                                  console.log("data", $scope.notifycount);
+                                
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
             // end codes to load  recent Feeds
         }
         $scope.changepass();
+
+
+
+
+
 
 
 

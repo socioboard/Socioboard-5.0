@@ -16,7 +16,7 @@
                 <div id="feeds" class="col offset-s1 s10 offset-m1 m10 offset-l1 l10">
                         
                         <h5 class="feeds_title blue darken-4 white-text">
-                            <i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}<span class="right">&nbsp;</span><a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{SorttTxtt}}</a></a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="loadFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>
+                            <i class="icon-social-facebook"></i>Facebook live feeds<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownFilter' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{filterrTxtt}}<span class="right">&nbsp;</span><!--<a class='dropdown-button right white-text btn black' href='javascript:void(0)' data-activates='dropdownSort' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">{{SorttTxtt}}</a>--></a><span class="right">&nbsp;</span><a class='right white-text btn black' ng-click="loadFeeds()" title="Recent feeds" href='javascript:void(0)' style="font-size: 14px;height: 28px;line-height: 27px;border-radius: 4px;">Recent</a><span class="right">&nbsp;</span>
                             <a class='right white-text btn green accent-4' title="It connects facebook again when users change the password of facebook account ,if you do not reconnect then it will be problem to socioboard account to collect the data/feeds from your respective account or page, when you reconnect the page or acc please login with respective fb account or page which to be reconnect in same browser." href="javascript:void(0)" ng-click="fbprofiles()" style="font-size: 14px !important;padding: 0px 5px 0px 5px !important;height: 28px;line-height: 15px;border-radius: 4px;">
                                 <span class="white-text text-darken-4"><i class="fa fa-refresh fa-fw"></i><strong>Reconnect</strong></span>&nbsp;&nbsp;&nbsp;
                             </a>
@@ -35,7 +35,7 @@
                             </ul>
                         </div>
 
-                        <div ng-if="dropCalled==true">
+                        <!--<div ng-if="dropCalled==true">
                             <ul id='dropdownSort' class='dropdown-content'>
                                 <li><a href="javascript:void(0)"><strong style="color:black">Popular</strong></a></li>
                                 <li><a href="javascript:void(0)" ng-click="SortSearch('maxlikes','Most likes')">Most Likes</a></li>
@@ -43,7 +43,7 @@
                                 <li><a href="javascript:void(0)" ng-click="SortSearch('leastlikes','Least likes')">Least Likes</a></li>
                                 <li><a href="javascript:void(0)" ng-click="SortSearch('leastcomment','Least comments')">Least Comments</a></li>
                             </ul>
-                        </div>
+                        </div>-->
 
                         <ul class="collection" id="facebookfeeds" ng-lazy-scroll="listData()" lazy-scroll-trigger="40" lazy-no-scroll="false">
                             <!--Latest Feeds-->
@@ -171,16 +171,16 @@
                                     </div>-->
                                 </div>
                                 <div class="row">
-                                    <div class="col l6 s8 left">
+                                    <!--<div class="col l6 s8 left">
                                         <a class="center">
                                             <i class="icon-like fa-fw"></i><span> {{fbfeed._facebookFeed.likecount}}</span>
                                         </a>
-                                    </div>
-                                    <div class="col l2 s1 center">
+                                    </div>-->
+                                    <!--<div class="col l2 s1 center">
                                         <div class="center">
                                             <a ng-click="viewcomment(fbfeed._facebookFeed)" class="right"><i class="icon-bubble" aria-hidden="true"></i> Comment</a>
                                         </div>
-                                    </div>
+                                    </div>-->
                                     <div class="col l2 s1 center">
                                         <div class="center">
                                             <a ng-click="openComposeMessage(fbfeed._facebookFeed)" class="right"><i class="fa fa-retweet fa-fw" aria-hidden="true"></i> Re-Socio</a>
@@ -196,7 +196,9 @@
                                     </div>
                                     
                                 </div>
-                                <a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.feedDate}}</a>
+                                <!--<a class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.feedDate}}</a>-->
+                                <a ng-if="fbfeed._facebookFeed.feedDateToshow " class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.feedDateToshow}}</a>
+                                <a ng-if="!fbfeed._facebookFeed.feedDateToshow" class="tooltipped secondary-content" data-position="left">{{fbfeed._facebookFeed.entryDate}}</a>
                             </li>
                             <!--End Feeds-->
                         </ul>
