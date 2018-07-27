@@ -71,10 +71,6 @@ SocioboardApp.controller('FacebookreportController', function ($rootScope, $scop
         }
         //addaed by me end for total fans
 
-      
-
-     
-
 
         $scope.getData = function (profileId, days) {
             $scope.GetFacebookPagePostData(profileId, days);

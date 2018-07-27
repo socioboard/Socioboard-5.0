@@ -257,7 +257,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
                     fbdetailpass.userId = userId;
                     fbdetailpass.profileId = ProfileId;
                     fbdetailpass.message = msg;
-                    fbdetailpass.userPrimaryEmail = lstUser.EmailId;
+                    fbdetailpass.FbEmail = lstUser.EmailId;
                     fbdetailpass.dateValue = DateTime.Today.ToString();
                     fbdetailpass.status = false;
 

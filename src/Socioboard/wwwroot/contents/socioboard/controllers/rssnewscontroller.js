@@ -131,7 +131,6 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                                 $scope.fetchdatacomplete = true;
                                 //$scope.rssNewsFeed(keywords);
                                 $('#tags').val('');
-                                
                             }
                             else {
 
@@ -139,7 +138,6 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                                 $('#rssSettingModal').closeModal();
                                 swal("Data already added");
                                 $('#tags').val('');
-                               
                             }
 
                         }

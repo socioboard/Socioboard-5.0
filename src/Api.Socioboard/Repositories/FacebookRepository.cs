@@ -180,6 +180,7 @@ namespace Api.Socioboard.Repositories
                             FacebookRepository.SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                             UpdatePageShareathon(fbAcc, userId, settings);
                             UpdateGroupShareathon(fbAcc, userId, settings);
+                           // UpdateDeleteFacebookPassChange(fbAcc, userId, settings);
                         }).Start();                       
                     }
                 }
@@ -366,6 +367,7 @@ namespace Api.Socioboard.Repositories
                              UpdateGroupShareathonPage(fbAcc, userId, settings);
                              UpdatePageshareathonPage(fbAcc, userId, settings);
                              UpdateDeleteLinkShareathon(fbAcc.FbUserName, userId, settings);
+                           //  UpdateDeleteFacebookPassChange(fbAcc, userId, settings);
                          }).Start();
 
                        
@@ -1982,6 +1984,8 @@ namespace Api.Socioboard.Repositories
 
                 DeleteLinkShareathon(fbAcc.FbUserName, userId,_appSettings);
 
+                DeleteFacebookPassChange(fbAcc.FbUserId, userId, _appSettings);
+
                 return "Deleted";
             }
             else
@@ -2258,6 +2262,23 @@ namespace Api.Socioboard.Repositories
             }
         }
 
+        public static void DeleteFacebookPassChange(string profileId,  long userId, Helper.AppSettings _appSettings)
+        {
+            MongoRepository _facebookPassChange = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
+            var ret = _facebookPassChange.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.profileId.Equals(profileId) && t.userId == userId);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+            int count = task.Result.Count;
+            if (count > 0)
+            {
+                var builders = Builders<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>.Filter;
+                FilterDefinition<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> filter = builders.Eq("profileId", profileId);
+                _facebookPassChange.Delete<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(filter);
+              
+            }
+        }
 
 
         public static string CompareDateWithclient(string clientdate, string scheduletime)

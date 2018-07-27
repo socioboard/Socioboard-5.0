@@ -1315,7 +1315,12 @@ namespace Socioboard.Controllers
             return View();
         }
 
+        [Route("TermsConditions")]
 
+        public IActionResult Conditions()
+        {
+            return View();
+        }
 
 
     }

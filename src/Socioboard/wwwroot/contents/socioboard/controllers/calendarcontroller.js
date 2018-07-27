@@ -9,12 +9,6 @@ SocioboardApp.controller('CalendarController', function ($rootScope, $scope, $ht
             eventLimit: 3,
             events: apiDomain + '/api/SocialMessages/GetAllScheduleMessageCalendar?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id
         });
-
-
-        //$('#calendar').fullCalendar({
-        //    eventLimit: 3,
-        //    events: apiDomain + '/api/SocialMessages/GetDaywiseScheduleMessageCalendar?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id
-        //});
     });
 
 });

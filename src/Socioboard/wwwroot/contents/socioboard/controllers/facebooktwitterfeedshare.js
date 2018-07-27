@@ -24,7 +24,6 @@ SocioboardApp.controller('FacebookTwitterFeedsShareController', function ($rootS
 
 
 
-
             var otherprofiles = new Array();
             $("#checkboxdataA .subcheckbox").each(function () {
 

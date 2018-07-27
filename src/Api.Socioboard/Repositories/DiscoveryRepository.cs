@@ -140,7 +140,5 @@ namespace Api.Socioboard.Repositories
 
                 return lstdiscovery;
         }
-
-       
     }
 }

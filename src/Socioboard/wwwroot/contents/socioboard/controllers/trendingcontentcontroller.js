@@ -43,19 +43,19 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
 
 
 
-        $scope.Toggle = function (lstforshare) {
+        //$scope.Toggle = function (lstforshare) {
 
 
-            var index = $scope.selectedContentfeed.indexOf(lstforshare);
-            if (index > -1) {
-                //if already selected then removed
-                $scope.selectedContentfeed.splice(index, 1);
-                console.log($scope.selectedContentfeed);
-            }
-            else {
-                $scope.selectedContentfeed.push(lstforshare);
-            }
-        }
+        //    var index = $scope.selectedContentfeed.indexOf(lstforshare);
+        //    if (index > -1) {
+        //        //if already selected then removed
+        //        $scope.selectedContentfeed.splice(index, 1);
+        //        console.log($scope.selectedContentfeed);
+        //    }
+        //    else {
+        //        $scope.selectedContentfeed.push(lstforshare);
+        //    }
+        //}
 
         var startData = 0; // where to start data
         var endingData = startData + 30; // how much data need to add on each function call
@@ -474,8 +474,10 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
                 }).then(function (response) {
                     $scope.lstAdvSearhDataaa = response.data;
                     $scope.dispbtn = true;
+
                     $('#ShareathonModal').closeModal();
                     swal("successfully scheduled");
+                    $scope.selectedContentfeed=[];
                     closeModel();
                     //window.location.reload();
                 }, function (reason) {
@@ -591,7 +593,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
 
         $scope.selectedContentfeed = [];
         $scope.Toggle = function (lstforshare) {
-
+         
 
             var index = $scope.selectedContentfeed.indexOf(lstforshare);
             if (index > -1) {
@@ -619,7 +621,7 @@ SocioboardApp.controller('TrendingContentController', function ($rootScope, $sco
         $('.modal-trigger').leanModal();
 
         $scope.viewPostModal = function (tempo) {
-            debugger;
+           
             $scope.feed = tempo;
             $('#viewPostModal').openModal();           
         }
