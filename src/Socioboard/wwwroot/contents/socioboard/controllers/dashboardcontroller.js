@@ -1140,6 +1140,132 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
             });
         }
+
+        //var bluesnap = new BlueSnap("10001$8e90cb93dc047e9e96407c4d23110c698f8a9afe79f181f8dbc7197098948ed368a69466e7b9e22bbcb8caf18376a100f525eaccf150d56f62348a377ff80bc4b95e7e0d68df396e64e0f4c2ce32f0823a050c82614e34d8294c2c189c95c9046cdd1bb5636446825361d3bb86ca6ec150fcbec573102cb22d4606e38c0625a860c645bdc6e01c5a3d7277212195ce1e03fb2ae9ebbaa923fc4ceab414ceec5c849946e27a9987826fafcd692959423f823f27b40f45a5864ff5803d9e880f3a91967117ff3a65ea8c989db3a190fa13fc767af86c2d54c2e88d9eb58a6aafa03952194a22127375e37493bead0672166243cbc967164d5184d115d1a3b3355f");
+
+        //document.getElementById("submit-button").addEventListener("click", function () {
+        //    debugger;
+        //    bluesnap.encrypt("checkout-form");
+        //});
+
+        //$scope.bsbs = function () {
+        //    debugger;
+        //    bluesnap.encrypt("checkout-form");
+        //    }
+        $scope.bluesnap = function () {
+            debugger;
+            var xmlstring =
+         "<?xml version='1.0'?>" +
+
+         "<plan xmlns='http://ws.plimus.com'>" +
+   "<name>Premium Plan</name>" +
+   "<recurring-charge-amount>50</recurring-charge-amount>" +
+   "<currency>USD</currency>" +
+   "<charge-frequency>DAILY</charge-frequency>" +
+   "<initial-charge-amount>100</initial-charge-amount>" +
+   "<charge-on-plan-switch>true</charge-on-plan-switch>" +
+   "<max-number-of-charges>12</max-number-of-charges>" +
+"</plan>";
+
+
+        //             "<card-transaction xmlns='http://ws.plimus.com'>" +
+        //             "<card-transaction-type>AUTH_ONLY</card-transaction-type>" +
+        //             "<recurring-transaction>ECOMMERCE</recurring-transaction>" +
+        //             "<soft-descriptor>DescTest</soft-descriptor>" +
+        //             "<amount>11.00</amount>" +
+        //             "<currency>USD</currency>" +
+        //             "<card-holder-info>" +
+        //                "<first-name>Rajsekhar</first-name>" +
+        //                "<last-name>Patnaik</last-name>" +
+        //                "</card-holder-info>" +
+        //                "<credit-card>" +
+        //                 "<card-number>4263982640269299</card-number>" +
+        //   "<security-code>738</security-code>" +
+        //   "<expiration-month>04</expiration-month>" +
+        //   "<expiration-year>2023</expiration-year>" +
+        //"</credit-card>" +
+        //             "</card-transaction>";
+
+            var blueSnapData = {
+                XMLData: xmlstring
+
+            }
+
+            $http({
+                method: 'POST',
+                url: apiDomain + '/api/Paymenttransaction/PostBlueSnapPlan?XMLData=' + xmlstring,
+            }).then(function (response) {
+
+
+
+           });
+        }
+
+
+        $scope.recSub = function () {
+            debugger;
+            var xmlstring =
+         "<?xml version='1.0'?>" +
+
+         "<recurring-subscription xmlns='http://ws.plimus.com'>" +
+  "<plan-id>2414233</plan-id>" +
+  "<payer-info>" +
+    "<first-name>Raj</first-name>" +
+    "<last-name>Sekhar</last-name>" +
+    "<zip>12345</zip>" +
+    "<phone>1234567890</phone>" +
+  "</payer-info>" +
+  "<payment-source>" +
+    "<credit-card-info>" +
+      "<credit-card>" +
+        "<card-number>4263982640269299</card-number>" +
+        "<security-code>738</security-code>" +
+        "<expiration-month>04</expiration-month>" +
+        "<expiration-year>2023</expiration-year>" +
+      "</credit-card>" +
+    "</credit-card-info>" +
+  "</payment-source>" +
+  "<transaction-fraud-info>" +
+    "<fraud-session-id>1234</fraud-session-id>" +
+  "</transaction-fraud-info>" +
+"</recurring-subscription>";
+
+
+            //             "<card-transaction xmlns='http://ws.plimus.com'>" +
+            //             "<card-transaction-type>AUTH_ONLY</card-transaction-type>" +
+            //             "<recurring-transaction>ECOMMERCE</recurring-transaction>" +
+            //             "<soft-descriptor>DescTest</soft-descriptor>" +
+            //             "<amount>11.00</amount>" +
+            //             "<currency>USD</currency>" +
+            //             "<card-holder-info>" +
+            //                "<first-name>Rajsekhar</first-name>" +
+            //                "<last-name>Patnaik</last-name>" +
+            //                "</card-holder-info>" +
+            //                "<credit-card>" +
+            //                 "<card-number>4263982640269299</card-number>" +
+            //   "<security-code>738</security-code>" +
+            //   "<expiration-month>04</expiration-month>" +
+            //   "<expiration-year>2023</expiration-year>" +
+            //"</credit-card>" +
+            //             "</card-transaction>";
+
+            var blueSnapData = {
+                XMLData: xmlstring
+
+            }
+
+            $http({
+                method: 'POST',
+                url: apiDomain + '/api/Paymenttransaction/PostBlueSnapData?XMLData=' + xmlstring,
+            }).then(function (response) {
+
+
+
+            });
+        }
+
+
+
     });
 });
 

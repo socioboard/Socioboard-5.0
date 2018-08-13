@@ -106,5 +106,12 @@ namespace Api.Socioboard.Helper
         public string paypalapiPassword { get; set; }
         public string paypalapiSignature { get; set; }
 
+        //Bluesnap
+
+        public string bluesnapApiKey { get; set; }
+        public string bluesnapPassword { get; set; }
+        public string bluesnapBase64 { get; set; }
+
+
     }
 }

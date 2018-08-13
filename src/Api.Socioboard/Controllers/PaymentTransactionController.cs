@@ -8,6 +8,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
 using Domain.Socioboard.Models;
 using Domain.Socioboard.Interfaces.Services;
+using System.Net;
+using System.Text;
+using System.IO;
+using System.Xml;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Api.Socioboard.Model;
 
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
@@ -232,7 +239,216 @@ namespace Api.Socioboard.Controllers
             }
             return Ok();
         }
-        
 
+
+        [HttpPost("PostBlueSnapSubscription")]
+        public IActionResult PostBlueSnapSubscription(string XMLData, string emailId)
+        {
+            string responseFromServer = string.Empty;
+            try
+            {
+                // Create a request using a URL that can receive a post. 
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://sandbox.bluesnap.com/services/2/recurring/subscriptions");
+                // Set the Method property of the request to POST.
+                request.Method = "POST";
+                request.Headers["Authorization"] = "Basic " + _appSettings.bluesnapBase64;
+                request.UserAgent = ".NET Framework Test Client";
+                string postData = XMLData;
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/xml";
+                request.ContentLength = byteArray.Length;
+
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                // Get the response.
+
+                HttpWebResponse myHttpWebResponse = (HttpWebResponse)request.GetResponse();
+                Console.WriteLine((myHttpWebResponse.StatusDescription));
+                dataStream = myHttpWebResponse.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                responseFromServer = reader.ReadToEnd();
+                Console.WriteLine(responseFromServer);
+                reader.Close();
+                dataStream.Close();
+                myHttpWebResponse.Close();
+            }
+            catch (WebException wex)
+            {
+                var pageContent = new StreamReader(wex.Response.GetResponseStream())
+                                      .ReadToEnd();
+
+                Console.WriteLine(wex.Message);
+                return BadRequest();
+            }
+
+
+
+            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            try
+            {
+
+                //JSON
+                XmlDocument doc = new XmlDocument();
+                doc.LoadXml(responseFromServer);
+                JObject jsonTextResponse = JObject.Parse(JsonConvert.SerializeXmlNode(doc));
+
+
+                User userObj = dbr.FindSingle<User>(t => t.EmailId == emailId);
+
+                PaymentTransaction objPaymentTransaction = new PaymentTransaction();
+                objPaymentTransaction.amount = jsonTextResponse["recurring-subscription"]["recurring-charge-amount"].ToString();
+                objPaymentTransaction.userid = userObj.Id;
+                objPaymentTransaction.email = userObj.EmailId;
+                objPaymentTransaction.paymentdate = DateTime.UtcNow;
+                objPaymentTransaction.trasactionId = jsonTextResponse["recurring-subscription"]["subscription-id"].ToString();
+                try
+                {
+                    objPaymentTransaction.paymentId = jsonTextResponse["recurring-subscription"]["charge"]["charge-id"].ToString();
+                }
+                catch
+                {
+                    objPaymentTransaction.paymentId = "NA";
+                }
+                objPaymentTransaction.PaymentType = Domain.Socioboard.Enum.PaymentType.bluesnap;
+                try
+                {
+                    objPaymentTransaction.paymentstatus = jsonTextResponse["recurring-subscription"]["status"].ToString();
+                }
+                catch
+                {
+                    objPaymentTransaction.paymentstatus = "NA";
+                }
+                objPaymentTransaction.itemname = "Socioboard" + userObj.AccountType.ToString();
+                objPaymentTransaction.Payername = userObj.FirstName + " " + userObj.LastName;
+                objPaymentTransaction.email = userObj.EmailId;
+                dbr.Add<PaymentTransaction>(objPaymentTransaction);
+
+                userObj.ExpiryDate = DateTime.Now.AddYears(1);
+                userObj.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Paid;
+                userObj.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.active;
+                userObj.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.added;
+                userObj.PaymentType = Domain.Socioboard.Enum.PaymentType.bluesnap;
+
+                dbr.Update<User>(userObj);
+
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+
+
+        }
+
+        [HttpPost("PostBlueSnapPlan")]
+        public IActionResult PostBlueSnapPlan(string XMLData)
+        {
+            string responseFromServer = string.Empty;
+            try
+            {
+                // Create a request using a URL that can receive a post. 
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://sandbox.bluesnap.com/services/2/recurring/plans");
+                // Set the Method property of the request to POST.
+                request.Method = "POST";
+                request.Headers["Authorization"] = "Basic " + _appSettings.bluesnapBase64;
+                request.UserAgent = ".NET Framework Test Client";
+                string postData = XMLData;
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/xml";
+                request.ContentLength = byteArray.Length;
+
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                // Get the response.
+
+                HttpWebResponse myHttpWebResponse = (HttpWebResponse)request.GetResponse();
+                Console.WriteLine((myHttpWebResponse.StatusDescription));
+                dataStream = myHttpWebResponse.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                responseFromServer = reader.ReadToEnd();
+                Console.WriteLine(responseFromServer);
+                reader.Close();
+                dataStream.Close();
+                myHttpWebResponse.Close();
+            }
+            catch (WebException wex)
+            {
+                var pageContent = new StreamReader(wex.Response.GetResponseStream())
+                                      .ReadToEnd();
+
+                Console.WriteLine(wex.Message);
+            }
+
+
+            return Ok(responseFromServer);
+        }
+
+
+        [HttpPost("GetBlueSnapPlan")]
+        public IActionResult GetBlueSnapPlan(string planId)
+        {
+            string responseFromServer = string.Empty;
+            try
+            {
+                // Create a request using a URL that can receive a post. 
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://sandbox.bluesnap.com/services/2/recurring/plans/" + planId);
+                // Set the Method property of the request to POST.
+                request.Method = "GET";
+                request.Headers["Authorization"] = "Basic " + _appSettings.bluesnapBase64;
+                request.UserAgent = ".NET Framework Test Client";
+                request.ContentType = "application/json";
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                // Get the response.
+                HttpWebResponse myHttpWebResponse = (HttpWebResponse)request.GetResponse();
+                Console.WriteLine((myHttpWebResponse.StatusDescription));
+                Stream dataStream = myHttpWebResponse.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                responseFromServer = reader.ReadToEnd();
+                Console.WriteLine(responseFromServer);
+                reader.Close();
+                dataStream.Close();
+                myHttpWebResponse.Close();
+            }
+            catch (WebException wex)
+            {
+                var pageContent = new StreamReader(wex.Response.GetResponseStream())
+                                      .ReadToEnd();
+
+                Console.WriteLine(wex.Message);
+            }
+
+
+            Dictionary<string, string> planValues = new Dictionary<string, string>();
+            //XML
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(responseFromServer);
+            foreach (XmlNode childrenNode in xmlDoc)
+            {
+                if (childrenNode.Name == "plan")
+                {
+                    foreach (XmlNode items in childrenNode.ChildNodes)
+                    {
+                        planValues.Add(items.Name, items.InnerText);
+                    }
+                }
+            }
+
+            return Ok(responseFromServer);
+        }
+
+        
     }
 }

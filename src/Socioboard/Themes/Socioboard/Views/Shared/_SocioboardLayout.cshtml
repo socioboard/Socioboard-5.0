@@ -261,6 +261,7 @@
                                 <optgroup label="PaymentType">
                                     <option value="0">paypal</option>
                                     <option value="1">payumoney</option>
+                                    <option value="2">bluesnap</option>
                                 </optgroup>
                             </select>
                             <label>Choose your option</label>
@@ -870,6 +871,7 @@ analytics" href="http://statcounter.com/shopify/"
                         return false;
                     }
 
+                    alert("Register");
                     $.ajax({
 
                         type: "POST",
@@ -895,7 +897,7 @@ analytics" href="http://statcounter.com/shopify/"
                             $('#submitButton').show(); .4
                             // $('#req_skype').val("");
 
-                            if (accountType != "0") {
+                            if (accountType != "0" && PaymentType != "2") {
                                 $.ajax({
 
                                     type: "GET",
@@ -915,6 +917,34 @@ analytics" href="http://statcounter.com/shopify/"
                                         return false;
                                     }
                                 });
+                            }
+                            else
+                            {
+                                alert("BS");
+                                //Bluesnap
+                                alertify.success("Please submit payment details.");
+
+                                window.top.location = "@ViewBag.Domain/Home/payBlueSnap?emailId=" + email;
+                                @*$.ajax({
+
+                                    type: "GET",
+
+                                    url: "@ViewBag.Domain/Home/payBlueSnap",
+
+                                    data: { "emailId": email, "IsLogin": false },
+
+                                    dataType: "html",
+                                    success: function (msg) {
+                                        alertify.set({ delay: 5000 });
+                                        alertify.error("please submit Payment detail.");
+                                        window.top.location = msg;
+                                    },
+                                    error: function (msg) {
+
+                                        return false;
+                                    }
+                                });*@
+
                             }
                         },
                         error: function (msg) {

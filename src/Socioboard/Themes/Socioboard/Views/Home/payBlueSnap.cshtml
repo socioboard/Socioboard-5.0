@@ -1,0 +1,80 @@
+﻿@{
+    string path = "Socioboard";
+    Layout = "~/Themes/" + path + "/Views/Shared/_SocioboardLayout.cshtml";
+}
+@{
+    string tempError = "noError";
+    try
+    {
+        tempError = ViewBag.errorCard;
+    }
+    catch
+    {
+
+
+    }
+        }
+
+<h4>Rajsekhar</h4>
+<div class="container">
+    <div class="card">
+        <div class="card-panel grey lighten-5 z-depth-1">
+            <div class="row">
+                <div class="col s12 m6">
+                    <h4>Blue Snap Credit/Debit Card Payments Settings</h4>
+                    <p>Details ....</p>
+                </div>
+                <form class="col s12 m6" action="~/Home/bluesnapCardPaymentEncp" method="POST" id="checkout-form">
+                    <div class="row card-panel grey lighten-5">
+                        <div class="col s12">
+                            <h6>Credit Card Info</h6>
+                        </div>
+                        <div class="input-field col s12">
+                            <input name="creditCard" id="creditCard" data-bluesnap="encryptedCreditCard" type="text" class="validate">
+                            <label id="creditCard">Credit Card Number</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <input type="text" name="exp-month" id="exp-month" maxlength="2" class="validate">
+                            <label for="Expiration">MM</label>
+                        </div>
+                        <div class="input-field col s3">
+                            <input type="text" name="exp-year" id="exp-year" maxlength="4" class="validate">
+                            <label for="Expiration">YYYY</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input type="text" name="cvv" id="cvv" data-bluesnap="encryptedCvv" class="validate">
+                            <label for="cvv">CVV</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <input type="text" name="cardholder-name" id="cardholder-name" class="validate">
+                            <label id="cardholder-name">Name of Card</label>
+                        </div>
+                        <div class="input-field col s12 center">
+                            <button id="submit-button" type="submit" class="waves-effect waves-light btn">Pay Securely</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://gateway.bluesnap.com/js/cse/v1.0.3/bluesnap.js"></script>
+<script>
+        debugger;
+    var bluesnap = new BlueSnap("CSE");
+    document.getElementById("submit-button").addEventListener("click", function () {
+        debugger;
+        bluesnap.encrypt("checkout-form");
+    });
+</script>
+<script>
+    debugger;
+    document.addEventListener('DOMContentLoaded', function() {
+        var temp='@tempError';
+        if(temp=="Error"){
+            alert("Card details are invalid");
+        }
+    });
+   
+
+</script>

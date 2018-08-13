@@ -259,7 +259,7 @@ namespace Socioboard.LinkedIn.Authentication
 
             webRequest.PreAuthenticate = true;
             webRequest.ServicePoint.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             if (postData != null)
             {
                 byte[] fileToSend = Encoding.UTF8.GetBytes(postData);
@@ -322,7 +322,7 @@ namespace Socioboard.LinkedIn.Authentication
 
             webRequest.PreAuthenticate = true;
             webRequest.ServicePoint.Expect100Continue = false;
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls;
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             if (postData != null)
             {
                 byte[] fileToSend = Encoding.UTF8.GetBytes(postData);
@@ -465,6 +465,7 @@ namespace Socioboard.LinkedIn.Authentication
                 stream.Flush();
                 stream.Close();
             }
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             try
             {
                 WebResponse webResponse = webRequest.GetResponse();

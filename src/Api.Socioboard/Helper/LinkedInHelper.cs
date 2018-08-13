@@ -277,14 +277,17 @@ namespace Api.Socioboard.Helper
                 oAuthLinkedIn _oauth = new oAuthLinkedIn();
                 _oauth.ConsumerKey = _appSettings.LinkedinApiKey;
                 _oauth.ConsumerSecret = _appSettings.LinkedinSecretKey;
-                string access_token_Url = "https://www.linkedin.com/uas/oauth2/accessToken";
+                //string access_token_Url = "https://www.linkedin.com/uas/oauth2/accessToken";
+                string access_token_Url = "https://www.linkedin.com/oauth/v2/accessToken";
                 string access_token_postData = "grant_type=authorization_code&code=" + Code + "&redirect_uri=" + _appSettings.LinkedinCallBackURL + "&client_id=" + _appSettings.LinkedinApiKey + "&client_secret=" + _appSettings.LinkedinSecretKey;
+                //ServicePointManager.Expect100Continue = true;
+                //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 string token = _oauth.APIWebRequestAccessToken("POST", access_token_Url, access_token_postData);
                 var oathtoken = JObject.Parse(token);
                 _oauth.Token = oathtoken["access_token"].ToString().TrimStart('"').TrimEnd('"');
                 return _oauth.Token.ToString();
             }
-            catch
+            catch(Exception ex)
             {
                 return null;
             }

@@ -34,7 +34,7 @@
     
     
 </script>
-
+<!--<script src="https://gateway.bluesnap.com/js/cse/v1.0.3/bluesnap.js"></script>-->
 <style>
     #profile-card{
         min-height:330px;
@@ -71,6 +71,32 @@
     <div class="container">
         <div class="col m12">
             <h4 class="grey-text text-darken-4">Dashboard</h4>
+            <!--<form method="POST" id="checkout-form">
+                <div>
+                    <label for="FirstName">Name on Card</label>
+                    <input type="text" name="cardholder-name" id="cardholder-name">
+                </div>
+                <div>
+                    <label for="creditCard">Card Number</label>
+                    <input type="text" name="creditCard" id="creditCard" data-bluesnap="encryptedCreditCard">
+                </div>
+
+                <div>
+                    <label for="cvv">Security Code</label>
+                    <input type="text" name="cvv" id="cvv" data-bluesnap="encryptedCvv">
+                </div>
+
+                <div>
+                    <label for="Expiration">Exp. (MM/YYYY)</label>
+                    <input type="text" name="exp-month" id="exp-month" size="2">
+                    <span> / </span>
+                    <input type="text" name="exp-year" id="exp-year" size="4">
+                </div>
+                <button onclick="bsbs()" type="submit" id="submit-button">Buy Now</button>
+
+            </form>-->
+            <button ng-click="bluesnap()">bluesnap</button>
+            <button ng-click="recSub()">recSub</button>
         </div>
     </div>
 

@@ -14,6 +14,8 @@ using iTextSharp.text;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Socioboard.Helper;
+using Newtonsoft.Json;
+using System.Net;
 
 namespace Socioboard.Controllers
 {
@@ -1442,6 +1444,200 @@ namespace Socioboard.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult> BluesnapAccount(string emailId, bool IsLogin)
+        {
+            HttpResponseMessage userresponse = await WebApiReq.GetReq("/api/User/GetUserData?emailId=" + emailId, "", "", _appSettings.ApiDomain);
+            if (userresponse.IsSuccessStatusCode)
+            {
+                string package = string.Empty;
+                User user = await userresponse.Content.ReadAsAsync<User>();
+                HttpContext.Session.SetObjectAsJson("User", user);
+                if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
+                {
+                    package = "Free";
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
+                {
+                    package = "Deluxe";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Premium)
+                {
+                    package = "Premium";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Topaz)
+                {
+                    package = "Topaz";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Platinum)
+                {
+                    package = "Platinum";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Gold)
+                {
+                    package = "Gold";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Ruby)
+                {
+                    package = "Ruby";
+
+                }
+                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Standard)
+                {
+                    package = "Standard";
+
+                }
+                List<KeyValuePair<string, string>> Parameter = new List<KeyValuePair<string, string>>();
+                Parameter.Add(new KeyValuePair<string, string>("packagename", package));
+                HttpResponseMessage respons = await WebApiReq.PostReq("/api/PaymentTransaction/GetPackage", Parameter, "", "", _appSettings.ApiDomain);
+                if (respons.IsSuccessStatusCode)
+                {
+                    try
+                    {
+                        Domain.Socioboard.Models.Package _Package = await respons.Content.ReadAsAsync<Domain.Socioboard.Models.Package>();
+                        HttpContext.Session.SetObjectAsJson("Package", _Package);
+                        if (!IsLogin)
+                        {
+                            if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
+                            {
+                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
+                                string paypalUrl = Helpers.Payment.RecurringPaymentWithPayPal(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL);
+                                return Content(paypalUrl);
+                            }
+                            else
+                            {
+                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
+                                return RedirectToAction("paymentWithPayUMoney", "Index");
+                            }
+                        }
+                        else
+                        {
+                            if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
+                            {
+                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
+                                return Redirect(Helpers.Payment.RecurringPaymentWithPayPal(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL));
+                            }
+                            else
+                            {
+                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
+                                return RedirectToAction("paymentWithPayUMoney", "Index", new { contesnt = false });
+                            }
+                        }
+                    }
+                    catch (Exception ex) { }
+
+                }
+
+            }
+            return Content("");
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> bluesnapCardPaymentEncp()
+        {
+            string content = await new StreamReader(Request.Body).ReadToEndAsync();
+            content = (("{\"" + content).Replace("=","\":\"").Replace("&","\",\"") + "\"}").Replace("exp-year", "expyear").Replace("exp-month", "expmonth").Replace("cardholder-name", "cardholdername");
+
+            creditCard creditCardObj= JsonConvert.DeserializeObject<creditCard>(content);
+            User user = new Domain.Socioboard.Models.User();
+            try
+            {
+                user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            }
+            catch
+            {
+                user = null;
+            }
+            string planId = "";
+
+            if (user != null)
+            {
+                string tempPlan = user.AccountType.ToString();
+                //object value = Enum.Parse(Domain.Socioboard.Enum.SBAccountTypeBlueSnap, tempPlan);
+                Domain.Socioboard.Enum.SBAccountTypeBlueSnap myStatus;
+                Enum.TryParse(tempPlan, out myStatus);
+                planId = ((int)myStatus).ToString();
+
+
+                string xmlData = "<?xml version='1.0'?>" +
+                                "<recurring-subscription xmlns='http://ws.plimus.com'>" +
+                                "<plan-id>" + planId + "</plan-id>" +
+                                "<payer-info>" +
+                                "<first-name>" + creditCardObj.cardholdername + "</first-name>" +
+                                "<last-name>" + creditCardObj.cardholdername + "</last-name>" +
+                                "<zip>12345</zip>" +
+                                "<phone>1234567890</phone>" +
+                                "</payer-info>" +
+                                "<payment-source>" +
+                                "<credit-card-info>" +
+                                "<credit-card>" +
+                                "<encrypted-card-number>" + creditCardObj.encryptedCreditCard + "</encrypted-card-number>" +
+                                "<encrypted-security-code>" + creditCardObj.encryptedCvv + "</encrypted-security-code>" +
+                                "<expiration-month>" + creditCardObj.expmonth + "</expiration-month>" +
+                                "<expiration-year>" + creditCardObj.expyear + "</expiration-year>" +
+                                "</credit-card>" +
+                                "</credit-card-info>" +
+                                "</payment-source>" +
+                                "<transaction-fraud-info>" +
+                                "<fraud-session-id>1234</fraud-session-id>" +
+                                "</transaction-fraud-info>" +
+                                "</recurring-subscription>";
+
+                List<KeyValuePair<string, string>> Parameter = new List<KeyValuePair<string, string>>();
+                Parameter.Add(new KeyValuePair<string, string>("XMLData", xmlData));
+                Parameter.Add(new KeyValuePair<string, string>("emailId", user.EmailId));
+                HttpResponseMessage respons = await WebApiReq.PostReq("/api/PaymentTransaction/PostBlueSnapSubscription", Parameter, "", "", _appSettings.ApiDomain);
+
+                if(respons.StatusCode== HttpStatusCode.OK)
+                {
+                    HttpResponseMessage userresponse = await WebApiReq.GetReq("/api/User/GetUserData?emailId=" + user.EmailId, "", "", _appSettings.ApiDomain);
+                    if (userresponse.IsSuccessStatusCode)
+                    {
+                        User userTemp = await userresponse.Content.ReadAsAsync<User>();
+                        HttpContext.Session.SetObjectAsJson("User", userTemp);
+                    }
+                    return RedirectToAction("SignIn", "Index");
+                }
+
+            }
+            else
+            {
+                ViewBag.errorCard = "Error";
+                return View("payBlueSnap");
+            }
+            ViewBag.errorCard = "Error";
+            return View("payBlueSnap");
+        }
+
+        public class creditCard
+        {
+            public string cardholdername { get; set; }
+            public string expmonth { get; set; }
+            public string expyear { get; set; }
+            public string ccLast4Digits { get; set; }
+            public string encryptedCreditCard { get; set; }
+            public string encryptedCvv { get; set; }
+        }
+
+        //Blue snap payment page
+        [HttpGet]
+        public async Task<IActionResult> payBlueSnap(string emailId)
+        {
+            HttpResponseMessage userresponse = await WebApiReq.GetReq("/api/User/GetUserData?emailId=" + emailId, "", "", _appSettings.ApiDomain);
+            if (userresponse.IsSuccessStatusCode)
+            {
+                User user = await userresponse.Content.ReadAsAsync<User>();
+                HttpContext.Session.SetObjectAsJson("User", user);
+            }
+            return View();
+        }
 
     }
 }
