@@ -44,5 +44,8 @@
     <property name="subscrdate">
       <column name="subscrdate"  />
     </property>
+  <property name="bluesnapSubscriptions">
+      <column name="bluesnapSubscriptions"  />
+    </property>
   </class>
 </hibernate-mapping>

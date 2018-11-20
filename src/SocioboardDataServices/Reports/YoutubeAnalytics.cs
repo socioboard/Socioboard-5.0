@@ -1,4 +1,5 @@
-﻿using Domain.Socioboard.Models.Mongo;
+﻿using Domain.Socioboard.Models;
+using Domain.Socioboard.Models.Mongo;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
@@ -26,65 +27,64 @@ namespace SocioboardDataServices.Reports
                 try
                 {
 
-                    Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
+                    var databaseRepository = new DatabaseRepository();
 
-                    string apiKey = AppSettings.googleApiKey;
-                    oAuthTokenYoutube ObjoAuthTokenYtubes = new oAuthTokenYoutube(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
-                    oAuthToken objToken = new oAuthToken(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
-                    YAnalytics ObjYAnalytics = new YAnalytics(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+                    var objOauthTokenYoutube = new oAuthTokenYoutube(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+                    var objToken = new oAuthToken(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+                    var ObjYAnalytics = new YAnalytics(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
 
-                    List<Domain.Socioboard.Models.YoutubeChannel> lstYtChannels = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.IsActive).ToList();
-                    long count = 0;
+                    var lstYtChannels = databaseRepository.Find<YoutubeChannel>(t => t.IsActive).ToList();
+                    var count = 0;
+
                     Console.WriteLine("---------------- Youtube Analytics Dataservices Started ----------------");
-                    foreach (var item in lstYtChannels)
+                    foreach (var youtubeChannelItem in lstYtChannels)
                     {
                         #region count for mongo data
-                        MongoRepository mongoreposs = new MongoRepository("YoutubeReportsData");
-                        var result = mongoreposs.Find<Domain.Socioboard.Models.Mongo.YoutubeReports>(t => t.channelId.Equals(item.YtubeChannelId));
+                        var mongoreposs = new MongoRepository("YoutubeReportsData");
+                        var result = mongoreposs.Find<YoutubeReports>(t => t.channelId.Equals(youtubeChannelItem.YtubeChannelId));
                         var task = Task.Run(async () =>
                         {
                             return await result;
                         });
-                        IList<Domain.Socioboard.Models.Mongo.YoutubeReports> lstYanalytics = task.Result;
-                        int count90AnalyticsUpdated = lstYanalytics.Count();
+                        var lstYanalytics = task.Result;
+                        var count90AnalyticsUpdated = lstYanalytics.Count();
                         #endregion
 
                         try
                         {
-                            if (!item.Days90Update || count90AnalyticsUpdated < 90)
+                            if (!youtubeChannelItem.Days90Update || count90AnalyticsUpdated < 90)
                             {
-                                if (item.IsActive)
+                                if (youtubeChannelItem.IsActive)
                                 {
                                     try
                                     {
                                         ////////code of reports here///////////////////////
 
-                                        DateTime to_Date = DateTime.UtcNow;
-                                        string to_dd = "0" + Convert.ToString(to_Date.Day);
+                                        var to_Date = DateTime.UtcNow;
+                                        var to_dd = ("0" + Convert.ToString(to_Date.Day));
                                         to_dd = to_dd.Substring(to_dd.Length - 2);
-                                        string to_mm = "0" + Convert.ToString(to_Date.Month);
+                                        var to_mm = "0" + Convert.ToString(to_Date.Month);
                                         to_mm = to_mm.Substring(to_mm.Length - 2);
-                                        string to_yyyy = Convert.ToString(to_Date.Year);
-                                        DateTime from_Date = DateTime.UtcNow.AddDays(-90);
-                                        string from_dd = "0" + Convert.ToString(from_Date.Day);
+                                        var to_yyyy = Convert.ToString(to_Date.Year);
+                                        var from_Date = DateTime.UtcNow.AddDays(-90);
+                                        var from_dd = "0" + Convert.ToString(from_Date.Day);
                                         from_dd = from_dd.Substring(from_dd.Length - 2);
-                                        string from_mm = "0" + Convert.ToString(from_Date.Month);
+                                        var from_mm = "0" + Convert.ToString(from_Date.Month);
                                         from_mm = from_mm.Substring(from_mm.Length - 2);
-                                        string from_yyyy = Convert.ToString(from_Date.Year);
-
-                                        string YaFrom_Date = from_yyyy + "-" + from_mm + "-" + from_dd;
-                                        string YaTo_Date = to_yyyy + "-" + to_mm + "-" + to_dd;
-
-
-                                        MongoRepository mongorepo = new MongoRepository("YoutubeReportsData");
+                                        var from_yyyy = Convert.ToString(from_Date.Year);
+                                        var YaFrom_Date = from_yyyy + "-" + from_mm + "-" + from_dd;
+                                        var YaTo_Date = to_yyyy + "-" + to_mm + "-" + to_dd;
 
 
-                                        string AnalyticData = ObjYAnalytics.Get_YAnalytics_ChannelId(item.YtubeChannelId, item.RefreshToken, YaFrom_Date, YaTo_Date);
-                                        JObject JAnalyticData = JObject.Parse(AnalyticData);
+                                        var mongorepo = new MongoRepository("YoutubeReportsData");
 
-                                        JArray dataArray = (JArray)JAnalyticData["rows"];
 
-                                        List<string> datesJdata = new List<string>();
+                                        var AnalyticData = ObjYAnalytics.Get_YAnalytics_ChannelId(youtubeChannelItem.YtubeChannelId, youtubeChannelItem.RefreshToken, YaFrom_Date, YaTo_Date);
+                                        var JAnalyticData = JObject.Parse(AnalyticData);
+
+                                        var dataArray = (JArray)JAnalyticData["rows"];
+
+                                        var datesJdata = new List<string>();
                                         if (dataArray != null)
                                         {
                                             foreach (var rows in dataArray)
@@ -94,41 +94,25 @@ namespace SocioboardDataServices.Reports
 
                                             foreach (var items in dataArray)
                                             {
-                                                YoutubeReports _YReports = new YoutubeReports();
+                                                var objYtReports = new YoutubeReports();
 
-                                                string date = items[0].ToString();
-                                                string channelIdd = items[1].ToString();
-                                                int SubscribersGained = Convert.ToInt32(items[2]);
-                                                int views = Convert.ToInt32(items[3]);
-                                                int likes = Convert.ToInt32(items[4]);
-                                                int comments = Convert.ToInt32(items[5]);
-                                                int shares = Convert.ToInt32(items[6]);
-                                                int dislikes = Convert.ToInt32(items[7]);
-                                                int subscribersLost = Convert.ToInt32(items[8]);
-                                                double averageViewDuration = Convert.ToInt64(items[9]);
-                                                double estimatedMinutesWatched = Convert.ToInt64(items[10]);
-                                                double annotationClickThroughRate = Convert.ToInt64(items[11]);
-                                                double annotationCloseRate = Convert.ToInt64(items[12]);
-                                                string uniqueIdentifier = item.YtubeChannelId + "_" + date;
-                                                double datetime_unix = Convert.ToDouble(UnixTimeNows(Convert.ToDateTime(date)));
+                                                objYtReports.Id = ObjectId.GenerateNewId();
+                                                objYtReports.date = items[0].ToString();
+                                                objYtReports.channelId = items[1].ToString();
+                                                objYtReports.SubscribersGained = Convert.ToInt32(items[2]);
+                                                objYtReports.views = Convert.ToInt32(items[3]);
+                                                objYtReports.likes = Convert.ToInt32(items[4]);
+                                                objYtReports.comments = Convert.ToInt32(items[5]);
+                                                objYtReports.dislikes = Convert.ToInt32(items[7]);
+                                                objYtReports.subscribersLost = Convert.ToInt32(items[8]);
+                                                objYtReports.averageViewDuration = Convert.ToInt64(items[9]);
+                                                objYtReports.estimatedMinutesWatched = Convert.ToInt64(items[10]);
+                                                objYtReports.annotationClickThroughRate = Convert.ToInt64(items[11]);
+                                                objYtReports.annotationCloseRate = Convert.ToInt64(items[12]);
+                                                objYtReports.uniqueIdentifier = youtubeChannelItem.YtubeChannelId + "_" + objYtReports.date;
+                                                objYtReports.datetime_unix = Convert.ToDouble(UnixTimeNows(Convert.ToDateTime(objYtReports.date)));
 
-                                                _YReports.Id = ObjectId.GenerateNewId();
-                                                _YReports.date = date;
-                                                _YReports.channelId = channelIdd;
-                                                _YReports.SubscribersGained = SubscribersGained;
-                                                _YReports.views = views;
-                                                _YReports.likes = likes;
-                                                _YReports.comments = comments;
-                                                _YReports.dislikes = dislikes;
-                                                _YReports.subscribersLost = subscribersLost;
-                                                _YReports.averageViewDuration = averageViewDuration;
-                                                _YReports.estimatedMinutesWatched = estimatedMinutesWatched;
-                                                _YReports.annotationClickThroughRate = annotationClickThroughRate;
-                                                _YReports.annotationCloseRate = annotationCloseRate;
-                                                _YReports.uniqueIdentifier = uniqueIdentifier;
-                                                _YReports.datetime_unix = datetime_unix;
-
-                                                mongorepo.Add(_YReports);
+                                                mongorepo.Add(objYtReports);
                                             }
                                         }
                                         else
@@ -136,43 +120,43 @@ namespace SocioboardDataServices.Reports
                                             datesJdata.Add("Null");
                                         }
 
-                                        for (int i = 1; i <= 90; i++)
+                                        for (var i = 1; i <= 90; i++)
                                         {
-                                            YoutubeReports _YReports = new YoutubeReports();
+                                            YoutubeReports objYreports = new YoutubeReports();
                                             DateTime dateTimeTemp = DateTime.UtcNow.AddDays(-i);
 
-                                            string now_dd = "0" + Convert.ToString(dateTimeTemp.Day);
+                                            var now_dd = "0" + Convert.ToString(dateTimeTemp.Day);
                                             now_dd = now_dd.Substring(now_dd.Length - 2);
-                                            string now_mm = "0" + Convert.ToString(dateTimeTemp.Month);
+                                            var now_mm = "0" + Convert.ToString(dateTimeTemp.Month);
                                             now_mm = now_mm.Substring(now_mm.Length - 2);
-                                            string now_yyyy = Convert.ToString(dateTimeTemp.Year);
-                                            string Ynow_Date = now_yyyy + "-" + now_mm + "-" + now_dd;
+                                            var now_yyyy = Convert.ToString(dateTimeTemp.Year);
+                                            var Ynow_Date = now_yyyy + "-" + now_mm + "-" + now_dd;
 
                                             if (!(datesJdata.Contains(Ynow_Date)))
                                             {
-                                                _YReports.Id = ObjectId.GenerateNewId();
-                                                _YReports.date = Ynow_Date;
-                                                _YReports.channelId = item.YtubeChannelId;
-                                                _YReports.SubscribersGained = 0;
-                                                _YReports.views = 0;
-                                                _YReports.likes = 0;
-                                                _YReports.comments = 0;
-                                                _YReports.dislikes = 0;
-                                                _YReports.subscribersLost = 0;
-                                                _YReports.averageViewDuration = 0;
-                                                _YReports.estimatedMinutesWatched = 0;
-                                                _YReports.annotationClickThroughRate = 0;
-                                                _YReports.annotationCloseRate = 0;
-                                                _YReports.uniqueIdentifier = item.YtubeChannelId + "_" + Ynow_Date;
-                                                _YReports.datetime_unix = Convert.ToDouble(UnixTimeNows(Convert.ToDateTime(Ynow_Date)));
+                                                objYreports.Id = ObjectId.GenerateNewId();
+                                                objYreports.date = Ynow_Date;
+                                                objYreports.channelId = youtubeChannelItem.YtubeChannelId;
+                                                objYreports.SubscribersGained = 0;
+                                                objYreports.views = 0;
+                                                objYreports.likes = 0;
+                                                objYreports.comments = 0;
+                                                objYreports.dislikes = 0;
+                                                objYreports.subscribersLost = 0;
+                                                objYreports.averageViewDuration = 0;
+                                                objYreports.estimatedMinutesWatched = 0;
+                                                objYreports.annotationClickThroughRate = 0;
+                                                objYreports.annotationCloseRate = 0;
+                                                objYreports.uniqueIdentifier = youtubeChannelItem.YtubeChannelId + "_" + Ynow_Date;
+                                                objYreports.datetime_unix = Convert.ToDouble(UnixTimeNows(Convert.ToDateTime(Ynow_Date)));
 
-                                                mongorepo.Add(_YReports);
+                                                mongorepo.Add(objYreports);
                                             }
                                         }
 
-                                        item.Days90Update = true;
-                                        item.LastReport_Update = DateTime.UtcNow;
-                                        dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(item);
+                                        youtubeChannelItem.Days90Update = true;
+                                        youtubeChannelItem.LastReport_Update = DateTime.UtcNow;
+                                        databaseRepository.Update(youtubeChannelItem);
                                     }
                                     catch (Exception)
                                     {
@@ -182,39 +166,38 @@ namespace SocioboardDataServices.Reports
                             }
                             else
                             {
-                                if (item.LastReport_Update.AddHours(24) < DateTime.UtcNow)
+                                if (youtubeChannelItem.LastReport_Update.AddHours(24) < DateTime.UtcNow)
                                 {
                                     //dailyReport Code here//
 
-                                    if (item.IsActive)
+                                    if (youtubeChannelItem.IsActive)
                                     {
                                         try
                                         {
                                             //code of reports here//
-                                            DateTime to_Date = DateTime.UtcNow;
-                                            string to_dd = "0" + Convert.ToString(to_Date.Day);
+                                            var to_Date = DateTime.UtcNow;
+                                            var to_dd = "0" + Convert.ToString(to_Date.Day);
                                             to_dd = to_dd.Substring(to_dd.Length - 2);
-                                            string to_mm = "0" + Convert.ToString(to_Date.Month);
+                                            var to_mm = "0" + Convert.ToString(to_Date.Month);
                                             to_mm = to_mm.Substring(to_mm.Length - 2);
-                                            string to_yyyy = Convert.ToString(to_Date.Year);
-                                            DateTime from_Date = DateTime.UtcNow.AddDays(-4);
-                                            string from_dd = "0" + Convert.ToString(from_Date.Day);
+                                            var to_yyyy = Convert.ToString(to_Date.Year);
+                                            var from_Date = DateTime.UtcNow.AddDays(-4);
+                                            var from_dd = "0" + Convert.ToString(from_Date.Day);
                                             from_dd = from_dd.Substring(from_dd.Length - 2);
-                                            string from_mm = "0" + Convert.ToString(from_Date.Month);
+                                            var from_mm = "0" + Convert.ToString(from_Date.Month);
                                             from_mm = from_mm.Substring(from_mm.Length - 2);
-                                            string from_yyyy = Convert.ToString(from_Date.Year);
-
-                                            string YaFrom_Date = from_yyyy + "-" + from_mm + "-" + from_dd;
-                                            string YaTo_Date = to_yyyy + "-" + to_mm + "-" + to_dd;
-
+                                            var from_yyyy = Convert.ToString(from_Date.Year);
+                                            var YaFrom_Date = from_yyyy + "-" + from_mm + "-" + from_dd;
+                                            var YaTo_Date = to_yyyy + "-" + to_mm + "-" + to_dd;
 
 
-                                            string AnalyticData = ObjYAnalytics.Get_YAnalytics_ChannelId(item.YtubeChannelId, item.RefreshToken, YaFrom_Date, YaTo_Date);
-                                            JObject JAnalyticData = JObject.Parse(AnalyticData);
 
-                                            JArray dataArray = (JArray)JAnalyticData["rows"];
+                                            var AnalyticData = ObjYAnalytics.Get_YAnalytics_ChannelId(youtubeChannelItem.YtubeChannelId, youtubeChannelItem.RefreshToken, YaFrom_Date, YaTo_Date);
+                                            var JAnalyticData = JObject.Parse(AnalyticData);
 
-                                            List<string> datesJdata = new List<string>();
+                                            var dataArray = (JArray)JAnalyticData["rows"];
+
+                                            var datesJdata = new List<string>();
                                             if (dataArray != null)
                                             {
                                                 foreach (var rows in dataArray)
@@ -224,55 +207,40 @@ namespace SocioboardDataServices.Reports
 
                                                 foreach (var items in dataArray)
                                                 {
-                                                    YoutubeReports _YReports = new YoutubeReports();
+                                                    var objYReports = new YoutubeReports();
 
-                                                    string date = items[0].ToString();
-                                                    string channelIdd = items[1].ToString();
-                                                    int SubscribersGained = Convert.ToInt32(items[2]);
-                                                    int views = Convert.ToInt32(items[3]);
-                                                    int likes = Convert.ToInt32(items[4]);
-                                                    int comments = Convert.ToInt32(items[5]);
-                                                    int shares = Convert.ToInt32(items[6]);
-                                                    int dislikes = Convert.ToInt32(items[7]);
-                                                    int subscribersLost = Convert.ToInt32(items[8]);
-                                                    double averageViewDuration = Convert.ToInt64(items[9]);
-                                                    double estimatedMinutesWatched = Convert.ToInt64(items[10]);
-                                                    double annotationClickThroughRate = Convert.ToInt64(items[11]);
-                                                    double annotationCloseRate = Convert.ToInt64(items[12]);
-                                                    string uniqueIdentifier = item.YtubeChannelId + "_" + date;
-                                                    double datetime_unix = Convert.ToDouble(UnixTimeNows(Convert.ToDateTime(date)));
-
-                                                    _YReports.Id = ObjectId.GenerateNewId();
-                                                    _YReports.date = date;
-                                                    _YReports.channelId = channelIdd;
-                                                    _YReports.SubscribersGained = SubscribersGained;
-                                                    _YReports.views = views;
-                                                    _YReports.likes = likes;
-                                                    _YReports.comments = comments;
-                                                    _YReports.dislikes = dislikes;
-                                                    _YReports.subscribersLost = subscribersLost;
-                                                    _YReports.averageViewDuration = averageViewDuration;
-                                                    _YReports.estimatedMinutesWatched = estimatedMinutesWatched;
-                                                    _YReports.annotationClickThroughRate = annotationClickThroughRate;
-                                                    _YReports.annotationCloseRate = annotationCloseRate;
-                                                    _YReports.uniqueIdentifier = uniqueIdentifier;
-                                                    _YReports.datetime_unix = datetime_unix;
+                                                    objYReports.Id = ObjectId.GenerateNewId();
+                                                    objYReports.date = items[0].ToString();
+                                                    objYReports.channelId = items[1].ToString();
+                                                    objYReports.SubscribersGained = Convert.ToInt32(items[2]);
+                                                    objYReports.views = Convert.ToInt32(items[3]);
+                                                    objYReports.likes = Convert.ToInt32(items[4]);
+                                                    objYReports.comments = Convert.ToInt32(items[5]);
+                                                    objYReports.shares= Convert.ToInt32(items[6]);
+                                                    objYReports.dislikes = Convert.ToInt32(items[7]);
+                                                    objYReports.subscribersLost = Convert.ToInt32(items[8]);
+                                                    objYReports.averageViewDuration = Convert.ToInt64(items[9]);
+                                                    objYReports.estimatedMinutesWatched = Convert.ToInt64(items[10]);
+                                                    objYReports.annotationClickThroughRate = Convert.ToInt64(items[11]);
+                                                    objYReports.annotationCloseRate = Convert.ToInt64(items[12]);
+                                                    objYReports.uniqueIdentifier = youtubeChannelItem.YtubeChannelId + "_" + objYReports.date;
+                                                    objYReports.datetime_unix = Convert.ToDouble(UnixTimeNows(Convert.ToDateTime(objYReports.date)));
 
 
                                                     try
                                                     {
-                                                        MongoRepository mongoRepotsRepo = new MongoRepository("YoutubeReportsData");
-                                                        var ret = mongoRepotsRepo.Find<YoutubeReports>(t => t.uniqueIdentifier.Equals(_YReports.uniqueIdentifier));
+                                                        var mongoRepotsRepo = new MongoRepository("YoutubeReportsData");
+                                                        var ret = mongoRepotsRepo.Find<YoutubeReports>(t => t.uniqueIdentifier.Equals(objYReports.uniqueIdentifier));
                                                         var task_Reports = Task.Run(async () =>
                                                         {
                                                             return await ret;
                                                         });
-                                                        int count_Reports = task_Reports.Result.Count;
+                                                        var count_Reports = task_Reports.Result.Count;
                                                         if (count_Reports < 1)
                                                         {
                                                             try
                                                             {
-                                                                mongoRepotsRepo.Add(_YReports);
+                                                                mongoRepotsRepo.Add(objYReports);
                                                             }
                                                             catch { }
                                                         }
@@ -280,8 +248,8 @@ namespace SocioboardDataServices.Reports
                                                         {
                                                             try
                                                             {
-                                                                FilterDefinition<BsonDocument> filter = new BsonDocument("uniqueIdentifier", _YReports.uniqueIdentifier);
-                                                                var update = Builders<BsonDocument>.Update.Set("SubscribersGained", _YReports.SubscribersGained).Set("views", _YReports.views).Set("likes", _YReports.likes).Set("comments", _YReports.comments).Set("dislikes", _YReports.dislikes).Set("subscribersLost", _YReports.subscribersLost).Set("averageViewDuration", _YReports.averageViewDuration).Set("estimatedMinutesWatched", _YReports.estimatedMinutesWatched).Set("annotationClickThroughRate", _YReports.annotationClickThroughRate).Set("annotationCloseRate", _YReports.annotationCloseRate);
+                                                                var filter = new BsonDocument("uniqueIdentifier", objYReports.uniqueIdentifier);
+                                                                var update = Builders<BsonDocument>.Update.Set("SubscribersGained", objYReports.SubscribersGained).Set("views", objYReports.views).Set("likes", objYReports.likes).Set("comments", objYReports.comments).Set("dislikes", objYReports.dislikes).Set("subscribersLost", objYReports.subscribersLost).Set("averageViewDuration", objYReports.averageViewDuration).Set("estimatedMinutesWatched", objYReports.estimatedMinutesWatched).Set("annotationClickThroughRate", objYReports.annotationClickThroughRate).Set("annotationCloseRate", objYReports.annotationCloseRate);
                                                                 mongoRepotsRepo.Update<YoutubeReports>(update, filter);
                                                             }
                                                             catch { }
@@ -297,23 +265,23 @@ namespace SocioboardDataServices.Reports
                                                 datesJdata.Add("Null");
                                             }
 
-                                            for (int i = 1; i <= 4; i++)
+                                            for (var i = 1; i <= 4; i++)
                                             {
-                                                YoutubeReports _YReports = new YoutubeReports();
-                                                DateTime dateTimeTemp = DateTime.UtcNow.AddDays(-i);
+                                                var _YReports = new YoutubeReports();
+                                                var dateTimeTemp = DateTime.UtcNow.AddDays(-i);
 
-                                                string now_dd = "0" + Convert.ToString(dateTimeTemp.Day);
+                                                var now_dd = "0" + Convert.ToString(dateTimeTemp.Day);
                                                 now_dd = now_dd.Substring(now_dd.Length - 2);
-                                                string now_mm = "0" + Convert.ToString(dateTimeTemp.Month);
+                                                var now_mm = "0" + Convert.ToString(dateTimeTemp.Month);
                                                 now_mm = now_mm.Substring(now_mm.Length - 2);
-                                                string now_yyyy = Convert.ToString(dateTimeTemp.Year);
-                                                string Ynow_Date = now_yyyy + "-" + now_mm + "-" + now_dd;
+                                                var now_yyyy = Convert.ToString(dateTimeTemp.Year);
+                                                var Ynow_Date = now_yyyy + "-" + now_mm + "-" + now_dd;
 
                                                 if (!(datesJdata.Contains(Ynow_Date)))
                                                 {
                                                     _YReports.Id = ObjectId.GenerateNewId();
                                                     _YReports.date = Ynow_Date;
-                                                    _YReports.channelId = item.YtubeChannelId;
+                                                    _YReports.channelId = youtubeChannelItem.YtubeChannelId;
                                                     _YReports.SubscribersGained = 0;
                                                     _YReports.views = 0;
                                                     _YReports.likes = 0;
@@ -324,16 +292,16 @@ namespace SocioboardDataServices.Reports
                                                     _YReports.estimatedMinutesWatched = 0;
                                                     _YReports.annotationClickThroughRate = 0;
                                                     _YReports.annotationCloseRate = 0;
-                                                    _YReports.uniqueIdentifier = item.YtubeChannelId + "_" + Ynow_Date;
+                                                    _YReports.uniqueIdentifier = youtubeChannelItem.YtubeChannelId + "_" + Ynow_Date;
                                                     _YReports.datetime_unix = Convert.ToDouble(UnixTimeNows(Convert.ToDateTime(Ynow_Date)));
 
-                                                    MongoRepository mongoRepotsRepo = new MongoRepository("YoutubeReportsData");
+                                                    var mongoRepotsRepo = new MongoRepository("YoutubeReportsData");
                                                     mongoRepotsRepo.Add(_YReports);
                                                 }
                                             }
 
-                                            item.LastReport_Update = DateTime.UtcNow;
-                                            dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(item);
+                                            youtubeChannelItem.LastReport_Update = DateTime.UtcNow;
+                                            databaseRepository.Update(youtubeChannelItem);
                                         }
                                         catch (Exception)
                                         {
@@ -350,12 +318,12 @@ namespace SocioboardDataServices.Reports
                         }
 
 
-                        long oldcount = count;
+                        var oldcount = count;
                         count++;
-                        long newcount = count;
-                        long totalcount = lstYtChannels.Count();
-                        long percentagenew = (newcount * 100) / totalcount;
-                        long percentageold = (oldcount * 100) / totalcount;
+                        var newcount = count;
+                        var totalcount = lstYtChannels.Count();
+                        var percentagenew = (newcount * 100) / totalcount;
+                        var percentageold = (oldcount * 100) / totalcount;
                         if (percentagenew != percentageold)
                         {
                             Console.WriteLine("---------------- {0}% Completed ----------------", percentagenew);

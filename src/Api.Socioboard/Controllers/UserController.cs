@@ -51,12 +51,14 @@ namespace Api.Socioboard.Controllers
         [HttpPost("Register")]
         public IActionResult Register(User user)
         {
+            #region Assign Initial Values
+
             user.CreateDate = DateTime.UtcNow;
             user.ExpiryDate = DateTime.UtcNow.AddDays(1);
             user.EmailValidateToken = SBHelper.RandomString(20);
             user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
             user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.MailSent;
-            user.Password = SBHelper.MD5Hash(user.Password);
+            user.Password = SBHelper.Md5Hash(user.Password);
             user.UserName = "Socioboard";
             user.UserType = "User";
             user.ReferralStatus = "InActive";
@@ -66,53 +68,68 @@ namespace Api.Socioboard.Controllers
             if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
             {
                 user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
-            }
+            } 
+
+            #endregion
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.EmailId));
-            if (lstUser != null && lstUser.Count() > 0)
+            // get the sql database respository
+            var mysqlDbRespository = new DatabaseRepository(_logger, _appEnv);
+
+            //validate the email is already register or not
+            var matchedUserList = mysqlDbRespository.Find<User>(t => t.EmailId.Equals(user.EmailId));
+
+            if (matchedUserList != null && matchedUserList.Count > 0)
             {
                 return BadRequest("This Email is already registered please login to continue");
             }
-            IList<User> lstUser1 = dbr.Find<User>(a => a.PhoneNumber.Equals(user.PhoneNumber));
-            //if (lstUser1 != null && lstUser1.Count() > 0)
-            //{
-            //    return BadRequest("Phone Number Exist");
-            //}
-            int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
-            User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
-            if (SavedStatus == 1 && nuser != null)
+
+            // add to database
+            var savedStatus = mysqlDbRespository.Add(user);
+
+            // Fetch the full details, because some additional seed data's are present
+            var fetchFullUserDetails = mysqlDbRespository.Single<User>(t => t.EmailId.Equals(user.EmailId));
+
+            if (savedStatus == 1 && fetchFullUserDetails != null)
             {
-                nuser.RefrralCode = "SOCIOBOARD_" + nuser.Id;
-                int SavedRefrral = dbr.Update<Domain.Socioboard.Models.User>(nuser);
-                Groups group = new Groups();
-                group.adminId = nuser.Id;
+                fetchFullUserDetails.RefrralCode = "SOCIOBOARD_" + fetchFullUserDetails.Id;
+
+                mysqlDbRespository.Update(fetchFullUserDetails);
+
+                #region Add to default group and add a member to group member respository
+                var group = new Groups();
+                group.adminId = fetchFullUserDetails.Id;
                 // group.id = nuser.Id;
                 group.createdDate = DateTime.UtcNow;
                 group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
-                SavedStatus = dbr.Add<Groups>(group);
-                if (SavedStatus == 1)
+                savedStatus = mysqlDbRespository.Add(group);
+
+                if (savedStatus == 1)
                 {
-                    long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
-                    GroupMembersRepository.createGroupMember(GroupId, nuser, _redisCache, dbr);
-                }
+                    var groupId = mysqlDbRespository.FindSingle<Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
+                    GroupMembersRepository.CreateGroupMember(groupId, fetchFullUserDetails, _redisCache, mysqlDbRespository);
+                } 
+                #endregion
+
+                #region Sending Email Activation Email to resgister user
                 try
                 {
-                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
-                    string html = System.IO.File.ReadAllText(path);
-                    html = html.Replace("[FirstName]", nuser.FirstName);
-                    html = html.Replace("[AccountType]", nuser.AccountType.ToString());
-                    html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + nuser.EmailValidateToken + "&id=" + nuser.Id);
-                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", nuser.EmailId, "", "", "Socioboard Email confirmation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+                    var path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
+                    var html = System.IO.File.ReadAllText(path);
+                    html = html.Replace("[FirstName]", fetchFullUserDetails.FirstName);
+                    html = html.Replace("[AccountType]", fetchFullUserDetails.AccountType.ToString());
+                    html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + fetchFullUserDetails.EmailValidateToken + "&id=" + fetchFullUserDetails.Id);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", fetchFullUserDetails.EmailId, "", "", "Socioboard Email confirmation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
                 }
                 catch
                 {
                     return Ok();
-                }
+                } 
+                #endregion
             }
             else
             {
@@ -130,7 +147,7 @@ namespace Api.Socioboard.Controllers
             user.EmailValidateToken = SBHelper.RandomString(20);
             user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
             user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.MailSent;
-            user.Password = SBHelper.MD5Hash(user.Password);
+            user.Password = SBHelper.Md5Hash(user.Password);
             user.UserName = "Socioboard";
             user.UserType = "User";
             user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
@@ -166,7 +183,7 @@ namespace Api.Socioboard.Controllers
                 if (SavedStatus == 1)
                 {
                     long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
-                    GroupMembersRepository.createGroupMember(GroupId, nuser, _redisCache, dbr);
+                    GroupMembersRepository.CreateGroupMember(GroupId, nuser, _redisCache, dbr);
                 }
                 try
                 {
@@ -198,7 +215,7 @@ namespace Api.Socioboard.Controllers
             user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
             user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
             user.dailyGrpReportsSummery = true;
-            user.Password = SBHelper.MD5Hash(user.Password);
+            user.Password = SBHelper.Md5Hash(user.Password);
             user.UserName = "Socioboard";
             user.UserType = "User";
             user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
@@ -236,7 +253,7 @@ namespace Api.Socioboard.Controllers
                 if (SavedStatus == 1)
                 {
                     long GroupId = dbr.FindSingle<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
-                    GroupMembersRepository.createGroupMember(GroupId, nuser, _redisCache, dbr);
+                    GroupMembersRepository.CreateGroupMember(GroupId, nuser, _redisCache, dbr);
                 }
                 return Ok("Register Successfully.");
             }
@@ -261,7 +278,7 @@ namespace Api.Socioboard.Controllers
                 // User inMemUser = (User)_memoryCache.Get(user.UserName);
                 if (inMemUser != null)
                 {
-                    if (inMemUser.Password.Equals(SBHelper.MD5Hash(user.Password)))
+                    if (inMemUser.Password.Equals(SBHelper.Md5Hash(user.Password)))
                     {
                         return Ok(inMemUser);
                     }
@@ -277,45 +294,41 @@ namespace Api.Socioboard.Controllers
                 _logger.LogError(ex.StackTrace);
             }
 
-
-
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.UserName));
-            if (lstUser != null && lstUser.Count() > 0)
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.UserName));
+            if (lstUser != null && lstUser.Count > 0)
             {
-                if (lstUser.First().Password != null && lstUser.First().Password.Equals(SBHelper.MD5Hash(user.Password)))
+                var matchedUser = lstUser.First();
+
+                if (matchedUser.Password != null && matchedUser.Password.Equals(SBHelper.Md5Hash(user.Password)))
                 {
                     //if (lstUser.First().UserType == "SuperAdmin")
                     //{
                     //    return Ok(lstUser.First());
                     //}
-                    if (lstUser.First().RefrralCode == null)
+                    if (matchedUser.RefrralCode == null)
                     {
-                        lstUser.First().RefrralCode = "SOCIOBOARD_" + lstUser.First().Id;
+                        matchedUser.RefrralCode = "SOCIOBOARD_" + matchedUser.Id;
                     }
                     DateTime d1 = DateTime.UtcNow;
                     //User userTable = dbr.Single < User>(t => t.EmailId == user.UserName);
-                    lstUser.First().LastLoginTime = d1;
+                    matchedUser.LastLoginTime = d1;
                     //userTable.LastLoginTime = d1;
-                    dbr.Update<User>(lstUser.First());
+                    dbr.Update<User>(matchedUser);
 
                     // _memoryCache.Set(lstUser.First().EmailId, lstUser.First());
-                    _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
-                    if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                    _redisCache.Set<User>(matchedUser.EmailId, matchedUser);
+
+                    switch (matchedUser.ActivationStatus)
                     {
-                        return Ok(lstUser.First());
-                    }
-                    else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.MailSent)
-                    {
-                        return Ok("Activate your account through email");
-                    }
-                    else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
-                    {
-                        return Ok("Your account is disabled. Please contact socioboard support for more assistance");
-                    }
-                    else
-                    {
-                        return Ok("Something went wrong please try after sometime");
+                        case Domain.Socioboard.Enum.SBUserActivationStatus.Active:
+                            return Ok(matchedUser);
+                        case Domain.Socioboard.Enum.SBUserActivationStatus.MailSent:
+                            return Ok("Activate your account through email");
+                        case Domain.Socioboard.Enum.SBUserActivationStatus.Disable:
+                            return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                        default:
+                            return Ok("Something went wrong please try after sometime");
                     }
                 }
                 else
@@ -360,7 +373,7 @@ namespace Api.Socioboard.Controllers
                 {
                     return Ok(lstUser.First());
                 }
-                else if (lstUser.First().Password.Equals(SBHelper.MD5Hash(user.Password)))
+                else if (lstUser.First().Password.Equals(SBHelper.Md5Hash(user.Password)))
                 {
                     return Ok(lstUser.First());
                 }
@@ -1630,7 +1643,7 @@ namespace Api.Socioboard.Controllers
                         if (SavedStatus == 1)
                         {
                             Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == nuser.Id && t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
-                            GroupMembersRepository.createGroupMember(ngrp.id, nuser, _redisCache, dbr);
+                            GroupMembersRepository.CreateGroupMember(ngrp.id, nuser, _redisCache, dbr);
                             // Adding Facebook Profile
                             Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.getFbFriends(AccessToken), dbr, nuser.Id, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, AccessToken, _redisCache, _appSettings, _logger);
                         }
@@ -1820,15 +1833,15 @@ namespace Api.Socioboard.Controllers
             User user = dbr.Single<User>(t => t.Id == userId);
             if (user != null && user.Password != null)
             {
-                if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+                if (user.Password.Equals(SBHelper.Md5Hash(currentPassword)))
                 {
-                    if (user.Password.Equals(SBHelper.MD5Hash(newPassword)))
+                    if (user.Password.Equals(SBHelper.Md5Hash(newPassword)))
                     {
                         return BadRequest("Current Password and New Password are same.Try with New Password");
                     }
                     if (newPassword.Equals(conformPassword))
                     {
-                        user.Password = SBHelper.MD5Hash(newPassword);
+                        user.Password = SBHelper.Md5Hash(newPassword);
                         int res = dbr.Update<User>(user);
                         if (res == 1)
                         {
@@ -2053,7 +2066,7 @@ namespace Api.Socioboard.Controllers
             {
                 if (user.forgotPasswordKeyToken.Equals(token))
                 {
-                    user.Password = SBHelper.MD5Hash(changePassword);
+                    user.Password = SBHelper.Md5Hash(changePassword);
                     user.forgotPasswordKeyToken = SBHelper.RandomString(20);
                     user.forgotPasswordExpireDate = DateTime.UtcNow.AddDays(1);
                     int res = dbr.Update<User>(user);
@@ -2096,7 +2109,7 @@ namespace Api.Socioboard.Controllers
             User user = dbr.Single<User>(t => t.Id == userId);
             if (user.SocialLoginEnableFb == false && user.SocialLoginEnableGo == false)
             {
-                if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+                if (user.Password.Equals(SBHelper.Md5Hash(currentPassword)))
                 {
                     user.TwostepEnable = true;
                     int res = dbr.Update<User>(user);
@@ -2109,7 +2122,7 @@ namespace Api.Socioboard.Controllers
                         return BadRequest("Error while enabling two step login, pls try after some time.");
                     }
                 }
-                else if (!user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+                else if (!user.Password.Equals(SBHelper.Md5Hash(currentPassword)))
                 {
                     return BadRequest("Wrong password");
                 }
@@ -2141,7 +2154,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
-            if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            if (user.Password.Equals(SBHelper.Md5Hash(currentPassword)))
             {
                 user.TwostepEnable = false;
                 int res = dbr.Update<User>(user);
@@ -2154,7 +2167,7 @@ namespace Api.Socioboard.Controllers
                     return BadRequest("Error while disabling two step login, pls try after some time.");
                 }
             }
-            else if (!user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            else if (!user.Password.Equals(SBHelper.Md5Hash(currentPassword)))
             {
                 return BadRequest("Wrong password");
             }
@@ -2183,7 +2196,7 @@ namespace Api.Socioboard.Controllers
             {
                 return BadRequest("EmailId reset is not permitted as you registered in Socioboard with Google.");
             }
-            if (user.Password.Equals(SBHelper.MD5Hash(currentPassword)))
+            if (user.Password.Equals(SBHelper.Md5Hash(currentPassword)))
             {
                 return Ok("Now you can change your EmailID");
             }
@@ -2586,7 +2599,7 @@ namespace Api.Socioboard.Controllers
             if (authUser.AuthCode.Contains("1974224400.2310fd1.699477d40ff64cd6babfb0b3a6cf60fa"))
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-                User _User = dbr.Single<User>(t => t.EmailId.Equals(authUser.email) && t.Password.Equals(SBHelper.MD5Hash(authUser.password)));
+                User _User = dbr.Single<User>(t => t.EmailId.Equals(authUser.email) && t.Password.Equals(SBHelper.Md5Hash(authUser.password)));
                 if (_User == null)
                 {
                     authUser.AuthMessage = "Invalid EmailId and password";

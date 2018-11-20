@@ -84,7 +84,7 @@ namespace Socioboard.Controllers
             string googleSocial = HttpContext.Session.GetObjectFromJson<string>("Google");
             string plan = HttpContext.Session.GetObjectFromJson<string>("RegisterPlan");
 
-            if(googleSocial== "Youtube_Account")
+            if (googleSocial == "Youtube_Account")
             {
                 googleLogin = null;
             }
@@ -165,7 +165,7 @@ namespace Socioboard.Controllers
         [HttpGet]
         public ActionResult getGoogleLoginUrl(string plan)
         {
-            HttpContext.Session.SetObjectAsJson("googlepluslogin","Google_Login");
+            HttpContext.Session.SetObjectAsJson("googlepluslogin", "Google_Login");
             if (!string.IsNullOrEmpty(plan))
             {
                 HttpContext.Session.SetObjectAsJson("RegisterPlan", plan);
@@ -236,7 +236,7 @@ namespace Socioboard.Controllers
                 {
                     HttpContext.Session.SetObjectAsJson("Google", "Gplus_Account");
                     string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write+https://www.googleapis.com/auth/plus.stream.read+https://www.googleapis.com/auth/plus.circles.read&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
-                    return Redirect(googleurl); 
+                    return Redirect(googleurl);
                 }
                 else if (Op == "page")
                 {
@@ -360,29 +360,30 @@ namespace Socioboard.Controllers
         {
             int count = 0;
             string profileCount = "";
-           // List<Domain.Socioboard.Models.Groups> groups = new List<Domain.Socioboard.Models.Groups>();
+            // List<Domain.Socioboard.Models.Groups> groups = new List<Domain.Socioboard.Models.Groups>();
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-          
-            
-                if (option == "recgplus")
-                {
-                    HttpContext.Session.SetObjectAsJson("Google", "ReconGplusAccount");
-                    string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write+https://www.googleapis.com/auth/plus.stream.read+https://www.googleapis.com/auth/plus.circles.read+https://www.googleapis.com/auth/plus.circles.write&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
-                    return Content(googleurl);
-                }
-               
-                else
-                {
-                    HttpContext.Session.SetObjectAsJson("Google", "ReconnectYTAcc");
-                    string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/youtube.force-ssl&response_type=code&access_type=offline&approval_prompt=force";
-                    return Content(googleurl);
-                }   
+
+
+            if (option == "recgplus")
+            {
+                HttpContext.Session.SetObjectAsJson("Google", "ReconGplusAccount");
+                string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write+https://www.googleapis.com/auth/plus.stream.read+https://www.googleapis.com/auth/plus.circles.read&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
+                // string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write+https://www.googleapis.com/auth/plus.stream.read+https://www.googleapis.com/auth/plus.circles.read+https://www.googleapis.com/auth/plus.circles.write&response_type=code&access_type=offline&approval_prompt=force&access.domainRestricted=true";
+                return Content(googleurl);
+            }
+
+            else
+            {
+                HttpContext.Session.SetObjectAsJson("Google", "ReconnectYTAcc");
+                string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/youtube.force-ssl&response_type=code&access_type=offline&approval_prompt=force";
+                return Content(googleurl);
+            }
         }
 
         public async Task<ActionResult> ReconnectGplusAcc(string code)
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-           // string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
+            // string groupId = HttpContext.Session.GetObjectFromJson<string>("selectedGroupId");
             List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
             Parameters.Add(new KeyValuePair<string, string>("code", code));
             //Parameters.Add(new KeyValuePair<string, string>("groupId", groupId));

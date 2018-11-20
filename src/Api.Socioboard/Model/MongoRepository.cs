@@ -136,15 +136,22 @@ namespace Api.Socioboard.Model
             var output = await collection.ToListAsync().ConfigureAwait(false);
             return output;
         }
+
         public async Task<IList<T>> FindWithRange<T>(Expression<Func<T, bool>> query, SortDefinition<T> sort, int skip, int take) where T : class, new()
         {
             var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Sort(sort).Limit(take).Skip(skip);
             
                 var output = await collection.ToListAsync().ConfigureAwait(false);
-                return output;
-           
+                return output;          
         }
 
+        public async Task<IList<T>> FindWithRange<T>(Expression<Func<T, bool>> query, int skip, int take) where T : class, new()
+        {
+            var collection = _db.GetCollection<T>(collecionName, settings).Find<T>(query).Limit(take).Skip(skip);
+
+            var output = await collection.ToListAsync().ConfigureAwait(false);
+            return output;
+        }
 
         public T Single<T>(System.Linq.Expressions.Expression<Func<T, bool>> expression)
      where T : class, new()
@@ -181,9 +188,9 @@ namespace Api.Socioboard.Model
             
         }
 
-        public void Add<T>(IEnumerable<T> items) where T : class, new()
+        public void AddRange<T>(IEnumerable<T> collections) where T : class, new()
         {
-            foreach (T item in items)
+            foreach (T item in collections)
             {
                 Add(item);
             }

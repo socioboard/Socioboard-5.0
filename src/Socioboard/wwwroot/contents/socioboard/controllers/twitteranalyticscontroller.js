@@ -56,7 +56,10 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
             $scope.keysearch = false;
             $scope.changeSearch("");
         }
+
+        debugger;
         $scope.changeSearch = function (name_search) {
+            debugger;
             var searchname = $('#name_search').val();
             var searchkey = $('#key_search').val();
             if (searchname != "" || searchkey != "") {
@@ -66,7 +69,7 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
             {
                 $scope.keysearch = false;
             }
-            if (name_search != "socioboard_key_search") {
+            if (name_search == "socioboard_key_search") {
                 var filtered = [];
                 angular.forEach($scope.temp, function (item) {
                     try {

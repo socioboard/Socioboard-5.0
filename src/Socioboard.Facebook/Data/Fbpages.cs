@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
+using Socioboard.Facebook.Utils;
 
 namespace Socioboard.Facebook.Data
 {
@@ -12,26 +13,27 @@ namespace Socioboard.Facebook.Data
     {
         public static List<Domain.Socioboard.Models.Facebookpage> Getfacebookpages(string accesstoken)
         {
-            List<Domain.Socioboard.Models.Facebookpage> lstpages = new List<Domain.Socioboard.Models.Facebookpage>();
-            FacebookClient fb = new FacebookClient();
-            fb.AccessToken = accesstoken;
-            dynamic profile = fb.Get("v2.7/me");//v2.1
-            dynamic output = fb.Get("v2.7/me/accounts");//v2.1
+            var lstpages = new List<Domain.Socioboard.Models.Facebookpage>();
+            var fb = new FacebookClient { AccessToken = accesstoken };
+            dynamic profile = fb.Get($"{FbConstants.FacebookApiVersion}/me");
+            dynamic output = fb.Get($"{FbConstants.FacebookApiVersion}/me/accounts");
             foreach (var item in output["data"])
             {
                 try
                 {
-                    Domain.Socioboard.Models.Facebookpage objAddFacebookPage = new Domain.Socioboard.Models.Facebookpage();
-                    objAddFacebookPage.ProfilePageId = item["id"].ToString();
+                    var objAddFacebookPage = new Domain.Socioboard.Models.Facebookpage
+                    {
+                        ProfilePageId = item["id"].ToString()
+                    };
                     try
                     {
-                        dynamic postlike = fb.Get("v2.7/" + item["id"] + "?fields=likes,name,username,fan_count");
+                        dynamic postlike = fb.Get($"{FbConstants.FacebookApiVersion}/" + item["id"] + "?fields=likes,name,username,fan_count");
                         objAddFacebookPage.LikeCount = postlike["fan_count"].ToString();
                     }
                     catch (Exception ex)
                     {
                         objAddFacebookPage.LikeCount = "0";
-                        
+                        Console.WriteLine(ex.Message);
                     }
                     objAddFacebookPage.Name = item["name"].ToString();
                     objAddFacebookPage.AccessToken = item["access_token"].ToString();
@@ -41,7 +43,8 @@ namespace Socioboard.Facebook.Data
                     }
                     catch (Exception ex)
                     {
-                        objAddFacebookPage.Email = "";
+                        objAddFacebookPage.Email = string.Empty;
+                        Console.WriteLine(ex.Message);
                     }
                     lstpages.Add(objAddFacebookPage);
                 }
@@ -53,55 +56,54 @@ namespace Socioboard.Facebook.Data
             return lstpages;
         }
 
-
-        public static object getFbPageData(string accessToken)
+        public static object GetFbPageData(string accessToken)
         {
-            FacebookClient fb = new FacebookClient();
-            fb.AccessToken = accessToken;
-           
+            var fb = new FacebookClient { AccessToken = accessToken };
             try
             {
-                return  fb.Get("v2.7/me?fields=id,name,username,likes,fan_count,cover,emails");
+                // username, emails, fan_count are deprecated,so removed in following request
+                // before fb.Get($"{FbConstants.FacebookApiVersion}/me?fields=id,name,username,likes,fan_count,cover,emails");
+
+                return fb.Get($"{FbConstants.FacebookApiVersion}/me?fields=id,name,likes,cover");
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "Invalid Access Token";
             }
         }
-        public static string getFbPageData(string accessToken,string PageId)
+
+        public static string GetFbPageName(string accessToken, string pageId)
         {
-            FacebookClient fb = new FacebookClient();
-            fb.AccessToken = accessToken;
+            var fb = new FacebookClient { AccessToken = accessToken };
             try
             {
-               dynamic profile= fb.Get("v2.7/"+ PageId + "?fields=id,name");
-               return profile["name"].ToString();
+                dynamic profile = fb.Get($"{FbConstants.FacebookApiVersion}/" + pageId + "?fields=id,name");
+                return profile["name"].ToString();
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "";
             }
         }
 
-        public static List<FacebookFanAddsViewModel> GetFacebookFanAdds(string profileId, double Since, double Until)
+        public static string GetPosts(string accessToken, string id, string paginationUrl)
         {
-            List<FacebookFanAddsViewModel> FbFansList = new List<FacebookFanAddsViewModel>();
-
-            return FbFansList;
+            var fb = new FacebookClient { AccessToken = accessToken };
+            try
+            {
+                return string.IsNullOrEmpty(paginationUrl)
+                    ? fb.Get($"{FbConstants.FacebookApiVersion}/" + id + "/posts?limit=30").ToString()
+                    : fb.Get(paginationUrl).ToString();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return "";
+            }
         }
-        //public static dynamic subscribed_apps(string accessToken)
-        //{
-        //    FacebookClient fb = new FacebookClient();
-        //    fb.AccessToken = accessToken;
-        //    try
-        //    {
-        //        return fb.Post("v2.7/me/subscribed_apps");//v2.6
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return "Invalid Access Token";
-        //    }
-        //}
+
         public static string getFacebookRecentPost(string fbAccesstoken, string pageId)
         {
             string output = string.Empty;
@@ -129,7 +131,7 @@ namespace Socioboard.Facebook.Data
             return output;
         }
 
-        public static string getFacebookPageRecentPost(string fbAccesstoken, string pageId,string curser_next)
+        public static string getFacebookPageRecentPost(string fbAccesstoken, string pageId, string curser_next)
         {
             string output = string.Empty;
             string facebookSearchUrl = string.Empty;
@@ -163,6 +165,7 @@ namespace Socioboard.Facebook.Data
             }
             return output;
         }
+
         public static string subscribed_apps(string fbAccesstoken, string pageId)
         {
             string output = string.Empty;
@@ -185,27 +188,31 @@ namespace Socioboard.Facebook.Data
             }
             catch (Exception e)
             {
-
+                Console.WriteLine(e.Message);
             }
             return output;
         }
 
-        public static string  schedulePage_Post(string accessToken,string link,string scheduled_publish_time)
+        public static string schedulePage_Post(string accessToken, string link, string scheduled_publish_time)
         {
-            FacebookClient fb = new FacebookClient();
-            var args = new Dictionary<string, object>();
-            args["link"] = link;
-            args["scheduled_publish_time"] = scheduled_publish_time;
-            args["published"] = "false";
-            fb.AccessToken = accessToken;
+            var fb = new FacebookClient { AccessToken = accessToken };
+            var args = new Dictionary<string, object>
+            {
+                ["link"] = link,
+                ["scheduled_publish_time"] = scheduled_publish_time,
+                ["published"] = "false"
+            };
+
             try
             {
-                return fb.Post("v2.8/me/feed",args).ToString();//v2.6
+                return fb.Post("v2.8/me/feed", args).ToString();//v2.6
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "";
             }
         }
+
     }
 }

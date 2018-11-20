@@ -22,7 +22,7 @@ namespace Domain.Socioboard.Models.Mongo
         public string fromProfileUrl { get; set; }
         public string screenName { get; set; }
         public string messageId { get; set; }
-        public TwitterMessageType type { get; set; }
+        public MessageType type { get; set; }
         public string inReplyToStatusUserId { get; set; }
         public string sourceUrl { get; set; }
         public string fromScreenName { get; set; }

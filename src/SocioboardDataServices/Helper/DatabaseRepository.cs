@@ -10,6 +10,10 @@ namespace SocioboardDataServices.Helper
 {
     public class DatabaseRepository 
     {
+        public DatabaseRepository()
+        {
+            
+        }
 
         public IList<T> Find<T>(Expression<Func<T, bool>> query) where T : class, new()
         {

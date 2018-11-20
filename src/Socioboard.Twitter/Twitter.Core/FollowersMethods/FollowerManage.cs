@@ -14,7 +14,7 @@ namespace Socioboard.Twitter.Twitter.Core.FollowersMethods
             SortedDictionary<string, string> stringDictionary = new SortedDictionary<string, string>();
             stringDictionary.Add("screen_name", screenName);
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostFriendshipsCreateUrl;
-            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, stringDictionary);
+            string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, stringDictionary);
             return response;
         }
 
@@ -23,7 +23,7 @@ namespace Socioboard.Twitter.Twitter.Core.FollowersMethods
             SortedDictionary<string, string> stringDictionary = new SortedDictionary<string, string>();
             stringDictionary.Add("user_id", userId);
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostFriendshipsCreateUrl;
-            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, stringDictionary);
+            string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, stringDictionary);
             return response;
         }
 
@@ -32,7 +32,7 @@ namespace Socioboard.Twitter.Twitter.Core.FollowersMethods
             SortedDictionary<string, string> stringDictionary = new SortedDictionary<string, string>();
             stringDictionary.Add("target_screen_name", screenName);
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendshipsShowUrl;
-            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, stringDictionary);
+            string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, stringDictionary);
             return response;
         }
 
@@ -41,7 +41,7 @@ namespace Socioboard.Twitter.Twitter.Core.FollowersMethods
             SortedDictionary<string, string> stringDictionary = new SortedDictionary<string, string>();
             stringDictionary.Add("target_id", userId);
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendshipsShowUrl;
-            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, stringDictionary);
+            string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, stringDictionary);
             return response;
         }
 

@@ -70,7 +70,7 @@ namespace Socioboard.Twitter.Twitter.Core.AccountMethods
         public XmlDocument Rate_Limit_Status(oAuthTwitter OAuth, SortedDictionary<string, string> strdic)
         {
             
-            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.GET, Globals.RateLimitStatusUrl, strdic);
+            string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.GET, Globals.RateLimitStatusUrl, strdic);
             xmlResult.Load(new StringReader(response));
             return xmlResult;
         }
@@ -85,7 +85,7 @@ namespace Socioboard.Twitter.Twitter.Core.AccountMethods
         public JArray Verify_Credentials(oAuthTwitter OAuth)
         {
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.GET, Globals.VerifyCredentialsUrl, strdic);
+            string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.GET, Globals.VerifyCredentialsUrl, strdic);
             //xmlResult.Load(new StringReader(response));
             if (!response.StartsWith("["))
                 response = "[" + response + "]";

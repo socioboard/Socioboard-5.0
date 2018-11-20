@@ -18,18 +18,18 @@ namespace Api.Socioboard.Repositories
     {
         public static void CreateTodayReports(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-            List<MongoTwitterMessage> lstTwitterMessages = TwitterReportsRepository.GetTodayMessages(profileId, userId, _redisCache, settings);
-            List<MongoTwitterDirectMessages> lstTwitterDirectMessages = TwitterReportsRepository.GetTodayDirectMessages(profileId, userId, _redisCache, settings);
+            List<MongoMessageModel> lstTwitterMessages = TwitterReportsRepository.GetTodayMessages(profileId, userId, _redisCache, settings);
+            List<MongoDirectMessages> lstTwitterDirectMessages = TwitterReportsRepository.GetTodayDirectMessages(profileId, userId, _redisCache, settings);
             MongoRepository mongorepo = new MongoRepository("MongoTwitterDailyReports", settings);
 
             MongoTwitterDailyReports todayReports = new MongoTwitterDailyReports();
-            todayReports.mentions = lstTwitterMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention);
-            todayReports.newFollowers = lstTwitterMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower);
-            todayReports.retweets = lstTwitterMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet);
+            todayReports.mentions = lstTwitterMessages.Count(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterMention);
+            todayReports.newFollowers = lstTwitterMessages.Count(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterFollower);
+            todayReports.retweets = lstTwitterMessages.Count(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterRetweet);
             todayReports.timeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-            //todayReports.newFollowing = lstTwitterMessages.Count(t=>t.type == Domain.Socioboard.Enum.TwitterMessageType.)
-            todayReports.directMessagesReceived = lstTwitterDirectMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived);
-            todayReports.directMessagesSent = lstTwitterDirectMessages.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent);
+            //todayReports.newFollowing = lstTwitterMessages.Count(t=>t.type == Domain.Socioboard.Enum.MessageType.)
+            todayReports.directMessagesReceived = lstTwitterDirectMessages.Count(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterDirectMessageReceived);
+            todayReports.directMessagesSent = lstTwitterDirectMessages.Count(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterDirectMessageSent);
             todayReports.profileId = profileId;
             todayReports.id = ObjectId.GenerateNewId();
             DateTime dayStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc);
@@ -57,31 +57,31 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        private static List<MongoTwitterMessage> GetTodayMessages(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
+        private static List<MongoMessageModel> GetTodayMessages(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", settings);
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel", settings);
             DateTime dayStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-            var result = mongorepo.Find<MongoTwitterMessage>(t => (t.messageTimeStamp > SBHelper.ConvertToUnixTimestamp(dayStart)) && (t.messageTimeStamp < SBHelper.ConvertToUnixTimestamp(dayEnd)));
+            var result = mongorepo.Find<MongoMessageModel>(t => (t.messageTimeStamp > SBHelper.ConvertToUnixTimestamp(dayStart)) && (t.messageTimeStamp < SBHelper.ConvertToUnixTimestamp(dayEnd)));
             var task = Task.Run(async () =>
             {
                 return await result;
             });
-            IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwtMessages = task.Result;
+            IList<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwtMessages = task.Result;
             return lstTwtMessages.ToList();
         }
 
-        private static List<MongoTwitterDirectMessages> GetTodayDirectMessages(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
+        private static List<MongoDirectMessages> GetTodayDirectMessages(string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", settings);
+            MongoRepository mongorepo = new MongoRepository("MongoDirectMessages", settings);
             DateTime dayStart = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-            var result = mongorepo.Find<MongoTwitterDirectMessages>(t => (t.timeStamp > SBHelper.ConvertToUnixTimestamp(dayStart)) && (t.timeStamp < SBHelper.ConvertToUnixTimestamp(dayEnd)));
+            var result = mongorepo.Find<MongoDirectMessages>(t => (t.timeStamp > SBHelper.ConvertToUnixTimestamp(dayStart)) && (t.timeStamp < SBHelper.ConvertToUnixTimestamp(dayEnd)));
             var task = Task.Run(async () =>
             {
                 return await result;
             });
-            IList<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> lstTwtMessages = task.Result;
+            IList<Domain.Socioboard.Models.Mongo.MongoDirectMessages> lstTwtMessages = task.Result;
             return lstTwtMessages.ToList();
         }
 
@@ -112,15 +112,15 @@ namespace Api.Socioboard.Repositories
 
         public static List<TwitterFan> GetTopFiveFans(string profileId, int daysCount, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", settings);
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel", settings);
             DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-1 * daysCount).Year, DateTime.UtcNow.AddDays(-1 * daysCount).Month, DateTime.UtcNow.AddDays(-1 * daysCount).Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-            var result = mongorepo.Find<MongoTwitterMessage>(t => (t.messageTimeStamp > SBHelper.ConvertToUnixTimestamp(dayStart)) && (t.messageTimeStamp < SBHelper.ConvertToUnixTimestamp(dayEnd)) && t.profileId==profileId && (t.type==Domain.Socioboard.Enum.TwitterMessageType.TwitterMention|| t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet));
+            var result = mongorepo.Find<MongoMessageModel>(t => (t.messageTimeStamp > SBHelper.ConvertToUnixTimestamp(dayStart)) && (t.messageTimeStamp < SBHelper.ConvertToUnixTimestamp(dayEnd)) && t.profileId==profileId && (t.type==Domain.Socioboard.Enum.MessageType.TwitterMention|| t.type == Domain.Socioboard.Enum.MessageType.TwitterRetweet));
             var task = Task.Run(async () =>
             {
                 return await result;
             });
-            IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwtMessages = task.Result;
+            IList<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwtMessages = task.Result;
             List<TwitterFan> lstTwtTopFans = lstTwtMessages.GroupBy(t => t.fromId).Select(g => new TwitterFan(g.ToList())).OrderBy(x=>x.totalCount).Take(5).ToList();
             return lstTwtTopFans;
 

@@ -20,7 +20,7 @@ namespace SocioboardDataScheduler.Facebook
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage) && t.scheduleTime <= DateTime.UtcNow).ToList();                  
+                    List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage) && t.scheduleTime <= DateTime.UtcNow).ToList();
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
                     int count = 1;
                     foreach (var items in newlstScheduledMessage)
@@ -30,7 +30,7 @@ namespace SocioboardDataScheduler.Facebook
                         Thread thread_pageshreathon = new Thread(() => schedulemessages(new object[] { dbr, items }));
                         thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
                         thread_pageshreathon.Start();
-                        Thread.Sleep(600 * 1000);
+                        Thread.Sleep(10 * 1000);
                         //while (noOfthreadRunning > 5)
                         //{
                         //    Thread.Sleep(1 * 1000);
@@ -57,33 +57,39 @@ namespace SocioboardDataScheduler.Facebook
             try
             {
                 Console.WriteLine(Thread.CurrentThread.Name + " Is Entered in Method");
-                object[] arr = o as object[];
-                Model.DatabaseRepository dbr = (Model.DatabaseRepository)arr[0];
-                IGrouping<string, Domain.Socioboard.Models.ScheduledMessage> items = (IGrouping<string, Domain.Socioboard.Models.ScheduledMessage>)arr[1];
-                Domain.Socioboard.Models.Facebookaccounts _facebook = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == items.Key && t.IsActive).FirstOrDefault();
-                Domain.Socioboard.Models.User _user = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == _facebook.UserId);
-                if (_facebook != null)
-                {
-                    foreach (var item in items)
-                    {
-                        try
-                        {
-                            Console.WriteLine(item.socialprofileName + "Scheduling Started");
-                            FacebookScheduler.PostFacebookMessage(item, _facebook, _user);
-                            Console.WriteLine(item.socialprofileName + "Scheduling");
-                        }
-                        catch (Exception)
-                        {
 
-                        }
+                var arr = o as object[];
+
+                var dbr = (DatabaseRepository)arr[0];
+
+                var items = (IGrouping<string, Domain.Socioboard.Models.ScheduledMessage>)arr[1];
+
+                var facebook = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId == items.Key && t.IsActive).FirstOrDefault();
+
+                var user = dbr.Single<Domain.Socioboard.Models.User>(t => t.Id == facebook.UserId);
+
+                if (facebook == null)
+                    return;
+
+                foreach (var item in items)
+                {
+                    try
+                    {
+                        Console.WriteLine(item.socialprofileName + "Scheduling Started");
+                        FacebookScheduler.PostFacebookMessage(item, facebook, user);
+                        Console.WriteLine(item.socialprofileName + "Scheduling");
                     }
-                    _facebook.SchedulerUpdate = DateTime.UtcNow;
-                    dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(_facebook);
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                 }
+                facebook.SchedulerUpdate = DateTime.UtcNow;
+                dbr.Update(facebook);
             }
             catch (Exception ex)
             {
-                //  Thread.Sleep(60000);
+                Console.WriteLine(ex.Message);
             }
             finally
             {
@@ -101,7 +107,7 @@ namespace SocioboardDataScheduler.Facebook
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.DaywiseSchedule> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.DaywiseSchedule>(t => t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && t.scheduleTime <= DateTime.Now).ToList();
-                   // lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("1452799044811364")).ToList();
+                    // lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Equals("1452799044811364")).ToList();
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
 
                     foreach (var items in newlstScheduledMessage)
@@ -115,7 +121,7 @@ namespace SocioboardDataScheduler.Facebook
                         //Thread thread_pageshreathon = new Thread(() => daywiseSchedulemessages(new object[] { dbr, items }));
                         //thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
                         //thread_pageshreathon.Start();
-                        //Thread.Sleep(10 * 1000);
+                        Thread.Sleep(10 * 1000);
                         // }
 
 
@@ -155,14 +161,11 @@ namespace SocioboardDataScheduler.Facebook
                         {
 
                         }
-
-                        item.scheduleTime = DateTime.UtcNow;
-                        dbr.Update<Domain.Socioboard.Models.DaywiseSchedule>(item);
+                        //item.scheduleTime = DateTime.UtcNow;
+                        //dbr.Update<Domain.Socioboard.Models.DaywiseSchedule>(item);
                     }
                     //_facebook.SchedulerUpdate = DateTime.UtcNow;
-
                     //dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(_facebook);
-
                 }
             }
             catch (Exception ex)

@@ -19,7 +19,7 @@ namespace SocioboardDataScheduler.Twitter
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.ScheduledMessage> lstScheduledMessage = dbr.Find<Domain.Socioboard.Models.ScheduledMessage>(t => (t.status == Domain.Socioboard.Enum.ScheduleStatus.Pending && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter) && t.scheduleTime <= DateTime.UtcNow).ToList();
-                   
+                    //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Contains("758233674978426880")).ToList();
                     var newlstScheduledMessage = lstScheduledMessage.GroupBy(t => t.profileId).ToList();
 
                     foreach (var items in newlstScheduledMessage)
@@ -94,53 +94,5 @@ namespace SocioboardDataScheduler.Twitter
                 Console.WriteLine(Thread.CurrentThread.Name + " Is Released");
             }
         }
-
-        //public static void PostTwitterMessage(Domain.Socioboard.Models.ScheduledMessage schmessage, Domain.Socioboard.Models.TwitterAccount _TwitterAccount, Domain.Socioboard.Models.User _user)
-        //{
-        //    try
-        //    {
-        //        DatabaseRepository dbr = new DatabaseRepository();
-        //        //if (_TwitterAccount.SchedulerUpdate.AddMinutes(15) <= DateTime.UtcNow)
-        //        //{
-        //        if (_TwitterAccount != null)
-        //        {
-        //            if (_TwitterAccount.isActive)
-        //            {
-        //                //if (apiHitsCount < MaxapiHitsCount)
-        //                //{
-        //                if (schmessage.scheduleTime <= DateTime.UtcNow)
-        //                {
-        //                    string twitterdata = ComposeTwitterMessage(schmessage.shareMessage, schmessage.profileId, schmessage.userId, schmessage.url, false, dbr, _TwitterAccount, schmessage, _user);
-        //                    if (!string.IsNullOrEmpty(twitterdata) && twitterdata != "Message not posted")
-        //                    {
-        //                        apiHitsCount++;
-        //                    }
-        //                    else if (twitterdata == "Message not posted")
-        //                    {
-        //                        _TwitterAccount.isActive = false;
-        //                        dbr.Update<TwitterAccount>(_TwitterAccount);
-        //                    }
-        //                }
-        //                //}
-        //                //_TwitterAccount.lastUpdate = DateTime.UtcNow;
-        //                //dbr.Update<Domain.Socioboard.Models.TwitterAccount>(_TwitterAccount);
-        //            }
-        //            else
-        //            {
-        //                // apiHitsCount = MaxapiHitsCount;
-        //            }
-        //        }
-        //        //}
-        //        //else
-        //        //{
-        //        //    apiHitsCount = 0;
-        //        //}
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        apiHitsCount = MaxapiHitsCount;
-        //    }
-        //}
-
     }
 }

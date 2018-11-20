@@ -71,32 +71,6 @@
     <div class="container">
         <div class="col m12">
             <h4 class="grey-text text-darken-4">Dashboard</h4>
-            <!--<form method="POST" id="checkout-form">
-                <div>
-                    <label for="FirstName">Name on Card</label>
-                    <input type="text" name="cardholder-name" id="cardholder-name">
-                </div>
-                <div>
-                    <label for="creditCard">Card Number</label>
-                    <input type="text" name="creditCard" id="creditCard" data-bluesnap="encryptedCreditCard">
-                </div>
-
-                <div>
-                    <label for="cvv">Security Code</label>
-                    <input type="text" name="cvv" id="cvv" data-bluesnap="encryptedCvv">
-                </div>
-
-                <div>
-                    <label for="Expiration">Exp. (MM/YYYY)</label>
-                    <input type="text" name="exp-month" id="exp-month" size="2">
-                    <span> / </span>
-                    <input type="text" name="exp-year" id="exp-year" size="4">
-                </div>
-                <button onclick="bsbs()" type="submit" id="submit-button">Buy Now</button>
-
-            </form>-->
-            <button ng-click="bluesnap()">bluesnap</button>
-            <button ng-click="recSub()">recSub</button>
         </div>
     </div>
 
@@ -242,7 +216,7 @@
                                             <img ng-if="fbProfile.facebookProfile !=0" class="activator" ng-src="{{data['fbaccount']['coverPic']}}">
                                         </div>
                                         <div class="card-content">
-                                            <img ng-src="https://graph.facebook.com/{{data['fbaccount']['fbUserId']}}/picture?type=small" alt="{{data['fbaccount']['fbUserName']}}" class="circle responsive-img activator card-profile-image">
+                                            <img ng-src="https://graph.facebook.com/{{data['fbaccount']['fbUserId']}}/picture?type=small" alt="{{data['fbaccount']['fbUserName']}}" class="circle responsive-img aaddctivator card-profile-image">
                                             <img ng-src="/contents/socioboard/images/fb_icon.png" class="card_profile_socio_icon">
 
                                             <a class="btn-floating activator btn-move-up waves-effect waves-light darken-2 right">
@@ -1258,14 +1232,14 @@
                                         <span style="float:left;">Check All</span>
                                     </label>
                                 </li>
-                                <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
+                                <!--<li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:0} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13' }" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />
                                         <img src="{{profile.profilePic}}" style="width:20px;float:left;margin-right: 5px;" />
                                         <span style="float:left; width:150px;" class="truncate" title="{{profile.profileName}}">{{profile.profileName}}</span>
                                         <span style="float:right;"><img ng-src="/contents/socioboard/images/fb_icon.png"></span>
                                     </label>
-                                </li>
+                                </li>-->
                                 <li ng-repeat="profile in lstProfiles |filter:query| filter:{profileType:1} | filter:{profileType:'!10'} | filter:{profileType:'!11'} | filter:{profileType:'!13'}" style="padding:5px 0;">
                                     <label>
                                         <input onclick="profile();" name="selector[]" class="subcheckbox" id="fb_{{profile.profileId}}" type="checkbox" style="visibility:visible;position: relative;left:5px;float:left" />

@@ -68,7 +68,7 @@ namespace Socioboard.Twitter.Twitter.Core.SocialGraphMethods
          public XmlDocument FriendsId(oAuthTwitter OAuth, string ScreenName, SortedDictionary<string, string> strdic)
          {
              string RequestUrl = Socioboard.Twitter.App.Core.Globals.FriendsIdUrl + ScreenName;
-             string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.GET,RequestUrl,strdic);
+             string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.GET,RequestUrl,strdic);
              xmlResult.Load(new StringReader(response));
              return xmlResult;
          }

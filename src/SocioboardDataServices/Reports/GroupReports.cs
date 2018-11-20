@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SocioboardDataServices.Helper;
 
 namespace SocioboardDataServices.Reports
 {
@@ -20,13 +21,11 @@ namespace SocioboardDataServices.Reports
                 try
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
-                    List<Domain.Socioboard.Models.Groups> grpid = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
-                    //var grpids = grpid.GroupBy(t => t.id).ToList();
-                     // grpid = grpid.Where(t => t.id== 1152529).ToList();  
-                    foreach (var item in grpid)
+                    List<Domain.Socioboard.Models.Groups> lstTwtAcc = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
+                    //lstTwtAcc = lstTwtAcc.Where(t => t.id==48).ToList();
+                    foreach (var item in lstTwtAcc)
                     {
                         CreateReports(item.id, DateTime.UtcNow);
-                        Console.WriteLine("item name" + item.groupName);
                     }
                     Thread.Sleep(120000);
                 }
@@ -210,10 +209,10 @@ namespace SocioboardDataServices.Reports
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
             DatabaseRepository dbr = new DatabaseRepository();
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
+            MongoRepository mongorepo = new MongoRepository("MongoDirectMessages");
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => lstStr.Contains(t.recipientId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => lstStr.Contains(t.recipientId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -229,10 +228,10 @@ namespace SocioboardDataServices.Reports
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
             DatabaseRepository dbr = new DatabaseRepository();
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
+            MongoRepository mongorepo = new MongoRepository("MongoDirectMessages");
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -250,10 +249,10 @@ namespace SocioboardDataServices.Reports
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
             DatabaseRepository dbr = new DatabaseRepository();
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
+            MongoRepository mongorepo = new MongoRepository("MongoDirectMessages");
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -272,10 +271,10 @@ namespace SocioboardDataServices.Reports
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
             DatabaseRepository dbr = new DatabaseRepository();
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
+            MongoRepository mongorepo = new MongoRepository("MongoDirectMessages");
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -292,10 +291,10 @@ namespace SocioboardDataServices.Reports
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
             DatabaseRepository dbr = new DatabaseRepository();
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
+            MongoRepository mongorepo = new MongoRepository("MongoDirectMessages");
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -312,11 +311,11 @@ namespace SocioboardDataServices.Reports
             DatabaseRepository dbr = new DatabaseRepository();
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
             long TwitterFollowerCount = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => lstStr.Contains(t.twitterUserId)).Sum(t => t.followersCount);
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => lstStr.Contains(t.profileId) && t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => lstStr.Contains(t.profileId) && t.type == Domain.Socioboard.Enum.MessageType.TwitterFollower && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -341,19 +340,19 @@ namespace SocioboardDataServices.Reports
             long getinteractions = 0;
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
-            MongoRepository mongorepoDm = new MongoRepository("MongoTwitterDirectMessages");
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
+            MongoRepository mongorepoDm = new MongoRepository("MongoDirectMessages");
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
             DatabaseRepository dbr = new DatabaseRepository();
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => lstStr.Contains(t.RecipientId) && t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => lstStr.Contains(t.RecipientId) && t.type == Domain.Socioboard.Enum.MessageType.TwitterRetweet && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
               {
                   return await ret;
               });
             long twtmessagecount = task.Result.Count;
 
-            var retDm = mongorepoDm.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var retDm = mongorepoDm.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => lstStr.Contains(t.senderId) && t.timeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.timeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var taskDm = Task.Run(async () =>
             {
                 return await retDm;
@@ -367,11 +366,11 @@ namespace SocioboardDataServices.Reports
             long gettwtmentions = 0;
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
             DatabaseRepository dbr = new DatabaseRepository();
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => lstStr.Contains(t.RecipientId) && t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => lstStr.Contains(t.RecipientId) && t.type == Domain.Socioboard.Enum.MessageType.TwitterMention && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -384,11 +383,11 @@ namespace SocioboardDataServices.Reports
             long gettwtretweets = 0;
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
             DatabaseRepository dbr = new DatabaseRepository();
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => lstStr.Contains(t.RecipientId) && t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => lstStr.Contains(t.RecipientId) && t.type == Domain.Socioboard.Enum.MessageType.TwitterRetweet && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart));
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -401,11 +400,11 @@ namespace SocioboardDataServices.Reports
             long uniquetwitteruser = 0;
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
             DatabaseRepository dbr = new DatabaseRepository();
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => lstStr.Contains(t.RecipientId) && t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart) && t.readStatus == 0);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => lstStr.Contains(t.RecipientId) && t.type == Domain.Socioboard.Enum.MessageType.TwitterFollower && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart) && t.readStatus == 0);
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -438,11 +437,11 @@ namespace SocioboardDataServices.Reports
             string firstname = string.Empty;
             DateTime dayStart = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
             DateTime dayEnd = new DateTime(date.Year, date.Month, date.Day, 23, 59, 59, DateTimeKind.Utc);
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
             DatabaseRepository dbr = new DatabaseRepository();
             List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
             string[] lstStr = lstgrpProfiles.Select(t => t.profileId).ToArray();
-            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => lstStr.Contains(t.profileId) && t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart) && t.readStatus == 0);
+            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => lstStr.Contains(t.profileId) && t.type == Domain.Socioboard.Enum.MessageType.TwitterFollower && t.messageTimeStamp <= SBHelper.ConvertToUnixTimestamp(dayEnd) && t.messageTimeStamp >= SBHelper.ConvertToUnixTimestamp(dayStart) && t.readStatus == 0);
             var task = Task.Run(async () =>
             {
                 return await ret;
@@ -450,7 +449,7 @@ namespace SocioboardDataServices.Reports
             long totalcount = task.Result.Count;
             if (totalcount > 0)
             {
-                foreach (Domain.Socioboard.Models.Mongo.MongoTwitterMessage twtfollowername in task.Result.ToList())
+                foreach (Domain.Socioboard.Models.Mongo.MongoMessageModel twtfollowername in task.Result.ToList())
                 {
                     if (twtfollowername.fromName.Contains(" "))
                     {

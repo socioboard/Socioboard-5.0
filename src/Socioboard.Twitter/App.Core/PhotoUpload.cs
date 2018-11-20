@@ -305,25 +305,19 @@ namespace Socioboard.Twitter.App.Core
 
                 }
 
-                try
+
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                 {
-                    using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                    //   HttpContext.Current.Response.Write("<script>alert(\"" + response.StatusCode + "\")</script>");
+
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        //   HttpContext.Current.Response.Write("<script>alert(\"" + response.StatusCode + "\")</script>");
-
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            bupdated = true;
-                        }
-
-                        myfunctioncalled = myfunctioncalled + "myfunctioncalled: " + response.ToString();
+                        bupdated = true;
                     }
 
+                    myfunctioncalled = myfunctioncalled + "myfunctioncalled: " + response.ToString();
                 }
-                catch (Exception ex)
-                {
 
-                }
 
 
             }
@@ -332,6 +326,8 @@ namespace Socioboard.Twitter.App.Core
                 myfunctioncalled = myfunctioncalled + "myfunctioncalled: " + ex.Message + ">>> " + ex.StackTrace;
                 Console.WriteLine(ex.Message);
                // logger.Error(ex.Message);
+               
+
             }
 
 

@@ -44,20 +44,20 @@ namespace SocioboardDataScheduler.LinkedIn
                                 }
                                 _LinkedInAccount.SchedulerUpdate = DateTime.UtcNow;
                                 dbr.Update<Domain.Socioboard.Models.LinkedInAccount>(_LinkedInAccount);
-                                Thread.Sleep(60000); 
+                                Thread.Sleep(10000); 
                             }
                         }
                         catch (Exception)
                         {
 
-                            Thread.Sleep(60000);
+                            Thread.Sleep(10000);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("issue in web api calling" + ex.StackTrace);
-                    Thread.Sleep(60000);
+                    Thread.Sleep(10000);
                 }
             }
         }
@@ -95,20 +95,20 @@ namespace SocioboardDataScheduler.LinkedIn
                                 }
                                 _LinkedinCompanyPage.SchedulerUpdate = DateTime.UtcNow;
                                 dbr.Update<Domain.Socioboard.Models.LinkedinCompanyPage>(_LinkedinCompanyPage);
-                                Thread.Sleep(60000); 
+                                Thread.Sleep(10000); 
                             }
                         }
                         catch (Exception)
                         {
 
-                            Thread.Sleep(60000);
+                            Thread.Sleep(10000);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine("issue in web api calling" + ex.StackTrace);
-                    Thread.Sleep(60000);
+                    Thread.Sleep(10000);
                 }
             }
         }

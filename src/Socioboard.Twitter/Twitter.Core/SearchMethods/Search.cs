@@ -95,7 +95,7 @@ namespace Socioboard.Twitter.Twitter.Core.SearchMethods
         /// <returns>Json Text Of Trends</returns>
         public string Trends(oAuthTwitter OAuth, SortedDictionary<string, string> strdic)
         {
-            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.GET, Socioboard.Twitter.App.Core.Globals.TrendsUrl, strdic);
+            string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.GET, Socioboard.Twitter.App.Core.Globals.TrendsUrl, strdic);
             return response;
         }
 
@@ -118,7 +118,7 @@ namespace Socioboard.Twitter.Twitter.Core.SearchMethods
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("q", SearchKeyword);
             strdic.Add("count", "30");
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -135,7 +135,7 @@ namespace Socioboard.Twitter.Twitter.Core.SearchMethods
             strdic.Add("q", SearchKeyword);
             strdic.Add("geocode",geoCode);
             strdic.Add("count", "20");
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);

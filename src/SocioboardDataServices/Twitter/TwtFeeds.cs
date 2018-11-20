@@ -14,6 +14,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using SocioboardDataServices.Helper;
 
 namespace SocioboardDataServices.Twitter
 {
@@ -25,7 +26,7 @@ namespace SocioboardDataServices.Twitter
         public static int updateTwitterFeeds(Domain.Socioboard.Models.TwitterAccount twtaccount, oAuthTwitter oAuth)
         {
             apiHitsCount = 0;
-            Model.DatabaseRepository dbr = new DatabaseRepository();
+            DatabaseRepository dbr = new DatabaseRepository();
            List<Domain.Socioboard.Models.Groupprofiles> _grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileId.Contains(twtaccount.twitterUserId)).ToList();
             if (twtaccount.lastUpdate.AddMinutes(15) <= DateTime.UtcNow)
             {
@@ -35,11 +36,16 @@ namespace SocioboardDataServices.Twitter
                     Users userinfo = new Users();
                     JArray profile = userinfo.Get_Users_LookUp_ByScreenName(oAuth, oAuth.TwitterScreenName);
                     TwitterUser twtuser;
-                    if (profile != null)
+                    
+                    
+                                            
+
+                    if (profile != null && profile.HasValues==true )
                     {
-                        var item = profile[0];
-
-
+                        
+                         var item = profile[0];
+                      
+                        
                         try
                         {
                             twtaccount.followingCount = Convert.ToInt64(item["friends_count"].ToString());
@@ -114,17 +120,16 @@ namespace SocioboardDataServices.Twitter
                         if (apiHitsCount < MaxapiHitsCount)
                         {
                             try
-                            {
+                            {                             
                                 Savetwitterrecentdetails(profile);
                                 SaveTwitterMessages(twtaccount.twitterUserId, oAuth);
                                 SaveUserRetweets(twtaccount.twitterUserId, oAuth);
                                 SaveUserFollowers(oAuth, twtaccount.twitterScreenName, twtaccount.twitterUserId);
                                 SaveTwitterDirectMessageSent(oAuth, twtaccount.twitterUserId);
                                 SaveTwittwrDirectMessageRecieved(oAuth, twtaccount.twitterUserId);
-                                //SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
-                                //SaveUserTweets(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
-                                //SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
 
+                                //SaveTwitterFeeds(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);
+                                //SaveUserTweets(twtaccount.twitterUserId, twtaccount.twitterScreenName, oAuth);                           
                             }
                             catch (Exception exs)
                             {
@@ -256,19 +261,19 @@ namespace SocioboardDataServices.Twitter
                     Console.WriteLine(ex.StackTrace);
                     apiHitsCount = MaxapiHitsCount;
                 }
-                Domain.Socioboard.Models.Mongo.MongoTwitterMessage objTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
+                Domain.Socioboard.Models.Mongo.MongoMessageModel objMessageModel = new Domain.Socioboard.Models.Mongo.MongoMessageModel();
                 if (data != null)
                 {
                     apiHitsCount++;
                     foreach (var item in data)
                     {
 
-                        objTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterMention;
-                        objTwitterMessage.id = MongoDB.Bson.ObjectId.GenerateNewId();
+                        objMessageModel.type = Domain.Socioboard.Enum.MessageType.TwitterMention;
+                        objMessageModel.id = MongoDB.Bson.ObjectId.GenerateNewId();
 
                         try
                         {
-                            objTwitterMessage.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -277,8 +282,8 @@ namespace SocioboardDataServices.Twitter
                         try
                         {
                             const string format = "ddd MMM dd HH:mm:ss zzzz yyyy";
-                            objTwitterMessage.messageDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
-                            objTwitterMessage.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
+                            objMessageModel.messageDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
+                            objMessageModel.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
                         }
                         catch (Exception ex)
                         {
@@ -286,7 +291,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.twitterMsg = item["text"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.Message = item["text"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -295,7 +300,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.fromId = item["user"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromId = item["user"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -304,7 +309,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.fromScreenName = item["user"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromScreenName = item["user"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -313,7 +318,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.fromProfileUrl = item["user"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromProfileUrl = item["user"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -322,7 +327,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.inReplyToStatusUserId = item["in_reply_to_status_id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.inReplyToStatusUserId = item["in_reply_to_status_id_str"].ToString().TrimStart('"').TrimEnd('"');
 
                         }
                         catch (Exception ex)
@@ -332,7 +337,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.sourceUrl = item["source"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.sourceUrl = item["source"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -340,7 +345,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.profileId = profileId;
+                            objMessageModel.profileId = profileId;
                         }
                         catch (Exception ex)
                         {
@@ -348,28 +353,28 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.screenName = item["user"]["screen_name"].ToString();
+                            objMessageModel.screenName = item["user"]["screen_name"].ToString();
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.StackTrace);
                         }
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                        var ret = mongorepo.Find<MongoTwitterMessage>(t => t.messageId.Equals(objTwitterMessage.messageId));
+                        MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
+                        var ret = mongorepo.Find<MongoMessageModel>(t => t.messageId.Equals(objMessageModel.messageId));
                         var task = Task.Run(async () => {
                             return await ret;
                         });
                         int count = task.Result.Count;
                         if (count<1)
                         {
-                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoMessageModel>(objMessageModel);
                         }
                         else
                         {
                             var builders = Builders<BsonDocument>.Filter;
-                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterMessage.messageId);
-                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterMessage.fromProfileUrl);
-                            mongorepo.Update<MongoTwitterMessage>(update, filter);
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objMessageModel.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objMessageModel.fromProfileUrl);
+                            mongorepo.Update<MongoMessageModel>(update, filter);
                         }
 
                     }
@@ -401,20 +406,19 @@ namespace SocioboardDataServices.Twitter
                 {
                     Console.WriteLine(ex.StackTrace);
                     apiHitsCount = MaxapiHitsCount;
-
                 }
-                Domain.Socioboard.Models.Mongo.MongoTwitterMessage objTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
+                Domain.Socioboard.Models.Mongo.MongoMessageModel objMessageModel = new Domain.Socioboard.Models.Mongo.MongoMessageModel();
                 if (Retweet != null)
                 {
                     apiHitsCount++;
                     foreach (var item in Retweet)
                     {
-                        objTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet;
-                        objTwitterMessage.id = ObjectId.GenerateNewId();
+                        objMessageModel.type = Domain.Socioboard.Enum.MessageType.TwitterRetweet;
+                        objMessageModel.id = ObjectId.GenerateNewId();
 
                         try
                         {
-                            objTwitterMessage.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -423,8 +427,8 @@ namespace SocioboardDataServices.Twitter
                         try
                         {
                             const string format = "ddd MMM dd HH:mm:ss zzzz yyyy";
-                            objTwitterMessage.messageDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
-                            objTwitterMessage.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
+                            objMessageModel.messageDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
+                            objMessageModel.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
                         }
                         catch (Exception ex)
                         {
@@ -432,7 +436,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.twitterMsg = item["text"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.Message = item["text"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -441,7 +445,18 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.fromId = item["user"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                           // objMessageModel.type = item["text"].ToString().TrimStart('"').TrimEnd('"');
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.StackTrace);
+                        }
+
+
+
+                        try
+                        {
+                            objMessageModel.fromId = item["user"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -450,7 +465,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.fromScreenName = item["user"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromScreenName = item["user"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -459,7 +474,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.fromProfileUrl = item["user"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromProfileUrl = item["user"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -468,7 +483,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.inReplyToStatusUserId = item["in_reply_to_status_id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.inReplyToStatusUserId = item["in_reply_to_status_id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -477,7 +492,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.sourceUrl = item["source"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.sourceUrl = item["source"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -485,28 +500,28 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.profileId = profileId;
+                            objMessageModel.profileId = profileId;
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.StackTrace);
                         }
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                        var ret = mongorepo.Find<MongoTwitterMessage>(t => t.messageId.Equals(objTwitterMessage.messageId));
+                        MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
+                        var ret = mongorepo.Find<MongoMessageModel>(t => t.messageId.Equals(objMessageModel.messageId));
                         var task = Task.Run(async () => {
                             return await ret;
                         });
                         int count = task.Result.Count;
                         if (count < 1)
                         {
-                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoMessageModel>(objMessageModel);
                         }
                         else
                         {
                             var builders = Builders<BsonDocument>.Filter;
-                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterMessage.messageId);
-                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterMessage.fromProfileUrl);
-                            mongorepo.Update<MongoTwitterMessage>(update, filter);
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objMessageModel.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objMessageModel.fromProfileUrl);
+                            mongorepo.Update<MongoMessageModel>(update, filter);
                         }
                     }
                 }
@@ -534,12 +549,12 @@ namespace SocioboardDataServices.Twitter
                     apiHitsCount++;
                     foreach (var item in Timeline)
                     {
-                        Domain.Socioboard.Models.Mongo.MongoTwitterMessage objTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
-                        objTwitterMessage.id = ObjectId.GenerateNewId();
-                        objTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterUsertweet;
+                        Domain.Socioboard.Models.Mongo.MongoMessageModel objMessageModel = new Domain.Socioboard.Models.Mongo.MongoMessageModel();
+                        objMessageModel.id = ObjectId.GenerateNewId();
+                        objMessageModel.type = Domain.Socioboard.Enum.MessageType.TwitterUsertweet;
                         try
                         {
-                            objTwitterMessage.twitterMsg = item["text"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.Message = item["text"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -547,7 +562,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.sourceUrl = item["source"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.sourceUrl = item["source"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -555,7 +570,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.mediaUrl = item["extended_entities"]["media"][0]["media_url_https"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.mediaUrl = item["extended_entities"]["media"][0]["media_url_https"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -563,7 +578,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.screenName = screenName;
+                            objMessageModel.screenName = screenName;
                         }
                         catch (Exception ex)
                         {
@@ -571,7 +586,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.profileId = profileId;
+                            objMessageModel.profileId = profileId;
                         }
                         catch (Exception ex)
                         {
@@ -579,7 +594,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -588,8 +603,8 @@ namespace SocioboardDataServices.Twitter
                         try
                         {
                             const string format = "ddd MMM dd HH:mm:ss zzzz yyyy";
-                            objTwitterMessage.messageDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
-                            objTwitterMessage.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
+                            objMessageModel.messageDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
+                            objMessageModel.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
                         }
                         catch (Exception ex)
                         {
@@ -597,7 +612,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.inReplyToStatusUserId = item["in_reply_to_status_id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.inReplyToStatusUserId = item["in_reply_to_status_id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -606,7 +621,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.fromProfileUrl = item["user"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromProfileUrl = item["user"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -614,7 +629,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.fromName = item["user"]["name"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromName = item["user"]["name"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -622,7 +637,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterMessage.fromId = item["user"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromId = item["user"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -631,28 +646,28 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterMessage.fromScreenName = item["user"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                            objMessageModel.fromScreenName = item["user"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.StackTrace);
                         }
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                        var ret = mongorepo.Find<MongoTwitterMessage>(t => t.messageId.Equals(objTwitterMessage.messageId));
+                        MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
+                        var ret = mongorepo.Find<MongoMessageModel>(t => t.messageId.Equals(objMessageModel.messageId));
                         var task = Task.Run(async () => {
                             return await ret;
                         });
                         int count = task.Result.Count;
                         if (count < 1)
                         {
-                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(objTwitterMessage);
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoMessageModel>(objMessageModel);
                         }
                         else
                         {
                             var builders = Builders<BsonDocument>.Filter;
-                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterMessage.messageId);
-                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objTwitterMessage.fromProfileUrl);
-                            mongorepo.Update<MongoTwitterMessage>(update, filter);
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objMessageModel.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("fromProfileUrl", objMessageModel.fromProfileUrl);
+                            mongorepo.Update<MongoMessageModel>(update, filter);
                         }
                     }
                 }
@@ -681,7 +696,7 @@ namespace SocioboardDataServices.Twitter
                     apiHitsCount++;
                     foreach (var item in Home_Timeline)
                     {
-                        objTwitterFeed.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterFeed;
+                        objTwitterFeed.type = Domain.Socioboard.Enum.MessageType.TwitterFeed;
                         try
                         {
                             objTwitterFeed.feed = item["text"].ToString().TrimStart('"').TrimEnd('"');
@@ -857,18 +872,18 @@ namespace SocioboardDataServices.Twitter
             {
                 JArray Messages_Sent = twtuser.GetDirect_Messages_Sent(OAuth, 20);
 
-                Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages objTwitterDirectMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages();
+                Domain.Socioboard.Models.Mongo.MongoDirectMessages objDirectMessages = new Domain.Socioboard.Models.Mongo.MongoDirectMessages();
                 if (Messages_Sent != null)
                 {
                     apiHitsCount++;
                     foreach (var item in Messages_Sent)
                     {
-                        objTwitterDirectMessages.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent;
-                        objTwitterDirectMessages.id = ObjectId.GenerateNewId();
-                        objTwitterDirectMessages.profileId = profileId;
+                        objDirectMessages.type = Domain.Socioboard.Enum.MessageType.TwitterDirectMessageSent;
+                        objDirectMessages.id = ObjectId.GenerateNewId();
+                        objDirectMessages.profileId = profileId;
                         try
                         {
-                            objTwitterDirectMessages.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -877,8 +892,8 @@ namespace SocioboardDataServices.Twitter
                         try
                         {
                             const string format = "ddd MMM dd HH:mm:ss zzzz yyyy";
-                            objTwitterDirectMessages.createdDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
-                            objTwitterDirectMessages.timeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
+                            objDirectMessages.createdDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
+                            objDirectMessages.timeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
                         }
                         catch (Exception ex)
                         {
@@ -886,7 +901,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterDirectMessages.message = item["text"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.message = item["text"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -895,7 +910,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.recipientId = item["recipient"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.recipientId = item["recipient"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -904,7 +919,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.recipientScreenName = item["recipient"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.recipientScreenName = item["recipient"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -913,7 +928,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.recipientProfileUrl = item["recipient"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.recipientProfileUrl = item["recipient"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -922,7 +937,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.senderId = item["sender"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.senderId = item["sender"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -931,7 +946,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.senderScreenName = item["sender"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.senderScreenName = item["sender"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -939,7 +954,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterDirectMessages.senderProfileUrl = item["sender"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.senderProfileUrl = item["sender"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -947,29 +962,29 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterDirectMessages.entryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                            objDirectMessages.entryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.StackTrace);
                         }
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
+                        MongoRepository mongorepo = new MongoRepository("MongoDirectMessages");
                        
-                        var ret = mongorepo.Find<MongoTwitterDirectMessages>(t => t.messageId.Equals(objTwitterDirectMessages.messageId));
+                        var ret = mongorepo.Find<MongoDirectMessages>(t => t.messageId.Equals(objDirectMessages.messageId));
                         var task = Task.Run(async () => {
                             return await ret;
                         });
                         int count = task.Result.Count;
                         if (count < 1)
                         {
-                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(objTwitterDirectMessages);
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(objDirectMessages);
                         }
                         else
                         {
                             var builders = Builders<BsonDocument>.Filter;
-                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterDirectMessages.messageId);
-                            var update = Builders<BsonDocument>.Update.Set("senderProfileUrl", objTwitterDirectMessages.senderProfileUrl).Set("recipientProfileUrl", objTwitterDirectMessages.recipientProfileUrl);
-                            mongorepo.Update<MongoTwitterDirectMessages>(update, filter);
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objDirectMessages.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("senderProfileUrl", objDirectMessages.senderProfileUrl).Set("recipientProfileUrl", objDirectMessages.recipientProfileUrl);
+                            mongorepo.Update<MongoDirectMessages>(update, filter);
                         }
                     }
                 }
@@ -995,17 +1010,17 @@ namespace SocioboardDataServices.Twitter
             {
                 JArray Messages_Sent = twtuser.GetDirect_Messages(OAuth, 20);
 
-                Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages objTwitterDirectMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages();
+                Domain.Socioboard.Models.Mongo.MongoDirectMessages objDirectMessages = new Domain.Socioboard.Models.Mongo.MongoDirectMessages();
                 if (Messages_Sent != null)
                 {
                     foreach (var item in Messages_Sent)
                     {
-                        objTwitterDirectMessages.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived;
-                        objTwitterDirectMessages.id = ObjectId.GenerateNewId();
-                        objTwitterDirectMessages.profileId = profileId;
+                        objDirectMessages.type = Domain.Socioboard.Enum.MessageType.TwitterDirectMessageReceived;
+                        objDirectMessages.id = ObjectId.GenerateNewId();
+                        objDirectMessages.profileId = profileId;
                         try
                         {
-                            objTwitterDirectMessages.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.messageId = item["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -1014,8 +1029,8 @@ namespace SocioboardDataServices.Twitter
                         try
                         {
                             const string format = "ddd MMM dd HH:mm:ss zzzz yyyy";
-                            objTwitterDirectMessages.createdDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
-                            objTwitterDirectMessages.timeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
+                            objDirectMessages.createdDate = DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture).ToString("yyyy/MM/dd HH:mm:ss");
+                            objDirectMessages.timeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.ParseExact(item["created_at"].ToString().TrimStart('"').TrimEnd('"'), format, System.Globalization.CultureInfo.InvariantCulture));
                         }
                         catch (Exception ex)
                         {
@@ -1023,7 +1038,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterDirectMessages.message = item["text"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.message = item["text"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -1032,7 +1047,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.recipientId = item["recipient"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.recipientId = item["recipient"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -1041,7 +1056,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.recipientScreenName = item["recipient"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.recipientScreenName = item["recipient"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -1050,7 +1065,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.recipientProfileUrl = item["recipient"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.recipientProfileUrl = item["recipient"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -1059,7 +1074,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.senderId = item["sender"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.senderId = item["sender"]["id_str"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -1068,7 +1083,7 @@ namespace SocioboardDataServices.Twitter
 
                         try
                         {
-                            objTwitterDirectMessages.senderScreenName = item["sender"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.senderScreenName = item["sender"]["screen_name"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -1076,7 +1091,7 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterDirectMessages.senderProfileUrl = item["sender"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
+                            objDirectMessages.senderProfileUrl = item["sender"]["profile_image_url"].ToString().TrimStart('"').TrimEnd('"');
                         }
                         catch (Exception ex)
                         {
@@ -1084,28 +1099,28 @@ namespace SocioboardDataServices.Twitter
                         }
                         try
                         {
-                            objTwitterDirectMessages.entryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                            objDirectMessages.entryDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine(ex.StackTrace);
                         }
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages");
-                        var ret = mongorepo.Find<MongoTwitterDirectMessages>(t => t.messageId.Equals(objTwitterDirectMessages.messageId));
+                        MongoRepository mongorepo = new MongoRepository("MongoDirectMessages");
+                        var ret = mongorepo.Find<MongoDirectMessages>(t => t.messageId.Equals(objDirectMessages.messageId));
                         var task = Task.Run(async () => {
                             return await ret;
                         });
                         int count = task.Result.Count;
                         if (count < 1)
                         {
-                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(objTwitterDirectMessages);
+                            mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(objDirectMessages);
                         }
                         else
                         {
                             var builders = Builders<BsonDocument>.Filter;
-                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objTwitterDirectMessages.messageId);
-                            var update = Builders<BsonDocument>.Update.Set("senderProfileUrl", objTwitterDirectMessages.senderProfileUrl).Set("recipientProfileUrl", objTwitterDirectMessages.recipientProfileUrl);
-                            mongorepo.Update<MongoTwitterDirectMessages>(update, filter);
+                            FilterDefinition<BsonDocument> filter = builders.Eq("messageId", objDirectMessages.messageId);
+                            var update = Builders<BsonDocument>.Update.Set("senderProfileUrl", objDirectMessages.senderProfileUrl).Set("recipientProfileUrl", objDirectMessages.recipientProfileUrl);
+                            mongorepo.Update<MongoDirectMessages>(update, filter);
                         }
                     }
                 }
@@ -1143,7 +1158,7 @@ namespace SocioboardDataServices.Twitter
                 do
                 {
                     curser = curser_next;
-                    Domain.Socioboard.Models.Mongo.MongoTwitterMessage _InboxMessages;
+                    Domain.Socioboard.Models.Mongo.MongoMessageModel objMessageModel;
                     if (jdata != null)
                     {
                         apiHitsCount++;
@@ -1151,80 +1166,80 @@ namespace SocioboardDataServices.Twitter
                         {
                             try
                             {
-                                _InboxMessages = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
-                                _InboxMessages.id = ObjectId.GenerateNewId();
-                                _InboxMessages.profileId = TwitterUserId;
-                                _InboxMessages.type = Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower;
-                                _InboxMessages.messageId = Generatetxnid(); 
-                                _InboxMessages.readStatus = 1;
+                                objMessageModel = new Domain.Socioboard.Models.Mongo.MongoMessageModel();
+                                objMessageModel.id = ObjectId.GenerateNewId();
+                                objMessageModel.profileId = TwitterUserId;
+                                objMessageModel.type = Domain.Socioboard.Enum.MessageType.TwitterFollower;
+                                objMessageModel.messageId = Generatetxnid(); 
+                                objMessageModel.readStatus = 1;
                                 try
                                 {
-                                    _InboxMessages.twitterMsg = item["description"].ToString();
+                                    objMessageModel.Message = item["description"].ToString();
                                 }
                                 catch (Exception ex)
                                 {
                                 }
                                 try
                                 {
-                                    _InboxMessages.fromId = item["id_str"].ToString();
+                                    objMessageModel.fromId = item["id_str"].ToString();
                                 }
                                 catch (Exception ex)
                                 {
-                                    _InboxMessages.fromId = item["id"].ToString();
+                                    objMessageModel.fromId = item["id"].ToString();
                                 }
                                 try
                                 {
-                                    _InboxMessages.fromName = item["screen_name"].ToString();
-                                }
-                                catch (Exception ex)
-                                {
-                                }
-                                try
-                                {
-                                    _InboxMessages.FollowerCount = Convert.ToInt32(item["followers_count"].ToString());
+                                    objMessageModel.fromName = item["screen_name"].ToString();
                                 }
                                 catch (Exception ex)
                                 {
                                 }
                                 try
                                 {
-                                    _InboxMessages.FollowingCount = Convert.ToInt32(item["friends_count"].ToString());
+                                    objMessageModel.FollowerCount = Convert.ToInt32(item["followers_count"].ToString());
                                 }
                                 catch (Exception ex)
                                 {
                                 }
                                 try
                                 {
-                                    _InboxMessages.fromProfileUrl = item["profile_image_url"].ToString();
+                                    objMessageModel.FollowingCount = Convert.ToInt32(item["friends_count"].ToString());
                                 }
                                 catch (Exception ex)
                                 {
-                                    _InboxMessages.fromProfileUrl = item["profile_image_url_https"].ToString();
                                 }
                                 try
                                 {
-                                    _InboxMessages.messageDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                                    _InboxMessages.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                                    objMessageModel.fromProfileUrl = item["profile_image_url"].ToString();
+                                }
+                                catch (Exception ex)
+                                {
+                                    objMessageModel.fromProfileUrl = item["profile_image_url_https"].ToString();
+                                }
+                                try
+                                {
+                                    objMessageModel.messageDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                                    objMessageModel.messageTimeStamp = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
                                 }
                                 catch (Exception ex)
                                 {
                                 }
-                                _InboxMessages.RecipientId = TwitterUserId;
-                                _InboxMessages.RecipientName = screeenName;
-                                MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.fromId == _InboxMessages.fromId && t.RecipientId == _InboxMessages.RecipientId && t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower);
+                                objMessageModel.RecipientId = TwitterUserId;
+                                objMessageModel.RecipientName = screeenName;
+                                MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
+                                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.fromId == objMessageModel.fromId && t.RecipientId == objMessageModel.RecipientId && t.type == Domain.Socioboard.Enum.MessageType.TwitterFollower);
                                 var task = Task.Run(async () =>
                                 {
                                     return await result;
                                 });
-                                IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstMongoTwitterMessage = task.Result;
+                                IList<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstMongoTwitterMessage = task.Result;
                                 if (lstMongoTwitterMessage.Count > 0)
                                 {
-                                    mongorepo.UpdateReplace<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(_InboxMessages, t => t.id == lstMongoTwitterMessage[0].id);
+                                    mongorepo.UpdateReplace<Domain.Socioboard.Models.Mongo.MongoMessageModel>(objMessageModel, t => t.id == lstMongoTwitterMessage[0].id);
                                 }
                                 else
                                 {
-                                    mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(_InboxMessages);
+                                    mongorepo.Add<Domain.Socioboard.Models.Mongo.MongoMessageModel>(objMessageModel);
                                 }
 
                             }

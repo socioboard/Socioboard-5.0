@@ -22,5 +22,6 @@ namespace Domain.Socioboard.Models
         public virtual string Payername { get; set; }
         public virtual string payeremail { get; set; }
         public virtual DateTime subscrdate { get; set; }
+        public virtual Int32 bluesnapSubscriptions { get; set; }
     }
 }

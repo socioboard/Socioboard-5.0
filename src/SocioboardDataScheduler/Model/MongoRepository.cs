@@ -27,7 +27,9 @@ namespace SocioboardDataServices.Model
 
             _db = client.GetDatabase(AppSettings.LiveMongoDbName);
 
-   
+            //MongoClient client = new MongoClient(AppSettings.ServMongoDbConnectionString);
+
+            //_db = client.GetDatabase(AppSettings.ServMongoDbName);
 
             this.collecionName = CollectionName;
             
@@ -119,9 +121,9 @@ namespace SocioboardDataServices.Model
             
         }
 
-        public void Add<T>(IEnumerable<T> items) where T : class, new()
+        public void AddRange<T>(IEnumerable<T> collections) where T : class, new()
         {
-            foreach (T item in items)
+            foreach (T item in collections)
             {
                 Add(item);
             }

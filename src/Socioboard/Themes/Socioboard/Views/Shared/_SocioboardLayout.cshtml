@@ -871,7 +871,6 @@ analytics" href="http://statcounter.com/shopify/"
                         return false;
                     }
 
-                    alert("Register");
                     $.ajax({
 
                         type: "POST",
@@ -892,9 +891,9 @@ analytics" href="http://statcounter.com/shopify/"
                             $('#EmailId').val("");
                             $('#Password').val("");
                             $('#CnfPassword').val("");
-                            $('#promo_code').val("")
+                            $('#promo_code').val("");
                             $('#ImgLoading').hide();
-                            $('#submitButton').show(); .4
+                            $('#submitButton').show();
                             // $('#req_skype').val("");
 
                             if (accountType != "0" && PaymentType != "2") {
@@ -918,9 +917,8 @@ analytics" href="http://statcounter.com/shopify/"
                                     }
                                 });
                             }
-                            else
+                            else if (PaymentType == "2")
                             {
-                                alert("BS");
                                 //Bluesnap
                                 alertify.success("Please submit payment details.");
 
@@ -931,9 +929,9 @@ analytics" href="http://statcounter.com/shopify/"
 
                                     url: "@ViewBag.Domain/Home/payBlueSnap",
 
-                                    data: { "emailId": email, "IsLogin": false },
 
                                     dataType: "html",
+                                    data: { "emailId": email, "IsLogin": false },
                                     success: function (msg) {
                                         alertify.set({ delay: 5000 });
                                         alertify.error("please submit Payment detail.");
@@ -1287,7 +1285,7 @@ analytics" href="http://statcounter.com/shopify/"
                         dataType: "html",
 
                         success: function (msg) {
-
+                            debugger;
                             window.location = msg;
 
                         }

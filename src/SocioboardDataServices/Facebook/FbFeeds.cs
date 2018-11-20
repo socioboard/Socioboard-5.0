@@ -7,6 +7,7 @@ using SocioboardDataServices.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SocioboardDataServices.Helper;
 
 namespace SocioboardDataServices.Facebook
 {
@@ -17,30 +18,34 @@ namespace SocioboardDataServices.Facebook
 
         public int updateFacebookFeeds(Domain.Socioboard.Models.Facebookaccounts fbAcc)
         {
-
             apiHitsCount = 0;
-            Model.DatabaseRepository dbr = new DatabaseRepository();
+            var databaseRepository = new DatabaseRepository();
+
             if (fbAcc.LastUpdate.AddHours(1) <= DateTime.UtcNow)
             {
-
-
                 if (fbAcc.IsAccessTokenActive)
                 {
-                    dynamic feeds = Socioboard.Facebook.Data.FbUser.getFeeds(fbAcc.AccessToken);
-                    dynamic profile = Socioboard.Facebook.Data.FbUser.getFbUser(fbAcc.AccessToken);
+                    var feeds = FacebookApiHelper.GetOwnFeedDetails(fbAcc.AccessToken);
+
+                    dynamic profile = FacebookApiHelper.GetUserDetails(fbAcc.AccessToken);
+
                     apiHitsCount++;
+
                     if (Convert.ToString(profile) != "Invalid Access Token")
                     {
-                        fbAcc.Friends = Socioboard.Facebook.Data.FbUser.getFbFriends(fbAcc.AccessToken);
+                        fbAcc.Friends = FacebookApiHelper.GetFriendCounts(fbAcc.AccessToken);
+
                         apiHitsCount++;
+
                         try
                         {
-                            fbAcc.EmailId = (Convert.ToString(profile["email"]));
+                            fbAcc.EmailId = Convert.ToString(profile["email"]);
                         }
                         catch
                         {
                             fbAcc.EmailId = fbAcc.EmailId;
                         }
+
                         try
                         {
                             fbAcc.ProfileUrl = (Convert.ToString(profile["link"]));
@@ -52,81 +57,80 @@ namespace SocioboardDataServices.Facebook
                         }
                         try
                         {
-                            fbAcc.gender = (Convert.ToString(profile["gender"]));
+                            fbAcc.Gender = (Convert.ToString(profile["gender"]));
                         }
                         catch
                         {
-                            fbAcc.gender = fbAcc.gender;
+                            fbAcc.Gender = fbAcc.Gender;
                         }
                         try
                         {
-                            fbAcc.bio = (Convert.ToString(profile["bio"]));
+                            fbAcc.Bio = (Convert.ToString(profile["bio"]));
                         }
                         catch
                         {
-                            fbAcc.bio = fbAcc.bio;
+                            fbAcc.Bio = fbAcc.Bio;
                         }
                         try
                         {
-                            fbAcc.about = (Convert.ToString(profile["about"]));
+                            fbAcc.About = (Convert.ToString(profile["about"]));
                         }
                         catch
                         {
-                            fbAcc.about = fbAcc.about;
+                            fbAcc.About = fbAcc.About;
                         }
                         try
                         {
-                            fbAcc.coverPic = (Convert.ToString(profile["cover"]["source"]));
+                            fbAcc.CoverPic = (Convert.ToString(profile["cover"]["source"]));
                         }
                         catch
                         {
-                            fbAcc.coverPic = fbAcc.coverPic;
+                            fbAcc.CoverPic = fbAcc.CoverPic;
                         }
                         try
                         {
-                            fbAcc.birthday = (Convert.ToString(profile["birthday"]));
+                            fbAcc.Birthday = (Convert.ToString(profile["birthday"]));
                         }
                         catch
                         {
-                            fbAcc.birthday = fbAcc.birthday;
+                            fbAcc.Birthday = fbAcc.Birthday;
                         }
                         try
                         {
                             JArray arry = JArray.Parse(profile["education"]);
                             if (arry.Count > 0)
                             {
-                                fbAcc.college = Convert.ToString(arry[arry.Count - 1]["school"]["name"]);
-                                fbAcc.education = Convert.ToString(arry[arry.Count - 1]["concentration"]["name"]);
+                                fbAcc.College = Convert.ToString(arry[arry.Count - 1]["school"]["name"]);
+                                fbAcc.Education = Convert.ToString(arry[arry.Count - 1]["concentration"]["name"]);
                             }
                         }
                         catch
                         {
-                            fbAcc.college = fbAcc.college;
-                            fbAcc.education = fbAcc.education;
+                            fbAcc.College = fbAcc.College;
+                            fbAcc.Education = fbAcc.Education;
                         }
                         try
                         {
                             JArray arry = JArray.Parse(profile["work"]);
                             if (arry.Count > 0)
                             {
-                                fbAcc.workPosition = Convert.ToString(arry[0]["position"]["name"]);
-                                fbAcc.workCompany = Convert.ToString(arry[0]["employer"]["name"]);
+                                fbAcc.WorkPosition = Convert.ToString(arry[0]["position"]["name"]);
+                                fbAcc.WorkCompany = Convert.ToString(arry[0]["employer"]["name"]);
                             }
                         }
                         catch
                         {
-                            fbAcc.workPosition = fbAcc.workPosition;
-                            fbAcc.workCompany = fbAcc.workCompany;
+                            fbAcc.WorkPosition = fbAcc.WorkPosition;
+                            fbAcc.WorkCompany = fbAcc.WorkCompany;
                         }
 
                         try
                         {
-
-                            dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+                            databaseRepository.Update(fbAcc);
                         }
                         catch { }
 
-                        while (apiHitsCount < MaxapiHitsCount && feeds != null && feeds["data"] != null)
+                        if (apiHitsCount < MaxapiHitsCount && feeds != null && feeds["data"] != null)
                         {
 
                             apiHitsCount++;
@@ -166,7 +170,17 @@ namespace SocioboardDataServices.Facebook
                                         objFacebookFeed.FromId = fbAcc.FbUserId;
                                     }
                                     objFacebookFeed.FeedId = result["id"].ToString();
-                                    objFacebookFeed.FeedDate = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
+                                    try
+                                    {
+                                        objFacebookFeed.FeedDateToshow = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");                                       
+                                        objFacebookFeed.FeedDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(Convert.ToDateTime(objFacebookFeed.FeedDateToshow)).ToString();
+                                        objFacebookFeed.FeedDateToshow = Domain.Socioboard.Helpers.SBHelper.ConvertFromUnixTimestamp(Convert.ToDouble(objFacebookFeed.FeedDate)).ToString("yyyy/MM/dd HH:mm:ss");
+
+                                    }
+                                    catch (Exception ex)
+                                    {
+
+                                    }
                                     try
                                     {
                                         objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
@@ -326,7 +340,7 @@ namespace SocioboardDataServices.Facebook
 
                         fbAcc.LastUpdate = DateTime.UtcNow;
 
-                        dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+                        databaseRepository.Update(fbAcc);
                     }
                 }
             }
@@ -351,7 +365,7 @@ namespace SocioboardDataServices.Facebook
                 //{
 
                 //}
-                dynamic post = Socioboard.Facebook.Data.FbUser.getPostComments(AccessToken, postid);
+                dynamic post = Socioboard.Facebook.Data.FbUser.GetPostComments(AccessToken, postid);
 
                 foreach (var item in post["data"])
                 {

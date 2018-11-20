@@ -6,6 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -14,15 +15,17 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Socioboard.Facebook.Data;
 using Api.Socioboard.Controllers;
+using Domain.Socioboard.Enum;
+using Domain.Socioboard.Interfaces.Repositories;
 
 namespace Api.Socioboard.Helper
 {
     public static class FacebookHelper
     {
-        
+
         public static string ComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Enum.MediaType mediaType, string profileName, DatabaseRepository dbr, ILogger _logger)
         {
-          
+
             string ret = "";
             FacebookClient fb = new FacebookClient();
             fb.AccessToken = accessToken;
@@ -43,7 +46,7 @@ namespace Api.Socioboard.Helper
                 {
                     if (!string.IsNullOrEmpty(imagePath))
                     {
-                        if(!imagePath.Contains("mp4") && !imagePath.Contains("mov") && !imagePath.Contains("mpeg") && !imagePath.Contains("wmv") && !imagePath.Contains("avi") && !imagePath.Contains("flv") && !imagePath.Contains("3gp"))
+                        if (!imagePath.Contains("mp4") && !imagePath.Contains("mov") && !imagePath.Contains("mpeg") && !imagePath.Contains("wmv") && !imagePath.Contains("avi") && !imagePath.Contains("flv") && !imagePath.Contains("3gp"))
                         {
                             Uri u = new Uri(imagePath);
                             string filename = string.Empty;
@@ -104,26 +107,7 @@ namespace Api.Socioboard.Helper
                     ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
 
                 }
-                ScheduledMessage scheduledMessage = new ScheduledMessage();
-                scheduledMessage.createTime = DateTime.UtcNow;
-                scheduledMessage.picUrl = "https://graph.facebook.com/" + fbUserId + "/picture?type=small";//imagePath;
-                scheduledMessage.profileId = profileId;
-                if (profiletype == Domain.Socioboard.Enum.FbProfileType.FacebookProfile)
-                {
-                    scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.Facebook;
-                }
-                else
-                {
-                    scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage;
-                }
-                scheduledMessage.scheduleTime = DateTime.UtcNow;
-                scheduledMessage.shareMessage = message;
-                scheduledMessage.userId = userId;
-                scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
-                scheduledMessage.url = imagePath;//"https://graph.facebook.com/"+ fbUserId + "/picture?type=small";
-                scheduledMessage.mediaType = mediaType;
-                scheduledMessage.socialprofileName = profileName;
-                dbr.Add<ScheduledMessage>(scheduledMessage);
+                UpdatePublishedDetails(profiletype, fbUserId, message, profileId, userId, imagePath, mediaType, profileName, dbr);
 
             }
             catch (Exception ex)
@@ -134,6 +118,28 @@ namespace Api.Socioboard.Helper
             return ret;
         }
 
+        public static void UpdatePublishedDetails(FbProfileType profileType, string fbUserId, string message, string profileId, long userId, string imagePath, MediaType mediaType, string profileName, IDatabaseRepository dbr)
+        {
+            var scheduledMessage = new ScheduledMessage
+            {
+                createTime = DateTime.UtcNow,
+                picUrl = "https://graph.facebook.com/" + fbUserId + "/picture?type=small",
+                profileId = profileId,
+                profileType = profileType == Domain.Socioboard.Enum.FbProfileType.FacebookProfile
+                    ? Domain.Socioboard.Enum.SocialProfileType.Facebook
+                    : Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage,
+                scheduleTime = DateTime.UtcNow,
+                shareMessage = message,
+                userId = userId,
+                status = Domain.Socioboard.Enum.ScheduleStatus.Compleated,
+                url = imagePath,
+                mediaType = mediaType,
+                socialprofileName = profileName
+            };
+
+
+            dbr.Add(scheduledMessage);
+        }
 
         public static string UrlComposeMessage(Domain.Socioboard.Enum.FbProfileType profiletype, string accessToken, string fbUserId, string message, string profileId, long userId, string imagePath, string link, Domain.Socioboard.Enum.MediaType mediaType, string profileName, DatabaseRepository dbr, ILogger _logger)
         {
@@ -194,16 +200,16 @@ namespace Api.Socioboard.Helper
                             var webClient = new WebClient();
                             byte[] img = webClient.DownloadData(imagePath);
                             media.SetValue(img);
-                           // args["title"] = message;
-                           // args["description"] = message;
+                            // args["title"] = message;
+                            // args["description"] = message;
                             args["source"] = media;
                             ret = fb.Post("v2.7/" + fbUserId + "/videos", args).ToString();//v2.1 
                         }
                     }
                     else
                     {
-                       // args["message"] = message;
-                       // ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();
+                        // args["message"] = message;
+                        // ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();
                     }
                 }
                 else
@@ -220,11 +226,11 @@ namespace Api.Socioboard.Helper
                     {
                         ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
 
                     }
-                   
+
 
                 }
                 ScheduledMessage scheduledMessage = new ScheduledMessage();
@@ -240,7 +246,7 @@ namespace Api.Socioboard.Helper
                     scheduledMessage.profileType = Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage;
                 }
                 scheduledMessage.scheduleTime = DateTime.UtcNow;
-                scheduledMessage.shareMessage =link;
+                scheduledMessage.shareMessage = link;
                 scheduledMessage.userId = userId;
                 scheduledMessage.status = Domain.Socioboard.Enum.ScheduleStatus.Compleated;
                 scheduledMessage.url = imagePath;//"https://graph.facebook.com/"+ fbUserId + "/picture?type=small";
@@ -403,7 +409,7 @@ namespace Api.Socioboard.Helper
             {
                 pageinfo = fb.Get(url);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 try
                 {
@@ -447,7 +453,7 @@ namespace Api.Socioboard.Helper
                 dynamic friends = fb.Get("v2.7/" + _facebookpage.ProfilePageId);//v2.1
                 fancountPage = Convert.ToInt32(friends["likes"].ToString());
             }
-            catch 
+            catch
             {
                 fancountPage = 0;
             }
@@ -483,54 +489,69 @@ namespace Api.Socioboard.Helper
             return output;
         }
 
-        public static void schedulePage_Post(string accessToken, string id,int TimeInterVal)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="accessToken"></param>
+        /// <param name="id"></param>
+        /// <param name="timeInterVal"></param>
+        public static void SchedulePagePost(string accessToken,string destinationPageId, string sourcePageId, int timeInterVal)
         {
             try
             {
-                int i = 1;
-                string curser_next = string.Empty;
+                var timeIncrementer = 1;
+
+                var cursorNext = string.Empty;
                 do
                 {
-                    string feeds = Fbpages.getFacebookPageRecentPost(accessToken, id, curser_next);
-                    string feedId = string.Empty;
-                   
-                    if (!string.IsNullOrEmpty(feeds) && !feeds.Equals("[]"))
+                    var feeds = Fbpages.getFacebookPageRecentPost(accessToken, sourcePageId, cursorNext);
+
+                    if (string.IsNullOrEmpty(feeds) || feeds.Equals("[]"))
+                        continue;
+
+                    var fbPageNotes = JObject.Parse(feeds);
+                    try
                     {
-                        JObject fbpageNotes = JObject.Parse(feeds);
+                        cursorNext = fbPageNotes["paging"]["next"].ToString();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        cursorNext = "0";
+                    }
+                    foreach (var obj in JArray.Parse(fbPageNotes["data"].ToString()))
+                    {
                         try
                         {
-                            curser_next = fbpageNotes["paging"]["next"].ToString();
+                            var postId = obj["id"].ToString();
+                            postId = postId.Split('_')[1];
+
+                            var timestamp = DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow.AddMinutes(timeInterVal * timeIncrementer));
+                            var link = "https://www.facebook.com/" + sourcePageId + "/posts/" + postId;
+
+                            var pageAccessToken =
+                                FacebookApiHelper.GetPageAccessToken(destinationPageId, accessToken, string.Empty);
+
+                            var status =   FacebookApiHelper.PublishPostOnSchedule(string.Empty, accessToken, destinationPageId,
+                                link, timestamp.ToString(CultureInfo.InvariantCulture));
+
+                            if (status)
+                                timeIncrementer++;
                         }
                         catch (Exception ex)
                         {
-                            curser_next = "0";
-                        }
-                        foreach (JObject obj in JArray.Parse(fbpageNotes["data"].ToString()))
-                        {
-                            try
-                            {
-                                string feedid = obj["id"].ToString();
-                                feedid = feedid.Split('_')[1];
-                                double timestamp = Helper.DateExtension.ConvertToUnixTimestamp(DateTime.UtcNow.AddMinutes(TimeInterVal * i));
-                                string link = "https://www.facebook.com/" + id + "/posts/" + feedid;
-                                string ret = Fbpages.schedulePage_Post(accessToken, link, timestamp.ToString());
-                                if (!string.IsNullOrEmpty(ret))
-                                {
-                                    i++;
-                                }
-                            }
-                            catch { }
-
+                            Console.WriteLine(ex.Message);
                         }
                     }
-                } while (curser_next != "0");
+                } while (cursorNext != "0");
 
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
             }
         }
 
-       
+
     }
 }

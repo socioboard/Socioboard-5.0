@@ -20,34 +20,34 @@
     <property name="EmailId">
       <column name="EmailId"/>
     </property>
-    <property name="coverPic">
+    <property name="CoverPic">
       <column name="coverPic"/>
     </property>
-    <property name="birthday">
+    <property name="Birthday">
       <column name="birthday"/>
     </property>
-    <property name="education">
+    <property name="Education">
       <column name="education"/>
     </property>
-    <property name="college">
+    <property name="College">
       <column name="college"/>
     </property>
-    <property name="workPosition">
+    <property name="WorkPosition">
       <column name="workPosition"/>
     </property>
-    <property name="homeTown">
+    <property name="HomeTown">
       <column name="homeTown"/>
     </property>
-    <property name="gender">
+    <property name="Gender">
       <column name="gender"/>
     </property>
-    <property name="bio">
+    <property name="Bio">
       <column name="bio"/>
     </property>
-    <property name="about">
+    <property name="About">
       <column name="about"/>
     </property>
-    <property name="workCompany">
+    <property name="WorkCompany">
       <column name="workCompany"/>
     </property>
     <property name="FbProfileType">
@@ -80,13 +80,13 @@
     <property name="IsAccessTokenActive">
       <column name="IsAccessTokenActive"/>
     </property>
-    <property name="lastpagereportgenerated">
+    <property name="LastPageReportGenerated">
       <column name="lastpagereportgenerated"/>
     </property>
     <property name="Is90DayDataUpdated">
       <column name="Is90DayDataUpdated"/>
     </property>
-   <property name="contenetShareathonUpdate">
+   <property name="ContentShareathonUpdate">
       <column name="contenetShareathonUpdate"/>
     </property>
    <property name="SocailSignInEnable">

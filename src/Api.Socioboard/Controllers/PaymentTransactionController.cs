@@ -449,6 +449,89 @@ namespace Api.Socioboard.Controllers
             return Ok(responseFromServer);
         }
 
-        
+        /// <summary>
+        /// Get bluesnap subscription ipn
+        /// </summary>
+        /// <param name="subscriptionId"></param>
+        /// <returns></returns>
+        [HttpPost("GetBlueSnapSubscription")]
+        public IActionResult GetBlueSnapSubscription(string subscriptionId)
+        {
+            string responseFromServer = string.Empty;
+            try
+            {
+                // Create a request using a URL that can receive a post. 
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create("https://sandbox.bluesnap.com/services/2/recurring/subscriptions/" + subscriptionId);
+                // Set the Method property of the request to POST.
+                request.Method = "GET";
+                request.Headers["Authorization"] = "Basic " + _appSettings.bluesnapBase64;
+                request.UserAgent = ".NET Framework Test Client";
+                request.ContentType = "application/json";
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+
+                // Get the response.
+                HttpWebResponse myHttpWebResponse = (HttpWebResponse)request.GetResponse();
+                Console.WriteLine((myHttpWebResponse.StatusDescription));
+                Stream dataStream = myHttpWebResponse.GetResponseStream();
+                StreamReader reader = new StreamReader(dataStream);
+                responseFromServer = reader.ReadToEnd();
+                Console.WriteLine(responseFromServer);
+                reader.Close();
+                dataStream.Close();
+                myHttpWebResponse.Close();
+            }
+            catch (WebException wex)
+            {
+                var pageContent = new StreamReader(wex.Response.GetResponseStream())
+                                      .ReadToEnd();
+
+                Console.WriteLine(wex.Message);
+            }
+
+
+            Dictionary<string, string> planValues = new Dictionary<string, string>();
+            //XML
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(responseFromServer);
+
+
+
+            try
+            {
+                string jsonText = JsonConvert.SerializeXmlNode(xmlDoc);
+
+                JObject responseJson = JObject.Parse(jsonText);
+
+
+                string temp = responseJson["recurring-subscription"]["plan-id"].ToString();
+
+                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
+                try
+                {
+                    PaymentTransaction objPaymentTransaction = dbr.Single<PaymentTransaction>(t => t.trasactionId == subscriptionId);
+                    if (objPaymentTransaction.paymentdate.Date != DateTime.Now.Date && objPaymentTransaction != null)
+                    {
+                        objPaymentTransaction.amount = responseJson["recurring-subscription"]["recurring-charge-amount"].ToString();
+                        objPaymentTransaction.paymentdate = DateTime.UtcNow;
+                        objPaymentTransaction.bluesnapSubscriptions++;
+                        dbr.Update(objPaymentTransaction);
+                    }
+                }
+                catch
+                {
+
+                }
+            }
+            catch
+            {
+
+            }
+
+            return Ok();
+        }
+
+
     }
 }

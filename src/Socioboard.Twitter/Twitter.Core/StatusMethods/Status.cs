@@ -103,7 +103,7 @@ namespace Socioboard.Twitter.Twitter.Core.StatusMethods
             try
             {
                 string RequestUrl = Socioboard.Twitter.App.Core.Globals.UpdateStatusUrl + "?status=";
-                string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+                string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
                 xmlResult.Load(new StringReader(response));
 
             }

@@ -14,12 +14,12 @@ namespace Domain.Socioboard.ViewModels
         public int totalCount { get; set; }
         public TwitterFan()
         { }
-        public TwitterFan(List<MongoTwitterMessage> lstMongoTwitterMessage)
+        public TwitterFan(List<MongoMessageModel> lstMongoTwitterMessage)
         {
             screenName = lstMongoTwitterMessage.First().fromScreenName;
             name = lstMongoTwitterMessage.First().fromName;
-            mentionsCount = lstMongoTwitterMessage.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention);
-            retweetsCount = lstMongoTwitterMessage.Count(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet);
+            mentionsCount = lstMongoTwitterMessage.Count(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterMention);
+            retweetsCount = lstMongoTwitterMessage.Count(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterRetweet);
             totalCount = lstMongoTwitterMessage.Count();
         }
     }

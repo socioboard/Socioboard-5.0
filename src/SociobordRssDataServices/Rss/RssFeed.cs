@@ -15,6 +15,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Socioboard.Facebook.Data;
 
 namespace SociobordRssDataServices.Rss
 {
@@ -53,7 +54,7 @@ namespace SociobordRssDataServices.Rss
                         {
                             Domain.Socioboard.Models.Facebookaccounts lstFbAcc = dbr.Single<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(item.ProfileId));
                             // Domain.Socioboard.Models.Facebookaccounts _Facebookaccounts = Repositories.FacebookRepository.getFacebookAccount(item.ProfileId, _redisCache, dbr);
-                            string msg = FacebookComposeMessageRss(item.Message, lstFbAcc.AccessToken, lstFbAcc.FbUserId, item.Title, item.Link, item.strId);
+                            string msg = FacebookComposeMessageRss(item.Title, lstFbAcc.AccessToken, lstFbAcc.FbUserId, item.Title, item.Link, item.strId);
 
                             var builders = Builders<BsonDocument>.Filter;
                             FilterDefinition<BsonDocument> filter = builders.Eq("strId", item.strId);
@@ -68,7 +69,6 @@ namespace SociobordRssDataServices.Rss
                             Console.WriteLine("rss Data");
                             Console.WriteLine(_rssdata);
 
-
                         }
 
                     }
@@ -76,45 +76,38 @@ namespace SociobordRssDataServices.Rss
                     {
                         return "";
                     }
-                    Thread.Sleep(20*1000); // for 10 min stop
+                    Thread.Sleep(20*1000);
                 }
-                //else if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
-                //{
-                //    try
-                //    {
-                //        string message = "";
-                //        string UrlShortendata = GetShortenUrl(item.Link, _appSettings);
-                //        string shortenUrl = string.Empty;
-                //        try
-                //        {
-                //            JObject JData = JObject.Parse(UrlShortendata);
-                //            if (JData["status_txt"].ToString() == "OK")
-                //                shortenUrl = JData["data"]["url"].ToString();
-                //        }
-                //        catch (Exception ex)
-                //        {
+                if (_objrssdata.First().ProfileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
+                {
+                    try
 
-                //        }
+                    {
+                        if (item.Status == false)
+                        {
+                            Domain.Socioboard.Models.TwitterAccount lstTwtAcc = dbr.Single<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId.Equals(item.ProfileId));
+                            string msg = TwitterComposeMessageRss(item.Link, lstTwtAcc.oAuthToken, lstTwtAcc.oAuthSecret, lstTwtAcc.twitterUserId, lstTwtAcc.twitterScreenName, item.strId);
 
-                //        if (item.Message.Length > 115)
-                //        {
-                //            message = item.Message.Substring(0, 115);
-                //        }
-                //        else
-                //        {
-                //            message = item.Message;
-                //        }
-                //        message += " " + shortenUrl;
-                //        Domain.Socioboard.Models.TwitterAccount _TwitterAccount = Repositories.TwitterRepository.getTwitterAccount(item.ProfileId, _redisCache, dbr);
-                //      TwitterComposeMessageRss(message, _TwitterAccount.oAuthToken, _TwitterAccount.oAuthSecret, _TwitterAccount.twitterUserId, _TwitterAccount.twitterScreenName, item.strId);
-
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        return "";
-                //    }
-                //    Thread.Sleep(10 * 000);
-                //}
+                            var builders = Builders<BsonDocument>.Filter;
+                            FilterDefinition<BsonDocument> filter = builders.Eq("strId", item.strId);
+                            var update = Builders<BsonDocument>.Update.Set("Status", true);
+                            mongorepo.Update<Domain.Socioboard.Models.Mongo.RssFeed>(update, filter);
+                            var resu = mongorepo.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.strId == item.strId);
+                            var tasks = Task.Run(async () =>
+                            {
+                                return await resu;
+                            });
+                            IList<Domain.Socioboard.Models.Mongo.RssFeed> _rssdata = tasks.Result;
+                            Console.WriteLine("rss Data");
+                            Console.WriteLine(_rssdata);
+                        }                
+                    }
+                    catch (Exception ex)
+                    {
+                        return "";
+                    }
+                    Thread.Sleep(20 * 000);
+                }
             }
             return "";
               //  string facebookdata = FacebookComposeMessageRss(objRssFeeds.Message, _Facebookaccounts.AccessToken, _Facebookaccounts.FbUserId, objRssFeeds.Title, objRssFeeds.Link, objRssFeeds.strId);
@@ -144,6 +137,7 @@ namespace SociobordRssDataServices.Rss
 
                             foreach (XmlElement item in abc)
                             {
+                                int count = 0;
                                 Domain.Socioboard.Models.Mongo.RssFeed objRssFeeds = new Domain.Socioboard.Models.Mongo.RssFeed();
                                 try
                                 {
@@ -234,12 +228,13 @@ namespace SociobordRssDataServices.Rss
                                     objRssFeeds.ProfileId = profileid;
                                     objRssFeeds.ProfileType = profiletype;
                                     objRssFeeds.Status = false;
-                                    var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Link.Equals(objRssFeeds.Link) && t.ProfileId.Equals(profileid) && t.ProfileType.Equals(profiletype));
+                                    var ret = _RssFeedRepository.Find<Domain.Socioboard.Models.Mongo.RssFeed>(t => t.Link.Equals(objRssFeeds.Link) && t.ProfileId.Equals(profileid) && t.ProfileType.Equals(profiletype) && t.Status==true);
                                     var task = Task.Run(async () =>
                                     {
                                         return await ret;
                                     });
-                                    int count = task.Result.Count;
+                                    //int count = task.Result.Count; change by sweta on 06/04/2018
+                                    count = task.Result.Count;
                                     if (count < 1)
                                     {
                                         _RssFeedRepository.Add<Domain.Socioboard.Models.Mongo.RssFeed>(objRssFeeds);
@@ -250,7 +245,7 @@ namespace SociobordRssDataServices.Rss
                                 {
 
                                 }
-                                if (apiHitsCount < MaxapiHitsCount)
+                                if (apiHitsCount < MaxapiHitsCount && count<1)
                                 {
                                     string facebookdata = FacebookComposeMessageRss(objRssFeeds.Message, _Facebookaccounts.AccessToken, _Facebookaccounts.FbUserId, objRssFeeds.Title, objRssFeeds.Link, objRssFeeds.strId);
                                     if (!string.IsNullOrEmpty(facebookdata))
@@ -456,17 +451,29 @@ namespace SociobordRssDataServices.Rss
             MongoRepository rssfeedRepo = new MongoRepository("RssFeed");
             try
             {
-                fb.AccessToken = accessToken;
-                System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
-                var args = new Dictionary<string, object>();
-                args["message"] = message;
-                args["link"] = link;
-                ret = fb.Post("v2.7/" + FbUserId + "/feed", args).ToString();
+                var pageAccessToken = FacebookApiHelper.GetPageAccessToken(FbUserId, accessToken, string.Empty);
+                if (string.IsNullOrEmpty(pageAccessToken))              
+                    return string.Empty;
+                FacebookApiHelper.PublishPostOnPage(pageAccessToken, FbUserId, message, string.Empty, link);
+
+                #region Old Methods 
+                //fb.AccessToken = accessToken;
+                //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
+                //var args = new Dictionary<string, object>();
+                //if (message != null)
+                //{
+                //    args["message"] = message;
+                //}
+
+                //args["link"] = link;
+                //ret = fb.Post("v2.7/" + FbUserId + "/feed", args).ToString(); 
+                #endregion
+
                 var builders = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", rssFeedId);
                 var update = Builders<BsonDocument>.Update.Set("Status", true);
                 rssfeedRepo.Update<Domain.Socioboard.Models.Mongo.RssFeed>(update, filter);
-                //Thread.Sleep(1000*120);
+                Thread.Sleep(1000*600);
                 return ret = "Messages Posted Successfully";
             }
             catch (Exception ex)

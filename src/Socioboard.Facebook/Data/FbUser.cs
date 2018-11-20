@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using Socioboard.Facebook.Utils;
 
 namespace Socioboard.Facebook.Data
 {
@@ -13,7 +14,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me?fields=id,about,bio,birthday,cover,education,email,gender,hometown,name,first_name,last_name,work,picture");//v2.6
+                return fb.Get($"{FbConstants.FacebookApiVersion}/me?fields=id,about,birthday,cover,education,email,gender,hometown,name,first_name,last_name,work,picture");//v2.6
             }
             catch (Exception ex)
             {
@@ -25,7 +26,7 @@ namespace Socioboard.Facebook.Data
         {
             FacebookClient fb = new FacebookClient();
             fb.AccessToken = accessToken;
-            dynamic friends = fb.Get("v2.7/me/friends");//v2.1
+            dynamic friends = fb.Get($"{FbConstants.FacebookApiVersion}/me/friends");//v2.1
             try
             {
                 return Convert.ToInt64(friends["summary"]["total_count"].ToString());
@@ -42,7 +43,8 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me/feed?limit=99&fields=picture,created_time,message,description,story,from,likes.summary(true),comments.summary(true),type,application");//v2.1
+                var details = fb.Get($"{FbConstants.FacebookApiVersion}/me/feed?limit=99&fields=picture,created_time,message,description,story,from,likes.summary(true),comments.summary(true),type,application");//v2.1
+                return details;
             }
             catch (Exception ex)
             {
@@ -57,7 +59,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/" + facebookid + "/posts?limit=99");//v2.1
+                return fb.Get($"{FbConstants.FacebookApiVersion}/" + facebookid + "/posts?limit=99");//v2.1
             }
             catch (Exception ex)
             {
@@ -71,7 +73,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/" + PostId + "?fields=likes.summary(true),comments.summary(true),shares");//v2.1
+                return fb.Get($"{FbConstants.FacebookApiVersion}/" + PostId + "?fields=likes.summary(true),comments.summary(true),shares");//v2.1
             }
             catch (Exception ex)
             {
@@ -84,7 +86,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/" + PostId + "/insights");//v2.1
+                return fb.Get($"{FbConstants.FacebookApiVersion}/" + PostId + "/insights");//v2.1
             }
             catch (Exception ex)
             {
@@ -99,7 +101,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me/conversations");//v2.1
+                return fb.Get($"{FbConstants.FacebookApiVersion}/me/conversations");//v2.1
             }
             catch (Exception ex)
             {
@@ -113,7 +115,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me/notifications");//v2.1
+                return fb.Get($"{FbConstants.FacebookApiVersion}/me/notifications");//v2.1
             }
             catch (Exception ex)
             {
@@ -121,33 +123,33 @@ namespace Socioboard.Facebook.Data
             }
         }
 
-        public static dynamic getPostComments(string accessToken, string postid)
+        public static dynamic GetPostComments(string accessToken, string postid)
         {
-            FacebookClient fb = new FacebookClient();
-            fb.AccessToken = accessToken;
+            var fb = new FacebookClient {AccessToken = accessToken};
             try
             {
-                return fb.Get("v2.7/" + postid + "/comments?limit=99");//v2.1
+                return fb.Get($"{FbConstants.FacebookApiVersion}/" + postid + "/comments?limit=99");//v2.1
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "Invalid Access Token";
             }
         }
 
 
-        public static string postComments(string accessToken, string postid, string message)
+        public static string PostComments(string accessToken, string postid, string message)
         {
-            var args = new Dictionary<string, object>();
-            FacebookClient fb = new FacebookClient();
-            fb.AccessToken = accessToken;
-            args["message"] = message;
+            var args = new Dictionary<string, object> {["message"] = message};
+            var fb = new FacebookClient {AccessToken = accessToken};
+           
             try
             {
-                return fb.Post("v2.7/" + postid + "/comments", args).ToString();//v2.1
+                return fb.Post($"{FbConstants.FacebookApiVersion}/" + postid + "/comments", args).ToString();//v2.1
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "Invalid Access Token";
             }
         }
@@ -172,7 +174,7 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me/tagged?fields=picture,created_time,message,description,from&limit=99");//v2.6
+                return fb.Get($"{FbConstants.FacebookApiVersion}/me/tagged?fields=picture,created_time,message,description,from&limit=99");//v2.6
             }
             catch (Exception ex)
             {
@@ -186,17 +188,13 @@ namespace Socioboard.Facebook.Data
             fb.AccessToken = accessToken;
             try
             {
-                return fb.Get("v2.7/me/promotable_posts?fields=picture,created_time,message,description,from&limit=99");//v2.6
+                return fb.Get($"{FbConstants.FacebookApiVersion}/me/promotable_posts?fields=picture,created_time,message,description,from&limit=99");//v2.6
             }
             catch (Exception ex)
             {
                 return "Invalid Access Token";
             }
         }
-
-
-      
-
 
         public static string SetPrivacy(string privacy, FacebookClient fb, string fbUserId)
         {

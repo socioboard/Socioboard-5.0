@@ -36,6 +36,7 @@ namespace Socioboard.Controllers
         {
             Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
             Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+           
             if (session != null)
             {
                 SortedDictionary<string, string> strdi = new SortedDictionary<string, string>();
@@ -1124,84 +1125,79 @@ namespace Socioboard.Controllers
         [HttpGet]
         public async Task<ActionResult> PayPalAccount(string emailId, bool IsLogin)
         {
-            HttpResponseMessage userresponse = await WebApiReq.GetReq("/api/User/GetUserData?emailId=" + emailId, "", "", _appSettings.ApiDomain);
+            var userresponse = await WebApiReq.GetReq("/api/User/GetUserData?emailId=" + emailId, "", "", _appSettings.ApiDomain);
+
             if (userresponse.IsSuccessStatusCode)
             {
-                string package = string.Empty;
-                User user = await userresponse.Content.ReadAsAsync<User>();
+                var package = string.Empty;
+                var user = await userresponse.Content.ReadAsAsync<User>();
                 HttpContext.Session.SetObjectAsJson("User", user);
-                if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
-                {
-                    package = "Free";
-                }
-                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
-                {
-                    package = "Deluxe";
 
-                }
-                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Premium)
+                switch (user.AccountType)
                 {
-                    package = "Premium";
-
+                    case Domain.Socioboard.Enum.SBAccountType.Free:
+                        package = "Free";
+                        break;
+                    case Domain.Socioboard.Enum.SBAccountType.Deluxe:
+                        package = "Deluxe";
+                        break;
+                    case Domain.Socioboard.Enum.SBAccountType.Premium:
+                        package = "Premium";
+                        break;
+                    case Domain.Socioboard.Enum.SBAccountType.Topaz:
+                        package = "Topaz";
+                        break;
+                    case Domain.Socioboard.Enum.SBAccountType.Platinum:
+                        package = "Platinum";
+                        break;
+                    case Domain.Socioboard.Enum.SBAccountType.Gold:
+                        package = "Gold";
+                        break;
+                    case Domain.Socioboard.Enum.SBAccountType.Ruby:
+                        package = "Ruby";
+                        break;
+                    case Domain.Socioboard.Enum.SBAccountType.Standard:
+                        package = "Standard";
+                        break;
                 }
-                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Topaz)
+
+                var parameter = new List<KeyValuePair<string, string>>
                 {
-                    package = "Topaz";
+                    new KeyValuePair<string, string>("packagename", package)
+                };
 
-                }
-                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Platinum)
-                {
-                    package = "Platinum";
+                var paymentResponse = await WebApiReq.PostReq("/api/PaymentTransaction/GetPackage", parameter, "", "", _appSettings.ApiDomain);
 
-                }
-                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Gold)
-                {
-                    package = "Gold";
-
-                }
-                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Ruby)
-                {
-                    package = "Ruby";
-
-                }
-                else if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Standard)
-                {
-                    package = "Standard";
-
-                }
-                List<KeyValuePair<string, string>> Parameter = new List<KeyValuePair<string, string>>();
-                Parameter.Add(new KeyValuePair<string, string>("packagename", package));
-                HttpResponseMessage respons = await WebApiReq.PostReq("/api/PaymentTransaction/GetPackage", Parameter, "", "", _appSettings.ApiDomain);
-                if (respons.IsSuccessStatusCode)
+                if (paymentResponse.IsSuccessStatusCode)
                 {
                     try
                     {
-                        Domain.Socioboard.Models.Package _Package = await respons.Content.ReadAsAsync<Domain.Socioboard.Models.Package>();
-                        HttpContext.Session.SetObjectAsJson("Package", _Package);
+                        var sessionPackage = await paymentResponse.Content.ReadAsAsync<Package>();
+                        HttpContext.Session.SetObjectAsJson("Package", sessionPackage);
+
                         if (!IsLogin)
                         {
+                            HttpContext.Session.SetObjectAsJson("paymentsession", true);
                             if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
-                            {
-                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
-                                string paypalUrl = Helpers.Payment.RecurringPaymentWithPayPal(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL);
+                            {                             
+                                var paypalUrl = Payment.RecurringPaymentWithPayPal(sessionPackage.amount, sessionPackage.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL);
                                 return Content(paypalUrl);
                             }
                             else
                             {
-                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
                                 return RedirectToAction("paymentWithPayUMoney", "Index");
                             }
                         }
                         else
                         {
+                            HttpContext.Session.SetObjectAsJson("paymentsession", true);
                             if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
                             {
-                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
-                                return Redirect(Helpers.Payment.RecurringPaymentWithPayPal(_Package.amount, _Package.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL));
+                             
+                                return Redirect(Payment.RecurringPaymentWithPayPal(sessionPackage.amount, sessionPackage.packagename, user.FirstName + " " + user.LastName, user.PhoneNumber, user.EmailId, "USD", _appSettings.paypalemail, _appSettings.callBackUrl, _appSettings.failUrl, _appSettings.callBackUrl, _appSettings.cancelurl, _appSettings.notifyUrl, "", _appSettings.PaypalURL));
                             }
                             else
                             {
-                                HttpContext.Session.SetObjectAsJson("paymentsession", true);
                                 return RedirectToAction("paymentWithPayUMoney", "Index", new { contesnt = false });
                             }
                         }
@@ -1637,6 +1633,35 @@ namespace Socioboard.Controllers
                 HttpContext.Session.SetObjectAsJson("User", user);
             }
             return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ipnBluesnap(string transactionType, long subscriptionId)
+        {
+            try
+            {
+                _logger.LogInformation("========================================transactiontype======================================");
+                _logger.LogInformation(transactionType);
+                _logger.LogInformation("========================================subscriptionId======================================");
+                _logger.LogInformation(subscriptionId.ToString());
+
+
+
+                List<KeyValuePair<string, string>> Parameter = new List<KeyValuePair<string, string>>();
+                Parameter.Add(new KeyValuePair<string, string>("subscriptionId", subscriptionId.ToString()));
+
+                HttpResponseMessage respons = await WebApiReq.PostReq("/api/PaymentTransaction/GetBlueSnapSubscription", Parameter, "", "", _appSettings.ApiDomain);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("========================================exception======================================");
+
+                _logger.LogInformation(ex.Message);
+            }
+
+
+
+            return Ok();
         }
 
     }

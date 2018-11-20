@@ -239,9 +239,7 @@ namespace Api.Socioboard.Repositories
             }
             else
             {
-                var builder = Builders<AdvanceSerachData>.Sort;
-                var sort = builder.Ascending(t => t.title.Contains(keywords));
-                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.title.Contains(keywords));
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.title.Contains(keywords) || t.postdescription.Contains(keywords), 0,100);
                 var task = Task.Run(async () =>
                 {
                     return await result;

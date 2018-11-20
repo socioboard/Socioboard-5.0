@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Domain.Socioboard.Helpers;
 using System.Text;
 using MongoDB.Bson;
+using SocioboardDataServices.Helper;
 
 namespace SocioboardDataServices.Reports.FacebookReports
 {
@@ -25,14 +26,14 @@ namespace SocioboardDataServices.Reports.FacebookReports
                     int c = 0;
                     DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.IsAccessTokenActive && t.IsActive && t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPage).ToList();
-            
+                    //lstFbAcc = lstFbAcc.Where(t => t.FbUserId.Contains("790900144392091")).ToList();
                     foreach (var item in lstFbAcc)
                     {
                         //if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
                         //{
                             CreateReports(item.FbUserId, item.AccessToken, item.Is90DayDataUpdated,item.UserId);
                             item.Is90DayDataUpdated = true;
-                            item.lastpagereportgenerated = DateTime.UtcNow;
+                            item.LastPageReportGenerated = DateTime.UtcNow;
                             dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(item);
                             cache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterMessageReportsByProfileId + item.FbUserId);
                             Console.WriteLine(c++);

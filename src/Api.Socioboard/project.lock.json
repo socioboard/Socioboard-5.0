@@ -35,10 +35,10 @@
           "lib/net45/Facebook.dll": {}
         }
       },
-      "Google.Apis/1.24.1": {
+      "Google.Apis/1.25.0": {
         "type": "package",
         "dependencies": {
-          "Google.Apis.Core": "1.24.1",
+          "Google.Apis.Core": "1.25.0",
           "Zlib.Portable.Signed": "1.11.0"
         },
         "compile": {
@@ -63,11 +63,11 @@
           "lib/portable-net45+netcore45+wpa81+wp8/Google.Apis.Analytics.v3.dll": {}
         }
       },
-      "Google.Apis.Auth/1.24.1": {
+      "Google.Apis.Auth/1.25.0": {
         "type": "package",
         "dependencies": {
-          "Google.Apis": "1.24.1",
-          "Google.Apis.Core": "1.24.1"
+          "Google.Apis": "1.25.0",
+          "Google.Apis.Core": "1.25.0"
         },
         "compile": {
           "lib/net45/Google.Apis.Auth.PlatformServices.dll": {},
@@ -78,7 +78,7 @@
           "lib/net45/Google.Apis.Auth.dll": {}
         }
       },
-      "Google.Apis.Core/1.24.1": {
+      "Google.Apis.Core/1.25.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -90,56 +90,17 @@
           "lib/net45/Google.Apis.Core.dll": {}
         }
       },
-      "Google.Apis.YouTube.v3/1.24.1.760": {
+      "Google.Apis.YouTube.v3/1.25.0.760": {
         "type": "package",
         "dependencies": {
-          "Google.Apis": "1.24.1",
-          "Google.Apis.Auth": "1.24.1"
+          "Google.Apis": "1.25.0",
+          "Google.Apis.Auth": "1.25.0"
         },
         "compile": {
           "lib/net45/Google.Apis.YouTube.v3.dll": {}
         },
         "runtime": {
           "lib/net45/Google.Apis.YouTube.v3.dll": {}
-        }
-      },
-      "Google.GData.Client/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "4.0.5"
-        },
-        "compile": {
-          "lib/Google.GData.Client.dll": {}
-        },
-        "runtime": {
-          "lib/Google.GData.Client.dll": {}
-        }
-      },
-      "Google.GData.Extensions/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "Google.GData.Client": "2.2.0",
-          "Newtonsoft.Json": "4.0.5"
-        },
-        "compile": {
-          "lib/Google.GData.Extensions.dll": {}
-        },
-        "runtime": {
-          "lib/Google.GData.Extensions.dll": {}
-        }
-      },
-      "Google.GData.YouTube/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "Google.GData.Client": "2.2.0",
-          "Google.GData.Extensions": "2.2.0",
-          "Newtonsoft.Json": "4.0.5"
-        },
-        "compile": {
-          "lib/Google.GData.YouTube.dll": {}
-        },
-        "runtime": {
-          "lib/Google.GData.YouTube.dll": {}
         }
       },
       "Hammock/1.2.3": {
@@ -2451,10 +2412,10 @@
           "lib/net45/Facebook.dll": {}
         }
       },
-      "Google.Apis/1.24.1": {
+      "Google.Apis/1.25.0": {
         "type": "package",
         "dependencies": {
-          "Google.Apis.Core": "1.24.1",
+          "Google.Apis.Core": "1.25.0",
           "Zlib.Portable.Signed": "1.11.0"
         },
         "compile": {
@@ -2479,11 +2440,11 @@
           "lib/portable-net45+netcore45+wpa81+wp8/Google.Apis.Analytics.v3.dll": {}
         }
       },
-      "Google.Apis.Auth/1.24.1": {
+      "Google.Apis.Auth/1.25.0": {
         "type": "package",
         "dependencies": {
-          "Google.Apis": "1.24.1",
-          "Google.Apis.Core": "1.24.1"
+          "Google.Apis": "1.25.0",
+          "Google.Apis.Core": "1.25.0"
         },
         "compile": {
           "lib/net45/Google.Apis.Auth.PlatformServices.dll": {},
@@ -2494,7 +2455,7 @@
           "lib/net45/Google.Apis.Auth.dll": {}
         }
       },
-      "Google.Apis.Core/1.24.1": {
+      "Google.Apis.Core/1.25.0": {
         "type": "package",
         "dependencies": {
           "Newtonsoft.Json": "7.0.1"
@@ -2506,56 +2467,17 @@
           "lib/net45/Google.Apis.Core.dll": {}
         }
       },
-      "Google.Apis.YouTube.v3/1.24.1.760": {
+      "Google.Apis.YouTube.v3/1.25.0.760": {
         "type": "package",
         "dependencies": {
-          "Google.Apis": "1.24.1",
-          "Google.Apis.Auth": "1.24.1"
+          "Google.Apis": "1.25.0",
+          "Google.Apis.Auth": "1.25.0"
         },
         "compile": {
           "lib/net45/Google.Apis.YouTube.v3.dll": {}
         },
         "runtime": {
           "lib/net45/Google.Apis.YouTube.v3.dll": {}
-        }
-      },
-      "Google.GData.Client/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "Newtonsoft.Json": "4.0.5"
-        },
-        "compile": {
-          "lib/Google.GData.Client.dll": {}
-        },
-        "runtime": {
-          "lib/Google.GData.Client.dll": {}
-        }
-      },
-      "Google.GData.Extensions/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "Google.GData.Client": "2.2.0",
-          "Newtonsoft.Json": "4.0.5"
-        },
-        "compile": {
-          "lib/Google.GData.Extensions.dll": {}
-        },
-        "runtime": {
-          "lib/Google.GData.Extensions.dll": {}
-        }
-      },
-      "Google.GData.YouTube/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "Google.GData.Client": "2.2.0",
-          "Google.GData.Extensions": "2.2.0",
-          "Newtonsoft.Json": "4.0.5"
-        },
-        "compile": {
-          "lib/Google.GData.YouTube.dll": {}
-        },
-        "runtime": {
-          "lib/Google.GData.YouTube.dll": {}
         }
       },
       "Hammock/1.2.3": {
@@ -4862,12 +4784,12 @@
         "serializers/JsonNetSerializer.cs"
       ]
     },
-    "Google.Apis/1.24.1": {
-      "sha512": "IotbJlX3qTthN3Z3HdtnzV81CkWUi5iFAKlZUqM0tEz5XYfm0rsieCIn5xGgemcrJ2NAQSrDVmcu4u2AHXS1uQ==",
+    "Google.Apis/1.25.0": {
+      "sha512": "6F8TcXVYS1dGSC7m4fQsf7wk7TlVmZV6qyMN3e0HIQHOdXOHNvmvMmI7hEOxfKX7xFKakUC98zxhS9j6GLDpwQ==",
       "type": "package",
-      "path": "Google.Apis/1.24.1",
+      "path": "Google.Apis/1.25.0",
       "files": [
-        "Google.Apis.1.24.1.nupkg.sha512",
+        "Google.Apis.1.25.0.nupkg.sha512",
         "Google.Apis.nuspec",
         "License.txt",
         "lib/net45/Google.Apis.PlatformServices.dll",
@@ -4917,12 +4839,12 @@
         "lib/portable-net45+netcore45+wpa81+wp8/Google.Apis.Analytics.v3.xml"
       ]
     },
-    "Google.Apis.Auth/1.24.1": {
-      "sha512": "Jlki9jQxZT2J1frKqbA7Hp2QwT14nrtrTBSb6NmT5JRfmFLDLtipJXLBSFnXpY8glchc2sQIIixMo5ul4buuhA==",
+    "Google.Apis.Auth/1.25.0": {
+      "sha512": "L2mdtqQ1VZxn5v3FLuI3EKsiNQQyaM7rr+tvn1Z1utJ1ZheD1nUyIm9Z6wCM7SL0gImYQWqzWMb6nOtxXKJV7A==",
       "type": "package",
-      "path": "Google.Apis.Auth/1.24.1",
+      "path": "Google.Apis.Auth/1.25.0",
       "files": [
-        "Google.Apis.Auth.1.24.1.nupkg.sha512",
+        "Google.Apis.Auth.1.25.0.nupkg.sha512",
         "Google.Apis.Auth.nuspec",
         "License.txt",
         "lib/net45/Google.Apis.Auth.PlatformServices.dll",
@@ -4960,12 +4882,12 @@
         "lib/wpa81/Google.Apis.Auth.xml"
       ]
     },
-    "Google.Apis.Core/1.24.1": {
-      "sha512": "ucJl79pUqRlD0GdsaJI0VPCcREmoYH+93Z1eHWRjOAkMQVGo2Jb9yOF6bJBQnPO+BTvGlf32a0Xc+nxCOLdvEw==",
+    "Google.Apis.Core/1.25.0": {
+      "sha512": "GD3N9s6LLv6MNcBh+uE+fq35Mi7keslkcpmdbnO8ZkQs18Oul1PAmyyflKAdKAWTexxEFknjEchI7erLizADkg==",
       "type": "package",
-      "path": "Google.Apis.Core/1.24.1",
+      "path": "Google.Apis.Core/1.25.0",
       "files": [
-        "Google.Apis.Core.1.24.1.nupkg.sha512",
+        "Google.Apis.Core.1.25.0.nupkg.sha512",
         "Google.Apis.Core.nuspec",
         "License.txt",
         "lib/net45/Google.Apis.Core.dll",
@@ -4979,12 +4901,12 @@
         "lib/portable-net45+sl50+netcore45+wpa81+wp8/Google.Apis.Core.xml"
       ]
     },
-    "Google.Apis.YouTube.v3/1.24.1.760": {
-      "sha512": "52hdVKEiSsut5cQc46pdgn91s6gNYH6T5ipbvjsnVHvyqps7c4OIylXvHNdCotd2S71u1+1/gLRW439BE4Whlg==",
+    "Google.Apis.YouTube.v3/1.25.0.760": {
+      "sha512": "d43Fp5+E+cAew9DyCaba9aFf0lHQzrwP+HPIdSC3baxJaGPkAvqQJFMU+SKUvtFsatd1E0jFyjxQfw2//zWHFA==",
       "type": "package",
-      "path": "Google.Apis.YouTube.v3/1.24.1.760",
+      "path": "Google.Apis.YouTube.v3/1.25.0.760",
       "files": [
-        "Google.Apis.YouTube.v3.1.24.1.760.nupkg.sha512",
+        "Google.Apis.YouTube.v3.1.25.0.760.nupkg.sha512",
         "Google.Apis.YouTube.v3.nuspec",
         "lib/net45/Google.Apis.YouTube.v3.dll",
         "lib/net45/Google.Apis.YouTube.v3.pdb",
@@ -4998,36 +4920,6 @@
         "lib/portable-net45+netcore45+wpa81+wp8/Google.Apis.YouTube.v3.dll",
         "lib/portable-net45+netcore45+wpa81+wp8/Google.Apis.YouTube.v3.pdb",
         "lib/portable-net45+netcore45+wpa81+wp8/Google.Apis.YouTube.v3.xml"
-      ]
-    },
-    "Google.GData.Client/2.2.0": {
-      "sha512": "fEzWX+zWCJLj2pHcaY22hz4bbhCYzk01OodW2lqovh8jA2KsMaZ+SvZJqjl2sZo83us8DAFYlnopIR6qfkBbrQ==",
-      "type": "package",
-      "path": "Google.GData.Client/2.2.0",
-      "files": [
-        "Google.GData.Client.2.2.0.nupkg.sha512",
-        "Google.GData.Client.nuspec",
-        "lib/Google.GData.Client.dll"
-      ]
-    },
-    "Google.GData.Extensions/2.2.0": {
-      "sha512": "Pvei3H1fhthoPbgey6QXqlYD3BCYo+E2h/J1+1PVK1rKMQ/9Ifo3nx5KDT1luyu2H/ZGFxouDaxnqKq2u/J5Qg==",
-      "type": "package",
-      "path": "Google.GData.Extensions/2.2.0",
-      "files": [
-        "Google.GData.Extensions.2.2.0.nupkg.sha512",
-        "Google.GData.Extensions.nuspec",
-        "lib/Google.GData.Extensions.dll"
-      ]
-    },
-    "Google.GData.YouTube/2.2.0": {
-      "sha512": "z/Ce0/mZDFs3sSqU5GdHhfilNVjnUHu8PZtfskzI3rMbxCLi9J1e1MQ097Jcl6DuSjkJl+M90JyC98wy5X7goA==",
-      "type": "package",
-      "path": "Google.GData.YouTube/2.2.0",
-      "files": [
-        "Google.GData.YouTube.2.2.0.nupkg.sha512",
-        "Google.GData.YouTube.nuspec",
-        "lib/Google.GData.YouTube.dll"
       ]
     },
     "Hammock/1.2.3": {
@@ -5144,12 +5036,12 @@
       ]
     },
     "Imgur.API/4.0.1": {
-      "sha512": "P5sDCdRgjJoiUksCvkEu5KdF3rLKLioC6cAya7h/GyYhFEHePCwMq33QYDl/M4Ms9ALZEvoU/+vXxfMLpDhSlg==",
+      "sha512": "fgg9Y0FQVw0RXeztVkbhFyIuc4SbxEDu7uTRPmes58jNpti5p3HW3dD1H4OtYB67stZbmWbiTwyx2Qm1/m8e6w==",
       "type": "package",
       "path": "Imgur.API/4.0.1",
       "files": [
-        "Imgur.API.4.0.1.nupkg.sha512",
-        "Imgur.API.nuspec",
+        "imgur.api.4.0.1.nupkg.sha512",
+        "imgur.api.nuspec",
         "lib/net45/Imgur.API.dll",
         "lib/net45/Imgur.API.xml",
         "lib/netstandard1.1/Imgur.API.dll",
@@ -5493,7 +5385,7 @@
       ]
     },
     "Microsoft.AspNetCore.JsonPatch/1.0.0": {
-      "sha512": "WVaSVS+dDlWCR/qerHnBxU9tIeJ9GMA3M5tg4cxH7/cJYZZLnr2zvaFHGB+cRRNCKKTJ0pFRxT7ES8knhgAAaA==",
+      "sha512": "TFhm3NMZTvm8JmZ3yTwSlbVBaLBcSFqVlJn8WxC6voGcTb12TOVKWAHL0K5eHoYKEvUhKUvrP1ugeFua39Xueg==",
       "type": "package",
       "path": "Microsoft.AspNetCore.JsonPatch/1.0.0",
       "files": [
@@ -6366,16 +6258,16 @@
       ]
     },
     "Microsoft.Extensions.PlatformAbstractions/1.0.0": {
-      "sha512": "zyjUzrOmuevOAJpIo3Mt5GmpALVYCVdLZ99keMbmCxxgQH7oxzU58kGHzE6hAgYEiWsdfMJLjVR7r+vSmaJmtg==",
+      "sha512": "+SMcyAqMVmGIP/nOLyVLOhnYVJNawYSm5ZogbZ+kA34eDuPdlunds4bLvT5wiiHm+El+aZr8OSGE6u4d245u+w==",
       "type": "package",
       "path": "Microsoft.Extensions.PlatformAbstractions/1.0.0",
       "files": [
-        "Microsoft.Extensions.PlatformAbstractions.1.0.0.nupkg.sha512",
-        "Microsoft.Extensions.PlatformAbstractions.nuspec",
         "lib/net451/Microsoft.Extensions.PlatformAbstractions.dll",
         "lib/net451/Microsoft.Extensions.PlatformAbstractions.xml",
         "lib/netstandard1.3/Microsoft.Extensions.PlatformAbstractions.dll",
-        "lib/netstandard1.3/Microsoft.Extensions.PlatformAbstractions.xml"
+        "lib/netstandard1.3/Microsoft.Extensions.PlatformAbstractions.xml",
+        "microsoft.extensions.platformabstractions.1.0.0.nupkg.sha512",
+        "microsoft.extensions.platformabstractions.nuspec"
       ]
     },
     "Microsoft.Extensions.Primitives/1.0.0": {
@@ -6594,7 +6486,7 @@
       ]
     },
     "NHibernate/4.0.4.4000": {
-      "sha512": "jAKwpGLeGai8KWj1e3p1K882vlZUJaQeH4RTuscKTyXhsEsiQEe2uKs9S3bY91aPyygMiPXg1CyRopi1K+e5aA==",
+      "sha512": "Me3y8Q1NPEfiTRuisgayLs5nm7J4hoGhvXT/hD5w78WajPFfsb+qNP2ld+bNimpvW0U/BDSaZAUS0FKl5+ty/w==",
       "type": "package",
       "path": "NHibernate/4.0.4.4000",
       "files": [
@@ -6606,15 +6498,15 @@
         "ConfigurationTemplates/SQLite.cfg.xml",
         "ConfigurationTemplates/SybaseASE.cfg.xml",
         "ConfigurationTemplates/SybaseSQLAnywhere.cfg.xml",
-        "NHibernate.4.0.4.4000.nupkg.sha512",
         "NHibernate.license.txt",
-        "NHibernate.nuspec",
         "NHibernate.readme.html",
         "NHibernate.releasenotes.txt",
         "lib/net40/NHibernate.dll",
         "lib/net40/NHibernate.xml",
         "nhibernate-configuration.xsd",
-        "nhibernate-mapping.xsd"
+        "nhibernate-mapping.xsd",
+        "nhibernate.4.0.4.4000.nupkg.sha512",
+        "nhibernate.nuspec"
       ]
     },
     "NHibernate.Linq/1.0.0": {
@@ -9421,8 +9313,7 @@
     "": [
       "Domain.Socioboard >= 1.0.0-*",
       "Google.Apis.Analytics.v3 >= 1.14.0.456",
-      "Google.Apis.YouTube.v3 >= 1.24.1.760",
-      "Google.GData.YouTube >= 2.2.0",
+      "Google.Apis.YouTube.v3 >= 1.25.0.760",
       "Imgur.API >= 4.0.1",
       "Microsoft.ApplicationInsights.AspNetCore >= 1.0.0",
       "Microsoft.AspNetCore.Cors >= 1.0.0",

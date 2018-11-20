@@ -317,17 +317,17 @@
             <param name="userId">Id of the user</param>
             <returns></returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.UserController.ChangePassword(System.Int64,System.String,System.String,System.String)">
+        <member name="M:Api.Socioboard.Controllers.UserController.ChangesmtpClientPassword(System.Int64,System.String,System.String,System.String)">
             <summary>
             To change the password when user request it.
             </summary>
             <param name="userId">id of the user</param>
-            <param name="currentPassword">password which is using currently</param>
-            <param name="newPassword">A new password given by the user</param>
-            <param name="conformPassword">confirm password </param>
+            <param name="currentsmtpClientPassword">password which is using currently</param>
+            <param name="newsmtpClientPassword">A new password given by the user</param>
+            <param name="conformsmtpClientPassword">confirm password </param>
             <returns></returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.UserController.ForgotPasswordSendMail(System.String)">
+        <member name="M:Api.Socioboard.Controllers.UserController.ForgotsmtpClientPasswordSendMail(System.String)">
             <summary>
             To send the mail to user :for reseting the password when user forgot it and request for change.
             </summary>
@@ -348,14 +348,14 @@
             Email Id does not exist: When email id does not exist in db.
             </returns>
         </member>
-        <member name="M:Api.Socioboard.Controllers.UserController.ResetPasswordMail(System.String,System.String,System.String)">
+        <member name="M:Api.Socioboard.Controllers.UserController.ResetsmtpClientPasswordMail(System.String,System.String,System.String)">
             <summary>
             sending mail to user after reseting the password.
             </summary>
             <param name="emailId">User email id </param>
-            <param name="changePassword">changed password</param>
+            <param name="changesmtpClientPassword">changed password</param>
             <param name="token">Forgot password token</param>
-            <returns>Password changed successfully:if user data present in db and validate token.
+            <returns>smtpClientPassword changed successfully:if user data present in db and validate token.
             EmailId does not exist:when user emailid does not exist
             </returns>
         </member>
@@ -440,7 +440,7 @@
             </summary>
             <param name="clientId">From Google Developer console https://console.developers.google.com</param>
             <param name="clientSecret">From Google Developer console https://console.developers.google.com</param>
-            <param name="userName">A string used to identify a user.</param>
+            <param name="smtpClientUserName">A string used to identify a user.</param>
             <returns></returns>
         </member>
         <member name="M:Api.Socioboard.Helper.GoogleAnalyticsAuthenticationHelper.AuthenticateServiceAccount(System.String,System.String)">

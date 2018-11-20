@@ -14,6 +14,7 @@ using Socioboard.Facebook.Data;
 using Microsoft.AspNetCore.Cors;
 using Domain.Socioboard.Models.Mongo;
 using MongoDB.Bson;
+using Newtonsoft.Json.Linq;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -52,7 +53,7 @@ namespace Api.Socioboard.Controllers
             dynamic profile = FbUser.getFbUser(accessToken);
             try
             {
-                 string x = Convert.ToString(profile);
+                string x = Convert.ToString(profile);
                 _logger.LogError(x);
             }
             catch { }
@@ -63,7 +64,7 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
             List<Domain.Socioboard.Models.Groupprofiles> grpProfiles = Api.Socioboard.Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
-           
+
 
 
             //if (grpProfiles.First().profileId == fbacc.FbUserId)
@@ -118,7 +119,7 @@ namespace Api.Socioboard.Controllers
             Domain.Socioboard.Models.Facebookaccounts fbaccw = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(profileId, _redisCache, dbr);
             //fbacc = fbacc.Where(t => t.FbUserId.Contains("127471161024815")).ToList();
 
-           try
+            try
             {
                 if (fbacc.FbUserId == profileId)
                 {
@@ -134,11 +135,11 @@ namespace Api.Socioboard.Controllers
                             int res = Api.Socioboard.Repositories.FacebookRepository.ReFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, reconnect, _redisCache, _appSettings, _logger);
                             if (res == 1)
                             {
-                        
+
                                 MongoRepository repofb = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
                                 try
                                 {
-                                    var result = repofb.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.profileId == fbacc.FbUserId );
+                                    var result = repofb.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.profileId == fbacc.FbUserId);
                                     var task = Task.Run(async () =>
                                     {
                                         return await result;
@@ -146,9 +147,9 @@ namespace Api.Socioboard.Controllers
                                     int count = task.Result.Count;
 
                                     IList<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> lstFbFeeds = task.Result;
-                                    if(count>0)
+                                    if (count > 0)
                                     {
-                                        FilterDefinition<BsonDocument> filter = new BsonDocument("profileId", lstFbFeeds.FirstOrDefault().profileId);                                                                             
+                                        FilterDefinition<BsonDocument> filter = new BsonDocument("profileId", lstFbFeeds.FirstOrDefault().profileId);
                                         var update = Builders<BsonDocument>.Update.Set("status", true);
                                         repofb.Update<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(update, filter);
 
@@ -180,8 +181,8 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("Oops! login information is wrong , login the profile which has to be reconnected");
             }
-           
-            
+
+
 
             return Ok();
 
@@ -316,7 +317,7 @@ namespace Api.Socioboard.Controllers
                 List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
                 MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
                 var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
-                var sort = builder.Descending(t => t.EntryDate); 
+                var sort = builder.Descending(t => t.EntryDate);
                 var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
@@ -348,32 +349,32 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpGet("GetLatestFeeds")]
-        public IActionResult GetLatestFeeds(string profileId, long userId, int skip, int count,string date)
+        public IActionResult GetLatestFeeds(string profileId, long userId, int skip, int count, string date)
         {
-                DateTime lastfeeddate =Convert.ToDateTime(date);
-                DateTime currentdate = DateTime.UtcNow;
-                //Int32 unixTimestamp= Convert.ToInt32(date);
-                List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
-                MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
-                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
-                var sort = builder.Descending(t => t.EntryDate);
-                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-                IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
-               List<Domain.Socioboard.Models.Mongo.LatestFacebookFeed> lstlatestfeed = new List<Domain.Socioboard.Models.Mongo.LatestFacebookFeed>();
-               lstlatestfeed = lstFbFeeds.Select(x => new LatestFacebookFeed() { EntryDate = Convert.ToDateTime(x.EntryDate), FeedDescription = x.FeedDescription, FeedDate=x.FeedDate, ProfileId=x.ProfileId, FromId=x.FromId, FromName=x.FromName, FromProfileUrl=x.FromProfileUrl, Type=x.Type, FbComment=x.FbComment, FbLike=x.FbLike, FeedId=x.FeedId, ReadStatus=x.ReadStatus, Picture=x.Picture, Positive=x.Positive, Negative=x.Negative, Commentcount=x.Commentcount, Likecount=x.Likecount, postType=x.postType, postingFrom=x.postingFrom, _facebookComment=x._facebookComment }).ToList();
-               lstlatestfeed=lstlatestfeed.FindAll(t => t.EntryDate > lastfeeddate && t.EntryDate <= currentdate).ToList();
-               return Ok(lstlatestfeed.ToList());
-            
+            DateTime lastfeeddate = Convert.ToDateTime(date);
+            DateTime currentdate = DateTime.UtcNow;
+            //Int32 unixTimestamp= Convert.ToInt32(date);
+            List<Domain.Socioboard.Models.Mongo.facebookfeed> lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
+            MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", _appSettings);
+            var builder = Builders<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>.Sort;
+            var sort = builder.Descending(t => t.EntryDate);
+            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFacebookFeed>(t => t.ProfileId.Equals(profileId), sort, skip, count);
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoFacebookFeed> lstFbFeeds = task.Result;
+            List<Domain.Socioboard.Models.Mongo.LatestFacebookFeed> lstlatestfeed = new List<Domain.Socioboard.Models.Mongo.LatestFacebookFeed>();
+            lstlatestfeed = lstFbFeeds.Select(x => new LatestFacebookFeed() { EntryDate = Convert.ToDateTime(x.EntryDate), FeedDescription = x.FeedDescription, FeedDate = x.FeedDate, ProfileId = x.ProfileId, FromId = x.FromId, FromName = x.FromName, FromProfileUrl = x.FromProfileUrl, Type = x.Type, FbComment = x.FbComment, FbLike = x.FbLike, FeedId = x.FeedId, ReadStatus = x.ReadStatus, Picture = x.Picture, Positive = x.Positive, Negative = x.Negative, Commentcount = x.Commentcount, Likecount = x.Likecount, postType = x.postType, postingFrom = x.postingFrom, _facebookComment = x._facebookComment }).ToList();
+            lstlatestfeed = lstlatestfeed.FindAll(t => t.EntryDate > lastfeeddate && t.EntryDate <= currentdate).ToList();
+            return Ok(lstlatestfeed.ToList());
+
         }
 
         [HttpGet("GetTopFilterFeeds")]
         public IActionResult GetTopFilterFeeds(string profileId, long userId, int skip, int count, string typeFilter)
         {
-                return Ok(Repositories.FacebookRepository.GetTopFacebookFilterFeed(profileId, userId, _redisCache, _appSettings, skip, count, typeFilter));
+            return Ok(Repositories.FacebookRepository.GetTopFacebookFilterFeed(profileId, userId, _redisCache, _appSettings, skip, count, typeFilter));
         }
 
 
@@ -501,8 +502,8 @@ namespace Api.Socioboard.Controllers
             int invalidaccessToken = 0;
             foreach (var item in accesstoken)
             {
-                dynamic profile = Fbpages.getFbPageData(item); 
-               string subscribed_apps = Fbpages.subscribed_apps(item, Convert.ToString(profile["id"]));                
+                dynamic profile = Fbpages.GetFbPageData(item);
+                FacebookApiHelper.MakeSubscribedWithApp(item);
                 try
                 {
                     string x = Convert.ToString(profile);
@@ -514,10 +515,10 @@ namespace Api.Socioboard.Controllers
                     invalidaccessToken++;
                     //  return Ok("Invalid Access Token");
                 }
-               else
+                else
                 {
                     DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-                    Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);                    
+                    Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
                     if (fbacc != null && fbacc.IsActive == true)
                     {
                         addedPageCount++;
@@ -533,18 +534,18 @@ namespace Api.Socioboard.Controllers
                         // Adding Facebook Page                     
                         int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookPage(profile, dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, item, _redisCache, _appSettings, _logger);
 
-                    } 
+                    }
                 }
             }
             if (addedPageCount == accesstoken.Length)
             {
                 return Ok("Facebook Pages added by other user.");
             }
-            else if(addedPageCount == accesstoken.Length)
+            else if (addedPageCount == accesstoken.Length)
             {
                 return Ok("Facebook Pages having Invalid Access Token.");
             }
-            else if (invalidaccessToken > 0 && addedPageCount>0)
+            else if (invalidaccessToken > 0 && addedPageCount > 0)
             {
                 return Ok("Pages added successfully and " + addedPageCount + " pages added by other user or " + invalidaccessToken + " pages having invalid access token issue");
             }
@@ -591,7 +592,7 @@ namespace Api.Socioboard.Controllers
 
 
             int invalidaccessToken = 0;
-            dynamic profile = Fbpages.getFbPageData(accessToken);
+            dynamic profile = Fbpages.GetFbPageData(accessToken);
             string subscribed_apps = Fbpages.subscribed_apps(accessToken, Convert.ToString(profile["id"]));
             try
             {
@@ -607,8 +608,8 @@ namespace Api.Socioboard.Controllers
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
-                  
-                int isSaved = 0;                           
+
+                int isSaved = 0;
                 if (fbacc != null)
                 {
                     fbacc.IsActive = true;
@@ -624,7 +625,7 @@ namespace Api.Socioboard.Controllers
                     }
                     try
                     {
-                        fbacc.coverPic = (Convert.ToString(profile["cover"]["source"]));
+                        fbacc.CoverPic = (Convert.ToString(profile["cover"]["source"]));
                     }
                     catch (Exception)
                     {
@@ -632,7 +633,7 @@ namespace Api.Socioboard.Controllers
                     }
                     fbacc.AccessToken = accessToken;
                     isSaved = dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbacc);
-                    if (isSaved>0)
+                    if (isSaved > 0)
                     {
                         return Ok("Page Reconnected Successfully");
                     }
@@ -653,7 +654,7 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpPost("PostFacebookComment")]
-        public IActionResult PostFacebookComment(string postId, string profileId, string message,string timezoneOffset)
+        public IActionResult PostFacebookComment(string postId, string profileId, string message, string timezoneOffset)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             string postcomment = Repositories.FacebookRepository.PostFacebookComment(dbr, message, profileId, postId, timezoneOffset, _redisCache, _appSettings, _logger);

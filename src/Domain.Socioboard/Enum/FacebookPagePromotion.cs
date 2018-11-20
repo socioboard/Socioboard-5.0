@@ -7,7 +7,8 @@ namespace Domain.Socioboard.Enum
 {
     public enum FacebookPagePromotion
     {
-        tagged=0,
-        promotable_posts=1
+        Tagged=0,
+
+        PromotablePosts=1
     }
 }

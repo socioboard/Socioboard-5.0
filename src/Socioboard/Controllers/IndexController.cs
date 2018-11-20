@@ -147,7 +147,7 @@ namespace Socioboard.Controllers
                                     HttpContext.Session.SetObjectAsJson("User", _user);
                                 }
                             }
-                            
+
                         }
                     }
                 }
@@ -158,7 +158,7 @@ namespace Socioboard.Controllers
         // GET: /<controller>/
         // [ResponseCache(Duration = 604800)]
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
-       // [ResponseCache(Duration = 100)]
+        // [ResponseCache(Duration = 100)]
         public async Task<IActionResult> Index()
         {
             //await Task.Run(() =>
@@ -170,11 +170,15 @@ namespace Socioboard.Controllers
             //{
             //    UserSession();
             //}).Start();
-          //  await UserSession();
-            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            string twostep = HttpContext.Session.GetObjectFromJson<string>("twosteplogin");
-            bool paymentsession = HttpContext.Session.GetObjectFromJson<bool>("paymentsession");
-            if (paymentsession == true)
+            //  await UserSession();
+
+            var user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+
+            var twostep = HttpContext.Session.GetObjectFromJson<string>("twosteplogin");
+
+            var paymentsession = HttpContext.Session.GetObjectFromJson<bool>("paymentsession");
+
+            if (paymentsession)
             {
                 user = null;
                 HttpContext.Session.Remove("User");
@@ -183,8 +187,10 @@ namespace Socioboard.Controllers
                 HttpContext.Session.Remove("paymentsession");
                 HttpContext.Session.Clear();
             }
+
             ViewBag.ApiDomain = _appSettings.ApiDomain;
             ViewBag.Domain = _appSettings.Domain;
+
             if (user == null)
             {
                 return View();
@@ -200,18 +206,17 @@ namespace Socioboard.Controllers
                     if (user.ExpiryDate < DateTime.UtcNow)
                     {
                         return RedirectToAction("UpgradePlans", "Index");
-
                     }
                 }
                 catch (Exception)
                 {
                     return RedirectToAction("Index", "Index");
                 }
-               //return RedirectToAction("Index", "Home");
+                //return RedirectToAction("Index", "Home");
                 return View();
             }
-
         }
+
         //[HttpGet]
         //private async Task UserSession()
         //{
@@ -290,7 +295,7 @@ namespace Socioboard.Controllers
         //    }
         //    catch (Exception ex)
         //    {
-                
+
         //    }
         //}
 
@@ -416,7 +421,7 @@ namespace Socioboard.Controllers
                 {
                     return RedirectToAction("Index", "Index");
                 }
-                 return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
                 //return View();
             }
         }
@@ -484,113 +489,98 @@ namespace Socioboard.Controllers
 
         public async Task<IActionResult> PaymentSuccessful()
         {
-            string output = "false";
-            string plan = "";
-            Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-            Domain.Socioboard.Models.Package _Package = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.Package>("Package");
-            string trasactionId = Generatetxnid();
+            var output = "false";
+
+            var user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
+            var package = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.Package>("Package");
+
+            var trasactionId = Generatetxnid();
+
+            #region Fetching the details from Paypal
+
             string media = Request.Form["charset"];
-            string subscr_date = Request.Form["subscr_date"];
-            if (string.IsNullOrEmpty(subscr_date))
-            {
-                subscr_date = Request.Form["payment_date"];
-            }
-            string ipn_track_id = Request.Form["ipn_track_id"];
-            string payer_email = Request.Form["payer_email"];
+
+            string subscrDate = Request.Form["subscr_date"];
+
+            if (string.IsNullOrEmpty(subscrDate))
+                subscrDate = Request.Form["payment_date"];
+
+
+            string ipnTrackId = Request.Form["ipn_track_id"];
+
+            string payerEmail = Request.Form["payer_email"];
+
             string amount = Request.Form["amount3"];
+
             if (string.IsNullOrEmpty(amount))
             {
                 amount = Request.Form["mc_gross"];
             }
-            string mc_currency = Request.Form["mc_currency"];
-            string Payername = Request.Form["first_name"] + " " + Request.Form["last_name"];
-            string txn_type = Request.Form["txn_type"];
-            string item_name = Request.Form["item_name"];
-            string payment_status = Request.Form["payment_status"];
-            if (string.IsNullOrEmpty(payment_status))
+
+            string mcCurrency = Request.Form["mc_currency"];
+
+            string payername = Request.Form["first_name"] + " " + Request.Form["last_name"];
+
+            string txnType = Request.Form["txn_type"];
+
+            string itemName = Request.Form["item_name"];
+
+            string paymentStatus = Request.Form["payment_status"];
+
+            if (string.IsNullOrEmpty(paymentStatus))
             {
-                payment_status = "Completed";
+                paymentStatus = "Completed";
             }
+
             string paymentId = Request.Form["subscr_id"];
+
             if (string.IsNullOrEmpty(paymentId))
             {
                 paymentId = Request.Form["txn_id"];
             }
-            if (_Package.packagename == "Free")
-            {
-                plan = "Free";
-            }
-            else if (_Package.packagename == "Deluxe")
-            {
-                plan = "Deluxe";
 
-            }
-            else if (_Package.packagename == "Premium")
-            {
-                plan = "Premium";
+            #endregion
 
-            }
-            else if (_Package.packagename == "Topaz")
-            {
-                plan = "Topaz";
+            var plan = package.packagename;
 
-            }
-            else if (_Package.packagename == "Platinum")
+            var parameters = new List<KeyValuePair<string, string>>
             {
-                plan = "Platinum";
+                new KeyValuePair<string, string>("userId", user.Id.ToString()),
+                new KeyValuePair<string, string>("UserName", user.FirstName + " " + user.LastName),
+                new KeyValuePair<string, string>("email", user.EmailId),
+                new KeyValuePair<string, string>("amount", package.amount),
+                new KeyValuePair<string, string>("PaymentType", user.PaymentType.ToString()),
+                new KeyValuePair<string, string>("trasactionId", trasactionId),
+                new KeyValuePair<string, string>("paymentId", paymentId),
+                new KeyValuePair<string, string>("accType", plan),
+                new KeyValuePair<string, string>("subscr_date", subscrDate.Replace("PDT", "").Replace("PST", "")),
+                new KeyValuePair<string, string>("payer_email", payerEmail),
+                new KeyValuePair<string, string>("Payername", payername),
+                new KeyValuePair<string, string>("payment_status", paymentStatus),
+                new KeyValuePair<string, string>("item_name", itemName),
+                new KeyValuePair<string, string>("media", media)
+            };
 
-            }
-            else if (_Package.packagename == "Gold")
-            {
-                plan = "Gold";
+            var response = await WebApiReq.PostReq("/api/PaymentTransaction/UpgradeAccount", parameters, "", "", _appSettings.ApiDomain);
 
-            }
-            else if (_Package.packagename == "Ruby")
-            {
-                plan = "Ruby";
-
-            }
-            else if (_Package.packagename == "Standard")
-            {
-                plan = "Standard";
-
-            }
-            List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
-            Parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
-            Parameters.Add(new KeyValuePair<string, string>("UserName", user.FirstName + " " + user.LastName));
-            Parameters.Add(new KeyValuePair<string, string>("email", user.EmailId));
-            Parameters.Add(new KeyValuePair<string, string>("amount", _Package.amount));
-            Parameters.Add(new KeyValuePair<string, string>("PaymentType", user.PaymentType.ToString()));
-            Parameters.Add(new KeyValuePair<string, string>("trasactionId", trasactionId));
-            Parameters.Add(new KeyValuePair<string, string>("paymentId", paymentId));
-            Parameters.Add(new KeyValuePair<string, string>("accType", plan));
-            Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date.Replace("PDT","").Replace("PST", "")));
-            Parameters.Add(new KeyValuePair<string, string>("payer_email", payer_email));
-            Parameters.Add(new KeyValuePair<string, string>("Payername", Payername));
-            Parameters.Add(new KeyValuePair<string, string>("payment_status", payment_status));
-            Parameters.Add(new KeyValuePair<string, string>("item_name", item_name));
-            Parameters.Add(new KeyValuePair<string, string>("media", media));
-            HttpResponseMessage response = await WebApiReq.PostReq("/api/PaymentTransaction/UpgradeAccount", Parameters, "", "", _appSettings.ApiDomain);
             if (response.IsSuccessStatusCode)
             {
                 try
                 {
                     string data = await response.Content.ReadAsStringAsync();
                     if (data == "payment done")
-                    {
-                        List<KeyValuePair<string, string>> _Parameters = new List<KeyValuePair<string, string>>();
-                        //_Parameters.Add(new KeyValuePair<string, string>("Id", user.Id.ToString()));
-                        HttpResponseMessage _response = await WebApiReq.GetReq("/api/User/GetUser?Id=" + user.Id.ToString(), "", "", _appSettings.ApiDomain);
+                    {                      
+                        var responseMessage = await WebApiReq.GetReq("/api/User/GetUser?Id=" + user.Id, "", "", _appSettings.ApiDomain);
+
                         if (response.IsSuccessStatusCode)
                         {
                             try
                             {
-                                Domain.Socioboard.Models.User _user = await _response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                                if(user.ReferralStatus == "InActive" && user.ReferdBy!=null)
+                                Domain.Socioboard.Models.User _user = await responseMessage.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                                if (user.ReferralStatus == "InActive" && user.ReferdBy != null)
                                 {
-                                    List<KeyValuePair<string, string>> ReffralParameters = new List<KeyValuePair<string, string>>();
-                                    ReffralParameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
-                                    HttpResponseMessage refrralresponse = await WebApiReq.PostReq("/api/User/UpdateRefrralStatus", Parameters, "", "", _appSettings.ApiDomain);
+
+                                    var refrralresponse = await WebApiReq.PostReq("/api/User/UpdateRefrralStatus", parameters, "", "", _appSettings.ApiDomain);
                                     if (refrralresponse.IsSuccessStatusCode)
                                     {
                                         HttpContext.Session.SetObjectAsJson("User", _user);
@@ -601,14 +591,12 @@ namespace Socioboard.Controllers
                                         HttpContext.Session.SetObjectAsJson("User", _user);
                                         return RedirectToAction("Index", "Index");
                                     }
-                                   
                                 }
                                 else
                                 {
                                     HttpContext.Session.SetObjectAsJson("User", _user);
                                     return RedirectToAction("Index", "Index");
                                 }
-                               
                             }
                             catch { }
                         }
@@ -826,7 +814,7 @@ namespace Socioboard.Controllers
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("subscr_id", subscr_id));
                 Parameters.Add(new KeyValuePair<string, string>("txn_id", txn_id));
-                Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date.Replace("PDT", "").Replace("PST","")));
+                Parameters.Add(new KeyValuePair<string, string>("subscr_date", subscr_date.Replace("PDT", "").Replace("PST", "")));
                 Parameters.Add(new KeyValuePair<string, string>("payer_email", payer_email));
                 Parameters.Add(new KeyValuePair<string, string>("Payername", Payername));
                 Parameters.Add(new KeyValuePair<string, string>("payment_status", payment_status));
@@ -1050,7 +1038,7 @@ namespace Socioboard.Controllers
                 string amount = Request.Form["amount"].ToString();
                 string productinfo = Request.Form["productinfo"].ToString();
                 Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-                
+
                 List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
                 Parameters.Add(new KeyValuePair<string, string>("userId", user.Id.ToString()));
                 Parameters.Add(new KeyValuePair<string, string>("UserName", user.FirstName + " " + user.LastName));
@@ -1119,10 +1107,9 @@ namespace Socioboard.Controllers
 
         public string Generatetxnid()
         {
-
-            Random rnd = new Random();
-            string strHash = Generatehash512(rnd.ToString() + DateTime.Now);
-            string txnid1 = strHash.ToString().Substring(0, 20);
+            var rnd = new Random();
+            var strHash = Generatehash512(rnd.ToString() + DateTime.Now);
+            var txnid1 = strHash.Substring(0, 20);
 
             return txnid1;
         }
@@ -1246,9 +1233,9 @@ namespace Socioboard.Controllers
         }
 
 
-       
+
         [Route("PrivacyPolicy")]
-       
+
         public IActionResult Privacy()
         {
             return View();

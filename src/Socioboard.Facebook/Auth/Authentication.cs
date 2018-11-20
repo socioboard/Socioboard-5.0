@@ -5,25 +5,28 @@ namespace Socioboard.Facebook.Auth
 {
     public static class Authentication
     {
-        public static string getAccessToken(string client_id, string redirect_uri, string client_secret, string code)
+        public static string GetAccessToken(string clientId, string redirectUri, string clientSecret, string code)
         {
-            FacebookClient fb = new FacebookClient();
-            string profileId = string.Empty;
-            Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("client_id", client_id);
-            parameters.Add("redirect_uri", redirect_uri);
-            parameters.Add("client_secret", client_secret);
-            parameters.Add("code", code);
-            JsonObject fbaccess_token = null;
+            var fb = new FacebookClient();
+         
+            var parameters = new Dictionary<string, object>
+            {
+                {"client_id", clientId},
+                {"redirect_uri", redirectUri},
+                {"client_secret", clientSecret},
+                {"code", code}
+            };
+
+            JsonObject fbaccessToken;
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
-            fbaccess_token = (JsonObject)fb.Get("/oauth/access_token", parameters);
-            return fbaccess_token["access_token"].ToString();
+            fbaccessToken = (JsonObject)fb.Get("/oauth/access_token", parameters);
+            return fbaccessToken["access_token"].ToString();
+
         }
 
-        public static string GetFacebookRedirectLink(string FacebookAuthUrl, string ClientId, string RedirectUrl)
-        {
-            return FacebookAuthUrl + "&client_id=" + ClientId + "&redirect_uri=" + RedirectUrl + "&response_type=code";
-        }
+        public static string GetFacebookRedirectLink(string facebookAuthUrl, string clientId, string redirectUrl)
+            =>  $"{facebookAuthUrl}&client_id={clientId}&redirect_uri={redirectUrl}&response_type=code";
+        
 
 
 

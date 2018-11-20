@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Domain.Socioboard.Helpers;
+using NHibernate.Util;
 using SocioboardDataServices.Helper;
 
 namespace SocioboardDataServices.Model
@@ -15,7 +17,7 @@ namespace SocioboardDataServices.Model
     {
         //private IMongo _provider;
         private IMongoDatabase _db;
-        private MongoCollectionSettings settings;
+        private MongoCollectionSettings settings { get; set; }
         private string collecionName;
        // private Api.Socioboard.Helper.AppSettings _appSettings;
        // private readonly ILogger _logger;
@@ -35,7 +37,7 @@ namespace SocioboardDataServices.Model
         public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
         {
             // Return the enumerable of the collection
-            var collection = _db.GetCollection<T>(collecionName, settings).Count<T>(query);
+            var collection = _db.GetCollection<T>(collecionName, settings).AsQueryable<T>().Count<T>(query);
             try
             {
                 var output = collection;
@@ -143,9 +145,9 @@ namespace SocioboardDataServices.Model
             
         }
 
-        public void Add<T>(IEnumerable<T> items) where T : class, new()
-        {
-            foreach (T item in items)
+        public void AddRange<T>(IEnumerable<T> collections) where T : class, new()
+        {      
+            foreach (T item in collections)
             {
                 Add(item);
             }

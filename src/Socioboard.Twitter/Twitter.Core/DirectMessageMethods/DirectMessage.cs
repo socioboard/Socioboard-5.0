@@ -161,7 +161,7 @@ namespace Socioboard.Twitter.Twitter.Core.DirectMessageMethods
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("count",count.ToString());
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetDirectMesagesUrl;
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             return JArray.Parse(response);
         }
 
@@ -176,7 +176,7 @@ namespace Socioboard.Twitter.Twitter.Core.DirectMessageMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetDirectMessagesSentUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("count", count.ToString());
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -194,7 +194,7 @@ namespace Socioboard.Twitter.Twitter.Core.DirectMessageMethods
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("id", directMessageId);
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -227,9 +227,12 @@ namespace Socioboard.Twitter.Twitter.Core.DirectMessageMethods
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostDirectMesagesNewUrl; 
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            strdic.Add("text", textMessage);
-            strdic.Add("user_id", userId);
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            // strdic.Add("text", textMessage);
+            // strdic.Add("user_id", userId);
+
+          var datas=    oAuth.SendDirectMessage(Globals.TwitterPostDirectMessageUrl, userId, textMessage, strdic);
+
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);

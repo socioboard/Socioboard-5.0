@@ -15,6 +15,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using SocioboardDataServices.Helper;
 
 namespace SocioboardDataServices.Instagram
 {
@@ -909,7 +910,7 @@ namespace SocioboardDataServices.Instagram
         public static void GetInstagramFollowing(string profile_id, string access_token, int status)
         {
 
-            Domain.Socioboard.Models.Mongo.MongoTwitterMessage _MongoTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
+            Domain.Socioboard.Models.Mongo.MongoMessageModel objMessageModel = new Domain.Socioboard.Models.Mongo.MongoMessageModel();
             JObject post_data = new JObject();
             JObject next_post_data = new JObject();
             string url = "https://api.instagram.com/v1/users/" + profile_id + "/follows?access_token=" + access_token + "&count=100";
@@ -939,23 +940,23 @@ namespace SocioboardDataServices.Instagram
                         string full_name = item["full_name"].ToString();
                         DateTime CreatedTime = DateTime.Now;
 
-                        _MongoTwitterMessage.id = ObjectId.GenerateNewId();
-                        _MongoTwitterMessage.messageId = Generatetxnid();
-                        _MongoTwitterMessage.profileId = profile_id;
-                        _MongoTwitterMessage.fromId = profile_id;
-                        _MongoTwitterMessage.fromName = "";
-                        _MongoTwitterMessage.RecipientId = id;
-                        _MongoTwitterMessage.RecipientName = full_name;
-                        _MongoTwitterMessage.twitterMsg = "";
-                        _MongoTwitterMessage.fromProfileUrl = "";
-                        _MongoTwitterMessage.RecipientName = "";
-                        _MongoTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing;
-                        _MongoTwitterMessage.messageDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                        _MongoTwitterMessage.FollowerCount = 0;
-                        _MongoTwitterMessage.FollowingCount = 0;
-                        _MongoTwitterMessage.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == _MongoTwitterMessage.RecipientId && t.fromId == _MongoTwitterMessage.fromId && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing);
+                        objMessageModel.id = ObjectId.GenerateNewId();
+                        objMessageModel.messageId = Generatetxnid();
+                        objMessageModel.profileId = profile_id;
+                        objMessageModel.fromId = profile_id;
+                        objMessageModel.fromName = "";
+                        objMessageModel.RecipientId = id;
+                        objMessageModel.RecipientName = full_name;
+                        objMessageModel.Message = "";
+                        objMessageModel.fromProfileUrl = "";
+                        objMessageModel.RecipientName = "";
+                        objMessageModel.type = Domain.Socioboard.Enum.MessageType.InstagramFollowing;
+                        objMessageModel.messageDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                        objMessageModel.FollowerCount = 0;
+                        objMessageModel.FollowingCount = 0;
+                        objMessageModel.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                        MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
+                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.RecipientId == objMessageModel.RecipientId && t.fromId == objMessageModel.fromId && t.type == Domain.Socioboard.Enum.MessageType.InstagramFollowing);
                         var task = Task.Run(async () => {
                             return await ret;
                         });
@@ -964,7 +965,7 @@ namespace SocioboardDataServices.Instagram
                             int count = task.Result.Count;
                             if (count < 1)
                             {
-                                mongorepo.Add(_MongoTwitterMessage);
+                                mongorepo.Add(objMessageModel);
                             }
                         }
                     }
@@ -1003,23 +1004,23 @@ namespace SocioboardDataServices.Instagram
                             string full_name = item["full_name"].ToString();
                             DateTime CreatedTime = DateTime.Now;
 
-                            _MongoTwitterMessage.id = ObjectId.GenerateNewId();
-                            _MongoTwitterMessage.messageId = Generatetxnid();
-                            _MongoTwitterMessage.profileId = profile_id;
-                            _MongoTwitterMessage.fromId = profile_id;
-                            _MongoTwitterMessage.fromName = "";
-                            _MongoTwitterMessage.RecipientId = id;
-                            _MongoTwitterMessage.RecipientName = full_name;
-                            _MongoTwitterMessage.twitterMsg = "";
-                            _MongoTwitterMessage.fromProfileUrl = "";
-                            _MongoTwitterMessage.RecipientName = "";
-                            _MongoTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing;
-                            _MongoTwitterMessage.messageDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
-                            _MongoTwitterMessage.FollowerCount = 0;
-                            _MongoTwitterMessage.FollowingCount = 0;
-                            _MongoTwitterMessage.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-                            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == _MongoTwitterMessage.RecipientId && t.fromId == _MongoTwitterMessage.fromId && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollowing);
+                            objMessageModel.id = ObjectId.GenerateNewId();
+                            objMessageModel.messageId = Generatetxnid();
+                            objMessageModel.profileId = profile_id;
+                            objMessageModel.fromId = profile_id;
+                            objMessageModel.fromName = "";
+                            objMessageModel.RecipientId = id;
+                            objMessageModel.RecipientName = full_name;
+                            objMessageModel.Message = "";
+                            objMessageModel.fromProfileUrl = "";
+                            objMessageModel.RecipientName = "";
+                            objMessageModel.type = Domain.Socioboard.Enum.MessageType.InstagramFollowing;
+                            objMessageModel.messageDate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
+                            objMessageModel.FollowerCount = 0;
+                            objMessageModel.FollowingCount = 0;
+                            objMessageModel.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                            MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
+                            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.RecipientId == objMessageModel.RecipientId && t.fromId == objMessageModel.fromId && t.type == Domain.Socioboard.Enum.MessageType.InstagramFollowing);
                             var task = Task.Run(async () => {
                                 return await ret;
                             });
@@ -1028,7 +1029,7 @@ namespace SocioboardDataServices.Instagram
                                 int count = task.Result.Count;
                                 if (count < 1)
                                 {
-                                    mongorepo.Add(_MongoTwitterMessage);
+                                    mongorepo.Add(objMessageModel);
                                 }
                             }
                         }
@@ -1056,7 +1057,7 @@ namespace SocioboardDataServices.Instagram
         public static void GetInstagramFollower(string profile_id, string access_token, int status)
         {
 
-            Domain.Socioboard.Models.Mongo.MongoTwitterMessage _MongoTwitterMessage = new Domain.Socioboard.Models.Mongo.MongoTwitterMessage();
+            Domain.Socioboard.Models.Mongo.MongoMessageModel objMessageModel = new Domain.Socioboard.Models.Mongo.MongoMessageModel();
             JObject post_data = new JObject();
             JObject next_post_data = new JObject();
             string url = "https://api.instagram.com/v1/users/" + profile_id + "/followed-by?access_token=" + access_token + "&cout=500";
@@ -1085,21 +1086,21 @@ namespace SocioboardDataServices.Instagram
                         string full_name = item["full_name"].ToString();
                         string image_url = item["profile_picture"].ToString();
                         DateTime CreatedTime = DateTime.UtcNow;
-                        _MongoTwitterMessage.id = ObjectId.GenerateNewId();
-                        _MongoTwitterMessage.profileId = profile_id;
-                        _MongoTwitterMessage.fromId = id;
-                        _MongoTwitterMessage.fromName = user_name;
-                        _MongoTwitterMessage.messageId = Generatetxnid();
-                        _MongoTwitterMessage.RecipientId = profile_id;
-                        _MongoTwitterMessage.RecipientName = "";
-                        _MongoTwitterMessage.fromProfileUrl = image_url;
-                        _MongoTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower;
-                        _MongoTwitterMessage.FollowerCount = 0;
-                        _MongoTwitterMessage.FollowingCount = 0;
-                        _MongoTwitterMessage.readStatus = status;
-                        _MongoTwitterMessage.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-                        MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == _MongoTwitterMessage.RecipientId && t.fromId == _MongoTwitterMessage.fromId && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower);
+                        objMessageModel.id = ObjectId.GenerateNewId();
+                        objMessageModel.profileId = profile_id;
+                        objMessageModel.fromId = id;
+                        objMessageModel.fromName = user_name;
+                        objMessageModel.messageId = Generatetxnid();
+                        objMessageModel.RecipientId = profile_id;
+                        objMessageModel.RecipientName = "";
+                        objMessageModel.fromProfileUrl = image_url;
+                        objMessageModel.type = Domain.Socioboard.Enum.MessageType.InstagramFollower;
+                        objMessageModel.FollowerCount = 0;
+                        objMessageModel.FollowingCount = 0;
+                        objMessageModel.readStatus = status;
+                        objMessageModel.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                        MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
+                        var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.RecipientId == objMessageModel.RecipientId && t.fromId == objMessageModel.fromId && t.type == Domain.Socioboard.Enum.MessageType.InstagramFollower);
                         var task = Task.Run(async () => {
                             return await ret;
                         });
@@ -1108,7 +1109,7 @@ namespace SocioboardDataServices.Instagram
                             int count = task.Result.Count;
                             if (count < 1)
                             {
-                                mongorepo.Add(_MongoTwitterMessage);
+                                mongorepo.Add(objMessageModel);
                             }
                         }
                     }
@@ -1148,21 +1149,21 @@ namespace SocioboardDataServices.Instagram
                             string full_name = item["full_name"].ToString();
                             string image_url = item["profile_picture"].ToString();
                             DateTime CreatedTime = DateTime.UtcNow;
-                            _MongoTwitterMessage.id = ObjectId.GenerateNewId();
-                            _MongoTwitterMessage.profileId = profile_id;
-                            _MongoTwitterMessage.fromId = id;
-                            _MongoTwitterMessage.fromName = user_name;
-                            _MongoTwitterMessage.messageId = Generatetxnid();
-                            _MongoTwitterMessage.RecipientId = profile_id;
-                            _MongoTwitterMessage.RecipientName = "";
-                            _MongoTwitterMessage.fromProfileUrl = image_url;
-                            _MongoTwitterMessage.type = Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower;
-                            _MongoTwitterMessage.FollowerCount = 0;
-                            _MongoTwitterMessage.FollowingCount = 0;
-                            _MongoTwitterMessage.readStatus = status;
-                            _MongoTwitterMessage.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
-                            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage");
-                            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.RecipientId == _MongoTwitterMessage.RecipientId && t.fromId == _MongoTwitterMessage.fromId && t.type == Domain.Socioboard.Enum.TwitterMessageType.InstagramFollower);
+                            objMessageModel.id = ObjectId.GenerateNewId();
+                            objMessageModel.profileId = profile_id;
+                            objMessageModel.fromId = id;
+                            objMessageModel.fromName = user_name;
+                            objMessageModel.messageId = Generatetxnid();
+                            objMessageModel.RecipientId = profile_id;
+                            objMessageModel.RecipientName = "";
+                            objMessageModel.fromProfileUrl = image_url;
+                            objMessageModel.type = Domain.Socioboard.Enum.MessageType.InstagramFollower;
+                            objMessageModel.FollowerCount = 0;
+                            objMessageModel.FollowingCount = 0;
+                            objMessageModel.readStatus = status;
+                            objMessageModel.messageTimeStamp = SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
+                            MongoRepository mongorepo = new MongoRepository("MongoMessageModel");
+                            var ret = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.RecipientId == objMessageModel.RecipientId && t.fromId == objMessageModel.fromId && t.type == Domain.Socioboard.Enum.MessageType.InstagramFollower);
                             var task = Task.Run(async () => {
                                 return await ret;
                             });
@@ -1171,7 +1172,7 @@ namespace SocioboardDataServices.Instagram
                                 int count = task.Result.Count;
                                 if (count < 1)
                                 {
-                                    mongorepo.Add(_MongoTwitterMessage);
+                                    mongorepo.Add(objMessageModel);
                                 }
                             }
                         }

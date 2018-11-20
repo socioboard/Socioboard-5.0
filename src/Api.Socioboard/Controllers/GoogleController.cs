@@ -50,7 +50,8 @@ namespace Api.Socioboard.Controllers
         /// 
         /// </summary>
         /// <param name="code"></param>
-        /// <returns></returns
+        /// <param name="accType"></param>
+        /// <returns></returns>
         [HttpPost("GoogleLogin")]
         public IActionResult GoogleLogin(string code,Domain.Socioboard.Enum.SBAccountType accType)
         {
@@ -251,19 +252,19 @@ namespace Api.Socioboard.Controllers
                 catch { }
                 user.RegistrationType = Domain.Socioboard.Enum.SBRegistrationType.Google;
 
-                int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
+                var savedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
                 User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
-                if (SavedStatus == 1 && nuser != null)
+                if (savedStatus == 1 && nuser != null)
                 {
                     Groups group = new Groups();
                     group.adminId = nuser.Id;
                     group.createdDate = DateTime.UtcNow;
                     group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
-                    SavedStatus = dbr.Add<Groups>(group);
-                    if (SavedStatus == 1)
+                    savedStatus = dbr.Add<Groups>(group);
+                    if (savedStatus == 1)
                     {
                         Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == nuser.Id && t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
-                        GroupMembersRepository.createGroupMember(ngrp.id, nuser, _redisCache, dbr);
+                        GroupMembersRepository.CreateGroupMember(ngrp.id, nuser, _redisCache, dbr);
                         // Adding GPlus Profile
                         Api.Socioboard.Repositories.GplusRepository.AddGplusAccount(userinfo, dbr, nuser.Id, ngrp.id, access_token, refreshToken, _redisCache, _appSettings, _logger);
                     }
@@ -276,6 +277,13 @@ namespace Api.Socioboard.Controllers
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="GplusId"></param>
+        /// <param name="checkEnable"></param>
+        /// <returns></returns>
         [HttpPost("EnableDisableGoogleSignIn")]
         public IActionResult EnableDisableGoogleSignIn(long userId,string GplusId, bool checkEnable)
         {
@@ -350,6 +358,13 @@ namespace Api.Socioboard.Controllers
             return Ok(lstGplusAcc);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="refreshToken"></param>
+        /// <param name="accessToken"></param>
+        /// <param name="accType"> Pass a enum of <see cref="Domain.Socioboard.Enum.SBAccountType"/></param>
+        /// <returns></returns>
         [HttpPost("GoogleLoginPhone")]
         public IActionResult GoogleLoginPhone(string refreshToken,string accessToken, Domain.Socioboard.Enum.SBAccountType accType)
         {
@@ -493,7 +508,7 @@ namespace Api.Socioboard.Controllers
                     if (SavedStatus == 1)
                     {
                         Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == nuser.Id && t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
-                        GroupMembersRepository.createGroupMember(ngrp.id, nuser, _redisCache, dbr);
+                        GroupMembersRepository.CreateGroupMember(ngrp.id, nuser, _redisCache, dbr);
                         // Adding GPlus Profile
                         Api.Socioboard.Repositories.GplusRepository.AddGplusAccount(userinfo, dbr, nuser.Id, ngrp.id, accessToken, refreshToken, _redisCache, _appSettings, _logger);
                     }

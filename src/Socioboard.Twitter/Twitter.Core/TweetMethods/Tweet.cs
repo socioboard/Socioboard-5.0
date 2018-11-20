@@ -35,7 +35,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
         {
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.StatusesRetweetByIdUrl + UserId + ".json";
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -53,7 +53,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
         {
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.StatusShowByIdUrl + UserId;
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -71,7 +71,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
         {
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.StatusDestroyByIdUrl + UserId + ".json";
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -92,7 +92,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
                 SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
                 strdic.Add("status", statuses);
                 string RequestUrl = Socioboard.Twitter.App.Core.Globals.StatusUpdateUrl;
-                response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+                response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
                 if (!response.StartsWith("["))
                     response = "[" + response + "]";
             }
@@ -117,7 +117,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostStatusesRetweetByIdUrl + UserId + ".json";
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -158,7 +158,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             strdic.Add("id", StatusId);
             strdic.Add("count", "100");
             strdic.Add("stringify_ids", "true");
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -170,7 +170,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.StatusUpdateUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("status", statuses);
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -182,7 +182,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("status", "@" + screen_name + " " + statuses);
             strdic.Add("in_reply_to_status_id", statusid);
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -195,7 +195,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostStatusFavoritesById;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("id", desirestatusId);
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -209,7 +209,7 @@ namespace Socioboard.Twitter.Twitter.Core.TweetMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostUserReportAsSpammerById;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("screen_name", userScreaanNameorId);
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);

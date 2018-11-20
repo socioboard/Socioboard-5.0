@@ -15,7 +15,7 @@ namespace Domain.Socioboard.Interfaces.Repositories
         System.Linq.IQueryable<T> All<T>() where T : class, new();
         System.Linq.IQueryable<T> All<T>(int page, int pageSize) where T : class, new();
         Task Add<T>(T item) where T : class, new();
-        void Add<T>(IEnumerable<T> items) where T : class, new();
+        void AddRange<T>(IEnumerable<T> collections) where T : class, new();
         Task<IList<T>> Find<T>(Expression<Func<T, bool>> query) where T : class, new();
         Task<IList<T>> FindAdvance<T>(Expression<Func<T, bool>> query) where T : class, new();
         int Counts<T>(Expression<Func<T, bool>> query) where T : class, new();

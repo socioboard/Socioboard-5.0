@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Domain.Socioboard.Models;
 using System.Globalization;
+using Domain.Socioboard.Helpers;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Api.Socioboard.Helper
 {
@@ -72,8 +75,6 @@ namespace Api.Socioboard.Helper
 
         public static string DaywiseScheduleMessage(string profileId, string socialprofileName, string weekdays, string shareMessage, Domain.Socioboard.Enum.SocialProfileType profiletype, long userId, string link, string url, string picUrl, string localscheduletime, AppSettings _AppSettings, Cache _redisCache, DatabaseRepository dbr, ILogger _logger)
         {
-
-
             DaywiseSchedule scheduledMessage = new DaywiseSchedule();
             scheduledMessage.shareMessage = shareMessage;
             //scheduledMessage.calendertime = Convert.ToDateTime(localscheduletime);
@@ -109,14 +110,18 @@ namespace Api.Socioboard.Helper
             scheduledMessage.profileType = profiletype;
             scheduledMessage.profileId = profileId;
             scheduledMessage.weekdays = weekdays;
+
+
             scheduledMessage.url = url;
             scheduledMessage.link = link;
             scheduledMessage.picUrl = picUrl;
             scheduledMessage.createTime = DateTime.UtcNow;
-            scheduledMessage.clientTime = DateTime.Now;
-            scheduledMessage.scheduleTime = Convert.ToDateTime(userlocalscheduletime);
-            scheduledMessage.localscheduletime = userlocalscheduletime;
+            scheduledMessage.clientTime = DateTime.Now;        
+            scheduledMessage.localscheduletime = Convert.ToDateTime(userlocalscheduletime);
 
+         
+            var selectDayObject = JsonConvert.DeserializeObject<List<string>>(scheduledMessage.weekdays);
+            scheduledMessage.scheduleTime = DateTimeHelper.GetNextScheduleDate(selectDayObject, scheduledMessage.localscheduletime);
 
             // scheduledMessage.localscheduletime = userlocalscheduletime;
             scheduledMessage.socialprofileName = socialprofileName;

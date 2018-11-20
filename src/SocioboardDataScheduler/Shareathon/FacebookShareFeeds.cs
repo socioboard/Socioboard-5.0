@@ -40,7 +40,7 @@ namespace SocioboardDataScheduler.Shareathon
                     });
                     IList<Domain.Socioboard.Models.Mongo.FacebookPageFeedShare> lstfbpagefeeds = task.Result.ToList();
 
-              
+                    //lstScheduledMessage = lstScheduledMessage.Where(t => t.profileId.Contains("758233674978426880")).ToList();
                     lstfbpagefeeds.GroupBy(t => t.pageId).ToList();
 
                     foreach (var items in lstfbpagefeeds)
@@ -51,7 +51,14 @@ namespace SocioboardDataScheduler.Shareathon
                         thread_pageshreathon.Name = "schedulemessages thread :" + noOfthreadRunning;
                         thread_pageshreathon.Start();
                         Thread.Sleep(60 * 1000);
-                    
+                        //while (noOfthreadRunning > 5)
+                        //{
+                        //    Thread.Sleep(5 * 1000);
+                        //}
+                        //new Thread(delegate ()
+                        //{
+                        //    TwitterSchedulemessage(dbr, items);
+                        //}).Start();
                     }
                     // Thread.Sleep(TimeSpan.FromMinutes(1));
                 }

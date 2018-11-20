@@ -1,6 +1,7 @@
 ﻿using Domain.Socioboard.Enum;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -18,70 +19,61 @@ namespace Domain.Socioboard.Helpers
               .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
-
-
-
-
-        public static string MD5Hash(string text)
+        public static string Md5Hash(string text)
         {
-            MD5 md5 = MD5.Create();
+            var md5 = MD5.Create();
 
             //compute hash from the bytes of text
-            byte[] result = md5.ComputeHash(System.Text.Encoding.Unicode.GetBytes(text));
+            var result = md5.ComputeHash(Encoding.Unicode.GetBytes(text));
 
             //get hash result after compute it
             //  byte[] result = md5.ComputeHash;
-
-            StringBuilder strBuilder = new StringBuilder();
-            for (int i = 0; i < result.Length; i++)
+            var strBuilder = new StringBuilder();
+            for (var i = 0; i < result.Length; i++)
             {
                 //change it into 2 hexadecimal digits
                 //for each byte
                 strBuilder.Append(result[i].ToString("x2"));
             }
-
             return strBuilder.ToString();
         }
 
 
         public static int GetMaxProfileCount(SBAccountType accountType)
         {
-            int ret = 5;
+            int maxProfileCount;
+
             switch (accountType)
             {
                 case SBAccountType.Free:
-                    ret = 5;
+                    maxProfileCount = 5;
                     break;
                 case SBAccountType.Standard:
-                    ret = 10;
+                    maxProfileCount = 10;
                     break;
-
                 case SBAccountType.Premium:
-                    ret = 20;
+                    maxProfileCount = 20;
                     break;
                 case SBAccountType.Deluxe:
-                    ret = 50;
+                    maxProfileCount = 50;
                     break;
                 case SBAccountType.Topaz:
-                    ret = 100;
+                    maxProfileCount = 100;
                     break;
                 case SBAccountType.Ruby:
-                    ret = 200;
+                    maxProfileCount = 200;
                     break;
                 case SBAccountType.Gold:
-                    ret = 500;
+                    maxProfileCount = 500;
                     break;
                 case SBAccountType.Platinum:
-                    ret = 1000;
+                    maxProfileCount = 1000;
                     break;
                 default:
-                    ret = 5;
+                    maxProfileCount = 5;
                     break;
-              
-
-
             }
-            return ret;
+            return maxProfileCount;
         }
 
         public static int GetMaxGroupCount(SBAccountType accountType)
@@ -130,6 +122,11 @@ namespace Domain.Socioboard.Helpers
             return origin.AddSeconds(timestamp);
         }
 
+        public static DateTime ConvertUnixTimeStamp(string unixTimeStamp)
+        {
+            return new DateTime(1970, 1, 1, 0, 0, 0).AddMilliseconds(Convert.ToDouble(unixTimeStamp));
+        }
+
         public static double ConvertToUnixTimestamp(DateTime date)
         {
             DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
@@ -137,6 +134,24 @@ namespace Domain.Socioboard.Helpers
             return Math.Floor(diff.TotalSeconds);
         }
 
+        public static void ForEach<T>(this IEnumerable<T> items, Action<T> action)
+        {
+            foreach (var item in items)
+            {
+                try
+                {
+                    action(item);
+                }
+                catch (IOException io)
+                {
+                    Console.WriteLine(io.Message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+            }
+        }
 
     }
 }

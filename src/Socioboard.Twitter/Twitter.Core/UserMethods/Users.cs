@@ -27,7 +27,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
         public int FollowersCount(oAuthTwitter oAuth, string screenname, SortedDictionary<string, string> strdic)
         {
             string RequestUrl = "https://api.twitter.com/1/users/lookup.xml?screen_name=" + screenname;
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             
             
             
@@ -122,7 +122,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetAccountSettingsUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -140,7 +140,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetAccountVerifyCredentialsUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -178,7 +178,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             if (time_zone != null)
                 strdic.Add("time_zone" , time_zone);
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -198,7 +198,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("device", device);
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -234,7 +234,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
                strdic.Add("description",description);
 
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -265,7 +265,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             if (tile != null)
                 strdic.Add("tile",tile);
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -302,7 +302,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             if (profile_text_color != null)
                 strdic.Add("profile_text_color", profile_text_color);
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -327,7 +327,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             if (image != null)
                 strdic.Add("image", image);
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -340,7 +340,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetUserSuggestions;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            string response = oauth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oauth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -352,7 +352,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetUserSuggestions;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            string response = oauth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oauth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -378,7 +378,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFollowersIdUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("user_id", Userid);
-            string response = oauth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oauth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -391,7 +391,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendsIdUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("user_id", Userid);
-            string response = oauth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oauth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -409,7 +409,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetBlocksListUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -427,7 +427,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetBlocksIdUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -448,7 +448,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             strdic.Add("user_id", user_id);
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostBlockCreateUrl;
       
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -470,7 +470,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             strdic.Add("user_id", user_id);
             
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -490,7 +490,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             strdic.Add("user_id", user_id);
             
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -508,7 +508,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("screen_name", screen_name);
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetUsersLookUpUrl;
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl,strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl,strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -528,7 +528,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             strdic.Add("user_id", user_id);
             
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -548,7 +548,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             strdic.Add("q", keyword);
             strdic.Add("count", count);
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -568,7 +568,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             strdic.Add("user_id", user_id);
             
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -588,7 +588,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             strdic.Add("user_id", user_id);
             
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -611,7 +611,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             
             
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             return response;
         }
         #endregion
@@ -639,7 +639,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
             if (height != null)
                 strdic.Add("height", height.ToString()); strdic.Add("width", width.ToString()); strdic.Add("offset_left", offset_left);strdic.Add("offset_top", offset_top);
             
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             return response;
         }
         #endregion
@@ -657,7 +657,7 @@ namespace Socioboard.Twitter.Twitter.Core.UserMethods
 
             strdic.Add("user_id", user_id);
             
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);

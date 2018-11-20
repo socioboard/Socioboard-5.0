@@ -14,7 +14,7 @@ namespace Domain.Socioboard.Services
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
 
-        public string SendMail(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "mailer12@socioboardmails.com", string Password = "RDmgjwos165s")
+        public string SendMail(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "", string Password = "")
         {
             string response = "";
             try
@@ -50,32 +50,33 @@ namespace Domain.Socioboard.Services
         }
 
 
-        public string SendMailSendGrid(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "SocioleadPro", string Password = "radium1234!@#$")
+        public string SendMailSendGrid(string from, string password, string to, string bcc, string cc, string subject, string body, string smtpClientUserName = "", string smtpClientPassword = "")
         {
             try
             {
-
                 try
                 {
-                    MailMessage mailMsg = new MailMessage();
+                    var mailMsg = new MailMessage();
 
                     // To
                     mailMsg.To.Add(new MailAddress(to));
+
                     if (!string.IsNullOrEmpty(cc))
                     {
                         mailMsg.CC.Add(new MailAddress(cc)); 
                     }
+
                     // From
                     mailMsg.From = new MailAddress(from);
 
                     // Subject and multipart/alternative Body
                     mailMsg.Subject = subject;
-                    string html = @body;
+                    var html = body;
                     mailMsg.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(html, null, MediaTypeNames.Text.Html));
 
                     // Init SmtpClient and send
-                    SmtpClient smtpClient = new SmtpClient("smtp.sendgrid.net", Convert.ToInt32(587));
-                    System.Net.NetworkCredential credentials = new System.Net.NetworkCredential(UserName, Password);
+                    var smtpClient = new SmtpClient("smtp.sendgrid.net", Convert.ToInt32(587));
+                    var credentials = new NetworkCredential(smtpClientUserName, smtpClientPassword);
                     smtpClient.Credentials = credentials;
 
                     smtpClient.Send(mailMsg);
@@ -86,15 +87,10 @@ namespace Domain.Socioboard.Services
                     Console.WriteLine(ex.Message);
                     return "Mail Not Send";
                 }
-
-                //string posturl = "https://api.sendgrid.com/api/mail.send.json";
-                //string postdata = "api_user=" + UserName + "&api_key=" + Password + "&to=" + to + "&toname=" + to + "&subject=" + subject + "&text=" + body + "&from=" + from;
-                //string ret = ApiSendGridHttp(posturl, postdata);
-                //return ret;
-                return "success";
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return "Mail Not Send";
             }
         }

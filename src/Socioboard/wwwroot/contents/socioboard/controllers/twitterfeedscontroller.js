@@ -158,18 +158,15 @@ SocioboardApp.controller('TwitterFeedsController', function ($rootScope, $scope,
         };
 
 
-
+        debugger;
         $scope.ReconnectTwt = function (xyz) {
-
-           
+            debugger;
             $http.get(domain + '/socioboard/Reconntwtacc?code=' + true)
                               .then(function (response) {
                                   window.location.href = response.data;
-
                               }, function (reason) {
                                   $scope.error = reason.data;
                               });
-
         };
 
         $scope.filterSearch = function (mediaType, txtt) {

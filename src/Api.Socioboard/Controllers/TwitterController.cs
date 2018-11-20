@@ -15,6 +15,7 @@ using Domain.Socioboard.Interfaces.Services;
 using System.Threading;
 using MongoDB.Bson;
 using Api.Socioboard.Repositories;
+using Domain.Socioboard.Models;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,7 +25,7 @@ namespace Api.Socioboard.Controllers
     [Route("api/[controller]")]
     public class TwitterController : Controller
     {
-        public TwitterController(ILogger<FacebookController> logger, IEmailSender email,  Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment appEnv)
+        public TwitterController(ILogger<FacebookController> logger, IEmailSender email, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment appEnv)
         {
             _logger = logger;
             _appSettings = settings.Value;
@@ -49,34 +50,33 @@ namespace Api.Socioboard.Controllers
         /// <param name="requestVerifier"></param>
         /// <returns></returns>
         [HttpPost("AddTwitterAccount")]
-        public IActionResult AddTwitterAccount(long userId, long groupId, string requestToken, string requestSecret, string requestVerifier,bool follow)
+        public IActionResult AddTwitterAccount(long userId, long groupId, string requestToken, string requestSecret, string requestVerifier, bool follow)
         {
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            oAuthTwitter OAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
-            OAuth.AccessToken = requestToken;
-            OAuth.AccessTokenSecret = requestVerifier;
-            OAuth.AccessTokenGet(requestToken, requestVerifier);
-            string output = Repositories.TwitterRepository.AddTwitterAccount(userId, groupId,follow, dbr, OAuth, _logger, _redisCache, _appSettings);
-            if (output.Contains("Twitter account already added by you") || output.Contains("This Account is added by other user") || output.Contains("Issue while fetching twitter userId") || output.Contains("Your Twitter profile is not Authorized to add") || output.Contains("Error while Adding Account"))
-            { 
-                return BadRequest(output);
-            }
-            else
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var OAuth = new oAuthTwitter(_appSettings.twitterConsumerKey,
+                _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl)
             {
-                return Ok(output);
-            }
+                AccessToken = requestToken,
+                AccessTokenSecret = requestVerifier
+            };
+            OAuth.GetTwitterAccessToken(requestToken, requestVerifier);
+            var output = TwitterRepository.AddTwitterAccount(userId, groupId, follow, dbr, OAuth, _logger, _redisCache, _appSettings);
+            if (output.Contains("Twitter account already added by you") || output.Contains("This Account is added by other user") || output.Contains("Issue while fetching twitter userId") || output.Contains("Your Twitter profile is not Authorized to add") || output.Contains("Error while Adding Account"))
+                return BadRequest(output);
+
+            return Ok(output);
         }
 
         [HttpPost("ReconnectTwtAcc")]
-        public IActionResult ReconnectTwtAcc(long userId,  string requestToken, string requestSecret, string requestVerifier, bool follow)
+        public IActionResult ReconnectTwtAcc(long userId, string requestToken, string requestSecret, string requestVerifier, bool follow)
         {
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             oAuthTwitter OAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
             OAuth.AccessToken = requestToken;
             OAuth.AccessTokenSecret = requestVerifier;
-            OAuth.AccessTokenGet(requestToken, requestVerifier);
+            OAuth.GetTwitterAccessToken(requestToken, requestVerifier);
             string output = Repositories.TwitterRepository.ReconnecTwitter(userId, follow, dbr, OAuth, _logger, _redisCache, _appSettings);
 
             return Ok(output);
@@ -127,15 +127,15 @@ namespace Api.Socioboard.Controllers
             }
             else
             {
-                MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
-                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>.Sort;
+                MongoRepository mongorepo = new MongoRepository("MongoMessageModel", _appSettings);
+                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoMessageModel>.Sort;
                 var sort = builder.Descending(t => t.messageDate);
-                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId.Equals(profileId), sort, skip, count);
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.profileId.Equals(profileId), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
                     return await result;
                 });
-                IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwitterTweets = task.Result;
+                IList<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwitterTweets = task.Result;
                 return Ok(lstTwitterTweets);
             }
         }
@@ -153,7 +153,7 @@ namespace Api.Socioboard.Controllers
                 {
                     lstTwtAcc.Add(twtAcc);
                 }
-            }   
+            }
             return Ok(lstTwtAcc);
         }
 
@@ -179,12 +179,12 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
-            List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>();
+            List<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoMessageModel>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
             {
                 if (skip + count < 100)
                 {
-                    List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> twtMessages = Repositories.TwitterRepository.GetUserNotifications(item.profileId, userId, _redisCache, _appSettings);
+                    List<Domain.Socioboard.Models.Mongo.MongoMessageModel> twtMessages = Repositories.TwitterRepository.GetUserNotifications(item.profileId, userId, _redisCache, _appSettings);
                     if (twtMessages != null)
                     {
                         lstTwtMessages.AddRange(twtMessages.OrderByDescending(t => t.messageDate).Skip(skip).Take(count));
@@ -192,15 +192,15 @@ namespace Api.Socioboard.Controllers
                 }
                 else
                 {
-                    MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
-                    var builder = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>.Sort;
+                    MongoRepository mongorepo = new MongoRepository("MongoMessageModel", _appSettings);
+                    var builder = Builders<Domain.Socioboard.Models.Mongo.MongoMessageModel>.Sort;
                     var sort = builder.Descending(t => t.messageDate);
-                    var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId.Equals(item.profileId) && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower), sort, skip, count);
+                    var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.profileId.Equals(item.profileId) && (t.type == Domain.Socioboard.Enum.MessageType.TwitterMention || t.type == Domain.Socioboard.Enum.MessageType.TwitterRetweet || t.type == Domain.Socioboard.Enum.MessageType.TwitterFollower), sort, skip, count);
                     var task = Task.Run(async () =>
                     {
                         return await result;
                     });
-                    IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwitterTweets = task.Result;
+                    IList<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwitterTweets = task.Result;
                     if (lstTwitterTweets != null)
                     {
                         lstTwtMessages.AddRange(lstTwitterTweets);
@@ -216,23 +216,23 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
             string[] arrProfile = lstGrpProfiles.Select(t => t.profileId).ToArray();
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
-            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => arrProfile.Contains(t.senderId) || arrProfile.Contains(t.recipientId));
+            MongoRepository mongorepo = new MongoRepository("MongoDirectMessages", _appSettings);
+            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => arrProfile.Contains(t.senderId) || arrProfile.Contains(t.recipientId));
             var task = Task.Run(async () =>
             {
                 return await result;
             });
-            IList<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> lstTwitterTweets = task.Result;
-            lstTwitterTweets = lstTwitterTweets.GroupBy(y => y.senderId, (key, g) => g.OrderByDescending(t => t.createdDate).First()).OrderByDescending(p => p.createdDate).ToList<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>();
+            IList<Domain.Socioboard.Models.Mongo.MongoDirectMessages> lstTwitterTweets = task.Result;
+            lstTwitterTweets = lstTwitterTweets.GroupBy(y => y.senderId, (key, g) => g.OrderByDescending(t => t.createdDate).First()).OrderByDescending(p => p.createdDate).ToList<Domain.Socioboard.Models.Mongo.MongoDirectMessages>();
             lstTwitterTweets = lstTwitterTweets.Where(t => t.profileId != null).ToList();
             return Ok(lstTwitterTweets);
         }
 
         [HttpPost("TwitterReplyUpdate")]
-        public IActionResult TwitterReplyUpdate(long groupId, long userId, string profileId, string messageId, string message,string screenName)
+        public IActionResult TwitterReplyUpdate(long groupId, long userId, string profileId, string messageId, string message, string screenName)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            string TwitterReplyUpdate = Repositories.TwitterRepository.Post_ReplyStatusesUpdate(profileId, message, messageId, userId, groupId, dbr, _logger, _redisCache, _appSettings,screenName);
+            string TwitterReplyUpdate = Repositories.TwitterRepository.Post_ReplyStatusesUpdate(profileId, message, messageId, userId, groupId, dbr, _logger, _redisCache, _appSettings, screenName);
             return Ok(TwitterReplyUpdate);
         }
 
@@ -256,14 +256,14 @@ namespace Api.Socioboard.Controllers
         public IActionResult TwitterRecentFollower(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.TwitterRecentFollower> lstTwitterRecentFollower = Helper.TwitterHelper.TwitterRecentFollower(groupId, dbr,_appSettings);
+            List<Domain.Socioboard.Models.TwitterRecentFollower> lstTwitterRecentFollower = Helper.TwitterHelper.TwitterRecentFollower(groupId, dbr, _appSettings);
             return Ok(lstTwitterRecentFollower);
         }
 
         [HttpGet("TwitterFollowerCount")]
         public IActionResult TwitterFollowerCount(long groupId, long userId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger,_appEnv);
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string TwitterFollowerCount = Repositories.TwitterRepository.TwitterFollowerCount(userId, groupId, dbr, _redisCache);
             return Ok(TwitterFollowerCount);
         }
@@ -272,26 +272,26 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetIncommingMessage(long groupId, long userId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            return Ok(Repositories.TwitterRepository.GetIncommingMessage(userId,groupId,dbr,_redisCache,_appSettings));
+            return Ok(Repositories.TwitterRepository.GetIncommingMessage(userId, groupId, dbr, _redisCache, _appSettings));
         }
 
         [HttpGet("GetConversation")]
         public IActionResult GetConversation(string SenderId, string RecipientId)
         {
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
-            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>((U=>(U.senderId == SenderId && U.recipientId == RecipientId) || (U.senderId == RecipientId && U.recipientId == SenderId)));
+            MongoRepository mongorepo = new MongoRepository("MongoDirectMessages", _appSettings);
+            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>((U => (U.senderId == SenderId && U.recipientId == RecipientId) || (U.senderId == RecipientId && U.recipientId == SenderId)));
             var task = Task.Run(async () =>
             {
                 return await result;
             });
-            IList<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> lstTwitterTweetsConversation = task.Result;
+            IList<Domain.Socioboard.Models.Mongo.MongoDirectMessages> lstTwitterTweetsConversation = task.Result;
             lstTwitterTweetsConversation = lstTwitterTweetsConversation.OrderBy(x => x.createdDate).ToList();
             return Ok(lstTwitterTweetsConversation);
         }
 
 
         [HttpPost("PostTwitterDirectmessage")]
-        public IActionResult PostTwitterDirectmessage(string profileId, string SenderId, string RecipientId,string message,long UserId)
+        public IActionResult PostTwitterDirectmessage(string profileId, string SenderId, string RecipientId, string message, long UserId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string postmessage = "";
@@ -319,14 +319,57 @@ namespace Api.Socioboard.Controllers
             }
             message = postmessage;
 
-            if (SenderId==profileId)
+            if (SenderId == profileId)
             {
-                Helper.TwitterHelper.PostTwitterDirectmessage(RecipientId, message,profileId, UserId, dbr, _appSettings, _redisCache);
+                Helper.TwitterHelper.PostTwitterDirectmessage(RecipientId, message, profileId, UserId, dbr, _appSettings, _redisCache);
                 return Ok();
             }
             else
             {
                 Helper.TwitterHelper.PostTwitterDirectmessage(SenderId, message, profileId, UserId, dbr, _appSettings, _redisCache);
+                return Ok();
+            }
+        }
+
+
+
+        [HttpPost("PostTwtDirectmessage")]
+        public IActionResult PostTwtDirectmessage(string profileId, string SenderId, string RecipientId, string message, long UserId,string recipientScreenName,string recipientImageUrl,string senderScreenName,string senderImageUrl)
+        {
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            string postmessage = "";
+            string[] updatedmessgae = Regex.Split(message, "<br>");
+            foreach (var item in updatedmessgae)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    //if (item.Contains("https://") || item.Contains("http://"))
+                    //{
+                    //    link = item;
+                    //}
+                    if (item.Contains("hhh") || item.Contains("nnn"))
+                    {
+                        if (item.Contains("hhh"))
+                        {
+                            postmessage = postmessage + "\n\r" + item.Replace("hhh", "#");
+                        }
+                    }
+                    else
+                    {
+                        postmessage = postmessage + "\n\r" + item;
+                    }
+                }
+            }
+            message = postmessage;
+
+            if (SenderId == profileId)
+            {
+                Helper.TwitterHelper.PostTwitterDirectmessage(RecipientId, message, profileId, UserId, dbr, _appSettings, _redisCache,  recipientScreenName,  recipientImageUrl,  senderScreenName,  senderImageUrl);
+                return Ok();
+            }
+            else
+            {
+                Helper.TwitterHelper.PostTwitterDirectmessage(SenderId, message, profileId, UserId, dbr, _appSettings, _redisCache,  recipientScreenName,  recipientImageUrl,  senderScreenName,  senderImageUrl);
                 return Ok();
             }
         }
@@ -353,9 +396,9 @@ namespace Api.Socioboard.Controllers
         [HttpGet("TwitterUserFollowers")]
         public IActionResult TwitterUserFollowers(string profileId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.TwitterMutualFans> lstfollowerlist = Helper.TwitterHelper.twitterfollowerslist(profileId, dbr, _appSettings);
-            return Ok(lstfollowerlist);
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var followers = Helper.TwitterHelper.twitterfollowerslist(profileId, dbr, _appSettings);
+            return Ok(followers);
         }
 
         [HttpPost("BlocksUser")]
@@ -418,17 +461,17 @@ namespace Api.Socioboard.Controllers
         public IActionResult UserMentions(string profileId, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>();
+            List<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoMessageModel>();
 
-            MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
-            var builder = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>.Sort;
+            MongoRepository mongorepo = new MongoRepository("MongoMessageModel", _appSettings);
+            var builder = Builders<Domain.Socioboard.Models.Mongo.MongoMessageModel>.Sort;
             var sort = builder.Descending(t => t.messageDate);
-            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId == profileId && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention), sort, skip, count);
+            var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.profileId == profileId && (t.type == Domain.Socioboard.Enum.MessageType.TwitterMention), sort, skip, count);
             var task = Task.Run(async () =>
             {
                 return await result;
             });
-            IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwitterTweets = task.Result;
+            IList<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwitterTweets = task.Result;
             if (lstTwitterTweets != null)
             {
                 lstTwtMessages.AddRange(lstTwitterTweets);
@@ -437,10 +480,10 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpGet("TwitterContactSearch")]
-        public IActionResult TwitterContactSearch(string profileId,string contact)
+        public IActionResult TwitterContactSearch(string profileId, string contact)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.TwitterContactSearch> lstfollowerlist = Helper.TwitterHelper.twitterConstactSearchlist(profileId,contact, dbr, _appSettings);
+            List<Domain.Socioboard.Models.TwitterContactSearch> lstfollowerlist = Helper.TwitterHelper.twitterConstactSearchlist(profileId, contact, dbr, _appSettings);
             return Ok(lstfollowerlist);
         }
 
@@ -469,7 +512,7 @@ namespace Api.Socioboard.Controllers
 
         [HttpGet("DeleteTwtFeed")]
 
-        public IActionResult deleteTwtFeed(string profileId ,string messageId)
+        public IActionResult deleteTwtFeed(string profileId, string messageId)
         {
             MongoRepository _DeleteTwtFeeds = new MongoRepository("MongoTwitterFeed", _appSettings);
             var builders = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterFeed>.Filter;
@@ -521,14 +564,14 @@ namespace Api.Socioboard.Controllers
 
         }
 
-         [HttpPost("publish")]
-        public IActionResult publish(string profileId,string twitterText, long userId , string imgUrl ,string strid)
+        [HttpPost("publish")]
+        public IActionResult publish(string profileId, string twitterText, long userId, string imgUrl, string strid)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, twitterText, profileId, userId, imgUrl, true, 0, "", dbr, _logger);
-            if (ret =="")
+            if (ret == "")
             {
-                string responce = SavedFeedsManagementRepository.publish( profileId,  strid, _appSettings);
+                string responce = SavedFeedsManagementRepository.publish(profileId, strid, _appSettings);
 
                 return Ok(responce);
             }
@@ -536,9 +579,9 @@ namespace Api.Socioboard.Controllers
             {
                 return Ok("failed");
             }
-           
 
-          }
+
+        }
 
         [HttpGet("Notifications")]
         public IActionResult Notifications(long groupId, long userId, int skip, int count)
@@ -547,51 +590,51 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<int> alldata = new List<int>();
             List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
-            List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>();
-            List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> TwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>();
+            List<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoMessageModel>();
+            List<Domain.Socioboard.Models.Mongo.MongoMessageModel> TwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoMessageModel>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
             {
-                MongoRepository mongorepo = new MongoRepository("MongoTwitterMessage", _appSettings);
-                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>.Sort;
+                MongoRepository mongorepo = new MongoRepository("MongoMessageModel", _appSettings);
+                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoMessageModel>.Sort;
                 var sort = builder.Descending(t => t.messageDate);
-                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoTwitterMessage>(t => t.profileId.Equals(item.profileId) && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterFollower || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterUsertweet), sort, skip, count);
-                var task = Task.Run(async () =>                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoMessageModel>(t => t.profileId.Equals(item.profileId) && (t.type == Domain.Socioboard.Enum.MessageType.TwitterMention || t.type == Domain.Socioboard.Enum.MessageType.TwitterRetweet || t.type == Domain.Socioboard.Enum.MessageType.TwitterFollower || t.type == Domain.Socioboard.Enum.MessageType.TwitterUsertweet), sort, skip, count);
+                var task = Task.Run(async () =>
                 {
                     return await result;
                 });
-               
-                    IList<Domain.Socioboard.Models.Mongo.MongoTwitterMessage> lstTwitterTweets = task.Result;
 
-                TwtMessages = lstTwitterTweets.Where(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterUsertweet).ToList();
+                IList<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwitterTweets = task.Result;
+
+                TwtMessages = lstTwitterTweets.Where(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterUsertweet).ToList();
                 if (lstTwitterTweets != null)
                 {
                     lstTwtMessages.AddRange(lstTwitterTweets);
                 }
                 var d = lstTwitterTweets.Count;
             }
-            int posttext = TwtMessages.FindAll(t => t.twitterMsg != null && t.mediaUrl == null && !t.twitterMsg.Contains("http") || !t.twitterMsg.Contains("https") || !t.twitterMsg.Contains("www.") || !t.twitterMsg.Contains("http://") || !t.twitterMsg.Contains("https://") || !t.twitterMsg.Contains("www.")).Count;
+            int posttext = TwtMessages.FindAll(t => t.Message != null && t.mediaUrl == null && !t.Message.Contains("http") || !t.Message.Contains("https") || !t.Message.Contains("www.") || !t.Message.Contains("http://") || !t.Message.Contains("https://") || !t.Message.Contains("www.")).Count;
             int mediapost = TwtMessages.FindAll(t => t.mediaUrl != null).Count;
-            int linkpost = TwtMessages.FindAll(t => t.twitterMsg.Contains("http") || t.twitterMsg.Contains("https") || t.twitterMsg.Contains("www.") || t.twitterMsg.Contains("http://") || t.twitterMsg.Contains("https://") || t.twitterMsg.Contains("www.")).Count;
-            int mentions = lstTwtMessages.FindAll(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterMention).Count;
-            int retweet = lstTwtMessages.FindAll(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterRetweet).Count;
+            int linkpost = TwtMessages.FindAll(t => t.Message.Contains("http") || t.Message.Contains("https") || t.Message.Contains("www.") || t.Message.Contains("http://") || t.Message.Contains("https://") || t.Message.Contains("www.")).Count;
+            int mentions = lstTwtMessages.FindAll(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterMention).Count;
+            int retweet = lstTwtMessages.FindAll(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterRetweet).Count;
 
-            //  || t.twitterMsg.Contains("https") || t.twitterMsg.Contains("www.") || t.twitterMsg.Contains("http://") || t.twitterMsg.Contains("https://") || t.twitterMsg.Contains("www.")
+            //  || t.Message.Contains("https") || t.Message.Contains("www.") || t.Message.Contains("http://") || t.Message.Contains("https://") || t.Message.Contains("www.")
             alldata.Add(mentions);
             alldata.Add(retweet);
-            List<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> lstTwtMessagess = new List<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>();
+            List<Domain.Socioboard.Models.Mongo.MongoDirectMessages> lstTwtMessagess = new List<Domain.Socioboard.Models.Mongo.MongoDirectMessages>();
 
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
             {
-                MongoRepository mongorepoDm = new MongoRepository("MongoTwitterDirectMessages", _appSettings);
+                MongoRepository mongorepoDm = new MongoRepository("MongoDirectMessages", _appSettings);
 
-                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>.Sort;
+                var builder = Builders<Domain.Socioboard.Models.Mongo.MongoDirectMessages>.Sort;
                 var sort = builder.Descending(t => t.entryDate);
-                var result = mongorepoDm.FindWithRange<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages>(t => t.profileId.Equals(item.profileId) && (t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived || t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent), sort, skip, count);
+                var result = mongorepoDm.FindWithRange<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => t.profileId.Equals(item.profileId) && (t.type == Domain.Socioboard.Enum.MessageType.TwitterDirectMessageReceived || t.type == Domain.Socioboard.Enum.MessageType.TwitterDirectMessageSent), sort, skip, count);
                 var task = Task.Run(async () =>
                 {
                     return await result;
                 });
-                IList<Domain.Socioboard.Models.Mongo.MongoTwitterDirectMessages> lstTwitterdm = task.Result;
+                IList<Domain.Socioboard.Models.Mongo.MongoDirectMessages> lstTwitterdm = task.Result;
                 if (lstTwitterdm != null)
                 {
                     lstTwtMessagess.AddRange(lstTwitterdm);
@@ -599,8 +642,8 @@ namespace Api.Socioboard.Controllers
 
             }
 
-            int dmrecived = lstTwtMessagess.FindAll(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageReceived).Count;
-            int dmsend = lstTwtMessagess.FindAll(t => t.type == Domain.Socioboard.Enum.TwitterMessageType.TwitterDirectMessageSent).Count;
+            int dmrecived = lstTwtMessagess.FindAll(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterDirectMessageReceived).Count;
+            int dmsend = lstTwtMessagess.FindAll(t => t.type == Domain.Socioboard.Enum.MessageType.TwitterDirectMessageSent).Count;
             alldata.Add(dmrecived);
             alldata.Add(dmsend);
             alldata.Add(posttext);

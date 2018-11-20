@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SocioboardDataServices.Helper;
 
 namespace SocioboardDataServices.Reports.FacebookReports
 {
@@ -18,15 +19,15 @@ namespace SocioboardDataServices.Reports.FacebookReports
             {
                 try
                 {
-                    Model.DatabaseRepository dbr = new Model.DatabaseRepository();
+                    DatabaseRepository dbr = new DatabaseRepository();
                     List<Domain.Socioboard.Models.Facebookaccounts> lstFbacc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbProfileType == Domain.Socioboard.Enum.FbProfileType.FacebookPublicPage && t.IsActive).ToList();
                     foreach (var item in lstFbacc)
                     {
-                        if (item.lastpagereportgenerated.AddHours(24) <= DateTime.UtcNow)
+                        if (item.LastPageReportGenerated.AddHours(24) <= DateTime.UtcNow)
                         {
                             CreateReport(item.FbUserId, item.Is90DayDataUpdated);
                             item.Is90DayDataUpdated = true;
-                            item.lastpagereportgenerated = DateTime.UtcNow;
+                            item.LastPageReportGenerated = DateTime.UtcNow;
                             dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(item);
                         }
                     }

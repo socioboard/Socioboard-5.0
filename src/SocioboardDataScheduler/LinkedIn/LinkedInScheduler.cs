@@ -2,20 +2,10 @@
 using Socioboard.LinkedIn.Authentication;
 using SocioboardDataScheduler.Model;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-
-using System.Net;
-using System.Collections.Specialized;
-using System.Text;
 using System.Net.Mail;
 using System.Net.Mime;
 using SocioboardDataScheduler.Helper;
-using Imgur.API.Authentication.Impl;
-using Imgur.API.Endpoints.Impl;
-using Imgur.API.Models;
+
 
 namespace SocioboardDataScheduler.LinkedIn
 {

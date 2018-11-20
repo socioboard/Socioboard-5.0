@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SocioboardDataServices.Helper;
 using static Socioboard.LinkedIn.App.Core.LinkedinCompanyPage;
 
 namespace SocioboardDataServices.LinkedIn

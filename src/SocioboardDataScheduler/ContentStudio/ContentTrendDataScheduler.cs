@@ -164,8 +164,8 @@ namespace SocioboardDataScheduler.ContentStudio
                                         pageapiHitsCount = pageMaxapiHitsCount;
                                     }
                                 }
-                                fbAcc.contenetShareathonUpdate = DateTime.UtcNow;
-                                facebookPage.contenetShareathonUpdate = DateTime.UtcNow;
+                                fbAcc.ContentShareathonUpdate = DateTime.UtcNow;
+                                facebookPage.ContentShareathonUpdate = DateTime.UtcNow;
                                 dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
                                 dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(facebookPage);
                             }

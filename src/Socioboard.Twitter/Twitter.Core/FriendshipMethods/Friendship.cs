@@ -99,7 +99,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
         public XmlDocument Friendships_Create(oAuthTwitter oAuth, string ScreenName, SortedDictionary<string, string> strdic)
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.FollowerUrl + ScreenName;
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
             xmlResult.Load(new StringReader(response));
             return xmlResult;
         }
@@ -162,7 +162,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
        {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendshipsNoRetweetsIdUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -177,7 +177,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
        {
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendsIdUrl;
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl,strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl,strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -192,7 +192,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
        {
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFollowersIdUrl;
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -207,7 +207,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
        {
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendshipsLookUpUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -222,7 +222,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
        {
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendshipsIncomingUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -237,7 +237,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
        {
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFrienshipsOutgoingUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -254,7 +254,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
            strdic.Add("user_id", UserId);
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostFriendshipsCreateUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -266,7 +266,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
            strdic.Add("user_id", UserId);
            strdic.Add("screen_name", screen_name);
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostFriendshipsCreateUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -284,7 +284,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostFriendshipsDestroyUrl;
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
            strdic.Add("user_id", UserId);
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl,strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl,strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -296,7 +296,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
            strdic.Add("user_id", UserId);
            strdic.Add("screen_name", screen_name);
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostFriendshipsDestroyUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -313,7 +313,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
            strdic.Add("user_id", UserId);
            strdic.Add("device", device.ToString());
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.PostFriendshipsDestroyUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.POST, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -330,7 +330,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
            strdic.Add("source_screen_name",source_screenname);
            strdic.Add("target_screen_name", getScreenname);
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendshipsShowUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl,strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl,strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -346,7 +346,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
        {
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFriendsListUrl;
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);
@@ -362,7 +362,7 @@ namespace Socioboard.Twitter.Twitter.Core.FriendshipMethods
        {
            SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
            string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFollowersListUrl;
-           string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+           string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
            if (!response.StartsWith("["))
                response = "[" + response + "]";
            return JArray.Parse(response);

@@ -17,7 +17,7 @@ namespace SocioboardDataServices.LinkedIn
             {
                 try
                 {
-                    Model.DatabaseRepository dbr = new Model.DatabaseRepository();
+                    DatabaseRepository dbr = new DatabaseRepository();
                     AppSettings _appsetting = new AppSettings();
                     List<Domain.Socioboard.Models.LinkedinCompanyPage> lstLinkedinCompanyPage = dbr.Find<Domain.Socioboard.Models.LinkedinCompanyPage>(t => t.IsActive).ToList();
                     foreach (var item in lstLinkedinCompanyPage)
@@ -57,7 +57,7 @@ namespace SocioboardDataServices.LinkedIn
             {
                 try
                 {
-                    Model.DatabaseRepository dbr = new Model.DatabaseRepository();
+                    DatabaseRepository dbr = new DatabaseRepository();
                     AppSettings _appsetting = new AppSettings();
                     List<Domain.Socioboard.Models.LinkedInAccount> lstLinkedinCompanyPage = dbr.Find<Domain.Socioboard.Models.LinkedInAccount>(t => t.IsActive).ToList();
                     //lstLinkedinCompanyPage = lstLinkedinCompanyPage.Where(t => t.LinkedinUserName.Contains("AvinashVerma")).ToList();

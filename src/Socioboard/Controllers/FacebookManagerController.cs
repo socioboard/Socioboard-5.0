@@ -101,7 +101,7 @@ namespace Socioboard.Controllers
                 string accessToken = string.Empty;
                 try
                 {
-                    accessToken = Socioboard.Facebook.Auth.Authentication.getAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
+                    accessToken = Socioboard.Facebook.Auth.Authentication.GetAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
                 }
                 catch (Exception ex)
                 {
@@ -278,7 +278,7 @@ namespace Socioboard.Controllers
             string accessToken = string.Empty;
             try
             {
-                accessToken = Socioboard.Facebook.Auth.Authentication.getAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
+                accessToken = Socioboard.Facebook.Auth.Authentication.GetAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
             }
             catch (Exception ex)
             {
@@ -310,7 +310,7 @@ namespace Socioboard.Controllers
             string accessToken = string.Empty;
             try
             {
-                accessToken = Socioboard.Facebook.Auth.Authentication.getAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
+                accessToken = Socioboard.Facebook.Auth.Authentication.GetAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
             }
             catch (Exception ex)
             {
@@ -351,7 +351,7 @@ namespace Socioboard.Controllers
             string accessToken = string.Empty;
             try
             {
-                accessToken = Socioboard.Facebook.Auth.Authentication.getAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
+                accessToken = Socioboard.Facebook.Auth.Authentication.GetAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
             }
             catch (Exception ex)
             {
@@ -394,7 +394,7 @@ namespace Socioboard.Controllers
             string accessToken = string.Empty;
             try
             {
-                accessToken = Socioboard.Facebook.Auth.Authentication.getAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
+                accessToken = Socioboard.Facebook.Auth.Authentication.GetAccessToken(_appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey, code);
             }
             catch (Exception ex)
             {

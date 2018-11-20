@@ -92,7 +92,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
         public XmlDocument Status_Mention(oAuthTwitter OAuth, string Count, SortedDictionary<string, string> strdic)
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.MentionUrl + Count;
-            string response = OAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = OAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             xmlResult.Load(new StringReader(response));
             return xmlResult;
         }
@@ -167,7 +167,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
         {
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.statusesMentionTimelineUrl;
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             return JArray.Parse(response);
         }
         #endregion
@@ -188,7 +188,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
 
            
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             return JArray.Parse(response);
         }
 
@@ -201,7 +201,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
             strdic.Add("user_id", ProfileId);
 
 
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             return JArray.Parse(response);
         }
 
@@ -219,7 +219,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.statusesHomeTimelineUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("count", "100");
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             return JArray.Parse(response);
         }
         #endregion
@@ -234,7 +234,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.statusesRetweetsOfMeUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             return JArray.Parse(response);
         }
         #endregion
@@ -245,7 +245,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
         {
             string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFollowersListUrl;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);
@@ -257,7 +257,7 @@ namespace Socioboard.Twitter.Twitter.Core.TimeLineMethods
             //string RequestUrl = Socioboard.Twitter.App.Core.Globals.GetFollowersListUrl + "?cursor="+curser;
             SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
             strdic.Add("cursor", curser);
-            string response = oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
+            string response = oAuth.OAuthWebRequest(oAuthTwitter.Method.GET, RequestUrl, strdic);
             if (!response.StartsWith("["))
                 response = "[" + response + "]";
             return JArray.Parse(response);

@@ -22,6 +22,8 @@ using Api.Socioboard.Helper;
 using Imgur.API.Authentication.Impl;
 using Imgur.API.Endpoints.Impl;
 using Imgur.API.Models;
+using Newtonsoft.Json;
+using Socioboard.Facebook.Data;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -62,7 +64,7 @@ namespace Api.Socioboard.Controllers
             var uploads = string.Empty;
             string imgPath = string.Empty;
             string temp = string.Empty;
-            string tempmsg = message.Replace("<br>","");
+            string tempmsg = message.Replace("<br>", "");
             if (shortnerStatus == Domain.Socioboard.Enum.UrlShortener.bitlyUri)
             {
                 temp = Utility.GetConvertedUrls(ref tempmsg, shortnerStatus);
@@ -119,12 +121,12 @@ namespace Api.Socioboard.Controllers
             //string[] updatedmessgae = Regex.Split(message, "<br>");
 
             //message = postmessage;
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+
+            var dbr = new DatabaseRepository(_logger, _appEnv);
             string[] lstProfileIds = null;
             if (profileId != null)
             {
                 lstProfileIds = profileId.Split(',');
-                profileId = lstProfileIds[0];
             }
             else
             {
@@ -133,26 +135,29 @@ namespace Api.Socioboard.Controllers
 
             foreach (var item in lstProfileIds)
             {
-                string temp_item_profileId = "";
-                string temp_item_profileName = "";
-                string[] profileSingle = new string[2];
+                var tempItemProfileId = string.Empty;
+                var tempItemProfileName = string.Empty;
+
                 if (item.Contains("`"))
                 {
-                    profileSingle = item.Split('`');
-                    temp_item_profileId = profileSingle[0];
-                    temp_item_profileName = profileSingle[1];
+                    var profileSingle = item.Split('`');
+                    tempItemProfileId = profileSingle[0];
+                    tempItemProfileName = profileSingle[1];
                 }
                 else
                 {
-                    temp_item_profileId = item;
+                    tempItemProfileId = item;
                 }
-                string updatedtext = "";
-                string postmessage = "";
-                string url = "";
+
+                var updatedText = string.Empty;
+                var postmessage = string.Empty;
+                var url = string.Empty;
+
                 if (!string.IsNullOrEmpty(tempmsg))
                 {
-                    string[] updatedmessgae = Regex.Split(tempmsg, "<br>");
-                    foreach (var items in updatedmessgae)
+                    var updatedMessgae = Regex.Split(tempmsg, "<br>");
+
+                    foreach (var items in updatedMessgae)
                     {
                         if (!string.IsNullOrEmpty(items))
                         {
@@ -163,11 +168,11 @@ namespace Api.Socioboard.Controllers
                                     url = items;
                                     if (items.Contains("https://"))
                                     {
-                                        string links = Utility.getBetween(url + "###", "https", "###");
+                                        var links = Utility.getBetween(url + "###", "https", "###");
                                         links = "https" + links;
                                         try
                                         {
-                                            url = links.Split(' ')[0].ToString();
+                                            url = links.Split(' ')[0];
                                             link = url;
                                         }
                                         catch (Exception)
@@ -220,12 +225,12 @@ namespace Api.Socioboard.Controllers
                     {
                         // link = url;
                         //updatedtext = postmessage.Replace(url, "");
-                        updatedtext = postmessage;
+                        updatedText = postmessage;
 
                     }
                     else
                     {
-                        updatedtext = postmessage;
+                        updatedText = postmessage;
                     }
 
 
@@ -235,15 +240,15 @@ namespace Api.Socioboard.Controllers
 
                 }
 
-                if (temp_item_profileId.StartsWith("fb"))
-                {                  
+                if (tempItemProfileId.StartsWith("fb"))
+                {
                     try
                     {
                         new Thread(delegate ()
                         {
-                            string prId = temp_item_profileId.Substring(3, temp_item_profileId.Length - 3);
+                            string prId = tempItemProfileId.Substring(3, tempItemProfileId.Length - 3);
                             Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
+                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedText, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
 
                         }).Start();
                     }
@@ -252,15 +257,61 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
-                else if (temp_item_profileId.StartsWith("page"))
+                else if (tempItemProfileId.StartsWith("page"))
+                {
+                    try
+                    {
+                        await Task.Factory.StartNew(() =>
+                        {
+                            try
+                            {
+                                var pageId = item.Replace("page_", string.Empty);
+
+                                var accountDetails = FacebookRepository.getFacebookAccount(pageId, _redisCache, dbr);
+
+                                var pageAccessToken =
+                                    FacebookApiHelper.GetPageAccessToken(pageId, accountDetails.AccessToken, string.Empty);
+
+                                var response = FacebookApiHelper.PublishPost(accountDetails.FbProfileType, pageAccessToken, accountDetails.FbUserId, updatedText, pageId, uploads, link);
+
+                                FacebookHelper.UpdatePublishedDetails(accountDetails.FbProfileType, accountDetails.FbUserId,
+                                    updatedText, pageId, userId, uploads, mediaType, accountDetails.FbUserName, dbr);
+
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex.Message);
+                                _logger.LogError(ex.StackTrace);
+                            }
+
+                        });
+
+                        #region Old Methods
+                        //new Thread(delegate ()
+                        //              {
+                        //                  string prId = temp_item_profileId.Substring(5, temp_item_profileId.Length - 5);
+                        //                  Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
+                        //                  string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
+                        //              }).Start();
+                        #endregion
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
+
+
+
+                else if (tempItemProfileId.StartsWith("urlfb"))
                 {
                     try
                     {
                         new Thread(delegate ()
                         {
-                            string prId = temp_item_profileId.Substring(5, temp_item_profileId.Length - 5);
+                            string prId = tempItemProfileId.Substring(6, tempItemProfileId.Length - 6);
                             Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                            string ret = Helper.FacebookHelper.ComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
+                            string ret = Helper.FacebookHelper.UrlComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedText, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
 
                         }).Start();
                     }
@@ -272,35 +323,15 @@ namespace Api.Socioboard.Controllers
 
 
 
-                else if (temp_item_profileId.StartsWith("urlfb"))
-                {
-                    try
-                    {
-                        new Thread(delegate ()
-                        {
-                            string prId = temp_item_profileId.Substring(6, temp_item_profileId.Length - 6);
-                            Domain.Socioboard.Models.Facebookaccounts objFacebookAccount = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                            string ret = Helper.FacebookHelper.UrlComposeMessage(objFacebookAccount.FbProfileType, objFacebookAccount.AccessToken, objFacebookAccount.FbUserId, updatedtext, prId, userId, uploads, link, mediaType, objFacebookAccount.FbUserName, dbr, _logger);
-
-                        }).Start();
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-
-
-
-                else if (temp_item_profileId.StartsWith("tw"))
+                else if (tempItemProfileId.StartsWith("tw"))
                 {
                     try
                     {
 
                         new Thread(delegate ()
                         {
-                            string prId = temp_item_profileId.Substring(3, temp_item_profileId.Length - 3);
-                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, tempmsg, prId, userId, uploads, true, mediaType, temp_item_profileName, dbr, _logger);
+                            string prId = tempItemProfileId.Substring(3, tempItemProfileId.Length - 3);
+                            string ret = Helper.TwitterHelper.PostTwitterMessage(_appSettings, _redisCache, tempmsg, prId, userId, uploads, true, mediaType, tempItemProfileName, dbr, _logger);
                         }).Start();
 
                     }
@@ -309,15 +340,15 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
-                
-               else if (temp_item_profileId.StartsWith("lin"))
+
+                else if (tempItemProfileId.StartsWith("lin"))
                 {
                     try
                     {
                         new Thread(delegate ()
                         {
-                            string prId = temp_item_profileId.Substring(4, temp_item_profileId.Length - 4);
-                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, tempmsg, prId, imgPath, mediaType, temp_item_profileName, _redisCache, _appSettings, dbr);
+                            string prId = tempItemProfileId.Substring(4, tempItemProfileId.Length - 4);
+                            string ret = Helper.LinkedInHelper.PostLinkedInMessage(uploads, userId, tempmsg, prId, imgPath, mediaType, tempItemProfileName, _redisCache, _appSettings, dbr);
 
                         }).Start();
                     }
@@ -327,15 +358,15 @@ namespace Api.Socioboard.Controllers
                     }
                 }
 
-                
-                else if (temp_item_profileId.StartsWith("Cmpylinpage"))
+
+                else if (tempItemProfileId.StartsWith("Cmpylinpage"))
                 {
                     try
                     {
                         new Thread(delegate ()
                         {
-                            string prId = temp_item_profileId.Substring(12, temp_item_profileId.Length - 12);
-                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, imgPath, userId, tempmsg, prId, mediaType, temp_item_profileName, _redisCache, dbr, _appSettings);
+                            string prId = tempItemProfileId.Substring(12, tempItemProfileId.Length - 12);
+                            string ret = Helper.LinkedInHelper.PostLinkedInCompanyPagePost(uploads, imgPath, userId, tempmsg, prId, mediaType, tempItemProfileName, _redisCache, dbr, _appSettings);
                         }).Start();
 
                     }
@@ -344,7 +375,7 @@ namespace Api.Socioboard.Controllers
 
                     }
                 }
-                
+
             }
 
             return Ok("Posted");
@@ -544,7 +575,7 @@ namespace Api.Socioboard.Controllers
                         link = linkurl;
                         string prId = item.Substring(8, item.Length - 8);
                         Domain.Socioboard.Models.Facebookaccounts objFacebookaccounts = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(prId, _redisCache, dbr);
-                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName,link, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
+                        Helper.ScheduleMessageHelper.ScheduleMessage(prId, objFacebookaccounts.FbUserName, link, Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, userId, link, filename, "https://graph.facebook.com/" + prId + "/picture?type=small", scheduledatetime, localscheduletime, mediaType, _appSettings, _redisCache, dbr, _logger);
                     }
                     catch (System.Exception ex)
                     {
@@ -729,6 +760,8 @@ namespace Api.Socioboard.Controllers
             }
             List<string> days = new List<string>();
             List<string> weekval = null;
+            List<string> SelectedDays = new List<string>();
+
             if (weekdays != null)
             {
 
@@ -740,12 +773,13 @@ namespace Api.Socioboard.Controllers
                         try
                         {
                             days.Add(day);
+                            var enabledDay = ((DayOfWeek) Enum.Parse(typeof(DayOfWeek), day, true)).ToString();
+                            SelectedDays.Add(enabledDay);
                         }
                         catch (Exception ex)
                         {
 
                         }
-
                     }
                 }
 
@@ -758,10 +792,14 @@ namespace Api.Socioboard.Controllers
 
             string retunMsg = string.Empty;
 
+            var scheduleDay = new Domain.Socioboard.Helpers.ScheduleDays();
+            scheduleDay.SelectedDays = SelectedDays;
+            var week = JsonConvert.SerializeObject(SelectedDays);
+
             foreach (var item in lstProfileIds)
             {
-                foreach (var week in days)
-                {
+               // foreach (var week in days)
+               // {
                     if (item.StartsWith("fb"))
                     {
                         try
@@ -833,7 +871,7 @@ namespace Api.Socioboard.Controllers
                             return Ok("Issue With Linkedin Page schedulers");
                         }
                     }
-                }
+               // }
 
 
             }
@@ -1152,7 +1190,7 @@ namespace Api.Socioboard.Controllers
                                 _ShareathonRepository.Add(_LinkShareathon);
                                 new Thread(delegate ()
                                {
-                                   Helper.FacebookHelper.schedulePage_Post(_Facebookaccounts.AccessToken, item.PageId, TimeInterVal);
+                                   Helper.FacebookHelper.SchedulePagePost(_Facebookaccounts.AccessToken, items, item.PageId, TimeInterVal);
                                }).Start();
                             }
                         }

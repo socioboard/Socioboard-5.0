@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping
       xmlns="urn:nhibernate-mapping-2.2"
       namespace="Domain.Socioboard.Models"
@@ -6,7 +6,7 @@
   <class name="AgencyUser" table="agencyuser" lazy="false">
     <id name="id" column="id" />
     <property name="userName">
-      <column name="userName" />
+      <column name="smtpClientUserName" />
     </property>
     <property name="email">
       <column name="email"  />

@@ -115,10 +115,10 @@ namespace SociobordRssDataServices.Rss
                     MongoRepository _MongoRepository = new MongoRepository("Rss");
                   
                     List<Domain.Socioboard.Models.RssFeedUrl> lstRssdata = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t => t.ProfileId != null && t.Keywords == null).ToList();
-                 
+                    //lstRssdata = lstRssdata.Where(t => t.ProfileId.Contains("758233674978426880")).ToList();
                     foreach (var item in lstRssdata)
                     {
-                        var ret = _MongoRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.RssFeedUrl == item.rssurl && t.ProfileId == item.ProfileId && t.lastupdate==null);
+                        var ret = _MongoRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.RssFeedUrl == item.rssurl && t.ProfileId == item.ProfileId && t.lastupdate == null);
                         var task = Task.Run(async () =>
                         {
                             return await ret;
@@ -129,22 +129,22 @@ namespace SociobordRssDataServices.Rss
                             DateTime dtval;
                             try
                             {
-                                dtval = Convert.ToDateTime(item_Rss.lastupdate);                                                     
+                                dtval = Convert.ToDateTime(item_Rss.lastupdate);
                                 if (dtval.AddHours(1) <= DateTime.UtcNow)
                                 {
 
-                                    //new Thread(delegate ()
-                                    //{
+                                    new Thread(delegate ()
+                                    {
                                         RssFeed.postRssFeeds(item_Rss);
-                                  //  }).Start();
+                                    }).Start();
 
-                                  
+
                                     item_Rss.lastupdate = DateTime.UtcNow.ToString("yyyy/MM/dd HH:mm:ss");
                                     FilterDefinition<BsonDocument> filter = new BsonDocument("strId", item_Rss.strId);
                                     var updatemongo = Builders<BsonDocument>.Update.Set("lastupdate", item_Rss.lastupdate);
                                     _MongoRepository.Update<Domain.Socioboard.Models.Mongo.Rss>(updatemongo, filter);
                                     dbr.Update<Domain.Socioboard.Models.RssFeedUrl>(item);
-                                  //  Thread.Sleep(20*1000);
+                                    Thread.Sleep(60 * 1000);
                                 }
                             }
                             catch (Exception ex)
@@ -160,7 +160,7 @@ namespace SociobordRssDataServices.Rss
                 catch (Exception ex)
                 {
                     Console.WriteLine("issue while calling api");
-                    //Thread.Sleep(60000);
+                    Thread.Sleep(60000);
                 }
             }
         }

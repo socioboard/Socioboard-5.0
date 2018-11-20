@@ -118,7 +118,12 @@ SocioboardApp.controller('TwitterInboxController', function ($rootScope, $scope,
                 updatedmessage = updatedmessage.replace("-+", 'jjj');
                 message = updatedmessage;
                 //codes to postdirrectmessage
-                $http.post(apiDomain + '/api/Twitter/PostTwitterDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message + '&UserId=' + $rootScope.user.Id)
+                $http.post(apiDomain + '/api/Twitter/PostTwtDirectmessage?RecipientId=' + $rootScope.RecipientId + '&SenderId=' + $rootScope.SenderId + '&profileId=' + $rootScope.profileId + '&message=' + message + '&UserId=' + $rootScope.user.Id                 
+                        + '&senderScreenName=' + $rootScope.recipientScreenName
+                        + '&senderImageUrl=' + $rootScope.recipientProfileUrl
+                        + '&recipientScreenName=' + $rootScope.senderScreenName
+                        + '&recipientImageUrl=' + $rootScope.recipientProfileUrl
+                )
                               .then(function (response) {
                                   //setTimeout(function () {
                                   //$scope.sendingcomment = false;

@@ -1,8 +1,8 @@
-﻿using Domain.Socioboard.Models.Mongo;
+﻿using Domain.Socioboard.Models;
+using Domain.Socioboard.Models.Mongo;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Newtonsoft.Json.Linq;
-using Socioboard.GoogleLib.Authentication;
 using Socioboard.GoogleLib.Youtube.Core;
 using SocioboardDataServices.Helper;
 using SocioboardDataServices.Model;
@@ -20,19 +20,13 @@ namespace SocioboardDataServices.Reports
         {
             while (true)
             {
-
                 try
                 {
-
-                    Helper.DatabaseRepository dbr = new Helper.DatabaseRepository();
-
-                    string apiKey = AppSettings.googleApiKey;
-                    oAuthTokenYoutube ObjoAuthTokenYtubes = new oAuthTokenYoutube(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
-                    oAuthToken objToken = new oAuthToken(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
+                    var databaseRepository = new DatabaseRepository();
                     Video objVideo = new Video(AppSettings.googleClientId, AppSettings.googleClientSecret, AppSettings.googleRedirectionUrl);
                     
-                    List<Domain.Socioboard.Models.YoutubeChannel> lstYtChannels = dbr.Find<Domain.Socioboard.Models.YoutubeChannel>(t => t.IsActive).ToList();
-                    long count = 0;
+                    var lstYtChannels = databaseRepository.Find<YoutubeChannel>(t => t.IsActive).ToList();
+                    var count = 0;
                     Console.WriteLine("---------------- Youtube Videos List Dataservices Started ----------------");
                     foreach (var item in lstYtChannels)
                     {                        
@@ -41,14 +35,14 @@ namespace SocioboardDataServices.Reports
                         {
                             if (item.LastVideoListDetails_Update.AddMinutes(60) < DateTime.UtcNow)
                             {
-                                MongoRepository mongoreposs = new MongoRepository("YoutubeVideos");
+                                var mongoreposs = new MongoRepository("YoutubeVideos");
                                 var result = mongoreposs.Find<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds>(t => t.YtChannelId.Equals(item.YtubeChannelId));
                                 var task = Task.Run(async () =>
                                 {
                                     return await result;
                                 });
-                                IList<Domain.Socioboard.Models.Mongo.MongoYoutubeFeeds> lstChannelVideos = task.Result;
-                                List<string> videoIds = new List<string>();
+                                var lstChannelVideos = task.Result;
+                                var videoIds = new List<string>();
 
                                 foreach (var items in lstChannelVideos)
                                 {
@@ -59,12 +53,12 @@ namespace SocioboardDataServices.Reports
                                 {
                                     try
                                     {
-                                        string VideoList = objVideo.GetYTVideoDetailList(apiKey, videoId);
-                                        JObject JVideoList = JObject.Parse(VideoList);
+                                        var VideoList = objVideo.GetYTVideoDetailList(AppSettings.googleApiKey, videoId);
+                                        var JVideoList = JObject.Parse(VideoList);
 
                                         foreach (var itemVideo in JVideoList["items"])
                                         {
-                                            YoutubeVideoDetailsList _YVideoDetails = new YoutubeVideoDetailsList();
+                                            var _YVideoDetails = new YoutubeVideoDetailsList();
 
 
                                             _YVideoDetails.Id = ObjectId.GenerateNewId();
@@ -352,7 +346,7 @@ namespace SocioboardDataServices.Reports
                                 }
 
                                 item.LastVideoListDetails_Update = DateTime.UtcNow;
-                                dbr.Update<Domain.Socioboard.Models.YoutubeChannel>(item);
+                                databaseRepository.Update(item);
 
                             }
                         }

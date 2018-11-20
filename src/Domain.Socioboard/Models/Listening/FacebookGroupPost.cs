@@ -15,7 +15,7 @@ namespace Domain.Socioboard.Models.Listening
         [BsonId]
         [JsonConverter(typeof(ObjectIdConverter))]
         public ObjectId Id { get; set; }
-        public string GroupId { get; set; }
+        public long GroupId { get; set; }
         public string GroupName { get; set; }
         public long PostId { get; set; }
         public string UserProfileId { get; set; }

@@ -86,6 +86,9 @@ namespace Socioboard.Twitter.App.Core
        public static string GetDirectMessagesShowUrl = "https://api.twitter.com/1.1/direct_messages/show.json";
        public static string PostDirectMessagesDestroyUrl = "https://api.twitter.com/1.1/direct_messages/destroy.json";
        public static string PostDirectMesagesNewUrl = "https://api.twitter.com/1.1/direct_messages/new.json";
+
+        public static string TwitterPostDirectMessageUrl = "https://api.twitter.com/1.1/direct_messages/events/new.json";
+
        #endregion
 
        #region Account Methods

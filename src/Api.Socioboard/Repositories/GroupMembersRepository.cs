@@ -19,6 +19,7 @@ namespace Api.Socioboard.Repositories
                 }
             }
             catch { }
+
             List<Domain.Socioboard.Models.Groupmembers> groupMembers = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.groupid == groupId).ToList();
             _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupMembers + groupId, groupMembers);
             return groupMembers;
@@ -56,19 +57,29 @@ namespace Api.Socioboard.Repositories
             return groupMembers;
         }
 
-        public static int createGroupMember(long groupId, User user, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        /// <summary>
+        /// To add the member to the specified group
+        /// </summary>
+        /// <param name="groupId">group Id</param>
+        /// <param name="user">user details</param>
+        /// <param name="redisCache"></param>
+        /// <param name="dbr">Database respository object</param>
+        /// <returns></returns>
+        public static int CreateGroupMember(long groupId, User user, Helper.Cache redisCache, Model.DatabaseRepository dbr)
         {
-            Domain.Socioboard.Models.Groupmembers grpMember = new Domain.Socioboard.Models.Groupmembers();
-            grpMember.groupid = groupId;
-            grpMember.email = user.EmailId;
-            grpMember.firstName = user.FirstName;
-            grpMember.lastName = user.LastName;
-            grpMember.memberStatus = Domain.Socioboard.Enum.GroupMemberStatus.Accepted;
-            grpMember.profileImg = user.ProfilePicUrl;
-            grpMember.userId = user.Id;
-            grpMember.memberCode = "Admin";
-            grpMember.isAdmin = true;
-            return dbr.Add<Groupmembers>(grpMember);
+            var grpMember = new Groupmembers
+            {
+                groupid = groupId,
+                email = user.EmailId,
+                firstName = user.FirstName,
+                lastName = user.LastName,
+                memberStatus = Domain.Socioboard.Enum.GroupMemberStatus.Accepted,
+                profileImg = user.ProfilePicUrl,
+                userId = user.Id,
+                memberCode = "Admin",
+                isAdmin = true
+            };
+            return dbr.Add(grpMember);
         }
 
         public static List<Domain.Socioboard.Models.Groupmembers> getGroupadmin(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
