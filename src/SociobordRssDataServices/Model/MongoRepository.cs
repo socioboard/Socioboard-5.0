@@ -26,12 +26,13 @@ namespace SociobordRssDataServices.Model
             MongoClient client = new MongoClient("");
 
             _db = client.GetDatabase("");
+;
 
-       
+         
 
             this.collecionName = CollectionName;
             
-           // _logger = logger;
+         
 
         }
         public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
@@ -131,9 +132,9 @@ namespace SociobordRssDataServices.Model
             
         }
 
-        public void Add<T>(IEnumerable<T> items) where T : class, new()
+        public void AddRange<T>(IEnumerable<T> collections) where T : class, new()
         {
-            foreach (T item in items)
+            foreach (T item in collections)
             {
                 Add(item);
             }

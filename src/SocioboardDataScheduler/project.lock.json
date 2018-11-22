@@ -26,6 +26,15 @@
           "lib/net45/Facebook.dll": {}
         }
       },
+      "FluentScheduler/5.3.0": {
+        "type": "package",
+        "compile": {
+          "lib/net40/FluentScheduler.dll": {}
+        },
+        "runtime": {
+          "lib/net40/FluentScheduler.dll": {}
+        }
+      },
       "Hammock/1.2.3": {
         "type": "package",
         "compile": {
@@ -858,6 +867,21 @@
         "serializers/JsonNetSerializer.cs"
       ]
     },
+    "FluentScheduler/5.3.0": {
+      "sha512": "XBLwqw3FFdkG6qIrxg7M9mIsigZje+qKTinWZWfyr47IN6O/0z6fFUoQCVEBvY0lk1puf4hU0VnVhN/kPNZL+A==",
+      "type": "package",
+      "path": "FluentScheduler/5.3.0",
+      "files": [
+        "FluentScheduler.5.3.0.nupkg.sha512",
+        "FluentScheduler.nuspec",
+        "lib/net40/FluentScheduler.dll",
+        "lib/net40/FluentScheduler.pdb",
+        "lib/net40/FluentScheduler.xml",
+        "lib/netstandard1.4/FluentScheduler.dll",
+        "lib/netstandard1.4/FluentScheduler.pdb",
+        "lib/netstandard1.4/FluentScheduler.xml"
+      ]
+    },
     "Hammock/1.2.3": {
       "sha512": "JdYotigd2ZilatoSXL+PXFZERRHkhTN3vn/rkVLrm2FxbXJjW0lhD4qEXF/gTv1RUp4gjgBwCTxv/WxQmAessQ==",
       "type": "package",
@@ -972,12 +996,12 @@
       ]
     },
     "Imgur.API/4.0.1": {
-      "sha512": "P5sDCdRgjJoiUksCvkEu5KdF3rLKLioC6cAya7h/GyYhFEHePCwMq33QYDl/M4Ms9ALZEvoU/+vXxfMLpDhSlg==",
+      "sha512": "fgg9Y0FQVw0RXeztVkbhFyIuc4SbxEDu7uTRPmes58jNpti5p3HW3dD1H4OtYB67stZbmWbiTwyx2Qm1/m8e6w==",
       "type": "package",
       "path": "Imgur.API/4.0.1",
       "files": [
-        "Imgur.API.4.0.1.nupkg.sha512",
-        "Imgur.API.nuspec",
+        "imgur.api.4.0.1.nupkg.sha512",
+        "imgur.api.nuspec",
         "lib/net45/Imgur.API.dll",
         "lib/net45/Imgur.API.xml",
         "lib/netstandard1.1/Imgur.API.dll",
@@ -1177,7 +1201,7 @@
       ]
     },
     "NHibernate/4.0.4.4000": {
-      "sha512": "jAKwpGLeGai8KWj1e3p1K882vlZUJaQeH4RTuscKTyXhsEsiQEe2uKs9S3bY91aPyygMiPXg1CyRopi1K+e5aA==",
+      "sha512": "Me3y8Q1NPEfiTRuisgayLs5nm7J4hoGhvXT/hD5w78WajPFfsb+qNP2ld+bNimpvW0U/BDSaZAUS0FKl5+ty/w==",
       "type": "package",
       "path": "NHibernate/4.0.4.4000",
       "files": [
@@ -1189,15 +1213,15 @@
         "ConfigurationTemplates/SQLite.cfg.xml",
         "ConfigurationTemplates/SybaseASE.cfg.xml",
         "ConfigurationTemplates/SybaseSQLAnywhere.cfg.xml",
-        "NHibernate.4.0.4.4000.nupkg.sha512",
         "NHibernate.license.txt",
-        "NHibernate.nuspec",
         "NHibernate.readme.html",
         "NHibernate.releasenotes.txt",
         "lib/net40/NHibernate.dll",
         "lib/net40/NHibernate.xml",
         "nhibernate-configuration.xsd",
-        "nhibernate-mapping.xsd"
+        "nhibernate-mapping.xsd",
+        "nhibernate.4.0.4.4000.nupkg.sha512",
+        "nhibernate.nuspec"
       ]
     },
     "NHibernate.Linq/1.0.0": {
@@ -3467,6 +3491,7 @@
   "projectFileDependencyGroups": {
     "": [
       "Domain.Socioboard >= 1.0.0-*",
+      "FluentScheduler >= 5.3.0",
       "Imgur.API >= 4.0.1",
       "Microsoft.Extensions.Options >= 1.0.0",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.0.0",
