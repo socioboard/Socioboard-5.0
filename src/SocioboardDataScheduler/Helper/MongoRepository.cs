@@ -21,13 +21,8 @@ namespace SocioboardDataScheduler.Helper
 
         public MongoRepository(string CollectionName)
         {
-
-
-    
-            MongoClient client = new MongoClient("");
-
-            _db = client.GetDatabase("");
-
+            MongoClient client = new MongoClient(AppSettings.MongoDbConnectionString);
+            _db = client.GetDatabase(AppSettings.MongoDbName);       
             this.collecionName = CollectionName;
 
             // _logger = logger;

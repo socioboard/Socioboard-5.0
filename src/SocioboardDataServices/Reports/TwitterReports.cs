@@ -15,7 +15,7 @@ namespace SocioboardDataServices.Reports
     {
         public static void CreateTwitterReports()
         {
-            Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+            Helper.Cache cache = Helper.Cache.GetCacheInstance(Helper.AppSettings.RedisConfiguration);
             while (true)
             {
                 try
@@ -42,7 +42,7 @@ namespace SocioboardDataServices.Reports
         {
             try
             {
-                Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+                Helper.Cache cache = Helper.Cache.GetCacheInstance(Helper.AppSettings.RedisConfiguration);
                 DatabaseRepository dbr = new DatabaseRepository();
                 List<Domain.Socioboard.Models.TwitterAccount> lstTwtAcc = dbr.Find<Domain.Socioboard.Models.TwitterAccount>(t => t.isAccessTokenActive && t.isActive).ToList();
                 //lstTwtAcc = lstTwtAcc.Where<Domain.Socioboard.Models.TwitterAccount>(t => t.twitterUserId == "758233674978426880").ToList();

@@ -1,82 +1,169 @@
-﻿using Domain.Socioboard.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Api.Socioboard.Helper;
+using Api.Socioboard.Model;
+using Domain.Socioboard.Consatants;
+using Domain.Socioboard.Enum;
+using Domain.Socioboard.Models;
 
 namespace Api.Socioboard.Repositories
 {
     public static class GroupProfilesRepository
     {
-        public static int AddGroupProfile(Int64 GroupId, string ProfileId, string ProfileName, Int64 ProfileOwnerId, string ProfilePic, Domain.Socioboard.Enum.SocialProfileType profileType, Model.DatabaseRepository dbr)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="ProfileId"></param>
+        /// <param name="ProfileName"></param>
+        /// <param name="ProfileOwnerId"></param>
+        /// <param name="ProfilePic"></param>
+        /// <param name="profileType"></param>
+        /// <param name="dbr"></param>
+        /// <returns></returns>
+        public static int AddGroupProfile(long groupId, string ProfileId, string ProfileName, long ProfileOwnerId,
+            string ProfilePic, SocialProfileType profileType, DatabaseRepository dbr)
         {
-            Domain.Socioboard.Models.Groupprofiles grpProfile = new Domain.Socioboard.Models.Groupprofiles();
-            grpProfile.groupId = GroupId;
-            grpProfile.profileId = ProfileId;
-            grpProfile.profileName = ProfileName;
-            grpProfile.profileOwnerId = ProfileOwnerId;
-            grpProfile.profilePic = ProfilePic;
-            grpProfile.profileType = profileType;
-            return dbr.Add<Domain.Socioboard.Models.Groupprofiles>(grpProfile);
+            var grpProfile = new Groupprofiles
+            {
+                groupId = groupId,
+                profileId = ProfileId,
+                profileName = ProfileName,
+                profileOwnerId = ProfileOwnerId,
+                profilePic = ProfilePic,
+                profileType = profileType
+            };
+            return dbr.Add(grpProfile);
         }
 
 
-        public static int getAllProfilesCountOfUser(Int64 userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        public static int getAllProfilesCountOfUser(long userId, Cache _redisCache, DatabaseRepository dbr)
         {
             try
             {
-                string inMemProfilesCount = _redisCache.Get<string>(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
-                if (inMemProfilesCount != null)
-                {
-                    return Convert.ToInt32(inMemProfilesCount);
-                }
+                var inMemProfilesCount = _redisCache.Get<string>(SocioboardConsts.CacheUserProfileCount + userId);
+                if (inMemProfilesCount != null) return Convert.ToInt32(inMemProfilesCount);
             }
-            catch { }
+            catch
+            {
+            }
 
-            int groupProfilesCount = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId == userId).GroupBy(t => t.profileId).Select(x => x.First()).Count();
-            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId, groupProfilesCount.ToString());
+            var groupProfilesCount = dbr.Find<Groupprofiles>(t => t.profileOwnerId == userId).GroupBy(t => t.profileId)
+                .Select(x => x.First()).Count();
+            _redisCache.Set(SocioboardConsts.CacheUserProfileCount + userId, groupProfilesCount.ToString());
             return groupProfilesCount;
         }
 
-        public static List<Domain.Socioboard.Models.Groupprofiles> getGroupProfiles(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        public static List<Groupprofiles> getGroupProfiles(long groupId, Cache _redisCache, DatabaseRepository dbr)
         {
-            try
-            {
-                List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                if (inMemGroupProfiles != null)
-                {
-                    return inMemGroupProfiles;
-                }
-            }
-            catch { }
+            return GetAllGroupProfiles(groupId, _redisCache, dbr);
+            //try
+            //{
+            //    var inMemGroupProfiles = _redisCache.Get<List<Groupprofiles>>(SocioboardConsts.CacheGroupProfiles + groupId);
 
-            List<Domain.Socioboard.Models.Groupprofiles> topgroupProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
-            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = topgroupProfiles.Take(3).ToList();
-            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
-            return groupProfiles;
+            //    if (inMemGroupProfiles != null)
+            //        return inMemGroupProfiles;
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.Message);
+            //}
+
+            //var topgroupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId).ToList();
+            //var groupProfiles = topgroupProfiles.Take(3).ToList();
+            //_redisCache.Set(SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
+            //return groupProfiles;
         }
 
-        public static List<Domain.Socioboard.Models.Groupprofiles> getAllGroupProfiles(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="redisCache"></param>
+        /// <param name="dbr"></param>
+        /// <returns></returns>
+        public static List<Groupprofiles> GetAllGroupProfiles(long groupId, Cache redisCache, DatabaseRepository dbr)
         {
+            var addedProfile = new List<SocialProfileType>();
+
+            var groupProfilesPerUserPlan = new List<Groupprofiles>();
+
             try
             {
-                List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                if (inMemGroupProfiles != null)
+                var inMemGroupProfiles = redisCache.Get<List<Groupprofiles>>(SocioboardConsts.CacheGroupProfiles + groupId);
+
+                if (inMemGroupProfiles != null && inMemGroupProfiles.Count > 0)
                 {
-                    return inMemGroupProfiles;
+                    var userDetails = redisCache.Get<User>("User") ?? dbr.FindFirstMatch<User>(t => t.Id == inMemGroupProfiles[0].profileOwnerId);
+
+                    foreach (var profile in inMemGroupProfiles)
+                    {
+                        if (userDetails.AccountType == SBAccountType.Free && addedProfile.Contains(profile.profileType))
+                            continue;
+
+                        if (userDetails.AccountType != SBAccountType.Free)
+                        {
+                            var maxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(userDetails.AccountType);
+                            if (groupProfilesPerUserPlan.Count >= maxCount)
+                                return groupProfilesPerUserPlan;
+                        }
+
+                        addedProfile.Add(profile.profileType);
+
+                        groupProfilesPerUserPlan.Add(profile);
+                    }
+
+                    return groupProfilesPerUserPlan;
                 }
             }
-            catch { }
-            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
-            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
-            return groupProfiles;
+            var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId).ToList();
+
+            redisCache.Set(SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
+
+            if (groupProfiles.Count == 0)
+                return groupProfilesPerUserPlan;
+
+            var currentUserDetails = redisCache.Get<User>("User") ?? dbr.FindFirstMatch<User>(t => t.Id == groupProfiles[0].profileOwnerId);
+
+            foreach (var profile in groupProfiles)
+            {
+                if (currentUserDetails.AccountType == SBAccountType.Free && addedProfile.Contains(profile.profileType))
+                    continue;
+
+                if (currentUserDetails.AccountType != SBAccountType.Free)
+                {
+                    var maxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(currentUserDetails.AccountType);
+                    if (groupProfilesPerUserPlan.Count >= maxCount)
+                        return groupProfilesPerUserPlan;
+                }
+
+                addedProfile.Add(profile.profileType);
+
+                groupProfilesPerUserPlan.Add(profile);
+            }
+
+            return groupProfilesPerUserPlan;
+
         }
-        public static Int64 GetAllGroupProfilesCount(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="redisCache"></param>
+        /// <param name="dbr"></param>
+        /// <returns></returns>
+        public static long GetAllGroupProfilesCount(long groupId, Cache redisCache, DatabaseRepository dbr)
         {
             try
             {
-                long groupProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId);
+                long groupProfiles = dbr.GetCount<Groupprofiles>(t => t.groupId == groupId);
                 return groupProfiles;
             }
             catch (Exception)
@@ -85,521 +172,552 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static List<Domain.Socioboard.Models.profilesdetail> getTop3GroupProfiles(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        /// <summary>
+        /// To Get the top three profile with given group Id
+        /// </summary>
+        /// <param name="groupId">group Id</param>
+        /// <param name="redisCache">redis cache database</param>
+        /// <param name="dbr">database object</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static List<profilesdetail> GetTop3GroupProfiles(long groupId, Cache redisCache, DatabaseRepository dbr)
         {
-            //try
-            //{
-            //    List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-            //    if (inMemGroupProfiles != null)
-            //    {
-            //         return inMemGroupProfiles;
-            //    }
-            //}
-            //catch { }
-            //Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-            List<Domain.Socioboard.Models.profilesdetail> lstprofiledetail = new List<profilesdetail>();
-            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = dbr.FindWithRange<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId, 0, 3).ToList();
-            // _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
-            //  List<Domain.Socioboard.Models.Groupprofiles> groupProfiless = groupProfiles.Take(3).ToList();
-            foreach (Domain.Socioboard.Models.Groupprofiles profile in groupProfiles)
+            var getTop3GroupProfiles = new List<profilesdetail>();
+
+            var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId).ToList();
+
+            if (groupProfiles.Count == 0)
+                return getTop3GroupProfiles;
+
+            var userDetails = redisCache.Get<User>("User") ?? dbr.FindFirstMatch<User>(t => t.Id == groupProfiles[0].profileOwnerId);
+
+            redisCache.Set(SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
+
+            var addedProfile = new List<SocialProfileType>();
+
+            foreach (var profile in groupProfiles)
             {
-                if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook)
-                {
+                if (getTop3GroupProfiles.Count >= 3)
+                    break;
 
-                    Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(profile.profileId, _redisCache, dbr);
+                if (userDetails.AccountType == SBAccountType.Free && addedProfile.Contains(profile.profileType))
+                    continue;
 
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Fbaccount = fbAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)
-                {
-                    Domain.Socioboard.Models.Facebookaccounts fbpageAcc = Repositories.FacebookRepository.getFacebookAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Fbaccount = fbpageAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
-                {
-                    Domain.Socioboard.Models.TwitterAccount twtAcc = Repositories.TwitterRepository.getTwitterAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Twtaccount = twtAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram)
-                {
-                    Domain.Socioboard.Models.Instagramaccounts insAcc = Repositories.InstagramRepository.getInstagramAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Instaaccount = insAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus)
-                {
-                    Domain.Socioboard.Models.Googleplusaccounts gPlusAcc = Repositories.GplusRepository.getGPlusAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Gplusaccount = gPlusAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn)
-                {
-                    Domain.Socioboard.Models.LinkedInAccount linkdAcc = Repositories.LinkedInAccountRepository.getLinkedInAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.LinkdInaccount = linkdAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage)
-                {
-                    Domain.Socioboard.Models.LinkedinCompanyPage LinkedcompanyAcc = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.LinkdINcompanyaccount = LinkedcompanyAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube)
-                {
-                    Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.GplusRepository.getYTChannel(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Ytubeaccount = YTChnl;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics)
-                {
-                    Domain.Socioboard.Models.GoogleAnalyticsAccount gAAcc = Repositories.GplusRepository.getGAAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.GAaccount = gAAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.Pinterest)
-                {
-                    Domain.Socioboard.Models.PinterestAccount PinAcc = Repositories.PinterestRepository.getPinterestAccountDetail(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Pintrestaccount = PinAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
+                addedProfile.Add(profile.profileType);
 
-                //lstprofiledetail.Add(profiledetails);
+                AddedProfileDetails(redisCache, dbr, getTop3GroupProfiles, profile);
             }
 
-            return lstprofiledetail;
+            return getTop3GroupProfiles;
         }
 
-        public static List<Domain.Socioboard.Models.profilesdetail> getAllGroupProfilesdetail(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        private static void AddedProfileDetails(Cache redisCache, DatabaseRepository dbr, List<profilesdetail> groupProfiles, Groupprofiles profile)
         {
+            switch (profile.profileType)
+            {
+                case SocialProfileType.Facebook:
+                    {
+                        var fbAcc = FacebookRepository.getFacebookAccount(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { Fbaccount = fbAcc };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.FacebookFanPage:
+                    {
+                        var fbPageAcc = FacebookRepository.getFacebookAccount(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { Fbaccount = fbPageAcc };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.Twitter:
+                    {
+                        var twtAcc = TwitterRepository.getTwitterAccount(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { Twtaccount = twtAcc };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.Instagram:
+                    {
+                        var insAcc = InstagramRepository.getInstagramAccount(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { Instaaccount = insAcc };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.GPlus:
+                    {
+                        var gPlusAcc = GplusRepository.getGPlusAccount(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { Gplusaccount = gPlusAcc };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.LinkedIn:
+                    {
+                        var linkedInAcc = LinkedInAccountRepository.getLinkedInAccount(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { LinkdInaccount = linkedInAcc };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.LinkedInComapanyPage:
+                    {
+                        var linkedCompanyAcc = LinkedInAccountRepository.getLinkedinCompanyPage(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { LinkdINcompanyaccount = linkedCompanyAcc };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.YouTube:
+                    {
+                        var youtubeChannel = GplusRepository.getYTChannel(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { Ytubeaccount = youtubeChannel };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.GoogleAnalytics:
+                    {
+                        var gAAcc = GplusRepository.getGAAccount(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { GAaccount = gAAcc };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.Pinterest:
+                    {
+                        var pInterestAccountDetail = PinterestRepository.getPinterestAccountDetail(profile.profileId, redisCache, dbr);
+                        var profileDetails = new profilesdetail { Pintrestaccount = pInterestAccountDetail };
+                        groupProfiles.Add(profileDetails);
+                        break;
+                    }
+                case SocialProfileType.GplusPage:
+                    break;
+                case SocialProfileType.Tumblr:
+                    break;
+                case SocialProfileType.FacebookPublicPage:
+                    break;
+                case SocialProfileType.DropBox:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="redisCache"></param>
+        /// <param name="dbr"></param>
+        /// <returns></returns>
+        public static List<profilesdetail> GetAllGroupProfilesDetail(long groupId, Cache redisCache, DatabaseRepository dbr)
+        {
+            var allGroupProfiles = new List<profilesdetail>();
+            var addedProfile = new List<SocialProfileType>();
             try
             {
-                List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                if (inMemGroupProfiles != null)
+                var inMemGroupProfiles = redisCache.Get<List<Groupprofiles>>(SocioboardConsts.CacheGroupProfiles + groupId);
+
+                if (inMemGroupProfiles != null && inMemGroupProfiles.Count > 0)
                 {
-                    // return inMemGroupProfiles;
+                    var userDetails = redisCache.Get<User>("User") ?? dbr.FindFirstMatch<User>(t => t.Id == inMemGroupProfiles[0].profileOwnerId);
+
+                    foreach (var profile in inMemGroupProfiles)
+                    {
+                        if (userDetails.AccountType == SBAccountType.Free && addedProfile.Contains(profile.profileType))
+                            continue;
+
+                        if (userDetails.AccountType != SBAccountType.Free)
+                        {
+                            var maxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(userDetails.AccountType);
+                            if (allGroupProfiles.Count >= maxCount)
+                                return allGroupProfiles;
+                        }
+
+                        addedProfile.Add(profile.profileType);
+
+                        AddedProfileDetails(redisCache, dbr, allGroupProfiles, profile);
+                    }
+                    if (allGroupProfiles.Count > 0)
+                        return allGroupProfiles;
                 }
+
+                var groupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId).ToList();
+
+                if (groupProfiles.Count == 0)
+                    return allGroupProfiles;
+
+                var currentUserDetails = redisCache.Get<User>("User") ?? dbr.FindFirstMatch<User>(t => t.Id == groupProfiles[0].profileOwnerId);
+
+                foreach (var profile in groupProfiles)
+                {
+                    if (currentUserDetails.AccountType == SBAccountType.Free && addedProfile.Contains(profile.profileType))
+                        continue;
+
+                    if (currentUserDetails.AccountType != SBAccountType.Free)
+                    {
+                        var maxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(currentUserDetails.AccountType);
+                        if (allGroupProfiles.Count >= maxCount)
+                            return allGroupProfiles;
+                    }
+
+                    addedProfile.Add(profile.profileType);
+
+                    AddedProfileDetails(redisCache, dbr, allGroupProfiles, profile);
+                }
+                return allGroupProfiles;
+
             }
-            catch { }
-            //Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-            List<Domain.Socioboard.Models.profilesdetail> lstprofiledetail = new List<profilesdetail>();
-            List<Domain.Socioboard.Models.Groupprofiles> groupProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).ToList();
-            // _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId, groupProfiles);
-            //  List<Domain.Socioboard.Models.Groupprofiles> groupProfiless = groupProfiles.Take(3).ToList();
-            foreach (Domain.Socioboard.Models.Groupprofiles profile in groupProfiles)
+            catch
             {
-                if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook)
-                {
-
-                    Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(profile.profileId, _redisCache, dbr);
-
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Fbaccount = fbAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage)
-                {
-                    Domain.Socioboard.Models.Facebookaccounts fbpageAcc = Repositories.FacebookRepository.getFacebookAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Fbaccount = fbpageAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter)
-                {
-                    Domain.Socioboard.Models.TwitterAccount twtAcc = Repositories.TwitterRepository.getTwitterAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Twtaccount = twtAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram)
-                {
-                    Domain.Socioboard.Models.Instagramaccounts insAcc = Repositories.InstagramRepository.getInstagramAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Instaaccount = insAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus)
-                {
-                    Domain.Socioboard.Models.Googleplusaccounts gPlusAcc = Repositories.GplusRepository.getGPlusAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Gplusaccount = gPlusAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn)
-                {
-                    Domain.Socioboard.Models.LinkedInAccount linkdAcc = Repositories.LinkedInAccountRepository.getLinkedInAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.LinkdInaccount = linkdAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage)
-                {
-                    Domain.Socioboard.Models.LinkedinCompanyPage LinkedcompanyAcc = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.LinkdINcompanyaccount = LinkedcompanyAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube)
-                {
-                    Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.GplusRepository.getYTChannel(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Ytubeaccount = YTChnl;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics)
-                {
-                    Domain.Socioboard.Models.GoogleAnalyticsAccount gAAcc = Repositories.GplusRepository.getGAAccount(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.GAaccount = gAAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-                else if (profile.profileType == Domain.Socioboard.Enum.SocialProfileType.Pinterest)
-                {
-                    Domain.Socioboard.Models.PinterestAccount PinAcc = Repositories.PinterestRepository.getPinterestAccountDetail(profile.profileId, _redisCache, dbr);
-                    Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                    profiledetails.Pintrestaccount = PinAcc;
-                    lstprofiledetail.Add(profiledetails);
-                }
-
-                //lstprofiledetail.Add(profiledetails);
+                return allGroupProfiles;
             }
-
-            return lstprofiledetail;
         }
 
-        public static string DeleteProfile(long groupId, long userId, string profileId, Helper.Cache _redisCache, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        public static string DeleteProfile(long groupId, long userId, string profileId, Cache redisCache, DatabaseRepository dbr, AppSettings appSettings)
         {
-            Domain.Socioboard.Models.Groupprofiles grpProfile = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileId.Equals(profileId)).FirstOrDefault();
-            Domain.Socioboard.Models.Groups grp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.id == groupId).FirstOrDefault();
-            string res = string.Empty;
-            if (grpProfile != null)
-            {
-                if (grp.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName))
-                {
-                    switch (grpProfile.profileType)
-                    {
-                        case Domain.Socioboard.Enum.SocialProfileType.Facebook:
-                            {
-                                res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage:
-                            {
-                                res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage:
-                            {
-                                res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.Twitter:
-                            {
-                                res = TwitterRepository.DeleteProfile(dbr, profileId, userId, _redisCache);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.LinkedIn:
-                            {
-                                res = LinkedInAccountRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage:
-                            {
-                                res = LinkedInAccountRepository.DeleteCompanyPageProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.Instagram:
-                            {
-                                res = InstagramRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics:
-                            {
-                                res = GplusRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.GPlus:
-                            {
-                                res = GplusRepository.DeleteGplusProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.YouTube:
-                            {
-                                res = GplusRepository.DeleteYoutubeChannelProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                        case Domain.Socioboard.Enum.SocialProfileType.Pinterest:
-                            {
-                                res = PinterestRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                break;
-                            }
-                    }
-                }
-                else
-                {
-                    Groups defaultGroup = GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr).Find(t => t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName));
-                    List<Groupprofiles> defalutGroupProfiles = getGroupProfiles(defaultGroup.id, _redisCache, dbr);
-                    if (defalutGroupProfiles != null && defalutGroupProfiles.Count(t => t.profileId.Equals(profileId)) <= 0)
-                    {
-                        switch (grpProfile.profileType)
-                        {
-                            case Domain.Socioboard.Enum.SocialProfileType.Facebook:
-                                {
-                                    res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage:
-                                {
-                                    res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage:
-                                {
-                                    res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.Twitter:
-                                {
-                                    res = TwitterRepository.DeleteProfile(dbr, profileId, userId, _redisCache);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.LinkedIn:
-                                {
-                                    res = LinkedInAccountRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage:
-                                {
-                                    res = LinkedInAccountRepository.DeleteCompanyPageProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.Instagram:
-                                {
-                                    res = InstagramRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics:
-                                {
-                                    res = GplusRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.GPlus:
-                                {
-                                    res = GplusRepository.DeleteGplusProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.YouTube:
-                                {
-                                    res = GplusRepository.DeleteYoutubeChannelProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
-                            case Domain.Socioboard.Enum.SocialProfileType.Pinterest:
-                                {
-                                    res = PinterestRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
-                                    break;
-                                }
 
-                        }
-                    }
-                    else
-                    {
-                        res = "Deleted";
-                    }
-                }
+            var grpProfile =
+                dbr.FindFirstMatch<Groupprofiles>(t => t.groupId == groupId && t.profileId.Equals(profileId));
 
-                if (res.Equals("Deleted"))
-                {
-                    dbr.Delete<Domain.Socioboard.Models.Groupprofiles>(grpProfile);
-                    _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                    _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
-                    return "Deleted";
-                }
-                else
-                {
-                    if (grpProfile != null)
-                    {
-                        dbr.Delete<Domain.Socioboard.Models.Groupprofiles>(grpProfile);
-                        _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                        _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
-                        return "Deleted";
-                    }
-                    return res;
-                }
-            }
+            var res = string.Empty;
+
+            if (grpProfile == null)
+                return "Issue while deleting Profile";
+
+            var grp = dbr.FindFirstMatch<Groups>(t => t.id == groupId);
+
+            if (grp.groupName.Equals(SocioboardConsts.DefaultGroupName))
+                DeleteGroup(userId, profileId, redisCache, dbr, appSettings, grpProfile, res);
+
             else
             {
-                return "Issue while deleting Profile";
+                var defaultGroup = GroupsRepository.GetAllGroupsofUser(userId, redisCache, dbr).Find(t => t.groupName.Equals(SocioboardConsts.DefaultGroupName));
+
+                var defaultGroupProfiles = getGroupProfiles(defaultGroup.id, redisCache, dbr);
+
+                if (defaultGroupProfiles != null && defaultGroupProfiles.Count(t => t.profileId.Equals(profileId)) <= 0)
+                    DeleteGroup(userId, profileId, redisCache, dbr, appSettings, grpProfile, res);
             }
+
+            dbr.Delete(grpProfile);
+            redisCache.Delete(SocioboardConsts.CacheGroupProfiles + groupId);
+            redisCache.Delete(SocioboardConsts.CacheUserProfileCount + userId);
+            return "Deleted";
+
         }
 
-        public static string IsPrimaryAccount(long userId, string profileId, Model.DatabaseRepository dbr, Helper.AppSettings _appSettings)
+        private static string DeleteGroup(long userId, string profileId, Cache _redisCache, DatabaseRepository dbr, AppSettings _appSettings, Groupprofiles grpProfile, string res)
         {
-            Domain.Socioboard.Models.User user = new User();
-            Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
+            switch (grpProfile.profileType)
+            {
+                case SocialProfileType.Facebook:
+                    {
+                        res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                        break;
+                    }
+                case SocialProfileType.FacebookFanPage:
+                    {
+                        res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                        break;
+                    }
+                case SocialProfileType.FacebookPublicPage:
+                    {
+                        res = FacebookRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                        break;
+                    }
+                case SocialProfileType.Twitter:
+                    {
+                        res = TwitterRepository.DeleteProfile(dbr, profileId, userId, _redisCache);
+                        break;
+                    }
+                case SocialProfileType.LinkedIn:
+                    {
+                        res = LinkedInAccountRepository.DeleteProfile(dbr, profileId, userId, _redisCache,
+                            _appSettings);
+                        break;
+                    }
+                case SocialProfileType.LinkedInComapanyPage:
+                    {
+                        res = LinkedInAccountRepository.DeleteCompanyPageProfile(dbr, profileId, userId,
+                            _redisCache, _appSettings);
+                        break;
+                    }
+                case SocialProfileType.Instagram:
+                    {
+                        res = InstagramRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                        break;
+                    }
+                case SocialProfileType.GoogleAnalytics:
+                    {
+                        res = GplusRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                        break;
+                    }
+                case SocialProfileType.GPlus:
+                    {
+                        res = GplusRepository.DeleteGplusProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                        break;
+                    }
+                case SocialProfileType.YouTube:
+                    {
+                        res = GplusRepository.DeleteYoutubeChannelProfile(dbr, profileId, userId, _redisCache,
+                            _appSettings);
+                        break;
+                    }
+                case SocialProfileType.Pinterest:
+                    {
+                        res = PinterestRepository.DeleteProfile(dbr, profileId, userId, _redisCache, _appSettings);
+                        break;
+                    }
+            }
+
+            return res;
+        }
+
+        public static string IsPrimaryAccount(long userId, string profileId, DatabaseRepository dbr, AppSettings _appSettings)
+        {
+            var user = new User();
+            var fbAcc = dbr
+                .Find<Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive)
+                .FirstOrDefault();
             try
             {
-                 user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId) && t.EmailId == fbAcc.EmailId && t.EmailValidateToken == "Facebook").FirstOrDefault();
-
+                user = dbr.Find<User>(t =>
+                        t.Id.Equals(userId) && t.EmailId == fbAcc.EmailId && t.EmailValidateToken == "Facebook")
+                    .FirstOrDefault();
             }
             catch (Exception ex)
             {
+            }
 
-            }
             if (user != null)
-            {
-                
                 return "Primary Account";
-            }
-            else
-            {
-                return "Not Primary Account";
-            }
-            
+            return "Not Primary Account";
         }
 
 
-        public static List<Domain.Socioboard.Models.profilesdetail> SearchProfileType(long groupId, string Profiletype, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <param name="profileType"></param>
+        /// <param name="redisCache"></param>
+        /// <param name="dbr"></param>
+        /// <returns></returns>
+        public static List<profilesdetail> SearchProfileType(long groupId, string profileType, Cache redisCache, DatabaseRepository dbr)
         {
+            var needProfileType = SocialProfileType.Facebook;
+            var finalResult = new List<profilesdetail>();
+            switch (profileType)
+            {
+                case "Facebook":
+                    needProfileType = SocialProfileType.Facebook;
+                    break;
+                case "FacebookPage":
+                    needProfileType = SocialProfileType.FacebookFanPage;
+                    break;
+                case "twitter":
+                    needProfileType = SocialProfileType.Twitter;
+                    break;
+                case "instagram":
+                    needProfileType = SocialProfileType.Instagram;
+                    break;
+                case "googlepluse":
+                    needProfileType = SocialProfileType.GPlus;
+                    break;
+                case "linkedin":
+                    needProfileType = SocialProfileType.LinkedIn;
+                    break;
+                case "linkedincompanypage":
+                    needProfileType = SocialProfileType.LinkedInComapanyPage;
+                    break;
+                case "Youtube":
+                    needProfileType = SocialProfileType.YouTube;
+                    break;
+                case "GAnalytics":
+                    needProfileType = SocialProfileType.GoogleAnalytics;
+                    break;
+                case "Pinterest":
+                    needProfileType = SocialProfileType.Pinterest;
+                    break;
+            }
+
             try
             {
-                List<Domain.Socioboard.Models.Groupprofiles> inMemGroupProfiles = _redisCache.Get<List<Domain.Socioboard.Models.Groupprofiles>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                if (inMemGroupProfiles != null)
+                var inMemGroupProfiles = redisCache.Get<List<Groupprofiles>>(SocioboardConsts.CacheGroupProfiles + groupId);
+
+                if (inMemGroupProfiles.Count == 0)
+                    inMemGroupProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType == needProfileType).ToList();
+
+
+               
+                if (inMemGroupProfiles.Count > 0)
                 {
-                    // return inMemGroupProfiles;
+                    var selectedProfileDetails = inMemGroupProfiles.Where(x => x.profileType == needProfileType).ToList();
+                    var userDetails = redisCache.Get<User>("User") ?? dbr.FindFirstMatch<User>(t => t.Id == inMemGroupProfiles[0].profileOwnerId);
+                   
+                    if (userDetails.AccountType == SBAccountType.Free)
+                    {
+                        var requiredGroup = selectedProfileDetails.FirstOrDefault();
+                        AddedProfileDetails(redisCache, dbr, finalResult, requiredGroup);
+                    }
+                    else
+                    {
+                        foreach (var profileDetail in selectedProfileDetails)
+                        {
+                            if (userDetails.AccountType != SBAccountType.Free)
+                            {
+                                var maxCount = Domain.Socioboard.Helpers.SBHelper.GetMaxProfileCount(userDetails.AccountType);
+                                if (finalResult.Count >= maxCount)
+                                    return finalResult;
+                            }
+
+                            AddedProfileDetails(redisCache, dbr, finalResult, profileDetail);
+                        }
+                      
+                    }                   
                 }
+                return finalResult;
             }
-            catch { }
-            List<Domain.Socioboard.Models.profilesdetail> lstprofiledetail = new List<profilesdetail>();
+            catch (Exception ex)
             {
-                if (Profiletype == "Facebook")
-                {
-
-                    List<Domain.Socioboard.Models.Groupprofiles> FbProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook).ToList();
-                    foreach (Domain.Socioboard.Models.Groupprofiles profil in FbProfiles)
-                    {
-                        Domain.Socioboard.Models.Facebookaccounts fbAcc = Repositories.FacebookRepository.getFacebookAccount(profil.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.Fbaccount = fbAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "FacebookPage")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> Fbpage = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
-                    foreach (Domain.Socioboard.Models.Groupprofiles page in Fbpage)
-                    {
-                        Domain.Socioboard.Models.Facebookaccounts fbpageAcc = Repositories.FacebookRepository.getFacebookAccount(page.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.Fbaccount = fbpageAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "twitter")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> TwitterProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).ToList();
-                    foreach (Domain.Socioboard.Models.Groupprofiles Twitter in TwitterProfiles)
-                    {
-                        Domain.Socioboard.Models.TwitterAccount twtAcc = Repositories.TwitterRepository.getTwitterAccount(Twitter.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.Twtaccount = twtAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "instagram")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> InstagramProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram).ToList();
-                    foreach (Domain.Socioboard.Models.Groupprofiles Instagram in InstagramProfiles)
-                    {
-                        Domain.Socioboard.Models.Instagramaccounts insAcc = Repositories.InstagramRepository.getInstagramAccount(Instagram.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.Instaaccount = insAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "googlepluse")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> GPlusProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus).ToList();
-                    foreach (Domain.Socioboard.Models.Groupprofiles GPlus in GPlusProfiles)
-                    {
-                        Domain.Socioboard.Models.Googleplusaccounts gPlusAcc = Repositories.GplusRepository.getGPlusAccount(GPlus.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.Gplusaccount = gPlusAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "linkedin")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> LinkedInProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn).ToList();
-                    foreach (Domain.Socioboard.Models.Groupprofiles LinkedIn in LinkedInProfiles)
-                    {
-                        Domain.Socioboard.Models.LinkedInAccount linkdAcc = Repositories.LinkedInAccountRepository.getLinkedInAccount(LinkedIn.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.LinkdInaccount = linkdAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "linkedincompanypage")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> LinkedInComapanyPageProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage).ToList();
-
-                    foreach (Domain.Socioboard.Models.Groupprofiles LinkedInComapanyPage in LinkedInComapanyPageProfiles)
-                    {
-                        Domain.Socioboard.Models.LinkedinCompanyPage LinkedcompanyAcc = Repositories.LinkedInAccountRepository.getLinkedinCompanyPage(LinkedInComapanyPage.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.LinkdINcompanyaccount = LinkedcompanyAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "Youtube")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> YouTubeProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
-                    foreach (Domain.Socioboard.Models.Groupprofiles YouTube in YouTubeProfiles)
-                    {
-                        Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.GplusRepository.getYTChannel(YouTube.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.Ytubeaccount = YTChnl;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "GAnalytics")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> GoogleAnalyticsProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.GoogleAnalytics).ToList();
-
-                    foreach (Domain.Socioboard.Models.Groupprofiles GoogleAnalytics in GoogleAnalyticsProfiles)
-                    {
-                        Domain.Socioboard.Models.GoogleAnalyticsAccount gAAcc = Repositories.GplusRepository.getGAAccount(GoogleAnalytics.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.GAaccount = gAAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-                else if (Profiletype == "Pinterest")
-                {
-                    List<Domain.Socioboard.Models.Groupprofiles> PinterestProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Pinterest).ToList();
-                    foreach (Domain.Socioboard.Models.Groupprofiles Pinterest in PinterestProfiles)
-                    {
-                        Domain.Socioboard.Models.PinterestAccount PinAcc = Repositories.PinterestRepository.getPinterestAccountDetail(Pinterest.profileId, _redisCache, dbr);
-                        Domain.Socioboard.Models.profilesdetail profiledetails = new profilesdetail();
-                        profiledetails.Pintrestaccount = PinAcc;
-                        lstprofiledetail.Add(profiledetails);
-                    }
-                }
-
-                return lstprofiledetail;
+                Console.WriteLine(ex.Message);
+                return finalResult;
             }
-        }
 
+            #region Old Code
+
+            //var lstprofiledetail = new List<profilesdetail>();
+            //{
+            //    if (Profiletype == "Facebook")
+            //    {
+            //        var FbProfiles = dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType == SocialProfileType.Facebook).ToList();
+
+            //        foreach (var profil in FbProfiles)
+            //        {
+            //            var fbAcc = FacebookRepository.getFacebookAccount(profil.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.Fbaccount = fbAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "FacebookPage")
+            //    {
+            //        var Fbpage = dbr.Find<Groupprofiles>(t =>
+            //            t.groupId == groupId && t.profileType == SocialProfileType.FacebookFanPage).ToList();
+            //        foreach (var page in Fbpage)
+            //        {
+            //            var fbpageAcc = FacebookRepository.getFacebookAccount(page.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.Fbaccount = fbpageAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "twitter")
+            //    {
+            //        var TwitterProfiles =
+            //            dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType == SocialProfileType.Twitter)
+            //                .ToList();
+            //        foreach (var Twitter in TwitterProfiles)
+            //        {
+            //            var twtAcc = TwitterRepository.getTwitterAccount(Twitter.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.Twtaccount = twtAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "instagram")
+            //    {
+            //        var InstagramProfiles = dbr.Find<Groupprofiles>(t =>
+            //            t.groupId == groupId && t.profileType == SocialProfileType.Instagram).ToList();
+            //        foreach (var Instagram in InstagramProfiles)
+            //        {
+            //            var insAcc = InstagramRepository.getInstagramAccount(Instagram.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.Instaaccount = insAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "googlepluse")
+            //    {
+            //        var GPlusProfiles =
+            //            dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType == SocialProfileType.GPlus)
+            //                .ToList();
+            //        foreach (var GPlus in GPlusProfiles)
+            //        {
+            //            var gPlusAcc = GplusRepository.getGPlusAccount(GPlus.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.Gplusaccount = gPlusAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "linkedin")
+            //    {
+            //        var LinkedInProfiles =
+            //            dbr.Find<Groupprofiles>(
+            //                t => t.groupId == groupId && t.profileType == SocialProfileType.LinkedIn).ToList();
+            //        foreach (var LinkedIn in LinkedInProfiles)
+            //        {
+            //            var linkdAcc =
+            //                LinkedInAccountRepository.getLinkedInAccount(LinkedIn.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.LinkdInaccount = linkdAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "linkedincompanypage")
+            //    {
+            //        var LinkedInComapanyPageProfiles = dbr.Find<Groupprofiles>(t =>
+            //            t.groupId == groupId && t.profileType == SocialProfileType.LinkedInComapanyPage).ToList();
+
+            //        foreach (var LinkedInComapanyPage in LinkedInComapanyPageProfiles)
+            //        {
+            //            var LinkedcompanyAcc =
+            //                LinkedInAccountRepository.getLinkedinCompanyPage(LinkedInComapanyPage.profileId,
+            //                    _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.LinkdINcompanyaccount = LinkedcompanyAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "Youtube")
+            //    {
+            //        var YouTubeProfiles =
+            //            dbr.Find<Groupprofiles>(t => t.groupId == groupId && t.profileType == SocialProfileType.YouTube)
+            //                .ToList();
+            //        foreach (var YouTube in YouTubeProfiles)
+            //        {
+            //            var YTChnl = GplusRepository.getYTChannel(YouTube.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.Ytubeaccount = YTChnl;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "GAnalytics")
+            //    {
+            //        var GoogleAnalyticsProfiles = dbr.Find<Groupprofiles>(t =>
+            //            t.groupId == groupId && t.profileType == SocialProfileType.GoogleAnalytics).ToList();
+
+            //        foreach (var GoogleAnalytics in GoogleAnalyticsProfiles)
+            //        {
+            //            var gAAcc = GplusRepository.getGAAccount(GoogleAnalytics.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.GAaccount = gAAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+            //    else if (Profiletype == "Pinterest")
+            //    {
+            //        var PinterestProfiles = dbr.Find<Groupprofiles>(t =>
+            //            t.groupId == groupId && t.profileType == SocialProfileType.Pinterest).ToList();
+            //        foreach (var Pinterest in PinterestProfiles)
+            //        {
+            //            var PinAcc =
+            //                PinterestRepository.getPinterestAccountDetail(Pinterest.profileId, _redisCache, dbr);
+            //            var profiledetails = new profilesdetail();
+            //            profiledetails.Pintrestaccount = PinAcc;
+            //            lstprofiledetail.Add(profiledetails);
+            //        }
+            //    }
+
+            //    return lstprofiledetail;
+            //}
+            #endregion
+        }
     }
 }

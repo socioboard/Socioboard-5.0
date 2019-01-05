@@ -24,7 +24,7 @@ namespace Api.Socioboard.Controllers
             _emailSender = emailSender;
             _appEnv = appEnv;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
 
         }
         private readonly ILogger _logger;
@@ -43,7 +43,7 @@ namespace Api.Socioboard.Controllers
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             //if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).Count > 0)
-            if (dbr.Find<Domain.Socioboard.Models.Groups>(t =>t.groupName.Equals(group.groupName)).Count > 0)
+            if (dbr.Find<Domain.Socioboard.Models.Groups>(t => t.groupName.Equals(group.groupName)).Count > 0)
             {
                 return Ok("Team Name Already Exist");
             }
@@ -79,32 +79,41 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetUserGroups")]
         public IActionResult GetUserGroups(long userId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            return Ok(GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr));
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            return Ok(GroupsRepository.GetAllGroupsofUser(userId, _redisCache, dbr));
         }
 
 
         [HttpGet("GetUserGroupData")]
-        public IActionResult GetUserGroupData(long userId,string groupId)
+        public IActionResult GetUserGroupData(long userId, string groupId)
         {
-            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            Domain.Socioboard.Models.GetUserGroupData _GetUserGroupData = new Domain.Socioboard.Models.GetUserGroupData();
-            List<Domain.Socioboard.Models.Groups> lstgroup = new List<Groups>();
-            List<Domain.Socioboard.Models.Groupmembers> lstgrpmember = new List<Groupmembers>();
-            lstgrpmember = dbr.Find<Groupmembers>(t => t.userId == userId && t.memberStatus==Domain.Socioboard.Enum.GroupMemberStatus.Accepted).ToList();
-            long[] lstgrpId = lstgrpmember.Select(t => t.groupid).ToArray();
-            lstgroup = dbr.Find<Domain.Socioboard.Models.Groups>(t => lstgrpId.Contains(t.id)).ToList();
-            List<Domain.Socioboard.Models.Groupprofiles> lstgrpProfiles = new List<Groupprofiles>();
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+
+            var _GetUserGroupData = new GetUserGroupData();
+
+            var lstgroup = new List<Groups>();
+
+            var lstgrpmember = new List<Groupmembers>();
+
+            lstgrpmember = dbr.Find<Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted).ToList();
+
+            var lstgrpId = lstgrpmember.Select(t => t.groupid).ToArray();
+
+            lstgroup = dbr.Find<Groups>(t => lstgrpId.Contains(t.id)).ToList();
+           
+            var lstgrpProfiles = new List<Groupprofiles>();
+
             if (string.IsNullOrEmpty(groupId))
             {
-                long[] lstStr = lstgroup.Select(t => t.id).ToArray();
-                lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => lstStr.Contains(t.groupId)).ToList(); 
+                var lstStr = lstgroup.Select(t => t.id).ToArray();
+                lstgrpProfiles = GroupProfilesRepository.GetAllGroupProfiles(lstStr[0], _redisCache, dbr);
             }
             else
             {
-                lstgrpProfiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t =>t.groupId==Convert.ToInt32(groupId)).ToList();
+                lstgrpProfiles = GroupProfilesRepository.GetAllGroupProfiles(Convert.ToInt32(groupId), _redisCache, dbr);
             }
-            Dictionary<long, List<Groupprofiles>> myProfiles = lstgrpProfiles.GroupBy(o => o.groupId).ToDictionary(g => g.Key, g => g.ToList());
+
+            var myProfiles = lstgrpProfiles.GroupBy(o => o.groupId).ToDictionary(g => g.Key, g => g.ToList());
             _GetUserGroupData.lstgroup = lstgroup;
             _GetUserGroupData.myProfiles = myProfiles;
             return Ok(_GetUserGroupData);

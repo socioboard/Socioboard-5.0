@@ -25,11 +25,11 @@ namespace Api.Socioboard.Controllers
         private Helper.AppSettings _appSettings;
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _env;
-        public TaskController(ILogger<RssFeedController> logger, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment env)
+        public TaskController(ILogger<TaskController> logger, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment env)
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
             _env = env;
         }
 

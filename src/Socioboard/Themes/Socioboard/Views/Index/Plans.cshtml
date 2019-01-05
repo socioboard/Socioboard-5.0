@@ -1003,18 +1003,17 @@
 
                             type: "GET",
 
-                            url: "@ViewBag.Domain/Home/PayPalAccount",
+                            url: "@ViewBag.Domain/payment/index",
 
-                            data: { "emailId": email, "IsLogin": false },
+                            data: { "emailId": email },
 
                             dataType: "html",
                             success: function (msg) {
                                 alertify.set({ delay: 5000 });
-                                alertify.error("please submit Payment detail.");
+                              
                                 window.top.location = msg;
                             },
-                            error: function (msg) {
-
+                            error: function (msg) {                               
                                 return false;
                             }
                         });
@@ -1104,9 +1103,9 @@
 
                                     type: "GET",
 
-                                    url: "@ViewBag.Domain/Home/PayPalAccount",
+                                    url: "@ViewBag.Domain/payment/index",
 
-                                    data: { "emailId": email, "IsLogin": false },
+                                    data: { "emailId": email },
 
                                     dataType: "html",
                                     success: function (msg) {

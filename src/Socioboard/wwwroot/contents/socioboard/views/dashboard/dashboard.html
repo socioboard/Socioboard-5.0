@@ -774,7 +774,7 @@
                                 <span class="collection-header">Automate Rss Feeds</span>
                                 <p>Build Your Contents</p>
                             </li>
-                            <li class="collection-item" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7"" >
+                            <li class="collection-item" ng-if="user.AccountType==2 || user.AccountType==3 || user.AccountType==4 || user.AccountType==5 || user.AccountType==6 || user.AccountType==7" >
                                 <div class="row">
                                     <div class="col l12 s12">
                                         <a ng-click="contentFeeds('Analytics')" class="chip red darken-1 white-text">Analytics</a>
@@ -1475,7 +1475,7 @@
                         <p>{{fbpages.LikeCount}}</p>
                     </div>
                     <p class="right">
-                        <input type="checkbox" value="{{fbpages.AccessToken}}" id="page_{{fbpages.AccessToken}}" ng-click="toggleFbPageProfileSelection(fbpages.AccessToken)">
+                        <input type="checkbox" value="{{fbpages.AccessToken}}" id="page_{{fbpages.AccessToken}}" ng-click="toggleFbPageProfileSelection(fbpages)">
                         <label for="page_{{fbpages.AccessToken}}"></label>
                     </p>
                 </li>

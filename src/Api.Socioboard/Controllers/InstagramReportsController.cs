@@ -21,7 +21,7 @@ namespace Api.Socioboard.Controllers
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
             _appEnv = appEnv;
         }
         private readonly ILogger _logger;
@@ -46,7 +46,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetInstagramProfilesData(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram).ToList();
             string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
             List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = new List<Domain.Socioboard.Models.Instagramaccounts>();
@@ -59,7 +59,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetInstafollowfollowingGraph(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram).ToList();
             string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
             List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = new List<Domain.Socioboard.Models.Instagramaccounts>();
@@ -72,7 +72,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetInstagramFeedsdata(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram).ToList();
             string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
             List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = new List<Domain.Socioboard.Models.Instagramaccounts>();

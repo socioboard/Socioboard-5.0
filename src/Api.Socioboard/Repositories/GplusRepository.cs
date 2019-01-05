@@ -34,18 +34,15 @@ namespace Api.Socioboard.Repositories
             }
             catch { }
 
-            List<Domain.Socioboard.Models.Googleplusaccounts> lstGPlusAcc = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(GPlusUserId) && t.IsActive).ToList();
-            if (lstGPlusAcc != null && lstGPlusAcc.Count() > 0)
+            var lstGPlusAcc = dbr.FindFirstMatch<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(GPlusUserId) && t.IsActive);
+
+            if (lstGPlusAcc != null)
             {
-                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusAccount + GPlusUserId, lstGPlusAcc.First());
-                return lstGPlusAcc.First();
-            }
-            else
-            {
-                return null;
+                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusAccount + GPlusUserId, lstGPlusAcc);
+                return lstGPlusAcc;
             }
 
-
+            return null;
 
         }
 
@@ -75,12 +72,12 @@ namespace Api.Socioboard.Repositories
 
 
         }
-        public static int AddGplusAccount(JObject profile,  Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, string accessToken,string refreshToken ,Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        public static int AddGplusAccount(JObject profile, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, string accessToken, string refreshToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
         {
             int isSaved = 0;
             Domain.Socioboard.Models.Googleplusaccounts gplusAcc = GplusRepository.getGPlusAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
-            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey,settings.GoogleConsumerSecret,settings.GoogleRedirectUri);
-           
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
+
             if (gplusAcc != null && gplusAcc.IsActive == false)
             {
                 gplusAcc.IsActive = true;
@@ -118,7 +115,7 @@ namespace Api.Socioboard.Repositories
                 {
                     gplusAcc.about = Convert.ToString(profile["tagline"]);
                 }
-                catch 
+                catch
                 {
                     gplusAcc.about = "";
                 }
@@ -207,11 +204,14 @@ namespace Api.Socioboard.Repositories
                 gplusAcc = new Domain.Socioboard.Models.Googleplusaccounts();
                 gplusAcc.UserId = userId;
                 gplusAcc.GpUserId = profile["id"].ToString();
-                try {
+                try
+                {
                     gplusAcc.GpUserName = profile["displayName"].ToString();
                 }
-                catch {
-                    try {
+                catch
+                {
+                    try
+                    {
                         gplusAcc.GpUserName = profile["name"].ToString();
                     }
                     catch { }
@@ -220,7 +220,8 @@ namespace Api.Socioboard.Repositories
                 gplusAcc.AccessToken = accessToken;
                 gplusAcc.RefreshToken = refreshToken;
                 gplusAcc.EntryDate = DateTime.UtcNow;
-                try {
+                try
+                {
                     gplusAcc.GpProfileImage = Convert.ToString(profile["image"]["url"]);
                 }
                 catch
@@ -230,7 +231,7 @@ namespace Api.Socioboard.Repositories
                         gplusAcc.GpProfileImage = Convert.ToString(profile["picture"]);
                     }
                     catch { }
-                    
+
                 }
                 gplusAcc.AccessToken = accessToken;
                 try
@@ -267,22 +268,23 @@ namespace Api.Socioboard.Repositories
                 }
                 try
                 {
-                    gplusAcc.EmailId = Convert.ToString(profile["email"][0]["value"]);                  
+                    gplusAcc.EmailId = Convert.ToString(profile["email"][0]["value"]);
 
                 }
                 catch
                 {
-                   try{
-                            try
-                            {
-                                gplusAcc.EmailId = Convert.ToString(profile["email"]);
-                            }
-                            catch(Exception ex)
-                            {
-                                gplusAcc.EmailId = "";
-                            }
-                     }
-                    catch(Exception ex)
+                    try
+                    {
+                        try
+                        {
+                            gplusAcc.EmailId = Convert.ToString(profile["email"]);
+                        }
+                        catch (Exception ex)
+                        {
+                            gplusAcc.EmailId = "";
+                        }
+                    }
+                    catch (Exception ex)
                     {
                         gplusAcc.EmailId = "";
                     }
@@ -333,9 +335,9 @@ namespace Api.Socioboard.Repositories
                 }
                 #endregion
 
-                 isSaved = dbr.Add<Domain.Socioboard.Models.Googleplusaccounts>(gplusAcc);
+                isSaved = dbr.Add<Domain.Socioboard.Models.Googleplusaccounts>(gplusAcc);
             }
-           
+
             if (isSaved == 1)
             {
                 List<Domain.Socioboard.Models.Googleplusaccounts> lstgplusAcc = dbr.Find<Domain.Socioboard.Models.Googleplusaccounts>(t => t.GpUserId.Equals(gplusAcc.GpUserId)).ToList();
@@ -346,12 +348,12 @@ namespace Api.Socioboard.Repositories
                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
                     _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
 
-                    
+
                     if (isSaved == 1)
                     {
                         new Thread(delegate ()
                         {
-                            GetUserActivities(gplusAcc.GpUserId,gplusAcc.AccessToken,settings,_logger);
+                            GetUserActivities(gplusAcc.GpUserId, gplusAcc.AccessToken, settings, _logger);
 
                         }).Start();
 
@@ -371,7 +373,7 @@ namespace Api.Socioboard.Repositories
             Domain.Socioboard.Models.Googleplusaccounts gplusAcc = GplusRepository.getGPlusAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
             oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
 
-            if (gplusAcc != null )//&& gplusAcc.IsActive == false)
+            if (gplusAcc != null)//&& gplusAcc.IsActive == false)
             {
                 gplusAcc.IsActive = true;
                 gplusAcc.UserId = userId;
@@ -491,14 +493,14 @@ namespace Api.Socioboard.Repositories
                 {
                     return isaved;
                 }
-            }           
+            }
             return isSaved;
         }
 
 
         public static void GetUserActivities(string ProfileId, string AcessToken, Helper.AppSettings settings, ILogger _logger)
         {
-            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey,settings.GoogleConsumerSecret,settings.GoogleRedirectUri);
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
             try
             {
                 //Domain.Socioboard.Domain.GooglePlusActivities _GooglePlusActivities = null;
@@ -612,7 +614,8 @@ namespace Api.Socioboard.Repositories
                     }
                     MongoRepository gplusFeedRepo = new MongoRepository("MongoGplusFeed", settings);
                     var ret = gplusFeedRepo.Find<MongoGplusFeed>(t => t.ActivityId.Equals(_GooglePlusActivities.ActivityId));
-                    var task = Task.Run(async () => {
+                    var task = Task.Run(async () =>
+                    {
                         return await ret;
                     });
                     int count = task.Result.Count;
@@ -627,8 +630,9 @@ namespace Api.Socioboard.Repositories
                         var update = Builders<BsonDocument>.Update.Set("PlusonersCount", _GooglePlusActivities.PlusonersCount).Set("RepliesCount", _GooglePlusActivities.RepliesCount).Set("ResharersCount", _GooglePlusActivities.ResharersCount);
                         gplusFeedRepo.Update<MongoGplusFeed>(update, filter);
                     }
-                    new Thread(delegate () {
-                       GetGooglePlusComments(_GooglePlusActivities.ActivityId, AcessToken, ProfileId,settings,_logger);
+                    new Thread(delegate ()
+                    {
+                        GetGooglePlusComments(_GooglePlusActivities.ActivityId, AcessToken, ProfileId, settings, _logger);
                     }).Start();
 
                     new Thread(delegate ()
@@ -770,8 +774,8 @@ namespace Api.Socioboard.Repositories
 
         public static void GetGooglePlusComments(string feedId, string AccessToken, string profileId, Helper.AppSettings settings, ILogger _logger)
         {
-            MongoRepository gplusCommentRepo = new MongoRepository("GoogleplusComments",settings);
-            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey,settings.GoogleConsumerSecret,settings.GoogleRedirectUri);
+            MongoRepository gplusCommentRepo = new MongoRepository("GoogleplusComments", settings);
+            oAuthTokenGPlus ObjoAuthTokenGPlus = new oAuthTokenGPlus(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
 
             MongoGoogleplusComments _GoogleplusComments = new MongoGoogleplusComments();
             try
@@ -896,11 +900,11 @@ namespace Api.Socioboard.Repositories
                 return "Account Not Exist";
             }
         }
-        public static List<Domain.Socioboard.Models.Mongo.MongoGplusFeed> getgoogleplusActivity(string profileId,Helper.Cache _redisCache,Helper.AppSettings _appSettings)
+        public static List<Domain.Socioboard.Models.Mongo.MongoGplusFeed> getgoogleplusActivity(string profileId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             MongoRepository gplusFeedRepo = new MongoRepository("MongoGplusFeed", _appSettings);
             List<Domain.Socioboard.Models.Mongo.MongoGplusFeed> iMmemMongoGplusFeed = _redisCache.Get<List<Domain.Socioboard.Models.Mongo.MongoGplusFeed>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusRecent100Feeds + profileId);
-            if(iMmemMongoGplusFeed!=null && iMmemMongoGplusFeed.Count>0)
+            if (iMmemMongoGplusFeed != null && iMmemMongoGplusFeed.Count > 0)
             {
                 return iMmemMongoGplusFeed;
             }
@@ -909,11 +913,12 @@ namespace Api.Socioboard.Repositories
                 var builder = Builders<MongoGplusFeed>.Sort;
                 var sort = builder.Descending(t => t.PublishedDate);
                 var ret = gplusFeedRepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoGplusFeed>(t => t.GpUserId.Equals(profileId), sort, 0, 100);
-                var task=Task.Run(async() =>{
+                var task = Task.Run(async () =>
+                {
                     return await ret;
                 });
                 IList<Domain.Socioboard.Models.Mongo.MongoGplusFeed> lstMongoGplusFeed = task.Result.ToList();
-                if (lstMongoGplusFeed.Count>0)
+                if (lstMongoGplusFeed.Count > 0)
                 {
                     _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheGplusRecent100Feeds + profileId, lstMongoGplusFeed.ToList());
                 }
@@ -923,16 +928,17 @@ namespace Api.Socioboard.Repositories
 
         public static List<Domain.Socioboard.Models.Mongo.MongoGplusFeed> getgoogleplusActivity(string profileId, Helper.Cache _redisCache, Helper.AppSettings _appSettings, int skip, int count, string postType)
         {
-            MongoRepository gplusFeedRepo = new MongoRepository("MongoGplusFeed", _appSettings);            
-                var builder = Builders<MongoGplusFeed>.Sort;
-                var sort = builder.Descending(t => t.PublishedDate);
-                var ret = gplusFeedRepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoGplusFeed>(t => t.GpUserId.Equals(profileId) && t.AttachmentType.Equals(postType), sort, skip, count);
-                var task = Task.Run(async () => {
-                    return await ret;
-                });
-                IList<Domain.Socioboard.Models.Mongo.MongoGplusFeed> lstMongoGplusFeed = task.Result.ToList();
+            MongoRepository gplusFeedRepo = new MongoRepository("MongoGplusFeed", _appSettings);
+            var builder = Builders<MongoGplusFeed>.Sort;
+            var sort = builder.Descending(t => t.PublishedDate);
+            var ret = gplusFeedRepo.FindWithRange<Domain.Socioboard.Models.Mongo.MongoGplusFeed>(t => t.GpUserId.Equals(profileId) && t.AttachmentType.Equals(postType), sort, skip, count);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+            IList<Domain.Socioboard.Models.Mongo.MongoGplusFeed> lstMongoGplusFeed = task.Result.ToList();
 
-                return lstMongoGplusFeed.ToList();
+            return lstMongoGplusFeed.ToList();
         }
 
         public static string DeleteYoutubeChannelProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
@@ -1123,7 +1129,7 @@ namespace Api.Socioboard.Repositories
 
             try
             {
-                
+
                 string videos = _Videos.Get_Videosby_Channel(channelid, AccessToken, "snippet,contentDetails,statistics");
                 JObject JVideodata = JObject.Parse(videos);
                 string videoimage = null;
@@ -1166,7 +1172,7 @@ namespace Api.Socioboard.Repositories
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -1568,7 +1574,7 @@ namespace Api.Socioboard.Repositories
             try
             {
                 var lstYtComments_sorted = lstYtComments.OrderByDescending(t => Convert.ToDateTime(t.publishTime));
-                foreach(var item in lstYtComments_sorted)
+                foreach (var item in lstYtComments_sorted)
                 {
                     var time = Convert.ToDateTime(item.publishTime).AddMinutes(330);
                     item.publishTime = time.ToString();
@@ -1585,7 +1591,7 @@ namespace Api.Socioboard.Repositories
 
         public static void PostCommentsYt(string channelId, string videoId, string commentText, Helper.AppSettings settings, ILogger _logger, Model.DatabaseRepository dbr)
         {
-            commentText = commentText.Replace("\n","\\n");
+            commentText = commentText.Replace("\n", "\\n");
             MongoRepository youtubefeedsrepo = new MongoRepository("YoutubeVideosComments", settings);
             Video _Videos = new Video(settings.GoogleConsumerKey, settings.GoogleConsumerSecret, settings.GoogleRedirectUri);
 
@@ -1614,7 +1620,7 @@ namespace Api.Socioboard.Repositories
                 string totalReplyCount = JVideodata["snippet"]["totalReplyCount"].ToString();
 
                 //Add in Mongo via mongo_model
-                
+
                 _YoutubeComments.Id = ObjectId.GenerateNewId();
                 _YoutubeComments.videoId = cmntvideoId;
                 _YoutubeComments.commentId = commentId;
@@ -1637,9 +1643,9 @@ namespace Api.Socioboard.Repositories
 
                 youtubefeedsrepo.Add(_YoutubeComments);
             }
-                
 
-            
+
+
             catch (Exception ex)
             {
 
@@ -1666,7 +1672,7 @@ namespace Api.Socioboard.Repositories
             ParentThread.Join();
             ChildThread.Join();
             List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> newList = new List<Domain.Socioboard.Models.Mongo.MongoYoutubeComments>();
-            if (lstyoutubeParentComment.Count==0 && lstyoutubeChildComment.Count==0)
+            if (lstyoutubeParentComment.Count == 0 && lstyoutubeChildComment.Count == 0)
             {
                 return null;
             }
@@ -1708,7 +1714,7 @@ namespace Api.Socioboard.Repositories
                 IList<Domain.Socioboard.Models.Mongo.MongoYoutubeComments> lstyoutubeParentComment = task.Result;
                 return lstyoutubeParentComment.ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }

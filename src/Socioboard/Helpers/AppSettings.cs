@@ -65,6 +65,8 @@ namespace Socioboard.Helpers
         public string notifyUrl { get; set; }
         public string paypalemail { get; set; }
 
+        public string PaypalPdtToken { get; set; }
+
         public string AgencycallBackUrl { get; set; }
 
         public string TrainingcallBackUrl { get; set; }

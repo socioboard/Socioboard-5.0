@@ -21,7 +21,7 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
     {
         public static void CreateGoogleAnalyticsReport()
         {
-            Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+            Helper.Cache cache = Helper.Cache.GetCacheInstance(Helper.AppSettings.RedisConfiguration);
             while (true)
             {
                 try
@@ -34,10 +34,11 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
                         {
                             if (item.IsActive)
                             {
+                                GoogleAnalyticsreportData(item.GaProfileId, item.RefreshToken, item.WebsiteUrl, item.Is90DayDataUpdated);
                                 GetTwitterWebMentions(item.WebsiteUrl);
                                 DailyMotionPost(item.WebsiteUrl);
                                 GetYoutubeSearchData(item.WebsiteUrl);
-                                GoogleAnalyticsreportData(item.GaProfileId, item.RefreshToken, item.WebsiteUrl, item.Is90DayDataUpdated);
+                               
                                 item.LastUpdate = DateTime.UtcNow;
                                 item.Is90DayDataUpdated = true;
                                 dbr.Update<Domain.Socioboard.Models.GoogleAnalyticsAccount>(item);
@@ -55,7 +56,7 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
         }
         public static void GoogleAnalyticsreportData(string ProfileId, string AccessToken, string HostName, bool is90daysupdated)
         {
-            Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+            Helper.Cache cache = Helper.Cache.GetCacheInstance(Helper.AppSettings.RedisConfiguration);
             MongoRepository TwtsearchRepo = new MongoRepository("TwitterUrlMentions");
             MongoRepository ArticlesAndBlogsRepo = new MongoRepository("ArticlesAndBlogs");
             MongoRepository GoogleAnalyticsReportRepo = new Model.MongoRepository("GoogleAnalyticsReport");
@@ -78,7 +79,7 @@ namespace SocioboardDataServices.Reports.GoogleAnalyticsReports
                 finalToken = AccessToken;
                 Console.WriteLine(ex.StackTrace);
             }
-            Analytics _Analytics = new Analytics("246221405801-5sg3n6bfpj329ie7tiqfdnb404pc78ea.apps.googleusercontent.com", "S5B4EtNKIe-1yHq4xEtXHCHK", "https://www.socioboard.com/GoogleManager/Google");
+            Analytics _Analytics = new Analytics(Helper.AppSettings.googleClientId, Helper.AppSettings.googleClientSecret, Helper.AppSettings.googleRedirectionUrl);
             DateTime startDate = DateTime.UtcNow.Date.AddDays(-day);
             while (startDate.Date < DateTime.UtcNow.Date)
             {

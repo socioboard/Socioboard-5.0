@@ -9,6 +9,9 @@ namespace Domain.Socioboard.Enum
         Paid = 0,
 
         [Description("Unpaid version")]
-        UnPaid = 1
+        UnPaid = 1,
+
+        [Description("Processing")]
+        Processing = 2
     }
 }

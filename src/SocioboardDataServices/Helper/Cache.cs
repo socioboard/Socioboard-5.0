@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using StackExchange.Redis;
 using System;
+using System.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,11 +13,32 @@ namespace SocioboardDataServices.Helper
     {
         private readonly ConnectionMultiplexer redisConnections;
 
-        public Cache(string configuration)
+        private static Cache _instance;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public static Cache GetCacheInstance(string configuration)
+        {
+            return _instance ?? (_instance = new Cache(configuration));
+        }
+
+        private Cache(string configuration)
         {
             try
             {
-                this.redisConnections = ConnectionMultiplexer.Connect(configuration);
+                if (redisConnections == null)
+                {
+                    var configurationOptions = new ConfigurationOptions
+                    {
+                        EndPoints = { configuration },
+                        AbortOnConnectFail = false
+                    };
+
+                    redisConnections = ConnectionMultiplexer.Connect(configurationOptions);
+                }
             }
             catch
             {

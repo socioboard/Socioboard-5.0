@@ -19,9 +19,15 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
         };
 
        
+        debugger;
 
+        var objappVersion = navigator.appVersion;
+        var objAgent = navigator.userAgent;
+        var objbrowserName = navigator.appName; 
+        var objfullVersion = '' + parseFloat(navigator.appVersion);
+        var objBrMajorVersion = parseInt(navigator.appVersion, 10);
+        var objOffsetName, objOffsetVersion, ix;
 
-        var objappVersion = navigator.appVersion; var objAgent = navigator.userAgent; var objbrowserName = navigator.appName; var objfullVersion = '' + parseFloat(navigator.appVersion); var objBrMajorVersion = parseInt(navigator.appVersion, 10); var objOffsetName, objOffsetVersion, ix;
         if ((objOffsetVersion = objAgent.indexOf("Chrome")) != -1) {
             objbrowserName = "Chrome"; objfullVersion = objAgent.substring(objOffsetVersion + 7);
         }
@@ -60,13 +66,16 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
             document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
         }
 
-
-        $http.get('//ipapi.co/json/')
+        debugger;
+        $http.get('https://ipapi.co/json/')
             .then(function (response) {
+
+                debugger;
                 //$scope.TwitterRecentFollower = response.data;
                 $rootScope.Ip = response.data.ip;
                 $scope.sessionData();
             }, function (reason) {
+                debugger;
                 $scope.error = reason.data;
             });
 
@@ -496,7 +505,6 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
                     url: apiDomain + '/api/GroupProfiles/DeleteProfile?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id + '&profileId=' + profileId,
                 }).then(function (response) {
                     if (response.data == "Deleted") {
-                        // swal("Deleted!", "Your profile has been deleted", "Success");
                         swal("Deleted!", "Account is deleted", "success");
                     }
                     window.location.reload();
@@ -723,7 +731,12 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
         //codes to add facebook pages
         $scope.toggleFbPageProfileSelection = function (option) {
-            var idx = $scope.selectedFbPageProfiles.indexOf(option);
+
+            debugger;
+
+            var value = JSON.stringify(option);
+
+            var idx = $scope.selectedFbPageProfiles.indexOf(value);
 
             // is currently selected
             if (idx > -1) {
@@ -732,20 +745,23 @@ SocioboardApp.controller('DashboardController', function ($rootScope, $scope, $h
 
                 // is newly selected
             else {
-                $scope.selectedFbPageProfiles.push(option);
+                $scope.selectedFbPageProfiles.push(value);
             }
         };
         $scope.selectedFbPageProfiles = [];
         $scope.selecteFbPageProfiles = [];
         // toggleGAeProfileSelection();
+
         $scope.AddFacebookPages = function () {
+
+            debugger;
+
             angular.forEach($rootScope.lstProfiles, function (value, key) {
-                if (value.profileType == 1) {
-                    if ($rootScope.lstAddFbPages.indexOf(value.profileId) == -1) {
+                if (value.profileType === 1) {
+                    if ($rootScope.lstAddFbPages.indexOf(value.profileId) === -1) {
 
                         $scope.selecteFbPageProfiles.push(value.profileId);
                     }
-
                 }
             });
 

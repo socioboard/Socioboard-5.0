@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Compat.Web;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,9 +15,9 @@ using Socioboard.Facebook.Data;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using System.IO;
-using NHibernate.Criterion;
 using System.Threading;
 using Api.Socioboard.Helper;
+using Domain.Socioboard.Enum;
 
 // For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -33,110 +34,17 @@ namespace Api.Socioboard.Controllers
             _emailSender = emailSender;
             _appEnv = appEnv;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Cache.GetCacheInstance(_appSettings.RedisConfiguration);
         }
         private readonly ILogger _logger;
         private readonly IEmailSender _emailSender;
         private readonly IHostingEnvironment _appEnv;
-        private Helper.AppSettings _appSettings;
-        private Helper.Cache _redisCache;
+        private AppSettings _appSettings;
+        private Cache _redisCache;
 
 
 
-        /// <summary>
-        /// To register the new user.
-        /// </summary>
-        /// <param name="user">data of the user for registration</param>
-        /// <returns></returns>
-        [HttpPost("Register")]
-        public IActionResult Register(User user)
-        {
-            #region Assign Initial Values
 
-            user.CreateDate = DateTime.UtcNow;
-            user.ExpiryDate = DateTime.UtcNow.AddDays(1);
-            user.EmailValidateToken = SBHelper.RandomString(20);
-            user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
-            user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.MailSent;
-            user.Password = SBHelper.Md5Hash(user.Password);
-            user.UserName = "Socioboard";
-            user.UserType = "User";
-            user.ReferralStatus = "InActive";
-            //user.RefrralCode = SBHelper.RandomString(20);
-            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.notadded;
-            user.LastLoginTime = DateTime.UtcNow;
-            if (user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
-            {
-                user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
-            } 
-
-            #endregion
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            // get the sql database respository
-            var mysqlDbRespository = new DatabaseRepository(_logger, _appEnv);
-
-            //validate the email is already register or not
-            var matchedUserList = mysqlDbRespository.Find<User>(t => t.EmailId.Equals(user.EmailId));
-
-            if (matchedUserList != null && matchedUserList.Count > 0)
-            {
-                return BadRequest("This Email is already registered please login to continue");
-            }
-
-            // add to database
-            var savedStatus = mysqlDbRespository.Add(user);
-
-            // Fetch the full details, because some additional seed data's are present
-            var fetchFullUserDetails = mysqlDbRespository.Single<User>(t => t.EmailId.Equals(user.EmailId));
-
-            if (savedStatus == 1 && fetchFullUserDetails != null)
-            {
-                fetchFullUserDetails.RefrralCode = "SOCIOBOARD_" + fetchFullUserDetails.Id;
-
-                mysqlDbRespository.Update(fetchFullUserDetails);
-
-                #region Add to default group and add a member to group member respository
-                var group = new Groups();
-                group.adminId = fetchFullUserDetails.Id;
-                // group.id = nuser.Id;
-                group.createdDate = DateTime.UtcNow;
-                group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
-                savedStatus = mysqlDbRespository.Add(group);
-
-                if (savedStatus == 1)
-                {
-                    var groupId = mysqlDbRespository.FindSingle<Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
-                    GroupMembersRepository.CreateGroupMember(groupId, fetchFullUserDetails, _redisCache, mysqlDbRespository);
-                } 
-                #endregion
-
-                #region Sending Email Activation Email to resgister user
-                try
-                {
-                    var path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
-                    var html = System.IO.File.ReadAllText(path);
-                    html = html.Replace("[FirstName]", fetchFullUserDetails.FirstName);
-                    html = html.Replace("[AccountType]", fetchFullUserDetails.AccountType.ToString());
-                    html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + fetchFullUserDetails.EmailValidateToken + "&id=" + fetchFullUserDetails.Id);
-                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", fetchFullUserDetails.EmailId, "", "", "Socioboard Email confirmation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
-                }
-                catch
-                {
-                    return Ok();
-                } 
-                #endregion
-            }
-            else
-            {
-                return BadRequest("Can't create user");
-            }
-            return Ok("Email verification mail sent successfully.");
-        }
 
 
         [HttpPost("PhoneSignUp")]
@@ -274,19 +182,9 @@ namespace Api.Socioboard.Controllers
         {
             try
             {
-                User inMemUser = _redisCache.Get<User>(user.UserName);
-                // User inMemUser = (User)_memoryCache.Get(user.UserName);
+                var inMemUser = _redisCache.Get<User>(user.UserName);
                 if (inMemUser != null)
-                {
-                    if (inMemUser.Password.Equals(SBHelper.Md5Hash(user.Password)))
-                    {
-                        return Ok(inMemUser);
-                    }
-                    else
-                    {
-                        return Ok("Wrong Password");
-                    }
-                }
+                    return inMemUser.Password.Equals(SBHelper.Md5Hash(user.Password)) ? Ok(inMemUser) : Ok("Wrong Password");
             }
             catch (Exception ex)
             {
@@ -294,99 +192,61 @@ namespace Api.Socioboard.Controllers
                 _logger.LogError(ex.StackTrace);
             }
 
+
             var dbr = new DatabaseRepository(_logger, _appEnv);
-            var lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.UserName));
-            if (lstUser != null && lstUser.Count > 0)
-            {
-                var matchedUser = lstUser.First();
+            var matchedUser = dbr.FindFirstMatch<User>(t => t.EmailId.Equals(user.UserName));
 
-                if (matchedUser.Password != null && matchedUser.Password.Equals(SBHelper.Md5Hash(user.Password)))
-                {
-                    //if (lstUser.First().UserType == "SuperAdmin")
-                    //{
-                    //    return Ok(lstUser.First());
-                    //}
-                    if (matchedUser.RefrralCode == null)
-                    {
-                        matchedUser.RefrralCode = "SOCIOBOARD_" + matchedUser.Id;
-                    }
-                    DateTime d1 = DateTime.UtcNow;
-                    //User userTable = dbr.Single < User>(t => t.EmailId == user.UserName);
-                    matchedUser.LastLoginTime = d1;
-                    //userTable.LastLoginTime = d1;
-                    dbr.Update<User>(matchedUser);
-
-                    // _memoryCache.Set(lstUser.First().EmailId, lstUser.First());
-                    _redisCache.Set<User>(matchedUser.EmailId, matchedUser);
-
-                    switch (matchedUser.ActivationStatus)
-                    {
-                        case Domain.Socioboard.Enum.SBUserActivationStatus.Active:
-                            return Ok(matchedUser);
-                        case Domain.Socioboard.Enum.SBUserActivationStatus.MailSent:
-                            return Ok("Activate your account through email");
-                        case Domain.Socioboard.Enum.SBUserActivationStatus.Disable:
-                            return Ok("Your account is disabled. Please contact socioboard support for more assistance");
-                        default:
-                            return Ok("Something went wrong please try after sometime");
-                    }
-                }
-                else
-                {
-                    return Ok("Wrong Password");
-                }
-            }
-            else
-            {
+            if (matchedUser == null)
                 return Ok("EmailId Not Exist");
+
+            if (matchedUser.Password == null || !matchedUser.Password.Equals(SBHelper.Md5Hash(user.Password)))
+                return Ok("Wrong Password");
+
+            if (matchedUser.RefrralCode == null)
+                matchedUser.RefrralCode = $"SOCIOBOARD_{matchedUser.Id}";
+
+            matchedUser.LastLoginTime = DateTime.UtcNow;
+
+            dbr.Update(matchedUser);
+
+            _redisCache.Set(matchedUser.EmailId, matchedUser);
+
+            switch (matchedUser.ActivationStatus)
+            {
+                case SBUserActivationStatus.Active:
+                    return Ok(matchedUser);
+                case SBUserActivationStatus.MailSent:
+                    return Ok("Activate your account through email");
+                case SBUserActivationStatus.Disable:
+                    return Ok("Your account is disabled. Please contact socioboard support for more assistance");
+                case SBUserActivationStatus.InActive:
+                    return Ok("Something went wrong please try after sometime");
+                default:
+                    return Ok("Something went wrong please try after sometime");
             }
+
         }
 
 
         [HttpPost("CheckUserLogin")]
         public IActionResult CheckUserLogin(UserLoginViewModel user)
         {
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var lstUser = dbr.FindFirstMatch<User>(t => t.EmailId.Equals(user.UserName));
 
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(user.UserName));
-            if (lstUser != null && lstUser.Count() > 0)
-            {
-                if (user.Password == "sociallogin")
-                {
-                    UserLoginViewModel obj = new UserLoginViewModel();
-                    user.Password = obj.Password;
-                }
-                //lstUser.First().Password != null &&
-                //if (lstUser.First().Password.Equals(user.Password)  && )
-                //{
-                //    return Ok("success");
-                //}
-                if (lstUser.First().Password == "")
-                {
-                    lstUser.First().Password = null;
-                }
-                if (string.IsNullOrEmpty(lstUser.First().Password) && string.IsNullOrEmpty(user.Password))
-                {
-                    return Ok(lstUser.First());
-                }
-                else if (lstUser.First().Password.Equals(user.Password))
-                {
-                    return Ok(lstUser.First());
-                }
-                else if (lstUser.First().Password.Equals(SBHelper.Md5Hash(user.Password)))
-                {
-                    return Ok(lstUser.First());
-                }
-                else
-                {
-                    return BadRequest();
-                }
-            }
-            else
-            {
+            if (lstUser == null)
                 return BadRequest();
-            }
 
+            if (user.Password == "sociallogin")
+                user.Password = "";
+
+            if (string.IsNullOrEmpty(lstUser.Password) && string.IsNullOrEmpty(user.Password))
+                return Ok(lstUser);
+
+            if (lstUser.Password.Equals(user.Password) || lstUser.Password.Equals(SBHelper.Md5Hash(user.Password)))
+                return Ok(lstUser);
+
+            return BadRequest();
         }
 
 
@@ -400,7 +260,7 @@ namespace Api.Socioboard.Controllers
         {
             try
             {
-                User inMemUser = _redisCache.Get<User>(Email);
+                var inMemUser = _redisCache.Get<User>(Email);
                 if (inMemUser != null)
                 {
                     return Ok("Email Exist");
@@ -408,7 +268,6 @@ namespace Api.Socioboard.Controllers
             }
             catch (Exception ex)
             {
-
                 _logger.LogInformation(ex.Message);
                 _logger.LogError(ex.StackTrace);
             }
@@ -437,12 +296,12 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetUser")]
         public IActionResult GetUser(Int64 Id)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            var dbr = new DatabaseRepository(_logger, _appEnv);
 
-            User user = dbr.Single<User>(t => t.Id == Id);
+            var user = dbr.FindFirstMatch<User>(t => t.Id == Id);
             if (user != null)
             {
-            if(user.EmailValidateToken=="Google")
+                if (user.EmailValidateToken == "Google")
                 {
                     string name = user.FirstName;
                     var nam = name.Split(' ');
@@ -453,12 +312,33 @@ namespace Api.Socioboard.Controllers
                 }
                 return Ok(user);
             }
-            else
-            {
-                return NotFound();
-            }
+
+            return NotFound();
+
 
         }
+
+        /// <summary>
+        /// To get the user datails.
+        /// </summary>
+        /// <param name="email">id of the user </param>
+        /// <returns>
+        /// 1. success: if the user id is exist in db.
+        /// 2. failure: if user id does not exist in db
+        /// </returns>
+        [HttpGet("GetUserDetails")]
+        public IActionResult GetUserDetails(string email)
+        {
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+
+            var user = dbr.FindFirstMatch<User>(t => t.EmailId == email);
+
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
 
         [HttpGet("GetPaidUserAdmin")]
         public IActionResult GetPaidUserAdmin(string selecteddate)
@@ -1203,19 +1083,17 @@ namespace Api.Socioboard.Controllers
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="emailId"></param>
+        /// <returns></returns>
         [HttpGet("GetUserData")]
         public IActionResult GetUserData(string emailId)
         {
-            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            User user = dbr.Single<User>(t => t.EmailId == emailId);
-            if (user != null)
-            {
-                return Ok(user);
-            }
-            else
-            {
-                return NotFound();
-            }
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var user = dbr.FindFirstMatch<User>(t => t.EmailId == emailId);
+            return user != null ? (IActionResult)Ok(user) : NotFound();
         }
 
 
@@ -1230,50 +1108,37 @@ namespace Api.Socioboard.Controllers
         /// Wrong Link:when user use false link or unautorize link.
         /// </returns>
         [HttpPost("VerifyEmail")]
-        public IActionResult VerifyEmail(Int64 Id, string Token)
+        public IActionResult VerifyEmail(string Id, string Token)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            User user = null;
             try
             {
-                user = dbr.Single<User>(t => t.Id == Id);
-            }
-            catch { }
-            if (user != null)
-            {
-                if (user.EmailValidateToken.Equals(Token))
-                {
-                    if (user.ValidateTokenExpireDate >= DateTime.UtcNow)
-                    {
-                        user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
-                        if (user.PayPalAccountStatus != Domain.Socioboard.Enum.PayPalAccountStatus.added)
-                        {
-                            user.PayPalAccountStatus = Domain.Socioboard.Enum.PayPalAccountStatus.inprogress;
-                        }
-                        int result = dbr.Update<User>(user);
-                        if (result == 1)
-                        {
-                            return Ok("Account Activated.");
-                        }
-                        else
-                        {
-                            return Ok("Failed to Activate.");
-                        }
-                    }
-                    else
-                    {
-                        return Ok("Link Expired.");
-                    }
-                }
-                else
-                {
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+
+                var user = dbr.FindFirstMatch<User>(t => t.EmailId == Id);
+
+                if (user == null)
                     return Ok("Wrong Link.");
-                }
+
+                if (!user.EmailValidateToken.Equals(Token))
+                    return Ok("Wrong Link.");
+
+                if (user.ValidateTokenExpireDate < DateTime.UtcNow)
+                    return Ok("Link Expired.");
+
+                user.ActivationStatus = SBUserActivationStatus.Active;
+
+                if (user.PayPalAccountStatus != PayPalAccountStatus.added)
+                    user.PayPalAccountStatus = PayPalAccountStatus.inprogress;
+
+                var result = dbr.Update(user);
+
+                return Ok(result == 1 ? "Account Activated." : "Failed to Activate.");
             }
-            else
+            catch
             {
                 return Ok("Wrong Link.");
             }
+
         }
 
 
@@ -1405,257 +1270,7 @@ namespace Api.Socioboard.Controllers
         }
 
 
-        /// <summary>
-        /// To validate the access token before login facebook
-        /// </summary>
-        /// <param name="AccessToken">Code obtained after successfull authentication from facebook.</param>
-        /// <returns>Success:added su</returns>
-        [HttpPost("FacebookLogin")]
-        public IActionResult FacebookLogin(string AccessToken, Domain.Socioboard.Enum.SBAccountType accType)
-        {
-            dynamic profile = FbUser.getFbUser(AccessToken);
 
-            if (Convert.ToString(profile) == "Invalid Access Token")
-            {
-                return Ok("Invalid Access Token");
-            }
-            try
-            {
-                string EmailId = string.Empty;
-                try
-                {
-                    EmailId = (Convert.ToString(profile["email"]));
-                }
-                catch { }
-                if (string.IsNullOrEmpty(EmailId))
-                {
-                    return Ok("Facebook Not retuning Email");
-                }
-
-                try
-                {
-                    User inMemUser = _redisCache.Get<User>(EmailId);
-                    if (inMemUser != null)
-                    {
-                        return Ok(inMemUser);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogInformation(ex.Message);
-                    _logger.LogError(ex.StackTrace);
-                }
-
-                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-                IList<Facebookaccounts> lstFbacc = dbr.Find<Facebookaccounts>(t => t.EmailId.Equals(EmailId));
-                IList<User> lstUser = dbr.Find<User>(t => t.EmailId.Equals(EmailId));
-                IList<User> userDet = dbr.Find<User>(t => t.Id == lstFbacc.First().UserId);
-                if (lstUser != null && lstUser.Count() > 0)
-                {
-                    if (lstFbacc != null && lstFbacc.Count() > 0 && lstUser.FirstOrDefault().Id == lstFbacc.FirstOrDefault().UserId)
-                    {
-                        if (lstUser.FirstOrDefault().SocialLoginEnableFb == true)
-                        {
-                            if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Active)
-                            {
-                                if (lstUser.First().RefrralCode == null)
-                                {
-                                    lstUser.First().RefrralCode = "SOCIOBOARD_" + lstUser.First().Id;
-                                }
-                                DateTime d1 = DateTime.UtcNow;
-
-                                try
-                                {
-
-                                    lstFbacc.First().ProfileUrl = (Convert.ToString(profile["picture"]["data"]["url"]));
-                                }
-                                catch (Exception ex)
-                                { }
-                                lstUser.First().LastLoginTime = d1;
-                                dbr.Update<User>(lstUser.First());
-                                dbr.Update<Facebookaccounts>(lstFbacc.First());
-                                _redisCache.Set<User>(lstUser.First().EmailId, lstUser.First());
-                                return Ok(lstUser.First());
-                            }
-                            else if (lstUser.First().ActivationStatus == Domain.Socioboard.Enum.SBUserActivationStatus.Disable)
-                            {
-                                return Ok("Your account is disabled. Please contact socioboard support for more assistance");
-                            }
-                            else
-                            {
-                                return Ok("Something went wrong please try after sometime");
-                            }
-                        }
-                        else
-                        {
-                            return Ok("it's look like you have disable your social signin for facebook account");
-                        }
-                    }
-                    else
-                    {
-                        if (lstFbacc != null && lstFbacc.Count > 0)
-                        {
-                            if (lstFbacc.First().IsActive == true)//&& userDet.First().SocialLoginEnableFb == true)
-                            {
-                                if (userDet.First().SocialLoginEnableFb == true)
-                                {
-                                    long id = lstFbacc.First().UserId;
-                                    //IList<User> userDet = dbr.Find<User>(t => t.Id == id);
-                                    DateTime d1 = DateTime.UtcNow;
-                                    userDet.First().LastLoginTime = d1;
-                                    dbr.Update<User>(userDet.First());
-                                    _redisCache.Set<User>(userDet.First().EmailId, userDet.First());
-                                    return Ok(userDet.First());
-                                }
-                                else
-                                {
-                                    return Ok("it's look like you have disable your social signin for facebook account");
-                                }
-                            }
-                            else
-                            {
-                                return Ok("facebook account added by other user");
-                            }
-                        }
-                        else
-                        {
-                            return Ok("EmailId already exist");
-                        }
-                    }
-                }
-                else if (lstFbacc != null && lstFbacc.Count() > 0 && lstUser.Count() == 0)
-                {
-                    if (lstFbacc.First().IsActive == true)//&& userDet.First().SocialLoginEnableFb == true)
-                    {
-                        if (userDet.First().SocialLoginEnableFb == true)
-                        {
-                            long id = lstFbacc.First().UserId;
-                            //IList<User> userDet = dbr.Find<User>(t => t.Id == id);
-                            DateTime d1 = DateTime.UtcNow;
-                            userDet.First().LastLoginTime = d1;
-                            dbr.Update<User>(userDet.First());
-                            _redisCache.Set<User>(userDet.First().EmailId, userDet.First());
-                            return Ok(userDet.First());
-                        }
-                        else
-                        {
-                            return Ok("it's look like you have disable your social signin for facebook account");
-                        }
-
-                    }
-                    else
-                    {
-                        return Ok("facebook account added by other user");
-                    }
-
-                }
-                else
-                {
-                    Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
-                    if (fbacc != null && fbacc.IsActive == true)
-                    {
-                        return Ok("Facebook account added by other user.");
-                    }
-
-                    Domain.Socioboard.Models.User user = new Domain.Socioboard.Models.User();
-                    if (accType == Domain.Socioboard.Enum.SBAccountType.Free)
-                    {
-                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
-                    {
-                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Deluxe;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Premium)
-                    {
-                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Premium;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Topaz)
-                    {
-                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Topaz;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Platinum)
-                    {
-                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Platinum;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Gold)
-                    {
-                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Gold;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Ruby)
-                    {
-                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Ruby;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Standard)
-                    {
-                        user.AccountType = Domain.Socioboard.Enum.SBAccountType.Standard;
-
-                    }
-
-                    user.ActivationStatus = Domain.Socioboard.Enum.SBUserActivationStatus.Active;
-                    user.CreateDate = DateTime.UtcNow;
-                    user.EmailId = EmailId;
-                    user.ExpiryDate = DateTime.UtcNow.AddDays(30);
-                    user.PaymentType = Domain.Socioboard.Enum.PaymentType.paypal;
-                    user.UserName = "Socioboard";
-                    user.UserType = "User";
-                    user.EmailValidateToken = "Facebook";
-                    user.SocialLoginEnableFb = true;
-                    user.SocialLoginEnableGo = true;
-                    user.LastLoginTime = DateTime.UtcNow;
-                    try
-                    {
-                        user.ProfilePicUrl = "https://graph.facebook.com/" + Convert.ToString(profile["id"]) + "/picture?type=small";
-                    }
-                    catch { }
-                    user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.UnPaid;
-                    try
-                    {
-                        user.FirstName = (Convert.ToString(profile["first_name"]));
-                    }
-                    catch
-                    {
-                        user.FirstName = (Convert.ToString(profile["name"]));
-                    }
-                    try
-                    {
-                        user.LastName = (Convert.ToString(profile["last_name"]));
-                    }
-                    catch { }
-
-                    user.RegistrationType = Domain.Socioboard.Enum.SBRegistrationType.Faceboook;
-
-                    int SavedStatus = dbr.Add<Domain.Socioboard.Models.User>(user);
-                    User nuser = dbr.Single<User>(t => t.EmailId.Equals(user.EmailId));
-                    if (SavedStatus == 1 && nuser != null)
-                    {
-                        Groups group = new Groups();
-                        group.adminId = nuser.Id;
-                        group.createdDate = DateTime.UtcNow;
-                        group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
-                        SavedStatus = dbr.Add<Groups>(group);
-                        if (SavedStatus == 1)
-                        {
-                            Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == nuser.Id && t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).FirstOrDefault();
-                            GroupMembersRepository.CreateGroupMember(ngrp.id, nuser, _redisCache, dbr);
-                            // Adding Facebook Profile
-                            Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.getFbFriends(AccessToken), dbr, nuser.Id, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, AccessToken, _redisCache, _appSettings, _logger);
-                        }
-                    }
-                    return Ok(nuser);
-                }
-            }
-            catch
-            {
-                return Ok("Invalid Access Token");
-            }
-        }
 
         [HttpGet("GetPrimaryUserDeatils")]
         public IActionResult GetPrimaryUserDeatils(long userId)
@@ -2105,6 +1720,8 @@ namespace Api.Socioboard.Controllers
         [HttpPost("EnableTwoStepLogin")]
         public IActionResult EnableTwoStepLogin(long userId, string currentPassword)
         {
+            currentPassword = Uri.UnescapeDataString(currentPassword);
+
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             User user = dbr.Single<User>(t => t.Id == userId);
             if (user.SocialLoginEnableFb == false && user.SocialLoginEnableGo == false)
@@ -2350,18 +1967,27 @@ namespace Api.Socioboard.Controllers
             return Ok(_user);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost("UpdateTrialStatus")]
-        public IActionResult UpdateTrialStatus(Int64 Id)
+        public IActionResult UpdateTrialStatus(long id)
         {
-            Model.DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            User _user = dbr.Single<User>(t => t.Id == Id);
-            if (_user != null)
-            {
-                _user.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.inactive;
-                _user.ExpiryDate = DateTime.UtcNow.AddDays(30);
-                dbr.Update<User>(_user);
-            }
-            return Ok(_user);
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var user = dbr.FindFirstMatch<User>(t => t.Id == id);
+
+            if (user == null)
+                return NotFound(null);
+
+            user.AccountType = SBAccountType.Free;
+            user.TrailStatus = UserTrailStatus.inactive;
+            user.ExpiryDate = DateTime.UtcNow.AddDays(15);
+
+            dbr.Update(user);
+
+            return Ok(user);
         }
 
 
@@ -2424,95 +2050,6 @@ namespace Api.Socioboard.Controllers
 
         #endregion
 
-        [HttpGet("GetUserSessions")]
-        public IActionResult GetUserSessions(long userId)
-        {
-            DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-14).Year, DateTime.UtcNow.AddDays(-14).Month, DateTime.UtcNow.AddDays(-14).Day, 0, 0, 0, DateTimeKind.Utc);
-            DateTime dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
-            List<SessionHistory> lstsessions = dbr.Find<SessionHistory>(t => t.userId == userId && t.lastAccessedTime > dayStart && t.lastAccessedTime < dayEnd).OrderByDescending(t => t.firstloginTime).ToList();
-            return Ok(lstsessions);
-        }
-        [HttpPost("SaveSessiondata")]
-        public IActionResult SaveSessiondata(string ip, string brwdata, string userId)
-        {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            //userAgent = getBetween(userAgent, "Mozilla/5.0 (", ";");
-            //string brwdata= browserName + " on " + userAgent;
-            Domain.Socioboard.Models.SessionHistory _SessionHistory = new SessionHistory();
-            _SessionHistory = dbr.Find<SessionHistory>(t => t.ipAddress == ip && t.browseros == brwdata && t.sessionStatus == Domain.Socioboard.Enum.SessionHistoryStatus.active).FirstOrDefault();
-            if (_SessionHistory == null)
-            {
-                _SessionHistory = new SessionHistory();
-                _SessionHistory.browseros = brwdata;
-                _SessionHistory.firstloginTime = DateTime.UtcNow;
-                _SessionHistory.ipAddress = ip;
-                _SessionHistory.systemId = DateTime.UtcNow.Ticks.ToString("x");
-                _SessionHistory.lastAccessedTime = DateTime.UtcNow;
-                _SessionHistory.sessionStatus = Domain.Socioboard.Enum.SessionHistoryStatus.active;
-                _SessionHistory.userId = Convert.ToInt32(userId);
-                dbr.Add<SessionHistory>(_SessionHistory);
-            }
-            else
-            {
-                _SessionHistory.browseros = brwdata;
-                _SessionHistory.ipAddress = ip;
-                _SessionHistory.lastAccessedTime = DateTime.UtcNow;
-                _SessionHistory.sessionStatus = Domain.Socioboard.Enum.SessionHistoryStatus.active;
-                _SessionHistory.userId = Convert.ToInt32(userId);
-                dbr.Update<SessionHistory>(_SessionHistory);
-            }
-            Domain.Socioboard.Models.SessionHistory SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == _SessionHistory.systemId).FirstOrDefault();
-            return Ok(SessionHistory);
-        }
-
-        [HttpPost("UpdateSessiondata")]
-        public IActionResult UpdateSessiondata(string systemId)
-        {
-            try
-            {
-                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-
-                Domain.Socioboard.Models.SessionHistory _SessionHistory = new SessionHistory();
-                _SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == systemId && t.sessionStatus == Domain.Socioboard.Enum.SessionHistoryStatus.active).FirstOrDefault();
-                _SessionHistory.lastAccessedTime = DateTime.UtcNow;
-                Domain.Socioboard.Models.SessionHistory SessionHistory = dbr.Find<SessionHistory>(t => t.systemId == systemId).FirstOrDefault();
-                return Ok(SessionHistory);
-            }
-            catch (Exception)
-            {
-                return Ok("Not Found");
-            }
-        }
-
-        [HttpPost("checksociorevtoken")]
-        public IActionResult checksociorevtoken(string systemId)
-        {
-            DatabaseRepository dnr = new Model.DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.SessionHistory> _session = dnr.Find<SessionHistory>(t => t.systemId == systemId && t.sessionStatus == Domain.Socioboard.Enum.SessionHistoryStatus.active).ToList();
-            if (_session.Count > 0)
-            {
-                return Ok(_session.FirstOrDefault());
-            }
-            else
-            {
-                return Ok("false");
-            }
-        }
-
-
-        [HttpPost("RevokeSession")]
-        public IActionResult RevokeSession(long sessionId, string systemId)
-        {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            SessionHistory _SessionHistory = dbr.Find<SessionHistory>(t => t.id == sessionId && t.systemId == systemId).FirstOrDefault();
-            _SessionHistory.sessionStatus = Domain.Socioboard.Enum.SessionHistoryStatus.inactive;
-            _SessionHistory.lastAccessedTime = DateTime.UtcNow;
-            dbr.Update<SessionHistory>(_SessionHistory);
-            return Ok();
-        }
-
-
 
 
         [HttpPost("UpdateurlShortnerStatus")]
@@ -2540,6 +2077,7 @@ namespace Api.Socioboard.Controllers
             }
 
         }
+
         [HttpPost("UpdateRefrralStatus")]
         public IActionResult UpdateRefrralStatus(long userId)
         {
@@ -2588,61 +2126,432 @@ namespace Api.Socioboard.Controllers
 
 
         }
+
         [HttpPost("AuthLogin")]
         public IActionResult AuthLogin(AuthUser authUser)
         {
+
             if (string.IsNullOrEmpty(authUser.AuthCode))
             {
                 authUser.AuthMessage = "Please enter valid authToken";
                 return BadRequest(authUser);
             }
+
             if (authUser.AuthCode.Contains("1974224400.2310fd1.699477d40ff64cd6babfb0b3a6cf60fa"))
             {
-                DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-                User _User = dbr.Single<User>(t => t.EmailId.Equals(authUser.email) && t.Password.Equals(SBHelper.Md5Hash(authUser.password)));
-                if (_User == null)
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+                var user = dbr.FindFirstMatch<User>(t => t.EmailId.Equals(authUser.email) && t.Password.Equals(SBHelper.Md5Hash(authUser.password)));
+
+                if (user == null)
                 {
                     authUser.AuthMessage = "Invalid EmailId and password";
                     return BadRequest(authUser);
                 }
-                if (_User.ExpiryDate < DateTime.UtcNow)
+                if (user.ExpiryDate < DateTime.UtcNow)
                 {
                     authUser.AuthMessage = "your account has been expired";
                     return BadRequest(authUser);
                 }
-                else if (_User.ActivationStatus != Domain.Socioboard.Enum.SBUserActivationStatus.Active)
+                if (user.ActivationStatus != SBUserActivationStatus.Active)
                 {
                     authUser.AuthMessage = "your account is not active please contact to support";
                     return BadRequest(authUser);
                 }
-                else if (_User.PaymentStatus != Domain.Socioboard.Enum.SBPaymentStatus.Paid)
+                if (user.PaymentStatus != SBPaymentStatus.Paid)
                 {
                     authUser.AuthMessage = "you are not paid user";
                     return BadRequest(authUser);
                 }
+
+                authUser.socioboard_id = user.Id;
+                authUser.Affiliate_id = user.RefrralCode;
+                authUser.AuthMessage = "login successfully";
+                authUser.country = user.Country;
+                authUser.email = user.EmailId;
+                authUser.first_name = user.FirstName;
+                authUser.last_name = user.LastName;
+                authUser.password = authUser.password;
+                authUser.phone = user.PhoneCode + user.PhoneNumber;
+                authUser.profile_pic_url = user.ProfilePicUrl;
+                return Ok(authUser);
+
+            }
+
+            authUser.AuthMessage = "Invalid authToken";
+            return BadRequest(authUser);
+
+
+        }
+
+
+
+        #region Registration
+
+        /// <summary>
+        /// To register the new user.
+        /// </summary>
+        /// <param name="user">data of the user for registration</param>
+        /// <returns></returns>
+        [HttpPost("Register")]
+        public IActionResult Register(User user)
+        {
+
+            #region Assign Initial Values
+
+            user.CreateDate = DateTime.UtcNow;
+            user.ExpiryDate = DateTime.UtcNow.AddDays(1);
+            user.EmailValidateToken = SBHelper.RandomString(20);
+            user.ValidateTokenExpireDate = DateTime.UtcNow.AddDays(1);
+            user.ActivationStatus = SBUserActivationStatus.MailSent;
+            user.Password = SBHelper.Md5Hash(user.Password);
+            user.UserName = SocioboardApiConstants.ApplicationName;
+            user.UserType = "User";
+            user.ReferralStatus = "InActive";
+            user.PayPalAccountStatus = PayPalAccountStatus.notadded;
+            user.LastLoginTime = DateTime.UtcNow;
+            user.PaymentStatus = SBPaymentStatus.UnPaid;
+            user.TrailStatus = UserTrailStatus.active;
+
+            if (user.AccountType == SBAccountType.Free)
+                user.ExpiryDate = DateTime.UtcNow.AddDays(15);
+
+            #endregion
+
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var dbRepository = new DatabaseRepository(_logger, _appEnv);
+
+            //validate the email is already register or not
+            var matchedUserList = dbRepository.FindFirstMatch<User>(t => t.EmailId.Equals(user.EmailId));
+
+            if (matchedUserList != null)
+                return BadRequest("Email already registered, Please login to continue");
+
+            #region Sending Email Activation Email to resgister user
+
+            try
+            {
+                var path = _appEnv.WebRootPath + "\\views\\mailtemplates\\registrationmail.html";
+                var html = System.IO.File.ReadAllText(path);
+                html = html.Replace("[FirstName]", user.FirstName);
+                html = html.Replace("[AccountType]", user.AccountType.ToString());
+                html = html.Replace("[ActivationLink]", _appSettings.Domain + "/Home/Active?Token=" + user.EmailValidateToken + "&id=" + user.EmailId);
+
+
+                if (!string.IsNullOrEmpty(_appSettings.SendGridApiKey))
+                {
+                    CustomTaskFactory.Instance.Start(async () =>
+                    {
+                        await _emailSender.SendMailBySendGridApi(_appSettings.frommail, user.EmailId, "", "", $"{SocioboardApiConstants.ApplicationName} Email confirmation Link", html, _appSettings.SendGridApiKey);
+                    });
+                }
                 else
                 {
-                    authUser.socioboard_id = _User.Id;
-                    authUser.Affiliate_id = _User.RefrralCode;
-                    authUser.AuthMessage = "login successfully";
-                    authUser.country = _User.Country;
-                    authUser.email = _User.EmailId;
-                    authUser.first_name = _User.FirstName;
-                    authUser.last_name = _User.LastName;
-                    authUser.password = authUser.password;
-                    authUser.phone = _User.PhoneCode + _User.PhoneNumber;
-                    authUser.profile_pic_url = _User.ProfilePicUrl;
-                    return Ok(authUser);
+                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", user.EmailId, "", "", $"{SocioboardApiConstants.ApplicationName} Email confirmation Link", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
                 }
+
+
+            }
+            catch
+            {
+                return BadRequest("Cant able to send email");
+            }
+
+            #endregion
+
+            // add to database
+            var savedStatus = dbRepository.Add(user);
+
+
+            CustomTaskFactory.Instance.Start(() =>
+            {
+
+                var fetchFullUserDetails = dbRepository.FindFirstMatch<User>(t => t.EmailId.Equals(user.EmailId));
+
+                fetchFullUserDetails.RefrralCode = $"{SocioboardApiConstants.ApplicationName}_{fetchFullUserDetails.Id}";
+
+                dbRepository.Update(fetchFullUserDetails);
+
+                #region Add to default group and add a member to group member respository
+
+                var group = new Groups();
+                group.adminId = fetchFullUserDetails.Id;
+                group.createdDate = DateTime.UtcNow;
+                group.groupName = Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName;
+                savedStatus = dbRepository.Add(group);
+
+                var groupId = dbRepository.FindFirstMatch<Groups>(t => t.adminId == group.adminId && t.groupName.Equals(group.groupName)).id;
+                GroupMembersRepository.CreateGroupMember(groupId, fetchFullUserDetails, _redisCache, dbRepository);
+
+                #endregion
+
+            });
+
+            return savedStatus == 1 ? (IActionResult)Ok("Email verification mail sent successfully.") : BadRequest("Can't able create user!");
+        }
+
+
+        /// <summary>
+        /// To validate the access token before login facebook
+        /// </summary>
+        /// <param name="accessToken">Code obtained after successfully authentication from facebook.</param>
+        /// <param name="accType"></param>
+        /// <returns>Success:added su</returns>
+        [HttpPost("FacebookLogin")]
+        public IActionResult FacebookLogin(string accessToken, SBAccountType accType)
+        {
+            dynamic profile = FbUser.GetFbUser(accessToken);
+
+            if (Convert.ToString(profile) == "Invalid Access Token")
+                return Ok("Invalid Access Token");
+
+            try
+            {
+                string emailId;
+                string profileId;
+                try
+                {
+                    emailId = Convert.ToString(profile["email"]);
+                    profileId = Convert.ToString(profile["id"]);
+                    try
+                    {
+                        var inMemUser = _redisCache.Get<User>(emailId);
+                        if (inMemUser != null)
+                            return Ok(inMemUser);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogInformation(ex.Message);
+                        _logger.LogError(ex.StackTrace);
+                    }
+                }
+                catch
+                {
+                    return Ok("Facebook Not retuning Email");
+                }
+
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+                var lstUser = dbr.FindFirstMatch<User>(t => t.EmailId.Equals(emailId));
+
+                if (lstUser != null)
+                {
+                    if (!lstUser.SocialLoginEnableFb)
+                        return Ok("Account isn't sign-up with facebook!");
+
+                    lstUser.LastLoginTime = DateTime.UtcNow;
+                    CustomTaskFactory.Instance.Start(() => dbr.Update(lstUser));
+                    return Ok(lstUser);
+                }
+
+                var user = new User
+                {
+                    AccountType = accType,
+                    ActivationStatus = SBUserActivationStatus.Active,
+                    CreateDate = DateTime.UtcNow,
+                    EmailId = emailId,
+                    ExpiryDate = DateTime.UtcNow.AddDays(1),
+                    PaymentType = PaymentType.paypal,
+                    UserName = $"{SocioboardApiConstants.ApplicationName}",
+                    UserType = "User",
+                    EmailValidateToken = "Facebook",
+                    SocialLoginEnableFb = true,
+                    SocialLoginEnableGo = false,
+                    LastLoginTime = DateTime.UtcNow,
+                    ProfilePicUrl = $"https://graph.facebook.com/{profileId}/picture?type=small",
+                    PaymentStatus = SBPaymentStatus.UnPaid,
+                    RegistrationType = SBRegistrationType.Faceboook,
+                    TrailStatus = UserTrailStatus.active
+                };
+
+                if (user.AccountType == SBAccountType.Free)
+                    user.ExpiryDate = DateTime.UtcNow.AddDays(15);
+
+                try
+                {
+                    user.LastName = Convert.ToString(profile["last_name"]);
+                    user.FirstName = Convert.ToString(profile["first_name"]);
+                }
+                catch
+                {
+                    user.FirstName = Convert.ToString(profile["name"]);
+                }
+
+                var savedStatus = dbr.Add(user);
+
+                if (savedStatus == 0)
+                    return Ok("User not saved!");
+
+                var currentUser = dbr.FindFirstMatch<User>(t => t.EmailId.Equals(user.EmailId));
+
+                CustomTaskFactory.Instance.Start(() =>
+                {
+                    _redisCache.Set(emailId, currentUser);
+
+                    currentUser.RefrralCode = $"{SocioboardApiConstants.ApplicationName}_{currentUser.Id}";
+                    dbr.Update(currentUser);
+
+                    var group = new Groups();
+                    group.adminId = currentUser.Id;
+                    group.createdDate = DateTime.UtcNow;
+                    group.groupName = SocioboardApiConstants.ApplicationName;
+                    dbr.Add(group);
+
+                    var groupDetails = dbr.FindFirstMatch<Groups>(t => t.adminId == currentUser.Id && t.groupName.Equals(SocioboardApiConstants.ApplicationName));
+                    GroupMembersRepository.CreateGroupMember(groupDetails.id, currentUser, _redisCache, dbr);
+
+                    // Adding Facebook Profile
+                    FacebookRepository.AddFacebookAccount(profile, FbUser.GetFbFriends(accessToken), dbr, currentUser.Id, groupDetails.id, FbProfileType.FacebookProfile, accessToken, _redisCache, _appSettings, _logger);
+                });
+
+                return Ok(currentUser);
+
+            }
+            catch
+            {
+                return Ok("Invalid Access Token");
+            }
+        }
+
+
+
+
+        #endregion
+
+
+        #region Sessions
+
+
+        /// <summary>
+        /// To Fetch the user sessions
+        /// </summary>
+        /// <param name="userId">user id of the person</param>
+        /// <returns></returns>
+        [HttpGet("GetUserSessions")]
+        public IActionResult GetUserSessions(long userId)
+        {
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+
+            var dayStart = new DateTime(DateTime.UtcNow.AddDays(-14).Year, DateTime.UtcNow.AddDays(-14).Month, DateTime.UtcNow.AddDays(-14).Day, 0, 0, 0, DateTimeKind.Utc);
+
+            var dayEnd = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, 23, 59, 59, DateTimeKind.Utc);
+
+            var sessionHistories = dbr.Find<SessionHistory>(t => t.userId == userId && t.lastAccessedTime > dayStart && t.lastAccessedTime < dayEnd).OrderByDescending(t => t.firstloginTime).ToList();
+
+            return Ok(sessionHistories);
+        }
+
+
+        /// <summary>
+        /// To Save the session into database
+        /// </summary>
+        /// <param name="ip">user ip address</param>
+        /// <param name="browserOs">user's operation system</param>
+        /// <param name="userId">user id</param>
+        /// <returns></returns>
+        [HttpPost("SaveSessiondata")]
+        public IActionResult SaveSessiondata(string ip, string browserOs, string userId)
+        {
+
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+
+            var userIdLong = long.Parse(userId);
+
+            var sessionHistory = dbr.FindFirstMatch<SessionHistory>(t => t.userId == userIdLong && t.ipAddress == ip && t.browseros == browserOs && t.sessionStatus == SessionHistoryStatus.active);
+
+            if (sessionHistory == null)
+            {
+                sessionHistory = new SessionHistory
+                {
+                    browseros = browserOs,
+                    firstloginTime = DateTime.UtcNow,
+                    ipAddress = ip,
+                    systemId = DateTime.UtcNow.Ticks.ToString("x"),
+                    lastAccessedTime = DateTime.UtcNow,
+                    sessionStatus = SessionHistoryStatus.active,
+                    userId = Convert.ToInt32(userId)
+                };
+                dbr.Add(sessionHistory);
             }
             else
             {
-                authUser.AuthMessage = "Invalid authToken";
-                return BadRequest(authUser);
+                sessionHistory.lastAccessedTime = DateTime.UtcNow;
+                sessionHistory.userId = Convert.ToInt32(userId);
+                dbr.Update(sessionHistory);
             }
-            return Ok();
 
+            return Ok(sessionHistory);
         }
+
+
+
+        /// <summary>
+        /// To Update the session data through system id
+        /// </summary>
+        /// <param name="systemId">system Id</param>
+        /// <returns></returns>
+        [HttpPost("UpdateSessiondata")]
+        public IActionResult UpdateSessiondata(string systemId)
+        {
+            try
+            {
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+
+                var sessionHistory = dbr.FindFirstMatch<SessionHistory>(t => t.systemId == systemId && t.sessionStatus == SessionHistoryStatus.active);
+
+                if (sessionHistory == null)
+                    return Ok("Not Found");
+
+                sessionHistory.lastAccessedTime = DateTime.UtcNow;
+                dbr.Update(sessionHistory);
+
+                return Ok(sessionHistory);
+            }
+            catch (Exception)
+            {
+                return Ok("Not Found");
+            }
+        }
+
+
+        /// <summary>
+        /// To check and get the session if system Id matched
+        /// </summary>
+        /// <param name="systemId">system Id</param>
+        /// <returns></returns>
+        [HttpPost("checksociorevtoken")]
+        public IActionResult checksociorevtoken(string systemId)
+        {
+            var dnr = new DatabaseRepository(_logger, _appEnv);
+            var session = dnr.FindFirstMatch<SessionHistory>(t => t.systemId == systemId && t.sessionStatus == SessionHistoryStatus.active);
+            return session != null ? Ok(session) : Ok("false");
+        }
+
+
+        /// <summary>
+        /// To revoke the session and update into database
+        /// </summary>
+        /// <param name="sessionId">session Id</param>
+        /// <param name="systemId">System Id</param>
+        /// <returns></returns>
+        [HttpPost("RevokeSession")]
+        public IActionResult RevokeSession(long sessionId, string systemId)
+        {
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var sessionHistory = dbr.FindFirstMatch<SessionHistory>(t => t.id == sessionId && t.systemId == systemId);
+
+            if (sessionHistory == null)
+                return NotFound();
+
+            sessionHistory.sessionStatus = SessionHistoryStatus.inactive;
+            sessionHistory.lastAccessedTime = DateTime.UtcNow;
+            dbr.Update(sessionHistory);
+
+            return Ok();
+        }
+
+        #endregion
+
 
     }
 

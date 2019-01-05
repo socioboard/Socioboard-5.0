@@ -1,90 +1,114 @@
 ﻿
 using Newtonsoft.Json.Linq;
-using Socioboard.GoogleLib.Authentication;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web;
 
 
 namespace Api.Socioboard.Helper
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class GplusDiscoverySearchHelper
     {
-        public static string GooglePlus(string keyword)
+      
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <param name="googleRssApiKey"></param>
+        /// <returns></returns>
+        public static string GooglePlus(string keyword, string googleRssApiKey)
         {
-            string ret = string.Empty;
+            var ret = string.Empty;
             try
-            {
-                string Key = "AIzaSyASmXtuaErvVC0FGblSLUAzRcxRXLlBsgE";
-                
-                string RequestUrl = "https://www.googleapis.com/plus/v1/activities?query=" + keyword + "&maxResults=20&orderBy=best&key=" + Key;
+            {              
+                var requestUrl = "https://www.googleapis.com/plus/v1/activities?query=" + keyword + "&maxResults=20&orderBy=best&key=" + googleRssApiKey;
 
+                var gPlusResponse = (HttpWebRequest)WebRequest.Create(requestUrl);
 
+                gPlusResponse.Method = "GET";
 
-                var gpluslistpagerequest = (HttpWebRequest)WebRequest.Create(RequestUrl);
-                gpluslistpagerequest.Method = "GET";
-                string response = string.Empty;
+                var response = string.Empty;
+
                 try
                 {
-                    using (var gplusresponse = gpluslistpagerequest.GetResponse())
+                    using (var gResponse = gPlusResponse.GetResponse())
                     {
-                        using (var stream = new StreamReader(gplusresponse.GetResponseStream(), Encoding.GetEncoding(1256)))
+                        var responseStream = gResponse.GetResponseStream();
+
+                        if (responseStream == null)
+                            response = "";
+                        else
                         {
-                            response = stream.ReadToEnd();
-
-
+                            using (var stream = new StreamReader(responseStream, Encoding.GetEncoding(1256)))
+                            {
+                                response = stream.ReadToEnd();
+                            }
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-
+                    //ignored
                 }
 
                 return response;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
+                //ignored
             }
 
             return ret;
         }
 
-
-        public static List<Domain.Socioboard.ViewModels.DiscoveryViewModal> DiscoverySearchGplus(long userId,string keyword)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="keyword"></param>
+        /// <param name="googleDiscoverApi"></param>
+        /// <returns></returns>
+        public static List<Domain.Socioboard.ViewModels.DiscoveryViewModal> DiscoverySearchGplus(long userId, string keyword , string googleDiscoverApi)
         {
-            List<Domain.Socioboard.ViewModels.DiscoveryViewModal> GplusDiscoverySearch = new List<Domain.Socioboard.ViewModels.DiscoveryViewModal>();
-            string profileid = string.Empty;
+            var gPlusDiscoverySearch = new List<Domain.Socioboard.ViewModels.DiscoveryViewModal>();
+
             try
             {
-                string searchResultObj = GplusDiscoverySearchHelper.GooglePlus(keyword);
+                var searchResultObj = GooglePlus(keyword, googleDiscoverApi);
 
-                JObject GplusActivities = JObject.Parse(GplusDiscoverySearchHelper.GooglePlus(keyword));
+                var gPlusActivities = JObject.Parse(searchResultObj);
 
-                foreach (JObject gobj in JArray.Parse(GplusActivities["items"].ToString()))
+                foreach (var googleActivity in JArray.Parse(gPlusActivities["items"].ToString()))
                 {
-                    Domain.Socioboard.ViewModels.DiscoveryViewModal gpfeed = new Domain.Socioboard.ViewModels.DiscoveryViewModal();
+                    var feeds = new Domain.Socioboard.ViewModels.DiscoveryViewModal();
                     try
                     {
-                        gpfeed.MessageId = gobj["url"].ToString();
-                        gpfeed.CreatedTime = DateTime.Parse(gobj["published"].ToString());
-                        gpfeed.Message = gobj["title"].ToString();
-                        gpfeed.FromId = gobj["actor"]["id"].ToString();
-                        gpfeed.FromName = gobj["actor"]["displayName"].ToString();
-                        gpfeed.ProfileImageUrl = gobj["actor"]["image"]["url"].ToString();
+                        feeds.MessageId = googleActivity["url"].ToString();
+                        feeds.CreatedTime = DateTime.Parse(googleActivity["published"].ToString());
+                        feeds.Message = googleActivity["title"].ToString();
+                        feeds.FromId = googleActivity["actor"]["id"].ToString();
+                        feeds.FromName = googleActivity["actor"]["displayName"].ToString();
+                        feeds.ProfileImageUrl = googleActivity["actor"]["image"]["url"].ToString();
                     }
-                    catch { }
+                    catch
+                    {
+                        //ignored
+                    }
 
-                    GplusDiscoverySearch.Add(gpfeed);
+                    gPlusDiscoverySearch.Add(feeds);
                 }
             }
-            catch { }
-            return GplusDiscoverySearch;
+            catch
+            {
+                //ignored
+            }
+            return gPlusDiscoverySearch;
         }
 
     }

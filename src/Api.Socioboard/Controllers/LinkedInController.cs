@@ -26,7 +26,7 @@ namespace Api.Socioboard.Controllers
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
             _env = env;
         }
         private readonly ILogger _logger;
@@ -132,7 +132,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetAllLinkedAccountProfiles(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.LinkedInAccount> lstInsAcc = new List<Domain.Socioboard.Models.LinkedInAccount>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn))
             {
@@ -149,7 +149,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetAllLinkedInCompanyPagesProfiles(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.LinkedinCompanyPage> lstInsAcc = new List<Domain.Socioboard.Models.LinkedinCompanyPage>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage))
             {
@@ -169,7 +169,7 @@ namespace Api.Socioboard.Controllers
             {
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
                 List<Domain.Socioboard.Models.AddlinkedinCompanyPage> lstcompanypages = Helper.LinkedInHelper.GetLinkedinCompanyPage(Code, _appSettings);
-                List<Domain.Socioboard.Models.Groupprofiles> lstgroupprofile = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+                List<Domain.Socioboard.Models.Groupprofiles> lstgroupprofile = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
                 lstgroupprofile = lstgroupprofile.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage).ToList();
                 string[] lstStr = lstgroupprofile.Select(t => t.profileId).ToArray();
                 if (lstStr.Length > 0)

@@ -8,7 +8,7 @@
                 <div class="card" id="feeds" >
                     <h5 class="feeds_title blue darken-2 white-text" style="padding:20px;margin:0;font-weight:300"><i class="icon-folder"></i>Twitter Analytics</h5>
                     <ul class="collection smartinbox_slider" ng-if="nodata==false">
-                        <li class="collection-item avatar" ng-repeat="notification in lstNotifications | notificationbyprofilesfileter : filterType : selectedProfiles | filter:key_search">
+                        <li class="collection-item avatar" ng-repeat="notification in lstNotifications | notificationbyprofilesfileter : filterType : selectedProfiles">
                             <img src="{{notification.fromProfileUrl}}" alt="{{notification.fromScreenName}}" class="circle">
                             <span ng-if="notification.type==0" class="email-title"><b>{{notification.fromScreenName}}</b> -- mention {{notification.recipientName}}</span>
                             <span ng-if="notification.type==1 && notification.fromScreenName!=''" class="email-title"><b>{{notification.fromScreenName}}</b> -- retweet {{notification.recipientName}} Post</span>
@@ -17,7 +17,7 @@
                             <span ng-if="notification.type==11" class="email-title"><b>{{notification.fromName}}</b> -- Facebook Page Notification</span>
                             <div class="row feeds_post z-depth-1 hoverable">
                                 <div class="col m8">
-                                    <p class="break_word ultra-small">{{notification.twitterMsg}}</p>
+                                    <p class="break_word ultra-small">{{notification.message}}</p>
                                 </div>
                                 <!--<div class="col m4 center">
                                   <img src="{{notification.sourceUrl}}" alt="{{notification.fromScreenName}}" ng-if="notification.sourceUrl != null" class="responsive-img ">
@@ -100,15 +100,15 @@
                 <div class="card" id="feeds">
                     <h5 class="feeds_title blue darken-2 white-text" style="padding:20px;margin:0;font-weight:300"><i class="icon-folder"></i>Filter</h5>
                         <div class="section section_filter">
-                            <h6>Search <a href="javascript:void(0)" class="fa fa-minus-circle red-text" ng-if="keysearch==true" title="Clear search" ng-click="clearSearch();key_search.twitterMsg=''"></a></h6>
+                            <h6>Search <a href="javascript:void(0)" class="fa fa-minus-circle red-text" ng-if="keysearch==true" title="Clear search" ng-click="clearSearch();key_search.twitterMsg='';name_search.fromScreenName='';"></a></h6>
                             <div class="row no-space">
                                 <div class="input-field col s12 no-padding">
                                     <!--<input id="name_search" type="text" ng-model="name_search.fromName" ng-change="changeSearch()" class="validate">-->
-                                    <input id="name_search" type="text" ng-model="name_search" ng-change="changeSearch('name_search'')" class="validate">
+                                    <input id="name_search" type="text" ng-model="name_search.fromScreenName" ng-change="changeSearch()" class="validate">
                                     <label for="name_search" style="left:0px;">Contact Search</label>
                                 </div>
                                 <div class="input-field col s12 no-padding">
-                                    <input id="key_search" type="text" ng-model="key_search.twitterMsg" ng-change="changeSearch('socioboard_key_search')" class="validate">
+                                    <input id="key_search" type="text" ng-model="key_search.twitterMsg" ng-change="changeSearch()" class="validate">
                                     <label for="key_search" style="left:0px;">Keyword Search</label>
                                 </div>
                             </div>

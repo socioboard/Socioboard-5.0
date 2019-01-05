@@ -22,7 +22,7 @@ namespace Api.Socioboard.Controllers
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
             _appEnv = appEnv;
 
         }
@@ -40,7 +40,7 @@ namespace Api.Socioboard.Controllers
         [HttpGet("GetGroupProfiles")]
         public IActionResult GetGroupProfiles(long groupId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
+            var dbr = new DatabaseRepository(_logger, _appEnv);
             return Ok(GroupProfilesRepository.getGroupProfiles(groupId, _redisCache, dbr));
         }
 
@@ -48,7 +48,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetAllGroupProfiles(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            return Ok(GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr));
+            return Ok(GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr));
         }
         [HttpGet("GetAllGroupProfilesCount")]
         public IActionResult GetAllGroupProfilesCount(long groupId)
@@ -61,30 +61,22 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetTop3GroupProfiles(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            return Ok(GroupProfilesRepository.getTop3GroupProfiles(groupId, _redisCache, dbr));
+            return Ok(GroupProfilesRepository.GetTop3GroupProfiles(groupId, _redisCache, dbr));
         }
         [HttpGet("GetAllGroupProfilesDeatails")]
         public IActionResult GetAllGroupProfilesDeatails(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            return Ok(GroupProfilesRepository.getAllGroupProfilesdetail(groupId, _redisCache, dbr));
+            return Ok(GroupProfilesRepository.GetAllGroupProfilesDetail(groupId, _redisCache, dbr));
         }
 
         [HttpPost("DeleteProfile")]
         public IActionResult DeleteProfile(long groupId, long userId, string profileId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
-            // Domain.Socioboard.Models.User user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId) && t.EmailId == fbAcc.EmailId && t.EmailValidateToken == "Facebook").FirstOrDefault();
-            Domain.Socioboard.Models.User user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId)).FirstOrDefault(); 
-            if (fbAcc != null && fbAcc.EmailId ==user.EmailId)
-            {
-                return BadRequest("Primary Account can't be delete ");
-            }
-            else
-            {
-                return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr, _appSettings));
-            }
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+
+            return Ok(GroupProfilesRepository.DeleteProfile(groupId, userId, profileId, _redisCache, dbr, _appSettings));
+
 
         }
         [HttpPost("IsPrimaryAcc")]
@@ -100,7 +92,7 @@ namespace Api.Socioboard.Controllers
             string selectedProfiles = Request.Form["selectedProfiles"];
             string[] Profiles = selectedProfiles.Split(',');
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             lstGrpProfiles = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId)).ToList();
             foreach (var item in lstGrpProfiles)
             {
@@ -117,17 +109,17 @@ namespace Api.Socioboard.Controllers
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             //User user = dbr.Single<User>(t => t.Id == userId);
             //Domain.Socioboard.Enum.SBAccountType accounttype = user.AccountType;
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             long FBProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage));
             long TwtProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter));
             long GplusProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus && t.profileType == Domain.Socioboard.Enum.SocialProfileType.GplusPage));
             long LinkedInProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn && t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage));
             long InstaProfiles = dbr.GetCount<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram));
             lstGrpProfiles = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId)).ToList();
-            long lstFBProfile= lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && (t.profileType== Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage)).Count();
+            long lstFBProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage)).Count();
             long lstTwtProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter).Count();
             long lstInstaProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram).Count();
-            long lstLinkedInProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn|| t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage)).Count();
+            long lstLinkedInProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedIn || t.profileType == Domain.Socioboard.Enum.SocialProfileType.LinkedInComapanyPage)).Count();
             long lstGplusProfile = lstGrpProfiles.Where(t => !Profiles.Contains(t.profileId) && (t.profileType == Domain.Socioboard.Enum.SocialProfileType.GPlus || t.profileType == Domain.Socioboard.Enum.SocialProfileType.GplusPage)).Count();
 
             long FbCount = FBProfiles - lstFBProfile;
@@ -136,7 +128,7 @@ namespace Api.Socioboard.Controllers
             long LinkedInCount = LinkedInProfiles - lstLinkedInProfile;
             long GplusCount = GplusProfiles - lstGplusProfile;
 
-            if(FbCount>1 || twtCount > 1|| InstaCount > 1|| LinkedInCount > 1|| GplusCount > 1)
+            if (FbCount > 1 || twtCount > 1 || InstaCount > 1 || LinkedInCount > 1 || GplusCount > 1)
             {
                 return BadRequest("As per your plan you can use only one profile per network.Please choose profiles as per your plan");
             }
@@ -155,11 +147,11 @@ namespace Api.Socioboard.Controllers
         [HttpGet("getProfilesAvailableToConnect")]
         public IActionResult getProfilesAvailableToConnect(long groupId, long userId)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupProfiles = GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
-            List<Domain.Socioboard.Models.Groups> lstGroups = GroupsRepository.getAllGroupsofUser(userId, _redisCache, dbr);
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var lstGroupProfiles = GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
+            var lstGroups = GroupsRepository.GetAllGroupsofUser(userId, _redisCache, dbr);
             long defaultGroupId = lstGroups.FirstOrDefault(t => t.groupName.Equals(Domain.Socioboard.Consatants.SocioboardConsts.DefaultGroupName)).id;
-            List<Domain.Socioboard.Models.Groupprofiles> defalutGroupProfiles = GroupProfilesRepository.getAllGroupProfiles(defaultGroupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> defalutGroupProfiles = GroupProfilesRepository.GetAllGroupProfiles(defaultGroupId, _redisCache, dbr);
             return Ok(defalutGroupProfiles.Where(t => !lstGroupProfiles.Any(x => x.profileId.Equals(t.profileId))));
         }
 
@@ -316,7 +308,7 @@ namespace Api.Socioboard.Controllers
                         {
                             return BadRequest("profile is added by other user");
                         }
-                        grpProfile.profileName = pinAcc.firstname+" "+pinAcc.lastname;
+                        grpProfile.profileName = pinAcc.firstname + " " + pinAcc.lastname;
                         grpProfile.profileOwnerId = userId;
                         grpProfile.profilePic = pinAcc.profileimgaeurl;
                         grpProfile.profileType = profileType;
@@ -392,7 +384,7 @@ namespace Api.Socioboard.Controllers
         }
 
         [HttpGet("GetSearchProfile")]
-        public IActionResult SearchProfile(long groupId,string Profiletype)
+        public IActionResult SearchProfile(long groupId, string Profiletype)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             return Ok(GroupProfilesRepository.SearchProfileType(groupId, Profiletype, _redisCache, dbr));

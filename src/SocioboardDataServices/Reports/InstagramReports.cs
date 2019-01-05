@@ -99,7 +99,7 @@ namespace SocioboardDataServices.Reports
 
 
 
-        private static List<InstagramFeed> GetVideoPosts(string profileId, int daysCount)
+        public static List<InstagramFeed> GetVideoPosts(string profileId, int daysCount)
         {
             var instagramFeedRepo = new MongoRepository("InstagramFeed");
 
@@ -113,7 +113,7 @@ namespace SocioboardDataServices.Reports
             var lstInstagramFeed = task.Result.GroupBy(x => x.FeedId).Select(g => g.First()).ToList();
             return lstInstagramFeed.ToList();
         }
-        private static List<InstagramFeed> GetImagePosts(string profileId, int daysCount)
+        public static List<InstagramFeed> GetImagePosts(string profileId, int daysCount)
         {
             var instagramFeedRepo = new MongoRepository("InstagramFeed");
             var dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
@@ -133,7 +133,7 @@ namespace SocioboardDataServices.Reports
             return instagramUserDetails;
         }
         
-        private static List<InstagramComment> GetInstagramPostComments(string profileId, int daysCount)
+        public static List<InstagramComment> GetInstagramPostComments(string profileId, int daysCount)
         {
             //MongoRepository instagarmCommentRepo = new MongoRepository("InstagramComment");
             //DateTime dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
@@ -163,7 +163,7 @@ namespace SocioboardDataServices.Reports
             }
             return lstInstagramPostComments.ToList();
         }
-        private static List<InstagramPostLikes> GetInstagramPostLikes(string profileId, int daysCount)
+        public static List<InstagramPostLikes> GetInstagramPostLikes(string profileId, int daysCount)
         {
             var InstagramPostLikesRepo = new MongoRepository("InstagramPostLikes");
             var dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);
@@ -177,7 +177,7 @@ namespace SocioboardDataServices.Reports
             return lstInstagramPostLikes;
         }
 
-        private static List<MongoMessageModel> GetInstagramFollwerFollowing(string profileId, int daysCount)
+        public static List<MongoMessageModel> GetInstagramFollwerFollowing(string profileId, int daysCount)
         {
             var mongoRepo = new MongoRepository("MongoMessageModel");
             var dayStart = new DateTime(DateTime.UtcNow.AddDays(-(daysCount)).Year, DateTime.UtcNow.AddDays(-(daysCount)).Month, DateTime.UtcNow.AddDays(-(daysCount)).Day, 0, 0, 0, DateTimeKind.Utc);

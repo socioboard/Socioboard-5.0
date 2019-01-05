@@ -27,8 +27,5 @@ namespace Socioboard.Facebook.Auth
         public static string GetFacebookRedirectLink(string facebookAuthUrl, string clientId, string redirectUrl)
             =>  $"{facebookAuthUrl}&client_id={clientId}&redirect_uri={redirectUrl}&response_type=code";
         
-
-
-
     }
 }

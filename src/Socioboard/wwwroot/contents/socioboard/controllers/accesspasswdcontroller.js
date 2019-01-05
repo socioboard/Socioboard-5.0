@@ -42,10 +42,13 @@ SocioboardApp.controller('AccessPasswdController', function ($rootScope, $scope,
 
         //Enable two step login start
         $scope.enabletwosteplogin = function (verifyPassword) {
-           
+
+            debugger;
+            var encodePassword = escape(verifyPassword.currentPassword);
+
             $http({
                 method: 'POST',
-                url: apiDomain + '/api/User/EnableTwoStepLogin?currentPassword=' + verifyPassword.currentPassword + '&userId=' + $rootScope.user.Id,
+                url: apiDomain + '/api/User/EnableTwoStepLogin?currentPassword=' + encodePassword + '&userId=' + $rootScope.user.Id,
                 crossDomain: true,
                 //data: ,
             }).then(function (response) {

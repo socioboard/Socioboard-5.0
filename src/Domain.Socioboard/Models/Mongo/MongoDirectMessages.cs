@@ -24,6 +24,8 @@ namespace Domain.Socioboard.Models.Mongo
         public Domain.Socioboard.Enum.MessageType type { get; set; }
         public string messageId { get; set; }
         public string image { get; set; }
-        public string  ConversationLink { get; set; }
+        public string ConversationLink { get; set; }
+        public string FollowerCount { get; set; }
+        public string FollowingCount { get; set; }
     }
 }

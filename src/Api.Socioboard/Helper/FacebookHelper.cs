@@ -17,6 +17,7 @@ using Socioboard.Facebook.Data;
 using Api.Socioboard.Controllers;
 using Domain.Socioboard.Enum;
 using Domain.Socioboard.Interfaces.Repositories;
+using Socioboard.Facebook.Utils;
 
 namespace Api.Socioboard.Helper
 {
@@ -61,7 +62,7 @@ namespace Api.Socioboard.Helper
                             byte[] img = webClient.DownloadData(imagePath);
                             media.SetValue(img);
                             args["source"] = media;
-                            ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();
+                            ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/photos", args).ToString();
                         }
                         else
                         {
@@ -85,13 +86,13 @@ namespace Api.Socioboard.Helper
                             args["title"] = message;
                             args["description"] = message;
                             args["source"] = media;
-                            ret = fb.Post("v2.7/" + fbUserId + "/videos", args).ToString();//v2.1 
+                            ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/videos", args).ToString();//v2.1 
                         }
                     }
                     else
                     {
                         args["message"] = message;
-                        ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();
+                        ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/feed", args).ToString();
                     }
                 }
                 else
@@ -104,7 +105,7 @@ namespace Api.Socioboard.Helper
                     {
                         args["picture"] = imagePath.Replace("&amp;", "&");
                     }
-                    ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
+                    ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/feed", args).ToString();//v2.1
 
                 }
                 UpdatePublishedDetails(profiletype, fbUserId, message, profileId, userId, imagePath, mediaType, profileName, dbr);
@@ -179,7 +180,7 @@ namespace Api.Socioboard.Helper
                             byte[] img = webClient.DownloadData(imagePath);
                             media.SetValue(img);
                             args["source"] = media;
-                            ret = fb.Post("v2.7/" + fbUserId + "/photos", args).ToString();
+                            ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/photos", args).ToString();
                         }
                         else
                         {
@@ -203,13 +204,13 @@ namespace Api.Socioboard.Helper
                             // args["title"] = message;
                             // args["description"] = message;
                             args["source"] = media;
-                            ret = fb.Post("v2.7/" + fbUserId + "/videos", args).ToString();//v2.1 
+                            ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/videos", args).ToString();//v2.1 
                         }
                     }
                     else
                     {
                         // args["message"] = message;
-                        // ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();
+                        // ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/feed", args).ToString();
                     }
                 }
                 else
@@ -224,7 +225,7 @@ namespace Api.Socioboard.Helper
                     }
                     try
                     {
-                        ret = fb.Post("v2.7/" + fbUserId + "/feed", args).ToString();//v2.1
+                        ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/feed", args).ToString();//v2.1
                     }
                     catch (Exception ex)
                     {
@@ -276,7 +277,7 @@ namespace Api.Socioboard.Helper
                 var args = new Dictionary<string, object>();
                 args["message"] = message;
                 args["link"] = link;
-                ret = fb.Post("v2.7/" + FbUserId + "/feed", args).ToString();
+                ret = fb.Post($"{FbConstants.FacebookApiVersion}/" + FbUserId + "/feed", args).ToString();
                 var builders = Builders<BsonDocument>.Filter;
                 FilterDefinition<BsonDocument> filter = builders.Eq("strId", rssFeedId);
                 var update = Builders<BsonDocument>.Update.Set("Status", true);
@@ -364,39 +365,48 @@ namespace Api.Socioboard.Helper
         public static List<Domain.Socioboard.Models.FacebookGroup> GetAllFacebookGroups(string accessToken, string client_id, string redirect_uri, string client_secret)
         {
 
-            List<Domain.Socioboard.Models.FacebookGroup> lstAddFacebookGroup = new List<Domain.Socioboard.Models.FacebookGroup>();
-            FacebookClient fb = new FacebookClient();
-            string profileId = string.Empty;
-            dynamic output = null;
-            if (accessToken != null)
-            {
-                try
-                {
-                    fb.AccessToken = accessToken;
-                    dynamic profile = fb.Get("v2.7/me");
-                    output = fb.Get("v2.7/me/groups");
-                    foreach (var item in output["data"])
-                    {
-                        try
-                        {
-                            Domain.Socioboard.Models.FacebookGroup objAddFacebookGroup = new Domain.Socioboard.Models.FacebookGroup();
-                            objAddFacebookGroup.ProfileGroupId = item["id"].ToString();
-                            objAddFacebookGroup.Name = item["name"].ToString();
-                            objAddFacebookGroup.AccessToken = accessToken.ToString();
-                            lstAddFacebookGroup.Add(objAddFacebookGroup);
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.StackTrace);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    return null;
-                }
-            }
-            return lstAddFacebookGroup;
+            var facebookGroups = FacebookApiHelper.GetFacebookGroups(accessToken);
+
+            if (facebookGroups == null)
+                return new List<FacebookGroup>();
+
+            return facebookGroups;
+
+            #region Old Code
+            //List<Domain.Socioboard.Models.FacebookGroup> lstAddFacebookGroup = new List<Domain.Socioboard.Models.FacebookGroup>();
+            //FacebookClient fb = new FacebookClient();
+            //string profileId = string.Empty;
+            //dynamic output = null;
+            //if (accessToken != null)
+            //{
+            //    try
+            //    {
+            //        fb.AccessToken = accessToken;
+            //        dynamic profile = fb.Get("v2.7/me");
+            //        output = fb.Get("v2.7/me/groups");
+            //        foreach (var item in output["data"])
+            //        {
+            //            try
+            //            {
+            //                Domain.Socioboard.Models.FacebookGroup objAddFacebookGroup = new Domain.Socioboard.Models.FacebookGroup();
+            //                objAddFacebookGroup.ProfileGroupId = item["id"].ToString();
+            //                objAddFacebookGroup.Name = item["name"].ToString();
+            //                objAddFacebookGroup.AccessToken = accessToken.ToString();
+            //                lstAddFacebookGroup.Add(objAddFacebookGroup);
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                Console.WriteLine(ex.StackTrace);
+            //            }
+            //        }
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        return null;
+            //    }
+            //}
+            //return lstAddFacebookGroup; 
+            #endregion
         }
 
         public static Domain.Socioboard.Models.Facebookpage GetFbPageDetails(string url, Helper.AppSettings _appSettings)
@@ -450,7 +460,7 @@ namespace Api.Socioboard.Helper
             try
             {
                 System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls;
-                dynamic friends = fb.Get("v2.7/" + _facebookpage.ProfilePageId);//v2.1
+                dynamic friends = fb.Get($"{FbConstants.FacebookApiVersion}/" + _facebookpage.ProfilePageId);
                 fancountPage = Convert.ToInt32(friends["likes"].ToString());
             }
             catch
@@ -495,7 +505,7 @@ namespace Api.Socioboard.Helper
         /// <param name="accessToken"></param>
         /// <param name="id"></param>
         /// <param name="timeInterVal"></param>
-        public static void SchedulePagePost(string accessToken,string destinationPageId, string sourcePageId, int timeInterVal)
+        public static void SchedulePagePost(string accessToken, string destinationPageId, string sourcePageId, int timeInterVal)
         {
             try
             {
@@ -532,7 +542,7 @@ namespace Api.Socioboard.Helper
                             var pageAccessToken =
                                 FacebookApiHelper.GetPageAccessToken(destinationPageId, accessToken, string.Empty);
 
-                            var status =   FacebookApiHelper.PublishPostOnSchedule(string.Empty, accessToken, destinationPageId,
+                            var status = FacebookApiHelper.PublishPostOnSchedule(string.Empty, accessToken, destinationPageId,
                                 link, timestamp.ToString(CultureInfo.InvariantCulture));
 
                             if (status)

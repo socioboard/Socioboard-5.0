@@ -1,11 +1,14 @@
 ﻿'use strict';
 
 SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $scope, $http, $timeout, apiDomain, grouptask) {
-    //alert('helo');
+   
+
     $scope.$on('$viewContentLoaded', function () {
+
         twitteranalytics();
         var reachLast = false;
         var x = false;
+
         $scope.nodata = false;
 
         $scope.getTwitterNotifications = function () {
@@ -17,12 +20,11 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
                                   $scope.temp = $scope.lstNotifications;
                                   $scope.x = true;
                               }
-                              else
-                              {
+                              else {
                                   $scope.nodata = true;
                                   $scope.x = true;
                               }
-                              //$scope.loaderclass = 'hide';
+
                               if (response.data == null) {
                                   reachLast = true;
                                   $scope.loaderclass = 'hide';
@@ -50,41 +52,60 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
 
         };
 
-        $scope.clearSearch = function () {
-            var searchname = $('#name_search').val("");
-            var searchkey = $('#key_search').val("");
-            $scope.keysearch = false;
-            $scope.changeSearch("");
+        $scope.clearSearch = function () {          
+            try {
+                $('#key_search').val('');
+                $('#name_search').val('');
+                $scope.changeSearch("");
+            } catch (error) {
+
+            }
         }
 
-        debugger;
-        $scope.changeSearch = function (name_search) {
-            debugger;
-            var searchname = $('#name_search').val();
-            var searchkey = $('#key_search').val();
+       
+        $scope.changeSearch = function () {
+           
+
+            var searchname = $('#name_search').val().toLowerCase();
+            var searchkey = $('#key_search').val().toLowerCase();
+
             if (searchname != "" || searchkey != "") {
                 $scope.keysearch = true;
             }
-            else
-            {
+            else {
                 $scope.keysearch = false;
+                $scope.lstNotifications = $scope.temp;
+                return;
             }
-            if (name_search == "socioboard_key_search") {
-                var filtered = [];
-                angular.forEach($scope.temp, function (item) {
-                    try {
-                        if (item.fromScreenName.includes(name_search)) {
-                            filtered.push(item);
-                        }
+
+
+            var filtered = [];
+
+            $scope.temp.forEach(function (items) {
+               
+                try {
+
+                    if (searchkey !== '' && items.message.toLowerCase().includes(searchkey)) {
+                        if (!filtered.some(e => e.messageId === items.messageId))
+                            filtered.push(items);
                     }
-                    catch (es) {
-                        if (item.fromName.includes(name_search)) {
-                            filtered.push(item);
-                        }
+
+                    if (searchname !=='' && items.fromScreenName != null && items.fromScreenName.toLowerCase().includes(searchname)) {
+                        if (!filtered.some(e => e.messageId === items.messageId))
+                            filtered.push(items);
                     }
-                })
-                $scope.lstNotifications = filtered;
-            }
+
+                    if (searchname !== '' && items.fromName != null && items.fromName.toLowerCase().includes(searchname)) {
+                        if (!filtered.some(e => e.messageId === items.messageId))
+                            filtered.push(items);
+                    }
+                }
+                catch (es) {
+                    filtered.push(items);
+                }
+            });
+            $scope.lstNotifications = filtered;
+
         }
 
 
@@ -118,7 +139,7 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
         }
 
         $scope.addTask = function (feedTableType) {
-
+            debugger;
             var memberId = $('.task-user-member:checked');
             var taskComment = $('#taskComment').val();
             var TempTaskMessage = taskComment;
@@ -141,7 +162,7 @@ SocioboardApp.controller('TwitterAnalyticsController', function ($rootScope, $sc
             }
             else {
                 var assignUserId = memberId.val();
-                grouptask.addtasks(assignUserId, feedTableType, taskComment, $rootScope.taskNotification.twitterMsg, $rootScope.taskNotification.messageId, '');
+                grouptask.addtasks(assignUserId, feedTableType, taskComment, $rootScope.taskNotification.message, $rootScope.taskNotification.messageId, '');
 
             }
         }

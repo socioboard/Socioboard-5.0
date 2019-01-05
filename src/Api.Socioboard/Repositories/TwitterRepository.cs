@@ -1665,84 +1665,91 @@ namespace Api.Socioboard.Repositories
         }
         public static void Savetwitterrecentdetails(JArray data, Helper.Cache _redisCache, Helper.AppSettings settings)
         {
-
-            string TwitterId = string.Empty;
-         Domain.Socioboard.Models.Mongo.TwitterRecentDetails insertdata = new TwitterRecentDetails();
-            MongoRepository mongorepo = new MongoRepository("TwitterRecentDetails", settings);
             try
             {
-                TwitterId = data[0]["id_str"].ToString();
+                string TwitterId = string.Empty;
+                Domain.Socioboard.Models.Mongo.TwitterRecentDetails insertdata = new TwitterRecentDetails();
+                MongoRepository mongorepo = new MongoRepository("TwitterRecentDetails", settings);
+                try
+                {
+                    TwitterId = data[0]["id_str"].ToString();
 
+                }
+                catch (Exception)
+                {
+
+                    TwitterId = string.Empty;
+
+                }
+
+                if (!string.IsNullOrEmpty(TwitterId))
+                {
+                    string AccountCreationDate = string.Empty;
+                    string LastActivityDate = string.Empty;
+                    string lastfeed = string.Empty;
+                    string FeedId = string.Empty;
+                    string retweetcount = string.Empty;
+                    string favoritecount = string.Empty;
+
+                    try
+                    {
+                        DateTime AccntCreationDate = Utility.ParseTwitterTime((data[0]["created_at"].ToString()));
+                        AccountCreationDate = AccntCreationDate.ToString();
+                    }
+                    catch (Exception)
+                    {
+                        AccountCreationDate = string.Empty;
+
+                    }
+
+
+                    try
+                    {
+                        DateTime lastactivitydate = Utility.ParseTwitterTime((data[0]["status"]["created_at"].ToString()));
+                        LastActivityDate = lastactivitydate.ToString();
+
+                    }
+                    catch (Exception)
+                    {
+
+
+                        LastActivityDate = string.Empty;
+                    }
+
+                    try
+                    {
+                        lastfeed = data[0]["status"]["text"].ToString();
+                        FeedId = data[0]["status"]["id_str"].ToString();
+                        retweetcount = data[0]["status"]["retweet_count"].ToString();
+                        favoritecount = data[0]["status"]["favorite_count"].ToString();
+
+                    }
+                    catch (Exception)
+                    {
+                        lastfeed = string.Empty;
+                        FeedId = string.Empty;
+                        retweetcount = string.Empty;
+                        favoritecount = string.Empty;
+
+                    }
+
+                    insertdata.Id = ObjectId.GenerateNewId();
+                    insertdata.strId = ObjectId.GenerateNewId().ToString();
+                    insertdata.TwitterId = TwitterId;
+                    insertdata.AccountCreationDate = AccountCreationDate;
+                    insertdata.LastActivityDate = LastActivityDate;
+                    insertdata.lastfeed = lastfeed;
+                    insertdata.FeedId = FeedId;
+                    insertdata.retweetcount = Convert.ToInt64(retweetcount);
+                    insertdata.favoritecount = Convert.ToInt64(favoritecount);
+                    mongorepo.Add<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(insertdata);
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
-                TwitterId = string.Empty;
-
+                Console.WriteLine(e);
             }
-
-            if (!string.IsNullOrEmpty(TwitterId))
-            {
-                string AccountCreationDate = string.Empty;
-                string LastActivityDate = string.Empty;
-                string lastfeed = string.Empty;
-                string FeedId = string.Empty;
-                string retweetcount = string.Empty;
-                string favoritecount = string.Empty;
-
-                try
-                {
-                    DateTime AccntCreationDate = Utility.ParseTwitterTime((data[0]["created_at"].ToString()));
-                    AccountCreationDate = AccntCreationDate.ToString();
-                }
-                catch (Exception)
-                {
-                    AccountCreationDate = string.Empty;
-
-                }
-
-
-                try
-                {
-                    DateTime lastactivitydate = Utility.ParseTwitterTime((data[0]["status"]["created_at"].ToString()));
-                    LastActivityDate = lastactivitydate.ToString();
-
-                }
-                catch (Exception)
-                {
-
-
-                    LastActivityDate = string.Empty;
-                }
-
-                try
-                {
-                    lastfeed = data[0]["status"]["text"].ToString();
-                    FeedId = data[0]["status"]["id_str"].ToString();
-                    retweetcount = data[0]["status"]["retweet_count"].ToString();
-                    favoritecount = data[0]["status"]["favorite_count"].ToString();
-
-                }
-                catch (Exception)
-                {
-                    lastfeed = string.Empty;
-                    FeedId = string.Empty;
-                    retweetcount = string.Empty;
-                    favoritecount = string.Empty;
-
-                }
-
-                insertdata.Id = ObjectId.GenerateNewId();
-                insertdata.strId = ObjectId.GenerateNewId().ToString();
-                insertdata.TwitterId = TwitterId;
-                insertdata.AccountCreationDate = AccountCreationDate;
-                insertdata.LastActivityDate = LastActivityDate;
-                insertdata.lastfeed = lastfeed;
-                insertdata.FeedId = FeedId;
-                insertdata.retweetcount = Convert.ToInt64(retweetcount);
-                insertdata.favoritecount = Convert.ToInt64(favoritecount);
-               mongorepo.Add<Domain.Socioboard.Models.Mongo.TwitterRecentDetails>(insertdata);
-            }
+         
         }
         public static string Post_ReplyStatusesUpdate(string profileId, string message, string messageId, long userId, long groupId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings, string screenName)
         {

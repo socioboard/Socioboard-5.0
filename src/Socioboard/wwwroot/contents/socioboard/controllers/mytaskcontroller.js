@@ -1,8 +1,8 @@
 'use strict';
 
-SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http, $timeout,apiDomain,utility) {
+SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http, $timeout, apiDomain, utility) {
     //alert('helo');
-    
+
     $scope.$on('$viewContentLoaded', function () {
         $scope.utility = utility;
         $scope.dispbtnmark = true;
@@ -13,6 +13,9 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
         $scope.userTasks = [];
         $scope.selectedTask = null;
         $scope.selectedTaskIndex = null;
+
+
+
         $scope.getTasks = function () {
             $http.get(apiDomain + '/api/Task/GetAllPendingTasksOfUserAndGroup?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
                           .then(function (response) {
@@ -22,10 +25,9 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
                                   if (response.data.length > 0) {
                                       $scope.showTask(0);
                                   }
-                                
+
                               }
-                              else
-                              {
+                              else {
                                   $scope.notasks = true;
                                   $scope.lastreached = true;
                               }
@@ -35,16 +37,14 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
         };
 
         $scope.showTask = function (index) {
-          
+
             $scope.selectedTask = $scope.userTasks[index];
             $scope.selectedTaskIndex = index;
-            
+
             $scope.replydisp = true;
         }
 
-
-        $scope.comment = function (newComment)
-        {
+        $scope.comment = function (newComment) {
             if (!(/\S/.test(newComment))) {
                 $scope.dispbtn = true;
                 return;
@@ -55,9 +55,9 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
             }
 
             else {
-           
+
                 $scope.dispbtn = false;
-               
+
                 //For taking special character start
                 var updatedmessage = "";
                 var commentencoded = encodeURIComponent(newComment);
@@ -87,9 +87,9 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
                         $("#task_rply").val("");
 
                     }
-                   
+
                 }, function (reason) {
-                   
+
                 });
             }
 
@@ -98,90 +98,130 @@ SocioboardApp.controller('MyTaskController', function ($rootScope, $scope, $http
         mytask();
         $scope.deleteTask = function () {
 
-                swal({
-                    title: "Are you sure?",
-                    text: "This task will be deleted",
-                    type: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#DD6B55",
-                    confirmButtonText: "OK",
-                    closeOnConfirm: false
-                },
-		        function () {
-		            if ($scope.selectedTask == null) {
-		                $scope.dispbtndelete = true;
-		                return;
-		            }
-		            else {
-		                $scope.dispbtndelete = false;
-		                $http({
-		                    method: 'POST',
-		                    url: apiDomain + '/api/Task/DeleteTask?taskId=' + $scope.selectedTask.tasks.strId,
-		                }).then(function (response) {
-		                    if (response.data == "deleted");
-		                    {
-		                        $scope.dispbtndelete = true;
-		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
-		                        $scope.selectedTask = null;
-		                        swal("Deleted!", "Your task has been deleted", "success");
-		                        $scope.replydisp = false;
-		                        $scope.$apply();
-		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
-		                            $scope.showTask($scope.selectedTask + 1);
-		                        }
+            swal({
+                title: "Are you sure?",
+                text: "This task will be deleted",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "OK",
+                closeOnConfirm: false
+            },
+            function () {
+                if ($scope.selectedTask == null) {
+                    $scope.dispbtndelete = true;
+                    return;
+                }
+                else {
+                    $scope.dispbtndelete = false;
+                    $http({
+                        method: 'POST',
+                        url: apiDomain + '/api/Task/DeleteTask?taskId=' + $scope.selectedTask.tasks.strId,
+                    }).then(function (response) {
+                        if (response.data == "deleted");
+                        {
+                            $scope.dispbtndelete = true;
+                            $scope.userTasks.splice($scope.selectedTaskIndex, 1);
+                            $scope.selectedTask = null;
+                            swal("Deleted!", "Your task has been deleted", "success");
+                            $scope.replydisp = false;
+                            $scope.$apply();
+                            if ($scope.selectedTask + 1 < $scope.userTasks.length) {
+                                $scope.showTask($scope.selectedTask + 1);
+                            }
 
-		                    }
-		                    
-		                }, function (reason) {
-		                  
-		                });
-		            }
+                        }
 
-		        });
-           }
+                    }, function (reason) {
 
-           $scope.markTaskCompleted = function () {
-               swal({
-                   title: "Are you sure?",
-                   text: "This task will be marked as completed",
-                   type: "warning",
-                   showCancelButton: true,
-                   confirmButtonColor: "#DD6B55",
-                   confirmButtonText: "Yes, mark it as completed!",
-                   closeOnConfirm: false
-               },
-		        function () {
-		            if ($scope.selectedTask == null) {
-		                $scope.dispbtnmark = true;
-		                return;
-		            }
-		            else {
-		                $scope.dispbtnmark = false;
-		                $http({
-		                    method: 'POST',
-		                    url: apiDomain + '/api/Task/MarkTaskCompleted?taskId=' + $scope.selectedTask.tasks.strId,
-		                }).then(function (response) {
-		                    if (response.data == "deleted");
-		                    {
-		                        $scope.dispbtnmark = true;
-		                        $scope.userTasks.splice($scope.selectedTaskIndex, 1);
-		                        $scope.selectedTask = null;
-		                        swal("Completed!", "Task has been completed", "success");
-		                        $scope.replydisp = false;
-		                        $scope.$apply();
-		                        if ($scope.selectedTask + 1 < $scope.userTasks.length) {
-		                            $scope.showTask($scope.selectedTask + 1);
-		                        }
-		                        
-		                    }
-		                   
-		                }, function (reason) {
-		                  
-		                });
-		            }
+                    });
+                }
 
-		        });
-           }
+            });
+        }
+
+        $scope.markTaskCompleted = function () {
+            swal({
+                title: "Are you sure?",
+                text: "This task will be marked as completed",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Yes, mark it as completed!",
+                closeOnConfirm: false
+            },
+             function () {
+                 if ($scope.selectedTask == null) {
+                     $scope.dispbtnmark = true;
+                     return;
+                 }
+                 else {
+                     $scope.dispbtnmark = false;
+                     $http({
+                         method: 'POST',
+                         url: apiDomain + '/api/Task/MarkTaskCompleted?taskId=' + $scope.selectedTask.tasks.strId,
+                     }).then(function (response) {
+                         if (response.data == "deleted");
+                         {
+                             $scope.dispbtnmark = true;
+                             $scope.userTasks.splice($scope.selectedTaskIndex, 1);
+                             $scope.selectedTask = null;
+                             swal("Completed!", "Task has been completed", "success");
+                             $scope.replydisp = false;
+                             $scope.$apply();
+                             if ($scope.selectedTask + 1 < $scope.userTasks.length) {
+                                 $scope.showTask($scope.selectedTask + 1);
+                             }
+
+                         }
+
+                     }, function (reason) {
+
+                     });
+                 }
+
+             });
+        }
+
+        $scope.showAllUserAssignedTask = function() {
+            $http.get(apiDomain + '/api/Task/GetAllTasksOfUserAndGroup?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
+                .then(function (response) {
+                    if (response.data != "") {
+                        $scope.userTasks = response.data;
+                        $scope.lastreached = true;
+                        if (response.data.length > 0) {
+                            $scope.showTask(0);
+                        }
+
+                    }
+                    else {
+                        $scope.notasks = true;
+                        $scope.lastreached = true;
+                    }
+                }, function (reason) {
+                    $scope.error = reason.data;
+                });
+        }
+
+        $scope.showAllCompletedTask = function () {
+            $http.get(apiDomain + '/api/Task/GetAllCompletedTasksOfUserAndGroup?groupId=' + $rootScope.groupId + '&userId=' + $rootScope.user.Id)
+                .then(function (response) {
+                    if (response.data != "") {
+                        $scope.userTasks = response.data;
+                        $scope.lastreached = true;
+                        if (response.data.length > 0) {
+                            $scope.showTask(0);
+                        }
+
+                    }
+                    else {
+                        $scope.notasks = true;
+                        $scope.lastreached = true;
+                    }
+                }, function (reason) {
+                    $scope.error = reason.data;
+                });
+        }
     });
 
 });

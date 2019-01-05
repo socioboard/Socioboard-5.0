@@ -9,6 +9,8 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
 
 
         $scope.getfacebookgroup = function (tested) {
+
+            debugger;
             $('select').material_select();
             $scope.lstfacebookgroup = '123';
             $scope.editgroup = false;
@@ -30,8 +32,8 @@ SocioboardApp.controller('CreateGroupShareathonController', function ($rootScope
 
 
 
-        $scope.AddGroupShareathon=function()
-        {
+        $scope.AddGroupShareathon=function() {
+            debugger;
             var Facebookaccountid = $('#groupshareathonfacebookaccount').val();
             var FacebookUrl = $('#postpage_url').val();
             var FacebookGroupId = $('#facebookgroupid').val();

@@ -2,7 +2,7 @@
 {
     public class FbConstants
     {
-        public static string FacebookApiVersion = "v3.1";
+        public static string FacebookApiVersion = "v3.2";
 
     }
 }

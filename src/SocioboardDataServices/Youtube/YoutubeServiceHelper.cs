@@ -38,7 +38,7 @@ namespace SocioboardDataServices.Youtube
             {
                 JobManager.AddJob(() =>
                 {
-                    Thread.CurrentThread.IsBackground = false;
+                    //Thread.CurrentThread.IsBackground = false;
                     var status = DataServicesBase.ActivityRunningStatus.GetOrAdd(ServiceDetails.YoutubeUpdateDetails, objStatus => false);
 
                     if (!status)
@@ -88,7 +88,7 @@ namespace SocioboardDataServices.Youtube
                     YoutubeFeedsfetch.ParseAndUpdateFeeds(youtubeChannel.YtubeChannelId);
                 }
             }
-        } 
+        }
         #endregion
 
         #region UpdateAccount
@@ -127,7 +127,7 @@ namespace SocioboardDataServices.Youtube
             {
 
             }
-        } 
+        }
         #endregion
     }
 
@@ -150,13 +150,18 @@ namespace SocioboardDataServices.Youtube
                 var _ChannelVideos = _ObjYtActivities.GetYtVideos(ChannelId, apiKey);
                 var J_ChannelVideos = JObject.Parse(_ChannelVideos);
 
-                foreach (var itemVideo in J_ChannelVideos.SelectTokens("items"))
+                if (J_ChannelVideos["items"] == null)
+                    return;
+
+                foreach (var itemVideo in J_ChannelVideos["items"])
                 {
                     _lstGlobalComVideos.Clear();
                     _ObjMongoYtFeeds = new MongoYoutubeFeeds();
                     _ObjMongoYtFeeds.Id = ObjectId.GenerateNewId();
                     _ObjMongoYtFeeds.YtChannelId = ChannelId;
                     _ObjMongoYtFeeds.YtVideoId = itemVideo.SelectToken("contentDetails.upload.videoId")?.ToString();
+                    if (_ObjMongoYtFeeds.YtVideoId == null)//sometimes coming null
+                        continue;
                     _ObjMongoYtFeeds.VdoTitle = itemVideo.SelectToken("snippet.title")?.ToString();
                     _ObjMongoYtFeeds.VdoDescription = itemVideo.SelectToken("snippet.description")?.ToString();
                     _ObjMongoYtFeeds.VdoPublishDate = itemVideo.SelectToken("snippet.publishedAt")?.ToString();
@@ -322,12 +327,11 @@ namespace SocioboardDataServices.Youtube
             }
         }
         #endregion
-    } 
+    }
     #endregion
 }
 
 
 
 
-    
 

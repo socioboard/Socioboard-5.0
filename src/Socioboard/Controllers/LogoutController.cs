@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Socioboard.Extensions;
 using System.Net.Http;
+using Domain.Socioboard.Helpers;
 using Socioboard.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
@@ -16,24 +17,16 @@ namespace Socioboard.Controllers
     public class LogoutController : Controller
     {
 
-        private Helpers.AppSettings _appSettings;
-        private readonly ILogger _logger;
-        private readonly IHostingEnvironment _appEnv;
-        public LogoutController(ILogger<LogoutController> logger, IHostingEnvironment appEnv, Microsoft.Extensions.Options.IOptions<Helpers.AppSettings> settings)
+        private readonly AppSettings _appSettings;
+
+        public LogoutController(Microsoft.Extensions.Options.IOptions<AppSettings> settings)
         {
             _appSettings = settings.Value;
-            _logger = logger;
-            _appEnv = appEnv;
-        }
-
-        // GET: /<controller>/
-        public IActionResult Index()
-        {
-            return View();
         }
 
 
-       // [ResponseCache(Duration = 100)]
+
+        // [ResponseCache(Duration = 100)]
         [HttpGet]
         public IActionResult Logout()
         {
@@ -43,21 +36,12 @@ namespace Socioboard.Controllers
                 HttpContext.Session.Remove("selectedGroupId");
                 HttpContext.Session.SetObjectAsJson("User", null);
                 HttpContext.Session.SetObjectAsJson("selectedGroupId", null);
-                // await Task.Run(() =>
-                // {
-                //     logoutsessiondata();
-                // }
-                //);
-                // Task.Run(logoutsessiondata);
-                logoutsessiondata();
-                //await logoutsessiondata();
+                CustomTaskFactory.Instance.Start(async () => { await LogoutSession(); });
                 HttpContext.Session.Clear();
                 ViewBag.user = null;
                 ViewBag.selectedGroupId = null;
                 ViewBag.groupProfiles = null;
-
                 return Content("logout");
-                // return RedirectToAction("Index", "Index");
             }
             catch (Exception)
             {
@@ -71,19 +55,22 @@ namespace Socioboard.Controllers
             }
         }
 
-        private async Task logoutsessiondata()
+        private async Task LogoutSession()
         {
-            Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+            var session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
+
             if (session != null)
             {
-                List<KeyValuePair<string, string>> Param = new List<KeyValuePair<string, string>>();
-                Param.Add(new KeyValuePair<string, string>("systemId", session.systemId));
-                Param.Add(new KeyValuePair<string, string>("sessionId", session.id.ToString()));
-                HttpResponseMessage respon = await WebApiReq.PostReq("/api/User/RevokeSession", Param, "", "", _appSettings.ApiDomain);
-                if (respon.IsSuccessStatusCode)
+                var param = new List<KeyValuePair<string, string>>
                 {
-                    HttpContext.Session.Remove("revokedata");
-                }
+                    new KeyValuePair<string, string>("systemId", session.systemId),
+                    new KeyValuePair<string, string>("sessionId", session.id.ToString())
+                };
+
+                var response = await WebApiReq.PostReq("/api/User/RevokeSession", param, "", "", _appSettings.ApiDomain);
+
+                if (response.IsSuccessStatusCode)
+                    HttpContext.Session.Remove("revokedata");                
             }
         }
     }

@@ -23,7 +23,7 @@ namespace Api.Socioboard.Controllers
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
             _appEnv = appEnv;
         }
         private readonly ILogger _logger;
@@ -77,7 +77,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetAllInstagramProfiles(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Instagramaccounts> lstInsAcc = new List<Domain.Socioboard.Models.Instagramaccounts>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Instagram))
             {

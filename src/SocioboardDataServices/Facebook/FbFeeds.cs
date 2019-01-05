@@ -329,7 +329,7 @@ namespace SocioboardDataServices.Facebook
                             }
                             try
                             {
-                                feeds = Socioboard.Facebook.Data.FbUser.fbGet(fbAcc.AccessToken, feeds["paging"]["next"]);
+                                feeds = Socioboard.Facebook.Data.FbUser.FbGet(fbAcc.AccessToken, feeds["paging"]["next"]);
                             }
                             catch
                             {

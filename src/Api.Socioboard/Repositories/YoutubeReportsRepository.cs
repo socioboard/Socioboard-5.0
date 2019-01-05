@@ -25,9 +25,9 @@ namespace Api.Socioboard.Repositories
 
             foreach (var items_reports in lstYtReports_channel)
             {
-                items_reports.SubscribersGained = items_reports.SubscribersGained-items_reports.subscribersLost;
+                items_reports.SubscribersGained = items_reports.SubscribersGained - items_reports.subscribersLost;
             }
-            
+
             try
             {
                 var lstYtReports_channel_sorted = lstYtReports_channel.OrderBy(t => t.datetime_unix);
@@ -44,74 +44,73 @@ namespace Api.Socioboard.Repositories
 
         public static List<Domain.Socioboard.Models.Mongo.YoutubeReports> GetYoutubeBulkReports(long groupId, Helper.Cache _redisCache, Helper.AppSettings settings, Model.DatabaseRepository dbr)
         {
-
-            List<Domain.Socioboard.Models.Mongo.YoutubeReports> lstReports = new List<Domain.Socioboard.Models.Mongo.YoutubeReports>();
-
-            List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
-            List<Domain.Socioboard.Models.YoutubeChannel> lstYoutubeChannel = new List<Domain.Socioboard.Models.YoutubeChannel>();
-
-
-            foreach (var item in lstGroupprofiles)
-            {
-                Domain.Socioboard.Models.YoutubeChannel YTChnl = Repositories.YoutubeReportsRepository.GetYtChannelLsts(item.profileId, _redisCache, dbr);
-                if (YTChnl != null)
-                {
-                    lstYoutubeChannel.Add(YTChnl);
-                }
-            }
-
-            MongoRepository mongorepo_channel = new MongoRepository("YoutubeReportsData", settings);
-            var result_channel = mongorepo_channel.Find<Domain.Socioboard.Models.Mongo.YoutubeReports>(t => t.datetime_unix < UnixTimeNows(DateTime.UtcNow) && t.datetime_unix >= UnixTimeNows(DateTime.UtcNow.AddDays(-90)) && t.channelId.Contains(lstYoutubeChannel.First().YtubeChannelId));
-            var task_channel = Task.Run(async () =>
-            {
-                return await result_channel;
-            });
-            IList<Domain.Socioboard.Models.Mongo.YoutubeReports> lstYtReports_channel = task_channel.Result;
             try
             {
-                var lstYtReports_channel_sorted = lstYtReports_channel.OrderBy(t => t.datetime_unix);
-            }
-            catch
-            {
-                var lstYtReports_channel_sorted = lstYtReports_channel.ToList();
-            }
+                List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.groupId == groupId).Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.YouTube).ToList();
+                List<Domain.Socioboard.Models.YoutubeChannel> lstYoutubeChannel = new List<Domain.Socioboard.Models.YoutubeChannel>();
 
-            foreach(var channel_Items in lstYoutubeChannel)
-            {
-                if(channel_Items!=lstYoutubeChannel.First())
+
+                foreach (var item in lstGroupprofiles)
                 {
-                    var result_channels = mongorepo_channel.Find<Domain.Socioboard.Models.Mongo.YoutubeReports>(t => t.datetime_unix < UnixTimeNows(DateTime.UtcNow) && t.datetime_unix >= UnixTimeNows(DateTime.UtcNow.AddDays(-90)) && t.channelId.Contains(channel_Items.YtubeChannelId));
-                    var task_channels = Task.Run(async () =>
+                    Domain.Socioboard.Models.YoutubeChannel YTChnl = GetYtChannelLsts(item.profileId, _redisCache, dbr);
+                    if (YTChnl != null)
                     {
-                        return await result_channels;
-                    });
-                    IList<Domain.Socioboard.Models.Mongo.YoutubeReports> lstYtReports_channel_new = task_channels.Result;
+                        lstYoutubeChannel.Add(YTChnl);
+                    }
+                }
 
-                    foreach(var new_item in lstYtReports_channel_new)
+                MongoRepository mongorepo_channel = new MongoRepository("YoutubeReportsData", settings);
+                var result_channel = mongorepo_channel.Find<Domain.Socioboard.Models.Mongo.YoutubeReports>(t => t.datetime_unix < UnixTimeNows(DateTime.UtcNow) && t.datetime_unix >= UnixTimeNows(DateTime.UtcNow.AddDays(-90)) && t.channelId.Contains(lstYoutubeChannel.First().YtubeChannelId));
+                var task_channel = Task.Run(async () =>
+                {
+                    return await result_channel;
+                });
+                IList<Domain.Socioboard.Models.Mongo.YoutubeReports> lstYtReports_channel = task_channel.Result;
+               
+
+                foreach (var channel_Items in lstYoutubeChannel)
+                {
+                    if (channel_Items != lstYoutubeChannel.First())
                     {
-                        foreach(var main_list in lstYtReports_channel)
+                        var result_channels = mongorepo_channel.Find<Domain.Socioboard.Models.Mongo.YoutubeReports>(t => t.datetime_unix < UnixTimeNows(DateTime.UtcNow) && t.datetime_unix >= UnixTimeNows(DateTime.UtcNow.AddDays(-90)) && t.channelId.Contains(channel_Items.YtubeChannelId));
+                        var task_channels = Task.Run(async () =>
                         {
-                            if(main_list.datetime_unix==new_item.datetime_unix)
+                            return await result_channels;
+                        });
+                        IList<Domain.Socioboard.Models.Mongo.YoutubeReports> lstYtReports_channel_new = task_channels.Result;
+
+                        foreach (var new_item in lstYtReports_channel_new)
+                        {
+                            foreach (var main_list in lstYtReports_channel)
                             {
-                                main_list.views = main_list.views + new_item.views;
-                                main_list.likes = main_list.likes + new_item.likes;
-                                main_list.comments = main_list.comments + new_item.comments;
+                                if (main_list.datetime_unix == new_item.datetime_unix)
+                                {
+                                    main_list.views = main_list.views + new_item.views;
+                                    main_list.likes = main_list.likes + new_item.likes;
+                                    main_list.comments = main_list.comments + new_item.comments;
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            try
-            {
-                var lstYtReports_channel_sorted = lstYtReports_channel.OrderBy(t => t.datetime_unix);
-                return lstYtReports_channel_sorted.ToList();
+                try
+                {
+                    var lstYtReports_channel_sorted = lstYtReports_channel.OrderBy(t => t.datetime_unix);
+                    return lstYtReports_channel_sorted.ToList();
+                }
+                catch
+                {
+                    var lstYtReports_channel_sorted = lstYtReports_channel.ToList();
+                    return lstYtReports_channel_sorted.ToList();
+                }
             }
-            catch
+            catch (Exception e)
             {
-                var lstYtReports_channel_sorted = lstYtReports_channel.ToList();
-                return lstYtReports_channel_sorted.ToList();
+                Console.WriteLine(e);
+                throw;
             }
+           
 
         }
 
@@ -136,7 +135,7 @@ namespace Api.Socioboard.Repositories
                 }
             }
 
-            return lstYoutubeChannel;                    
+            return lstYoutubeChannel;
 
         }
 
@@ -194,29 +193,29 @@ namespace Api.Socioboard.Repositories
 
 
             Domain.Socioboard.Models.YoutubeReports_all _intaReportsStats = new Domain.Socioboard.Models.YoutubeReports_all();
-                MongoRepository mongorepo = new MongoRepository("YoutubeVideosDetailedList", settings);
+            MongoRepository mongorepo = new MongoRepository("YoutubeVideosDetailedList", settings);
 
-                var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.YoutubeVideoDetailsList>(t => t.channelId.Equals(channelId));
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-                IList<Domain.Socioboard.Models.Mongo.YoutubeVideoDetailsList> lstVideos = task.Result;
-                IList<Domain.Socioboard.Models.Mongo.YoutubeVideoDetailsList> lstVideos_sorted;
+            var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.YoutubeVideoDetailsList>(t => t.channelId.Equals(channelId));
+            var task = Task.Run(async () =>
+            {
+                return await result;
+            });
+            IList<Domain.Socioboard.Models.Mongo.YoutubeVideoDetailsList> lstVideos = task.Result;
+            IList<Domain.Socioboard.Models.Mongo.YoutubeVideoDetailsList> lstVideos_sorted;
 
-                try
-                {
-                    lstVideos_sorted = lstVideos.OrderBy(t => Convert.ToDateTime(t.publishedAt)).ToList();
-                }
-                catch
-                {
-                    lstVideos_sorted = lstVideos;
-                }
+            try
+            {
+                lstVideos_sorted = lstVideos.OrderBy(t => Convert.ToDateTime(t.publishedAt)).ToList();
+            }
+            catch
+            {
+                lstVideos_sorted = lstVideos;
+            }
 
-                _intaReportsStats._YoutubeChannelss = lstChannel.First();
-                _intaReportsStats._YoutubeVideoss = lstVideos_sorted.ToList();
+            _intaReportsStats._YoutubeChannelss = lstChannel.First();
+            _intaReportsStats._YoutubeVideoss = lstVideos_sorted.ToList();
 
-                lstReportsAll.Add(_intaReportsStats);
+            lstReportsAll.Add(_intaReportsStats);
 
             return lstReportsAll;
 
@@ -264,7 +263,7 @@ namespace Api.Socioboard.Repositories
                 }
 
                 MongoRepository mongorepo = new MongoRepository("YoutubeReportsData", _appSettings);
-               
+
 
                 foreach (var itemss in subscriberC)
                 {

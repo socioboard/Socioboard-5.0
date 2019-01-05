@@ -8,6 +8,7 @@ using Api.Socioboard.Model;
 using Domain.Socioboard.Models;
 using Facebook;
 using System.Net;
+using Domain.Socioboard.Helpers;
 using MongoDB.Driver;
 using Microsoft.AspNetCore.Hosting;
 using Socioboard.Facebook.Data;
@@ -28,7 +29,7 @@ namespace Api.Socioboard.Controllers
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
             _env = env;
         }
         private readonly ILogger _logger;
@@ -50,7 +51,7 @@ namespace Api.Socioboard.Controllers
         [HttpPost("AddFacebookAccount")]
         public IActionResult AddFacebookAccount(string accessToken, long groupId, long userId)
         {
-            dynamic profile = FbUser.getFbUser(accessToken);
+            dynamic profile = FbUser.GetFbUser(accessToken);
             try
             {
                 string x = Convert.ToString(profile);
@@ -63,7 +64,7 @@ namespace Api.Socioboard.Controllers
             }
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
             Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
-            List<Domain.Socioboard.Models.Groupprofiles> grpProfiles = Api.Socioboard.Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> grpProfiles = Api.Socioboard.Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
 
 
 
@@ -84,7 +85,7 @@ namespace Api.Socioboard.Controllers
                     return Ok("Wrong Group Id");
                 }
                 // Adding Facebook Profile
-                int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, _redisCache, _appSettings, _logger);
+                int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookAccount(profile, FbUser.GetFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, _redisCache, _appSettings, _logger);
                 if (res == 1)
                 {
                     return Ok("Facebook account Added Successfully");
@@ -101,7 +102,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult ReconnectFbAccount(string accessToken, long groupId, long userId, string reconnect, string profileId)
         {
 
-            dynamic profile = FbUser.getFbUser(accessToken);
+            dynamic profile = FbUser.GetFbUser(accessToken);
 
 
             try
@@ -132,7 +133,7 @@ namespace Api.Socioboard.Controllers
                             {
                                 return Ok("Wrong Group Id");
                             }
-                            int res = Api.Socioboard.Repositories.FacebookRepository.ReFacebookAccount(profile, FbUser.getFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, reconnect, _redisCache, _appSettings, _logger);
+                            int res = Api.Socioboard.Repositories.FacebookRepository.ReFacebookAccount(profile, FbUser.GetFbFriends(accessToken), dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookProfile, accessToken, reconnect, _redisCache, _appSettings, _logger);
                             if (res == 1)
                             {
 
@@ -400,7 +401,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetAllFacebookProfiles(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = new List<Facebookaccounts>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage || t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookPublicPage))
             {
@@ -417,7 +418,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetFacebookProfilesOnlyforReconn(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = new List<Facebookaccounts>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook))
             {
@@ -435,7 +436,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetFacebookProfilesOnly(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = new List<Facebookaccounts>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook))
             {
@@ -453,7 +454,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetPrimaryFacebookAcc(long userId, long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             //List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = new List<Facebookaccounts>();
             Domain.Socioboard.Models.Facebookaccounts UserFbAccDetail = new Facebookaccounts();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Facebook))
@@ -476,7 +477,7 @@ namespace Api.Socioboard.Controllers
                 List<Domain.Socioboard.Models.Facebookpage> lstpages = new List<Facebookpage>();
                 lstpages = Fbpages.Getfacebookpages(accesstoken);
                 DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+                List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
                 lstGrpProfiles = lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage).ToList();
                 string[] lstStr = lstGrpProfiles.Select(t => t.profileId).ToArray();
                 if (lstStr.Length > 0)
@@ -493,71 +494,81 @@ namespace Api.Socioboard.Controllers
             }
         }
 
+
+
         [HttpPost("AddFacebookPages")]
         public IActionResult AddFacebookPages(long userId, long groupId)
         {
-            string data = Request.Form["profileaccesstoken"];
-            string[] accesstoken = data.Split(',');
-            int addedPageCount = 0;
-            int invalidaccessToken = 0;
-            foreach (var item in accesstoken)
-            {
-                dynamic profile = Fbpages.GetFbPageData(item);
-                FacebookApiHelper.MakeSubscribedWithApp(item);
-                try
-                {
-                    string x = Convert.ToString(profile);
-                    _logger.LogError(x);
-                }
-                catch { }
-                if (Convert.ToString(profile) == "Invalid Access Token")
-                {
-                    invalidaccessToken++;
-                    //  return Ok("Invalid Access Token");
-                }
-                else
-                {
-                    DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-                    Domain.Socioboard.Models.Facebookaccounts fbacc = Api.Socioboard.Repositories.FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
-                    if (fbacc != null && fbacc.IsActive == true)
-                    {
-                        addedPageCount++;
-                        //return Ok("Facebook Page added by other user.");
-                    }
-                    else
-                    {
-                        Groups ngrp = dbr.Find<Domain.Socioboard.Models.Groups>(t => t.adminId == userId && t.id == groupId).FirstOrDefault();
-                        if (ngrp == null)
-                        {
-                            return Ok("Wrong Group Id");
-                        }
-                        // Adding Facebook Page                     
-                        int res = Api.Socioboard.Repositories.FacebookRepository.AddFacebookPage(profile, dbr, userId, ngrp.id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, item, _redisCache, _appSettings, _logger);
 
+            try
+            {
+                string data = Request.Form["profileaccesstoken"];
+
+                var pages = JArray.Parse($"[{data}]");
+
+                var pageDetails = new List<Facebookaccounts>();
+
+                foreach (var page in pages)
+                {
+                    try
+                    {
+                        var facebookAccount = new Facebookaccounts
+                        {
+                            AccessToken = page.SelectToken("AccessToken").ToString(),
+                            FbUserId = page.SelectToken("ProfilePageId").ToString(),
+                            Friends = long.Parse(page.SelectToken("LikeCount").ToString()),
+                            FbUserName = page.SelectToken("Name").ToString(),
+                            EmailId = page.SelectToken("Email").ToString(),
+                        };
+                        facebookAccount.CoverPic = $"https://graph.facebook.com/{facebookAccount.FbUserId}/picture?type=small";
+                        facebookAccount.ProfileUrl = $"https://graph.facebook.com/{facebookAccount.FbUserId}/picture?type=small";
+                        pageDetails.Add(facebookAccount);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
                     }
                 }
+
+                var pageIds = pageDetails.Select(x => x.FbUserId).ToList();
+
+                var dbr = new DatabaseRepository(_logger, _env);
+
+                var availableAccounts = Repositories.FacebookRepository.GetFacebookAccounts(pageIds, _redisCache, dbr).Select(x => x.FbUserId).ToList();
+
+                pageDetails.RemoveAll(x => availableAccounts.Contains(x.FbUserId));
+
+                CustomTaskFactory.Instance.Start(() =>
+                {
+                    var groupDetails = dbr.FindFirstMatch<Groups>(t => t.adminId == userId && t.id == groupId);
+
+                    if (groupDetails == null)
+                        return;
+
+                    foreach (var page in pageDetails)
+                    {
+                        Repositories.FacebookRepository.AddFacebookPage(page, dbr, userId, groupDetails.id, Domain.Socioboard.Enum.FbProfileType.FacebookPage, page.AccessToken, _redisCache, _appSettings, _logger);
+                    }
+                });
+
+                if (availableAccounts.Count == 0)
+                    return Ok("All Pages added successfully!");
+
+                if (availableAccounts.Count == pageDetails.Count)
+                    return Ok("All Pages already added!");
+
+
+                if (availableAccounts.Count < pageDetails.Count)
+                {
+                    var remainding = pageDetails.Count - availableAccounts.Count;
+                    return Ok($"Totally {remainding} Pages added, Rest already added either by you or others!");
+                }
+                return Ok("Pages added!");
             }
-            if (addedPageCount == accesstoken.Length)
-            {
-                return Ok("Facebook Pages added by other user.");
-            }
-            else if (addedPageCount == accesstoken.Length)
-            {
-                return Ok("Facebook Pages having Invalid Access Token.");
-            }
-            else if (invalidaccessToken > 0 && addedPageCount > 0)
-            {
-                return Ok("Pages added successfully and " + addedPageCount + " pages added by other user or " + invalidaccessToken + " pages having invalid access token issue");
-            }
-            else if (invalidaccessToken > 0)
-            {
-                return Ok("Pages added successfully" + invalidaccessToken + " pages having invalid access token issue");
-            }
-            else if (addedPageCount > 0)
-            {
-                return Ok("Pages added successfully and " + addedPageCount + " pages added by other user");
-            }
-            return Ok("Page added successfully");
+            catch (Exception)
+            {              
+                return Ok("Error while adding pages");
+            } 
         }
 
 

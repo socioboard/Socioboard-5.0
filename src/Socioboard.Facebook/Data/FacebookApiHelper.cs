@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using Domain.Socioboard.Enum;
 using Domain.Socioboard.Models;
@@ -63,6 +64,10 @@ namespace Socioboard.Facebook.Data
                 return "Invalid Access Token";
             }
         }
+
+
+   
+
 
         /// <summary>
         /// To get the friend count of an account
@@ -244,7 +249,7 @@ namespace Socioboard.Facebook.Data
             var fb = new FacebookClient {AccessToken = pageAccessToken};
             try
             {
-                return fb.Get($"{FbConstants.FacebookApiVersion}/me/tagged?fields=picture,created_time,message,description,from&limit=99").ToString();//v2.6
+                return fb.Get($"{FbConstants.FacebookApiVersion}/me/tagged?fields=picture,created_time,message,description,from&limit=99").ToString();
             }
             catch (Exception)
             {
@@ -255,7 +260,11 @@ namespace Socioboard.Facebook.Data
         public static bool PostMessage(string message, string accessToken, string fbUserId, string link)
         {
             var fb = new FacebookClient { AccessToken = accessToken };
-            var args = new Dictionary<string, object> { ["message"] = message, ["link"] = link };
+            var args = new Dictionary<string, object> {["link"] = link };
+
+            if (!string.IsNullOrEmpty(message))
+                args["message"] = message;
+
             fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/feed", args);
             return true;
         }
@@ -263,7 +272,10 @@ namespace Socioboard.Facebook.Data
         public static bool PublishPostOnSchedule(string message, string accessToken, string fbUserId, string link, string scheduleTime)
         {
             var fb = new FacebookClient { AccessToken = accessToken };
-            var args = new Dictionary<string, object> { ["message"] = message, ["link"] = link };
+            var args = new Dictionary<string, object> {  ["link"] = link };
+
+            if (!string.IsNullOrEmpty(message))
+                args["message"] = message;
 
             //, ["scheduled_publish_time"] = scheduleTime, ["published"] = "false"
             fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/feed", args);
@@ -280,6 +292,7 @@ namespace Socioboard.Facebook.Data
 
             if (!string.IsNullOrEmpty(message))
                 args["message"] = message;
+          
 
             if (profileType == FbProfileType.FacebookProfile)
                 args["privacy"] = FbUser.SetPrivacy("Public", fb, profileId);
@@ -375,6 +388,7 @@ namespace Socioboard.Facebook.Data
 
             if (!string.IsNullOrEmpty(message))
                 args["message"] = message;
+          
 
             try
             {
@@ -385,9 +399,9 @@ namespace Socioboard.Facebook.Data
                         return fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/feed", args).ToString();
                     }
 
-                    if (!mediaPath.Contains("mp4") && !mediaPath.Contains("mov") && !mediaPath.Contains("mpeg") &&
-                        !mediaPath.Contains("wmv") && !mediaPath.Contains("avi") && !mediaPath.Contains("flv") &&
-                        !mediaPath.Contains("3gp"))
+                    if (mediaPath != null && !mediaPath.Contains("mp4") && !mediaPath.Contains("mov") && !mediaPath.Contains("mpeg") &&
+                                              !mediaPath.Contains("wmv") && !mediaPath.Contains("avi") && !mediaPath.Contains("flv") &&
+                                              !mediaPath.Contains("3gp"))
                     {
                         var uri = new Uri(mediaPath);
                         var extension = Path.GetExtension(uri.AbsolutePath).Replace(".", "");
@@ -409,25 +423,29 @@ namespace Socioboard.Facebook.Data
                     {
                         var extension = string.Empty;
 
-                        var filename =
-                            mediaPath.Substring(mediaPath.IndexOf("get?id=", StringComparison.Ordinal) + 7);
-
-                        if (!string.IsNullOrWhiteSpace(filename))
+                        if (mediaPath != null)
                         {
-                            extension = filename.Substring(filename.IndexOf(".", StringComparison.Ordinal) + 1);
+                            var filename =
+                                mediaPath.Substring(mediaPath.IndexOf("get?id=", StringComparison.Ordinal) + 7);
+
+                            if (!string.IsNullOrWhiteSpace(filename))
+                            {
+                                extension = filename.Substring(filename.IndexOf(".", StringComparison.Ordinal) + 1);
+                            }
+
+                            var media = new FacebookMediaObject
+                            {
+                                FileName = filename,
+                                ContentType = "video/" + extension
+                            };
+
+                            var webClient = new WebClient();
+                            var img = webClient.DownloadData(mediaPath);
+                            media.SetValue(img);
+
+                            args["source"] = media;
                         }
 
-                        var media = new FacebookMediaObject
-                        {
-                            FileName = filename,
-                            ContentType = "video/" + extension
-                        };
-
-                        var webClient = new WebClient();
-                        var img = webClient.DownloadData(mediaPath);
-                        media.SetValue(img);
-
-                        args["source"] = media;
                         return fb.Post($"{FbConstants.FacebookApiVersion}/" + fbUserId + "/videos", args).ToString();
                     }
                 }

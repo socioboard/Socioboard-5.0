@@ -140,7 +140,7 @@ namespace SocioboardDataServices.Facebook
 
         public static void SaveFacebookFeeds(string AccessToken, string ProfileId,string UserName)
         {
-            dynamic feeds = FbUser.getFeeds(AccessToken);
+            dynamic feeds = FbUser.GetFeeds(AccessToken);
 
             if (feeds != null)
             {
@@ -570,7 +570,7 @@ namespace SocioboardDataServices.Facebook
             {
 
                 Domain.Socioboard.Models.Mongo.MongoDirectMessages objDirectMessages;
-                dynamic data = FbUser.conversations(AccessToken);
+                dynamic data = FbUser.Conversations(AccessToken);
                 if (data != null)
                 {
                     apiHitsCount++;
@@ -715,7 +715,7 @@ namespace SocioboardDataServices.Facebook
             try
             {
 
-                dynamic fbfeeds = FbUser.getFeeds(accesstoken, facebookid);
+                dynamic fbfeeds = FbUser.GetFeeds(accesstoken, facebookid);
                 if (fbfeeds != null)
                 {
                     apiHitsCount++;
@@ -798,7 +798,7 @@ namespace SocioboardDataServices.Facebook
 
                             try
                             {
-                                dynamic feeddetails = FbUser.getFeedDetail(accesstoken, _FacebookPagePost.PostId);
+                                dynamic feeddetails = FbUser.GetFeedDetail(accesstoken, _FacebookPagePost.PostId);
 
                                 try
                                 {
@@ -831,7 +831,7 @@ namespace SocioboardDataServices.Facebook
 
                             try
                             {
-                                dynamic postdetails = FbUser.postdetails(accesstoken, _FacebookPagePost.PostId);
+                                dynamic postdetails = FbUser.PostDetails(accesstoken, _FacebookPagePost.PostId);
                                 string _clicks = string.Empty;
                                 foreach (var _details in postdetails["data"])
                                 {
@@ -930,7 +930,7 @@ namespace SocioboardDataServices.Facebook
         {
             try
             {
-                dynamic data = FbUser.notifications(AccessToken);
+                dynamic data = FbUser.Notifications(AccessToken);
                 Domain.Socioboard.Models.Mongo.MongoMessageModel objMessageModel;
                 if (data != null)
                 {
@@ -1031,7 +1031,7 @@ namespace SocioboardDataServices.Facebook
         {
             try
             {
-                dynamic data = FbUser.getPageTaggedPostDetails(accesstoken);
+                dynamic data = FbUser.GetPageTaggedPostDetails(accesstoken);
                 Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails _InboxMessages;
 
                 foreach (var item in data["data"])
@@ -1138,7 +1138,7 @@ namespace SocioboardDataServices.Facebook
         {
             try
             {
-                dynamic data = FbUser.getPromotablePostsDetails(accesstoken);
+                dynamic data = FbUser.GetPromotablePostsDetails(accesstoken);
                 Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails _InboxMessages;
 
                 foreach (var item in data["data"])

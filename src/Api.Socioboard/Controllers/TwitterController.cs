@@ -29,7 +29,7 @@ namespace Api.Socioboard.Controllers
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
             _appEnv = appEnv;
             _emailSender = email;
         }
@@ -161,7 +161,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetAllTwitterProfiles(long groupId)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.TwitterAccount> lstTwtAcc = new List<Domain.Socioboard.Models.TwitterAccount>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
             {
@@ -178,7 +178,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetNotifications(long groupId, long userId, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoMessageModel>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))
             {
@@ -214,7 +214,7 @@ namespace Api.Socioboard.Controllers
         public IActionResult GetTwitterDirectMessage(long groupId, long userId, int skip, int count)
         {
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             string[] arrProfile = lstGrpProfiles.Select(t => t.profileId).ToArray();
             MongoRepository mongorepo = new MongoRepository("MongoDirectMessages", _appSettings);
             var result = mongorepo.Find<Domain.Socioboard.Models.Mongo.MongoDirectMessages>(t => arrProfile.Contains(t.senderId) || arrProfile.Contains(t.recipientId));
@@ -503,10 +503,10 @@ namespace Api.Socioboard.Controllers
             return Ok(lstMentionSugg);
         }
         [HttpGet("TwitterConversation")]
-        public IActionResult TwitterConversation(string profileId)
+        public async Task<IActionResult> TwitterConversation(string profileId)
         {
             DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            List<Domain.Socioboard.Models.TwitterMentionSugg> lstConveSugg = Helper.TwitterHelper.TwitterConversation(profileId, dbr, _logger, _redisCache, _appSettings);
+            List<Domain.Socioboard.Models.TwitterMentionSugg> lstConveSugg = await Helper.TwitterHelper.TwitterConversation(profileId, dbr, _logger, _redisCache, _appSettings);
             return Ok(lstConveSugg);
         }
 
@@ -589,7 +589,7 @@ namespace Api.Socioboard.Controllers
 
             DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             List<int> alldata = new List<int>();
-            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.getAllGroupProfiles(groupId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.Groupprofiles> lstGrpProfiles = Repositories.GroupProfilesRepository.GetAllGroupProfiles(groupId, _redisCache, dbr);
             List<Domain.Socioboard.Models.Mongo.MongoMessageModel> lstTwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoMessageModel>();
             List<Domain.Socioboard.Models.Mongo.MongoMessageModel> TwtMessages = new List<Domain.Socioboard.Models.Mongo.MongoMessageModel>();
             foreach (var item in lstGrpProfiles.Where(t => t.profileType == Domain.Socioboard.Enum.SocialProfileType.Twitter))

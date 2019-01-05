@@ -15,22 +15,30 @@ using System.Xml;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Api.Socioboard.Model;
-
-
-// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+using Domain.Socioboard.Enum;
 
 namespace Api.Socioboard.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     public class PaymentTransactionController : Controller
     {
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="settings"></param>
+        /// <param name="appEnv"></param>
+        /// <param name="emailSender"></param>
         public PaymentTransactionController(ILogger<PaymentTransactionController> logger, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment appEnv, IEmailSender emailSender)
         {
             _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
+            _redisCache = Helper.Cache.GetCacheInstance(_appSettings.RedisConfiguration);
             _appEnv = appEnv;
             _emailSender = emailSender;
 
@@ -40,30 +48,61 @@ namespace Api.Socioboard.Controllers
         private Helper.Cache _redisCache;
         private readonly IHostingEnvironment _appEnv;
         private readonly IEmailSender _emailSender;
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="packagename"></param>
+        /// <returns></returns>
         [HttpPost("GetPackage")]
         public IActionResult GetPackage(string packagename)
         {
-            Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            DatabaseRepository dbr = new DatabaseRepository(_logger, _appEnv);
             return Ok(Repositories.PaymentTransactionRepository.GetPackage(packagename, dbr));
         }
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost("GetPaymentTransactiondata")]
         public IActionResult GetPaymentTransactiondata(long id)
         {
-            Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
-            Domain.Socioboard.Models.PaymentTransaction _PaymentTransaction = dbr.Find<Domain.Socioboard.Models.PaymentTransaction>(t => t.id == id).FirstOrDefault();
-            return Ok(_PaymentTransaction);
+            var dbr = new DatabaseRepository(_logger, _appEnv);
+            var paymentTransaction = dbr.FindFirstMatch<PaymentTransaction>(t => t.id == id);
+            return Ok(paymentTransaction);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="amount"></param>
+        /// <param name="UserName"></param>
+        /// <param name="email"></param>
+        /// <param name="PaymentType"></param>
+        /// <param name="trasactionId"></param>
+        /// <param name="paymentId"></param>
+        /// <param name="accType"></param>
+        /// <param name="subscr_date"></param>
+        /// <param name="payer_email"></param>
+        /// <param name="Payername"></param>
+        /// <param name="payment_status"></param>
+        /// <param name="item_name"></param>
+        /// <param name="media"></param>
+        /// <returns></returns>
         [HttpPost("UpgradeAccount")]
         public IActionResult UpgradeAccount(string userId, string amount, string UserName, string email, Domain.Socioboard.Enum.PaymentType PaymentType, string trasactionId, string paymentId, Domain.Socioboard.Enum.SBAccountType accType, DateTime subscr_date, string payer_email, string Payername, string payment_status, string item_name, string media)
         {
-               Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
+            var dbr = new DatabaseRepository(_logger, _appEnv);
             try
             {
-                string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\invoice.html";
-                string html = System.IO.File.ReadAllText(path);
+                var path = _appEnv.WebRootPath + "\\views\\mailtemplates\\invoice.html";
+                var html = System.IO.File.ReadAllText(path);
                 html = html.Replace("[paymentId]", paymentId);
                 html = html.Replace("[subscr_date]", subscr_date.ToString());
                 html = html.Replace("[payer_email]", payer_email);
@@ -79,7 +118,7 @@ namespace Api.Socioboard.Controllers
             }
             try
             {
-                User inMemUser = _redisCache.Get<User>(UserName);
+                var inMemUser = _redisCache.Get<User>(UserName);
 
                 if (inMemUser != null)
                 {
@@ -88,50 +127,12 @@ namespace Api.Socioboard.Controllers
                     inMemUser.ExpiryDate = DateTime.UtcNow.AddDays(30);
                     inMemUser.Id = Convert.ToInt64(userId);
                     inMemUser.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.active;
-                    if (accType == Domain.Socioboard.Enum.SBAccountType.Free)
-                    {
-                        inMemUser.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
-                    {
-                        inMemUser.AccountType = Domain.Socioboard.Enum.SBAccountType.Deluxe;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Premium)
-                    {
-                        inMemUser.AccountType = Domain.Socioboard.Enum.SBAccountType.Premium;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Topaz)
-                    {
-                        inMemUser.AccountType = Domain.Socioboard.Enum.SBAccountType.Topaz;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Platinum)
-                    {
-                        inMemUser.AccountType = Domain.Socioboard.Enum.SBAccountType.Platinum;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Gold)
-                    {
-                        inMemUser.AccountType = Domain.Socioboard.Enum.SBAccountType.Gold;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Ruby)
-                    {
-                        inMemUser.AccountType = Domain.Socioboard.Enum.SBAccountType.Ruby;
-
-                    }
-                    else if (accType == Domain.Socioboard.Enum.SBAccountType.Standard)
-                    {
-                        inMemUser.AccountType = Domain.Socioboard.Enum.SBAccountType.Standard;
-
-                    }
-                    dbr.Update<User>(inMemUser);
+                    inMemUser.AccountType = accType;
+                    dbr.Update(inMemUser);
                 }
                 else
                 {
-                    User _user = dbr.Single<User>(t => t.Id == Convert.ToInt64(userId));
+                    var _user = dbr.FindFirstMatch<User>(t => t.Id == Convert.ToInt64(userId));
                     if (_user != null)
                     {
                         _user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Paid;
@@ -139,49 +140,11 @@ namespace Api.Socioboard.Controllers
                         _user.ExpiryDate = DateTime.UtcNow.AddDays(30);
                         _user.Id = Convert.ToInt64(userId);
                         _user.TrailStatus = Domain.Socioboard.Enum.UserTrailStatus.active;
-                        if (accType == Domain.Socioboard.Enum.SBAccountType.Free)
-                        {
-                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Free;
-                        }
-                        else if (accType == Domain.Socioboard.Enum.SBAccountType.Deluxe)
-                        {
-                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Deluxe;
-
-                        }
-                        else if (accType == Domain.Socioboard.Enum.SBAccountType.Premium)
-                        {
-                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Premium;
-
-                        }
-                        else if (accType == Domain.Socioboard.Enum.SBAccountType.Topaz)
-                        {
-                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Topaz;
-
-                        }
-                        else if (accType == Domain.Socioboard.Enum.SBAccountType.Platinum)
-                        {
-                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Platinum;
-
-                        }
-                        else if (accType == Domain.Socioboard.Enum.SBAccountType.Gold)
-                        {
-                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Gold;
-
-                        }
-                        else if (accType == Domain.Socioboard.Enum.SBAccountType.Ruby)
-                        {
-                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Ruby;
-
-                        }
-                        else if (accType == Domain.Socioboard.Enum.SBAccountType.Standard)
-                        {
-                            _user.AccountType = Domain.Socioboard.Enum.SBAccountType.Standard;
-
-                        }
-                        dbr.Update<User>(_user);
+                        _user.AccountType = accType;
+                        dbr.Update(_user);
                     }
                 }
-                int isaved = Repositories.PaymentTransactionRepository.AddPaymentTransaction(Convert.ToInt64(userId), amount, email, PaymentType, paymentId, trasactionId,subscr_date,payer_email,Payername,payment_status,item_name,media,dbr);
+                int isaved = Repositories.PaymentTransactionRepository.AddPaymentTransaction(Convert.ToInt64(userId), amount, email, PaymentType, paymentId, trasactionId, subscr_date, payer_email, Payername, payment_status, item_name, media, dbr);
                 if (isaved == 1)
                 {
                     return Ok("payment done");
@@ -195,26 +158,149 @@ namespace Api.Socioboard.Controllers
             return Ok();
         }
 
-        
 
-        [HttpPost("UpdateRecurringUser")]
-        public IActionResult UpdateRecurringUser(string subscr_id, string txn_id, DateTime subscr_date, string payer_email, string Payername, string payment_status, string item_name, string amount,string media)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="amount"></param>
+        /// <param name="UserName"></param>
+        /// <param name="email"></param>
+        /// <param name="PaymentType"></param>
+        /// <param name="trasactionId"></param>
+        /// <param name="paymentId"></param>
+        /// <param name="accType"></param>
+        /// <param name="subscr_date"></param>
+        /// <param name="payer_email"></param>
+        /// <param name="Payername"></param>
+        /// <param name="payment_status"></param>
+        /// <param name="item_name"></param>
+        /// <param name="media"></param>
+        /// <returns></returns>
+        [HttpPost("UpdateTransactionDetails")]
+        public IActionResult UpdateTransactionDetails(string userId, string amount, string UserName, string email, Domain.Socioboard.Enum.PaymentType PaymentType, string trasactionId, string paymentId, Domain.Socioboard.Enum.SBAccountType accType, DateTime subscr_date, string payer_email, string Payername, string payment_status, string item_name, string media)
         {
             try
             {
-                
-                    string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\invoice.html";
-                    string html = System.IO.File.ReadAllText(path);
-                    html = html.Replace("[paymentId]", txn_id);
-                    html = html.Replace("[subscr_date]", subscr_date.ToString());
-                    html = html.Replace("[payer_email]", payer_email);
-                    html = html.Replace("[Payername]", Payername);
-                    html = html.Replace("[payment_status]", payment_status);
-                    html = html.Replace("[item_name]", item_name);
-                    html = html.Replace("[amount]", amount + "$");
-                    html = html.Replace("[media]", media);
-                    _emailSender.SendMailSendGrid(_appSettings.frommail, "", payer_email, "", "", "Socioboard Payment Invoice", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
-               
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+                var inMemUser = _redisCache.Get<User>(UserName);
+
+                if (inMemUser != null)
+                {
+                    inMemUser.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Processing;
+                    inMemUser.AccountType = accType;
+                    inMemUser.ExpiryDate = DateTime.UtcNow.AddDays(1);
+                    inMemUser.TrailStatus = UserTrailStatus.active;
+                    dbr.Update(inMemUser);
+                }
+                else
+                {
+                    var user = dbr.FindFirstMatch<User>(t => t.Id == Convert.ToInt64(userId));
+                    if (user != null)
+                    {
+                        user.PaymentStatus = Domain.Socioboard.Enum.SBPaymentStatus.Processing;
+                        user.AccountType = accType;
+                        user.ExpiryDate = DateTime.UtcNow.AddDays(1);
+                        user.TrailStatus = UserTrailStatus.active;
+                        dbr.Update(user);
+                    }
+                }
+                var isSaved = Repositories.PaymentTransactionRepository.AddPaymentTransaction(Convert.ToInt64(userId), amount, email, PaymentType, paymentId, trasactionId, subscr_date, payer_email, Payername, "Processing", item_name, media, dbr);
+                if (isSaved == 1)
+                {
+                    return Ok("processing");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="information"></param>
+        /// <returns></returns>
+        [HttpPost("UpdatePaypalTransactions")]
+        public IActionResult UpdatePaypalTransactions(string information)
+        {
+            try
+            {
+                var dbr = new DatabaseRepository(_logger, _appEnv);
+
+                var userDetails = JsonConvert.DeserializeObject<PaymentTransaction>(
+                    information);
+
+                var user = dbr.FindFirstMatch<User>(t => t.Id == Convert.ToInt64(userDetails.userid));
+
+
+                var package = SBAccountType.Standard;
+                try
+                {
+                    var packageName = userDetails.itemname.Replace("Socioboard_", "");
+                    package = (SBAccountType)Enum.Parse(typeof(SBAccountType), packageName);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"Can't fetch the package details for transaction {userDetails.trasactionId}");
+                    _logger.LogError(e.StackTrace);               
+                }
+
+                if (user != null)
+                {
+                    user.PaymentStatus = SBPaymentStatus.Paid;
+                    user.ExpiryDate = DateTime.UtcNow.AddDays(30);
+                    user.AccountType = package;
+                    dbr.Update(user);
+                }
+
+                var paymentTransactions = dbr.FindFirstMatch<PaymentTransaction>(t => t.trasactionId == userDetails.trasactionId);
+
+                if (paymentTransactions == null)
+                    dbr.Add(userDetails);
+                else
+                {
+                    paymentTransactions.paymentId = userDetails.paymentId;
+                    paymentTransactions.paymentdate = userDetails.paymentdate;
+                    paymentTransactions.subscrdate = userDetails.subscrdate;
+                    paymentTransactions.paymentstatus = userDetails.paymentstatus;
+
+                    dbr.Update(paymentTransactions);
+                }
+
+                return Ok("Completed");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation(ex.Message);
+                _logger.LogError(ex.StackTrace);
+            }
+            return Ok();
+        }
+
+
+        [HttpPost("UpdateRecurringUser")]
+        public IActionResult UpdateRecurringUser(string subscr_id, string txn_id, DateTime subscr_date, string payer_email, string Payername, string payment_status, string item_name, string amount, string media)
+        {
+            try
+            {
+
+                string path = _appEnv.WebRootPath + "\\views\\mailtemplates\\invoice.html";
+                string html = System.IO.File.ReadAllText(path);
+                html = html.Replace("[paymentId]", txn_id);
+                html = html.Replace("[subscr_date]", subscr_date.ToString());
+                html = html.Replace("[payer_email]", payer_email);
+                html = html.Replace("[Payername]", Payername);
+                html = html.Replace("[payment_status]", payment_status);
+                html = html.Replace("[item_name]", item_name);
+                html = html.Replace("[amount]", amount + "$");
+                html = html.Replace("[media]", media);
+                _emailSender.SendMailSendGrid(_appSettings.frommail, "", payer_email, "", "", "Socioboard Payment Invoice", html, _appSettings.SendgridUserName, _appSettings.SendGridPassword);
+
                 Model.DatabaseRepository dbr = new Model.DatabaseRepository(_logger, _appEnv);
                 Domain.Socioboard.Models.PaymentTransaction _PaymentTransaction = dbr.FindSingle<Domain.Socioboard.Models.PaymentTransaction>(t => t.paymentId.Contains(subscr_id));
                 Domain.Socioboard.Models.User _user = dbr.FindSingle<Domain.Socioboard.Models.User>(x => x.Id == _PaymentTransaction.userid);
@@ -227,10 +313,10 @@ namespace Api.Socioboard.Controllers
                 _PaymentTransaction.Payername = Payername;
                 _PaymentTransaction.paymentstatus = payment_status;
                 _PaymentTransaction.itemname = item_name;
-                _PaymentTransaction.media = media; 
-                _PaymentTransaction.subscrdate= subscr_date;
+                _PaymentTransaction.media = media;
+                _PaymentTransaction.subscrdate = subscr_date;
                 _PaymentTransaction.amount = amount;
-                dbr.Update<Domain.Socioboard.Models.PaymentTransaction>(_PaymentTransaction);
+                dbr.Update(_PaymentTransaction);
             }
             catch (Exception ex)
             {

@@ -18,7 +18,7 @@ namespace SocioboardDataServices.Reports.FacebookReports
     {
         public static void CreateFacebookPageReport()
         {
-            Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+            Helper.Cache cache = Helper.Cache.GetCacheInstance(Helper.AppSettings.RedisConfiguration);
             while (true)
             {
                 try

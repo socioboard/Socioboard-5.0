@@ -15,7 +15,7 @@ namespace SocioboardDataServices.Reports
 
         public static void CreateGroupReports()
         {
-            Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+            Helper.Cache cache = Helper.Cache.GetCacheInstance(Helper.AppSettings.RedisConfiguration);
             while (true)
             {
                 try
@@ -40,7 +40,7 @@ namespace SocioboardDataServices.Reports
         {
             try
             {
-                Helper.Cache cache = new Helper.Cache(Helper.AppSettings.RedisConfiguration);
+                Helper.Cache cache = Helper.Cache.GetCacheInstance(Helper.AppSettings.RedisConfiguration);
                 DatabaseRepository dbr = new DatabaseRepository();
                 List<Domain.Socioboard.Models.Groups> lstTwtAcc = dbr.FindAll<Domain.Socioboard.Models.Groups>().ToList();
                 foreach (var item in lstTwtAcc)

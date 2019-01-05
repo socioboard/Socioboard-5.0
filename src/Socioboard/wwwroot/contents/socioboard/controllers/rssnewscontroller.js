@@ -11,9 +11,19 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         $rootScope.contentMessage = {};
         $rootScope.schedulemessage = {};
         $scope.buildbtn = true;
-
+        $scope.activateModules = 'CalledThroughDashBoard';
+        $scope.skip = 0;
+        $scope.count = 5;
+        var onScrollLoad = true;
         var x = $rootScope.keyword;
-      
+
+        if ($rootScope.keyword == undefined || $rootScope.keyword == null || $rootScope.keyword == '') {
+            $rootScope.keyword = 'Analytics';
+        }
+
+        var initialLoad = false;
+        $scope.processCompleted = false;
+
         rssnews();
 
         var getAllSelected = function () {
@@ -38,9 +48,8 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             }
         }
 
-
         $scope.deleteMsg = function (profileId) {
-          
+
             swal({
                 title: "Are you sure?",
                 text: "You want to delete this!",
@@ -50,9 +59,9 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 confirmButtonText: "Yes, delete it!",
                 closeOnConfirm: false
             },
-	        function () {
+            function () {
 
-	            $http.post(apiDomain + '/api/RssFeed/DeleteContentFeeds?contentfeedid=' + profileId)
+                $http.post(apiDomain + '/api/RssFeed/DeleteContentFeeds?contentfeedid=' + profileId)
                            .then(function (response) {
                                if (response.data == "success") {
                                    swal("Deleted!", "content feed has been deleted.", "success");
@@ -62,28 +71,31 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                            }, function (reason) {
                                $scope.error = reason.data;
                            });
-	            //todo: code to delete profile
-	           // swal("Deleted!", "Your profile has been deleted.", "success");
-	        });
+                //todo: code to delete profile
+                // swal("Deleted!", "Your profile has been deleted.", "success");
+            });
         }
-
-
-
 
         $('#tags').tagsInput();
 
+        $scope.loadRssNewsFeed = function (skip, count) {
+          
+            $scope.activateModules = 'CalledThroughDashBoard';
 
-        $scope.loadRssNewsFeed = function () {
-           
+            onScrollLoad = false;
             //if()
             if ($rootScope.keyword == null || $rootScope.keyword == undefined) {
 
-                $http.get(apiDomain + '/api/RssFeed/getRssNewsFeedsPost?userId=' + $rootScope.user.Id + '&skip=0&count=50')
+                $http.get(apiDomain + '/api/RssFeed/getRssNewsFeedsPost?userId=' + $rootScope.user.Id + '&skip=' + skip + '&count=' + count)
             .then(function (response) {
                 if (response.data != "") {
 
-                    $scope.postedRssData = response.data;
-                  
+                    if ($scope.postedRssData == undefined) {
+                        $scope.postedRssData = response.data;
+                    } else {
+                        $scope.postedRssData = $scope.postedRssData.concat(response.data);
+                    }
+
                     $scope.fetchdatacomplete = true;
                     var keywords = $('#tags').val('');
                     //if ($rootScope.keyword != null) {
@@ -92,17 +104,23 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
                 }
                 else {
-                    $scope.nofeeds = true;
-                    $scope.fetchdatacomplete = false;
 
+                    if ($scope.postedRssData != undefined && $scope.postedRssData.length > 0) {
+                        $scope.processCompleted = true;
+                    } else {
+                        $scope.nofeeds = true;
+                        $scope.fetchdatacomplete = true;
+                        $scope.processCompleted = true;
+                    }
                 }
+                onScrollLoad = true;
             }, function () {
                 $scope.error = reason.data;
             });
             }
-            
+
             else {
-                                            
+
                 if ($('#tags').val() != null && $('#tags').val() != "") {
                     var keywords = $('#tags').val();
                 }
@@ -114,18 +132,20 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 $scope.buildbtn = false;
 
 
-               
 
                 if (keywords != null && keywords != undefined) {
 
-                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrl?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
+                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrlPagination?userId=' + $rootScope.user.Id + '&keyword=' + keywords + '&skip=' + skip + '&count=' + count)
                     .then(function (response) {
                         if (response.data != "") {
 
-                            $scope.postedRssData = response.data;
-                            if ($scope.postedRssData != "Data already added") {
+                            if ($scope.postedRssData == undefined) {
+                                $scope.postedRssData = response.data;
+                            } else {
+                                $scope.postedRssData = $scope.postedRssData.concat(response.data);
+                            }
 
-                             
+                            if ($scope.postedRssData != "Data already added") {
                                 $scope.buildbtn = true;
                                 $('#rssSettingModal').closeModal();
                                 $scope.fetchdatacomplete = true;
@@ -142,11 +162,19 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
                         }
                         else {
-                            $scope.nofeeds = true;
-                            $scope.buildbtn = true;
-                            $('#rssSettingModal').closeModal();
-                            $scope.fetchdatacomplete = true;
+
+
+                            if ($scope.postedRssData != undefined && $scope.postedRssData.length > 0) {
+                                $scope.processCompleted = true;
+                            } else {
+                                $scope.nofeeds = true;
+                                $scope.buildbtn = true;
+                                $('#rssSettingModal').closeModal();
+                                $scope.fetchdatacomplete = true;
+                                $scope.processCompleted = true;
+                            }
                         }
+                        onScrollLoad = true;
                     }, function () {
                         $scope.error = reason.data;
 
@@ -154,13 +182,18 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 }
             }
 
-            
+
 
         }
 
-        $scope.loadRssNewsFeed();
+        $scope.rssContentsData = function (skip, count) {
 
-        $scope.rssContentsData = function () {
+            if (skip == undefined || count == undefined) {
+                skip = 0;
+                count = 0;
+            }
+
+            $scope.activateModules = 'AddedThroughKeyword';
             var title = $('#tags').val();
             if (/\S/.test(title)) {
                 if ($('#tags').val() != null) {
@@ -170,22 +203,21 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                     var keywords = $rootScope.keyword;
                 }
 
-
                 $scope.buildbtn = false;
-
-
-
 
                 if (keywords != null && keywords != undefined) {
 
-                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrl?userId=' + $rootScope.user.Id + '&keyword=' + keywords)
+                    $http.get(apiDomain + '/api/RssFeed/RssNewsFeedsUrlPagination?userId=' + $rootScope.user.Id + '&keyword=' + keywords + '&skip=' + skip + '&count=' + count)
                     .then(function (response) {
                         if (response.data != "") {
 
-                            $scope.postedRssData = response.data;
+                            if ($scope.postedRssData == undefined) {
+                                $scope.postedRssData = response.data;
+                            } else {
+                                $scope.postedRssData = $scope.postedRssData.concat(response.data);
+                            }
+
                             if ($scope.postedRssData != "Data already added") {
-
-
                                 $scope.buildbtn = true;
                                 $('#rssSettingModal').closeModal();
                                 $scope.fetchdatacomplete = true;
@@ -202,16 +234,25 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
                         }
                         else {
-                            $scope.nofeeds = true;
-                            $scope.buildbtn = true;
-                            $('#rssSettingModal').closeModal();
-                            $scope.fetchdatacomplete = true;
+
+
+                            if ($scope.postedRssData != undefined && $scope.postedRssData.length > 0) {
+                                $scope.processCompleted = true;
+                            } else {
+                                $scope.nofeeds = true;
+                                $scope.buildbtn = true;
+                                $('#rssSettingModal').closeModal();
+                                $scope.fetchdatacomplete = true;
+                                $scope.processCompleted = true;
+                            }
                         }
+                        onScrollLoad = true;
                     }, function () {
                         $scope.error = reason.data;
 
                     });
                 }
+
             }
             else {
                 swal("Please enter tag first")
@@ -221,9 +262,11 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
         }
 
         $scope.contentfeedsdata = function () {
-         
-            if ($('#tags').val() != null)
-            {
+
+
+
+
+            if ($('#tags').val() != null) {
                 var keywords = $('#tags').val();
             }
             else {
@@ -231,8 +274,8 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             }
 
             $scope.buildbtn = false;
-           // var keywords = $('#tags').val();
-          
+            // var keywords = $('#tags').val();
+
 
             if (keywords != null && keywords != undefined) {
 
@@ -243,7 +286,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                         $scope.postedRssData = response.data;
                         if ($scope.postedRssData != "Data already added") {
 
-                           
+
                             $scope.buildbtn = true;
                             $('#rssSettingModal').closeModal();
                             $scope.fetchdatacomplete = true;
@@ -320,11 +363,11 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
             var message = {
                 "shareMessage": schedulemessage.title,
-                "url":schedulemessage.link,
+                "url": schedulemessage.link,
                 "picUrl": schedulemessage.image
             };
             $rootScope.schedulemessage = message;
-          
+
             $state.go('schedulemessage');
         }
 
@@ -336,8 +379,8 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                     "link": contentFeed.link,
                     "image": contentFeed.image,
                 };
-               
-                 $rootScope.contentMessage = message;
+
+                $rootScope.contentMessage = message;
 
             }
 
@@ -346,17 +389,15 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             $(composeImagedropify).find('.dropify-render').html('<img src="' + contentFeed.image + '">');
             $(composeImagedropify).find('.dropify-preview').attr('style', 'display: block;');
             $('select').material_select();
-          
+
         }
 
-
-
         $scope.ComposeMessage = function () {
-          
+
             $scope.disbtncom = false;
             var profiles = new Array();
             $("#checkboxdata .subcheckbox").each(function () {
-             
+
                 var attrId = $(this).attr("id");
                 if (document.getElementById(attrId).checked == false) {
                     var index = profiles.indexOf(attrId);
@@ -368,7 +409,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 }
             });
 
-           // var profiles = $('#composeProfiles').val();
+            // var profiles = $('#composeProfiles').val();
             var message = $('#composeMessage').val();
             //if (image == "N/A") {
             //    image = image.replace("N/A", "");
@@ -387,7 +428,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                     formData.append('files', $("#composeImage").get(0).files[0]);
                     $http({
                         method: 'POST',
-                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message+ '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
+                        url: apiDomain + '/api/SocialMessages/ComposeMessage?profileId=' + profiles + '&userId=' + $rootScope.user.Id + '&message=' + message + '&imagePath=' + encodeURIComponent($('#imageUrl').val()),
                         data: formData,
                         headers: {
                             'Content-Type': undefined
@@ -396,16 +437,16 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                     }).then(function (response) {
                         if (response.data == "Posted") {
                             $scope.disbtncom = true;
-                           // $('#composeMessage').val('');
+                            // $('#composeMessage').val('');
                             //$('#composeMessage').val('');
                             $('#ComposePostModal').closeModal();
-                                                     
+
                             swal('Message composed successfully');
 
                         }
 
                     }, function (reason) {
-                       
+
                     });
                 }
                 else {
@@ -427,7 +468,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
 
         $scope.checkfile = function () {
             var filesinput = $('#composeImage');
-          
+
             var fileExtension = ['jpeg', 'jpg', 'png', 'gif', 'bmp'];
             if (filesinput != undefined && filesinput[0].files[0] != null) {
                 if ($scope.hasExtension('#composeImage', fileExtension)) {
@@ -442,12 +483,11 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                 $scope.check = true;
             }
         }
+
         $scope.hasExtension = function (inputID, exts) {
             var fileName = $('#composeImage').val();
             return (new RegExp('(' + exts.join('|').replace(/\./g, '\\.') + ')$')).test(fileName);
         }
-
-
 
         $scope.draftMsg = function () {
             $scope.draftbtn = false;
@@ -484,7 +524,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                         $('#ComposePostModal').closeModal();
                         swal("Message has got saved in draft successfully");
                     }, function (reason) {
-                       
+
                     });
                 }
 
@@ -507,7 +547,7 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
                         swal("Message has got saved in draft successfully");
 
                     }, function (reason) {
-                      
+
                     });
                 }
                 else {
@@ -521,6 +561,42 @@ SocioboardApp.controller('RssNewsController', function ($rootScope, $scope, $htt
             }
         }
 
+
+     
+
+        $(window).scroll(function () {
+            if (($(window).scrollTop() >= ($(document).height() - $(window).height()) * 0.9)) {
+
+                if ($scope.processCompleted) {
+                    return;
+                }
+
+                if ($scope.activateModules === 'CalledThroughDashBoard') {
+                    if (onScrollLoad) {
+                        if (!initialLoad) {
+                            initialLoad = true;
+                            $scope.skip = 0;
+                            $scope.loadRssNewsFeed($scope.skip, $scope.count);
+                        } else {
+                            $scope.skip += 5;
+                            $scope.loadRssNewsFeed($scope.skip, $scope.count);
+                        }
+
+                    }
+                }
+                else if ($scope.activateModules === 'AddedThroughKeyword') {
+
+                    if (onScrollLoad) {
+                        $scope.skip += 5;
+                        $scope.rssContentsData($scope.skip, $scope.count);
+                    }
+
+                }
+
+
+            }
+        });
+        $scope.loadRssNewsFeed(0,5);
     });
 
 });

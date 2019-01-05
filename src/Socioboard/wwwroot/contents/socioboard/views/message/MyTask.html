@@ -13,18 +13,26 @@
                                 <div class="nav-wrapper">
                                     <div class="left col s12 m5 l5">
                                         <ul>
-                                            <li>
+                                            <!--<li>
                                                 <h5 class="email-type">My Task</h5>
+                                            </li>-->
+                                            <li>
+                                                <a ng-show="dispbtnmark" ng-click="getTasks()"><h5 style="margin-top: 25px" class="email-type">Todo Task List</h5></a>
+                                                <a ng-show="!dispbtnmark" ><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></a>
+                                            </li>
+                                            <li>
+                                                <a ng-show="dispbtnmark" ng-click="showAllUserAssignedTask()"><h5 style="margin-top: 25px" class="email-type">Assigned Task List</h5></a>
+                                                <a ng-show="!dispbtnmark"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></a>
                                             </li>
                                         </ul>
                                     </div>
                                     <div ng-init="dispbtnmark= {{dispbtnmark}}"></div>
                                     <div ng-init="dispbtndelete= {{dispbtndelete}}"></div>
                                     <div class="col s12 m7 l7 hide-on-med-and-down" ng-if="replydisp==true">
-                                        <ul class="right">
+                                        <ul class="right">                                          
                                             <li>
                                                 <a ng-show="dispbtnmark" ng-click="markTaskCompleted()"><i class="icon-check"></i></a>
-                                                <a ng-show="!dispbtnmark" ><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></a>
+                                                <a ng-show="!dispbtnmark"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></a>
                                             </li>
                                             <li>
                                                 <a ng-show="dispbtndelete" ng-click="deleteTask()"><i class="icon-trash"></i></a>

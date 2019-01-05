@@ -9,22 +9,35 @@ namespace Api.Socioboard.Repositories
     public static class GroupsRepository
     {
 
-        public static List<Domain.Socioboard.Models.Groups> getAllGroupsofUser(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="redisCache"></param>
+        /// <param name="dbr"></param>
+        /// <returns></returns>
+        public static List<Groups> GetAllGroupsofUser(long userId, Helper.Cache redisCache, Model.DatabaseRepository dbr)
         {
             try
             {
-                List<Domain.Socioboard.Models.Groups> inMemGroups = _redisCache.Get<List<Domain.Socioboard.Models.Groups>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + userId);
-                if (inMemGroups != null)
-                {
-                    return inMemGroups;
-                }
-            }
-            catch { }
+                var inMemGroups = redisCache.Get<List<Groups>>(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + userId);
 
-            List<long> lstGroupIds = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted).Select(t => t.groupid).ToList();
-            List<Domain.Socioboard.Models.Groups> groups = dbr.Find<Domain.Socioboard.Models.Groups>(t => lstGroupIds.Contains(t.id) ).ToList();
-            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + userId, groups);
-            return groups;
+                if (inMemGroups != null)               
+                    return inMemGroups;
+
+                var lstGroupIds = dbr.Find<Groupmembers>(t => t.userId == userId && t.memberStatus == Domain.Socioboard.Enum.GroupMemberStatus.Accepted).Select(t => t.groupid).ToList();
+                var groups = dbr.Find<Groups>(t => lstGroupIds.Contains(t.id)).ToList();
+
+                redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserGroups + userId, groups);
+
+                return groups;
+            }
+            catch(Exception ex) {
+                Console.WriteLine(ex.StackTrace);
+            }
+
+            return null;
+
         }
 
         public static List<Domain.Socioboard.Models.Groups> getAdminGroupsofUser(long userId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)

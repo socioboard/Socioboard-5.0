@@ -10,16 +10,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Domain.Socioboard.Helpers;
 
 namespace Api.Socioboard.Repositories
 {
     public static class FacebookRepository
     {
 
-        public static int AddFacebookAccount(dynamic profile, Int64 friends, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, Domain.Socioboard.Enum.FbProfileType fbProfileType, string accessToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        public static int AddFacebookAccount(dynamic profile, long friends, DatabaseRepository dbr, Int64 userId, Int64 groupId, Domain.Socioboard.Enum.FbProfileType fbProfileType, string accessToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
         {
-            int isSaved = 0;
-            Domain.Socioboard.Models.Facebookaccounts fbAcc = FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+            int isSaved;
+            Domain.Socioboard.Models.Facebookaccounts fbAcc = getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
             if (fbAcc != null && fbAcc.IsActive == false)
             {
                 fbAcc.IsActive = true;
@@ -101,7 +102,7 @@ namespace Api.Socioboard.Repositories
                 try
                 {
                     fbAcc.ProfileUrl = (Convert.ToString(profile["picture"]["data"]["url"]));
-                   // fbAcc.ProfileUrl = "http://graph.facebook.com/" + profile["from"]["id"] + "/picture?type=small";
+                    // fbAcc.ProfileUrl = "http://graph.facebook.com/" + profile["from"]["id"] + "/picture?type=small";
                 }
                 catch { }
                 try
@@ -162,29 +163,30 @@ namespace Api.Socioboard.Repositories
                 }
                 catch { }
 
-                isSaved = dbr.Add<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
+                isSaved = dbr.Add(fbAcc);
             }
+
+            if (isSaved != 1)
+                return isSaved;
+
+            var lstFbAcc = dbr.FindFirstMatch<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(fbAcc.FbUserId));
+
+            if (lstFbAcc == null)
+                return isSaved;
+
+            isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lstFbAcc.FbUserId, lstFbAcc.FbUserName, userId, "https://graph.facebook.com/" + fbAcc.FbUserId + "/picture?type=small", Domain.Socioboard.Enum.SocialProfileType.Facebook, dbr);
 
             if (isSaved == 1)
             {
-                List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(fbAcc.FbUserId)).ToList();
-                if (lstFbAcc != null && lstFbAcc.Count() > 0)
-                {
-                    isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lstFbAcc.First().FbUserId, lstFbAcc.First().FbUserName, userId, "https://graph.facebook.com/" + fbAcc.FbUserId + "/picture?type=small", Domain.Socioboard.Enum.SocialProfileType.Facebook, dbr);
-                    if (isSaved == 1)
-                    {
-                        _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
-                        _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
-                        new Thread(delegate ()
-                        {
-                            FacebookRepository.SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
-                            UpdatePageShareathon(fbAcc, userId, settings);
-                            UpdateGroupShareathon(fbAcc, userId, settings);
-                           // UpdateDeleteFacebookPassChange(fbAcc, userId, settings);
-                        }).Start();                       
-                    }
-                }
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
 
+                CustomTaskFactory.Instance.Start(() =>
+                {
+                    SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.FbUserId, settings, _logger);
+                    UpdatePageShareathon(fbAcc, userId, settings);
+                    UpdateGroupShareathon(fbAcc, userId, settings);
+                });
             }
             return isSaved;
         }
@@ -193,13 +195,13 @@ namespace Api.Socioboard.Repositories
         {
             int isSaved = 0;
             Domain.Socioboard.Models.Facebookaccounts fbAcc;
-           
-          
-           fbAcc = FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
-               
 
-            
-            if (fbAcc != null )
+
+            fbAcc = FacebookRepository.getFacebookAccount(Convert.ToString(profile["id"]), _redisCache, dbr);
+
+
+
+            if (fbAcc != null)
             {
                 fbAcc.IsActive = true;
                 fbAcc.UserId = userId;
@@ -266,6 +268,89 @@ namespace Api.Socioboard.Repositories
             return isSaved;
         }
 
+
+        public static int AddFacebookPage(Domain.Socioboard.Models.Facebookaccounts fbAccounts, DatabaseRepository dbr, long userId, long groupId, Domain.Socioboard.Enum.FbProfileType fbProfileType, string accessToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        {
+            var isSaved = 0;
+
+            var fbAcc = getFacebookAccount(fbAccounts.FbUserId, _redisCache, dbr);
+
+            if (fbAcc != null && fbAcc.IsActive == false)
+            {
+                fbAcc.IsActive = true;
+                fbAcc.UserId = userId;
+                fbAcc.Is90DayDataUpdated = false;
+                try
+                {
+                    fbAcc.Friends = fbAccounts.Friends;
+                    fbAcc.CoverPic = fbAccounts.CoverPic;
+                }
+                catch (Exception)
+                {
+                    fbAcc.Friends = 0;
+                }
+
+                fbAcc.AccessToken = accessToken;
+                isSaved = dbr.Update(fbAcc);
+            }
+            else
+            {
+                fbAcc = new Domain.Socioboard.Models.Facebookaccounts
+                {
+                    UserId = userId,
+                    IsActive = true,
+                    Friends = fbAccounts.Friends,
+                    FbProfileType = fbProfileType,
+                    AccessToken = accessToken,
+                    FbPageSubscription = Domain.Socioboard.Enum.FbPageSubscription.Subscribed,
+                    FbUserId = fbAccounts.FbUserId,
+                    FbUserName = fbAccounts.FbUserName,
+                    CoverPic = fbAccounts.CoverPic,
+                    EmailId = fbAccounts.EmailId,
+                    ProfileUrl = fbAccounts.ProfileUrl,
+                };
+
+                isSaved = dbr.Add(fbAcc);
+            }
+
+
+            CustomTaskFactory.Instance.Start(() =>
+            {
+                if (isSaved != 1)
+                    return;
+
+                var lstFbAcc = dbr.FindFirstMatch<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(fbAcc.FbUserId));
+
+                if (lstFbAcc == null)
+                    return;
+
+                isSaved = GroupProfilesRepository.AddGroupProfile(groupId, lstFbAcc.FbUserId, lstFbAcc.FbUserName, userId, "https://graph.facebook.com/" + fbAcc.FbUserId + "/picture?type=small", Domain.Socioboard.Enum.SocialProfileType.FacebookFanPage, dbr);
+
+                if (isSaved != 1)
+                    return;
+
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheUserProfileCount + userId);
+                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheGroupProfiles + groupId);
+
+
+                SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.FbUserId, settings, _logger);
+                SaveFacebookPageFeed(fbAcc.AccessToken, lstFbAcc.FbUserId, fbAcc.FbUserName,
+                    settings);
+                SavePageConversations(fbAcc.AccessToken, lstFbAcc.FbUserId, settings, _logger);
+                SaveFacebookPagePromotionalDetails(fbAcc.AccessToken, lstFbAcc.FbUserId, settings,
+                    _logger);
+                SaveFacebookPageTaggedDetails(fbAcc.AccessToken, lstFbAcc.FbUserId, settings,
+                    _logger);
+
+                UpdateGroupShareathonPage(fbAcc, userId, settings);
+                UpdatePageshareathonPage(fbAcc, userId, settings);
+                UpdateDeleteLinkShareathon(fbAcc.FbUserName, userId, settings);
+            });
+            return isSaved;
+
+        }
+
+
         public static int AddFacebookPage(dynamic profile, Model.DatabaseRepository dbr, Int64 userId, Int64 groupId, Domain.Socioboard.Enum.FbProfileType fbProfileType, string accessToken, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
         {
             int isSaved = 0;
@@ -279,7 +364,7 @@ namespace Api.Socioboard.Repositories
             //{
             //    fbAcc.FbPageSubscription = 0;
             //}
-           
+
             if (fbAcc != null && fbAcc.IsActive == false)
             {
                 fbAcc.IsActive = true;
@@ -359,7 +444,7 @@ namespace Api.Socioboard.Repositories
                         new Thread(delegate ()
                          {
                              FacebookRepository.SaveFacebookFeeds(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
-                             FacebookRepository.SaveFacebookPageFeed(fbAcc.AccessToken, lstFbAcc.First().FbUserId, fbAcc.FbUserName,settings);
+                             FacebookRepository.SaveFacebookPageFeed(fbAcc.AccessToken, lstFbAcc.First().FbUserId, fbAcc.FbUserName, settings);
                              FacebookRepository.SavePageConversations(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                              FacebookRepository.SaveFacebookPagePromotionalDetails(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
                              FacebookRepository.SaveFacebookPageTaggedDetails(fbAcc.AccessToken, lstFbAcc.First().FbUserId, settings, _logger);
@@ -367,10 +452,10 @@ namespace Api.Socioboard.Repositories
                              UpdateGroupShareathonPage(fbAcc, userId, settings);
                              UpdatePageshareathonPage(fbAcc, userId, settings);
                              UpdateDeleteLinkShareathon(fbAcc.FbUserName, userId, settings);
-                           //  UpdateDeleteFacebookPassChange(fbAcc, userId, settings);
+                             //  UpdateDeleteFacebookPassChange(fbAcc, userId, settings);
                          }).Start();
 
-                       
+
 
                     }
                 }
@@ -433,7 +518,7 @@ namespace Api.Socioboard.Repositories
                             UpdatePageshareathonPage(fbAcc, userId, _appSettings);
                         }).Start();
 
-                       
+
 
 
                     }
@@ -441,41 +526,80 @@ namespace Api.Socioboard.Repositories
             }
             return isSaved;
         }
-        public static Domain.Socioboard.Models.Facebookaccounts getFacebookAccount(string FbUserId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
+
+        public static Domain.Socioboard.Models.Facebookaccounts getFacebookAccount(string FbUserId, Helper.Cache _redisCache, DatabaseRepository dbr)
         {
             try
             {
-                Domain.Socioboard.Models.Facebookaccounts inMemFbAcc = _redisCache.Get<Domain.Socioboard.Models.Facebookaccounts>(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + FbUserId);
-                if (inMemFbAcc != null)
-                {
-                    return inMemFbAcc;
-                }
-            }
-            catch { }
+                var inMemFbAcc = _redisCache.Get<Domain.Socioboard.Models.Facebookaccounts>(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + FbUserId);
 
-            try
-            {
-                List<Domain.Socioboard.Models.Facebookaccounts> lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(FbUserId)).ToList();
-                if (lstFbAcc != null && lstFbAcc.Count() > 0)
-                {
-                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + FbUserId, lstFbAcc.First());
-                    return lstFbAcc.First();
-                }
-                else
-                {
+                if (inMemFbAcc != null)
+                    return inMemFbAcc;
+
+
+                var lstFbAcc = dbr.FindFirstMatch<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(FbUserId));
+
+                if (lstFbAcc == null)
                     return null;
-                }
+
+                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + FbUserId, lstFbAcc);
+                return lstFbAcc;
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
+
                 return null;
             }
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="facebookAccountIds"></param>
+        /// <param name="_redisCache"></param>
+        /// <param name="dbr"></param>
+        /// <returns></returns>
+        public static List<Domain.Socioboard.Models.Facebookaccounts> GetFacebookAccounts(List<string> facebookAccountIds, Helper.Cache _redisCache, DatabaseRepository dbr)
+        {
+            try
+            {
+
+                var requiredFacebookAccounts = facebookAccountIds.Select(item =>
+                    _redisCache.Get<Domain.Socioboard.Models.Facebookaccounts>(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + item))
+                    .Where(inMemFbAcc => inMemFbAcc != null)
+                    .ToList();
+
+                if (facebookAccountIds.Count == requiredFacebookAccounts.Count)
+                    return requiredFacebookAccounts;
+
+                var needAccounts = facebookAccountIds.Except(requiredFacebookAccounts.Select(x => x.FbUserId).ToList());
+
+                var lstFbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => needAccounts.Contains(t.FbUserId));
+
+                requiredFacebookAccounts.AddRange(lstFbAcc);
+
+                foreach (var item in lstFbAcc)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + item.FbUserId, item);
+                }
+
+                return requiredFacebookAccounts;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+        }
+
+
+
         public static void SaveFbPublicPagePost(string accesstoken, string profileid, Helper.AppSettings _appSettings)
         {
 
-            dynamic feeds = FbUser.getFeeds(accesstoken, profileid);
+            dynamic feeds = FbUser.GetFeeds(accesstoken, profileid);
             try
             {
 
@@ -572,7 +696,7 @@ namespace Api.Socioboard.Repositories
                     }
                     try
                     {
-                        dynamic like = FbUser.getFeedDetail(accesstoken, objFbPagePost.PostId);
+                        dynamic like = FbUser.GetFeedDetail(accesstoken, objFbPagePost.PostId);
                         objFbPagePost.Likes = Convert.ToInt32(like["likes"]["summary"]["total_count"].ToString());
                         objFbPagePost.Comments = Convert.ToInt32(like["comments"]["summary"]["total_count"].ToString());
                         objFbPagePost.Shares = Convert.ToInt32(like["shares"]["count"].ToString());
@@ -623,7 +747,7 @@ namespace Api.Socioboard.Repositories
 
         public static void SaveFacebookFeeds(string AccessToken, string ProfileId, Helper.AppSettings settings, ILogger _logger)
         {
-            dynamic feeds = FbUser.getFeeds(AccessToken);
+            dynamic feeds = FbUser.GetFeeds(AccessToken);
 
             if (feeds != null)
             {
@@ -646,11 +770,11 @@ namespace Api.Socioboard.Repositories
                             objFacebookFeed.FeedDateToshow = DateTime.Parse(result["created_time"].ToString()).ToString("yyyy/MM/dd HH:mm:ss");
                             objFacebookFeed.FeedDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(Convert.ToDateTime(objFacebookFeed.FeedDateToshow)).ToString();
                         }
-                        catch(Exception ex) { }
+                        catch (Exception ex) { }
                         objFacebookFeed.FbComment = "http://graph.facebook.com/" + result["id"] + "/comments";
                         objFacebookFeed.FbLike = "http://graph.facebook.com/" + result["id"] + "/likes";
                         objFacebookFeed.shareStatus = false;
-                        
+
 
                     }
                     catch (Exception ex) { }
@@ -735,8 +859,8 @@ namespace Api.Socioboard.Repositories
                     //}
                     //catch { }
                     //objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, AccessToken, settings, _logger);
-                    
-                    objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, comment,settings, _logger);
+
+                    objFacebookFeed._facebookComment = FbPostComments(objFacebookFeed.FeedId, comment, settings, _logger);
                     try
                     {
                         MongoRepository mongorepo = new MongoRepository("MongoFacebookFeed", settings);
@@ -749,7 +873,7 @@ namespace Api.Socioboard.Repositories
                         _logger.LogError(ex.StackTrace);
                     }
 
-                   // AddFbPostComments(objFacebookFeed.FeedId, AccessToken, settings, _logger);
+                    // AddFbPostComments(objFacebookFeed.FeedId, AccessToken, settings, _logger);
                 }
 
             }
@@ -762,7 +886,7 @@ namespace Api.Socioboard.Repositories
             {
 
                 Domain.Socioboard.Models.Mongo.MongoDirectMessages objDirectMessages;
-                dynamic data = FbUser.conversations(AccessToken);
+                dynamic data = FbUser.Conversations(AccessToken);
                 foreach (var item in data["data"])
                 {
                     foreach (var msg_item in item["messages"]["data"])
@@ -899,7 +1023,7 @@ namespace Api.Socioboard.Repositories
         {
             try
             {
-                dynamic data = FbUser.notifications(AccessToken);
+                dynamic data = FbUser.Notifications(AccessToken);
                 Domain.Socioboard.Models.Mongo.MongoMessageModel objMessageModel;
 
                 foreach (var item in data["data"])
@@ -1001,13 +1125,13 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static void SaveFacebookPageFeed(string accesstoken, string facebookid, string fbpagename,Helper.AppSettings _appSettings)
+        public static void SaveFacebookPageFeed(string accesstoken, string facebookid, string fbpagename, Helper.AppSettings _appSettings)
         {
             try
             {
                 Domain.Socioboard.Models.Mongo.FacebookPagePost _FacebookPagePost = new FacebookPagePost();
 
-                dynamic fbfeeds = FbUser.getFeeds(accesstoken, facebookid);
+                dynamic fbfeeds = FbUser.GetFeeds(accesstoken, facebookid);
                 foreach (var _feed in fbfeeds["data"])
                 {
                     try
@@ -1020,7 +1144,7 @@ namespace Api.Socioboard.Repositories
                         {
                             _FacebookPagePost.PageName = _feed["from"]["name"].ToString();
                         }
-                        catch(Exception ex)
+                        catch (Exception ex)
                         {
                             _FacebookPagePost.PageName = fbpagename;
                         }
@@ -1088,7 +1212,7 @@ namespace Api.Socioboard.Repositories
 
                         try
                         {
-                            dynamic feeddetails = FbUser.getFeedDetail(accesstoken, _FacebookPagePost.PostId);
+                            dynamic feeddetails = FbUser.GetFeedDetail(accesstoken, _FacebookPagePost.PostId);
 
                             try
                             {
@@ -1121,7 +1245,7 @@ namespace Api.Socioboard.Repositories
 
                         try
                         {
-                            dynamic postdetails = FbUser.postdetails(accesstoken, _FacebookPagePost.PostId);
+                            dynamic postdetails = FbUser.PostDetails(accesstoken, _FacebookPagePost.PostId);
                             string _clicks = string.Empty;
                             foreach (var _details in postdetails["data"])
                             {
@@ -1213,7 +1337,7 @@ namespace Api.Socioboard.Repositories
         {
             try
             {
-                dynamic data = FbUser.getPageTaggedPostDetails(accesstoken);
+                dynamic data = FbUser.GetPageTaggedPostDetails(accesstoken);
                 Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails _InboxMessages;
 
                 foreach (var item in data["data"])
@@ -1318,7 +1442,7 @@ namespace Api.Socioboard.Repositories
         {
             try
             {
-                dynamic data = FbUser.getPromotablePostsDetails(accesstoken);
+                dynamic data = FbUser.GetPromotablePostsDetails(accesstoken);
                 Domain.Socioboard.Models.Mongo.FacebookPagePromotionDetails _InboxMessages;
 
                 foreach (var item in data["data"])
@@ -1687,9 +1811,9 @@ namespace Api.Socioboard.Repositories
         {
             var lstfacebookfeed = new List<Domain.Socioboard.Models.Mongo.facebookfeed>();
             var mongorepo = new MongoRepository("MongoFacebookFeed", settings);
-            var builder = Builders<MongoFacebookFeed>.Sort;         
+            var builder = Builders<MongoFacebookFeed>.Sort;
             var sort = builder.Descending(t => t.FeedDate);
-            var result =mongorepo.FindWithRange(t => t.ProfileId.Equals(profileId), sort, skip, 20);
+            var result = mongorepo.FindWithRange(t => t.ProfileId.Equals(profileId), sort, skip, 20);
             var task = Task.Run(async () => await result);
 
             IList<MongoFacebookFeed> lstFbFeeds;
@@ -1703,7 +1827,7 @@ namespace Api.Socioboard.Repositories
             }
 
 
-         //   lstFbFeeds = lstFbFeeds.OrderByDescending(t => t.EntryDate).ToList();
+            //   lstFbFeeds = lstFbFeeds.OrderByDescending(t => t.EntryDate).ToList();
             // foreach (var item in lstFbFeeds)//sortt.ToList())
             foreach (var item in lstFbFeeds)
             {
@@ -1725,7 +1849,7 @@ namespace Api.Socioboard.Repositories
                 //}
 
                 _intafeed._facebookFeed = item;
-               // _intafeed._facebookComment = lstFbPostComment.ToList();
+                // _intafeed._facebookComment = lstFbPostComment.ToList();
                 lstfacebookfeed.Add(_intafeed);
             }
             return lstfacebookfeed;
@@ -1781,24 +1905,24 @@ namespace Api.Socioboard.Repositories
                 lstFbFeeds = lstFbFeeds.OrderByDescending(t => Convert.ToInt64(t.Commentcount)).ToList();
                 foreach (var item in lstFbFeeds.ToList())
                 {
-                   Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
-                //    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
-                //    var buildecommentr = Builders<Domain.Socioboard.Models.Mongo.MongoFbPostComment>.Sort;
-                //    var sortcomment = buildecommentr.Descending(t => t.Likes);
-                //    var resultcomment = mongorepocomment.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId && (!t.CommentId.Contains("{")), sortcomment, 0, 50);
-                //    var taskcomment = Task.Run(async () =>
-                //    {
-                //        return await resultcomment;
-                //    });
-                //    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
-                //    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
-                //    item.Commentcount = lstFbPostComment.Count.ToString();
-                //    foreach (var commentItems in lstFbPostComment)
-                //    {
-                //        commentItems.Commentdate = Convert.ToDateTime(commentItems.Commentdate).AddMinutes(330).ToString();
-                //    }
-                   _intafeed._facebookFeed = item;
-                //    _intafeed._facebookComment = lstFbPostComment.ToList();
+                    Domain.Socioboard.Models.Mongo.facebookfeed _intafeed = new Domain.Socioboard.Models.Mongo.facebookfeed();
+                    //    MongoRepository mongorepocomment = new MongoRepository("MongoFbPostComment", settings);
+                    //    var buildecommentr = Builders<Domain.Socioboard.Models.Mongo.MongoFbPostComment>.Sort;
+                    //    var sortcomment = buildecommentr.Descending(t => t.Likes);
+                    //    var resultcomment = mongorepocomment.FindWithRange<Domain.Socioboard.Models.Mongo.MongoFbPostComment>(t => t.PostId == item.FeedId && (!t.CommentId.Contains("{")), sortcomment, 0, 50);
+                    //    var taskcomment = Task.Run(async () =>
+                    //    {
+                    //        return await resultcomment;
+                    //    });
+                    //    IList<Domain.Socioboard.Models.Mongo.MongoFbPostComment> lstFbPostComment = taskcomment.Result;
+                    //    lstFbPostComment = lstFbPostComment.OrderByDescending(t => t.Commentdate).ToList();
+                    //    item.Commentcount = lstFbPostComment.Count.ToString();
+                    //    foreach (var commentItems in lstFbPostComment)
+                    //    {
+                    //        commentItems.Commentdate = Convert.ToDateTime(commentItems.Commentdate).AddMinutes(330).ToString();
+                    //    }
+                    _intafeed._facebookFeed = item;
+                    //    _intafeed._facebookComment = lstFbPostComment.ToList();
                     lstfacebookfeed.Add(_intafeed);
                 }
                 return lstfacebookfeed;
@@ -1923,7 +2047,7 @@ namespace Api.Socioboard.Repositories
                 _intafeed._facebookComment = lstFbPostCommentTemp.ToList();
                 lstfacebookfeed.Add(_intafeed);
             }
-            foreach(var itemss in lstfacebookfeed)
+            foreach (var itemss in lstfacebookfeed)
             {
                 itemss._facebookFeed.Commentcount = itemss._facebookComment.Count().ToString();
             }
@@ -1957,41 +2081,32 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static string DeleteProfile(Model.DatabaseRepository dbr, string profileId, long userId, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static string DeleteProfile(DatabaseRepository dbr, string profileId, long userId, Helper.Cache redisCache, Helper.AppSettings appSettings)
         {
-            Domain.Socioboard.Models.Facebookaccounts fbAcc = dbr.Find<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive).FirstOrDefault();
-            Domain.Socioboard.Models.User user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id.Equals(userId) && t.EmailId == fbAcc.EmailId && t.EmailValidateToken == "Facebook").FirstOrDefault();
-            if (user != null)
-            {
-                dbr.Delete<Domain.Socioboard.Models.User>(user);
-                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + userId);
-            }
+            var fbAcc = dbr.FindFirstMatch<Domain.Socioboard.Models.Facebookaccounts>(t => t.FbUserId.Equals(profileId) && t.UserId == userId && t.IsActive);
 
-            if (fbAcc != null)
-            {
-
-              //  fbAcc.IsActive = false;
-              //  dbr.Update<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
-                dbr.Delete<Domain.Socioboard.Models.Facebookaccounts>(fbAcc);
-                _redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + profileId);
-
-                UpdateDeletesPagehreathon(profileId, _appSettings, userId);
-
-                UpadteDeletesGroupShareathon(profileId, _appSettings, userId);
-
-                DeleteLinkShareathon(fbAcc.FbUserName, userId,_appSettings);
-
-                DeleteFacebookPassChange(fbAcc.FbUserId, userId, _appSettings);
-
-                return "Deleted";
-            }
-            else
-            {
+            if (fbAcc == null)
                 return "Account Not Exist";
-            }
+
+            dbr.Delete(fbAcc);
+
+            redisCache.Delete(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + profileId);
+
+            CustomTaskFactory.Instance.Start(() =>
+            {
+                UpdateDeletesPagehreathon(profileId, appSettings, userId);
+
+                UpadteDeletesGroupShareathon(profileId, appSettings, userId);
+
+                DeleteLinkShareathon(fbAcc.FbUserName, userId, appSettings);
+
+                DeleteFacebookPassChange(fbAcc.FbUserId, userId, appSettings);
+            });
+
+            return "Deleted";
         }
 
-        public static string PostFacebookComment(Model.DatabaseRepository dbr, string message, string profileId, string postId,string timezoneOffset, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
+        public static string PostFacebookComment(Model.DatabaseRepository dbr, string message, string profileId, string postId, string timezoneOffset, Helper.Cache _redisCache, Helper.AppSettings settings, ILogger _logger)
         {
             Domain.Socioboard.Models.Facebookaccounts lstFbAcc = new Domain.Socioboard.Models.Facebookaccounts();
             Domain.Socioboard.Models.Facebookaccounts inMemFbAcc = _redisCache.Get<Domain.Socioboard.Models.Facebookaccounts>(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookAccount + profileId);
@@ -2052,15 +2167,14 @@ namespace Api.Socioboard.Repositories
             {
                 return iMmemFacebookGroup;
             }
-            else
-            {
-                Domain.Socioboard.Models.Facebookaccounts _facebookaccount = Repositories.FacebookRepository.getFacebookAccount(fbUserId, _redisCache, dbr);
-                List<Domain.Socioboard.Models.FacebookGroup> lstFacebookGroup = Helper.FacebookHelper.GetAllFacebookGroups(_facebookaccount.AccessToken, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey);
-                _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookGroup + fbUserId, lstFacebookGroup);
-                return lstFacebookGroup;
-            }
+
+            Domain.Socioboard.Models.Facebookaccounts _facebookaccount = Repositories.FacebookRepository.getFacebookAccount(fbUserId, _redisCache, dbr);
+            List<Domain.Socioboard.Models.FacebookGroup> lstFacebookGroup = Helper.FacebookHelper.GetAllFacebookGroups(_facebookaccount.AccessToken, _appSettings.FacebookClientId, _appSettings.FacebookRedirectUrl, _appSettings.FacebookClientSecretKey);
+            _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheFacebookGroup + fbUserId, lstFacebookGroup);
+            return lstFacebookGroup;
+
         }
-        
+
         public static string FacebookfanPageCount(long userId, long groupId, Model.DatabaseRepository dbr, Helper.Cache _redisCache)
         {
             string[] profileids = null;
@@ -2098,50 +2212,45 @@ namespace Api.Socioboard.Repositories
 
         public static void UpdatePageShareathon(Domain.Socioboard.Models.Facebookaccounts fbAcc, long userId, Helper.AppSettings settings)
         {
-            MongoRepository _ShareathonRepository = new MongoRepository("Shareathon", settings);
-            var ret = _ShareathonRepository.Find<Domain.Socioboard.Models.Mongo.PageShareathon>(t => t.Facebookaccountid == fbAcc.FbUserId && t.Userid == userId);
-            var task = Task.Run(async () =>
-            {
-                return await ret;
-            });
+            var shareathonRepository = new MongoRepository("Shareathon", settings);
+
+            var ret = shareathonRepository.Find<PageShareathon>(t => t.Facebookaccountid == fbAcc.FbUserId && t.Userid == userId);
+
+            var task = Task.Run(async () => await ret);
 
             if (task.Result == null)
                 return;
 
-            int count = task.Result.Count;
-            if (count > 0)
-            {
+            var count = task.Result.Count;
+            if (count <= 0)
+                return;
 
-                var builders = Builders<BsonDocument>.Filter;
-                FilterDefinition<BsonDocument> filter = builders.Eq("Facebookaccountid", fbAcc.FbUserId);
-                var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 1);
-                _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.PageShareathon>(update, filter);
-
-            }
+            var builders = Builders<BsonDocument>.Filter;
+            var filter = builders.Eq("Facebookaccountid", fbAcc.FbUserId);
+            var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 1);
+            shareathonRepository.Update<PageShareathon>(update, filter);
         }
 
         public static void UpdateGroupShareathon(Domain.Socioboard.Models.Facebookaccounts fbAcc, long userId, Helper.AppSettings settings)
         {
-            MongoRepository _ShareathongroupRepository = new MongoRepository("GroupShareathon", settings);
-            var ret1 = _ShareathongroupRepository.Find<Domain.Socioboard.Models.Mongo.GroupShareathon>(t => t.Facebookaccountid == fbAcc.FbUserId && t.Userid == userId);
-            var task1 = Task.Run(async () =>
-            {
-                return await ret1;
-            });
+            var shareathongroupRepository = new MongoRepository("GroupShareathon", settings);
+
+            var ret1 = shareathongroupRepository.Find<GroupShareathon>(t => t.Facebookaccountid == fbAcc.FbUserId && t.Userid == userId);
+
+            var task1 = Task.Run(async () => await ret1);
 
             if (task1.Result == null)
                 return;
 
-            int count1 = task1.Result.Count;
-            if (count1 > 0)
-            {
+            var count1 = task1.Result.Count;
 
-                var builders = Builders<BsonDocument>.Filter;
-                FilterDefinition<BsonDocument> filter = builders.Eq("Facebookaccountid", fbAcc.FbUserId);
-                var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 1);
-                _ShareathongroupRepository.Update<Domain.Socioboard.Models.Mongo.GroupShareathon>(update, filter);
+            if (count1 <= 0)
+                return;
 
-            }
+            var builders = Builders<BsonDocument>.Filter;
+            var filter = builders.Eq("Facebookaccountid", fbAcc.FbUserId);
+            var update = Builders<BsonDocument>.Update.Set("FacebookStatus", 1);
+            shareathongroupRepository.Update<GroupShareathon>(update, filter);
         }
 
         public static void UpdatePageshareathonPage(Domain.Socioboard.Models.Facebookaccounts fbAcc, long userId, Helper.AppSettings settings)
@@ -2233,7 +2342,7 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static string DeleteLinkShareathon(string Facebookpageid,long userId ,Helper.AppSettings _appSettings)
+        public static string DeleteLinkShareathon(string Facebookpageid, long userId, Helper.AppSettings _appSettings)
         {
             try
             {
@@ -2279,15 +2388,15 @@ namespace Api.Socioboard.Repositories
                 //_ShareathonRepository.Delete<Domain.Socioboard.Models.Mongo.LinkShareathon>(filter);
                 var update = Builders<Domain.Socioboard.Models.Mongo.LinkShareathon>.Update.Set(t => t.IsActive, true);
                 _ShareathonRepository.Update<Domain.Socioboard.Models.Mongo.LinkShareathon>(update, t => t.strId == _linkshareathon.strId);
-               
+
             }
             catch (Exception ex)
             {
-               
+
             }
         }
 
-        public static void DeleteFacebookPassChange(string profileId,  long userId, Helper.AppSettings _appSettings)
+        public static void DeleteFacebookPassChange(string profileId, long userId, Helper.AppSettings _appSettings)
         {
             MongoRepository _facebookPassChange = new MongoRepository("FacebookPasswordChangeUserDetail", _appSettings);
             var ret = _facebookPassChange.Find<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(t => t.profileId.Equals(profileId) && t.userId == userId);
@@ -2305,7 +2414,7 @@ namespace Api.Socioboard.Repositories
                 var builders = Builders<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>.Filter;
                 FilterDefinition<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail> filter = builders.Eq("profileId", profileId);
                 _facebookPassChange.Delete<Domain.Socioboard.Models.Mongo.FacebookPasswordChangeUserDetail>(filter);
-              
+
             }
         }
 

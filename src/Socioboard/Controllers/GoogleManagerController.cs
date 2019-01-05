@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Domain.Socioboard.Enum;
 
 namespace Socioboard.Controllers
 {
@@ -22,139 +23,105 @@ namespace Socioboard.Controllers
             _logger = logger;
         }
 
-        //public override void OnActionExecuting(ActionExecutingContext filterContext)
-        //{
-        //    Domain.Socioboard.Models.User user = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.User>("User");
-        //    Domain.Socioboard.Models.SessionHistory session = HttpContext.Session.GetObjectFromJson<Domain.Socioboard.Models.SessionHistory>("revokedata");
-        //    if (session != null)
-        //    {
-        //        SortedDictionary<string, string> strdi = new SortedDictionary<string, string>();
-        //        strdi.Add("systemId", session.systemId);
-        //        string respo = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/checksociorevtoken", strdi, _appSettings.ApiDomain);
-        //        if (respo != "false")
-        //        {
-        //            if (user != null)
-        //            {
-        //                SortedDictionary<string, string> strdic = new SortedDictionary<string, string>();
-        //                strdic.Add("UserName", user.EmailId);
-        //                if (string.IsNullOrEmpty(user.Password))
-        //                {
-        //                    strdic.Add("Password", "sociallogin");
-        //                }
-        //                else
-        //                {
-        //                    strdic.Add("Password", user.Password);
-        //                }
-
-
-        //                string response = CustomHttpWebRequest.HttpWebRequest("POST", "/api/User/CheckUserLogin", strdic, _appSettings.ApiDomain);
-
-        //                if (!string.IsNullOrEmpty(response))
-        //                {
-        //                    Domain.Socioboard.Models.User _user = Newtonsoft.Json.JsonConvert.DeserializeObject<Domain.Socioboard.Models.User>(response);
-        //                    HttpContext.Session.SetObjectAsJson("User", _user);
-        //                }
-        //                else
-        //                {
-        //                    HttpContext.Session.Remove("User");
-        //                    HttpContext.Session.Remove("selectedGroupId");
-        //                    HttpContext.Session.Clear();
-        //                    HttpContext.Session.Remove("revokedata");
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-        //            HttpContext.Session.Remove("User");
-        //            HttpContext.Session.Remove("selectedGroupId");
-        //            HttpContext.Session.Clear();
-        //            HttpContext.Session.Remove("revokedata");
-        //        }
-
-        //    }
-        //    base.OnActionExecuting(filterContext);
-        //}
-
-
 
         [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
         public async Task<ActionResult> Google(string code)
         {
-            string googleLogin = HttpContext.Session.GetObjectFromJson<string>("googlepluslogin");
-            string googleSocial = HttpContext.Session.GetObjectFromJson<string>("Google");
-            string plan = HttpContext.Session.GetObjectFromJson<string>("RegisterPlan");
+            var googleLogin = HttpContext.Session.GetObjectFromJson<string>("googlepluslogin");
+            var googleSocial = HttpContext.Session.GetObjectFromJson<string>("Google");
+            var plan = HttpContext.Session.GetObjectFromJson<string>("RegisterPlan");
 
-            if (googleSocial == "Youtube_Account")
-            {
+            if (googleSocial == "Youtube_Account" || googleSocial == "Ganalytics_Account")
                 googleLogin = null;
-            }
 
+       
             if (googleLogin != null && googleLogin.Equals("Google_Login"))
             {
-                Domain.Socioboard.Models.User user = null;
-                List<KeyValuePair<string, string>> Parameters = new List<KeyValuePair<string, string>>();
-                Parameters.Add(new KeyValuePair<string, string>("code", code));
-                Parameters.Add(new KeyValuePair<string, string>("accType", plan));
-                HttpResponseMessage response = await WebApiReq.PostReq("/api/Google/GoogleLogin", Parameters, "", "", _appSettings.ApiDomain);
-                if (response.IsSuccessStatusCode)
+                try
                 {
+                    var parameters = new List<KeyValuePair<string, string>>
+                    {
+                        new KeyValuePair<string, string>("code", code),
+                        new KeyValuePair<string, string>("accType", plan)
+                    };
+
+                    var response = await WebApiReq.PostReq("/api/Google/GoogleLogin", parameters, "", "", _appSettings.ApiDomain);
+
+                    if (!response.IsSuccessStatusCode)
+                        return RedirectToAction("Index", "Home");
+
                     try
                     {
-                        user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
-                        HttpContext.Session.SetObjectAsJson("User", user);
-                        HttpContext.Session.SetObjectAsJson("googlepluslogin", null);
-                        if (user.ExpiryDate < DateTime.UtcNow && user.AccountType == Domain.Socioboard.Enum.SBAccountType.Free)
+                        var user = await response.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+
+                        // If expired, make user to use free plan
+                        if (user.ExpiryDate < DateTime.UtcNow)
                         {
+                            HttpContext.Session.Remove("User");
+
+                            var param = new List<KeyValuePair<string, string>>
+                            {
+                                new KeyValuePair<string, string>("Id", user.Id.ToString())
+                            };
+
+                            var trialStatus = await WebApiReq.PostReq("/api/User/UpdateTrialStatus", param, "", "", _appSettings.ApiDomain);
+
+                            if (!trialStatus.IsSuccessStatusCode)
+                                return RedirectToAction("Index", "Payment");
+
+                            var userDetails = await trialStatus.Content.ReadAsAsync<Domain.Socioboard.Models.User>();
+                            HttpContext.Session.SetObjectAsJson("User", userDetails);
                             return RedirectToAction("Index", "Home");
                         }
-                        else if ((user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.notadded || user.PayPalAccountStatus == Domain.Socioboard.Enum.PayPalAccountStatus.inprogress) && (user.AccountType != Domain.Socioboard.Enum.SBAccountType.Free))
-                        {
-                            if (user.PaymentType == Domain.Socioboard.Enum.PaymentType.paypal)
-                            {
-                                return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId, IsLogin = true });
-                            }
-                            else
-                            {
-                                return RedirectToAction("paymentWithPayUMoney", "Index");
-                            }
-                            // return RedirectToAction("PayPalAccount", "Home", new { emailId = user.EmailId, IsLogin = true });
-                        }
+
+                        HttpContext.Session.SetObjectAsJson("User", user);
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         try
                         {
+                            HttpContext.Session.Remove("User");
                             TempData["Error"] = await response.Content.ReadAsStringAsync();
                             return RedirectToAction("Index", "Index");
                         }
-                        catch (Exception exe) { }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex.StackTrace);
+                        }
                     }
+                    return RedirectToAction("Index", "Home");
 
                 }
-                return RedirectToAction("Index", "Home");
-
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.StackTrace);
+                    HttpContext.Session.Remove("User");
+                    return RedirectToAction("Index", "Index");
+                }             
             }
-            else if (googleSocial.Equals("Gplus_Account"))
+
+
+            if (googleSocial.Equals("Gplus_Account"))
             {
                 HttpContext.Session.SetObjectAsJson("Google", null);
                 return RedirectToAction("AddGoogleAcc", "GoogleManager", new { code = code });
             }
-            else if (googleSocial.Equals("Ganalytics_Account"))
+            if (googleSocial.Equals("Ganalytics_Account"))
             {
                 HttpContext.Session.SetObjectAsJson("Google", null);
                 return RedirectToAction("AddGanalyticsAcc", "GoogleManager", new { code = code });
             }
-            else if (googleSocial.Equals("ReconGplusAccount"))
+            if (googleSocial.Equals("ReconGplusAccount"))
             {
                 HttpContext.Session.SetObjectAsJson("Google", null);
                 return RedirectToAction("ReconnectGplusAcc", "GoogleManager", new { code = code });
             }
-            else if (googleSocial.Equals("ReconnectYTAcc"))
+            if (googleSocial.Equals("ReconnectYTAcc"))
             {
                 HttpContext.Session.SetObjectAsJson("Google", null);
                 return RedirectToAction("ReconnectYTAcc", "GoogleManager", new { code = code });
             }
-            else if (googleSocial.Equals("Youtube_Account"))
+            if (googleSocial.Equals("Youtube_Account"))
             {
                 HttpContext.Session.SetObjectAsJson("Google", null);
                 return RedirectToAction("AddYoutubeAcc", "GoogleManager", new { code = code });
@@ -170,7 +137,7 @@ namespace Socioboard.Controllers
             {
                 HttpContext.Session.SetObjectAsJson("RegisterPlan", plan);
             }
-            string googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write&response_type=code&access_type=offline";
+            var googleurl = "https://accounts.google.com/o/oauth2/auth?client_id=" + _appSettings.GoogleConsumerKey + "&redirect_uri=" + _appSettings.GoogleRedirectUri + "&scope=https://www.googleapis.com/auth/youtube+https://www.googleapis.com/auth/youtube.readonly+https://www.googleapis.com/auth/youtubepartner+https://www.googleapis.com/auth/youtubepartner-channel-audit+https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile+https://www.googleapis.com/auth/plus.me+https://www.googleapis.com/auth/plus.media.upload+https://www.googleapis.com/auth/plus.stream.write&response_type=code&access_type=offline";
             return Content(googleurl);
         }
 

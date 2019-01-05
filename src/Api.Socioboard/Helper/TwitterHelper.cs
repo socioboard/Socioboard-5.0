@@ -21,6 +21,8 @@ using Socioboard.Twitter.Twitter.Core.TimeLineMethods;
 using Socioboard.Twitter.Twitter.Core.DirectMessageMethods;
 using Socioboard.Twitter.Twitter.Core;
 using Socioboard.Twitter.TwitterUtilites;
+using System.Threading;
+using Domain.Socioboard.Models.Mongo;
 
 namespace Api.Socioboard.Helper
 {
@@ -106,6 +108,16 @@ namespace Api.Socioboard.Helper
             return str;
         }
 
+
+        /// <summary>
+        ///it will work for video length less than 30 sec and size less than 15 mb
+        /// </summary>
+        /// <param name="binary"></param>
+        /// <param name="tweetmessage"></param>
+        /// <param name="accesstoken"></param>
+        /// <param name="tokensecret"></param>
+        /// <param name="_appsetting"></param>
+        /// <returns></returns>
         public static bool videoUploading(byte[] binary, string tweetmessage, string accesstoken, string tokensecret, Helper.AppSettings _appsetting)
         {
             try
@@ -123,10 +135,13 @@ namespace Api.Socioboard.Helper
                         if (uploader.Append(second, "media"))
                         {
                             var media = uploader.Complete();
+                            //var timeToWait = media.UploadedMediaInfo.ProcessingInfo.CheckAfterInMilliseconds;
+                            Thread.Sleep(1000);
                             var tweet = Tweetinvi.Tweet.PublishTweet(tweetmessage, new Tweetinvi.Parameters.PublishTweetOptionalParameters
                             {
                                 Medias = { media }
                             });
+                            //var tweet2 = Tweetinvi.Tweet.PublishTweetWithVideo(tweetmessage, binary);this is also working
                         }
                     }
                 }
@@ -326,8 +341,8 @@ namespace Api.Socioboard.Helper
             return lstTwitterRecentFollower;
         }
 
-        public static void PostTwitterDirectmessage(string toId, string message, string profileId, long UserId, Model.DatabaseRepository dbr, 
-            Helper.AppSettings _appSettings, Helper.Cache _redisCache,string recipientScreenName, string recipientImageUrl, string senderScreenName, string senderImageUrl)
+        public static void PostTwitterDirectmessage(string toId, string message, string profileId, long UserId, Model.DatabaseRepository dbr,
+            Helper.AppSettings _appSettings, Helper.Cache _redisCache, string recipientScreenName, string recipientImageUrl, string senderScreenName, string senderImageUrl)
         {
             Domain.Socioboard.Models.Mongo.MongoDirectMessages objDirectMessages = new Domain.Socioboard.Models.Mongo.MongoDirectMessages();
             // Domain.Socioboard.Models.TwitterAccount objTwitterAccount = Repositories.TwitterRepository.getTwitterAccount(profileId, _redisCache,dbr);
@@ -365,7 +380,7 @@ namespace Api.Socioboard.Helper
                             objDirectMessages.profileId = objTwitterAccount.twitterUserId;
 
                             var timestamp = jobject.SelectToken("event.created_timestamp")?.ToString() ?? string.Empty;
-                            objDirectMessages.timeStamp = Math.Floor(double.Parse(timestamp) / 1000); 
+                            objDirectMessages.timeStamp = Math.Floor(double.Parse(timestamp) / 1000);
 
                             try
                             {
@@ -373,7 +388,7 @@ namespace Api.Socioboard.Helper
                                     Domain.Socioboard.Helpers.SBHelper
                                         .ConvertUnixTimeStamp(timestamp);
 
-                                objDirectMessages.createdDate = dateTime.ToString("yyyy/MM/dd HH:mm:ss"); 
+                                objDirectMessages.createdDate = dateTime.ToString("yyyy/MM/dd HH:mm:ss");
                             }
                             catch (Exception ex)
                             {
@@ -416,7 +431,7 @@ namespace Api.Socioboard.Helper
                         }
                     }
                 });
-                task.Start();              
+                task.Start();
             }
             catch (Exception ex)
             {
@@ -1030,7 +1045,7 @@ namespace Api.Socioboard.Helper
                 return null;
             }
         }
-        public static List<Domain.Socioboard.Models.TwitterMentionSugg> TwitterConversation(string profileId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
+        public static async Task<List<Domain.Socioboard.Models.TwitterMentionSugg>> TwitterConversation(string profileId, Model.DatabaseRepository dbr, ILogger _logger, Helper.Cache _redisCache, Helper.AppSettings _appSettings)
         {
             List<Domain.Socioboard.Models.TwitterMentionSugg> lstConveUsers = new List<TwitterMentionSugg>();
             Domain.Socioboard.Models.TwitterAccount twtacc = new Domain.Socioboard.Models.TwitterAccount();
@@ -1047,49 +1062,67 @@ namespace Api.Socioboard.Helper
             {
                 twtacc = imtwtacc;
             }
-            oAuthTwitter oAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
-            oAuth.AccessToken = twtacc.oAuthToken;
-            oAuth.AccessTokenSecret = twtacc.oAuthSecret;
-            oAuth.TwitterScreenName = twtacc.twitterScreenName;
-            oAuth.TwitterUserId = twtacc.twitterUserId;
-            DirectMessage timeline_obj = new DirectMessage();
-            List<string> tempScreenNames = new List<string>();
             try
             {
-                JArray jMentionResp = timeline_obj.Get_Direct_Messages(oAuth, 100);
-                if (jMentionResp == null)
+                MongoRepository mongorepo = new MongoRepository("MongoDirectMessages", _appSettings);
+                IList<MongoDirectMessages> ListOfDirectMessage = await mongorepo.Find<MongoDirectMessages>(x => x.senderScreenName != twtacc.twitterScreenName);
+                foreach (MongoDirectMessages sender in ListOfDirectMessage)
                 {
-                    return null;
-                }
-                else
-                {
-                    foreach (var items in jMentionResp)
+                    var twittermention = new TwitterMentionSugg
                     {
-                        Domain.Socioboard.Models.TwitterMentionSugg _objLstData = new Domain.Socioboard.Models.TwitterMentionSugg();
-
-                        _objLstData.postId = items["id_str"].ToString();
-                        _objLstData.textMsg = items["sender"]["description"].ToString();
-                        _objLstData.fromName = items["sender"]["name"].ToString();
-                        _objLstData.fromScreenName = items["sender"]["screen_name"].ToString();
-                        _objLstData.fromLocation = items["sender"]["location"].ToString();
-                        if (_objLstData.fromLocation == "")
-                        {
-                            _objLstData.fromLocation = "NA";
-                        }
-                        _objLstData.fromFollowers = items["sender"]["followers_count"].ToString();
-                        _objLstData.fromFollowing = items["sender"]["friends_count"].ToString();
-                        _objLstData.fromProfilePic = items["sender"]["profile_image_url_https"].ToString();
-                        _objLstData.fromProfileLinkUrl = "https://twitter.com/" + _objLstData.fromScreenName;
-                        _objLstData.postLinkUrl = "https://twitter.com/SB/status/" + _objLstData.postId;
-                        if (!tempScreenNames.Contains(_objLstData.fromScreenName))
-                        {
-                            lstConveUsers.Add(_objLstData);
-                        }
-                        tempScreenNames.Add(_objLstData.fromScreenName);
-                    }
+                        postId = sender.messageId,
+                        fromName = sender.senderScreenName,
+                        fromFollowers = sender.FollowerCount ?? "0",
+                        fromFollowing = sender.FollowingCount ?? "0",
+                        fromProfilePic = sender.senderProfileUrl,
+                        fromProfileLinkUrl = "https://twitter.com/" + sender.senderScreenName
+                    };
+                    lstConveUsers.Add(twittermention);
                 }
-                lstConveUsers.RemoveAll(t => t.fromScreenName == twtacc.twitterScreenName);
-                return lstConveUsers.ToList();
+                lstConveUsers = lstConveUsers.GroupBy(x => x.fromName).Select(x => x.First()).ToList();
+                //oAuthTwitter oAuth = new oAuthTwitter(_appSettings.twitterConsumerKey, _appSettings.twitterConsumerScreatKey, _appSettings.twitterRedirectionUrl);
+                //oAuth.AccessToken = twtacc.oAuthToken;
+                //oAuth.AccessTokenSecret = twtacc.oAuthSecret;
+                //oAuth.TwitterScreenName = twtacc.twitterScreenName;
+                //oAuth.TwitterUserId = twtacc.twitterUserId;
+                //DirectMessage timeline_obj = new DirectMessage();
+                //List<string> tempScreenNames = new List<string>();
+                //try
+                //{
+                //    JArray jMentionResp = timeline_obj.Get_Direct_Messages(oAuth, 100);
+                //    if (jMentionResp == null)
+                //    {
+                //        return null;
+                //    }
+                //    else
+                //    {
+                //        foreach (var items in jMentionResp)
+                //        {
+                //            Domain.Socioboard.Models.TwitterMentionSugg _objLstData = new Domain.Socioboard.Models.TwitterMentionSugg();
+
+                //            _objLstData.postId = items["id_str"].ToString();
+                //            _objLstData.textMsg = items["sender"]["description"].ToString();
+                //            _objLstData.fromName = items["sender"]["name"].ToString();
+                //            _objLstData.fromScreenName = items["sender"]["screen_name"].ToString();
+                //            _objLstData.fromLocation = items["sender"]["location"].ToString();
+                //            if (_objLstData.fromLocation == "")
+                //            {
+                //                _objLstData.fromLocation = "NA";
+                //            }
+                //            _objLstData.fromFollowers = items["sender"]["followers_count"].ToString();
+                //            _objLstData.fromFollowing = items["sender"]["friends_count"].ToString();
+                //            _objLstData.fromProfilePic = items["sender"]["profile_image_url_https"].ToString();
+                //            _objLstData.fromProfileLinkUrl = "https://twitter.com/" + _objLstData.fromScreenName;
+                //            _objLstData.postLinkUrl = "https://twitter.com/SB/status/" + _objLstData.postId;
+                //            if (!tempScreenNames.Contains(_objLstData.fromScreenName))
+                //            {
+                //                lstConveUsers.Add(_objLstData);
+                //            }
+                //            tempScreenNames.Add(_objLstData.fromScreenName);
+                //        }
+                //  }
+                //lstConveUsers.RemoveAll(t => t.fromScreenName == twtacc.twitterScreenName);
+                return lstConveUsers;
             }
             catch (Exception ex)
             {

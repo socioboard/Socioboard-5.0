@@ -20,6 +20,9 @@ namespace Api.Socioboard.Helper
         public string SendgridUserName { get; set; }
         public string SendGridPassword { get; set; }
 
+        public string SendGridApiKey { get; set; }
+
+
         public string frommail { get; set; }
 
         public string ccmail { get; set; }
@@ -57,6 +60,9 @@ namespace Api.Socioboard.Helper
         public string GoogleConsumerSecret { get; set; }
         public string GoogleApiKey { get; set; }
         public string GoogleRedirectUri { get; set; }
+
+        public string GoogleApiKeyForRssFeed { get; set; }
+
         //End Google App Creds
 
 

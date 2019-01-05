@@ -84,21 +84,29 @@ namespace Api.Socioboard.Repositories
 
         public static List<Domain.Socioboard.Models.Groupmembers> getGroupadmin(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)
         {
-           List<Domain.Socioboard.Models.Groupmembers> adminDetails = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.groupid == groupId && t.isAdmin).ToList();
-           long userID = adminDetails.First().userId;
-           List<Domain.Socioboard.Models.User> user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id == userID).ToList();
-           string Email = null;
             try
             {
-                Email = user.First().EmailId;
-            }
-            catch (Exception ex)
-            {
+                List<Domain.Socioboard.Models.Groupmembers> adminDetails = dbr.Find<Domain.Socioboard.Models.Groupmembers>(t => t.groupid == groupId && t.isAdmin).ToList();
+                long userID = adminDetails.First().userId;
+                List<Domain.Socioboard.Models.User> user = dbr.Find<Domain.Socioboard.Models.User>(t => t.Id == userID).ToList();
+                string Email = null;
+                try
+                {
+                    Email = user.First().EmailId;
+                }
+                catch (Exception ex)
+                {
 
+                }
+
+                adminDetails.First().email = Email;
+                return adminDetails;
             }
-            
-           adminDetails.First().email = Email;
-           return adminDetails;
+            catch (Exception e)
+            {
+                return new List<Domain.Socioboard.Models.Groupmembers>();
+            }
+          
         }
 
         public static List<Domain.Socioboard.Models.Groupmembers> adminDelete(long groupId, Helper.Cache _redisCache, Model.DatabaseRepository dbr)

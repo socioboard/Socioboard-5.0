@@ -10,9 +10,10 @@ namespace SocioboardDataScheduler.Helper
         public const string Domain = "http://localhost:9821";
         public const string ApiDomain = "http://localhost:6361";
 
-        public const string RedisConfiguration = "";
-        public const string NhibernateFilePath = "";
- 
+        public const string RedisConfiguration = "127.0.0.1:6379";
+        public const string NhibernateFilePath = @"D:\SBPROJECT\Developer\src\SocioboardDataScheduler";
+       
+
         public const string MongoDbConnectionString = "";
         public const string MongoDbName = "";
 
@@ -20,14 +21,14 @@ namespace SocioboardDataScheduler.Helper
         //Start facebook App Creds
         public const string FacebookClientId = "";
         public const string FacebookClientSecretKey = "";
-        public const string FacebookRedirectUrl = "http://serv1.socioboard.com/FacebookManager/Facebook";
+        public const string FacebookRedirectUrl = "http://localhost:port/FacebookManager/Facebook";
         //End facebook App Creds
 
 
         //Elsatic mail and Send grid Credentials
 
         public const string elasticMailApiKey = "";
-        public const string from_mail = "";
+        public const string from_mail = "support@socioboard.com";
         public const string sendGridUserName = "";
         public const string sendGridPassword = "";
 
@@ -37,7 +38,7 @@ namespace SocioboardDataScheduler.Helper
         //Twitter App Creds Start
         public const string twitterConsumerKey = "";
         public const string twitterConsumerScreatKey = "";
-        public const string twitterRedirectionUrl = "https://www.socioboard.com/TwitterManager/Twitter";
+        public const string twitterRedirectionUrl = "https://localhost:port/TwitterManager/Twitter";
         //End Twitter App Creds 
 
         //Mongo DB Connection string Start

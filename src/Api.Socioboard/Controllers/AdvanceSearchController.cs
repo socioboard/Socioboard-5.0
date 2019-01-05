@@ -1,106 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.Hosting;
+using Api.Socioboard.Helper;
 using Api.Socioboard.Model;
-using MongoDB.Driver;
-using Microsoft.AspNetCore.Cors;
+using Api.Socioboard.Repositories;
+using Domain.Socioboard.Enum;
 using Domain.Socioboard.Models.Mongo;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
+using MongoDB.Driver;
 
 // For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Api.Socioboard.Controllers
 {
+    /// <summary>
+    /// Advance 
+    /// </summary>
     [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     public class AdvanceSearchController : Controller
     {
-        public AdvanceSearchController(ILogger<AdvanceSearchController> logger, Microsoft.Extensions.Options.IOptions<Helper.AppSettings> settings, IHostingEnvironment env)
+        private readonly AppSettings _appSettings;
+        private readonly Cache _redisCache;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="settings"></param>
+        public AdvanceSearchController(IOptions<AppSettings> settings)
         {
-            _logger = logger;
             _appSettings = settings.Value;
-            _redisCache = new Helper.Cache(_appSettings.RedisConfiguration);
-            _env = env;
+            _redisCache = Cache.GetCacheInstance(_appSettings.RedisConfiguration);
+            
         }
-        private readonly ILogger _logger;
-        private Helper.AppSettings _appSettings;
-        private Helper.Cache _redisCache;
-        private readonly IHostingEnvironment _env;
 
-
-
-        //[HttpGet("GetYTAdvanceSearchData")]
-        //public IActionResult GetYTAdvanceSearchData(Domain.Socioboard.Enum.NetworkType network, int skip, int count)
-        //{
-        //    DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-        //    MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);          
-        //    if (skip + count < 100)
-        //    {
-        //        return Ok(Repositories.ContentStudioRepository.YuTubeAdvanceSerachData(network, _redisCache, _appSettings).Skip(skip).Take(count));
-        //    }
-        //    else
-        //    {               
-        //        var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSerachData>.Sort;
-        //        var sort = builder.Descending(t => t.totalShareCount);
-        //        var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.networkType.Equals(network), sort, skip, count);
-        //        var task = Task.Run(async () =>
-        //        {
-        //            return await result;
-        //        });
-        //        IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitterFeeds = task.Result;
-        //        return Ok(lstTwitterFeeds);
-        //    }
-        //}
-
-
-        //[HttpGet("GetSortByData")]
-        //public IActionResult GetSortByData(string sortType, int skip, int count)
-        //{
-        //    DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-        //    MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
-        //    if (skip + count < 200)
-        //    {
-        //        return Ok(Repositories.ContentStudioRepository.GetSortBy(sortType, _redisCache, _appSettings).Skip(skip).Take(count));
-        //    }
-        //    else
-        //    {
-        //        var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSerachData>.Sort;
-        //        var sort = builder.Descending(t => t.totalShareCount);
-        //        var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.twtShareCount != 0, sort, skip, count);
-        //        var task = Task.Run(async () =>
-        //        {
-        //            return await result;
-        //        });
-        //        IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitterFeeds = task.Result;
-        //        return Ok(lstTwitterFeeds);
-        //    }
-        //}
-
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="networkType"></param>
+        /// <param name="skip"></param>
+        /// <param name="count"></param>
+        /// <returns></returns>
         [HttpGet("QuickTopics")]
-        public IActionResult QuickTopics(Domain.Socioboard.Enum.NetworkType networkType, int skip, int count)
+        public IActionResult QuickTopics(NetworkType networkType, int skip, int count)
         {
-            DatabaseRepository dbr = new DatabaseRepository(_logger, _env);
-            MongoRepository mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
-            if (skip + count < 100)
-            {
-                return Ok(Repositories.ContentStudioRepository.QuickTopicRepository(networkType, _redisCache, _appSettings).Skip(skip).Take(count));
-            }
-            else
-            {
-                var builder = Builders<Domain.Socioboard.Models.Mongo.AdvanceSerachData>.Sort;
-                var sort = builder.Descending(t => t.totalShareCount);
-                var result = mongorepo.FindWithRange<Domain.Socioboard.Models.Mongo.AdvanceSerachData>(t => t.twtShareCount != 0, sort, skip, count);
-                var task = Task.Run(async () =>
-                {
-                    return await result;
-                });
-                IList<Domain.Socioboard.Models.Mongo.AdvanceSerachData> lstTwitterFeeds = task.Result;
-                return Ok(lstTwitterFeeds);
-            }
+            var mongorepo = new MongoRepository("AdvanceSerachData", _appSettings);
+
+            if(skip + count < 100)
+                return Ok(ContentStudioRepository.QuickTopicRepository(networkType, _redisCache, _appSettings) .Skip(skip).Take(count));
+            
+            var builder = Builders<AdvanceSerachData>.Sort;
+            var sort = builder.Descending(t => t.totalShareCount);
+            var result = mongorepo.FindWithRange(t => t.twtShareCount != 0, sort, skip, count);
+            var task = Task.Run(async () => await result);
+            var lstTwitterFeeds = task.Result;
+            return Ok(lstTwitterFeeds);
         }
     }
 }

@@ -8,13 +8,15 @@ using System.Net.Mail;
 using System.Net;
 using System.Text;
 using System.Net.Mime;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace Domain.Socioboard.Services
 {
     public class AuthMessageSender : IEmailSender, ISmsSender
     {
 
-        public string SendMail(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "", string Password = "")
+        public string SendMail(string from, string passsword, string to, string bcc, string cc, string subject, string body, string UserName = "mailer12@socioboardmails.com", string Password = "RDmgjwos165s")
         {
             string response = "";
             try
@@ -25,7 +27,7 @@ namespace Domain.Socioboard.Services
                     mail.To.Add(to);
                     if (!string.IsNullOrEmpty(cc))
                     {
-                        mail.CC.Add(cc); 
+                        mail.CC.Add(cc);
                     }
                     mail.From = new MailAddress(UserName);
                     mail.Subject = subject;
@@ -49,8 +51,7 @@ namespace Domain.Socioboard.Services
             return response;
         }
 
-
-        public string SendMailSendGrid(string from, string password, string to, string bcc, string cc, string subject, string body, string smtpClientUserName = "", string smtpClientPassword = "")
+        public string SendMailSendGrid(string from, string password, string to, string bcc, string cc, string subject, string body, string smtpClientUserName = "SocioleadPro", string smtpClientPassword = "radium1234!@#$")
         {
             try
             {
@@ -63,7 +64,7 @@ namespace Domain.Socioboard.Services
 
                     if (!string.IsNullOrEmpty(cc))
                     {
-                        mailMsg.CC.Add(new MailAddress(cc)); 
+                        mailMsg.CC.Add(new MailAddress(cc));
                     }
 
                     // From
@@ -93,7 +94,32 @@ namespace Domain.Socioboard.Services
                 Console.WriteLine(ex.Message);
                 return "Mail Not Send";
             }
+
         }
+
+        public async Task SendMailBySendGridApi(string from, string to, string bcc, string cc, string subject, string body, string apiKey)
+        {
+            try
+            {              
+                var client = new SendGridClient(apiKey);
+
+                // Send a Single Email using the Mail Helper
+                var fromMail = new EmailAddress(from);
+
+                var toMail = new EmailAddress(to);
+                      
+                var msg = MailHelper.CreateSingleEmail(fromMail, toMail, subject, "", body);
+
+                var response = await client.SendEmailAsync(msg);
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
 
         public static string ApiSendGridHttp(string url, string postData)
         {

@@ -20,17 +20,21 @@ namespace SociobordRssDataServices.Rss
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     MongoRepository _MongoRepository = new MongoRepository("Rss");
-                    List<Domain.Socioboard.Models.RssFeedUrl> lstRssdata = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t=>t.ProfileId!=null && t.Keywords==null).ToList();
-                    
+
+                    var lstRssdata = dbr.Find<RssFeedUrl>(t => t.ProfileId != null && t.Keywords == null).ToList();
+
                     foreach (var item in lstRssdata)
                     {
-                       // List<Domain.Socioboard.Models.RssFeedUrl> lstRssFeedUrl = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl == lstRssdata.FirstOrDefault().rssurl && t.Keywords == null && t.ProfileId == lstRssdata.FirstOrDefault().ProfileId).ToList();
-                        var ret = _MongoRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.RssFeedUrl == item.rssurl && t.ProfileId==item.ProfileId);
+
+                        var ret = _MongoRepository.Find<Domain.Socioboard.Models.Mongo.Rss>(t => t.RssFeedUrl == item.rssurl && t.ProfileId == item.ProfileId);
+
                         var task = Task.Run(async () =>
                         {
                             return await ret;
                         });
-                        List<Domain.Socioboard.Models.Mongo.Rss> lstRss = task.Result.ToList();
+
+                        var lstRss = task.Result.ToList();
+
                         foreach (var item_Rss in lstRss)
                         {
                             if (item.LastUpdate.AddHours(6) <= DateTime.UtcNow)
@@ -43,7 +47,7 @@ namespace SociobordRssDataServices.Rss
 
                                 Console.WriteLine(item.rssurl + "rssdata");
                                 item.LastUpdate = DateTime.UtcNow;
-                                dbr.Update<Domain.Socioboard.Models.RssFeedUrl>(item);
+                                dbr.Update(item);
                             }
 
                         }
@@ -113,7 +117,7 @@ namespace SociobordRssDataServices.Rss
                 {
                     DatabaseRepository dbr = new DatabaseRepository();
                     MongoRepository _MongoRepository = new MongoRepository("Rss");
-                  
+
                     List<Domain.Socioboard.Models.RssFeedUrl> lstRssdata = dbr.Find<Domain.Socioboard.Models.RssFeedUrl>(t => t.ProfileId != null && t.Keywords == null).ToList();
                     //lstRssdata = lstRssdata.Where(t => t.ProfileId.Contains("758233674978426880")).ToList();
                     foreach (var item in lstRssdata)
@@ -153,9 +157,9 @@ namespace SociobordRssDataServices.Rss
                                 Console.WriteLine(item_Rss.lastupdate);
                                 Console.WriteLine(item_Rss.ProfileId);
                             }
+                        }
                     }
-                }
-                Thread.Sleep(60000);
+                    Thread.Sleep(60000);
                 }
                 catch (Exception ex)
                 {

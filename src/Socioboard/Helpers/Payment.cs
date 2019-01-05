@@ -9,21 +9,20 @@ using System.Web;
 
 namespace Socioboard.Helpers
 {
-    public  class Payment
+    public class Payment
     {
-       
-        public static  string RecurringPaymentWithPayPal(string amount, string itemInfo, string name, string phone, string email, string currency, string paypalemail, string successUrl, string failUrl, string callBackUrl, string cancelurl, string notifyurl, string custom,string PaypalURL)
+        public static string RecurringPaymentWithPayPal(string amount, string itemInfo, string name, string phone, string email, string currency, string paypalemail, string successUrl, string failUrl, string callBackUrl, string cancelurl, string notifyurl, string custom, string PaypalURL)
         {
             string redirecturl = "";
             try
             {
-              
+
 
                 //Mention URL to redirect content to paypal site
                 //redirecturl += "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +
                 //                      paypalemail;
-                redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +
-                                     paypalemail;
+
+                redirecturl += PaypalURL + @"/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" + paypalemail;
 
                 //redirecturl += "https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_xclick-subscriptions&business=" +
                 //   paypalemail;
@@ -82,16 +81,14 @@ namespace Socioboard.Helpers
 
 
                 //Success return page url
-                redirecturl += "&return=" +
-                              callBackUrl;
+                redirecturl += "&return=" + callBackUrl;
+
                 //Failed return page url
-                redirecturl += "&cancel_return=" +
-                             cancelurl;
+                redirecturl += "&cancel_return=" + cancelurl;
+
                 redirecturl += "&notify_url=" + notifyurl;
 
                 redirecturl += "&custom=" + custom;
-
-
 
                 // redirecturl += "&a1=0.0";//"&a1=0.0"; //Trial period 1 price. For a free trial period, specify 0
                 redirecturl += "&a1=" + amount;
@@ -262,11 +259,11 @@ namespace Socioboard.Helpers
 
 
 
-              //  redirecturl += "&a1="+ amount;//"&a1=0.0"; //Trial period 1 price. For a free trial period, specify 0
+                //  redirecturl += "&a1="+ amount;//"&a1=0.0"; //Trial period 1 price. For a free trial period, specify 0
 
-               // redirecturl += "&p1=1";
+                // redirecturl += "&p1=1";
 
-               // redirecturl += "&t1=M";
+                // redirecturl += "&t1=M";
 
                 ////"<input type='hidden' name='p3' value='1'>". 
 
@@ -348,7 +345,6 @@ namespace Socioboard.Helpers
             }
             return redirecturl;
         }
-
 
         public static string AgencyPayment(string amount, string itemInfo, string name, string phone, string email, string currency, string paypalemail, string successUrl, string failUrl, string callBackUrl, string cancelurl, string notifyurl, string custom, string PaypalURL)
         {
@@ -520,6 +516,28 @@ namespace Socioboard.Helpers
             return redirecturl;
         }
 
-      
+        public static string PaypalRecurringPayment(string amount, string itemInfo, string name, string phone, string email, string currency, string paypalemail, string successUrl, string failUrl, string callBackUrl, string cancelurl, string notifyurl, string custom, string PaypalURL,long userId)
+        {
+            #region Recurring Payment
+
+            var baseUrl = $"{PaypalURL}/cgi-bin/webscr?";
+
+            var itemName = $"Socioboard_{itemInfo}";
+
+            // Paypal Settings
+            const string p3 = "1";
+            const string t3 = "M";
+            const string src = "1";
+            const string sra = "1";
+            custom = $"{email}_Socioboard_Id_{userId}";
+
+            var paypalRecurringUrl = $"{baseUrl}cmd=_xclick-subscriptions&business={paypalemail}&item_name={itemName}&currency_code={currency}&a3={amount}&p3={p3}&t3={t3}&src={src}&sra={sra}&no_note=1&custom={custom}&return={callBackUrl}&cancel_return={cancelurl}&notify_url={notifyurl}";
+
+            return paypalRecurringUrl;
+            #endregion
+        }
+
+
+
     }
 }

@@ -19,58 +19,58 @@ namespace Api.Socioboard.Repositories
     {
         public static string AddRssContentsUrl(string keywords, string userId, Helper.AppSettings _appSettings, Model.DatabaseRepository dbr)
         {
-            
-            MongoRepository _rssNewsContents = new MongoRepository("RssNewsContents", _appSettings);
-            //Domain.Socioboard.Models.RssFeedUrl _RssFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(url));
-            List<string> list = new List<string>();
+
+            var _rssNewsContents = new MongoRepository("RssNewsContents", _appSettings);
+
+            var list = new List<string>();
             list = findUrl(keywords).ToList();
 
-            Domain.Socioboard.Models.Mongo.RssNewsContents _rssnews = new Domain.Socioboard.Models.Mongo.RssNewsContents();
+            var _rssnews = new RssNewsContents();
 
             Domain.Socioboard.Models.RssFeedUrl _RssContentFeeds = new Domain.Socioboard.Models.RssFeedUrl();
-           
+
 
             foreach (var urlValue in list)
             {
                 if (urlValue != null)
                 {
                     string rt = ParseFeedUrl(urlValue.ToString(), keywords, userId, _appSettings);
-                    
-                    _RssContentFeeds = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(urlValue) && t.Keywords!=null);
 
-                    if (_RssContentFeeds != null)
+                    _RssContentFeeds = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(urlValue) && t.Keywords != null);
+
+                    if (_RssContentFeeds == null)
                     {
-                        //return _RssFeedUrl.ToString();
-                    }
-                    else
-                    {
-                        _RssContentFeeds = new Domain.Socioboard.Models.RssFeedUrl();
-                        _RssContentFeeds.rssurl = urlValue;
-                        _RssContentFeeds.LastUpdate = DateTime.UtcNow;
-                        _RssContentFeeds.Keywords = keywords;
+                        _RssContentFeeds = new Domain.Socioboard.Models.RssFeedUrl
+                        {
+                            rssurl = urlValue,
+                            LastUpdate = DateTime.UtcNow,
+                            Keywords = keywords
+                        };
+
                         try
                         {
-                            dbr.Add<Domain.Socioboard.Models.RssFeedUrl>(_RssContentFeeds);
+                            dbr.Add(_RssContentFeeds);
                         }
+
                         catch (Exception error)
                         {
-
+                            // ignored
                         }
-                        
-                        //_RssContentFeedUrl = dbr.FindSingle<Domain.Socioboard.Models.RssFeedUrl>(t => t.rssurl.Contains(urlValue) && t.Keywords == null);
-                        //return urlValue;
                     }
-                    var ret = _rssNewsContents.Find<Domain.Socioboard.Models.Mongo.RssNewsContents>(t => t.RssFeedUrl.Equals(urlValue) && t.ProfileId.Contains(userId));
+
+                    var ret = _rssNewsContents.Find<RssNewsContents>(t => t.RssFeedUrl.Equals(urlValue) && t.ProfileId.Contains(userId));
                     var task = Task.Run(async () =>
                     {
                         return await ret;
                     });
+
                     int count = task.Result.Count;
+
                     if (count < 1)
                     {
                         _rssnews.Id = ObjectId.GenerateNewId();
                         _rssnews.ProfileId = userId;
-                        _rssnews.RssFeedUrl = urlValue.ToString();
+                        _rssnews.RssFeedUrl = urlValue;
                         _rssnews.LastUpdate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.UtcNow);
                         _rssNewsContents.Add(_rssnews);
                     }
@@ -79,7 +79,6 @@ namespace Api.Socioboard.Repositories
                         return "Data already added";
                     }
                 }
-
             }
             return "added successfully";
         }
@@ -101,7 +100,7 @@ namespace Api.Socioboard.Repositories
             string responce_BBC = obj_reqest.getHtmlfromUrl(new Uri(BBC));
             string responce_HinduTime = obj_reqest.getHtmlfromUrl(new Uri(hinduTimes));
             //string responce_Baskar = obj_reqest.getHtmlfromUrl(new Uri(Baskar));
-           string[] url = new string[4];
+            string[] url = new string[4];
 
             //List<string> url = null;
             List<string> lstkeyword = null;
@@ -112,7 +111,7 @@ namespace Api.Socioboard.Repositories
             if (keywords != null)
             {
                 lstkeyword = keywords.Split(',').ToList();
-               // keywords = lstkeyword[0];
+                // keywords = lstkeyword[0];
             }
             else
             {
@@ -121,7 +120,7 @@ namespace Api.Socioboard.Repositories
 
             foreach (var keywordslist in lstkeyword)
             {
-                
+
                 if (responce_BBC.Contains(keywordslist))
                 {
                     try
@@ -205,13 +204,13 @@ namespace Api.Socioboard.Repositories
 
                     }
                 }
-                
+
 
                 foreach (var itemurl in url)
                 {
-                    if(list.Contains(itemurl))
+                    if (list.Contains(itemurl))
                     {
-                        
+
                     }
                     else
                     {
@@ -219,7 +218,7 @@ namespace Api.Socioboard.Repositories
                     }
                 }
 
-                
+
             }
 
             return list;
@@ -311,16 +310,16 @@ namespace Api.Socioboard.Repositories
                         else
                         {
                             objRssFeeds.Link = item.ChildNodes[2].InnerText;
-                           
+
 
                             //  objRssFeeds.Link = getBetween(objRssFeeds.Link, "<a href=\"", "\">");
                         }
-                        if(item.BaseURI.Contains("http://feeds.bbci.co.uk") || item.BaseURI.Contains("http://www.hindustantimes.com"))
+                        if (item.BaseURI.Contains("http://feeds.bbci.co.uk") || item.BaseURI.Contains("http://www.hindustantimes.com"))
                         {
                             objRssFeeds.Image = item.ChildNodes[5].OuterXml;
                             objRssFeeds.Image = getBetween(objRssFeeds.Image, "url=\"", "\"");//media:content url="
                         }
-                       
+
 
 
                         objRssFeeds.RssFeedUrl = TextUrl;
@@ -370,19 +369,31 @@ namespace Api.Socioboard.Repositories
             }
         }
 
-        public static List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> GetRssNewsFeeds(string userId, string keywords, Helper.AppSettings _appSettings)
+        public static List<RssNewsContentsFeeds> GetRssNewsFeeds(string userId, string keywords, AppSettings _appSettings)
         {
             string[] profileids = null;
-            MongoRepository _RssRepository = new MongoRepository("RssNewsContentsFeeds", _appSettings);
-            List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = new List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>();
-            //List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId == userId).ToList();
-            //profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
-            var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>(t=>t.keywords==keywords && t.UserId == userId.ToString());//UserId
+            var _RssRepository = new MongoRepository("RssNewsContentsFeeds", _appSettings);
+
+            var ret = _RssRepository.Find<RssNewsContentsFeeds>(t => t.keywords == keywords && t.UserId == userId.ToString());
             var task = Task.Run(async () =>
             {
                 return await ret;
             });
-            return lstRss = task.Result.ToList();
+            return task.Result.ToList();
+        }
+
+
+        public static List<RssNewsContentsFeeds> GetRssNewsFeeds(string userId, string keywords, AppSettings _appSettings, int skip, int count)
+        {
+            string[] profileids = null;
+            var _RssRepository = new MongoRepository("RssNewsContentsFeeds", _appSettings);
+
+            var ret = _RssRepository.FindWithRange<RssNewsContentsFeeds>(t => t.keywords == keywords && t.UserId == userId.ToString(), skip, count);
+            var task = Task.Run(async () =>
+            {
+                return await ret;
+            });
+            return task.Result.ToList();
         }
 
 
@@ -400,26 +411,26 @@ namespace Api.Socioboard.Repositories
             {
                 MongoRepository mongorepo = new MongoRepository("RssNewsContentsFeeds", _appSettings);
                 // MongoRepository mongorepo = new MongoRepository("MongoTwitterFeed", settings);
-                    var builder = Builders<RssNewsContentsFeeds>.Sort;
-                    var sort = builder.Descending(t => t.PublishingDate);
-                    var result = mongorepo.FindWithRange<RssNewsContentsFeeds>(t => t.UserId.Equals(userId), sort, 0, 200);
-                    var task = Task.Run(async () =>
-                    {
-                        return await result;
-                    });
-                    IList<RssNewsContentsFeeds> lstRss = task.Result;
+                var builder = Builders<RssNewsContentsFeeds>.Sort;
+                var sort = builder.Descending(t => t.PublishingDate);
+                var result = mongorepo.FindWithRange<RssNewsContentsFeeds>(t => t.UserId.Equals(userId), sort, 0, 200);
+                var task = Task.Run(async () =>
+                {
+                    return await result;
+                });
+                IList<RssNewsContentsFeeds> lstRss = task.Result;
 
-                    if (lstRss != null)
-                    {
-                        _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + userId, lstRss.ToList());
+                if (lstRss != null)
+                {
+                    _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheTwitterRecent100Feeds + userId, lstRss.ToList());
 
-                        return lstRss.ToList();
-                    }
+                    return lstRss.ToList();
+                }
 
-                    return null;
+                return null;
             }
-            
-           // List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = new List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>();
+
+            // List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds> lstRss = new List<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>();
             //List<Domain.Socioboard.Models.Groupprofiles> lstGroupprofiles = dbr.Find<Domain.Socioboard.Models.Groupprofiles>(t => t.profileOwnerId == userId).ToList();
             //profileids = lstGroupprofiles.Select(t => t.profileId).ToArray();
             //var ret = _RssRepository.Find<Domain.Socioboard.Models.Mongo.RssNewsContentsFeeds>(t => t.UserId == userId);//UserId
@@ -427,7 +438,7 @@ namespace Api.Socioboard.Repositories
             //{
             //    return await ret;
             //});
-           // return lstRss = task.Result.ToList();
+            // return lstRss = task.Result.ToList();
         }
 
 
@@ -536,17 +547,19 @@ namespace Api.Socioboard.Repositories
         public static bool addGplusContentfeedsdata(string keywords, string userId, Helper.AppSettings _appSettings)
         {
             MongoRepository mongorepo = new MongoRepository("RssNewsContentsFeeds", _appSettings);
+
             bool output = false;
             try
             {
-                string searchResultObj = GplusDiscoverySearchHelper.GooglePlus(keywords);
-                JObject GplusActivities = JObject.Parse(GplusDiscoverySearchHelper.GooglePlus(keywords));
-                
-                foreach(JObject obj in JArray.Parse(GplusActivities["items"].ToString()))
-                { 
+                var discoveryResponse = GplusDiscoverySearchHelper.GooglePlus(keywords, _appSettings.GoogleApiKeyForRssFeed);
+
+                JObject GplusActivities = JObject.Parse(discoveryResponse);
+
+                foreach (JObject obj in JArray.Parse(GplusActivities["items"].ToString()))
+                {
                     RssNewsContentsFeeds contentGFeedsDet = new RssNewsContentsFeeds();
                     contentGFeedsDet.Id = ObjectId.GenerateNewId();
-                   
+
                     try
                     {
                         foreach (JObject att in JArray.Parse(obj["object"]["attachments"].ToString()))
@@ -564,8 +577,8 @@ namespace Api.Socioboard.Repositories
                         contentGFeedsDet.PublishingDate = Domain.Socioboard.Helpers.SBHelper.ConvertToUnixTimestamp(DateTime.Parse(obj["published"].ToString())).ToString();
                     }
                     catch { }
-                    
-               
+
+
                     contentGFeedsDet.UserId = userId;
                     contentGFeedsDet.keywords = keywords;
                     var ret = mongorepo.Find<RssNewsContentsFeeds>(t => t.Title == contentGFeedsDet.Title);
@@ -578,7 +591,7 @@ namespace Api.Socioboard.Repositories
                     {
                         try
                         {
-                            mongorepo.Add<RssNewsContentsFeeds>(contentGFeedsDet);
+                            mongorepo.Add(contentGFeedsDet);
                             output = true;
                         }
                         catch { }

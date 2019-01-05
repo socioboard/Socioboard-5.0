@@ -21,21 +21,27 @@ namespace Domain.Socioboard.Helpers
 
         public static string Md5Hash(string text)
         {
-            var md5 = MD5.Create();
 
-            //compute hash from the bytes of text
-            var result = md5.ComputeHash(Encoding.Unicode.GetBytes(text));
-
-            //get hash result after compute it
-            //  byte[] result = md5.ComputeHash;
-            var strBuilder = new StringBuilder();
-            for (var i = 0; i < result.Length; i++)
+            if (text != null)
             {
-                //change it into 2 hexadecimal digits
-                //for each byte
-                strBuilder.Append(result[i].ToString("x2"));
+                var md5 = MD5.Create();
+
+                //compute hash from the bytes of text
+                var result = md5.ComputeHash(Encoding.Unicode.GetBytes(text));
+
+                //get hash result after compute it
+                //  byte[] result = md5.ComputeHash;
+                var strBuilder = new StringBuilder();
+                for (var i = 0; i < result.Length; i++)
+                {
+                    //change it into 2 hexadecimal digits
+                    //for each byte
+                    strBuilder.Append(result[i].ToString("x2"));
+                }
+                return strBuilder.ToString();
             }
-            return strBuilder.ToString();
+
+            return text;
         }
 
 

@@ -43,7 +43,7 @@ namespace Domain.Socioboard.Models
     public class GetUserGroupData
     {
         public Dictionary<long, List<Groupprofiles>> myProfiles { get; set; }
-        public List<Domain.Socioboard.Models.Groups> lstgroup { get; set; }
+        public List<Groups> lstgroup { get; set; }
     }
 
 

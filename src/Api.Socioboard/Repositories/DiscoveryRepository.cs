@@ -82,7 +82,7 @@ namespace Api.Socioboard.Repositories
             }
             else
             {
-                List<Domain.Socioboard.ViewModels.DiscoveryViewModal> lstDiscoveryViewModal = Helper.GplusDiscoverySearchHelper.DiscoverySearchGplus(userId, keyword);
+                List<Domain.Socioboard.ViewModels.DiscoveryViewModal> lstDiscoveryViewModal = Helper.GplusDiscoverySearchHelper.DiscoverySearchGplus(userId, keyword, _appSeetings.GoogleApiKeyForRssFeed);
                 _redisCache.Set(Domain.Socioboard.Consatants.SocioboardConsts.CacheDiscoveryGplus + keyword, lstDiscoveryViewModal);
                 return lstDiscoveryViewModal;
             }

@@ -120,7 +120,6 @@ namespace SocioboardDataScheduler.Shareathon
         {
             var dbr = new DatabaseRepository();
             var shareathonRepository = new MongoRepository("GroupShareathon");
-            //var result = shareathonRepository.Find<GroupShareathon>(t => t.FacebookStatus == 1 && t.Userid == 502164);
             var result = shareathonRepository.Find<GroupShareathon>(t => t.FacebookStatus == 1);
            
             var task = Task.Run(async () => await result);

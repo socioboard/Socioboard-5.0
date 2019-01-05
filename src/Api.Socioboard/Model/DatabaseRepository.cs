@@ -204,6 +204,8 @@ namespace Api.Socioboard.Model
         }
 
 
+       
+
         public System.Linq.IQueryable<T> All<T>() where T : class, new()
         {
             throw new NotImplementedException();
@@ -448,5 +450,36 @@ namespace Api.Socioboard.Model
             return result;
 
         }
+
+
+
+        #region Hibernate Functions
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="query"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T FindFirstMatch<T>(Expression<Func<T, bool>> query) where T : class, new()
+        {
+            T result = null;
+            try
+            {
+                using (var session = SessionFactory.GetNewSession(_env))
+                {
+                    result = session.Query<T>().Where(query).FirstOrDefault();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical(ex.Message);
+                _logger.LogError(ex.StackTrace);
+            }
+            return result;
+        }
+
+
+        #endregion
     }
 }

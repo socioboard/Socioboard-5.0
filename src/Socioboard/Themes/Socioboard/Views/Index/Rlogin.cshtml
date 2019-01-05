@@ -26,14 +26,13 @@
             <a><i class="fa fa-comments"> </i> Help</a><span class='s-c'> | </span>
             <a href="@domainName"><i class="fa fa-chevron-circle-right"> </i> Go to Socioboard</a>
         </div>
+
         <div class="modal-dialog modal-dialog-login" role="document">
             <div class="modal-content p-r m-t">
                 <div class="modal-header">
-                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close "><span aria-hidden="true">&times;</span></button>*@
-                    
+                    @*<button type="button" class="close" data-dismiss="modal" aria-label="Close "><span aria-hidden="true">&times;</span></button>*@                    
                 </div>
-            
-            
+                       
                 <div class="modal-body">
                     <div class='row'>
                         <div class='col-md-offset-1  col-md-10'>
@@ -261,10 +260,8 @@
                     disable();
                 },
                 success: function (data) {
-
                     enable();
-
-                    if (data == "1") {
+                    if (data === "Success") {
                         var emailId = $("#email").val();
                         var password = $("#password").val();
                         setCookie("socioboardpluginemailId", emailId, "90");

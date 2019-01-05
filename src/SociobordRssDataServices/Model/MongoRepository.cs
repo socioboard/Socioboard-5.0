@@ -21,19 +21,10 @@ namespace SociobordRssDataServices.Model
 
         public MongoRepository(string CollectionName) 
         {
-
-
             MongoClient client = new MongoClient("");
-
             _db = client.GetDatabase("");
-;
-
-         
-
-            this.collecionName = CollectionName;
-            
-         
-
+            this.collecionName = CollectionName;           
+           // _logger = logger;
         }
         public int Counts<T>(Expression<Func<T, bool>> query) where T : class, new()
         {

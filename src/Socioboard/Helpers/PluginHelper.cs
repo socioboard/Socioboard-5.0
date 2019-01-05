@@ -213,6 +213,9 @@ namespace Socioboard.Helper
                     using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
                     {
                         location = response.GetResponseHeader("Location");
+                        //charset="
+                       
+
                         if (response.StatusCode == HttpStatusCode.OK)
                         {
                             Stream receiveStream = response.GetResponseStream();
@@ -224,7 +227,7 @@ namespace Socioboard.Helper
                             }
                             else
                             {
-                                readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet));
+                                readStream = new StreamReader(receiveStream, Encoding.GetEncoding(response.CharacterSet.Replace("\"", "")));
                             }
 
                             html = readStream.ReadToEnd();

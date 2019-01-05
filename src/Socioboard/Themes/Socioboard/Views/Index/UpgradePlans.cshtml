@@ -614,9 +614,9 @@
 
                             type: "GET",
 
-                            url: "@ViewBag.Domain/Home/PayPalAccount",
+                            url: "@ViewBag.Domain/Payment/index",
 
-                            data: { "emailId": email, "IsLogin": false },
+                            data: { "emailId": email },
 
                             dataType: "html",
                             success: function (msg) {

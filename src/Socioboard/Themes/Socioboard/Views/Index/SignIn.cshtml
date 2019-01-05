@@ -89,53 +89,59 @@
 
                 dataType: "html",
 
-                success: function (msg) {
+                  success: function (msg) {
 
                     $("#fb-gp-login").css("display", "none");
-                    //Savesessiondata();
-                    //sleep(30000);
-                    if (msg == "SuperAdmin") {
+
+                    if (msg === "SuperAdmin") {
                         window.top.location = '../AdminHome/Dashboard';
                     }
-                    if (msg == "TwoStepLogin") {
+
+                    else if (msg === "TwoStepLogin") {
                         window.top.location = '/Index/TwoStepOtp';
                     }
-                    if (msg == "UpgradePlans") {
+
+                    else if (msg === "UpgradePlans") {
+
                         alertify.alert("your account has been expired.Please upgrade it.");
+
                         setTimeout(function () {
-                            window.top.location = '/Index/UpgradePlans'
+                            window.top.location = '/Index/UpgradePlans';
                         }, 3000);
                     }
-                    else if (msg == "1") {
+                    else if (msg === "Success" || msg === "Payment Processing") {
                         $('input[type="submit"]').attr('disabled', false);
+
                         if ($("#RememberMe").is(':checked')) {
-
                             checkCookie(userName, password);
-
                         }
-                        window.top.location = '/home/index'
-                    } else if (msg == "Trail Expire") {
+
+                        window.top.location = '/home/index';
+                    }
+                    else if (msg === "Trail Expire") {
+
                         alertify.error("your trial has been expired.so you can't use paid features");
+
                         setTimeout(function () {
                             window.top.location = '/home/index';
-                        }, 3000);
+                        }, 1000);
+
                     }
-                    else if (msg == "2") {
-                        alertify.error("Payment details is not submitted.Please submit paypal detail.");
+                    else if (msg === "Payment not Confirmed") {
+                      
+                        alertify.error("License has been expired!");
+
                         $.ajax({
-
                             type: "GET",
-
-                            url: "@ViewBag.Domain/Home/PayPalAccount",
-
-                            data: { "emailId": userName, "IsLogin": false },
-
+                            url: "@ViewBag.Domain/Payment/Index",
+                            data: { "emailId": userName },
                             dataType: "html",
-                            success: function (msg) {
-                                window.top.location = msg;
+                            success: function (response) {
+                                debugger;
+                                window.top.location = response;
                             },
-                            error: function (msg) {
-
+                            error: function (error) {
+                                debugger;
                                 return false;
                             }
                         });
